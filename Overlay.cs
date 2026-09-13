@@ -94,7 +94,7 @@ namespace ScumMiniMap {
             SetStyle(ControlStyles.OptimizedDoubleBuffer|ControlStyles.AllPaintingInWmPaint,true);
         }
         protected override Point ScrollToControl(Control activeControl) {
-            return DisplayRectangle.Location;
+            return AutoScrollPosition;
         }
     }
     // Return focus only when an explicitly opened panel still owns it.
@@ -220,6 +220,28 @@ namespace ScumMiniMap {
         [DllImport("user32.dll")] static extern bool ReleaseCapture();
         [DllImport("user32.dll")] static extern IntPtr SendMessage(IntPtr window,int message,IntPtr w,IntPtr l);
         bool through=true;
+        bool fullMapMode;
+        Size savedSize;
+        Point savedLocation;
+        public bool FullMapMode {
+            get { return fullMapMode; }
+            set {
+                if(fullMapMode==value) return;
+                fullMapMode=value;
+                if(value) {
+                    savedSize=Size;
+                    savedLocation=Location;
+                    Rectangle area=Screen.FromControl(this).WorkingArea;
+                    MaximumSize=new Size(area.Width,area.Height);
+                    Size=new Size(area.Width,area.Height);
+                    Location=area.Location;
+                } else {
+                    MaximumSize=new Size(800,800);
+                    Size=savedSize;
+                    Location=savedLocation;
+                }
+            }
+        }
         public OverlayWindow(Action settings,Action exit,Action<float> zoom,Action search) {
             Text="SCUM Minimap Overlay"; FormBorderStyle=FormBorderStyle.None;
             ShowInTaskbar=false; TopMost=true; Size=new Size(360,360);

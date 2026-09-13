@@ -16,10 +16,10 @@ using System.Drawing.Drawing2D;
 [assembly: AssemblyDescription("Tactical Real-Time Overlay for SCUM")]
 [assembly: AssemblyCompany("MikeRafone")]
 [assembly: AssemblyProduct("SkynettMiniMap")]
-[assembly: AssemblyCopyright("Copyright © 2026 MikeRafone")]
-[assembly: AssemblyVersion("1.2.5.0")]
-[assembly: AssemblyFileVersion("1.2.5.0")]
-[assembly: AssemblyInformationalVersion("1.2.5")]
+[assembly: AssemblyCopyright("Copyright Â© 2026 MikeRafone")]
+[assembly: AssemblyVersion("1.3.0.0")]
+[assembly: AssemblyFileVersion("1.3.0.0")]
+[assembly: AssemblyInformationalVersion("1.3.0")]
 
 namespace ScumMiniMap {
     public sealed class Position {
@@ -195,7 +195,17 @@ namespace ScumMiniMap {
         int labelSize=6;
         bool showZones=true;
         bool showGasStations=true;
-        Position pin;
+        bool showCities=true;
+        bool showTowns=true;
+        bool showFarms=true;
+        bool showTraders=true;
+        bool showFactions=true;
+        bool showMilitary=true;
+        bool showCustomWaypoints=true;
+        bool fullMapActive;
+        DateTime lastMAction = DateTime.MinValue;
+        bool lastMDown;
+                Position pin;
         MapZone searchTarget;
         RoadRoute activeRoute;
         PointF lastRoutePlayerPt = PointF.Empty;
@@ -356,7 +366,7 @@ namespace ScumMiniMap {
             FlowLayoutPanel langRow = new FlowLayoutPanel { Width = 365, Height = 32 };
             langRow.Controls.Add(new Label { Text = Localization.Get("Language"), Width = 160, Padding = new Padding(0, 5, 0, 0) });
             ComboBox langCombo = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 150 };
-            langCombo.Items.AddRange(new object[] { "English", "Español (Argentina)" });
+            langCombo.Items.AddRange(new object[] { "English", "EspaÃ±ol (Argentina)" });
             langCombo.SelectedIndex = Localization.Current == AppLanguage.SpanishArgentina ? 1 : 0;
             langCombo.SelectedIndexChanged += (s, e) => {
                 AppLanguage newLang = langCombo.SelectedIndex == 1 ? AppLanguage.SpanishArgentina : AppLanguage.English;
@@ -399,6 +409,13 @@ namespace ScumMiniMap {
             bar.Controls.Add(gridRow);
             AddCheck(bar, Localization.Get("ShowSavedZones"), showZones, value => showZones = value);
             AddCheck(bar, Localization.Get("ShowGasStations"), showGasStations, value => showGasStations = value);
+            AddCheck(bar, Localization.Get("ShowCities"), showCities, value => showCities = value);
+            AddCheck(bar, Localization.Get("ShowTowns"), showTowns, value => showTowns = value);
+            AddCheck(bar, Localization.Get("ShowFarms"), showFarms, value => showFarms = value);
+            AddCheck(bar, Localization.Get("ShowTraders"), showTraders, value => showTraders = value);
+            AddCheck(bar, Localization.Get("ShowFactions"), showFactions, value => showFactions = value);
+            AddCheck(bar, Localization.Get("ShowMilitary"), showMilitary, value => showMilitary = value);
+            AddCheck(bar, Localization.Get("ShowCustomWaypoints"), showCustomWaypoints, value => showCustomWaypoints = value);
             AddNumber(bar, Localization.Get("ZoneLabelSize"), 6, 24, labelSize, value => labelSize = value);
             Button zoneButton = new Button { Text = Localization.Get("MapZonesScreenshot"), Width = 280 };
             zoneButton.Click += (s, e) => OpenZoneImport(null);
@@ -468,6 +485,10 @@ namespace ScumMiniMap {
                 using (OpenFileDialog ofd = new OpenFileDialog { Filter = "Image Files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg|All files (*.*)|*.*", Title = Localization.Get("CustomMapSelectTitle") }) {
                     if (ofd.ShowDialog(this) == DialogResult.OK) {
                         try {
+                            using(Image preview = Image.FromFile(ofd.FileName)) {
+                                if(preview.Width < 1024 || preview.Height < 1024) { MessageBox.Show(this, Localization.Get("CustomMapTooSmall"), Localization.Get("CustomMapConfirmTitle"), MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+                                if(MessageBox.Show(this, Localization.T("CustomMapDimensions", preview.Width, preview.Height), Localization.Get("CustomMapConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+                            }
                             string targetPath = Path.Combine(dataFolder, "map.png");
                             File.Copy(ofd.FileName, targetPath, true);
                             MessageBox.Show(this, Localization.Get("CustomMapSuccessMsg"), Localization.Get("CustomMapSuccessTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -478,6 +499,16 @@ namespace ScumMiniMap {
                 }
             };
             bar.Controls.Add(customMapBtn);
+            Button resetMapBtn = new Button { Text = Localization.Get("ResetDefaultMap"), Width = 280 };
+            resetMapBtn.Click += (s, e) => {
+                string targetPath = Path.Combine(dataFolder, "map.png");
+                if(!File.Exists(targetPath)) { MessageBox.Show(this, Localization.Get("ResetDefaultMapDone"), Localization.Get("CustomMapConfirmTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+                if(MessageBox.Show(this, Localization.Get("ResetDefaultMapConfirm"), Localization.Get("CustomMapConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes) {
+                    try { File.Delete(targetPath); MessageBox.Show(this, Localization.Get("ResetDefaultMapDone"), Localization.Get("CustomMapConfirmTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information); }
+                    catch(Exception ex) { MessageBox.Show(this, ex.Message); }
+                }
+            };
+            bar.Controls.Add(resetMapBtn);
             Button updateBtn = new Button { Text = Localization.Get("CheckUpdatesGitHub"), Width = 280 };
             updateBtn.Click += (s, e) => CheckForUpdates(true);
             bar.Controls.Add(updateBtn);
@@ -511,8 +542,8 @@ namespace ScumMiniMap {
             OverlayTheme.Sections(bar);
             bar.ResumeLayout(true);
         }
-        public const string VersionString = "1.2.5";
-        public static readonly Version CurrentVersion = new Version(1, 2, 5, 0);
+        public const string VersionString = "1.3.0";
+        public static readonly Version CurrentVersion = new Version(1, 3, 0, 0);
         bool updateCheckRunning;
         async void CheckForUpdates(bool userInitiated) {
             if(updateCheckRunning || closing || IsDisposed || diagnosticMode) return;
@@ -604,6 +635,17 @@ namespace ScumMiniMap {
             number.ValueChanged+=(s,e)=> { changed((int)number.Value); SettingsChanged(); }; row.Controls.Add(number); panel.Controls.Add(row); return number;
         }
         void SettingsChanged() { terrainKey=null; lastFrameKey=null; saveAfter=DateTime.UtcNow.AddMilliseconds(700); }
+        HashSet<ZoneCategory> BuildHiddenCategories() {
+            var hidden = new HashSet<ZoneCategory>();
+            if(!showCities) hidden.Add(ZoneCategory.City);
+            if(!showTowns) hidden.Add(ZoneCategory.Town);
+            if(!showFarms) hidden.Add(ZoneCategory.Farm);
+            if(!showTraders) hidden.Add(ZoneCategory.Trader);
+            if(!showFactions) hidden.Add(ZoneCategory.Faction);
+            if(!showMilitary) hidden.Add(ZoneCategory.Military);
+            if(!showCustomWaypoints) hidden.Add(ZoneCategory.Custom);
+            return hidden.Count==0 ? null : hidden;
+        }
         static int ReadCopyInterval(int value,bool legacy) {
             // Limit synthetic shortcuts to one per second; preserve slower custom values.
             if(legacy) return value<=1?1000:Math.Min(10,value)*1000;
@@ -635,7 +677,7 @@ namespace ScumMiniMap {
                         if(key=="Welcomed") { foundWelcomed=true; continue; }
                         if(key=="Language") { Localization.SetLanguage(val); foundLanguage=true; continue; }
                         if(bool.TryParse(val,out b)) {
-                            switch(key) { case "GridLabels":gridLabels=b;break;case "GridBorders":gridBorders=b;break;case "EdgeFade":edgeFade=b;break;case "ShowStatus":showStatus=b;break;case "ShowZones":showZones=b;break;case "ShowGasStations":showGasStations=b;break;case "AutoZoom":autoZoom=b;break;case "ShowHeading":showHeading=b;break;case "ShowCompass":showCompass=b;break;case "ShowElevation":showElevation=b;break;case "ZoneChime":zoneChime=b;break; }
+                            switch(key) { case "GridLabels":gridLabels=b;break;case "GridBorders":gridBorders=b;break;case "EdgeFade":edgeFade=b;break;case "ShowStatus":showStatus=b;break;case "ShowZones":showZones=b;break;case "ShowGasStations":showGasStations=b;break;case "AutoZoom":autoZoom=b;break;case "ShowHeading":showHeading=b;break;case "ShowCompass":showCompass=b;break;case "ShowElevation":showElevation=b;break;case "ZoneChime":zoneChime=b;break;case "ShowCities":showCities=b;break;case "ShowTowns":showTowns=b;break;case "ShowFarms":showFarms=b;break;case "ShowTraders":showTraders=b;break;case "ShowFactions":showFactions=b;break;case "ShowMilitary":showMilitary=b;break;case "ShowCustomWaypoints":showCustomWaypoints=b;break; }
                         }
                         if(key=="StatusPos") { statusPos=val=="Above"?"Above":"Below"; }
                         if(key=="Shape") { overlayShape=val=="Circle"?"Circle":"Square"; }
@@ -657,7 +699,7 @@ namespace ScumMiniMap {
         void SaveSettings() {
             if(diagnosticMode)return;
             saveAfter=DateTime.MaxValue;
-            try { File.WriteAllLines(settingsPath+".tmp",new string[]{"Welcomed=True","Language="+Localization.CurrentCode,"GridLabels="+gridLabels,"GridBorders="+gridBorders,"GridOpacity="+gridOpacity,"ShowZones="+showZones,"ShowGasStations="+showGasStations,"LabelSize="+labelSize,"EdgeFade="+edgeFade,"Shape="+overlayShape,"ShowHeading="+showHeading,"ShowCompass="+showCompass,"ShowElevation="+showElevation,"ZoneChime="+zoneChime,"CopyIntervalMs="+copyIntervalMs,"AutoZoom="+autoZoom,"AutoZoomMin="+autoZoomMin,"AutoZoomMax="+autoZoomMax,"ShowStatus="+showStatus,"StatusPos="+statusPos,"Opacity="+mapOpacity,"Width="+overlay.Width,"Height="+overlay.Height,"Left="+overlay.Left,"Top="+overlay.Top,"Zoom="+zoom.ToString(CultureInfo.InvariantCulture),"MaxZoom="+maxZoom,"ZoomStep="+zoomStepPercent});
+            try { File.WriteAllLines(settingsPath+".tmp",new string[]{"Welcomed=True","Language="+Localization.CurrentCode,"GridLabels="+gridLabels,"GridBorders="+gridBorders,"GridOpacity="+gridOpacity,"ShowZones="+showZones,"ShowGasStations="+showGasStations,"LabelSize="+labelSize,"EdgeFade="+edgeFade,"Shape="+overlayShape,"ShowHeading="+showHeading,"ShowCompass="+showCompass,"ShowElevation="+showElevation,"ZoneChime="+zoneChime,"CopyIntervalMs="+copyIntervalMs,"AutoZoom="+autoZoom,"AutoZoomMin="+autoZoomMin,"AutoZoomMax="+autoZoomMax,"ShowStatus="+showStatus,"StatusPos="+statusPos,"Opacity="+mapOpacity,"Width="+overlay.Width,"Height="+overlay.Height,"Left="+overlay.Left,"Top="+overlay.Top,"Zoom="+zoom.ToString(CultureInfo.InvariantCulture),"MaxZoom="+maxZoom,"ZoomStep="+zoomStepPercent,"ShowCities="+showCities,"ShowTowns="+showTowns,"ShowFarms="+showFarms,"ShowTraders="+showTraders,"ShowFactions="+showFactions,"ShowMilitary="+showMilitary,"ShowCustomWaypoints="+showCustomWaypoints});
                 if(File.Exists(settingsPath)) File.Replace(settingsPath+".tmp",settingsPath,settingsPath+".bak"); else File.Move(settingsPath+".tmp",settingsPath); }
             catch(IOException) { note=Localization.Get("NoteSettingsSaveFail"); } catch(UnauthorizedAccessException) { note=Localization.Get("NoteSettingsSaveFail"); }
         }
@@ -832,14 +874,44 @@ namespace ScumMiniMap {
         void TriggerPin() {
             if((DateTime.UtcNow - lastInsertAction).TotalMilliseconds < 450) return;
             lastInsertAction = DateTime.UtcNow;
-            if(pin==null && position!=null) {
-                pin=new Position { X=position.X, Y=position.Y, Z=position.Z, Yaw=position.Yaw };
-                note=Localization.Get("NotePinSet");
-            } else {
-                pin=null;
-                note=Localization.Get("NotePinCleared");
+            if(position==null) return;
+            PointF mapPt = ToMap(position);
+            MapZone existing = null;
+            foreach(MapZone z in zones) {
+                if(z.Category==ZoneCategory.Custom && z.Points!=null && z.Points.Length>0) {
+                    double dx=z.Points[0].X-mapPt.X, dy=z.Points[0].Y-mapPt.Y;
+                    if(Math.Sqrt(dx*dx+dy*dy)<0.005) { existing=z; break; }
+                }
             }
-            SettingsChanged();
+            if(existing!=null) {
+                string displayName=Localization.GetZoneName(existing.Name);
+                if(MessageBox.Show(Localization.T("WaypointDeleteConfirm",displayName), Localization.Get("WaypointNameTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question)==DialogResult.Yes) {
+                    zones.Remove(existing); pin=null;
+                    try { ZoneStore.Save(zonesPath,zones); } catch {}
+                    note=Localization.T("WaypointDeleted",displayName);
+                    SettingsChanged();
+                    RenderOverlay();
+                }
+                return;
+            }
+            using(Form prompt=new Form { Width=340,Height=160,Text=Localization.Get("WaypointNameTitle"),StartPosition=FormStartPosition.CenterScreen,FormBorderStyle=FormBorderStyle.FixedDialog,MaximizeBox=false,MinimizeBox=false,TopMost=true }) {
+                Label lbl=new Label { Left=15,Top=15,Width=290,Text=Localization.Get("WaypointNamePrompt") };
+                TextBox txt=new TextBox { Left=15,Top=45,Width=290 };
+                Button ok=new Button { Text=Localization.Get("Done"),Left=135,Top=80,Width=80,DialogResult=DialogResult.OK };
+                Button cn=new Button { Text=Localization.Get("Cancel"),Left=225,Top=80,Width=80,DialogResult=DialogResult.Cancel };
+                prompt.Controls.AddRange(new Control[]{lbl,txt,ok,cn});
+                prompt.AcceptButton=ok; prompt.CancelButton=cn;
+                if(prompt.ShowDialog()==DialogResult.OK && !string.IsNullOrWhiteSpace(txt.Text)) {
+                    string name=txt.Text.Trim();
+                    if(name.Length>80) name=name.Substring(0,80);
+                    MapZone wp=new MapZone { Name=name, Argb=Color.FromArgb(255,0,200,255).ToArgb(), Points=new PointF[]{mapPt}, Category=ZoneCategory.Custom };
+                    zones.Add(wp); pin=new Position { X=position.X, Y=position.Y, Z=position.Z, Yaw=position.Yaw };
+                    try { ZoneStore.Save(zonesPath,zones); } catch {}
+                    note=Localization.T("WaypointSaved",name);
+                    SettingsChanged();
+                    RenderOverlay();
+                }
+            }
         }
 
         void TriggerZoomIn() {
@@ -894,10 +966,16 @@ namespace ScumMiniMap {
                 BeginInvoke(new Action(TriggerZoomOut));
                 return;
             }
-            // Insert key (0x2D): Set or clear custom pin at current position
+            // Insert key (0x2D): Save custom waypoint at current position
             if(key==0x2D) {
                 lastInsertDown=true;
                 BeginInvoke(new Action(TriggerPin));
+                return;
+            }
+            // M key (0x4D): Toggle Full Map Mode
+            if(key==0x4D && Native.GameFocused() && !chat.Paused) {
+                lastMDown=true;
+                BeginInvoke(new Action(TriggerFullMap));
                 return;
             }
             if(Native.GameFocused()) {
@@ -999,6 +1077,22 @@ namespace ScumMiniMap {
                 TriggerZoomOut();
             }
             lastPgDnDown = isPgDn;
+
+            bool isM = (Native.GetAsyncKeyState(0x4D) & 0x8000) != 0;
+            if(isM && !lastMDown && Native.GameFocused() && !chat.Paused && !Native.UserTypingOrActive()) {
+                TriggerFullMap();
+            }
+            lastMDown = isM;
+        }
+        void TriggerFullMap() {
+            if((DateTime.UtcNow - lastMAction).TotalMilliseconds < 450) return;
+            lastMAction = DateTime.UtcNow;
+            fullMapActive = !fullMapActive;
+            overlay.FullMapMode = fullMapActive;
+            lastFrameKey = null;
+            terrainKey = null;
+            note = fullMapActive ? Localization.Get("NoteFullMapOn") : Localization.Get("NoteFullMapOff");
+            RenderOverlay();
         }
         async void Tick(object sender,EventArgs args) {
             if(diagnosticMode || closing || IsDisposed) return;
@@ -1022,6 +1116,7 @@ namespace ScumMiniMap {
                 if(overlay.Visible) { overlay.Hide(); hiddenByFocusLoss=true; }
             }
             wasGameFocused=gameFocused;
+            if(fullMapActive && !gameFocused) { fullMapActive=false; overlay.FullMapMode=false; lastFrameKey=null; terrainKey=null; note=Localization.Get("NoteFullMapOff"); }
             motion.Advance(motionClock.Elapsed.TotalSeconds);
             if(autoZoom && Math.Abs(targetZoom-zoom)>0.001f) {
                 float zoomDelta=targetZoom-zoom;
@@ -1082,7 +1177,7 @@ namespace ScumMiniMap {
             string age=position==null?Localization.Get("WaitingForCoordinates"):string.Format(CultureInfo.InvariantCulture,"X {0:F0}  Y {1:F0}  Z {2:F0}  |  {3}",position.X,position.Y,position.Z,Localization.T("SecondsAgo",(int)(now-updated).TotalSeconds));
             if(Visible) {
                 string statusText=age+Environment.NewLine+Localization.T("StatusSummary",attempts,responses)+Environment.NewLine+note;
-                if(status.Text!=statusText)status.Text=statusText;
+                if(status.Text!=statusText) { bar.SuspendLayout(); status.Text=statusText; bar.ResumeLayout(false); }
             }
             // Routine successes are visible in Settings; avoid synchronous disk I/O every copy cycle.
             bool routine=pending || note==Localization.Get("NoteCoordReceived");
@@ -1307,10 +1402,10 @@ namespace ScumMiniMap {
             int mx=motion!=null?(int)Math.Round(motion.Point.X*100000):0;
             int my=motion!=null?(int)Math.Round(motion.Point.Y*100000):0;
             int myaw=motion!=null?(int)Math.Round(motion.Yaw*10):0;
-            return string.Format(CultureInfo.InvariantCulture,"{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|{13}|{14}|{15}|{16}|{17}|{18}|{19}|{20}",
+            return string.Format(CultureInfo.InvariantCulture,"{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|{13}|{14}|{15}|{16}|{17}|{18}|{19}|{20}|{21}",
                 position==null?0:position.X,position==null?0:position.Y,position==null?0:position.Z,position==null?0:position.Yaw,
                 zoom,chat.Paused,TrackingEnabled,OverlayAge(),overlay.Width,overlay.Height,showStatus,statusPos,overlayShape,showHeading,showCompass,showElevation,GetLocationDescription(),searchTarget==null?"":searchTarget.Name,
-                mx,my,myaw);
+                mx,my,myaw,fullMapActive);
         }
         Bitmap OverlayBitmap() {
             if(overlayFrame.Width!=overlay.Width || overlayFrame.Height!=overlay.Height) {
@@ -1340,7 +1435,7 @@ namespace ScumMiniMap {
             int mapTop=(int)Math.Round(mapBounds.Top+mapBounds.Height/2f-side*centrePt.Y);
             int mapRight=(int)Math.Round(mapLeft+side);
             int mapBottom=(int)Math.Round(mapTop+side);
-            OverlayWindow.Fade(bitmap,edgeFade,mapOpacity,zoom==1?mapLeft:-1,zoom==1?mapTop:-1,zoom==1?mapRight:-1,zoom==1?mapBottom:-1,overlayShape);
+            OverlayWindow.Fade(bitmap,fullMapActive?false:edgeFade,fullMapActive?100:mapOpacity,zoom==1?mapLeft:-1,zoom==1?mapTop:-1,zoom==1?mapRight:-1,zoom==1?mapBottom:-1,fullMapActive?"Square":overlayShape);
 
             // Now draw the crisp HUD location info banner outside/over the map so it is not faded
             if(barActive) {
@@ -1428,7 +1523,7 @@ namespace ScumMiniMap {
             overlay.Present(OverlayBitmap()); lastFrameKey=frameKey; PresentedFrames++;
         }
         public static PointF ToMap(Position p) {
-            return new PointF((float)((616818-p.X)/1521618),(float)((618818-p.Y)/1523618));
+            return new PointF((float)((617018-p.X)/1521618),(float)((619018-p.Y)/1523618));
         }
         void PaintMap(object sender,PaintEventArgs e) {
             DrawMapArea(e.Graphics,new Rectangle(0,0,canvas.Width,canvas.Height));
@@ -1457,7 +1552,7 @@ namespace ScumMiniMap {
                     foreach(Bitmap level in mapLevels) { if(level.Width<side || level.Height<side)break; texture=level; }
                     background.DrawImage(texture,left,top,side,side);
                     DrawGrid(background,left,top,side);
-                    if(showZones || showGasStations)ZoneStore.Draw(background,zones,new RectangleF(left,top,side,side),showZones,labelSize,showGasStations);
+                    if(showZones || showGasStations)ZoneStore.Draw(background,zones,new RectangleF(left,top,side,side),showZones,labelSize,showGasStations,BuildHiddenCategories());
                 }
                 terrainKey=terrain; TerrainBuilds++;
             }
@@ -1583,7 +1678,7 @@ namespace ScumMiniMap {
 
                 // Draw FOV / Directional heading cone if enabled
                 if(showHeading) {
-                    // SCUM Unreal Engine Yaw adjusted by -90° to match screen orientation
+                    // SCUM Unreal Engine Yaw adjusted by -90Â° to match screen orientation
                     double drawYaw = motion!=null && motion.Point.X>0 ? motion.Yaw : position.Yaw;
                     float yawRad = (float)((drawYaw - 180.0) * Math.PI / 180.0);
                     float coneDist = 58f;
@@ -1763,8 +1858,8 @@ namespace ScumMiniMap {
             Position p=Position.Parse("{X=-336602.375 Y=-270302.625 Z=18853.264|P=-3.814117 Y=13.952554 R=0.000000}");
             if(p==null || p.Y!=-270302.625 || p.Yaw!=13.952554) throw new Exception("Coordinate/rotation parsing failed.");
             if(Position.Parse("hello")!=null || Position.Parse("prefix {X=1 Y=2 Z=3|P=0 Y=0 R=0}")!=null) throw new Exception("Invalid clipboard text accepted.");
-            PointF corner=ToMap(new Position { X=616818,Y=618818 });
-            PointF end=ToMap(new Position { X=-904800,Y=-904800 });
+            PointF corner=ToMap(new Position { X=617018,Y=619018 });
+            PointF end=ToMap(new Position { X=-904600,Y=-904600 });
             if(corner.X!=0 || corner.Y!=0 || Math.Abs(end.X-1)>.00001 || Math.Abs(end.Y-1)>.00001) throw new Exception("Map projection failed.");
             if(RoadRouter.Instance.IsLoaded) {
                 var testRoute=RoadRouter.Instance.FindRoute(new PointF(0.62767f,0.63618f),new PointF(0.67270f,0.03878f));

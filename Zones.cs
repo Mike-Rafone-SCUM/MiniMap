@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 using System.Drawing.Drawing2D;
 
 namespace ScumMiniMap {
+    public enum ZoneCategory { City, Town, Farm, Trader, Faction, Military, GasStation, Custom, Unknown }
     public sealed class MapZone {
         public string Name;
         public int Argb;
         public PointF[] Points;
+        public ZoneCategory Category;
         static readonly HashSet<string> FactionNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
             "D4 Clock house", "D4 Stable ruins", "D4 City - Pharmacy", "D4 City - Police Station",
             "D3 City Warehouse", "D3 - General Store", "D3 Little town - House",
@@ -76,6 +78,27 @@ namespace ScumMiniMap {
         }
     }
     public static class ZoneStore {
+        static string SafeUnescape(string value) {
+            try { return Uri.UnescapeDataString(value); }
+            catch(UriFormatException) { return value; }
+        }
+        public static ZoneCategory Classify(MapZone z) {
+            if(z.IsFuelStation) return ZoneCategory.GasStation;
+            if(z.IsFaction) return ZoneCategory.Faction;
+            if(z.Argb==-16737281) return ZoneCategory.Custom; // cyan 0xFF00C8FF
+            string n=z.Name??"";
+            string upper=n.ToUpperInvariant();
+            if(z.Argb==-993486 || z.Argb==-1358291) { // gold or red = military
+                return ZoneCategory.Military;
+            }
+            if(upper.Contains("FARM") || upper.Contains("RANCH") || upper.Contains("VINEYARD") || upper.Contains("ORCHARD")) return ZoneCategory.Farm;
+            if(upper.Contains("OUTPOST") || upper.Contains("TRADER") || z.Argb==-9843406) return ZoneCategory.Trader;
+            // Large settlements vs small towns: check for known city names
+            string[] cities = { "SAMOBOR", "KLENOVNIK", "PRIBOJ" };
+            foreach(string c in cities) if(upper.Contains(c)) return ZoneCategory.City;
+            if(z.Points!=null && z.Points.Length>=3 && z.Argb==-6895376) return ZoneCategory.Town;
+            return ZoneCategory.Unknown;
+        }
         public static List<MapZone> Load(string path) {
             if(File.Exists(path)) {
                 using(Stream stream=File.OpenRead(path)) return Load(stream);
@@ -92,21 +115,35 @@ namespace ScumMiniMap {
                 string line;
                 while((line=reader.ReadLine())!=null) {
                     string[] parts=line.Split('\t'); int color;
-                    if(parts.Length!=3 || !int.TryParse(parts[1],out color))continue;
+                    if((parts.Length!=3 && parts.Length!=4) || !int.TryParse(parts[1],out color))continue;
                     List<PointF> points=new List<PointF>(); bool valid=true;
                     foreach(string point in parts[2].Split(';')) {
                         string[] xy=point.Split(','); float x,y;
                         if(xy.Length!=2 || !float.TryParse(xy[0],NumberStyles.Float,CultureInfo.InvariantCulture,out x) || !float.TryParse(xy[1],NumberStyles.Float,CultureInfo.InvariantCulture,out y) || float.IsNaN(x) || float.IsNaN(y) || x<-.1f || x>1.1f || y<-.1f || y>1.1f) { valid=false;break; }
                         points.Add(new PointF(Math.Max(0,Math.Min(1,x)),Math.Max(0,Math.Min(1,y))));
                     }
-                    if(valid && points.Count>=1 && points.Count<=512 && result.Count<500) result.Add(new MapZone { Name=Uri.UnescapeDataString(parts[0]),Argb=color,Points=points.ToArray() });
+                    if(valid && points.Count>=1 && points.Count<=512 && result.Count<500) {
+                        MapZone zone = new MapZone { Name=SafeUnescape(parts[0]),Argb=color,Points=points.ToArray() };
+                        if(parts.Length>3) {
+                            ZoneCategory cat;
+                            if(Enum.TryParse(parts[3], out cat)) zone.Category = cat;
+                        } else {
+                            zone.Category = Classify(zone);
+                        }
+                        result.Add(zone);
+                    }
                 }
             }
             return result;
         }
         public static void Save(string path,List<MapZone> zones) {
             string temp=path+".tmp";
-            File.WriteAllLines(temp,zones.Select(z=>Uri.EscapeDataString(z.Name)+"\t"+z.Argb+"\t"+string.Join(";",z.Points.Select(p=>p.X.ToString("R",CultureInfo.InvariantCulture)+","+p.Y.ToString("R",CultureInfo.InvariantCulture)))));
+            List<string> lines = new List<string>();
+            foreach(MapZone z in zones) {
+                if(z.Points==null || z.Points.Length==0) continue;
+                lines.Add(Uri.EscapeDataString(z.Name)+"\t"+z.Argb+"\t"+string.Join(";",z.Points.Select(p=>p.X.ToString("R",CultureInfo.InvariantCulture)+","+p.Y.ToString("R",CultureInfo.InvariantCulture)))+"\t"+z.Category);
+            }
+            File.WriteAllLines(temp,lines);
             if(File.Exists(path))File.Replace(temp,path,null); else File.Move(temp,path);
         }
         public static void DrawFuelIcon(Graphics g,float cx,float cy,float r=10f) {
@@ -122,13 +159,14 @@ namespace ScumMiniMap {
                 g.DrawLine(whitePen,cx+4f,cy+4f,cx+2.5f,cy+2.5f);
             }
         }
-        public static void Draw(Graphics g,IEnumerable<MapZone> zones,RectangleF rect,bool labels,float fontSize=9f,bool showGasStations=true) {
+        public static void Draw(Graphics g,IEnumerable<MapZone> zones,RectangleF rect,bool labels,float fontSize=9f,bool showGasStations=true,HashSet<ZoneCategory> hidden=null) {
             using(Font font=new Font("Segoe UI",Math.Max(6f,Math.Min(24f,fontSize)),FontStyle.Bold)) {
                 StringFormat sf=new StringFormat { Alignment=StringAlignment.Center,LineAlignment=StringAlignment.Center };
                 List<RectangleF> placed=new List<RectangleF>();
                 List<KeyValuePair<string,RectangleF>> labelItems=new List<KeyValuePair<string,RectangleF>>();
                 foreach(MapZone zone in zones??Enumerable.Empty<MapZone>()) {
                     if(zone==null || zone.Points==null || zone.Points.Length==0) continue;
+                    if(hidden!=null && hidden.Contains(zone.Category)) continue;
                     if(zone.Points.Length>=3) {
                         if(!labels) continue;
                         PointF[] points=zone.Points.Select(p=>new PointF(rect.Left+p.X*rect.Width,rect.Top+p.Y*rect.Height)).ToArray();
@@ -291,7 +329,7 @@ namespace ScumMiniMap {
                 // Only files generated inside this unique import directory are removed.
                 try {
                     foreach(string leaf in new[]{"zones.tsv","source.tsv"}) { string generated=Path.Combine(temp,leaf);if(File.Exists(generated))File.Delete(generated); }
-                    Directory.Delete(temp);
+                    Directory.Delete(temp, true);
                 }catch(IOException) {}catch(UnauthorizedAccessException) {}
             }
         }

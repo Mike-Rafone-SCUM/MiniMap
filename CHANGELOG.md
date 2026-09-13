@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.3.0] - 2026-09-13
+
+### Added
+- **POI Category Filtering**: Added customizable filter options in Settings to selectively show or hide POI categories on the minimap:
+  - Cities (Samobor, Klenovnik Hospital, Novigrad)
+  - Towns, villages, and local settlements
+  - Farms, vineyards, and agricultural locations
+  - Trader outposts (C2, B4, A0, Z3, CC)
+  - Faction War POIs
+  - Military installations, bunkers, airfields, barracks, and radar sites
+  - Fuel / Gas stations
+  - Custom user waypoints
+- **Category Tagging Engine**: Tagged all 144 map POIs with explicit category designations in zones.tsv, with backward-compatible 4th-column format and dynamic runtime heuristic fallback.
+- **Custom Waypoint Saving**: Pressing Insert now prompts for a custom waypoint name and permanently saves the location to zones.tsv. Pressing Insert while near an existing custom waypoint prompts for confirmation to delete it. Custom waypoints are rendered with a distinct cyan badge and label.
+- **Full-Size In-Game Map Mode**: Pressing M while in SCUM expands the minimap into a full-size rectangle covering the screen at 100% opacity, matching the in-game map view. Pressing M again or losing focus smoothly restores standard minimap dimensions and opacity.
+- **Custom Map Polish**: Added image dimension validation (minimum 1024x1024) and confirmation preview dialog prior to importing custom maps, along with a 'Reset to default map' button to restore the embedded map image.
+
+### Fixed
+- **Settings Panel Auto-Scrolling**: Fixed issue where the settings viewport snapped upwards every second during live coordinate updates by overriding ScrollToControl with AutoScrollPosition and suspending container layout during status text refreshes.
+- **Import Zones Unhandled Exception**: Fixed unhandled UriFormatException during TSV loading by safely unescaping names, guarded against null points in zone serialization, and ensured reliable recursive cleanup of temporary screenshot analysis directories.
+- **Map Alignment Calibration**: Calibrated ToMap() coordinate projection offsets (+200 cm X/Y) so that road navigation GPS lines up directly on roads rather than adjacent to them.
+
 ## [1.2.5] - 2026-09-13
 
 ### Changed
