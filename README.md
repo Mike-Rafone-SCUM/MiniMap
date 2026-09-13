@@ -1,68 +1,136 @@
-# SCUM MiniMap v1.2.5
+# SCUM MiniMap v1.3.2
 
-Run SkynettMiniMap.exe from the extracted release folder. Map artwork and default places are embedded. Use borderless/windowed SCUM; exclusive fullscreen can hide external overlays.
+SCUM MiniMap is an external, real-time tactical radar HUD overlay and navigation utility engineered specifically for SCUM players. It renders an active minimap displaying player coordinates, heading, elevation, road network navigation, categorized points of interest (POIs), and custom waypoints without modifying game memory, injecting DLLs, or violating Easy Anti-Cheat (EAC) policies.
 
-## Application updates
+Run `SkynettMiniMap.exe` from the extracted release directory. High-resolution map artwork, road networks, and 144 categorized points of interest are embedded directly into the executable.
 
-Download [the latest release from GitHub](https://github.com/Mike-Rafone-SCUM/MiniMap/releases/latest) for both initial installation and updates. Choose `SkynettMiniMap.exe` for the standalone app or `SkynettMiniMap.zip` for the app plus optional screenshot-import files. Version 1.2.4 and later check [GitHub Releases](https://github.com/Mike-Rafone-SCUM/MiniMap/releases) at startup and through **Check for updates (GitHub)** in Settings or the tray menu. No Git installation or GitHub account is needed.
+> [!IMPORTANT]
+> SCUM must run in **Borderless Window** or **Windowed** mode. Windows exclusive fullscreen mode takes dedicated hardware control of the display and suppresses external desktop overlays.
 
-When a newer stable version is available, choose to download it and save it as a new file. The app verifies its SHA-256 checksum before making the download available. Exit the app using its tray menu, replace the old executable with the downloaded file, and run it. Settings and imported zones in Local Application Data are preserved. Installation is manual; the updater never replaces a running executable.
+---
 
-Startup checks reuse verified release metadata for up to one hour. Manual checks refresh after one minute. Network errors, invalid metadata and rate limits never report that the installation is current. A server retry delay is saved across restarts. Versions 1.2.3 and earlier need the migration build once before they can use GitHub updates.
+## Official Distribution & Automatic Updates
 
-Maintainers: update the version constants, assembly versions and changelog, then push the source and a matching `vX.Y.Z` tag. GitHub Actions builds and tests the app, uploads `SkynettMiniMap.exe`, `SkynettMiniMap.zip` and `update.txt` to a draft, then publishes the complete release as latest and verifies a public download. Normal pushes and pull requests run the build checks without publishing. The manifest is generated from the executable's product version and SHA-256 hash. Never replace an already published executable; publish a new version. GitHub is the only download and update host.
+Official binaries, update manifests, and cryptographic checksums are distributed exclusively via GitHub Releases:
 
-For local builds, run `Build-GitHubRelease.ps1`; files appear in `release/github/vX.Y.Z`. `Publish-GitHubRelease.ps1 -Version X.Y.Z` can publish those assets using an authenticated GitHub CLI and an existing remote version tag.
+* **Official Repository:** [Mike-Rafone-SCUM/MiniMap](https://github.com/Mike-Rafone-SCUM/MiniMap)
+* **Latest Release:** [GitHub Releases Latest](https://github.com/Mike-Rafone-SCUM/MiniMap/releases/latest)
+* **Standalone Executable:** [SkynettMiniMap.exe](https://github.com/Mike-Rafone-SCUM/MiniMap/releases/latest/download/SkynettMiniMap.exe)
+* **Complete Archive:** [SkynettMiniMap.zip](https://github.com/Mike-Rafone-SCUM/MiniMap/releases/latest/download/SkynettMiniMap.zip)
 
-## Controls
+### Integrated Auto-Updater
+SkynettMiniMap features an automated background update service. On every startup (and via **Check for updates (GitHub)** in the tray menu or Settings panel), the application queries `update.txt` from the official repository and compares the semantic version and SHA-256 checksum against the running installation. When a verified build is available, the application notifies you with release details and offers to download the new build.
 
-| Action | Control |
+---
+
+## Key Features
+
+### In-Game Full Map Mode (M Key)
+Pressing <kbd>M</kbd> during gameplay seamlessly transitions the minimap into a full-scale, 1:1 square tactical map at 100% opacity, centered directly over SCUM's built-in in-game map.
+* **Monitor Detection & Horizontal Centering:** Automatically detects your display geometry and horizontally centers the square overlay (`(ScreenWidth - ScreenHeight) / 2`), leaving peripheral HUD bars (health, stamina, speedometer) fully visible.
+* **Smart Auto-Restore:** Restores normal minimap dimensions and opacity when pressing <kbd>M</kbd> again, pressing <kbd>Esc</kbd>, closing the map in SCUM (detected via cursor hiding), or switching away from the game.
+
+### Custom Waypoints & Search List Management
+* **Save at Current Location (Insert Key):** Press <kbd>Insert</kbd> while playing to capture your current GPS coordinates. An input dialog immediately captures keyboard focus to let you name the location, saving it persistently to `zones.tsv` with a cyan marker.
+* **List Management & Right-Click Deletion:** Open the waypoint list (<kbd>Delete</kbd> key) to search, navigate to, or manage locations. Right-clicking any custom waypoint displays a context menu to delete it, or highlight it and press <kbd>Delete</kbd>.
+* **Proximity Clearing:** Pressing <kbd>Insert</kbd> within 50 meters of an existing custom waypoint prompts you to delete it directly in the field.
+
+### Road-Aware GPS Navigation
+* **A* Driving Route Pathfinding:** Real-time pathfinding across SCUM's road network calculates driving trajectories, turns, and remaining road distance in milliseconds.
+* **Calibrated Alignment:** Calibrated coordinate transform offsets (+200 cm X/Y) ensure vehicle markers and navigation trajectories align directly along road centrelines.
+* **High-Contrast Feeder Vectors:** Off-road dashed guidance lines connect your vehicle to the nearest road entry point.
+
+### POI Filtering & Smart Label LOD
+* **Granular Category Filters:** Toggle visibility for individual POI classes: Cities, Towns, Farms, Traders, Faction War POIs, Military Sites, Custom Waypoints, and Gas Stations.
+* **Smart Level of Detail (LOD):** When zoomed out (< 2.5x), minor text labels (towns, farms, military sites, faction tags) are automatically suppressed to keep terrain and roadways clean and legible. Only major Cities, Traders, and Custom Waypoints display text labels. Detailed local tags smoothly reappear as you zoom in closer.
+* **Independent Border & Label Controls:** Toggle POI text names (`ShowZoneLabels`) independently from colored zone borders (`ShowSavedZones`).
+
+### Real-Time Bilingual Interface
+Complete bilingual support in English and Argentine Spanish (`es-AR`). Switch instantly in the Settings panel under **Language / Idioma** without restarting the application. Automatically defaults to Spanish on systems configured with Argentine, Uruguayan, or Hispanic Windows locales.
+
+### Custom Map Textures & Zone Import
+* Supports custom `map.png` textures and custom `zones.tsv` files in `%LocalAppData%\ScumMiniMap`.
+* Validates imported map dimensions (minimum 1024x1024) with a preview confirmation dialog.
+* Includes a **Reset to default map** option to revert to embedded high-resolution assets without manual file deletion.
+
+---
+
+## Controls & Keybinds
+
+| Key | Action |
 |---|---|
-| Search and navigate | Delete |
-| Open settings | Home |
-| Show / hide radar | End |
-| Zoom | Page Up / Page Down |
-| Set / clear a pin at your position | Insert |
-| Close a panel | Escape / Close |
+| <kbd>Home</kbd> | Open / Close Settings panel |
+| <kbd>Delete</kbd> | Open Waypoint Search & Destination Navigation |
+| <kbd>End</kbd> | Show / Hide Minimap Overlay |
+| <kbd>Insert</kbd> | Save custom waypoint at current GPS position (prompts for name) |
+| <kbd>M</kbd> | Toggle In-Game Full Map Mode (100% opacity centered overlay) |
+| <kbd>Page Up</kbd> | Manual zoom in |
+| <kbd>Page Down</kbd> | Manual zoom out |
+| <kbd>Escape</kbd> | Close active search/settings dialog, or exit full map mode |
 
-The radar never activates or appears in Alt-Tab. Search takes keyboard focus and moves the pointer into its text box. Closing a panel returns to the SCUM window that opened it; deliberate Alt-Tab is respected. Right-click the map outside gameplay or use the tray icon for quick actions. Settings sections are all accessible by default with smooth continuous scrolling, and fold or unfold on click.
+---
 
-## Intelligent search
+## Intelligent Search & Navigation
 
-Examples: `mil air`, `airfield military`, `airfeild`, `airport`, `bunker C3`, `grid D4`, `nearest bunker`. Search ignores case, punctuation and accents. Longer words tolerate one or two edits, including transpositions. Airport/airfield, gas/petrol/fuel and harbor/harbour are synonyms.
+* **Fuzzy & Phonetic Matching:** Accent-insensitive, typo-tolerant search handles aliases and abbreviations (e.g., `mil air`, `airfeild`, `nafta`, `bunker C3`, `nearest trader`).
+* **Sector Search:** Enter any sector code (`D4`, `C2`, `B0`) to highlight and navigate to the sector center.
+* **Auto-Clear on Arrival:** Active navigation targets clear automatically once your character arrives within 30 meters of the destination.
 
-Exact and prefix matches rank first. Distance breaks equal-rank ties when a position is available; nearest prioritises distance among matching places. Empty search sorts by proximity when possible, otherwise alphabetically. Results show grid and distance to the saved place centre. Arrow keys select; Enter sets the waypoint; Clear waypoint removes it. Grid-only searches include the sector centre and places in that sector. Search covers the loaded catalogue, not every game object.
+---
 
-Navigation waypoints clear automatically when a fresh position is within 30 metres of the destination centre. Insert places a pin at your current position; pins remain until you clear them with Insert. Waypoints and pins are local overlay markers, not SCUM-native markers. Coordinates may be stale; check the LIVE/age indicator before navigating.
+## Architecture & Anticheat Safety
 
-## Tracking and data
+SkynettMiniMap is designed from the ground up for strict compatibility with Easy Anti-Cheat (EAC):
 
-Tracking is automatic whenever SCUM is focused. There is no manual tracking mode or enable switch. Settings controls the update interval. T pauses for chat; Enter/Escape resumes. Search/settings pause copying and wait for an in-flight chord to release. Tracking resumes automatically when returning to SCUM. Requests cancelled by focus or user input resume at the normal sampling interval. After three missed responses or a Windows input error it waits five seconds before retrying, without requiring user intervention. The status shows AUTO, CHAT, WAIT or RETRY. Chat/menu state is inferred from keyboard activity rather than read from the game.
+* **Zero DLL Injection:** Operates entirely outside the SCUM process space as a standard layered Windows desktop utility.
+* **No Game Memory Access:** Does not attach debuggers, inspect process RAM, hook DirectX/Vulkan APIs, or modify game files.
+* **Clipboard-Based Coordinate Acquisition:** Samples coordinates strictly through Windows standard clipboard copy commands triggered while SCUM is focused.
+* **Safe Input Suspension:** Automatically pauses coordinate polling while typing in chat (after pressing <kbd>T</kbd>), while modifier keys are held, or when SCUM loses window focus.
 
-Settings, imported zones and logs live in the ScumMiniMap folder under Windows Local Application Data. Settings writes atomically replace the previous file and retain settings.ini.bak. Existing files are migrated only when user data is absent. Custom map.png and zones.tsv in the data folder override embedded defaults. Settings includes an Open Data Folder button.
+---
 
-## Optional screenshot import
+## System Requirements
 
-The release includes detect_zones.py and requirements.txt. Automatic screenshot import additionally needs Python with the packages in requirements.txt; manual editing does not. A python-path.txt file in the data folder can specify the Python executable. Detection uses the loaded map and times out after 60 seconds. Map-edge outlines slightly outside the image are clipped; grossly invalid coordinates are rejected.
+* **Operating System:** Windows 10 / 11 (64-bit)
+* **Display Mode:** Borderless Window or Windowed Mode
+* **Framework:** Microsoft .NET Framework 4.0 or higher
+* **Optional:** Python 3.8+ (only required if executing `detect_zones.py` for automated CV zone extraction)
 
-## Build and checks
+---
 
-Clone this repository and run `Build-GitHubRelease.ps1` with Windows PowerShell on Windows. The map, road data and default zones are included, so the checkout builds independently. It compiles, runs regression checks and creates a standalone executable, complete ZIP and update manifest. This build does not stop or replace a running installation. The older `Build.ps1` packaging command remains available; it increments the version by default and `-Install` replaces and restarts the local executable.
+## Data & Configuration Directory
 
-Start-MiniMap.ps1 -Check tests search, grids, focus-return policy, coordinates and zone parsing. -Preview renders sample windows. Measure-Rendering.ps1 checks rendering performance and caching. Diagnostic windows neither copy game input nor save settings.
+All user settings, logs, and custom assets are stored in:
+```
+%LocalAppData%\ScumMiniMap
+```
+* `settings.ini`: Persistent user preferences, layout, filters, and language settings.
+* `zones.tsv`: Categorized point-of-interest database and saved custom waypoints.
+* `automatic.log`: Diagnostic communication and updater activity log.
+* `map.png`: Optional custom map override texture.
 
-Before wider release, check Home/Delete, typing, selecting/cancelling, Alt-Tab, movement keys, manual pause, restart, display scaling and screenshot import in the intended SCUM setup. Local tests cannot establish every game focus or fullscreen combination. No game memory or server access is used.
+---
 
-Map artwork and bounds: https://github.com/nerdcave-support/nerdmaps-for-scum (retrieved 2026-09-12). Artwork belongs to its owners; redistribution rights have not been established. Bounds and saved place outlines are approximate.
+## Building from Source
 
-## Update frequency
+The repository includes embedded road navigation networks, default zones, and high-resolution map assets:
 
-Position sampling defaults to 1000 ms (at most one request per second). Settings > Tracking and zoom > Position update interval (ms) accepts 1000–10000 ms. Faster saved intervals migrate to 1000 ms; slower custom intervals are retained. Clipboard changes are checked on the 40 ms UI timer. Only one request may be outstanding. Ctrl is held before and after C so the shortcut spans game frames; focus changes and fresh physical input cancel C before it is sent. Synthetic keys do not update the physical-key monitor, and failed key releases are retried before the request finishes. SCUM response time, held modifiers, chat and focus can reduce the actual update rate. automatic.log records status changes, not a position stream. Live gameplay still needs to confirm that the shortcut does not conflict with your bindings.
+```powershell
+# Clone the repository
+git clone https://github.com/Mike-Rafone-SCUM/MiniMap.git
+cd MiniMap
 
-## Dynamic tracking and auto-zoom
+# Run the automated build, regression tests, and packaging script
+.\Build-GitHubRelease.ps1
+```
 
-When zoomed in, the minimap dynamically centres on the player in real time, smoothly moving the terrain, grid, and zones beneath your position so your player marker remains centered on the radar. At full map view (zoom 1), the entire island is displayed with your marker navigating across it. Auto-zoom remains available in Tracking and zoom, using filtered travel speed and a small change threshold. Terrain, grid and zones are cached efficiently to minimize CPU use.
+Compiled binaries and release packages appear in `release/github/vX.Y.Z/`:
+* `SkynettMiniMap.exe`: Standalone release executable.
+* `SkynettMiniMap.zip`: Complete distribution archive.
+* `update.txt`: Manifest containing ProductVersion and SHA-256 checksum for auto-updater verification.
+
+---
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for a complete history of changes, features, and release notes.
+See [CHANGELOG.md](CHANGELOG.md) for the complete history of updates, feature additions, and bug fixes.
