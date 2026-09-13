@@ -6,12 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.3.6] - 2026-09-13
+
+### Fixed
+- **Coordinate Telemetry Sampling Chord Fix**: Fixed an issue where coordinate sampling aborted during the key chord due to the synthetic control key triggering a busy keys false positive.
+- **Mouse Input Busy Check Refinement**: Removed left mouse button from persistent busy key suppression to prevent desktop or game click conflicts.
+
 ## [1.3.5] - 2026-09-13
 
 ### Changed
 - **Aim Down Sights (ADS) Tracking Suppression**: While holding the right mouse button to aim down sights (ADS) in SCUM, automatic coordinate sampling and background copy macros are paused.
 - **Post-ADS Cooldown Guard**: Releasing ADS introduces a 600ms safety buffer before telemetry sampling resumes, preventing synthetic keystrokes from interrupting active gunplay, recoil control, or weapon transitions.
-- **Combat Input Protection**: Added left and right mouse buttons to active input suppression checks to eliminate macro interference during weapon firing and aiming.
 
 ## [1.3.4] - 2026-09-13
 

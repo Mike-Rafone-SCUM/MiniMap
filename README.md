@@ -1,4 +1,4 @@
-# SCUM MiniMap v1.3.5
+﻿# SCUM MiniMap v1.3.6
 
 SCUM MiniMap is an external, real-time tactical radar HUD overlay and navigation utility engineered specifically for SCUM players. It renders an active minimap displaying player coordinates, heading, elevation, road network navigation, categorized points of interest (POIs), and custom waypoints without modifying game memory, injecting DLLs, or violating Easy Anti-Cheat (EAC) policies.
 
