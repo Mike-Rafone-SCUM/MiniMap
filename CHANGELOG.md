@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.3.8] - 2026-09-13
+
+### Added
+- **Instant POI Search & Discovery**: Destination search (`Delete` key) now instantly lists nearby ScumMap POIs and custom zones sorted by distance when opened without typing. Search queries match marker titles, categories (e.g., "police", "bunker", "well", "pharmacy"), and sectors (e.g., "bunker d4").
+- **Clear Category Context in Search**: Search results now display the specific POI category and sector alongside the distance (e.g. `B2 / Police station / 450 m`).
+
+### Changed
+- **Streamlined 3-Layer Map Architecture**: Reorganized Map Layers in Settings into three clear, distinct layers:
+  1. `Custom Map Zones (using the PNG)` (with screenshot importer)
+  2. `ScumMap Pois` (with POI filter dialog)
+  3. `User Added Pois` (custom waypoints placed by player)
+  Removed redundant legacy sub-category checkboxes from the Settings interface.
+
+### Removed
+- **Legacy Pin Diamond Marker**: Removed obsolete yellow diamond marker and literal "PIN" label drawn on the map when placing waypoints or clicking destinations. All points and destinations now render through clean category dots and GPS navigation routing.
+
 ## [1.3.7] - 2026-09-13
 
 ### Added
