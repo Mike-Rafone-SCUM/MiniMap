@@ -1,8 +1,8 @@
-﻿# SCUM MiniMap v1.3.6
+# SCUM MiniMap v1.3.7
 
 SCUM MiniMap is an external map overlay and navigation utility for SCUM, made for the Skynett community. It displays player coordinates, heading, elevation, road routes, points of interest, and custom waypoints. It does not read game memory or inject DLLs; this is not an official anticheat certification.
 
-Run `SkynettMiniMap.exe` from the extracted release directory. High-resolution map artwork, road networks, and 144 categorized points of interest are embedded directly into the executable.
+Run `SkynettMiniMap.exe` from the extracted release directory. High-resolution map artwork, road networks, and over 8,000 categorized ScumMap points of interest across 106 categories are embedded directly into the executable.
 
 > [!IMPORTANT]
 > SCUM must run in **Borderless Window** or **Windowed** mode. Windows exclusive fullscreen mode takes dedicated hardware control of the display and suppresses external desktop overlays.

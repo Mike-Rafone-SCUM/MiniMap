@@ -38,3 +38,4 @@ tests/
 /skynett-community-message.md
 /test.py
 /test_detection.py
+/*.cjs

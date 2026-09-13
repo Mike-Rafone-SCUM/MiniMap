@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.3.7] - 2026-09-13
+
+### Added
+- **Full ScumMap Location Filter Alignment**: Comprehensive alignment of POI categories matching the official [scum-map.com](https://scum-map.com) Island catalog. Integrated all 106 categories across 12 sections covering 8,056 POI locations.
+- **Dedicated POI Filter Dialog**: Added a searchable filter management window accessible via Settings -> Map and zones -> "Configure POI Filters (106 categories)...". Supports real-time text filtering, section-wide batch toggles, individual category selection with location counts, and default state reset.
+- **Master & Group Settings Controls**: Added a master switch `Show ScumMap POIs` and granular category persistence across sessions in `settings.ini`.
+- **POI Click-to-Waypoint & Search**: Clicking any visible ScumMap POI locks onto that landmark with its exact name and coordinates. Integrated POI matching into the Destination Search dialog (`Delete` key).
+
+### Changed & Performance
+- **High-Performance Spatial Indexing & Viewport Culling**: Embedded `scummap.bin` (241 KB) with a 32x32 spatial index grid. Only visible markers in the player's viewport are evaluated (< 0.05 ms query time), maintaining steady 60+ FPS overlay rendering with zero idle redraw overhead.
+
+### Fixed
+- **Faction Bunker Classification**: Fixed an issue in `Zones.cs` where faction bases containing "WWII Bunker" in their name were misclassified as generic bunkers due to substring evaluation order.
+
 ## [1.3.6] - 2026-09-13
 
 ### Fixed
