@@ -1,6 +1,6 @@
 ﻿# SCUM MiniMap v1.3.6
 
-SCUM MiniMap is an external, real-time tactical radar HUD overlay and navigation utility engineered specifically for SCUM players. It renders an active minimap displaying player coordinates, heading, elevation, road network navigation, categorized points of interest (POIs), and custom waypoints without modifying game memory, injecting DLLs, or violating Easy Anti-Cheat (EAC) policies.
+SCUM MiniMap is an external map overlay and navigation utility for SCUM, made for the Skynett community. It displays player coordinates, heading, elevation, road routes, points of interest, and custom waypoints. It does not read game memory or inject DLLs; this is not an official anticheat certification.
 
 Run `SkynettMiniMap.exe` from the extracted release directory. High-resolution map artwork, road networks, and 144 categorized points of interest are embedded directly into the executable.
 
@@ -19,7 +19,13 @@ Official binaries, update manifests, and cryptographic checksums are distributed
 * **Complete Archive:** [SkynettMiniMap.zip](https://github.com/Mike-Rafone-SCUM/MiniMap/releases/latest/download/SkynettMiniMap.zip)
 
 ### Integrated Auto-Updater
-SkynettMiniMap features an automated background update service. On every startup (and via **Check for updates (GitHub)** in the tray menu or Settings panel), the application queries `update.txt` from the official repository and compares the semantic version and SHA-256 checksum against the running installation. When a verified build is available, the application notifies you with release details and offers to download the new build.
+SCUM MiniMap checks the version in the official `update.txt` manifest at startup. Startup results are cached for up to an hour; manual checks through **Check for updates (GitHub)** in the tray menu or Settings reuse results for up to one minute. A newer release triggers a notification. Use a manual check to choose and save the download; its SHA-256 checksum is verified before it is saved.
+
+Exit the old app from its tray menu, replace the executable with the downloaded file, then launch it. Installation is manual. Saved settings and zones are retained.
+
+### Discord support
+
+Join the [SCUM MiniMap Discord](https://discord.gg/MYzcGaFDMn) for downloads, release notices, guides, and support in English and Argentine Spanish. Select either or both languages during Discord Onboarding; change the selection later in **Channels & Roles**. The app's language setting is separate from Discord's language selection.
 
 ---
 
@@ -88,7 +94,7 @@ Complete bilingual support in English and Argentine Spanish (`es-AR`). Switch in
 
 ## Architecture & Anticheat Safety
 
-SkynettMiniMap is designed from the ground up for strict compatibility with Easy Anti-Cheat (EAC):
+SCUM MiniMap runs as an external Windows application:
 
 * **Zero DLL Injection:** Operates entirely outside the SCUM process space as a standard layered Windows desktop utility.
 * **No Game Memory Access:** Does not attach debuggers, inspect process RAM, hook DirectX/Vulkan APIs, or modify game files.
@@ -119,23 +125,11 @@ All user settings, logs, and custom assets are stored in:
 
 ---
 
-## Building from Source
+## Repository contents
 
-The repository includes embedded road navigation networks, default zones, and high-resolution map assets:
+This public repository contains documentation and downloadable releases. Application source, development scripts, map assets, and Discord administration files are maintained separately and are not included in a public clone.
 
-```powershell
-# Clone the repository
-git clone https://github.com/Mike-Rafone-SCUM/MiniMap.git
-cd MiniMap
-
-# Run the automated build, regression tests, and packaging script
-.\Build-GitHubRelease.ps1
-```
-
-Compiled binaries and release packages appear in `release/github/vX.Y.Z/`:
-* `SkynettMiniMap.exe`: Standalone release executable.
-* `SkynettMiniMap.zip`: Complete distribution archive.
-* `update.txt`: Manifest containing ProductVersion and SHA-256 checksum for auto-updater verification.
+Each GitHub release provides `SkynettMiniMap.exe`, the complete `SkynettMiniMap.zip` package, and the `update.txt` version and SHA-256 manifest. Use the download links above to install the app.
 
 ---
 
