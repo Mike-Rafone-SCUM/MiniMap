@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.3.1] - 2026-09-13
+
+### Added
+- **Right-Click Deletion of Custom Waypoints**: Added context menu and Delete key shortcut in the waypoint search list to delete custom markers directly without walking back to them.
+- **Smart POI Label LOD**: Automatically suppresses cluttered local town, farm, military, and faction text labels when zoomed out (< 2.5x), displaying only major Cities, Traders, and Custom Waypoints to keep roads and terrain crystal clear.
+- **Independent Zone Label Toggle**: Added `ShowZoneLabels` setting to toggle POI text labels on/off independently from zone borders.
+- **Smart Label LOD Toggle**: Added `SmartLabelLod` setting in Map and zones to toggle automatic zoom-based label decluttering.
+
+### Fixed
+- **Full Map Mode (M Key)**: Added 0x4D to the low-level keyboard hook filter and resolved timing conflict with user activity detection, enabling the M key to transition the minimap into a full-screen rectangle at 100% opacity covering SCUM's in-game map. Added auto-restore on Esc, cursor disappearance, or game focus loss.
+- **Waypoint Name Input Focus**: Configured custom marker prompt dialog with tab index 0, active control assignment, and foreground window activation so the text input box immediately draws keyboard focus and ready cursor.
+- **Live Settings Update & Invalidation**: Wired up `SettingsChanged()` and expanded `terrainKey` caching so toggling any POI category or label filter immediately refreshes the map and persists to `settings.ini`.
+
 ## [1.3.0] - 2026-09-13
 
 ### Added

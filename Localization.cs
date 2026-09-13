@@ -140,6 +140,10 @@ namespace ScumMiniMap {
             { "ShowFactions", "Show faction locations" },
             { "ShowMilitary", "Show military sites" },
             { "ShowCustomWaypoints", "Show custom waypoints" },
+            { "ShowZoneLabels", "Show POI names" },
+            { "SmartLabelLod", "Hide detailed tags when zoomed out" },
+            { "DeleteWaypoint", "Delete custom waypoint" },
+            { "DeleteWaypointNamed", "Delete waypoint \"{0}\"" },
             { "ZoneLabelSize", "Zone label size" },
             { "MapZonesScreenshot", "Map zones from screenshot..." },
 
@@ -345,6 +349,10 @@ namespace ScumMiniMap {
             { "ShowFactions", "Mostrar ubicaciones de faccion" },
             { "ShowMilitary", "Mostrar sitios militares" },
             { "ShowCustomWaypoints", "Mostrar puntos personalizados" },
+            { "ShowZoneLabels", "Mostrar nombres de puntos" },
+            { "SmartLabelLod", "Ocultar etiquetas detalladas al alejar" },
+            { "DeleteWaypoint", "Eliminar punto personalizado" },
+            { "DeleteWaypointNamed", "Eliminar punto \"{0}\"" },
             { "ZoneLabelSize", "Tamaño de etiqueta de zona" },
             { "MapZonesScreenshot", "Mapear zonas desde captura de pantalla..." },
 

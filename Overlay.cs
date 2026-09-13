@@ -196,7 +196,7 @@ namespace ScumMiniMap {
                     LastUserInputTime=DateTime.UtcNow;
                     if(fresh && isDown) LastFreshKeyDownTime=DateTime.UtcNow;
                 }
-                if(k==0x54 || k==0x0D || k==0x1B || k==0xBF || k==0x6F || k==0x21 || k==0x22 || k==0x23 || k==0x24 || k==0x2D || k==0x2E) {
+                if(k==0x54 || k==0x0D || k==0x1B || k==0xBF || k==0x6F || k==0x21 || k==0x22 || k==0x23 || k==0x24 || k==0x2D || k==0x2E || k==0x4D) {
                     if(fresh && isDown) action(k);
                 }
             }
@@ -231,7 +231,7 @@ namespace ScumMiniMap {
                 if(value) {
                     savedSize=Size;
                     savedLocation=Location;
-                    Rectangle area=Screen.FromControl(this).WorkingArea;
+                    Rectangle area=Screen.FromControl(this).Bounds;
                     MaximumSize=new Size(area.Width,area.Height);
                     Size=new Size(area.Width,area.Height);
                     Location=area.Location;

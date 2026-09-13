@@ -159,21 +159,23 @@ namespace ScumMiniMap {
                 g.DrawLine(whitePen,cx+4f,cy+4f,cx+2.5f,cy+2.5f);
             }
         }
-        public static void Draw(Graphics g,IEnumerable<MapZone> zones,RectangleF rect,bool labels,float fontSize=9f,bool showGasStations=true,HashSet<ZoneCategory> hidden=null) {
+        public static void Draw(Graphics g,IEnumerable<MapZone> zones,RectangleF rect,bool showPolygons,float fontSize=9f,bool showGasStations=true,HashSet<ZoneCategory> hidden=null,bool showLabels=true,bool smartLod=true,float zoom=1.0f) {
             using(Font font=new Font("Segoe UI",Math.Max(6f,Math.Min(24f,fontSize)),FontStyle.Bold)) {
                 StringFormat sf=new StringFormat { Alignment=StringAlignment.Center,LineAlignment=StringAlignment.Center };
                 List<RectangleF> placed=new List<RectangleF>();
                 List<KeyValuePair<string,RectangleF>> labelItems=new List<KeyValuePair<string,RectangleF>>();
+                bool zoomedOut = smartLod && zoom < 2.5f;
                 foreach(MapZone zone in zones??Enumerable.Empty<MapZone>()) {
                     if(zone==null || zone.Points==null || zone.Points.Length==0) continue;
                     if(hidden!=null && hidden.Contains(zone.Category)) continue;
                     if(zone.Points.Length>=3) {
-                        if(!labels) continue;
+                        if(!showPolygons) continue;
                         PointF[] points=zone.Points.Select(p=>new PointF(rect.Left+p.X*rect.Width,rect.Top+p.Y*rect.Height)).ToArray();
                         Color color=Color.FromArgb(zone.Argb);
-                        using(Brush fill=new SolidBrush(Color.FromArgb(45,color)))g.FillPolygon(fill,points);
-                        using(Pen pen=new Pen(Color.FromArgb(210,color),2))g.DrawPolygon(pen,points);
-                        if(!string.IsNullOrEmpty(zone.Name)) {
+                        using(Brush fill=new SolidBrush(Color.FromArgb(40,color)))g.FillPolygon(fill,points);
+                        using(Pen pen=new Pen(Color.FromArgb(200,color),1.8f))g.DrawPolygon(pen,points);
+                        bool isMajor = zone.Category==ZoneCategory.City || zone.Category==ZoneCategory.Trader || zone.Category==ZoneCategory.Custom;
+                        if(showLabels && (!zoomedOut || isMajor) && !string.IsNullOrEmpty(zone.Name)) {
                             string displayName = Localization.GetZoneName(zone.Name);
                             float cx=points.Average(p=>p.X),cy=points.Average(p=>p.Y);
                             SizeF sz=g.MeasureString(displayName,font);
@@ -191,15 +193,30 @@ namespace ScumMiniMap {
                             placed.Add(box);
                             labelItems.Add(new KeyValuePair<string,RectangleF>(displayName,box));
                         }
-                    } else if(showGasStations) {
+                    } else {
                         float cx=rect.Left+zone.Points[0].X*rect.Width, cy=rect.Top+zone.Points[0].Y*rect.Height;
                         if(cx>=rect.Left-20 && cx<=rect.Right+20 && cy>=rect.Top-20 && cy<=rect.Bottom+20) {
-                            DrawFuelIcon(g,cx,cy);
+                            if(zone.IsFuelStation) {
+                                if(showGasStations) DrawFuelIcon(g,cx,cy);
+                            } else {
+                                Color c=Color.FromArgb(zone.Argb);
+                                using(Brush shadow=new SolidBrush(Color.FromArgb(90,0,0,0))) g.FillEllipse(shadow,cx-7,cy-7+1.5f,14,14);
+                                using(Brush badge=new SolidBrush(c)) g.FillEllipse(badge,cx-7,cy-7,14,14);
+                                using(Pen border=new Pen(Color.FromArgb(220,20,25,30),1.4f)) g.DrawEllipse(border,cx-7,cy-7,14,14);
+                                using(Brush dot=new SolidBrush(Color.White)) g.FillEllipse(dot,cx-2.5f,cy-2.5f,5,5);
+                                if(showLabels && !string.IsNullOrEmpty(zone.Name)) {
+                                    string displayName = Localization.GetZoneName(zone.Name);
+                                    SizeF sz=g.MeasureString(displayName,font);
+                                    RectangleF box=new RectangleF(cx-sz.Width/2f-4f,cy+9f,sz.Width+8f,sz.Height+4f);
+                                    placed.Add(box);
+                                    labelItems.Add(new KeyValuePair<string,RectangleF>(displayName,box));
+                                }
+                            }
                         }
                     }
                 }
                 foreach(KeyValuePair<string,RectangleF> item in labelItems) {
-                    using(Brush bg=new SolidBrush(Color.FromArgb(170,12,17,22)))g.FillRectangle(bg,item.Value);
+                    using(Brush bg=new SolidBrush(Color.FromArgb(180,12,17,22)))g.FillRectangle(bg,item.Value);
                     using(Pen border=new Pen(Color.FromArgb(130,255,255,255),1f))g.DrawRectangle(border,item.Value.X,item.Value.Y,item.Value.Width,item.Value.Height);
                     g.DrawString(item.Key,font,Brushes.Black,item.Value.X+item.Value.Width/2f+1f,item.Value.Y+item.Value.Height/2f+1f,sf);
                     g.DrawString(item.Key,font,Brushes.White,item.Value.X+item.Value.Width/2f,item.Value.Y+item.Value.Height/2f,sf);
