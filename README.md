@@ -1,4 +1,4 @@
-# SCUM MiniMap v1.3.3
+# SCUM MiniMap v1.3.5
 
 SCUM MiniMap is an external, real-time tactical radar HUD overlay and navigation utility engineered specifically for SCUM players. It renders an active minimap displaying player coordinates, heading, elevation, road network navigation, categorized points of interest (POIs), and custom waypoints without modifying game memory, injecting DLLs, or violating Easy Anti-Cheat (EAC) policies.
 
@@ -93,7 +93,7 @@ SkynettMiniMap is designed from the ground up for strict compatibility with Easy
 * **Zero DLL Injection:** Operates entirely outside the SCUM process space as a standard layered Windows desktop utility.
 * **No Game Memory Access:** Does not attach debuggers, inspect process RAM, hook DirectX/Vulkan APIs, or modify game files.
 * **Clipboard-Based Coordinate Acquisition:** Samples coordinates strictly through Windows standard clipboard copy commands triggered while SCUM is focused.
-* **Safe Input Suspension:** Automatically pauses coordinate polling while typing in chat (after pressing <kbd>T</kbd>), while modifier keys are held, or when SCUM loses window focus.
+* **Safe Input Suspension:** Automatically pauses coordinate polling while aiming down sights (holding right mouse button in ADS), while typing in chat (after pressing <kbd>T</kbd> or <kbd>/</kbd>), while modifier keys are held, or when SCUM loses window focus. Includes a 600ms cooldown after releasing ADS to prevent macro interference during gunplay.
 
 ---
 
