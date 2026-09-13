@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.3.2] - 2026-09-13
+
+### Fixed
+- **Full Map Centering**: Calibrated Full Map Mode (M key) to detect the SCUM game monitor and center the 1:1 square overlay horizontally (`(ScreenWidth - ScreenHeight) / 2`), matching the in-game map position and covering it at 100% opacity without obscuring peripheral HUD elements.
+
 ## [1.3.1] - 2026-09-13
 
 ### Added

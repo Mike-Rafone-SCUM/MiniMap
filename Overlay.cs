@@ -231,10 +231,18 @@ namespace ScumMiniMap {
                 if(value) {
                     savedSize=Size;
                     savedLocation=Location;
-                    Rectangle area=Screen.FromControl(this).Bounds;
+                    Screen scr=Screen.FromControl(this);
+                    try {
+                        IntPtr fg=Native.GetForegroundWindow();
+                        if(fg!=IntPtr.Zero && Native.IsGameWindow(fg)) scr=Screen.FromHandle(fg);
+                    } catch {}
+                    Rectangle area=scr.Bounds;
+                    int mapDim=area.Height;
+                    int mapX=area.Left+(area.Width-mapDim)/2;
+                    int mapY=area.Top;
                     MaximumSize=new Size(area.Width,area.Height);
-                    Size=new Size(area.Width,area.Height);
-                    Location=area.Location;
+                    Size=new Size(mapDim,mapDim);
+                    Location=new Point(mapX,mapY);
                 } else {
                     MaximumSize=new Size(800,800);
                     Size=savedSize;

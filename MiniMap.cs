@@ -17,9 +17,9 @@ using System.Drawing.Drawing2D;
 [assembly: AssemblyCompany("MikeRafone")]
 [assembly: AssemblyProduct("SkynettMiniMap")]
 [assembly: AssemblyCopyright("Copyright Â© 2026 MikeRafone")]
-[assembly: AssemblyVersion("1.3.1.0")]
-[assembly: AssemblyFileVersion("1.3.1.0")]
-[assembly: AssemblyInformationalVersion("1.3.1")]
+[assembly: AssemblyVersion("1.3.2.0")]
+[assembly: AssemblyFileVersion("1.3.2.0")]
+[assembly: AssemblyInformationalVersion("1.3.2")]
 
 namespace ScumMiniMap {
     public sealed class Position {
@@ -546,8 +546,8 @@ namespace ScumMiniMap {
             OverlayTheme.Sections(bar);
             bar.ResumeLayout(true);
         }
-        public const string VersionString = "1.3.1";
-        public static readonly Version CurrentVersion = new Version(1, 3, 1, 0);
+        public const string VersionString = "1.3.2";
+        public static readonly Version CurrentVersion = new Version(1, 3, 2, 0);
         bool updateCheckRunning;
         async void CheckForUpdates(bool userInitiated) {
             if(updateCheckRunning || closing || IsDisposed || diagnosticMode) return;
@@ -1488,9 +1488,10 @@ namespace ScumMiniMap {
             }
             // Apply subtle edge fade strictly within the map bounds and fade as player approaches/reaches the edge of the world map
             Rectangle mapBounds=new Rectangle(0,mapY,bitmap.Width,mapH);
-            float side=Math.Min(mapBounds.Width,mapBounds.Height)*zoom;
+            float currentZoom=fullMapActive?1.0f:zoom;
+            float side=Math.Min(mapBounds.Width,mapBounds.Height)*currentZoom;
             PointF p=position==null?new PointF(.5f,.5f):(motion!=null && motion.Point.X>0?motion.Point:ToMap(position));
-            PointF centrePt=zoom==1?new PointF(.5f,.5f):p;
+            PointF centrePt=(fullMapActive || currentZoom==1)?new PointF(.5f,.5f):p;
             int mapLeft=(int)Math.Round(mapBounds.Left+mapBounds.Width/2f-side*centrePt.X);
             int mapTop=(int)Math.Round(mapBounds.Top+mapBounds.Height/2f-side*centrePt.Y);
             int mapRight=(int)Math.Round(mapLeft+side);
