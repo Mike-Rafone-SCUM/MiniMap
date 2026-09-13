@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.3.3] - 2026-09-13
+
+### Added
+- **Full-Map Mouse Wheel Zoom & Drag Pan**: Full Map Mode (`M` key) now supports interactive mouse wheel zooming (1.0x to 16.0x) and left-click drag panning across the island without stealing keyboard focus from SCUM. Right-click resets to default 1.0x view.
+- **Floating Opacity Slider**: Added a sleek glass pill control in the upper right of the full-screen map with real-time opacity adjustment (20% to 100%), allowing players to see through the map overlay directly into the game world.
+- **Independent Bunker POI Filter**: Separated military bunkers and abandoned bunkers from the general military category, providing an independent toggle in Map & Zone settings.
+
+### Fixed
+- **Full-Map Display Height**: Removed WinForms form maximum size constraints (`MaximumSize = Size.Empty`), allowing the full map mode overlay to expand to the full display height (up to 1152p / 1440p / 4K) directly covering SCUM's native in-game map.
+
 ## [1.3.2] - 2026-09-13
 
 ### Fixed

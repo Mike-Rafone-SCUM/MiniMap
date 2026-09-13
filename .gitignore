@@ -10,11 +10,21 @@
 __pycache__/
 *.pyc
 *.png
-!/map.png
 .env
 .env.*
 /TestHarness.cs
 /releases-repository/
+
+# Source code, assets and development scripts (excluded from public repository)
+*.cs
+*.ps1
+*.cmd
+*.py
+requirements.txt
+*.bin
+*.tsv
+.github/
+tests/
 
 # Operator notes, local experiments and Discord administration
 /AGENTS.md
