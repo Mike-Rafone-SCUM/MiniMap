@@ -1,0 +1,30 @@
+# Generated builds and local user data
+/release/
+*.exe
+*.zip
+*.log
+*.partial
+*.bak
+/settings.ini
+/settings.ini.*
+__pycache__/
+*.pyc
+*.png
+!/map.png
+.env
+.env.*
+/TestHarness.cs
+/releases-repository/
+
+# Operator notes, local experiments and Discord administration
+/AGENTS.md
+/Setup-DiscordServer.ps1
+/*.npy
+/detected-*.tsv
+/*.json
+/markers.php
+/nerdmaps_index.txt
+/readback_ann.txt
+/skynett-community-message.md
+/test.py
+/test_detection.py
