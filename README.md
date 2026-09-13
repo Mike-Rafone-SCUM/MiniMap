@@ -63,10 +63,11 @@ Complete bilingual support in English and Argentine Spanish (`es-AR`). Switch in
 
 | Input | Mode | Action |
 |---|---|---|
-| <kbd>M</kbd> | In-Game | Toggle Full Map Mode (centered full-height overlay) |
-| <kbd>Mouse Wheel</kbd> | Full Map | Zoom in and out smoothly (1.0x to 16.0x) |
+| <kbd>M</kbd> | In-Game | Toggle Full Map Mode (centered full-height overlay; ignored while typing in chat) |
+| <kbd>Left Click</kbd> | Full Map | Click anywhere to place/route GPS marker (re-click marker to clear) |
+| <kbd>Mouse Wheel</kbd> | Full Map | Zoom in and out smoothly (1.0x to 16.0x toward cursor) |
 | <kbd>Left Click + Drag</kbd> | Full Map | Pan across the map (when zoomed in) or drag opacity slider |
-| <kbd>Right Click</kbd> | Full Map | Reset full-map zoom to 1.0x and center view |
+| <kbd>Right Click</kbd> | Full Map | Reset zoom to 1.0x (or clear active GPS waypoint if at 1.0x) |
 | <kbd>Home</kbd> | Any | Open / Close Settings panel |
 | <kbd>Delete</kbd> | Any | Open Waypoint Search & Destination Navigation |
 | <kbd>End</kbd> | Any | Show / Hide Minimap Overlay |

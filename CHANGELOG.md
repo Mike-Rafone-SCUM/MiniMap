@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.3.4] - 2026-09-13
+
+### Added
+- **Click-to-Place GPS Marker**: Left-clicking anywhere on the full-screen map now instantly sets a GPS waypoint and navigation route directly to that point. Snaps to named POIs when clicked near one, or creates a sector-labeled GPS marker (e.g., `GPS Marker (C3)`). Re-clicking the active marker or right-clicking at 1.0x zoom clears the waypoint.
+
+### Fixed
+- **In-Game Chat Guard for M Key**: Gated `M` key handling behind active chat state across both the low-level keyboard hook and physical polling loop. Pressing `T` or `/` pauses hotkey triggers, ensuring typing words containing the letter 'm' in in-game chat will never accidentally trigger or toggle Full Map mode until `Enter` or `Escape` closes the chat box.
+
 ## [1.3.3] - 2026-09-13
 
 ### Added
