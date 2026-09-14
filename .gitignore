@@ -25,6 +25,7 @@ requirements.txt
 *.tsv
 .github/
 tests/
+/research/
 
 # Operator notes, local experiments and Discord administration
 /AGENTS.md

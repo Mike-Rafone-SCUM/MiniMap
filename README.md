@@ -1,4 +1,4 @@
-# SCUM MiniMap v1.3.8
+# SCUM MiniMap v1.3.9
 
 SCUM MiniMap is an external map overlay and navigation utility for SCUM, made for the Skynett community. It displays player coordinates, heading, elevation, road routes, points of interest, and custom waypoints. It does not read game memory or inject DLLs; this is not an official anticheat certification.
 
@@ -133,6 +133,20 @@ Each GitHub release provides `SkynettMiniMap.exe`, the complete `SkynettMiniMap.
 
 ---
 
+## Attributions & Third-Party Credits
+
+SCUM MiniMap incorporates public community data, open-source libraries, and game references with sincere appreciation:
+
+* **[Scum-Map.com](https://scum-map.com)**: POI coordinate datasets (8,000+ points across 106 categories), vector hunting biome regions (`hunting_biomes.svg`), and Island Wildlife Guide species behavioral data. Maintained by Jazi and the Scum-Map community.
+* **[Davo's SCUM Interactive Map](https://davoonline.com/scummap/)**: Aquatic life spawning volume extents (`EMBEDDED_AQUATIC_LIFE`, 187 volumes) and fish species preset groupings (`FISH_SPECIES_BY_PRESET`). Created by Davo / DavoOnline.
+* **[scummymap.com](https://scummymap.com)**: Map legend definitions and reference cross-checking.
+* **Game Intellectual Property**: SCUM is developed by **Gamepires** and published by **Jagex**. All game artwork, terrain textures, sector names, item definitions, and trademarks belong to Gamepires d.o.o. and Jagex Ltd. SCUM MiniMap is an independent, non-commercial community tool made for the Skynett Gaming community.
+* **Open Source Software**: [OpenCV](https://opencv.org/) (Apache 2.0), [NumPy](https://numpy.org/) (BSD 3-Clause), [RE-UE4SS](https://github.com/UE4SS-RE/RE-UE4SS) (MIT), and [Tabler Icons](https://tabler.io/icons) (MIT).
+
+See [ATTRIBUTION.md](ATTRIBUTION.md) for full license details, source citations, and copyright notices.
+
+---
+
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for the complete history of updates, feature additions, and bug fixes.
+See [CHANGELOG.md](CHANGELOG.md) for the complete history of updates, feature additions, and bug fixes.

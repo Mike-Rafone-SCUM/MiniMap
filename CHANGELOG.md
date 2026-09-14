@@ -6,6 +6,44 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.3.9] - 2026-09-14
+
+### Added
+- **Interactive Habitat Boundaries & Spawning Extents**: Full integration of 187 aquatic volume rectangles and 4 regional hunting biomes (Mountain, Mediterranean, Continental Forest, Continental Meadow) across 24 species categories (15 fish types including radioactive carp, 9 animal species).
+- **Multi-Ring Winding Hole Geometry**: Advanced winding fill rendering and geometric point-in-polygon containment that properly excludes inner water bodies, clearings, and internal terrain holes from surrounding biome shapes.
+- **Species-Specific Presets & Exclusivity**: Dedicated species presets and filtering (e.g. Tuna, Dentex, Pike, Sardine, Radioactive Carp) with accurate habitat assignment and click-to-identify waypoints.
+- **Granular Custom Map Importer Controls**: Upgraded the Map Zones screenshot importer with comprehensive zone management controls:
+  - **Delete All Zones**: Added a safety-confirmed action to immediately clear all custom map zones from memory and disk.
+  - **Direct Zone Search & Filtering**: Real-time filter box in the zone list for finding specific zones by name or tag.
+  - **Reordering & Layer Management**: Added Up/Down controls to adjust drawing and rendering priority among overlapping zones.
+  - **Zone Duplication**: Quick one-click duplication of existing zone shapes and coordinates for fast variant creation.
+  - **Batch Recolor by Group**: Color selection can now be applied across all zones sharing the selected zone's original color.
+  - **Append vs Replace Import Mode**: Checkbox to either append newly detected or imported zones onto existing collections or replace all.
+  - **Direct File Import & Export**: Load and save custom zones to `.json` or `.tsv` files for seamless backup and sharing.
+  - **Wireframe vs Filled Polygon Mode**: Toggle translucent polygon fills or clean wireframe outlines with vertex points.
+  - **Zone Inspector & Details Status Bar**: Live display of vertex counts, center sector (e.g. B2), color hex, and total zone counts.
+  - **Quick Clear in Settings**: Added a direct "Clear all custom zones..." shortcut in Settings -> Map and zones for quick maintenance.
+- **Dedicated Full-Map Right-Side Sidebar & Clean Map Canvas**: Integrated a high-contrast dark control panel docked immediately to the right of the square map, completely removing all floating cards, buttons, or sliders from the map canvas for an unobstructed view of the island:
+  - **Pinned Tactical Header**: Real-time zoom readout with `[-]`, `[+]`, and `[1x]` reset shortcuts, smooth horizontal map opacity slider, and search button with active destination readout and one-click clear button.
+  - **General Map Layer Switches**: Instant sleek toggle switches for Custom Zones, Custom Waypoints, Gas Stations, Grid Lines, and Zone Labels.
+  - **Full POI Category System with Collapsible Accordions**:
+    - Complete accordion hierarchy for all major sections (`Bunkers`, `Vehicles`, `Hunting`, `Crops`, `Outposts`, `Buildings`, `Fishing`, `Radiation`, etc.) with `▼` / `►` foldout toggles.
+    - Master toggle switch per section supporting enabled, disabled, and partially active states, plus an active count badge (e.g. `3/7`, `6/6`).
+    - Instant **All** / **Off** master controls to toggle all POI categories across the entire map with a single click.
+    - Individual category toggle switches with custom color swatch dots (`ColorBackground`), localized titles, and live marker count badges (e.g. `WW2 bunkers (53)`, `Hunting Towers (161)`).
+  - **Embedded Wildlife Biomes Reference**: Seamlessly integrated directly into the expanded `Hunting` section, detailing the 4 regional biomes (Mediterranean `#49B7CB`, Meadow `#FFDB2B`, Forest `#41B549`, Mountain `#DDDDDD`), their resident animal fauna, and the mutant beast roaming footnote without obstructing map terrain.
+  - **Smooth Scrolling & Draggable Scrollbar**: Full vertical navigation via mouse wheel (48px per notch) and a draggable high-contrast scrollbar thumb on the right edge with clipped hit-testing.
+  - **Quick Tool Shortcuts**: Instant modals for Custom Zone Editor and Settings, along with in-game hotkey tips.
+
+### Changed
+- **Streamlined Default Map Markers**: Reduced default initial startup markers from 758 down to 154 essential landmark markers (safezone trader outposts, key underground bunkers, gas stations, police stations, vehicle repair, pharmacies, gun shops, hospitals, and lighthouses), eliminating map clutter on fresh launches.
+- **Merged Fish & Hunting Habitats**: Unified 15 fish species and 9 wildlife habitat categories directly into the primary "Fishing" and "Hunting" sections in the POI filter dialog, rather than displaying redundant separate habitat sections.
+- **Habitats Disabled by Default**: All dense habitat boundary layers now start turned off by default for clean initial exploration, while remaining easily toggled via the quick activity buttons in the POI filter dialog.
+
+### Fixed
+- **Settings Reopening & Persistence**: Resolved an early initialization issue where pre-existing settings files could fail to load saved filter configurations on startup.
+- **Small Zone Selection Priority**: Ensured smaller specific fishing spots and local waypoints take precedence over large surrounding biome regions during hit testing and map clicks.
+
 ## [1.3.8] - 2026-09-13
 
 ### Added
