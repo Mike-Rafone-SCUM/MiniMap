@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.3.14] - 2026-09-15
+
+### Changed
+- **Reliable In-Game Hotkeys**: Routed global hotkey callbacks safely through the application UI thread and added one-shot fallback detection for settings, overlay visibility, search, waypoint, and zoom controls when Windows misses a hook event.
+- **Safer Full-Map Input**: The `M` map toggle remains exclusively chat-aware, so typing `m` in SCUM chat cannot open or close the full map.
+- **Automatic Update Installation**: Launch checks now prompt immediately when a newer verified release is available. After approval, SCUM MiniMap downloads the update to a staging file, verifies its SHA-256 checksum, closes, replaces the prior executable, and restarts itself.
+
+### Fixed
+- **Aim Down Sights Input**: Right mouse button input now always passes through the overlay to SCUM, including while the full map is visible, so the overlay cannot swallow an ADS press.
+- **Intermittent Chat Map Opening**: Removed the chat-unaware hardware polling route that could toggle the full map while text was being entered.
+- **Unresponsive Overlay Controls**: Prevented cross-thread hotkey handling from leaving menu, settings, or overlay UI in an incomplete state.
+
 ## [1.3.9] - 2026-09-14
 
 ### Added
@@ -41,6 +53,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **Habitats Disabled by Default**: All dense habitat boundary layers now start turned off by default for clean initial exploration, while remaining easily toggled via the quick activity buttons in the POI filter dialog.
 
 ### Fixed
+- **Coordinate Calibration & Road Alignment**: Calibrated world origin $(617718, 618618)$ with recompiled road network graph and sector grid, aligning player in-game position, vehicle road splines, and coastline features accurately with the high-resolution map.
+- **Minimap Jitter & Motion Smoothing**: Removed discrete quantized terrain caching steps, restoring smooth 25 Hz floating-point rendering during movement while preserving idle performance caching.
+- **Optimized Map Asset Loading**: Integrated the optimized 10.6 MB map texture into application resources and eliminated outdated local AppData asset shadowing.
 - **Settings Reopening & Persistence**: Resolved an early initialization issue where pre-existing settings files could fail to load saved filter configurations on startup.
 - **Small Zone Selection Priority**: Ensured smaller specific fishing spots and local waypoints take precedence over large surrounding biome regions during hit testing and map clicks.
 
