@@ -6,6 +6,58 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.0] - 2026-09-17
+
+### Added
+- **Customizable Player Heading Cone & Position Dot Color**: Users can now customize the color of their heading vision cone and player dot in Settings or the overlay context menu, with real-time saving and configuration persistence.
+- **Tactical Section Headers & Dropdown Controls**: Built-in `TacticalSectionHeader` with interactive amber indicator bars and vector chevrons, paired with custom dark-themed `TacticalComboBox` controls.
+- **Contextual Settlement & Sector Intelligence Engine**: Intelligently names POIs based on spatial proximity to 61 settlements, bunker sector codes, and natural singularized landmark labels.
+
+### Changed
+- **Purged All Blue Palette Elements**: Completely redesigned `OverlayTheme` to authentic military tactical carbon (`#0C0C0C`), matte graphite plates, milled bronze-steel borders (`#32302C`), and high-contrast survival hazard amber (`#FF9F1C`).
+- **Tactical Dialog Redesign**: Converted "Save Waypoint" and "Remove Waypoint" prompts from standard OS windows into frameless tactical hardware interfaces with custom buttons, fields, and accent headers.
+- **Settings Menu Visual Overhaul**: Eliminated native white scrollbars and cramped layouts with clean collapsible sections and dark explorer scroll containers.
+- **Navigation Pill Geometry & Illumination**: Re-aligned the circular minimap navigation pill 3px lower flush against the bottom bezel and added reactive route-color illumination when actively routing.
+- **In-Game Chat Channel Cycling & Map Protection**: Fixed an issue where cycling chat channels with Tab unlatched the chat-paused gate and caused typing to inadvertently open the full map. ChatState now treats Tab and regular keystrokes as active session extensions while open, and closing full-map mode when chat opens preserves the active chat pause state rather than resetting it.
+- **Stabilized Map & Player Motion**: Resolved map and player wobble, jitter, and desync across all modes. In minimap mode, the player marker and feeder origin are mathematically locked to the exact geometric center, while the background map moves smoothly without 0.25-pixel staircasing. MapMotion duration now smoothly spans the full 1-second sampling interval instead of stopping dead for 500ms, stationary deadbands suppress idle floating-point noise, and auto-zoom is gated to vehicle speeds (> 18 km/h) to eliminate scale pumping on foot.
+- **Smooth Ping-Pong Location Ticker**: Overhauled infobar text scrolling for locations that exceed the banner width. Replaced sudden edge wrapping with continuous sinusoidal ease-in-out bouncing (scrolling to the end, pausing, and smoothly gliding back to the start) paired with subpixel anti-aliased text rendering to eliminate integer pixel snapping.
+- **Ticker Perpetual Reset & Render Cadence Fix**: Isolated dynamic distance and ETA counter digits using base semantic keys (`GetScrollBaseKey`) so periodic 1-second GPS coordinate polls do not reset the infobar marquee cycle back to start. Refined render timer pacing to 50ms (20 FPS) and relaxed terrain background caching granularity to 0.125px (`Round(left * 8)`) to eliminate UI-thread message pump starvation during movement.
+
+## [1.3.18] - 2026-09-16
+
+### Changed
+- Automated build packaging update.
+- Performance refinements and maintenance release.
+
+## [1.3.17] - 2026-09-16
+
+### Changed
+- Automated build packaging update.
+- Performance refinements and maintenance release.
+
+## [1.3.16] - 2026-09-16
+
+### Changed
+- Automated build packaging update.
+- Performance refinements and maintenance release.
+
+## [1.3.15] - 2026-09-16
+
+### Changed
+- Automated build packaging update.
+- Performance refinements and maintenance release.
+
+## [Unreleased]
+
+### Added
+- **Full-Map Waypoint Action**: Full-map right-click options can now save a named custom waypoint at the clicked map location using the existing persistent cyan-marker workflow.
+- **SCUM Key Rebinding Wizard**: Settings can capture non-default SCUM Map and Chat bindings and persist them for full-map toggling and chat-safe tracking.
+- **Complete SCUM Binding Capture**: The rebinding wizard now captures Map, Chat, and the coordinate-copy modifier/key, removing the hard-coded Ctrl+C conflict for custom free-look and other bindings.
+- **Zone Editor Stability**: Full-map and settings launches now share guarded editor startup, with malformed saved zone entries normalized instead of causing an unhandled exception.
+
+### Changed
+- **Infobar Layout**: Removed the `AUTO | Xs ago` status tag and added clipped horizontal scrolling for location strings that exceed the infobar width.
+
 ## [1.3.14] - 2026-09-15
 
 ### Changed

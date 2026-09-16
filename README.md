@@ -34,7 +34,7 @@ Join the [SCUM MiniMap Discord](https://discord.gg/MYzcGaFDMn) for downloads, re
 ### In-Game Full Map Mode (M Key)
 Pressing <kbd>M</kbd> during gameplay seamlessly transitions the minimap into a full-scale, 1:1 square tactical map centered directly over SCUM's built-in in-game map.
 * **Full Monitor Height & Centering:** Unconstrained display geometry detection expands the overlay to the full display height (1080p, 1152p, 1440p, 4K) and horizontally centers it (`(ScreenWidth - ScreenHeight) / 2`), leaving peripheral HUD elements (health, stamina, speedometer) visible.
-* **Mouse Wheel Zoom & Pan:** Roll the mouse wheel while viewing the full map to zoom smoothly from 1.0x up to 16.0x towards the cursor. Click and drag with the left mouse button to pan across the island. Right-click instantly resets to the centered 1.0x view.
+* **Mouse Wheel Zoom & Pan:** Roll the mouse wheel while viewing the full map to zoom smoothly from 1.0x up to 16.0x towards the cursor. Click and drag with the left mouse button to pan across the island. Right-click opens map actions, including resetting the view and adding a custom waypoint at the clicked location.
 * **Floating Opacity Slider:** An interactive glass pill at the top-right corner allows adjusting overlay opacity in real time from 20% to 100%, letting you see through the overlay directly into the game environment.
 * **Non-Activating Window Hit-Testing:** Interacting with the map (zooming, panning, sliding opacity) uses non-activating hit testing so SCUM never loses keyboard focus or gameplay responsiveness.
 * **Smart Auto-Restore:** Restores normal minimap dimensions and position when pressing <kbd>M</kbd> again, pressing <kbd>Esc</kbd>, closing the map in SCUM (detected via cursor hiding), or switching away from the game.
@@ -43,6 +43,7 @@ Pressing <kbd>M</kbd> during gameplay seamlessly transitions the minimap into a 
 * **Save at Current Location (Insert Key):** Press <kbd>Insert</kbd> while playing to capture your current GPS coordinates. An input dialog immediately captures keyboard focus to let you name the location, saving it persistently to `zones.tsv` with a cyan marker.
 * **List Management & Right-Click Deletion:** Open the waypoint list (<kbd>Delete</kbd> key) to search, navigate to, or manage locations. Right-clicking any custom waypoint displays a context menu to delete it, or highlight it and press <kbd>Delete</kbd>.
 * **Proximity Clearing:** Pressing <kbd>Insert</kbd> within 50 meters of an existing custom waypoint prompts you to delete it directly in the field.
+* **SCUM Key Rebinding Wizard:** Settings can capture every SCUM binding used by MiniMap: Map, Chat, and the coordinate-copy modifier/key. This prevents custom bindings such as Ctrl for free look from moving the camera during tracking.
 
 ### Road-Aware GPS Navigation
 * **A* Driving Route Pathfinding:** Real-time pathfinding across SCUM's road network calculates driving trajectories, turns, and remaining road distance in milliseconds.
@@ -73,7 +74,7 @@ Complete bilingual support in English and Argentine Spanish (`es-AR`). Switch in
 | <kbd>Left Click</kbd> | Full Map | Click anywhere to place/route GPS marker (re-click marker to clear) |
 | <kbd>Mouse Wheel</kbd> | Full Map | Zoom in and out smoothly (1.0x to 16.0x toward cursor) |
 | <kbd>Left Click + Drag</kbd> | Full Map | Pan across the map (when zoomed in) or drag opacity slider |
-| <kbd>Right Click</kbd> | Full Map | Reset zoom to 1.0x (or clear active GPS waypoint if at 1.0x) |
+| <kbd>Right Click</kbd> | Full Map | Open map actions: add custom waypoint here, reset zoom, or clear active GPS waypoint |
 | <kbd>Home</kbd> | Any | Open / Close Settings panel |
 | <kbd>Delete</kbd> | Any | Open Waypoint Search & Destination Navigation |
 | <kbd>End</kbd> | Any | Show / Hide Minimap Overlay |
@@ -99,7 +100,7 @@ SCUM MiniMap runs as an external Windows application:
 * **Zero DLL Injection:** Operates entirely outside the SCUM process space as a standard layered Windows desktop utility.
 * **No Game Memory Access:** Does not attach debuggers, inspect process RAM, hook DirectX/Vulkan APIs, or modify game files.
 * **Clipboard-Based Coordinate Acquisition:** Samples coordinates strictly through Windows standard clipboard copy commands triggered while SCUM is focused.
-* **Safe Input Suspension:** Automatically pauses coordinate polling while aiming down sights (holding right mouse button in ADS), while typing in chat (after pressing <kbd>T</kbd> or <kbd>/</kbd>), while modifier keys are held, or when SCUM loses window focus. Includes a 600ms cooldown after releasing ADS to prevent macro interference during gunplay.
+* **Safe Input Suspension:** Automatically pauses coordinate polling while aiming down sights (holding right mouse button in ADS), while typing in chat (after pressing the configured SCUM Chat key or <kbd>/</kbd>), while modifier keys are held, or when SCUM loses window focus. Includes a 600ms cooldown after releasing ADS to prevent macro interference during gunplay.
 
 ---
 
