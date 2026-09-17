@@ -9,13 +9,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [1.4.3] - 2026-09-17
 
 ### Added
-- **Full Bridge Traversal & Island Routing**: Overhauled the GPS routing engine to navigate seamlessly across bridges. Embedded high-precision physical bridge curves and abutment connections for the East Suspension Bridge (A0 to Z0), West Highway Bridge (A3 to Z3 Rogoznica), Central Diagonal Rail/Road Bridge (A2 to Z2), and C2 Dam Crest Crossing.
+- **Full Bridge Traversal & Island Routing**: Overhauled the GPS routing engine to navigate seamlessly across bridges. Embedded high-precision physical bridge curves and abutment connections for the East Suspension Bridge (A0 to Z0), West Highway Bridge (A3 to Z3 Rogoznica), Central Diagonal Railway Bridge (A2 to Z2), Central-East Highway Bridge (A1 to Z1), and C2 Dam Crest Crossing.
+- **Strict Land/Bridge Routing & Water Avoidance**: Enhanced pathfinding prioritizing continuous road and bridge traversal across the entire mainland and southern islands. Nautical water transit is strictly reserved as an unavoidable fallback for isolated offshore islands lacking physical crossings.
 - **Multi-Modal Island Transit Engine**: Added intelligent multi-modal routing for offshore islands without physical bridges, routing along roads to the optimal coastal departure point, indicating nautical water transit across the channel, and continuing along roads from the landing dock to the destination.
 
 ### Changed
+- **Diagonal Railway Bridge Geometry Correction**: Realigned the central diagonal railway bridge to exact surveyed mainland and southern island abutments with true straight deck curve geometry.
 - **Zero-Allocation Epoch-Indexed A* Algorithm**: Replaced heap-allocated dictionary lookups with flat primitive arrays and an epoch-based O(1) state reset mechanism, eliminating garbage-collection overhead and reducing full-map pathfinding query latency to under 1 millisecond.
-- **Topological Micro-Gap Healing**: Implemented startup graph analysis that detects and dynamically stitches over 1,200 digitized micro-gaps (<= 35m) at road forks, intersections, and river crossings, unifying 94.3% of the road network into a continuous navigable graph.
-- **Multi-Candidate Snapping & Direct Walk Optimization**: Upgraded road snapping to evaluate the top 3 nearest road candidates, avoiding dead-end spurs. Added smart direct-walk fallback when direct walking distance is significantly shorter than an off-road detour.
+- **Two-Pass Topological Micro-Gap Healing**: Implemented dual-pass graph analysis (standard <= 35m, cross-component <= 65m) dynamically unifying 96.2% of all road network nodes into a continuous navigable graph.
+- **Multi-Candidate Snapping & Direct Walk Optimization**: Upgraded road snapping to evaluate up to 8 nearest candidates with guaranteed main-component representation. Added smart direct-walk fallback when direct walking distance is significantly shorter than an off-road detour.
 
 ## [1.4.2-HOTFIX] - 2026-09-17
 
