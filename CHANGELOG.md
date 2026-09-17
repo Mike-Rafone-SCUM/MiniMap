@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.2] - 2026-09-17
+
+### Fixed
+- **Add Waypoint Dialog Stability & Focus**: Resolved a `Win32Exception: Error creating window handle` crash and focus unresponsiveness when opening the custom waypoint prompt via the `Insert` shortcut or the full-map right-click context menu. Releasing Win32 mouse capture, resetting cursor clipping, marshalling dialog invocation past `WM_TIMER` dispatch, and setting the title bar close button `TabStop = false` ensures the name input field is immediately activated, selected, and focused with an I-beam cursor.
+- **Auto-Update Downgrade Prompt**: Fixed false-positive update notifications on local and development builds by removing the same-version SHA-256 mismatch comparison in `CheckForUpdates`, ensuring update alerts only trigger when a strictly newer release version is available on GitHub (`release.Version > CurrentVersion`).
+
 ## [1.4.1] - 2026-09-17
 
 ### Added
