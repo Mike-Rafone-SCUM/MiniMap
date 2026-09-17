@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.2-HOTFIX] - 2026-09-17
+
+### Fixed
+- **Zone Importer Base Map Preparation**: Resolved `FileNotFoundError: [Errno 2] No such file or directory: '...reference.png'` in automatic zone detection by generating the base map reference image from embedded assembly resources or local map files prior to launching Python `detect_zones.py`.
+- **Settings Menu Layout & Usability**: All configuration sections now default to expanded for instant visibility of all minimap overlay options. Added a permanent bottom-docked action footer for immediate access to telemetry, `Open Data Folder`, and `Done` buttons.
+- **WinForms Handle & GDI Exhaustion**: Eliminated GDI font handle leaks and USER object accumulation across repeated settings panel rebuilds and tactical section header rendering.
+- **Embedded Zone Detection Script Fallback**: Added candidate path search and embedded assembly manifest extraction for `detect_zones.py` when running unbundled or standalone binaries.
+
 ## [1.4.2] - 2026-09-17
 
 ### Fixed
