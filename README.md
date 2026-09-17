@@ -1,4 +1,4 @@
-﻿# SCUM MiniMap v1.3.9
+# SCUM MiniMap v1.4.1
 
 SCUM MiniMap is an external map overlay and navigation utility for SCUM, made for the Skynett community. It displays player coordinates, heading, elevation, road routes, points of interest, and custom waypoints. It does not read game memory or inject DLLs; this is not an official anticheat certification.
 
@@ -25,7 +25,7 @@ Exit the old app from its tray menu, replace the executable with the downloaded 
 
 ### Discord support
 
-Join the [SCUM MiniMap Discord](https://discord.gg/MYzcGaFDMn) for downloads, release notices, guides, and support in English and Argentine Spanish. Select either or both languages during Discord Onboarding; change the selection later in **Channels & Roles**. The app's language setting is separate from Discord's language selection.
+Join the [SCUM MiniMap Discord](https://discord.gg/MYzcGaFDMn) for downloads, release notices, guides, and support in English, Spanish (Argentina), French, German, Dutch, Russian, Chinese, Turkish, and Arabic. Select your preferred languages in **Channels & Roles** or through the Welcome gateway buttons. The app's language setting is separate from Discord's language selection.
 
 ---
 

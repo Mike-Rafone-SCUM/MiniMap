@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.1] - 2026-09-17
+
+### Added
+- **Global Multilingual Localization Expansion**: Added complete native translations for 7 new languages: **French** (`fr`), **German** (`de`), **Dutch** (`nl`), **Russian** (`ru`), **Chinese (Simplified)** (`zh-CN`), **Turkish** (`tr`), and **Arabic** (`ar`), expanding total language support to 9 languages alongside English and Argentine Spanish.
+- **Dynamic Welcome & Startup Guide Language Integration**: Integrated all 9 languages into the `StartupGuideDialog` onboarding welcome screen and Settings panel `TacticalComboBox` with instant, zero-restart live translation switching across all slides, tabs, and hardware dialogs.
+- **Full UI & POI Coverage**: Comprehensive localization across all 335 interface strings, hotkey guidance, HUD telemetry notes, keybinding wizard, POI categories, and section titles.
+
+### Fixed
+- **Zone Editor Launch Stability**: Resolved a Win32 window handle creation exception when opening the Zone Creator Wizard from the full-map sidebar overlay by safely releasing mouse capture, deferring modal invocation past the mouse-down dispatch cycle, and ensuring screen-centered dialog hierarchy.
+
 ## [1.4.0] - 2026-09-17
 
 ### Added
