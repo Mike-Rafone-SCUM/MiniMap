@@ -9,10 +9,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [1.4.4] - 2026-09-18
 
 ### Added
-- **Multi-Layer Custom Map Zones & Sidebar Management**: Expanded the full-screen map sidebar "Custom Map Zones" section into an interactive accordion container displaying all loaded custom zone layers. Each layer features an independent state switch pill and zone count badge (e.g., `[✓] FactionMap [51]`), enabling players to toggle individual layers on or off while maintaining global master control.
+- **Multi-Layer Custom Map Zones & Sidebar Management**: Expanded the full-screen map sidebar "Custom Map Zones" section into an interactive accordion container displaying all loaded custom zone layers. Each layer features an independent state switch pill and zone count badge (e.g., `[ON] FactionMap [51]`), enabling players to toggle individual layers on or off while maintaining global master control.
 - **Dynamic Live Layer Synchronization**: Integrated write-timestamp polling (`lastZonesFileWriteTimeUtc`) that automatically detects external edits to `zones.tsv` and reloads the map layers and sidebar in real time upon opening the full map without requiring an application restart.
 - **High-Contrast Selected Zone Highlighting**: Upgraded ZoneEditor selection outlines with a high-contrast dual-layer border (4.5px backing + 2.5px theme accent), providing instant visual clarity against complex terrain and overlapping circular zones.
 - **Full-Map Faction Label Visibility**: Added Faction and Custom zone categories to major landmark LOD filters in `ZoneStore.Draw`, ensuring zone names and points of interest remain clearly legible at high zoom distances.
+- **System Tray Manual Map Toggle**: Added an explicit manual full-map toggle option to the system tray context menu for direct access regardless of hardware hook state.
+
+### Changed
+- **In-Game Keybinding & Chat Guard Overhaul**: Resolved full-screen map activation (`M` key) race condition where typing-activity heuristics (`Native.UserTypingOrActive`) falsely suppressed map toggling. Upgraded `ChatState` with hook-level chat lifecycle tracking: Enter and Escape close active chat, `/` or configured chat key opens tracking, and keypresses continuously refresh the active session to prevent chat timeout mid-sentence. Re-enabled fallback key polling in `Tick()` to ensure responsive activation even under heavy game load.
+- **Automated Update Engine & Deployment Verification**: Hardened GitHub release update checks against the official `update.txt` manifest with SHA-256 pre-download validation. Enforced strict version increment comparison (`release.Version > CurrentVersion`) preventing false downgrade prompts on development builds. Implemented rate-limiting detection and exponential backoff retry handling (`UpdateRetryException`).
+- **Performance & Smoothness Sweep**: Eliminated jitter and micro-stutters during active coordinate sampling chords. Stabilized player Cone of Vision redraws and HUD telemetry ticker scrolling. Added visible clip bounds culling for zones, habitats, and markers to eliminate off-screen render overhead. Replaced scanline copying with bulk buffer memory transfers in overlay fade transitions.
 
 ### Fixed
 - **Faction War Zone Detection Engine Overhaul**: Calibrated circular template matching and non-maximum suppression (`1.45 * min(rad, orad)`) in `detect_zones.py`, achieving 100% detection accuracy on all 51 white circular zones across 1024x1024 and 2048x2048 map imports with zero mountain-snow or urban false positives.
