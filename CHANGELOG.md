@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.4] - 2026-09-18
+
+### Added
+- **Multi-Layer Custom Map Zones & Sidebar Management**: Expanded the full-screen map sidebar "Custom Map Zones" section into an interactive accordion container displaying all loaded custom zone layers. Each layer features an independent state switch pill and zone count badge (e.g., `[✓] FactionMap [51]`), enabling players to toggle individual layers on or off while maintaining global master control.
+- **Dynamic Live Layer Synchronization**: Integrated write-timestamp polling (`lastZonesFileWriteTimeUtc`) that automatically detects external edits to `zones.tsv` and reloads the map layers and sidebar in real time upon opening the full map without requiring an application restart.
+- **High-Contrast Selected Zone Highlighting**: Upgraded ZoneEditor selection outlines with a high-contrast dual-layer border (4.5px backing + 2.5px theme accent), providing instant visual clarity against complex terrain and overlapping circular zones.
+- **Full-Map Faction Label Visibility**: Added Faction and Custom zone categories to major landmark LOD filters in `ZoneStore.Draw`, ensuring zone names and points of interest remain clearly legible at high zoom distances.
+
+### Fixed
+- **Faction War Zone Detection Engine Overhaul**: Calibrated circular template matching and non-maximum suppression (`1.45 * min(rad, orad)`) in `detect_zones.py`, achieving 100% detection accuracy on all 51 white circular zones across 1024x1024 and 2048x2048 map imports with zero mountain-snow or urban false positives.
+- **Authoritative Canonical POI Mapping**: Embedded canonical landmark POI names across all 19 sectors, eliminating seasonal event naming collisions (e.g., "Halloween House" corrected to "D1 Farm").
+- **Sidebar Custom Layer Enumeration**: Removed restrictive `Category == Custom` filters in `MiniMap.cs` layer collection, ensuring zones classified as `Faction`, `Bunker`, or other categories are properly indexed under their assigned layer and counted in the sidebar badge.
+- **ZoneEditor Polygon Render Flag**: Resolved a bug in `ZoneEditor.DrawDetected` where `showPolygons` was passed as `false`, restoring solid fills and perimeter borders for all circular and polygonal zones.
+- **Windows Alt-Tab Task Switcher Deadlock**: Implemented low-level emergency modifier key release (`Ctrl`, `Alt`, `Tab`, `Win`) inside key hook handlers and added 500ms focus shielding to prevent full-screen overlay interference with the Windows DWM task switcher.
+- **Continuous Player Coordinate Sampling**: Restored continuous location tracking by decoupling modifier key state validation in coordinate copy scheduling, preventing tracking halts during complex key combinations.
+
 ## [1.4.3] - 2026-09-17
 
 ### Added
