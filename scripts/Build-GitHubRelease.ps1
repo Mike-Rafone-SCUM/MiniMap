@@ -17,7 +17,15 @@ foreach ($script in @('Test-UpdateChecker.ps1','Check-Stability.ps1')) {
 }
 & powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File (Join-Path $repoRoot 'tests\Test-AuditRegressions.ps1')
 if ($LASTEXITCODE -ne 0) { throw 'Audit regression checks failed.' }
-$output = if ($OutputDirectory) { [IO.Path]::GetFullPath($OutputDirectory) } else { Join-Path $repoRoot ("release\builds\v$version-" + [guid]::NewGuid().ToString('N')) }
+$output = if ($OutputDirectory) {
+    if ([IO.Path]::IsPathRooted($OutputDirectory)) {
+        [IO.Path]::GetFullPath($OutputDirectory)
+    } else {
+        [IO.Path]::GetFullPath((Join-Path $repoRoot $OutputDirectory))
+    }
+} else {
+    Join-Path $repoRoot ("release\builds\v$version-" + [guid]::NewGuid().ToString('N'))
+}
 if (Test-Path -LiteralPath (Join-Path $output 'SkynettMiniMap.exe')) { throw 'Output already contains a binary. Choose a fresh build directory.' }
 New-Item -ItemType Directory -Path $output -Force | Out-Null
 $exe = Join-Path $output 'SkynettMiniMap.exe'
