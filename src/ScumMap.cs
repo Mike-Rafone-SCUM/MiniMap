@@ -324,7 +324,7 @@ namespace ScumMiniMap {
                     float screenMaxX = mapBounds.Left + h.MaxX * mapBounds.Width;
                     float screenMinY = mapBounds.Top + h.MinY * mapBounds.Height;
                     float screenMaxY = mapBounds.Top + h.MaxY * mapBounds.Height;
-                    if(screenMaxX < clip.Left || screenMinX > clip.Right || screenMinY < clip.Top || screenMinY > clip.Bottom) continue;
+                    if(screenMaxX < clip.Left || screenMinX > clip.Right || screenMaxY < clip.Top || screenMinY > clip.Bottom) continue;
                     using(GraphicsPath p=h.CreatePath())
                     using(Matrix transform=new Matrix(mapBounds.Width,0,0,mapBounds.Height,mapBounds.Left,mapBounds.Top)) {
                         p.Transform(transform);
