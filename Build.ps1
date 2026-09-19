@@ -37,7 +37,7 @@ if ($Increment -or $Version) {
     $miniCsText = $miniCsText -replace '\[assembly:\s*AssemblyFileVersion\("[^"]+"\)]', "[assembly: AssemblyFileVersion(`"$verFull`")]"
     $miniCsText = $miniCsText -replace '\[assembly:\s*AssemblyInformationalVersion\("[^"]+"\)]', "[assembly: AssemblyInformationalVersion(`"$activeVer`")]"
     $miniCsText = $miniCsText -replace 'public const string VersionString\s*=\s*"[^"]+";', "public const string VersionString = `"$activeVer`";"
-    $miniCsText = $miniCsText -replace 'public static readonly Version CurrentVersion\s*=\s*new Version\([^)]+\);', "public static readonly Version CurrentVersion = new Version($major, $minor, $patch, 0);"
+    $miniCsText = $miniCsText -replace 'public static readonly Version CurrentVersion\s*=\s*new Version\([^)]+\);', "public static readonly Version CurrentVersion = new Version(VersionString);"
     [System.IO.File]::WriteAllText($miniCsPath, $miniCsText, [System.Text.Encoding]::UTF8)
 
     # 2. Update README.md

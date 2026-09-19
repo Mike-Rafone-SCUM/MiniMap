@@ -30,9 +30,41 @@ if (Test-Path -LiteralPath (Join-Path $output 'SkynettMiniMap.exe')) { throw 'Ou
 New-Item -ItemType Directory -Path $output -Force | Out-Null
 $exe = Join-Path $output 'SkynettMiniMap.exe'
 $compiler = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
-$sources = & (Join-Path (Split-Path $PSScriptRoot -Parent) 'scripts\Get-MiniMapSources.ps1')
+$sources = @(& (Join-Path (Split-Path $PSScriptRoot -Parent) 'scripts\Get-MiniMapSources.ps1'))
+
+# VersionString is the authoritative application version. Stamp a temporary
+# MiniMap source for compilation so PE/assembly metadata cannot drift from it.
+$versionFull = "$version.0"
+$releaseSourceText = $source
+$releaseSourceText = $releaseSourceText -replace '\[assembly:\s*AssemblyVersion\("[^"]+"\)\]', "[assembly: AssemblyVersion(`"$versionFull`")]"
+$releaseSourceText = $releaseSourceText -replace '\[assembly:\s*AssemblyFileVersion\("[^"]+"\)\]', "[assembly: AssemblyFileVersion(`"$versionFull`")]"
+$releaseSourceText = $releaseSourceText -replace '\[assembly:\s*AssemblyInformationalVersion\("[^"]+"\)\]', "[assembly: AssemblyInformationalVersion(`"$version`")]"
+$releaseSourceText = $releaseSourceText -replace 'public static readonly Version CurrentVersion\s*=\s*new Version\([^)]+\);', 'public static readonly Version CurrentVersion = new Version(VersionString);'
+
+$releaseMiniMap = Join-Path $output 'MiniMap.release.cs'
+[IO.File]::WriteAllText($releaseMiniMap, $releaseSourceText, [Text.UTF8Encoding]::new($false))
+
+$trackedMiniMap = [IO.Path]::GetFullPath((Join-Path $srcDir 'MiniMap.cs'))
+$replacementCount = 0
+$sources = @($sources | ForEach-Object {
+    $candidate = [IO.Path]::GetFullPath($_)
+    if ([string]::Equals($candidate, $trackedMiniMap, [StringComparison]::OrdinalIgnoreCase)) {
+        $replacementCount++
+        $releaseMiniMap
+    } else {
+        $_
+    }
+})
+
+if ($replacementCount -ne 1) {
+    Remove-Item -LiteralPath $releaseMiniMap -Force -ErrorAction SilentlyContinue
+    throw "Expected exactly one MiniMap.cs compilation source; found $replacementCount."
+}
+
 & $compiler /nologo /optimize+ /target:winexe /platform:x64 "/out:$exe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll "/resource:$resDir\map.png,map.png" "/resource:$resDir\zones.tsv,zones.tsv" "/resource:$resDir\roads.bin,roads.bin" "/resource:$resDir\scummap.bin,scummap.bin" "/resource:$packDir\detect_zones.py,detect_zones.py" "/win32icon:$resDir\App-Icon.ico" @sources
-if ($LASTEXITCODE -ne 0) { throw 'Compilation failed.' }
+$compileExitCode = $LASTEXITCODE
+Remove-Item -LiteralPath $releaseMiniMap -Force -ErrorAction SilentlyContinue
+if ($compileExitCode -ne 0) { throw 'Compilation failed.' }
 $process = Start-Process -FilePath $exe -ArgumentList '-Check' -WindowStyle Hidden -PassThru
 if (-not $process.WaitForExit(30000)) { $process.Kill(); throw 'Executable self-test timed out.' }
 if ($process.ExitCode -ne 0) { throw 'Executable self-test failed.' }
