@@ -27,11 +27,6 @@ __pycache__/
 
 # Generated development previews
 /TestHarness.cs
-/scripts/preview.png
-/scripts/settings-preview.png
-/scripts/search-preview.png
-/scripts/zones-preview.png
-/scripts/automatic-editor-preview.png
 
 # Common editor / OS junk
 .vs/
