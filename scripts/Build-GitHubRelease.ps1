@@ -39,7 +39,7 @@ $releaseSourceText = $source
 $releaseSourceText = $releaseSourceText -replace '\[assembly:\s*AssemblyVersion\("[^"]+"\)\]', "[assembly: AssemblyVersion(`"$versionFull`")]"
 $releaseSourceText = $releaseSourceText -replace '\[assembly:\s*AssemblyFileVersion\("[^"]+"\)\]', "[assembly: AssemblyFileVersion(`"$versionFull`")]"
 $releaseSourceText = $releaseSourceText -replace '\[assembly:\s*AssemblyInformationalVersion\("[^"]+"\)\]', "[assembly: AssemblyInformationalVersion(`"$version`")]"
-$releaseSourceText = $releaseSourceText -replace 'public static readonly Version CurrentVersion\s*=\s*new Version\([^)]+\);', 'public static readonly Version CurrentVersion = new Version(VersionString);'
+$releaseSourceText = $releaseSourceText -replace 'public static readonly Version CurrentVersion\s*=\s*new Version\([^)]+\);', 'public static readonly Version CurrentVersion = new Version(VersionString + ".0");'
 
 $releaseMiniMap = Join-Path $output 'MiniMap.release.cs'
 [IO.File]::WriteAllText($releaseMiniMap, $releaseSourceText, [Text.UTF8Encoding]::new($false))

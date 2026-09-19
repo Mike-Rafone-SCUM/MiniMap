@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.6] - 2026-09-19
+
+### Fixed
+- **Auto-Updater Version Normalization**: Normalized the application's runtime System.Version to four components (X.Y.Z.0), preventing the currently installed release from incorrectly treating the same published version as a newer update.
+- **Release Verification Consistency**: Kept application, assembly, manifest, and live GitHub updater version comparisons aligned under one release version source.
+
 ## [1.4.5] - 2026-09-19
 
 ### Changed
