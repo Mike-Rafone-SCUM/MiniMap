@@ -1588,7 +1588,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "1.4.4";
+        public const string VersionString = "1.4.5";
 
 
 

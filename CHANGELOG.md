@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.5] - 2026-09-19
+
+### Changed
+- **Application Architecture Refactor**: Split the large MiniMap implementation into dedicated startup, native input, position, map canvas, settings, and diagnostics source files while preserving existing runtime behaviour.
+- **MapWindow Partial-Class Structure**: Converted MapWindow into a partial class so major application subsystems can be maintained independently without changing user-facing behaviour.
+- **Build & Release Hardening**: Improved repository-relative build output handling and removed obsolete build switches and redundant startup tooling.
+- **Source & Project Cleanup**: Removed obsolete scripts, dead helper methods, unused rendering code, stale development artifacts, and redundant theme values while retaining required compatibility and migration paths.
+- **Regression Test Organisation**: Consolidated diagnostic and self-test code into a dedicated subsystem while retaining updater, input, routing, rendering, settings, and audit regression coverage.
+
+### Fixed
+- **Habitat Rendering Culling**: Corrected vertical viewport culling so habitat geometry is tested against the proper visible screen bounds.
+- **Waypoint Focus Regression Test**: Corrected the test path for the internal native input bridge following the source-code restructuring.
+
 ## [1.4.4] - 2026-09-18
 
 ### Added
