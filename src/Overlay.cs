@@ -17,7 +17,6 @@ namespace ScumMiniMap {
         public static readonly Color BorderHighlight=Color.FromArgb(82,78,70);
         public static readonly Color Ink=Color.FromArgb(240,238,232);
         public static readonly Color InkMuted=Color.FromArgb(150,146,138);
-        public static readonly Color StatusGreen=Color.FromArgb(57,211,83);
 
         [DllImport("user32.dll")] static extern bool ReleaseCapture();
         [DllImport("user32.dll")] static extern IntPtr SendMessage(IntPtr window,int message,IntPtr w,IntPtr l);
