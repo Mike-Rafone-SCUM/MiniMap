@@ -1,0 +1,60 @@
+﻿name: Build and release MiniMap
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Validate release tag
+        shell: pwsh
+        run: |
+          $source = Get-Content src/MiniMap.cs -Raw
+          if ($source -notmatch 'public const string VersionString = "(\d+\.\d+\.\d+)";') { throw 'Version missing.' }
+          if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$($matches[1])") { throw 'Tag does not match the application version.' }
+      - name: Build and test Windows application
+        shell: powershell
+        run: |
+          $source = Get-Content src/MiniMap.cs -Raw
+          if ($source -notmatch 'VersionString = "(\d+\.\d+\.\d+)"') { throw 'Version missing.' }
+          .\scripts\Build-GitHubRelease.ps1 -OutputDirectory "release/github/v$($matches[1])"
+      - uses: actions/upload-artifact@v7.0.1
+        with:
+          name: MiniMap-release
+          path: release/github/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: windows-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/download-artifact@v8.0.1
+        with:
+          name: MiniMap-release
+          path: release/github/
+      - name: Publish verified release assets
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: .\scripts\Publish-GitHubRelease.ps1 -Version $env:GITHUB_REF_NAME.Substring(1)
+      - name: Verify the public update download
+        shell: powershell
+        run: .\tests\Test-LiveUpdater.ps1 -Version $env:GITHUB_REF_NAME.Substring(1) -RequireLocalBinaryMatch
+
