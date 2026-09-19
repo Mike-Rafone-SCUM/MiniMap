@@ -5413,47 +5413,6 @@ namespace ScumMiniMap {
 
 
 
-        bool IsPlayerInOutpostZone() {
-
-
-
-            if(position == null || zones == null) return false;
-
-
-
-            PointF pt = ToMap(position);
-
-
-
-            for(int i = 0; i < zones.Count; i++) {
-
-
-
-                MapZone z = zones[i];
-
-
-
-                if(z != null && (z.Name ?? "").IndexOf("Outpost", StringComparison.OrdinalIgnoreCase) >= 0 && z.Contains(pt)) {
-
-
-
-                    return true;
-
-
-
-                }
-
-
-
-            }
-
-
-
-            return false;
-
-
-
-        }
 
 
 
@@ -10105,15 +10064,6 @@ public void SaveSettingsPreview(string path) {
 
 
 
-        void DrawMap(Graphics g,int width,int height) {
-
-
-
-            DrawMapArea(g,new Rectangle(0,0,width,height));
-
-
-
-        }
 
 
 
