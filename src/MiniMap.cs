@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 
 
@@ -9063,17 +9063,7 @@ namespace ScumMiniMap {
 
 
         }
-
-
-
-        public void SetTestSearchTarget(MapZone target) {
-            searchTarget = target;
-            cachedLocationTarget = null;
-        }
-
-
-
-        public void SaveSettingsPreview(string path) {
+public void SaveSettingsPreview(string path) {
 
 
 
