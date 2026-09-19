@@ -92,7 +92,7 @@ namespace ScumMiniMap {
 
 
 
-    public sealed class MapWindow:Form {
+    public sealed partial class MapWindow:Form {
 
 
 
