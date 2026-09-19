@@ -603,8 +603,6 @@ namespace ScumMiniMap {
                 double maxRadius=Math.Min(fadeWidth,fadeHeight)/2.0;
                 if(shape=="Circle" && hasMapBounds) {
                     // Fit circle inside the actual mapBounds area (excluding status bar)
-                    int mbH = mapBottom - mapTop;
-                    int mbW = mapRight - mapLeft;
                     double mapAreaH = Math.Min(fadeHeight - 34.0, (double)fadeHeight);
                     maxRadius = Math.Min(fadeWidth, mapAreaH) / 2.0;
                     cx = fadeWidth / 2.0;
