@@ -1,4 +1,4 @@
-﻿param([switch]$Install, [switch]$NoIncrement, [switch]$Increment, [string]$Version, [string]$OutputDirectory)
+﻿param([switch]$Install, [switch]$Increment, [string]$Version, [string]$OutputDirectory)
 $ErrorActionPreference = 'Stop'
 
 # Automated Version Increment
