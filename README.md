@@ -1,4 +1,4 @@
-# SCUM MiniMap v1.4.4
+# SCUM MiniMap v1.4.7
 
 SCUM MiniMap is an external map overlay and navigation utility for SCUM, made for the Skynett community. It displays player coordinates, heading, elevation, road routes, points of interest, and custom waypoints. It does not read game memory or inject DLLs; this is not an official anticheat certification.
 
@@ -51,20 +51,25 @@ Pressing <kbd>M</kbd> during gameplay seamlessly transitions the minimap into a 
 * **High-Contrast Feeder Vectors:** Off-road dashed guidance lines connect your vehicle to the nearest road entry point.
 
 ### POI Filtering & Smart Label LOD
-* **Granular Category Filters:** Toggle visibility for individual POI classes: Cities, Towns, Farms, Traders, Faction War POIs, Military Sites, Bunkers & Abandoned Bunkers, Custom Waypoints, and Gas Stations.
+* **POI Filters:** Use Configure POI filters or the full-map category list for locations such as gas stations and bunkers. Custom waypoints and imported zone layers have separate visibility controls.
 * **Independent Bunker Filtering:** Bunkers and abandoned underground facilities can be shown or hidden independently from surface military sites.
 * **Smart Level of Detail (LOD):** When zoomed out (< 2.5x), minor text labels (towns, farms, military sites, faction tags) are automatically suppressed to keep terrain and roadways clean and legible. Only major Cities, Traders, and Custom Waypoints display text labels. Detailed local tags smoothly reappear as you zoom in closer.
-* **Independent Border & Label Controls:** Toggle POI text names (`ShowZoneLabels`) independently from colored zone borders (`ShowSavedZones`).
+* **Independent Border & Label Controls:** Toggle POI text names (`ShowZoneLabels`) independently from colored zone borders (`ShowZones`).
 
-### Real-Time Bilingual Interface
-Complete bilingual support in English and Argentine Spanish (`es-AR`). Switch instantly in the Settings panel under **Language / Idioma** without restarting the application. Automatically defaults to Spanish on systems configured with Argentine, Uruguayan, or Hispanic Windows locales.
+### Interface Languages
+Choose English, Argentine Spanish, French, German, Dutch, Russian, Simplified Chinese, Turkish, or Arabic in Settings without restarting. The initial language follows your system language; untranslated labels fall back to English.
 
 ### Custom Map Textures & Zone Import
 * Supports custom `map.png` textures and custom `zones.tsv` files in `%LocalAppData%\ScumMiniMap`.
-* Validates imported map dimensions (minimum 1024x1024) with a preview confirmation dialog.
 * Includes a **Reset to default map** option to revert to embedded high-resolution assets without manual file deletion.
 
 ---
+
+## First Launch: Size and Position
+
+New installations start with a compact 240 × 240 minimap in the upper-right corner. The setup guide's **Move and resize minimap** button opens the Appearance settings. Switch to the desktop to drag the minimap into position or drag its edges to resize it; use **Home → Appearance** for exact width and height. Changes save automatically. Reopen the setup guide from Settings whenever needed.
+
+Existing saved layouts are retained. Opening the full map does not replace your saved minimap size or position.
 
 ## Controls & Keybinds
 
