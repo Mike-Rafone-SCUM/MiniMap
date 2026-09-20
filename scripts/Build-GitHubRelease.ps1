@@ -6,10 +6,10 @@ $srcDir = Join-Path $repoRoot 'src'
 $resDir = Join-Path $repoRoot 'resources'
 $packDir = Join-Path $repoRoot 'packaging'
 
-$source = Get-Content (Join-Path $srcDir 'MiniMap.cs') -Raw
+$source = Get-Content (Join-Path $srcDir 'MiniMap.cs') -Raw -Encoding UTF8
 if ($source -notmatch 'public const string VersionString = "(\d+\.\d+\.\d+)";') { throw 'Cannot read application version.' }
 $version = $matches[1]
-$updateSource = Get-Content (Join-Path $srcDir 'UpdateService.cs') -Raw
+$updateSource = Get-Content (Join-Path $srcDir 'UpdateService.cs') -Raw -Encoding UTF8
 if ($updateSource -notmatch 'public const string Repository = "[A-Za-z0-9-]+/[A-Za-z0-9._-]+";') { throw 'Configure the update repository first.' }
 foreach ($script in @('Test-UpdateChecker.ps1','Check-Stability.ps1')) {
     & powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot $script)
@@ -78,7 +78,7 @@ foreach ($asset in @('detect_zones.py','requirements.txt','Start-MiniMap.cmd')) 
 Copy-Item -LiteralPath (Join-Path $repoRoot 'ATTRIBUTION.md') -Destination $output
 $packageFiles = @('SkynettMiniMap.exe','README.md','CHANGELOG.md','ATTRIBUTION.md','detect_zones.py','requirements.txt','Start-MiniMap.cmd') | ForEach-Object { Join-Path $output $_ }
 Compress-Archive -LiteralPath $packageFiles -DestinationPath (Join-Path $output 'SkynettMiniMap.zip') -Force
-$changelog = Get-Content (Join-Path $repoRoot 'CHANGELOG.md') -Raw
+$changelog = Get-Content (Join-Path $repoRoot 'CHANGELOG.md') -Raw -Encoding UTF8
 $section = [regex]::Match($changelog, '(?ms)^## \[' + [regex]::Escape($version) + '\][^\r\n]*\r?\n(.*?)(?=^## \[|\z)')
 if (-not $section.Success) { throw 'Add a changelog entry for this release before packaging.' }
 $notes = "SCUM MiniMap, made for the Skynett community.`n`n" + $section.Groups[1].Value.Trim() + "`n`nDownload SkynettMiniMap.exe for the standalone app, or SkynettMiniMap.zip for the complete package. Exit the previous app before replacing it. Saved settings and zones are retained.`n"

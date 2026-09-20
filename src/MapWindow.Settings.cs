@@ -78,47 +78,7 @@ namespace ScumMiniMap {
 
 
 
-        HashSet<ZoneCategory> BuildHiddenCategories() {
 
-
-
-            var hidden = new HashSet<ZoneCategory>();
-
-
-
-            if(!showCities) hidden.Add(ZoneCategory.City);
-
-
-
-            if(!showTowns) hidden.Add(ZoneCategory.Town);
-
-
-
-            if(!showFarms) hidden.Add(ZoneCategory.Farm);
-
-
-
-            if(!showTraders) hidden.Add(ZoneCategory.Trader);
-
-
-
-            if(!showFactions) hidden.Add(ZoneCategory.Faction);
-
-
-
-            if(!showMilitary) hidden.Add(ZoneCategory.Military);
-
-
-
-            if(!showBunkers) hidden.Add(ZoneCategory.Bunker);
-
-
-
-            return hidden.Count==0 ? null : hidden;
-
-
-
-        }
 
 
 
@@ -246,7 +206,7 @@ namespace ScumMiniMap {
 
 
 
-                            switch(key) { case "GridLabels":gridLabels=b;break;case "GridBorders":gridBorders=b;break;case "EdgeFade":edgeFade=b;break;case "ShowStatus":showStatus=b;break;case "ShowZones":showZones=b;break;case "ShowGasStations":showGasStations=b;break;case "AutoZoom":autoZoom=b;break;case "ShowHeading":showHeading=b;break;case "ShowCompass":showCompass=b;break;case "ShowElevation":showElevation=b;break;case "ZoneChime":zoneChime=b;break;case "ShowCities":showCities=b;break;case "ShowTowns":showTowns=b;break;case "ShowFarms":showFarms=b;break;case "ShowTraders":showTraders=b;break;case "ShowFactions":showFactions=b;break;case "ShowMilitary":showMilitary=b;break;case "ShowBunkers":showBunkers=b;break;case "ShowCustomWaypoints":showCustomWaypoints=b;break;case "ShowScumMap":showScumMap=b;break;case "ShowZoneLabels":showZoneLabels=b;break;case "SmartLabelLod":smartLabelLod=b;break;case "ShowHuntingLegend":showHuntingLegend=b;break;case "SidebarWildlifeExpanded":sidebarWildlifeExpanded=b;break;case "SidebarZonesExpanded":sidebarZonesExpanded=b;break; }
+                            switch(key) { case "GridLabels":gridLabels=b;break;case "GridBorders":gridBorders=b;break;case "EdgeFade":edgeFade=b;break;case "ShowStatus":showStatus=b;break;case "ShowZones":showZones=b;break;case "AutoZoom":autoZoom=b;break;case "ShowHeading":showHeading=b;break;case "ShowCompass":showCompass=b;break;case "ShowElevation":showElevation=b;break;case "ZoneChime":zoneChime=b;break;case "ShowCustomWaypoints":showCustomWaypoints=b;break;case "ShowScumMap":showScumMap=b;break;case "ShowZoneLabels":showZoneLabels=b;break;case "SmartLabelLod":smartLabelLod=b;break;case "SidebarWildlifeExpanded":sidebarWildlifeExpanded=b;break;case "SidebarZonesExpanded":sidebarZonesExpanded=b;break; }
                         }
                         if(key=="DisabledZoneLayers") {
                             disabledZoneLayers.Clear();
@@ -350,6 +310,8 @@ namespace ScumMiniMap {
 
 
 
+                autoZoomMax=Math.Max(autoZoomMin,autoZoomMax);
+                zoom=Math.Max(1,Math.Min(maxZoom,zoom)); targetZoom=zoom;
                 savedWidth=width; savedHeight=height; savedLeft=left; savedTop=top;
 
 
@@ -399,10 +361,11 @@ namespace ScumMiniMap {
 
 
             saveAfter=DateTime.MaxValue;
+            Rectangle minimapBounds=overlay!=null?overlay.MinimapBounds:new Rectangle(savedLeft,savedTop,savedWidth,savedHeight);
 
 
 
-            try { File.WriteAllLines(settingsPath+".tmp",new string[]{"Welcomed=True","Language="+Localization.CurrentCode,"GridLabels="+gridLabels,"GridBorders="+gridBorders,"GridOpacity="+gridOpacity,"ShowZones="+showZones,"ShowGasStations="+showGasStations,"LabelSize="+labelSize,"EdgeFade="+edgeFade,"Shape="+overlayShape,"ShowHeading="+showHeading,"ShowCompass="+showCompass,"ShowElevation="+showElevation,"ZoneChime="+zoneChime,"CopyIntervalMs="+copyIntervalMs,"AutoZoom="+autoZoom,"AutoZoomMin="+autoZoomMin,"AutoZoomMax="+autoZoomMax,"ShowStatus="+showStatus,"StatusPos="+statusPos,"Opacity="+mapOpacity,"FullMapOpacity="+fullMapOpacity,"Width="+(overlay!=null?overlay.Width:savedWidth),"Height="+(overlay!=null?overlay.Height:savedHeight),"Left="+(overlay!=null?overlay.Left:savedLeft),"Top="+(overlay!=null?overlay.Top:savedTop),"Zoom="+zoom.ToString(CultureInfo.InvariantCulture),"MaxZoom="+maxZoom,"ZoomStep="+zoomStepPercent,"ScumMapKey="+scumMapKey,"ScumChatKey="+scumChatKey,"ScumCopyModifierKey="+scumCopyModifierKey,"ScumCopyKey="+scumCopyKey,"ShowCities="+showCities,"ShowTowns="+showTowns,"ShowFarms="+showFarms,"ShowTraders="+showTraders,"ShowFactions="+showFactions,"ShowMilitary="+showMilitary,"ShowBunkers="+showBunkers,"ShowCustomWaypoints="+showCustomWaypoints,"ShowScumMap="+showScumMap,"ScumMapDisabledCats="+(scumMap!=null?scumMap.GetDisabledCategoriesString():""),"ShowZoneLabels="+showZoneLabels,"SmartLabelLod="+smartLabelLod,"ShowHuntingLegend="+showHuntingLegend,"SidebarWildlifeExpanded="+sidebarWildlifeExpanded,"SidebarZonesExpanded="+sidebarZonesExpanded,"DisabledZoneLayers="+string.Join(";",disabledZoneLayers),"RouteColor="+ColorTranslator.ToHtml(routeGuidanceColor),"PlayerColor="+ColorTranslator.ToHtml(playerConeColor)});
+            try { File.WriteAllLines(settingsPath+".tmp",new string[]{"Welcomed=True","Language="+Localization.CurrentCode,"GridLabels="+gridLabels,"GridBorders="+gridBorders,"GridOpacity="+gridOpacity,"ShowZones="+showZones,"LabelSize="+labelSize,"EdgeFade="+edgeFade,"Shape="+overlayShape,"ShowHeading="+showHeading,"ShowCompass="+showCompass,"ShowElevation="+showElevation,"ZoneChime="+zoneChime,"CopyIntervalMs="+copyIntervalMs,"AutoZoom="+autoZoom,"AutoZoomMin="+autoZoomMin,"AutoZoomMax="+autoZoomMax,"ShowStatus="+showStatus,"StatusPos="+statusPos,"Opacity="+mapOpacity,"FullMapOpacity="+fullMapOpacity,"Width="+minimapBounds.Width,"Height="+minimapBounds.Height,"Left="+minimapBounds.Left,"Top="+minimapBounds.Top,"Zoom="+zoom.ToString(CultureInfo.InvariantCulture),"MaxZoom="+maxZoom,"ZoomStep="+zoomStepPercent,"ScumMapKey="+scumMapKey,"ScumChatKey="+scumChatKey,"ScumCopyModifierKey="+scumCopyModifierKey,"ScumCopyKey="+scumCopyKey,"ShowCustomWaypoints="+showCustomWaypoints,"ShowScumMap="+showScumMap,"ScumMapDisabledCats="+(scumMap!=null?scumMap.GetDisabledCategoriesString():""),"ShowZoneLabels="+showZoneLabels,"SmartLabelLod="+smartLabelLod,"SidebarWildlifeExpanded="+sidebarWildlifeExpanded,"SidebarZonesExpanded="+sidebarZonesExpanded,"DisabledZoneLayers="+string.Join(";",disabledZoneLayers),"RouteColor="+ColorTranslator.ToHtml(routeGuidanceColor),"PlayerColor="+ColorTranslator.ToHtml(playerConeColor)});
 
 
 
@@ -423,6 +386,14 @@ namespace ScumMiniMap {
 
 
         bool panelOpening;
+        bool layoutSettingsRequested;
+
+        void FocusLayoutSettings() {
+            if(!layoutSettingsRequested || widthOption==null) return;
+            layoutSettingsRequested=false;
+            bar.ScrollControlIntoView(widthOption.Parent);
+            widthOption.Focus();
+        }
 
 
 
@@ -468,6 +439,8 @@ namespace ScumMiniMap {
 
                 Native.ForceForeground(Handle);
 
+                FocusLayoutSettings();
+
 
 
                 return;
@@ -510,7 +483,9 @@ namespace ScumMiniMap {
 
 
 
+                BuildSettingsPanel();
                 Show();
+                FocusLayoutSettings();
 
 
 

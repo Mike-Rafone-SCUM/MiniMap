@@ -72,15 +72,15 @@ using System.Drawing.Drawing2D;
 
 
 
-[assembly: AssemblyVersion("1.4.6.0")]
+[assembly: AssemblyVersion("1.4.7.0")]
 
 
 
-[assembly: AssemblyFileVersion("1.4.6.0")]
+[assembly: AssemblyFileVersion("1.4.7.0")]
 
 
 
-[assembly: AssemblyInformationalVersion("1.4.6")]
+[assembly: AssemblyInformationalVersion("1.4.7")]
 
 
 
@@ -193,35 +193,27 @@ namespace ScumMiniMap {
 
 
 
-        bool showGasStations=false;
 
 
 
-        bool showCities=false;
 
 
 
-        bool showTowns=true;
 
 
 
-        bool showFarms=false;
 
 
 
-        bool showTraders=false;
 
 
 
-        bool showFactions=false;
 
 
 
-        bool showMilitary=false;
 
 
 
-        bool showBunkers=false;
 
 
 
@@ -301,7 +293,6 @@ namespace ScumMiniMap {
 
 
 
-        bool showHuntingLegend = true;
 
 
 
@@ -536,7 +527,7 @@ namespace ScumMiniMap {
 
 
 
-        int savedWidth=300,savedHeight=300,savedLeft=-1,savedTop=-1;
+        int savedWidth=240,savedHeight=240,savedLeft=-1,savedTop=-1;
 
 
 
@@ -1186,6 +1177,8 @@ namespace ScumMiniMap {
 
 
             overlay.SizeChanged+=(s,e)=> {
+                if(overlay.FullMapMode || overlay.ChangingMapMode) return;
+                savedWidth=overlay.Width; savedHeight=overlay.Height;
 
 
 
@@ -1205,7 +1198,11 @@ namespace ScumMiniMap {
 
 
 
-            overlay.LocationChanged+=(s,e)=> { saveAfter=DateTime.UtcNow.AddMilliseconds(700); };
+            overlay.LocationChanged+=(s,e)=> {
+                if(overlay.FullMapMode || overlay.ChangingMapMode) return;
+                savedLeft=overlay.Left; savedTop=overlay.Top;
+                saveAfter=DateTime.UtcNow.AddMilliseconds(700);
+            };
 
 
 
@@ -1427,7 +1424,7 @@ namespace ScumMiniMap {
             bar.Controls.Add(gridRow);
 
             // 3. WAYPOINTS & POI LAYERS
-            AddCheck(bar, Localization.Get("ShowCustomWaypoints"), showCustomWaypoints, value => { showCustomWaypoints = value; SettingsChanged(); });
+            AddCheck(bar, Localization.Get("ShowCustomWaypoints"), showCustomWaypoints, value => { showCustomWaypoints = value; });
             bar.Controls.Add(new Label { Text = Localization.Get("CustomWaypointsDescription"), Width = 365, Height = 32, AutoSize = false, ForeColor = OverlayTheme.InkMuted, Margin = new Padding(3, -2, 3, 4) });
 
             FlowLayoutPanel routeColorRow = new FlowLayoutPanel { Width = 365, Height = 34, Margin = new Padding(3, 2, 3, 6) };
@@ -1473,7 +1470,6 @@ namespace ScumMiniMap {
             AddCheck(bar, Localization.Get("ShowScumMap"), showScumMap, value => {
                 showScumMap = value;
                 if (scumMap != null) scumMap.MasterEnabled = value;
-                SettingsChanged();
             });
             Button poiFilterButton = new Button { Text = Localization.Get("ConfigurePoiFilters"), Width = 280 };
             poiFilterButton.Click += (s, e) => {
@@ -1488,7 +1484,7 @@ namespace ScumMiniMap {
             };
             bar.Controls.Add(poiFilterButton);
 
-            AddCheck(bar, Localization.Get("ShowSavedZones"), showZones, value => { showZones = value; SettingsChanged(); });
+            AddCheck(bar, Localization.Get("ShowSavedZones"), showZones, value => { showZones = value; });
             bar.Controls.Add(new Label { Text = Localization.Get("CustomZonesDescription"), Width = 365, Height = 42, AutoSize = false, ForeColor = OverlayTheme.InkMuted, Margin = new Padding(3, -2, 3, 4) });
             Button zoneButton = new Button { Text = Localization.Get("MapZonesScreenshot"), Width = 280 };
             zoneButton.Click += (s, e) => OpenZoneImport(null);
@@ -1509,15 +1505,14 @@ namespace ScumMiniMap {
             };
             bar.Controls.Add(clearZonesBtn);
 
-            AddCheck(bar, Localization.Get("ShowZoneLabels"), showZoneLabels, value => { showZoneLabels = value; SettingsChanged(); });
-            AddCheck(bar, Localization.Get("SmartLabelLod"), smartLabelLod, value => { smartLabelLod = value; SettingsChanged(); });
-            AddCheck(bar, Localization.Get("ShowHuntingLegend"), showHuntingLegend, value => { showHuntingLegend = value; SettingsChanged(); });
+            AddCheck(bar, Localization.Get("ShowZoneLabels"), showZoneLabels, value => { showZoneLabels = value; });
+            AddCheck(bar, Localization.Get("SmartLabelLod"), smartLabelLod, value => { smartLabelLod = value; });
             AddNumber(bar, Localization.Get("ZoneLabelSize"), 6, 24, labelSize, value => labelSize = value);
 
             // 4. DISPLAY & HUD LAYOUT
             OverlayTheme.Section(bar, Localization.Get("SecAppearance"));
-            widthOption = AddNumber(bar, Localization.Get("MapWidth"), 240, 800, overlay.Width, value => overlay.Width = value);
-            heightOption = AddNumber(bar, Localization.Get("MapHeight"), 240, 800, overlay.Height, value => overlay.Height = value);
+            widthOption = AddNumber(bar, Localization.Get("MapWidth"), 240, 800, overlay.MinimapBounds.Width, value => overlay.SetMinimapSize(new Size(value,overlay.MinimapBounds.Height)));
+            heightOption = AddNumber(bar, Localization.Get("MapHeight"), 240, 800, overlay.MinimapBounds.Height, value => overlay.SetMinimapSize(new Size(overlay.MinimapBounds.Width,value)));
             AddNumber(bar, Localization.Get("MapOpacity"), 30, 100, mapOpacity, value => mapOpacity = value);
 
             FlowLayoutPanel posRow = new FlowLayoutPanel { Width = 365, Height = 32 };
@@ -1541,22 +1536,29 @@ namespace ScumMiniMap {
 
             // 5. GPS TRACKING & AUTO-ZOOM
             OverlayTheme.Section(bar, Localization.Get("SecTrackingZoom"));
-            AddCheck(bar, Localization.Get("AutoZoomSpeed"), autoZoom, value => { autoZoom = value; SettingsChanged(); });
-            AddNumber(bar, Localization.Get("AutoZoomMin"), 1, 32, autoZoomMin, value => { autoZoomMin = value; autoZoomMax = Math.Max(autoZoomMax, value); SettingsChanged(); });
-            AddNumber(bar, Localization.Get("AutoZoomMax"), 1, 32, autoZoomMax, value => { autoZoomMax = value; autoZoomMin = Math.Min(autoZoomMin, value); SettingsChanged(); });
-            AddNumber(bar, Localization.Get("MaxZoom"), 4, 32, maxZoom, value => { maxZoom = value; zoom = Math.Min(maxZoom, zoom); targetZoom = Math.Min(maxZoom, targetZoom); SettingsChanged(); });
-            AddNumber(bar, Localization.Get("ZoomStep"), 10, 100, zoomStepPercent, value => { zoomStepPercent = value; SettingsChanged(); });
-            AddNumber(bar, Localization.Get("PositionInterval"), 1000, 10000, copyIntervalMs, value => { copyIntervalMs = value; next = DateTime.UtcNow; SettingsChanged(); }).Increment = 250;
+            AddCheck(bar, Localization.Get("AutoZoomSpeed"), autoZoom, value => { autoZoom = value; });
+            NumericUpDown autoMinOption = null, autoMaxOption = null;
+            autoMinOption = AddNumber(bar, Localization.Get("AutoZoomMin"), 1, 32, autoZoomMin, value => {
+                autoZoomMin = value;
+                if (autoMaxOption != null && autoMaxOption.Value < value) autoMaxOption.Value = value;
+            });
+            autoMaxOption = AddNumber(bar, Localization.Get("AutoZoomMax"), 1, 32, autoZoomMax, value => {
+                autoZoomMax = value;
+                if (autoMinOption.Value > value) autoMinOption.Value = value;
+            });
+            AddNumber(bar, Localization.Get("MaxZoom"), 4, 32, maxZoom, value => { maxZoom = value; zoom = Math.Min(maxZoom, zoom); targetZoom = Math.Min(maxZoom, targetZoom); });
+            AddNumber(bar, Localization.Get("ZoomStep"), 10, 100, zoomStepPercent, value => { zoomStepPercent = value; });
+            AddNumber(bar, Localization.Get("PositionInterval"), 1000, 10000, copyIntervalMs, value => { copyIntervalMs = value; next = DateTime.UtcNow; }).Increment = 250;
 
             // 6. TOOLS & DATA
             OverlayTheme.Section(bar, Localization.Get("SecToolsShortcuts"));
             Button resetMapBtn = new Button { Text = Localization.Get("ResetDefaultMap"), Width = 280 };
             resetMapBtn.Click += (s, e) => {
-                if (MessageBox.Show(this, Localization.Get("ResetMapConfirm"), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                if (MessageBox.Show(this, Localization.Get("ResetDefaultMapConfirm"), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
                     try {
                         string customMap = Path.Combine(dataFolder, "map.png");
                         if (File.Exists(customMap)) File.Delete(customMap);
-                        MessageBox.Show(this, Localization.Get("MapResetDone"), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(this, Localization.Get("ResetDefaultMapDone"), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     } catch (Exception ex) {
                         MessageBox.Show(this, Localization.T("MapResetFailed", ex.Message), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -1588,7 +1590,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "1.4.6";
+        public const string VersionString = "1.4.7";
 
 
 
@@ -2006,6 +2008,11 @@ namespace ScumMiniMap {
                     })) {
                     if(owner == null) guide.StartPosition = FormStartPosition.CenterScreen;
                     guide.ShowDialog(owner);
+                    if(guide.LayoutRequested) {
+                        SetFullMap(false);
+                        layoutSettingsRequested=true;
+                        ShowSettings();
+                    }
                 }
             } catch(Exception ex) {
                 Program.LogException("StartupGuide", ex);
@@ -6303,34 +6310,6 @@ namespace ScumMiniMap {
 
 
 
-            DrawScrollableToggle(g, innerX, itemY, innerW, toggleH, Localization.Get("SidebarLayerGas"), showGasStations, viewportRect, () => {
-
-
-
-                showGasStations = !showGasStations;
-
-
-
-                SettingsChanged();
-
-
-
-                lastFrameKey = null; terrainKey = null;
-
-
-
-                RenderOverlay();
-
-
-
-            });
-
-
-
-            itemY += toggleH + toggleGap;
-
-
-
             DrawScrollableToggle(g, innerX, itemY, innerW, toggleH, Localization.Get("SidebarLayerGrid"), gridBorders, viewportRect, () => {
 
 
@@ -8722,7 +8701,7 @@ namespace ScumMiniMap {
             float left=isPlayerCentered?(cx-side*p.X):(cx-side*mapCentre.X);
             float top=isPlayerCentered?(cy-side*p.Y):(cy-side*mapCentre.Y);
 
-            string terrain=string.Join("|",new object[]{bounds,effectiveZoom,isPlayerCentered?(int)Math.Round(left*8):(int)Math.Round(left*4),isPlayerCentered?(int)Math.Round(top*8):(int)Math.Round(top*4),gridLabels,gridBorders,gridOpacity,showZones,string.Join(",",disabledZoneLayers),showGasStations,showCities,showTowns,showFarms,showTraders,showFactions,showMilitary,showBunkers,showCustomWaypoints,showScumMap,(scumMap!=null?scumMap.GetFilterHashKey():""),showZoneLabels,smartLabelLod,fullMapActive,labelSize,Localization.CurrentCode});
+            string terrain=string.Join("|",new object[]{bounds,effectiveZoom,isPlayerCentered?(int)Math.Round(left*8):(int)Math.Round(left*4),isPlayerCentered?(int)Math.Round(top*8):(int)Math.Round(top*4),gridLabels,gridBorders,gridOpacity,showZones,string.Join(",",disabledZoneLayers),showCustomWaypoints,showScumMap,(scumMap!=null?scumMap.GetFilterHashKey():""),showZoneLabels,smartLabelLod,fullMapActive,labelSize,Localization.CurrentCode});
             if(terrainKey!=terrain) {
                 using(Graphics background=Graphics.FromImage(fullMap)) {
                     background.Clear(Color.FromArgb(0,0,0,0));
@@ -8750,7 +8729,7 @@ namespace ScumMiniMap {
                             } else categoryDrawList.Add(zone);
                         }
                     }
-                    if(categoryDrawList.Count>0)ZoneStore.Draw(background,categoryDrawList,new RectangleF(left,top,side,side),true,labelSize,showGasStations,BuildHiddenCategories(),showZoneLabels,smartLabelLod,currentZoom);
+                    if(categoryDrawList.Count>0)ZoneStore.Draw(background,categoryDrawList,new RectangleF(left,top,side,side),true,labelSize,true,null,showZoneLabels,smartLabelLod,currentZoom);
                     if(customZoneDrawList.Count>0)ZoneStore.Draw(background,customZoneDrawList,new RectangleF(left,top,side,side),true,labelSize,false,null,showZoneLabels,smartLabelLod,currentZoom);
                     if(waypointDrawList.Count>0)ZoneStore.Draw(background,waypointDrawList,new RectangleF(left,top,side,side),false,labelSize,false,null,showZoneLabels,smartLabelLod,currentZoom);
 

@@ -395,8 +395,14 @@ namespace ScumMiniMap {
         [DllImport("user32.dll")] static extern IntPtr SendMessage(IntPtr window,int message,IntPtr w,IntPtr l);
         bool through=true;
         bool fullMapMode;
+        public bool ChangingMapMode { get; private set; }
         Size savedSize;
         Point savedLocation;
+        public Rectangle MinimapBounds { get { return fullMapMode ? new Rectangle(savedLocation,savedSize) : Bounds; } }
+        public void SetMinimapSize(Size size) {
+            size=new Size(Math.Max(240,Math.Min(800,size.Width)),Math.Max(240,Math.Min(800,size.Height)));
+            if(fullMapMode) savedSize=size; else Size=size;
+        }
         readonly ContextMenuStrip menu;
         readonly ToolStripMenuItem fullMapWaypointMenu;
         public Action<int, Point> OnFullMapWheel;
@@ -417,6 +423,8 @@ namespace ScumMiniMap {
             get { return fullMapMode; }
             set {
                 if(fullMapMode==value) return;
+                ChangingMapMode=true;
+                try {
                 fullMapMode=value;
                 if(value) {
                     savedSize=Size;
@@ -456,6 +464,7 @@ namespace ScumMiniMap {
                 if(fullMapWaypointMenu!=null) fullMapWaypointMenu.Visible=value;
                 if(fullMapRouteColorMenu!=null) fullMapRouteColorMenu.Visible=value;
                 if(fullMapPlayerColorMenu!=null) fullMapPlayerColorMenu.Visible=value;
+                } finally { ChangingMapMode=false; }
             }
         }
         public OverlayWindow(Action settings,Action exit,Action<float> zoom,Action search) {

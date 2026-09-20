@@ -11,6 +11,7 @@ namespace ScumMiniMap {
         readonly Action onSettingsChanged;
 
         int currentSlide = 0;
+        public bool LayoutRequested { get; private set; }
         const int TotalSlides = 5;
 
         // Keybind calibration state
@@ -432,9 +433,17 @@ namespace ScumMiniMap {
         void RenderSlideOverview() {
             FlowLayoutPanel flow = CreateContentFlow();
 
+            AddTacticalCard(flow, Localization.Get("WizardLayoutTitle"), Localization.Get("WizardLayoutDescription"));
+            Button layoutButton = new Button {
+                Text=Localization.Get("WizardAdjustLayout"), AutoSize=true, MinimumSize=new Size(280,36),
+                FlatStyle=FlatStyle.Flat, BackColor=AmberAccent, ForeColor=Color.Black,
+                Margin=new Padding(0,0,0,14), Cursor=Cursors.Hand
+            };
+            layoutButton.Click+=(s,e)=> { LayoutRequested=true; FinishWizard(); };
+            flow.Controls.Add(layoutButton);
+
             AddTacticalCard(flow, "[ SYS // 01 ] " + Localization.Get("WzOvTitle1"), Localization.Get("WzOvDesc1"));
             AddTacticalCard(flow, "[ DISP // 02 ] " + Localization.Get("WzOvTitle2"), Localization.Get("WzOvDesc2"));
-            AddTacticalCard(flow, "[ GEOM // 03 ] " + Localization.Get("WzOvTitle3"), Localization.Get("WzOvDesc3"));
             AddTacticalCard(flow, "[ NAV // 04 ] " + Localization.Get("WzOvTitle4"), Localization.Get("WzOvDesc4"));
 
             contentPanel.Controls.Add(flow);

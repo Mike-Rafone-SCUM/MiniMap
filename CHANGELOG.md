@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.7] - 2026-09-20
+
+### Changed
+- New installations start at 240 × 240, with a move-and-resize prompt in the setup guide.
+- Preserve compact minimap size and position when opening, saving, or configuring the full map.
+- Removed unused hunting-legend and legacy category settings, including the obsolete fuel toggle. POI categories remain controlled by the POI filters.
+- Removed 51 unused UI string keys across all nine languages and corrected custom-zone help, POI filter labels, and deletion wording.
+- Refresh settings from current sidebar state when reopened; keep automatic zoom bounds and their controls synchronised.
+- Retained legacy coordinate-interval and player-colour migration aliases.
+- Repaired reset-map messages and refreshed first-launch guidance in all nine languages.
+
 ## [1.4.6] - 2026-09-19
 
 ### Fixed

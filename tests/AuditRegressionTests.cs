@@ -24,6 +24,18 @@ static class AuditRegressionTests {
         using(var stream=new MemoryStream()) { using(var writer=new BinaryWriter(stream)) { action(writer); return stream.ToArray(); } }
     }
     static MapZone Zone(string name) { return new MapZone { Name=name,Category=ZoneCategory.Custom,Argb=Color.Cyan.ToArgb(),Points=new[]{new PointF(.5f,.5f)} }; }
+    static Control FindControl(Control parent,string text) {
+        foreach(Control child in parent.Controls) {
+            if(child.Text==text) return child;
+            Control found=FindControl(child,text); if(found!=null) return found;
+        }
+        return null;
+    }
+    static NumericUpDown SettingNumber(Control parent,string key) {
+        Control label=FindControl(parent,Localization.Get(key));
+        foreach(Control child in label.Parent.Controls) if(child is NumericUpDown) return (NumericUpDown)child;
+        throw new Exception("Missing setting: "+key);
+    }
     static void PumpUntil(Func<bool> done) {
         DateTime timeout=DateTime.UtcNow.AddSeconds(10);
         while(!done() && DateTime.UtcNow<timeout) { Application.DoEvents(); Thread.Sleep(10); }
@@ -72,6 +84,45 @@ static class AuditRegressionTests {
 
             // Exercise the real transaction entry point under a locked destination.
             using(var window=new MapWindow(root,true)) {
+                var minimap=(OverlayWindow)Field(window,"overlay").GetValue(window);
+                Check(minimap.Size==new Size(240,240) && !(bool)Field(window,"fullMapActive").GetValue(window),
+                    "Fresh installation starts with compact minimap, not full map");
+                Rectangle compactBounds=minimap.MinimapBounds;
+                Call(window,"SetFullMap",true);
+                Rectangle expandedBounds=minimap.Bounds;
+                Check(minimap.MinimapBounds==compactBounds,"Full map retains normal bounds for settings persistence");
+                Call(window,"BuildSettingsPanel");
+                Check(SettingNumber((Control)Field(window,"bar").GetValue(window),"MapWidth").Value==240 &&
+                    minimap.Bounds==expandedBounds,"Settings in full-map mode show compact dimensions without shrinking full map");
+                minimap.SetMinimapSize(new Size(280,260));
+                Check(minimap.Bounds==expandedBounds && minimap.MinimapBounds.Size==new Size(280,260),
+                    "Editing compact dimensions does not resize active full map");
+                Call(window,"SetFullMap",false);
+                Check(minimap.Size==new Size(280,260) && minimap.Location==compactBounds.Location,
+                    "Closing full map restores chosen compact size and original position");
+                File.WriteAllLines(Path.Combine(root,"settings.ini"),new[]{
+                    "Welcomed=True","Language=en","Width=420","Height=340","ShowHuntingLegend=False","ShowGasStations=True",
+                    "ShowCities=True","ShowCustomWaypoints=False","GridBorders=False",
+                    "CopyInterval=3","PlayerConeColor=#123456","AutoZoomMin=12","AutoZoomMax=4"});
+                Call(window,"LoadSettings");
+                Check(minimap.Size==new Size(420,340),"Existing users retain their saved minimap dimensions");
+                Check(!(bool)Field(window,"showCustomWaypoints").GetValue(window) &&
+                    !(bool)Field(window,"gridBorders").GetValue(window),"Old settings preserve active layer preferences");
+                Check((int)Field(window,"copyIntervalMs").GetValue(window)==3000 &&
+                    ((Color)Field(window,"playerConeColor").GetValue(window)).ToArgb()==ColorTranslator.FromHtml("#123456").ToArgb(),
+                    "Legacy interval and player colour aliases remain compatible");
+                Check((int)Field(window,"autoZoomMax").GetValue(window)==12,"Inverted saved zoom bounds are normalised");
+                Call(window,"BuildSettingsPanel");
+                Control settings=(Control)Field(window,"bar").GetValue(window);
+                var minimum=SettingNumber(settings,"AutoZoomMin");
+                var maximum=SettingNumber(settings,"AutoZoomMax");
+                minimum.Value=20;
+                Check(maximum.Value==20 && (int)Field(window,"autoZoomMax").GetValue(window)==20,"Raising minimum updates maximum control and state");
+                maximum.Value=5;
+                Check(minimum.Value==5 && (int)Field(window,"autoZoomMin").GetValue(window)==5,"Lowering maximum updates minimum control and state");
+                Field(window,"gridBorders").SetValue(window,true);
+                Call(window,"BuildSettingsPanel");
+                Check(((TacticalCheckBox)FindControl(settings,Localization.Get("GridBorders"))).Checked,"Rebuilt settings reflect sidebar layer changes");
                 var current=(List<MapZone>)Field(window,"zones").GetValue(window);
                 var added=new List<MapZone>(current); added.Add(Zone("Must not commit"));
                 var deleted=new List<MapZone>();
@@ -154,6 +205,10 @@ static class AuditRegressionTests {
             foreach(AppLanguage language in Enum.GetValues(typeof(AppLanguage))) {
                 Localization.Current=language;
                 Check(Localization.T("PoiSectionSummary","A",2,3)!="PoiSectionSummary","POI section translated: "+language);
+                Check(Localization.Get("ResetDefaultMapConfirm")!="ResetDefaultMapConfirm" &&
+                    Localization.Get("ResetDefaultMapDone")!="ResetDefaultMapDone" &&
+                    Localization.T("MapResetFailed","test error").Contains("test error"),
+                    "Reset-map messages resolve and format: "+language);
             }
             Console.WriteLine("Passed "+count+" audit regression checks."); return 0;
         } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
