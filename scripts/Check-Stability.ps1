@@ -1,4 +1,4 @@
-﻿$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 $repoRoot = Split-Path $PSScriptRoot -Parent
@@ -46,8 +46,8 @@ try {
     $miniMotion.Sample([Drawing.PointF]::new(0.500005, 0.5), 90.5, 2.0, $false)
     if ($miniMotion.Point.X -ne 0.5 -or $miniMotion.Yaw -ne 90.0) { throw 'Stationary sub-threshold jitter was not deadbanded.' }
     $miniMotion.Sample([Drawing.PointF]::new(0.501, 0.5), 90.0, 3.0, $false)
-    $null = $miniMotion.Advance(3.75)
-    if ([Math]::Abs($miniMotion.Point.X - 0.50075) -gt 0.0001) { throw '1-second sampling interval was prematurely capped.' }
+    $null = $miniMotion.Advance(3.18)
+    if ([Math]::Abs($miniMotion.Point.X - 0.501) -gt 0.0001) { throw 'Latest observed position did not settle within the responsiveness budget.' }
     $miniTarget = [ScumMiniMap.MapZone]::new()
     $miniTarget.Name = 'Arrival test'
     $miniTarget.Points = [Drawing.PointF[]]@([Drawing.PointF]::new(0.5, 0.5))

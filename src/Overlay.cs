@@ -221,7 +221,7 @@ namespace ScumMiniMap {
         public PointF Point;
         public double Yaw;
         PointF start,target;
-        double startYaw,targetYaw,began,duration,lastSample;
+        double began,duration,lastSample;
         bool initialized;
         public static double HeadingDelta(double from,double to) { return ((to-from+540)%360+360)%360-180; }
         public void Sample(PointF point,double yaw,double now,bool snap) {
@@ -232,22 +232,25 @@ namespace ScumMiniMap {
             }
             if(initialized && !snap && DestinationSearch.Metres(Point,point)<0.30) point=Point;
             if(initialized && !snap && Math.Abs(HeadingDelta(Yaw,yaw))<1.2) yaw=Yaw;
-            start=Point; target=point; startYaw=Yaw; targetYaw=Yaw+HeadingDelta(Yaw,yaw);
-            began=now; duration=Math.Max(.1,Math.Min(3.0,initialized?interval:.5));
+            start=Point; target=point;
+            // Heading describes the latest observed view direction, not travel motion.
+            // Apply it immediately rather than delaying it behind position smoothing.
+            Yaw+=HeadingDelta(Yaw,yaw);
+            // Reach the latest observed position promptly without predicting beyond it.
+            began=now; duration=Math.Max(.06,Math.Min(.18,initialized?interval*.5:.1));
             lastSample=now; initialized=true;
         }
         public bool Advance(double now) {
             if(!initialized)return false;
             double t=Math.Max(0,Math.Min(1,(now-began)/duration));
             PointF next=new PointF((float)(start.X+(target.X-start.X)*t),(float)(start.Y+(target.Y-start.Y)*t));
-            double heading=startYaw+(targetYaw-startYaw)*t;
-            bool changed=next!=Point || Math.Abs(heading-Yaw)>.0001;
-            Point=next; Yaw=heading; return changed;
+            bool changed=next!=Point;
+            Point=next; return changed;
         }
         public static void SelfTest() {
             MapMotion m=new MapMotion(); m.Sample(new PointF(.5f,.5f),359,0,false);
-            m.Sample(new PointF(.501f,.5f),1,.25,false); m.Advance(.375);
-            if(Math.Abs(m.Point.X-.5005)>.000001 || Math.Abs(m.Yaw-360)>.001)throw new Exception("Motion midpoint or heading wrap failed.");
+            m.Sample(new PointF(.501f,.5f),1,.25,false); m.Advance(.3125);
+            if(Math.Abs(m.Point.X-.5005)>.000001 || Math.Abs(m.Yaw-361)>.001)throw new Exception("Motion midpoint or immediate heading update failed.");
             m.Advance(2); if(Math.Abs(m.Point.X-.501)>.000001 || m.Advance(3))throw new Exception("Motion overshoot or idle redraw.");
             m.Sample(new PointF(.9f,.9f),45,3,false); if(m.Point.X!=.9f)throw new Exception("Teleport must snap.");
             m.Sample(new PointF(.900005f,.9f),45.5,4,false);

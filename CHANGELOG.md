@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.8] - 2026-09-20
+
+### Changed
+- Heading and the vision cone update immediately when a new coordinate sample arrives.
+- Request position and heading every 250 ms by default, including while stationary. Existing one-second settings upgrade once; slower custom intervals are retained.
+- Position smoothing reaches the latest observed location within 180 ms, with a 16 ms overlay timer.
+- Reuse cached terrain during small movements and full-map pans, reducing repeated map rendering work. Zoom and layer changes still refresh immediately.
+- Preserve chat, aiming, focus and overlapping-copy protections. Actual tracking speed remains dependent on SCUM supplying clipboard updates.
+
 ## [1.4.7] - 2026-09-20
 
 ### Changed

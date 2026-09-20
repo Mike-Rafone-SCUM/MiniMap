@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -6,6 +6,17 @@ using System.Windows.Forms;
 namespace ScumMiniMap {
 
     public static class Program {
+#if MINIMAP_TEST
+        internal static readonly bool IsTestBuild=true;
+#else
+        internal static readonly bool IsTestBuild=false;
+#endif
+        internal static string DataFolderName { get { return IsTestBuild?"ScumMiniMap-ResponsivenessTest":"ScumMiniMap"; } }
+        internal static int MinimumCopyIntervalMs { get { return 250; } }
+        internal static int TrackingIntervalMs(int configured) { return Math.Max(MinimumCopyIntervalMs,configured); }
+        internal static int UpgradeCopyInterval(int configured,bool revisionSeen) {
+            return !revisionSeen && configured==1000 ? 250 : configured;
+        }
 
 
 
@@ -21,7 +32,7 @@ namespace ScumMiniMap {
 
 
 
-                string appData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ScumMiniMap");
+                string appData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DataFolderName);
 
 
 
@@ -118,7 +129,7 @@ namespace ScumMiniMap {
 
 
 
-            string appData=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"ScumMiniMap");
+            string appData=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),DataFolderName);
 
 
 
@@ -334,7 +345,10 @@ namespace ScumMiniMap {
 
 
 
-                if(!createdNew) return;
+                if(!createdNew) {
+                    if(IsTestBuild) MessageBox.Show("Exit the running SCUM MiniMap from its tray menu before starting this test package.","SCUM MiniMap responsiveness test");
+                    return;
+                }
 
 
 

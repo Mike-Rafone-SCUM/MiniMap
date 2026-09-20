@@ -508,7 +508,7 @@ public void SaveSettingsPreview(string path) {
 
 
 
-            if(ReadCopyInterval(1,true)!=1000 || ReadCopyInterval(3,true)!=3000 || ReadCopyInterval(0,false)!=1000 || ReadCopyInterval(500,false)!=1000 || ReadCopyInterval(int.MaxValue,false)!=10000)throw new Exception("Sampling interval migration failed.");
+            if(ReadCopyInterval(1,true)!=1000 || ReadCopyInterval(3,true)!=3000 || ReadCopyInterval(0,false)!=Program.MinimumCopyIntervalMs || ReadCopyInterval(500,false)!=Math.Max(500,Program.MinimumCopyIntervalMs) || ReadCopyInterval(int.MaxValue,false)!=10000)throw new Exception("Sampling interval migration failed.");
 
 
 

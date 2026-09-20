@@ -31,6 +31,12 @@ New-Item -ItemType Directory -Path $output -Force | Out-Null
 $exe = Join-Path $output 'SkynettMiniMap.exe'
 $compiler = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 $sources = @(& (Join-Path (Split-Path $PSScriptRoot -Parent) 'scripts\Get-MiniMapSources.ps1'))
+$renderTest = Join-Path $output 'RenderingChecks.exe'
+& $compiler /nologo /optimize+ /target:exe /platform:x64 /main:MapRenderingTests "/out:$renderTest" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll @sources (Join-Path $repoRoot 'tests\MapRenderingTests.cs')
+if ($LASTEXITCODE -ne 0) { throw 'Rendering test compilation failed.' }
+& $renderTest $resDir
+if ($LASTEXITCODE -ne 0) { throw 'Rendering checks failed.' }
+Remove-Item -LiteralPath $renderTest
 
 # VersionString is the authoritative application version. Stamp a temporary
 # MiniMap source for compilation so PE/assembly metadata cannot drift from it.

@@ -86,7 +86,7 @@ namespace ScumMiniMap {
 
 
 
-            // Limit synthetic shortcuts to one per second; preserve slower custom values.
+            // Legacy settings store seconds; current settings allow 250 ms tracking.
 
 
 
@@ -94,7 +94,7 @@ namespace ScumMiniMap {
 
 
 
-            return Math.Max(1000,Math.Min(10000,value));
+            return Math.Max(Program.MinimumCopyIntervalMs,Math.Min(10000,value));
 
 
 
@@ -150,7 +150,7 @@ namespace ScumMiniMap {
 
 
 
-                bool foundWelcomed=false, foundLanguage=false;
+                bool foundWelcomed=false, foundLanguage=false, foundTrackingRevision=false;
 
 
 
@@ -194,6 +194,7 @@ namespace ScumMiniMap {
 
 
 
+                        if((key=="TrackingRevision" && val=="1") || (Program.IsTestBuild && key=="TestTrackingRevision" && val=="2")) { foundTrackingRevision=true; continue; }
                         if(key=="Welcomed") { foundWelcomed=true; continue; }
 
 
@@ -270,6 +271,8 @@ namespace ScumMiniMap {
 
 
 
+                // Upgrade test 1's default once; retain explicit slower custom intervals.
+                copyIntervalMs=Program.UpgradeCopyInterval(copyIntervalMs,foundTrackingRevision);
                 if(!foundWelcomed) isFirstLaunch=true;
 
 
@@ -365,7 +368,7 @@ namespace ScumMiniMap {
 
 
 
-            try { File.WriteAllLines(settingsPath+".tmp",new string[]{"Welcomed=True","Language="+Localization.CurrentCode,"GridLabels="+gridLabels,"GridBorders="+gridBorders,"GridOpacity="+gridOpacity,"ShowZones="+showZones,"LabelSize="+labelSize,"EdgeFade="+edgeFade,"Shape="+overlayShape,"ShowHeading="+showHeading,"ShowCompass="+showCompass,"ShowElevation="+showElevation,"ZoneChime="+zoneChime,"CopyIntervalMs="+copyIntervalMs,"AutoZoom="+autoZoom,"AutoZoomMin="+autoZoomMin,"AutoZoomMax="+autoZoomMax,"ShowStatus="+showStatus,"StatusPos="+statusPos,"Opacity="+mapOpacity,"FullMapOpacity="+fullMapOpacity,"Width="+minimapBounds.Width,"Height="+minimapBounds.Height,"Left="+minimapBounds.Left,"Top="+minimapBounds.Top,"Zoom="+zoom.ToString(CultureInfo.InvariantCulture),"MaxZoom="+maxZoom,"ZoomStep="+zoomStepPercent,"ScumMapKey="+scumMapKey,"ScumChatKey="+scumChatKey,"ScumCopyModifierKey="+scumCopyModifierKey,"ScumCopyKey="+scumCopyKey,"ShowCustomWaypoints="+showCustomWaypoints,"ShowScumMap="+showScumMap,"ScumMapDisabledCats="+(scumMap!=null?scumMap.GetDisabledCategoriesString():""),"ShowZoneLabels="+showZoneLabels,"SmartLabelLod="+smartLabelLod,"SidebarWildlifeExpanded="+sidebarWildlifeExpanded,"SidebarZonesExpanded="+sidebarZonesExpanded,"DisabledZoneLayers="+string.Join(";",disabledZoneLayers),"RouteColor="+ColorTranslator.ToHtml(routeGuidanceColor),"PlayerColor="+ColorTranslator.ToHtml(playerConeColor)});
+            try { File.WriteAllLines(settingsPath+".tmp",new string[]{"Welcomed=True","TrackingRevision=1","Language="+Localization.CurrentCode,"GridLabels="+gridLabels,"GridBorders="+gridBorders,"GridOpacity="+gridOpacity,"ShowZones="+showZones,"LabelSize="+labelSize,"EdgeFade="+edgeFade,"Shape="+overlayShape,"ShowHeading="+showHeading,"ShowCompass="+showCompass,"ShowElevation="+showElevation,"ZoneChime="+zoneChime,"CopyIntervalMs="+copyIntervalMs,"AutoZoom="+autoZoom,"AutoZoomMin="+autoZoomMin,"AutoZoomMax="+autoZoomMax,"ShowStatus="+showStatus,"StatusPos="+statusPos,"Opacity="+mapOpacity,"FullMapOpacity="+fullMapOpacity,"Width="+minimapBounds.Width,"Height="+minimapBounds.Height,"Left="+minimapBounds.Left,"Top="+minimapBounds.Top,"Zoom="+zoom.ToString(CultureInfo.InvariantCulture),"MaxZoom="+maxZoom,"ZoomStep="+zoomStepPercent,"ScumMapKey="+scumMapKey,"ScumChatKey="+scumChatKey,"ScumCopyModifierKey="+scumCopyModifierKey,"ScumCopyKey="+scumCopyKey,"ShowCustomWaypoints="+showCustomWaypoints,"ShowScumMap="+showScumMap,"ScumMapDisabledCats="+(scumMap!=null?scumMap.GetDisabledCategoriesString():""),"ShowZoneLabels="+showZoneLabels,"SmartLabelLod="+smartLabelLod,"SidebarWildlifeExpanded="+sidebarWildlifeExpanded,"SidebarZonesExpanded="+sidebarZonesExpanded,"DisabledZoneLayers="+string.Join(";",disabledZoneLayers),"RouteColor="+ColorTranslator.ToHtml(routeGuidanceColor),"PlayerColor="+ColorTranslator.ToHtml(playerConeColor)});
 
 
 

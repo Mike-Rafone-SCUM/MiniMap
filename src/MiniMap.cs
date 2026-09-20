@@ -72,15 +72,15 @@ using System.Drawing.Drawing2D;
 
 
 
-[assembly: AssemblyVersion("1.4.7.0")]
+[assembly: AssemblyVersion("1.4.8.0")]
 
 
 
-[assembly: AssemblyFileVersion("1.4.7.0")]
+[assembly: AssemblyFileVersion("1.4.8.0")]
 
 
 
-[assembly: AssemblyInformationalVersion("1.4.7")]
+[assembly: AssemblyInformationalVersion("1.4.8")]
 
 
 
@@ -134,6 +134,8 @@ namespace ScumMiniMap {
 
 
         internal int TerrainBuilds;
+        const int TerrainMargin=64;
+        float terrainLeft,terrainTop;
 
 
 
@@ -173,7 +175,7 @@ namespace ScumMiniMap {
 
 
 
-        int copyIntervalMs=1000;
+        int copyIntervalMs=Program.MinimumCopyIntervalMs;
 
 
 
@@ -865,7 +867,7 @@ namespace ScumMiniMap {
 
 
 
-            Text=Localization.T("HeaderSettings",VersionString); TopMost=true; ClientSize=new Size(450,640); MinimumSize=new Size(450,480);
+            Text=Localization.T("HeaderSettings",VersionString+(Program.IsTestBuild?" TEST":"")); TopMost=true; ClientSize=new Size(450,640); MinimumSize=new Size(450,480);
 
 
 
@@ -1063,7 +1065,7 @@ namespace ScumMiniMap {
 
 
 
-            tray=new NotifyIcon { Icon=SystemIcons.Application,Text="SkynettMiniMap v"+VersionString,Visible=true };
+            tray=new NotifyIcon { Icon=SystemIcons.Application,Text="SCUM MiniMap v"+VersionString+(Program.IsTestBuild?" TEST":""),Visible=true };
 
 
 
@@ -1124,7 +1126,7 @@ namespace ScumMiniMap {
 
 
 
-            OverlayTheme.Frame(this,Localization.T("HeaderSettings",VersionString),DismissSettings);
+            OverlayTheme.Frame(this,Localization.T("HeaderSettings",VersionString+(Program.IsTestBuild?" TEST":"")),DismissSettings);
 
 
 
@@ -1214,7 +1216,7 @@ namespace ScumMiniMap {
 
 
 
-            timer.Interval=33; timer.Tick+=Tick; timer.Start();
+            timer.Interval=16; timer.Tick+=Tick; timer.Start();
 
 
 
@@ -1262,7 +1264,7 @@ namespace ScumMiniMap {
 
 
 
-                if(!diagnosticMode && string.IsNullOrEmpty(Program.LocalUpdateSource)) {
+                if(!Program.IsTestBuild && !diagnosticMode && string.IsNullOrEmpty(Program.LocalUpdateSource)) {
 
 
 
@@ -1320,7 +1322,7 @@ namespace ScumMiniMap {
             trayMenu.Items.Add(Localization.Get("Settings"),null,(s,e)=>ShowSettings());
             trayMenu.Items.Add(Localization.Get("FullMap"),null,(s,e)=>TriggerFullMap());
             trayMenu.Items.Add(Localization.Get("SearchPlaceOrGrid"),null,(s,e)=>ShowZoneSearch());
-            trayMenu.Items.Add(Localization.Get("TrayCheckUpdates"),null,(s,e)=>CheckForUpdates(true));
+            trayMenu.Items.Add(Localization.Get("TrayCheckUpdates"),null,(s,e)=>CheckForUpdates(true)).Enabled=!Program.IsTestBuild;
             trayMenu.Items.Add(Localization.Get("JoinDiscord"),null,(s,e)=>{ try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName="https://discord.gg/MYzcGaFDMn", UseShellExecute=true }); } catch {} });
             trayMenu.Items.Add(Localization.Get("TrayShowHide"),null,(s,e)=>ToggleOverlay());
             trayMenu.Items.Add(Localization.Get("TrayExit"),null,(s,e)=>ExitApp());
@@ -1386,7 +1388,7 @@ namespace ScumMiniMap {
                 }
                 if (Localization.Current != newLang) {
                     Localization.Current = newLang;
-                    Text = Localization.T("HeaderSettings", VersionString);
+                    Text = Localization.T("HeaderSettings", VersionString+(Program.IsTestBuild?" TEST":""));
                     BuildTrayMenu();
                     BuildSettingsPanel();
                     terrainKey = null;
@@ -1548,7 +1550,7 @@ namespace ScumMiniMap {
             });
             AddNumber(bar, Localization.Get("MaxZoom"), 4, 32, maxZoom, value => { maxZoom = value; zoom = Math.Min(maxZoom, zoom); targetZoom = Math.Min(maxZoom, targetZoom); });
             AddNumber(bar, Localization.Get("ZoomStep"), 10, 100, zoomStepPercent, value => { zoomStepPercent = value; });
-            AddNumber(bar, Localization.Get("PositionInterval"), 1000, 10000, copyIntervalMs, value => { copyIntervalMs = value; next = DateTime.UtcNow; }).Increment = 250;
+            AddNumber(bar, Localization.Get("PositionInterval"), Program.MinimumCopyIntervalMs, 10000, copyIntervalMs, value => { copyIntervalMs = value; next = DateTime.UtcNow; }).Increment = 50;
 
             // 6. TOOLS & DATA
             OverlayTheme.Section(bar, Localization.Get("SecToolsShortcuts"));
@@ -1566,7 +1568,7 @@ namespace ScumMiniMap {
             };
             bar.Controls.Add(resetMapBtn);
 
-            Button updateBtn = new Button { Text = Localization.Get("CheckUpdatesGitHub"), Width = 280 };
+            Button updateBtn = new Button { Text = Localization.Get("CheckUpdatesGitHub"), Width = 280, Enabled = !Program.IsTestBuild };
             updateBtn.Click += (s, e) => CheckForUpdates(true);
             bar.Controls.Add(updateBtn);
 
@@ -1590,7 +1592,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "1.4.7";
+        public const string VersionString = "1.4.8";
 
 
 
@@ -1793,7 +1795,7 @@ namespace ScumMiniMap {
 
 
 
-            if(updateCheckRunning || closing || IsDisposed || diagnosticMode) return;
+            if(Program.IsTestBuild || updateCheckRunning || closing || IsDisposed || diagnosticMode) return;
 
 
 
@@ -5189,11 +5191,8 @@ namespace ScumMiniMap {
 
 
 
-                InvalidateFullMapSidebar();
-
-
-
-                lastFrameKey = null; terrainKey = null;
+                // Panning changes the camera only; retain terrain coverage and sidebar controls.
+                lastFrameKey = null;
 
 
 
@@ -7652,8 +7651,7 @@ namespace ScumMiniMap {
                     else if(Native.KeysBusy(scumCopyModifierKey,scumCopyKey)) note=Localization.Get("NoteWaitingUserKeys");
                 }
                 if(TrackingEnabled && keys.Available && !panelOpening && !Visible && !searchOpen && !chat.Paused && !pending && !copyInProgress && !altTabRecent && now>=resumeAfter && now>=next && Native.GameFocused() && !Native.KeysBusy(scumCopyModifierKey,scumCopyKey)) {
-                    int interval=copyIntervalMs;
-                    if(position!=null && filteredSpeed<0.5) interval=Math.Max(copyIntervalMs,1000);
+                    int interval=Program.TrackingIntervalMs(copyIntervalMs);
                     next=now.AddMilliseconds(interval);
                     PerformCopyAsync();
                 }
@@ -8234,7 +8232,7 @@ namespace ScumMiniMap {
 
 
 
-            if(overlayFrame.Width!=overlay.Width || overlayFrame.Height!=overlay.Height) {
+            if(overlayFrame.Width!=overlay.Width || overlayFrame.Height!=overlay.Height || fullMap.Width!=overlay.Width+TerrainMargin*2 || fullMap.Height!=overlay.Height+TerrainMargin*2) {
 
 
 
@@ -8246,7 +8244,7 @@ namespace ScumMiniMap {
 
 
 
-                fullMap=new Bitmap(overlay.Width,overlay.Height,PixelFormat.Format32bppPArgb);
+                fullMap=new Bitmap(overlay.Width+TerrainMargin*2,overlay.Height+TerrainMargin*2,PixelFormat.Format32bppPArgb);
 
 
 
@@ -8701,17 +8699,27 @@ namespace ScumMiniMap {
             float left=isPlayerCentered?(cx-side*p.X):(cx-side*mapCentre.X);
             float top=isPlayerCentered?(cy-side*p.Y):(cy-side*mapCentre.Y);
 
-            string terrain=string.Join("|",new object[]{bounds,effectiveZoom,isPlayerCentered?(int)Math.Round(left*8):(int)Math.Round(left*4),isPlayerCentered?(int)Math.Round(top*8):(int)Math.Round(top*4),gridLabels,gridBorders,gridOpacity,showZones,string.Join(",",disabledZoneLayers),showCustomWaypoints,showScumMap,(scumMap!=null?scumMap.GetFilterHashKey():""),showZoneLabels,smartLabelLod,fullMapActive,labelSize,Localization.CurrentCode});
-            if(terrainKey!=terrain) {
+            string terrain=string.Join("|",new object[]{bounds,effectiveZoom,gridLabels,gridBorders,gridOpacity,showZones,string.Join(",",disabledZoneLayers),showCustomWaypoints,showScumMap,(scumMap!=null?scumMap.GetFilterHashKey():""),showZoneLabels,smartLabelLod,fullMapActive,labelSize,Localization.CurrentCode});
+            // A padded viewport can follow small movements without repainting all terrain/POI.
+            // Zoom, layers, language and settings remain part of the cache key.
+            if(terrainKey!=terrain || Math.Abs(left-terrainLeft)>TerrainMargin || Math.Abs(top-terrainTop)>TerrainMargin) {
                 using(Graphics background=Graphics.FromImage(fullMap)) {
-                    background.Clear(Color.FromArgb(0,0,0,0));
-                    using(Brush bgBrush=new SolidBrush(Color.FromArgb(12,17,22))) background.FillRectangle(bgBrush,bounds);
+                    background.Clear(Color.FromArgb(12,17,22));
+                    background.TranslateTransform(TerrainMargin,TerrainMargin);
                     background.SmoothingMode=SmoothingMode.AntiAlias;
                     background.InterpolationMode=InterpolationMode.Bilinear;
                     background.PixelOffsetMode=PixelOffsetMode.HighSpeed;
                     Image texture=map;
                     foreach(Bitmap level in mapLevels) { if(level.Width<side || level.Height<side)break; texture=level; }
-                    background.DrawImage(texture,left,top,side,side);
+                    // Crop before scaling: GDI+ otherwise processes a huge zoomed image
+                    // even though only a small window onto it is visible.
+                    RectangleF visibleTexture=RectangleF.Intersect(background.VisibleClipBounds,new RectangleF(left,top,side,side));
+                    if(visibleTexture.Width>0 && visibleTexture.Height>0) {
+                        float textureScale=texture.Width/side, textureScaleY=texture.Height/side;
+                        background.DrawImage(texture,visibleTexture,new RectangleF(
+                            (visibleTexture.Left-left)*textureScale,(visibleTexture.Top-top)*textureScaleY,
+                            visibleTexture.Width*textureScale,visibleTexture.Height*textureScaleY),GraphicsUnit.Pixel);
+                    }
                     DrawGrid(background,left,top,side);
                     float currentZoom=fullMapActive?fullMapZoom:zoom;
 
@@ -8743,6 +8751,7 @@ namespace ScumMiniMap {
 
 
 
+                terrainLeft=left; terrainTop=top;
                 terrainKey=terrain; TerrainBuilds++;
 
 
@@ -8751,7 +8760,11 @@ namespace ScumMiniMap {
 
 
 
-            g.DrawImageUnscaled(fullMap,0,0);
+            GraphicsState terrainState=g.Save();
+            try {
+                g.SetClip(bounds,CombineMode.Intersect);
+                g.DrawImageUnscaled(fullMap,(int)Math.Round(left-terrainLeft)-TerrainMargin,(int)Math.Round(top-terrainTop)-TerrainMargin);
+            } finally { g.Restore(terrainState); }
 
 
 
