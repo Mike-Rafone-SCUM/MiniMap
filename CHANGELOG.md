@@ -1,10 +1,31 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to **SkynettMiniMap** are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+
+## [1.4.8] - 2026-09-21
+
+### New copy-key default
+- New installations and the setup guide's key reset use **backslash (`\`) without a modifier**. Bind SCUM's **Copy location** action to the same key manually; the app does not change SCUM settings. Keyboard layouts differ: use the key capture controls to match your binding, or choose another unused single key.
+- Existing saved bindings are preserved. To switch from Ctrl+C, change both SCUM and MiniMap and select **Single key without modifier**. Ctrl+C remains supported with a minimum one-second interval; a dedicated single key avoids injecting Ctrl during gameplay.
+
+### Optional voice navigation — work in progress
+- Disabled by default. Enable it in Settings, choose a voice, preview it and adjust volume. Includes **Lyan (Female US)** and supports additional voice packs.
+- Distance and turn instructions use the supplied 12 clips. Junction-based turn prompts, wrong-way detection and rerouting are included, but accuracy and timing still need gameplay testing; use the map and road signs to check directions.
+- Removed ambiguous keep-left/right prompts from current guidance. Route connector lines are included in off-route checks; ordinary route refreshes no longer interrupt a phrase after “In”.
+- Recalculation is shown on screen. The bundled voice has no spoken recalculating clip; future packs can optionally provide one.
+
+### Responsiveness and input
+- Single-key tracking requests updates every 250 ms by default. Existing one-second preferences upgrade once; slower custom intervals remain. Modifier bindings retain their one-second minimum.
+- Vision cone and heading apply the latest received sample immediately; shorter position smoothing and cached terrain reduce rendering work.
+- Removed blocking clipboard retries and repeated full clipboard snapshots from the update loop. Single-key response waits and retry pauses are shorter, and audio playback runs on its own thread.
+- Improved injected-key cleanup and chat protection for T, Tab, Enter and Esc. Single-key copying continues while scrolling; modifier copying retains extra input guards.
+- Recover keyboard hooks and stale held-key state to address the full-map shortcut becoming unresponsive during long sessions.
+- Keep an interactive taskbar icon; click it to reopen Settings.
+- Actual update speed still depends on SCUM providing coordinates. These changes do not guarantee uninterrupted tracking or eliminate all gameplay conflicts with Ctrl+C.
 
 ## [1.4.7] - 2026-09-20
 
@@ -46,6 +67,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **System Tray Manual Map Toggle**: Added an explicit manual full-map toggle option to the system tray context menu for direct access regardless of hardware hook state.
 
 ### Changed
+- **Configurable Coordinate Copy Key (With / Without Modifier)**: Expanded the Key Rebinding Wizard in Settings with a dedicated "Single key without modifier" mode. Players can now configure coordinate telemetry copying either as a combination chord (e.g., `Ctrl+C`, `Alt+C`, `Shift+Key`) or as a standalone single key without requiring any modifier key (e.g., dedicated function or keypad keys). Automatic conflict detection ensures standalone coordinate keys cannot conflict with configured Map or Chat keys.
 - **In-Game Keybinding & Chat Guard Overhaul**: Resolved full-screen map activation (`M` key) race condition where typing-activity heuristics (`Native.UserTypingOrActive`) falsely suppressed map toggling. Upgraded `ChatState` with hook-level chat lifecycle tracking: Enter and Escape close active chat, `/` or configured chat key opens tracking, and keypresses continuously refresh the active session to prevent chat timeout mid-sentence. Re-enabled fallback key polling in `Tick()` to ensure responsive activation even under heavy game load.
 - **Automated Update Engine & Deployment Verification**: Hardened GitHub release update checks against the official `update.txt` manifest with SHA-256 pre-download validation. Enforced strict version increment comparison (`release.Version > CurrentVersion`) preventing false downgrade prompts on development builds. Implemented rate-limiting detection and exponential backoff retry handling (`UpdateRetryException`).
 - **Performance & Smoothness Sweep**: Eliminated jitter and micro-stutters during active coordinate sampling chords. Stabilized player Cone of Vision redraws and HUD telemetry ticker scrolling. Added visible clip bounds culling for zones, habitats, and markers to eliminate off-screen render overhead. Replaced scanline copying with bulk buffer memory transfers in overlay fade transitions.
