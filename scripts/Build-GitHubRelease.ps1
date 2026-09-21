@@ -11,7 +11,7 @@ if ($source -notmatch 'public const string VersionString = "(\d+\.\d+\.\d+)";') 
 $version = $matches[1]
 $updateSource = Get-Content (Join-Path $srcDir 'UpdateService.cs') -Raw -Encoding UTF8
 if ($updateSource -notmatch 'public const string Repository = "[A-Za-z0-9-]+/[A-Za-z0-9._-]+";') { throw 'Configure the update repository first.' }
-foreach ($script in @('Test-UpdateChecker.ps1','Check-Stability.ps1')) {
+foreach ($script in @('Test-UpdateChecker.ps1','Check-Stability.ps1','Test-InputVoice.ps1')) {
     & powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot $script)
     if ($LASTEXITCODE -ne 0) { throw "$script failed." }
 }
@@ -29,6 +29,7 @@ $output = if ($OutputDirectory) {
 if (Test-Path -LiteralPath (Join-Path $output 'SkynettMiniMap.exe')) { throw 'Output already contains a binary. Choose a fresh build directory.' }
 New-Item -ItemType Directory -Path $output -Force | Out-Null
 $exe = Join-Path $output 'SkynettMiniMap.exe'
+$voiceResources=@(& (Join-Path $PSScriptRoot 'Get-VoiceResources.ps1'))
 $compiler = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 $sources = @(& (Join-Path (Split-Path $PSScriptRoot -Parent) 'scripts\Get-MiniMapSources.ps1'))
 $renderTest = Join-Path $output 'RenderingChecks.exe'
@@ -67,7 +68,7 @@ if ($replacementCount -ne 1) {
     throw "Expected exactly one MiniMap.cs compilation source; found $replacementCount."
 }
 
-& $compiler /nologo /optimize+ /target:winexe /platform:x64 "/out:$exe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll "/resource:$resDir\map.png,map.png" "/resource:$resDir\zones.tsv,zones.tsv" "/resource:$resDir\roads.bin,roads.bin" "/resource:$resDir\scummap.bin,scummap.bin" "/resource:$packDir\detect_zones.py,detect_zones.py" "/win32icon:$resDir\App-Icon.ico" @sources
+& $compiler /nologo /optimize+ /target:winexe /platform:x64 @voiceResources "/out:$exe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll "/resource:$resDir\map.png,map.png" "/resource:$resDir\zones.tsv,zones.tsv" "/resource:$resDir\roads.bin,roads.bin" "/resource:$resDir\scummap.bin,scummap.bin" "/resource:$packDir\detect_zones.py,detect_zones.py" "/win32icon:$resDir\App-Icon.ico" @sources
 $compileExitCode = $LASTEXITCODE
 Remove-Item -LiteralPath $releaseMiniMap -Force -ErrorAction SilentlyContinue
 if ($compileExitCode -ne 0) { throw 'Compilation failed.' }

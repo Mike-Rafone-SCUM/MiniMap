@@ -262,10 +262,7 @@ namespace ScumMiniMap {
         public bool Paused {
             get {
                 if(openTime == DateTime.MinValue) return false;
-                if((DateTime.UtcNow - openTime).TotalSeconds > 25) {
-                    openTime = DateTime.MinValue;
-                    return false;
-                }
+                // An idle chat box still owns typing; only an explicit close releases it.
                 return true;
             }
         }
@@ -312,6 +309,8 @@ namespace ScumMiniMap {
         }
         public void Resync(Func<int,bool> isDown) {
             if(isDown==null) return;
+            // A missed key-up must not leave M (or any other shortcut) permanently held.
+            for(int key=0;key<held.Length;key++) if(held[key] && !isDown(key)) held[key]=false;
             for(int i=0; i<ModifierKeys.Length; i++) {
                 int key = ModifierKeys[i];
                 held[key] = isDown(key);
@@ -326,25 +325,75 @@ namespace ScumMiniMap {
         [DllImport("user32.dll")] static extern IntPtr CallNextHookEx(IntPtr hook,int code,IntPtr message,IntPtr data);
         [DllImport("kernel32.dll",CharSet=CharSet.Unicode)] static extern IntPtr GetModuleHandle(string name);
         [StructLayout(LayoutKind.Sequential)] struct KeyboardData { public uint key,scan,flags,time; public UIntPtr extra; }
+        [StructLayout(LayoutKind.Sequential)] struct MouseData { public int x,y; public uint data,flags,time; public UIntPtr extra; }
         readonly HookProc callback;
+        readonly HookProc mouseCallback;
         readonly Action<int> action;
         readonly Func<int,bool> shouldDispatch;
         readonly ChatState chatState;
         readonly Func<int> getChatOpenKey;
+        readonly Func<int> getCopyModifier;
         readonly PhysicalKeyTransitions transitions=new PhysicalKeyTransitions();
         IntPtr hook;
+        IntPtr mouseHook;
+        DateTime nextHookRefresh=DateTime.MinValue;
+        bool disposed,wasFocused;
+        readonly bool[] polledChatKeys=new bool[256];
+        static DateTime lastMouseAction=DateTime.MinValue;
         public static DateTime LastUserInputTime = DateTime.MinValue;
         public static DateTime LastFreshKeyDownTime = DateTime.MinValue;
         internal static bool UserActiveRecently(int windowMs = 90) {
-            return (DateTime.UtcNow - LastFreshKeyDownTime).TotalMilliseconds < windowMs;
+            return (DateTime.UtcNow - LastFreshKeyDownTime).TotalMilliseconds < windowMs || (DateTime.UtcNow-lastMouseAction).TotalMilliseconds<400;
         }
-        public bool Available { get { return hook!=IntPtr.Zero; } }
+        public bool Available { get { return hook!=IntPtr.Zero && mouseHook!=IntPtr.Zero; } }
         public bool ShortcutModifiersDown(bool includeShift) { return transitions.ShortcutModifiersDown(includeShift); }
-        public GameKeys(Action<int> action,Func<int,bool> shouldDispatch,ChatState chatState=null,Func<int> getChatOpenKey=null) {
-            this.action=action; this.shouldDispatch=shouldDispatch; this.chatState=chatState; this.getChatOpenKey=getChatOpenKey; callback=OnKey;
-            hook=SetWindowsHookEx(13,callback,GetModuleHandle(null),0);
+        public GameKeys(Action<int> action,Func<int,bool> shouldDispatch,ChatState chatState=null,Func<int> getChatOpenKey=null,Func<int> getCopyModifier=null) {
+            this.action=action; this.shouldDispatch=shouldDispatch; this.chatState=chatState; this.getChatOpenKey=getChatOpenKey; this.getCopyModifier=getCopyModifier; callback=OnKey;
+            mouseCallback=OnMouse;
+            RefreshHooks();
         }
-        public void Resync() { transitions.Resync(key => (Native.GetAsyncKeyState(key)&0x8000)!=0); }
+        void RefreshHooks() {
+            if(disposed) return;
+            if(hook!=IntPtr.Zero) UnhookWindowsHookEx(hook);
+            if(mouseHook!=IntPtr.Zero) UnhookWindowsHookEx(mouseHook);
+            hook=SetWindowsHookEx(13,callback,GetModuleHandle(null),0);
+            mouseHook=SetWindowsHookEx(14,mouseCallback,GetModuleHandle(null),0);
+            nextHookRefresh=DateTime.UtcNow.AddSeconds(30);
+        }
+        public void Resync() {
+            if(disposed) return;
+            bool focused=Native.GameFocused();
+            // Windows may silently remove a hook after a long UI stall; a non-zero handle
+            // alone is not proof it still receives input. Refresh without changing chat state.
+            if(!Native.CopyInProgress && (DateTime.UtcNow>=nextHookRefresh || (focused && !wasFocused))) RefreshHooks();
+            wasFocused=focused;
+            if(!Native.CopyInProgress) transitions.Resync(key => (Native.GetAsyncKeyState(key)&0x8000)!=0);
+            int openKey=getChatOpenKey!=null?getChatOpenKey():0x54;
+            foreach(int key in new[]{openKey,0xBF,0x6F,0x0D,0x1B}) {
+                if(key<0 || key>=256) continue;
+                bool down=(Native.GetAsyncKeyState(key)&0x8000)!=0;
+                if(focused && down && !polledChatKeys[key] && chatState!=null) {
+                    chatState.Key(key,openKey);
+                    Native.CancelActiveCopy();
+                }
+                polledChatKeys[key]=down;
+            }
+        }
+        IntPtr OnMouse(int code,IntPtr message,IntPtr data) {
+            int kind=message.ToInt32();
+            if(code>=0 && kind!=0x200 && Native.GameFocused()) {
+                MouseData mouse=(MouseData)Marshal.PtrToStructure(data,typeof(MouseData));
+                if((mouse.flags&1)==0 && MouseActionBlocksCopy(kind,getCopyModifier!=null?getCopyModifier():0xA2)) {
+                    lastMouseAction=DateTime.UtcNow;
+                    Native.CancelActiveCopy();
+                }
+            }
+            return CallNextHookEx(mouseHook,code,message,data);
+        }
+        internal static bool MouseActionBlocksCopy(int message,int modifier) {
+            // Wheel events cannot collide with a modifier that is no longer being injected.
+            return (message!=0x20A && message!=0x20E) || modifier>0;
+        }
         IntPtr OnKey(int code,IntPtr message,IntPtr data) {
             if(code>=0) {
                 KeyboardData key=(KeyboardData)Marshal.PtrToStructure(data,typeof(KeyboardData));
@@ -356,7 +405,7 @@ namespace ScumMiniMap {
                 bool altDown=transitions.IsDown(0x12) || transitions.IsDown(0xA4) || transitions.IsDown(0xA5)
                     || (Native.GetAsyncKeyState(0x12)&0x8000)!=0 || (Native.GetAsyncKeyState(0xA4)&0x8000)!=0 || (Native.GetAsyncKeyState(0xA5)&0x8000)!=0;
                 if(Native.CopyInProgress && isDown && (k==0x12 || k==0xA4 || k==0xA5 || k==0x09 || k==0x5B || k==0x5C)) {
-                    Native.EmergencyReleaseModifier();
+                    Native.CancelActiveCopy();
                 }
                 if(k==0x09 && altDown) {
                     Native.LastAltTabTime=DateTime.UtcNow;
@@ -365,6 +414,7 @@ namespace ScumMiniMap {
                     LastUserInputTime=DateTime.UtcNow;
                     if(fresh && isDown) {
                         LastFreshKeyDownTime=DateTime.UtcNow;
+                        Native.CancelActiveCopy();
                         if(chatState!=null) {
                             int openKey = getChatOpenKey != null ? getChatOpenKey() : 0x54;
                             chatState.Key(k, openKey);
@@ -375,11 +425,18 @@ namespace ScumMiniMap {
                 // every physical key so modifier/chat state remains accurate, but forwarding
                 // all typed keys creates a BeginInvoke storm and makes focus transitions prone
                 // to losing the matching key-up event.
-                if(fresh && isDown && !(k==0x09 && altDown) && (shouldDispatch==null || shouldDispatch(k))) action(k);
+                bool chatOwnsKey=chatState!=null && chatState.Paused && k!=(getChatOpenKey!=null?getChatOpenKey():0x54)
+                    && k!=0x09 && k!=0x0D && k!=0x1B;
+                if(fresh && isDown && !chatOwnsKey && !(k==0x09 && altDown) && (shouldDispatch==null || shouldDispatch(k))) action(k);
             }
             return CallNextHookEx(hook,code,message,data);
         }
-        public void Dispose() { if(hook!=IntPtr.Zero) { UnhookWindowsHookEx(hook); hook=IntPtr.Zero; } }
+        public void Dispose() {
+            disposed=true;
+            Native.CancelActiveCopy();
+            if(hook!=IntPtr.Zero) { UnhookWindowsHookEx(hook); hook=IntPtr.Zero; }
+            if(mouseHook!=IntPtr.Zero) { UnhookWindowsHookEx(mouseHook); mouseHook=IntPtr.Zero; }
+        }
     }
     sealed class OverlayWindow:Form {
         [StructLayout(LayoutKind.Sequential)] struct XY { public int X,Y; public XY(int x,int y) { X=x;Y=y; } }

@@ -1,36 +1,61 @@
-# SCUM MiniMap responsiveness test 2
+# SCUM MiniMap input and voice navigation test
 
-This is an unpublished test package based on v1.4.7. Run `SkynettMiniMap-Test.exe` after exiting the installed MiniMap from its tray menu. The two versions cannot run together because they would compete for keyboard and clipboard tracking.
+This is an unpublished test build. The v1.4.8 release was halted; v1.4.7 remains public. Exit the current MiniMap and run `SkynettMiniMap-Test.exe`. Updates are disabled in this build.
 
-The test uses `%LocalAppData%\ScumMiniMap-ResponsivenessTest` for its settings, zones and logs. It does not replace the installed executable or modify the normal MiniMap data folder. Update checks and installation of updates are disabled in this build. Close the test and start your usual executable to return to v1.4.7.
+Settings, zones, logs and voice packs use `%LocalAppData%\ScumMiniMap-ResponsivenessTest`. The installed app and its normal data folder are unchanged.
 
-## Changes to try
+The app now keeps its icon in the taskbar while minimized. Click it to open Settings; closing Settings minimizes the app while tracking continues. Use Exit from the tray menu to quit.
 
-- A padded terrain cache follows small camera movements without rebuilding terrain and POI every frame.
-- The renderer crops the visible texture before scaling, reducing the cost of zoomed views.
-- The cone applies newly received headings immediately, independently of position smoothing. Position still catches up within 180 ms. No movement or heading is predicted beyond the latest received sample.
-- The test requests coordinates and heading every 250 ms by default, including while stationary. The old test's 1,000 ms default is upgraded once; other saved intervals are retained. Change the interval in Settings if needed.
-- The UI timer requests frames every 16 ms instead of 33 ms. Actual frame rate depends on Windows and rendering load.
+## Gameplay input checks
 
-The cone can only show heading supplied by SCUM's clipboard command. The 250 ms interval is a request cadence, not a guaranteed response time; chat, aiming, input conflicts, focus changes and pending copy requests can delay it. All those protections remain active. More frequent sampling sends more coordinate-copy shortcuts: include any effect on game controls in your feedback, and use a slower interval if needed.
+Ctrl+C remains supported but now uses at least 1 second between automatic copies. It still injects gameplay keys and cannot guarantee freedom from control conflicts. For the crouching test, bind Copy location inside SCUM to an unused single key (such as F8), then select that same key and Single key without modifier in the MiniMap key setup. The game binding must be changed first; this build does not change it for you. Single-key mode retains the 250 ms cadence.
 
-## Comparison checklist
+All held shortcuts, including M, now recover from missed key-up events. Keyboard and mouse hooks renew every 30 seconds and on game focus gain without clearing chat protection. T/Enter/Esc also have physical-state polling to recover missed chat transitions.
 
-1. Match size, zoom, layer filters and tracking interval when comparing against v1.4.7. Test both 240-pixel and larger minimap sizes.
-2. Turn while standing still, then walk and drive. The cone should use each new heading immediately instead of rotating slowly toward it. Check whether the more frequent coordinate-copy shortcuts affect your controls.
-3. Pan and zoom the full map. Check that roads, POI, waypoints and the player stay aligned, with no blank strips at the viewport edges.
-4. Toggle layers, resize the minimap, Alt-Tab, aim and type in chat. Confirm that the existing input behaviour remains intact.
-5. Report your map dimensions, display resolution, zoom, enabled layers and what felt faster or worse. Logs are in the separate test data folder.
+- Scroll normally during gameplay while position sampling is active. Physical wheel events cancel modifier-based shortcuts and pause their sampling for 400 ms; single-key copying continues through wheel events. Button-event protections remain active. The copy key is released before its modifier.
+- Press T, leave chat idle for over 25 seconds, use Tab to switch channels, and type text containing M. Chat remains protected until Enter sends the message or Esc closes chat.
+- Map opening now uses the physical keyboard hook only. The competing map-key polling path is removed. Polling of other shortcuts is suspended during chat.
+- Test Alt-Tab, aiming, holding modifiers and the custom coordinate-copy binding. Sampling fails closed if either keyboard or mouse monitoring is unavailable.
 
-The accompanying development benchmarks are synthetic CPU rendering measurements, not an in-game frame-rate guarantee. No GitHub release or Discord announcement is created by the test build script.
+These input changes have deterministic regression coverage, but require live SCUM testing to establish whether the reported crouching and chat behaviour is resolved. Synthetic coordinate-copy shortcuts still depend on the game's configured binding.
 
-## Initial renderer benchmark (test 1)
+## Voice navigation
 
-180 moving frames per scenario, fixed 16x zoom, same map, same machine. These times cover bitmap composition, excluding Windows presentation and game coordinate acquisition.
+1. Open Settings, find **Voice navigation**, choose **Lyan (Female US)** and press **Preview voice**. It plays “In 100 metres, turn left.”
+2. Turn **Enable voice navigation** on and choose a volume. It is off by default. Selection, volume and enabled state persist across restarts.
+3. Select a destination with a road route and return to SCUM. Actual road-graph junctions supply left, right and U-turn instructions. Keep-left/right announcements are disabled because lane/fork-choice metadata is unavailable. Approaching a turn plays distance cues at approximately 500, 250, 100 and 50 metres. Timing accounts for movement speed and phrase duration; an urgent turn can interrupt a distance phrase. Straight sections can announce “Continue straight”. Arrival within the app's existing 30 metre radius plays “You have arrived”.
+4. Disable voice navigation to stop both the current clip and queued clips. Changing destination, opening chat, leaving the game or stale coordinates also stops route speech. Preview works while guidance is disabled.
 
-| Minimap size | v1.4.7 median / p95 | Test median / p95 | Terrain rebuilds, original / test |
-| --- | --- | --- | --- |
-| 240 x 240 | 16.83 / 20.96 ms | 0.90 / 1.38 ms | 179 / 0 |
-| 600 x 600 | 137.76 / 158.48 ms | 4.17 / 5.64 ms | 179 / 1 |
+Distance phrases are sequenced MP3 clips, not text-to-speech. Audio opening, playback and closing now run on a dedicated background worker. Repeated navigation checks are skipped when position, route and playback state have not changed; voice-pack lookup is cached. No overlapping voice phrases are played. Routine route refreshes and single uncertain samples no longer interrupt a phrase after “In”. Repeated coordinate samples and routine route refreshes do not repeat the same turn cue. Large jumps can skip distance prompts; junction coverage depends on the road graph. Water transit suppresses road instructions. The route check includes the displayed road-entry and destination connectors. Recalculation requires at least three distinct positions outside a 35-metre corridor over at least half a second. The status appears only when the router accepts the request and clears on completion; failure is reported separately. Sustained backward travel of 10 metres against the route triggers the U-turn clip and a recalculation; camera rotation alone does not. This is a first implementation for in-game testing, not a verified road-navigation dataset.
 
-Occasional cache rebuilds still occur, especially during zooming, large jumps and filter changes. Heading-only rendering was broadly unchanged (around 1 ms at 240 pixels and 4 ms at 600 pixels). These figures do not establish live gameplay latency or frame rate.
+## Adding another voice
+
+Create a folder under `%LocalAppData%\ScumMiniMap-ResponsivenessTest\voice-navigation` with a descriptive voice name. Include all 12 filenames below, then reopen Settings. Incomplete packs are omitted from the selector. The production app will use its own `ScumMiniMap\voice-navigation` folder.
+
+```
+01_500_meters.mp3
+02_250_meters.mp3
+03_100_meters.mp3
+04_50_meters.mp3
+05_continue_straight.mp3
+06_turn_left.mp3
+07_turn_right.mp3
+08_keep_left.mp3
+09_keep_right.mp3
+10_make_a_u_turn.mp3
+11_in.mp3
+12_you_have_arrived.mp3
+```
+
+An optional `13_recalculating.mp3` can be added to any pack for spoken recalculation. It is not included among the supplied clips, so recalculation is visual until that recording is provided.
+
+The bundled voice is embedded in the executable and installed into the test data folder. Keep clip wording compatible with the sequence `11_in.mp3` + distance + action.
+
+## Retained responsiveness changes
+
+The cone applies received headings immediately, position smoothing catches up within 180 ms, the overlay timer runs at 16 ms, and a padded terrain cache reduces redraw work. The 250 ms single-key tracking setting is a request cadence; input protection and SCUM clipboard response time can delay updates.
+## Test 7 sampling changes
+
+Single-key requests time out after 350 ms from keypress start, rather than over one second; repeated misses back off for one second rather than five. Single-key presses are held for 60 ms to cover game frames, without an extra post-release delay. Clipboard coordinate reads do not retry on contention, restoration disables the default retry loop, and the original clipboard snapshot is cached until external content changes. Snapshot capture and diagnostic writes run off the UI thread.
+
+The test records bounded timing summaries (no coordinates or clipboard content) in tracking-timing.log in the test data folder, to distinguish UI stalls, missing responses and input pauses if symptoms remain.

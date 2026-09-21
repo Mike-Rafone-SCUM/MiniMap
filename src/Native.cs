@@ -28,6 +28,50 @@ namespace ScumMiniMap {
 
 
         [DllImport("user32.dll")] internal static extern uint GetClipboardSequenceNumber();
+        [DllImport("user32.dll")] static extern bool OpenClipboard(IntPtr owner);
+        [DllImport("user32.dll")] static extern bool CloseClipboard();
+        [DllImport("user32.dll")] static extern bool EmptyClipboard();
+        [DllImport("user32.dll")] static extern IntPtr GetClipboardData(uint format);
+        [DllImport("user32.dll")] static extern bool IsClipboardFormatAvailable(uint format);
+        [DllImport("kernel32.dll")] static extern IntPtr GlobalLock(IntPtr data);
+        [DllImport("kernel32.dll")] static extern bool GlobalUnlock(IntPtr data);
+        [DllImport("kernel32.dll")] static extern UIntPtr GlobalSize(IntPtr data);
+        internal static bool TryReadCoordinateClipboard(out string text) {
+            text=null;
+            if(!OpenClipboard(IntPtr.Zero)) return false;
+            try {
+                if(!IsClipboardFormatAvailable(13)) return true;
+                IntPtr data=GetClipboardData(13);
+                if(data==IntPtr.Zero) return false;
+                ulong bytes=GlobalSize(data).ToUInt64();
+                if(bytes<2 || bytes>2048) return true;
+                IntPtr value=GlobalLock(data);
+                if(value==IntPtr.Zero) return false;
+                try {
+                    text=Marshal.PtrToStringUni(value,(int)(bytes/2));
+                    int end=text.IndexOf('\0'); if(end>=0) text=text.Substring(0,end);
+                    return true;
+                }
+                finally { GlobalUnlock(data); }
+            } finally { CloseClipboard(); }
+        }
+        internal static bool TryClearClipboard() {
+            if(!OpenClipboard(IntPtr.Zero)) return false;
+            try { return EmptyClipboard(); } finally { CloseClipboard(); }
+        }
+        internal static Task<IDataObject> CaptureClipboardAsync() {
+            var completion=new TaskCompletionSource<IDataObject>();
+            var worker=new Thread(()=> {
+                try {
+                    IDataObject original=Clipboard.GetDataObject();
+                    var snapshot=new DataObject();
+                    if(original!=null) foreach(string format in original.GetFormats(false)) snapshot.SetData(format,false,original.GetData(format,false));
+                    completion.SetResult(snapshot);
+                } catch(Exception ex) { completion.SetException(ex); }
+            }) { IsBackground=true,Name="MiniMap clipboard snapshot" };
+            worker.SetApartmentState(ApartmentState.STA); worker.Start();
+            return completion.Task;
+        }
 
 
 
@@ -234,6 +278,10 @@ namespace ScumMiniMap {
 
 
         internal static bool CopyInProgress;
+        static CopyInputLease activeCopy;
+        internal static void CancelActiveCopy() {
+            if(activeCopy!=null) activeCopy.Cancel();
+        }
 
 
 
@@ -414,6 +462,7 @@ namespace ScumMiniMap {
 
 
             CopyInProgress=true;
+            activeCopy=new CopyInputLease(Key);
 
 
 
@@ -421,11 +470,11 @@ namespace ScumMiniMap {
 
 
 
-                bool sent=await CopyChord(Key,Task.Delay,()=>allowed() && GetForegroundWindow()==game && GameFocused()
+                bool sent=await CopyChord(activeCopy.Send,Task.Delay,()=>!activeCopy.Cancelled && allowed() && GetForegroundWindow()==game && GameFocused()
                     && !UserTypingOrActive() && !IsCursorVisible() && !IsRightMouseDown() && !IsAltOrTabOrWinDown(),
                     copyModifierKey,copyKey);
-                return ClassifyCopy(sent,CopyError);
-            } finally { CopyInProgress=false; }
+                return ClassifyCopy(sent && !activeCopy.Cancelled,CopyError);
+            } finally { CancelActiveCopy(); activeCopy=null; CopyInProgress=false; }
         }
 
         internal static CopyResult ClassifyCopy(bool sent,string error) {
@@ -455,11 +504,11 @@ namespace ScumMiniMap {
                     if(canPressC()) {
                         c=key((uint)copyKey,false);
                         if(c) {
-                            await delay(30);
+                            // Cover more than one game frame without a modifier or a trailing hold.
+                            await delay(60);
                             ok=key((uint)copyKey,true);
                             c=!ok;
                         }
-                        await delay(80);
                     }
                 }
 

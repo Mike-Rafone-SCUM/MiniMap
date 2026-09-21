@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -9,6 +9,20 @@ using System.Windows.Forms;
 namespace ScumMiniMap {
 
     public sealed partial class MapWindow {
+        // Keep the main window minimized for a persistent taskbar button while the overlay runs.
+        bool SettingsVisible { get { return Visible && WindowState!=FormWindowState.Minimized; } }
+        bool taskbarMinimized;
+        void HandleTaskbarRestore(object sender,EventArgs args) {
+            if(WindowState==FormWindowState.Minimized) { taskbarMinimized=true; return; }
+            if(!taskbarMinimized || WindowState!=FormWindowState.Normal) return;
+            taskbarMinimized=false;
+            if(diagnosticMode || panelOpening || closing || !IsHandleCreated) return;
+            BeginInvoke(new Action(()=> {
+                if(closing || IsDisposed || WindowState!=FormWindowState.Normal) return;
+                BuildSettingsPanel();
+                ShowSettings();
+            }));
+        }
 
         void AddCheck(FlowLayoutPanel panel,string text,bool value,Action<bool> changed) {
 
@@ -195,6 +209,9 @@ namespace ScumMiniMap {
 
 
                         if((key=="TrackingRevision" && val=="1") || (Program.IsTestBuild && key=="TestTrackingRevision" && val=="2")) { foundTrackingRevision=true; continue; }
+                        if(key=="VoiceEnabled") { bool enabled; if(bool.TryParse(val,out enabled)) voiceEnabled=enabled; continue; }
+                        if(key=="VoiceName") { if(val==Path.GetFileName(val)) voiceName=val; continue; }
+                        if(key=="VoiceVolume") { int volume; if(int.TryParse(val,out volume)) voiceVolume=Math.Max(0,Math.Min(100,volume)); continue; }
                         if(key=="Welcomed") { foundWelcomed=true; continue; }
 
 
@@ -271,7 +288,7 @@ namespace ScumMiniMap {
 
 
 
-                // Upgrade test 1's default once; retain explicit slower custom intervals.
+                // Upgrade the old one-second default once; retain slower custom intervals.
                 copyIntervalMs=Program.UpgradeCopyInterval(copyIntervalMs,foundTrackingRevision);
                 if(!foundWelcomed) isFirstLaunch=true;
 
@@ -305,11 +322,11 @@ namespace ScumMiniMap {
 
 
 
-                if(scumCopyModifierKey!=0 && !IsModifierKey(scumCopyModifierKey)) scumCopyModifierKey=0xA2;
+                if(scumCopyModifierKey!=0 && !IsModifierKey(scumCopyModifierKey)) scumCopyModifierKey=Program.DefaultCopyModifierKey;
 
 
 
-                if(scumCopyKey<=0 || scumCopyKey>=256 || IsModifierKey(scumCopyKey)) scumCopyKey=0x43;
+                if(scumCopyKey<=0 || scumCopyKey>=256 || IsModifierKey(scumCopyKey)) scumCopyKey=Program.DefaultCopyKey;
 
 
 
@@ -368,7 +385,7 @@ namespace ScumMiniMap {
 
 
 
-            try { File.WriteAllLines(settingsPath+".tmp",new string[]{"Welcomed=True","TrackingRevision=1","Language="+Localization.CurrentCode,"GridLabels="+gridLabels,"GridBorders="+gridBorders,"GridOpacity="+gridOpacity,"ShowZones="+showZones,"LabelSize="+labelSize,"EdgeFade="+edgeFade,"Shape="+overlayShape,"ShowHeading="+showHeading,"ShowCompass="+showCompass,"ShowElevation="+showElevation,"ZoneChime="+zoneChime,"CopyIntervalMs="+copyIntervalMs,"AutoZoom="+autoZoom,"AutoZoomMin="+autoZoomMin,"AutoZoomMax="+autoZoomMax,"ShowStatus="+showStatus,"StatusPos="+statusPos,"Opacity="+mapOpacity,"FullMapOpacity="+fullMapOpacity,"Width="+minimapBounds.Width,"Height="+minimapBounds.Height,"Left="+minimapBounds.Left,"Top="+minimapBounds.Top,"Zoom="+zoom.ToString(CultureInfo.InvariantCulture),"MaxZoom="+maxZoom,"ZoomStep="+zoomStepPercent,"ScumMapKey="+scumMapKey,"ScumChatKey="+scumChatKey,"ScumCopyModifierKey="+scumCopyModifierKey,"ScumCopyKey="+scumCopyKey,"ShowCustomWaypoints="+showCustomWaypoints,"ShowScumMap="+showScumMap,"ScumMapDisabledCats="+(scumMap!=null?scumMap.GetDisabledCategoriesString():""),"ShowZoneLabels="+showZoneLabels,"SmartLabelLod="+smartLabelLod,"SidebarWildlifeExpanded="+sidebarWildlifeExpanded,"SidebarZonesExpanded="+sidebarZonesExpanded,"DisabledZoneLayers="+string.Join(";",disabledZoneLayers),"RouteColor="+ColorTranslator.ToHtml(routeGuidanceColor),"PlayerColor="+ColorTranslator.ToHtml(playerConeColor)});
+            try { File.WriteAllLines(settingsPath+".tmp",new string[]{"Welcomed=True","TrackingRevision=1","VoiceEnabled="+voiceEnabled,"VoiceName="+voiceName,"VoiceVolume="+voiceVolume,"Language="+Localization.CurrentCode,"GridLabels="+gridLabels,"GridBorders="+gridBorders,"GridOpacity="+gridOpacity,"ShowZones="+showZones,"LabelSize="+labelSize,"EdgeFade="+edgeFade,"Shape="+overlayShape,"ShowHeading="+showHeading,"ShowCompass="+showCompass,"ShowElevation="+showElevation,"ZoneChime="+zoneChime,"CopyIntervalMs="+copyIntervalMs,"AutoZoom="+autoZoom,"AutoZoomMin="+autoZoomMin,"AutoZoomMax="+autoZoomMax,"ShowStatus="+showStatus,"StatusPos="+statusPos,"Opacity="+mapOpacity,"FullMapOpacity="+fullMapOpacity,"Width="+minimapBounds.Width,"Height="+minimapBounds.Height,"Left="+minimapBounds.Left,"Top="+minimapBounds.Top,"Zoom="+zoom.ToString(CultureInfo.InvariantCulture),"MaxZoom="+maxZoom,"ZoomStep="+zoomStepPercent,"ScumMapKey="+scumMapKey,"ScumChatKey="+scumChatKey,"ScumCopyModifierKey="+scumCopyModifierKey,"ScumCopyKey="+scumCopyKey,"ShowCustomWaypoints="+showCustomWaypoints,"ShowScumMap="+showScumMap,"ScumMapDisabledCats="+(scumMap!=null?scumMap.GetDisabledCategoriesString():""),"ShowZoneLabels="+showZoneLabels,"SmartLabelLod="+smartLabelLod,"SidebarWildlifeExpanded="+sidebarWildlifeExpanded,"SidebarZonesExpanded="+sidebarZonesExpanded,"DisabledZoneLayers="+string.Join(";",disabledZoneLayers),"RouteColor="+ColorTranslator.ToHtml(routeGuidanceColor),"PlayerColor="+ColorTranslator.ToHtml(playerConeColor)});
 
 
 
@@ -404,7 +421,7 @@ namespace ScumMiniMap {
 
 
 
-            SaveSettings(); settingsFocus.Restore(); Hide();
+            SaveSettings(); WindowState=FormWindowState.Minimized; settingsFocus.Restore();
 
 
 
@@ -420,7 +437,7 @@ namespace ScumMiniMap {
             if(panelOpening || searchOpen) return;
             Native.ReleaseCapture();
             Cursor.Clip=Rectangle.Empty;
-            if(Visible) {
+            if(SettingsVisible) {
 
 
 
@@ -487,6 +504,7 @@ namespace ScumMiniMap {
 
 
                 BuildSettingsPanel();
+                WindowState=FormWindowState.Normal;
                 Show();
                 FocusLayoutSettings();
 

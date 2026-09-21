@@ -17,8 +17,8 @@ namespace ScumMiniMap {
         // Keybind calibration state
         int mapKey = 0x4D;       // 'M'
         int chatKey = 0x54;      // 'T'
-        int copyModKey = 0x11;   // VK_CONTROL
-        int copyKey = 0x43;      // 'C'
+        int copyModKey = Program.DefaultCopyModifierKey;
+        int copyKey = Program.DefaultCopyKey;
         int captureTarget = 0;   // 0=none, 1=map, 2=chat, 3=mod, 4=copy
 
         Panel headerPanel;
@@ -52,14 +52,14 @@ namespace ScumMiniMap {
         static readonly Color TextMuted = Color.FromArgb(168, 178, 188);
 
         public StartupGuideDialog() : this(null) {}
-        public StartupGuideDialog(Action onSettingsChanged) : this(0x4D, 0x54, 0x11, 0x43, null, onSettingsChanged) {}
+        public StartupGuideDialog(Action onSettingsChanged) : this(0x4D, 0x54, Program.DefaultCopyModifierKey, Program.DefaultCopyKey, null, onSettingsChanged) {}
 
         public StartupGuideDialog(int mapKey, int chatKey, int copyModKey, int copyKey,
                                   KeybindSaveHandler onSaveKeybinds, Action onSettingsChanged = null) {
             this.mapKey = mapKey > 0 ? mapKey : 0x4D;
             this.chatKey = chatKey > 0 ? chatKey : 0x54;
-            this.copyModKey = copyModKey >= 0 && copyModKey < 256 ? copyModKey : 0x11;
-            this.copyKey = copyKey > 0 ? copyKey : 0x43;
+            this.copyModKey = (copyModKey == 0 || IsModifierKey(copyModKey)) ? copyModKey : Program.DefaultCopyModifierKey;
+            this.copyKey = copyKey > 0 && copyKey < 256 && !IsModifierKey(copyKey) ? copyKey : Program.DefaultCopyKey;
             this.onSaveKeybinds = onSaveKeybinds;
             this.onSettingsChanged = onSettingsChanged;
 
@@ -465,6 +465,7 @@ namespace ScumMiniMap {
 
         void RenderSlideKeybinds() {
             FlowLayoutPanel flow = CreateContentFlow();
+            flow.Controls.Add(new Label { Text=Program.CopyBindingHelp,ForeColor=TextWhite,Width=Math.Max(700,contentPanel.Width-80),Height=70 });
 
             // Header Banner Card
             Panel banner = new Panel {
@@ -580,11 +581,11 @@ namespace ScumMiniMap {
             resetBtn.Click += (s, e) => {
                 mapKey = 0x4D;
                 chatKey = 0x54;
-                copyModKey = 0x11;
-                copyKey = 0x43;
+                copyModKey = Program.DefaultCopyModifierKey;
+                copyKey = Program.DefaultCopyKey;
                 captureTarget = 0;
-                if (chkNoMod != null) chkNoMod.Checked = false;
-                if (modCapBtn != null) modCapBtn.Enabled = true;
+                if (chkNoMod != null) chkNoMod.Checked = true;
+                if (modCapBtn != null) modCapBtn.Enabled = false;
                 UpdateKeybindValues();
                 captureStatusLabel.Text = Localization.Get("KeyWizardReady");
             };

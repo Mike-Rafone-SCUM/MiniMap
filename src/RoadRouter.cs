@@ -13,6 +13,7 @@ namespace ScumMiniMap {
         public PointF RoadExitPoint;
         public PointF TargetPoint;
         public PointF[] Polyline; // Full route including entry/exit or just road path
+        public int[] JunctionIndices=new int[0]; // Actual branch nodes along Polyline, not geometry bends.
         public double TotalDistanceMeters;
         public double RoadDistanceMeters;
         public double EntryDistanceMeters;
@@ -988,6 +989,7 @@ namespace ScumMiniMap {
 
                 // Construct smooth polyline
                 List<PointF> polyline = new List<PointF>();
+                List<int> junctions = new List<int>();
 
                 // 1. From entry projected point along start edge to chosen start node
                 if (chosenStartNode == eStart.U) {
@@ -999,6 +1001,7 @@ namespace ScumMiniMap {
                 }
 
                 // 2. Intermediate edges
+                if(adj[chosenStartNode].Count>=3) junctions.Add(polyline.Count-1);
                 for (int e = 0; e < edgePath.Count; e++) {
                     HalfEdge he = edgePath[e];
                     PointF[] pts = edges[he.EdgeIndex].Points;
@@ -1007,6 +1010,7 @@ namespace ScumMiniMap {
                     } else {
                         for (int i = pts.Length - 2; i >= 0; i--) polyline.Add(pts[i]);
                     }
+                    if(adj[he.TargetNode].Count>=3) junctions.Add(polyline.Count-1);
                 }
 
                 // 3. Along end edge from reachedEndNode to exit projected point
@@ -1022,6 +1026,7 @@ namespace ScumMiniMap {
                 for (int i = 0; i < polyline.Count - 1; i++) roadLen += DistanceMeters(polyline[i], polyline[i + 1]);
 
                 result.Polyline = polyline.ToArray();
+                result.JunctionIndices = junctions.ToArray();
                 result.RoadDistanceMeters = roadLen;
                 result.TotalDistanceMeters = snapStart.DistanceMeters + roadLen + snapEnd.DistanceMeters;
                 result.Success = true;
