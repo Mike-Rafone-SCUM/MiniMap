@@ -23,7 +23,7 @@ Remove-Item -LiteralPath $renderTest
 $testSource=Join-Path $output 'MiniMap.test.cs'
 $mainSource=Join-Path $root 'src\MiniMap.cs'
 $text=[IO.File]::ReadAllText($mainSource)
-$text=$text -replace 'AssemblyInformationalVersion\("[^"]+"\)', 'AssemblyInformationalVersion("1.4.8-input-voice-test.7")'
+$text=$text -replace 'AssemblyInformationalVersion\("[^"]+"\)', 'AssemblyInformationalVersion("1.4.8-settings-test.9")'
 [IO.File]::WriteAllText($testSource,$text,[Text.UTF8Encoding]::new($false))
 $sources=@($sources | ForEach-Object { if($_ -eq $mainSource) { $testSource } else { $_ } })
 $res=Join-Path $root 'resources'

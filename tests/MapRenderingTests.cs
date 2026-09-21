@@ -10,6 +10,14 @@ static class MapRenderingTests {
     static void Check(bool ok,string message) { if(!ok) throw new Exception(message); Console.WriteLine("PASS: "+message); }
     [STAThread] static void Main(string[] args) {
         Check(Program.DataFolderName==(Program.IsTestBuild?"ScumMiniMap-ResponsivenessTest":"ScumMiniMap"),"Build uses the appropriate data folder");
+        Check(Native.CursorBlocksCopy(true,false) && !Native.CursorBlocksCopy(true,true) && !Native.CursorBlocksCopy(false,false),"Visible cursor blocks ordinary menus but permits full-map tracking");
+        PointF edge,direction;
+        foreach(bool circle in new[]{true,false}) foreach(PointF target in new[]{new PointF(1,0),new PointF(-1,0),new PointF(0,1),new PointF(0,-1),new PointF(1,1)}) {
+            RectangleF ring=new RectangleF(0,28,240,212);
+            Check(MapWindow.TryDestinationEdge(ring,circle,PointF.Empty,target,out edge,out direction) && ring.Contains(edge) &&
+                Math.Sign(edge.X-120)==Math.Sign(target.X) && Math.Sign(edge.Y-134)==Math.Sign(target.Y),"Destination edge follows map bearing within "+(circle?"circular":"rectangular")+" bounds: "+target);
+        }
+        Check(!MapWindow.TryDestinationEdge(new RectangleF(0,0,240,240),true,PointF.Empty,PointF.Empty,out edge,out direction),"No arbitrary direction when player and destination coincide");
         Check(Program.TrackingIntervalMs(250)==250 && Program.TrackingIntervalMs(700)==700,"Fast tracking cadence has no stationary slowdown and respects slower settings");
         Check(Program.UpgradeCopyInterval(1000,false)==250 && Program.UpgradeCopyInterval(1000,true)==1000 &&
             Program.UpgradeCopyInterval(3000,false)==3000,"Previous default upgrades once without replacing slower custom intervals");
@@ -62,6 +70,39 @@ static class MapRenderingTests {
             Check(window.TerrainBuilds==panBuilds,"Full-map drag reuses terrain for small pans");
             Set(window,"gridBorders",true); draw();
             Check(window.TerrainBuilds==panBuilds+1,"Layer changes invalidate full-map terrain immediately");
+            Set(window,"draggingMap",false); Set(window,"fullMapPan",new PointF(.5f,.5f));
+            Set(window,"playerConeColor",Color.Magenta);
+            window.Accept("{X=-143091 Y=-143191 Z=10|P=0 Y=20 R=0}");
+            marker.Advance(double.MaxValue);
+            draw(); int stationaryTerrain=window.TerrainBuilds;
+            string beforeKey=(string)typeof(MapWindow).GetMethod("OverlayKey",Hidden).Invoke(window,null);
+            window.Accept("{X=-173523.36 Y=-143191 Z=10|P=0 Y=90 R=0}");
+            marker.Advance(double.MaxValue);
+            string afterKey=(string)typeof(MapWindow).GetMethod("OverlayKey",Hidden).Invoke(window,null);
+            Bitmap moved=draw();
+            Check(beforeKey!=afterKey && window.TerrainBuilds==stationaryTerrain,"Full-map position samples invalidate the frame without rebuilding stationary terrain");
+            Check(moved.GetPixel(348,300).ToArgb()==Color.Magenta.ToArgb() && moved.GetPixel(300,300).ToArgb()!=Color.Magenta.ToArgb(),"Full-map player marker moves to the new position over cached terrain");
+            Set(window,"fullMapActive",false); overlay.SetMinimapSize(new Size(240,240));
+            Set(window,"overlayShape","Circle"); Set(window,"showStatus",true); Set(window,"statusPos","Below");
+            Set(window,"edgeFade",true); Set(window,"routeGuidanceColor",Color.Cyan);
+            Set(window,"searchTarget",new MapZone { Name="Destination",Points=new[]{new PointF(.8f,.5f)} });
+            marker.Point=new PointF(.5f,.5f);
+            Bitmap indicated=draw();
+            Check(indicated.GetPixel(207,109).G>180 && indicated.GetPixel(207,109).B>180,"Destination edge arrow remains visible above the circular edge fade");
+            indicated.Save(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"DestinationIndicatorPreview.png"));
+            Set(window,"statusPos","Above");
+            Set(window,"searchTarget",new MapZone { Name="Destination",Points=new[]{new PointF(.5f,.2f)} });
+            Bitmap above=draw();
+            Color indicatorPixel=above.GetPixel(123,46);
+            Check(indicatorPixel.G>180 && indicatorPixel.B>180,"North destination indicator stays below an above-map status bar");
+            Set(window,"searchTarget",null);
+            Bitmap cleared=draw();
+            Check(cleared.GetPixel(123,46).ToArgb()!=indicatorPixel.ToArgb(),"Clearing navigation removes its edge marker");
+            using(var opaqueCircle=new Bitmap(100,100)) {
+                using(var graphics=Graphics.FromImage(opaqueCircle)) graphics.Clear(Color.White);
+                OverlayWindow.Fade(opaqueCircle,false,100,shape:"Circle");
+                Check(opaqueCircle.GetPixel(0,0).A==0 && opaqueCircle.GetPixel(50,50).A==255,"Circular shape remains clipped with fade disabled at full opacity");
+            }
         }
     }
 }

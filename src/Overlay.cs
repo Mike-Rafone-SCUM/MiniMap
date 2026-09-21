@@ -656,13 +656,25 @@ namespace ScumMiniMap {
         static int cachedOpacity=94;
         static int cachedMapLeft=-1,cachedMapTop=-1,cachedMapRight=-1,cachedMapBottom=-1;
         static string cachedShape="Square";
+        static Rectangle? cachedViewport;
+        internal static RectangleF CircleBounds(Size size,bool hasMapBounds,Rectangle? viewport=null) {
+            if(viewport.HasValue) {
+                Rectangle area=viewport.Value;
+                float diameter=Math.Min(area.Width,area.Height);
+                return new RectangleF(area.Left+(area.Width-diameter)/2,area.Top+(area.Height-diameter)/2,diameter,diameter);
+            }
+            float radius=Math.Min(size.Width,hasMapBounds?size.Height-34:size.Height)/2f;
+            float cx=size.Width/2f,cy=hasMapBounds?radius+2:size.Height/2f;
+            return new RectangleF(cx-radius,cy-radius,radius*2,radius*2);
+        }
         // Rebuild only when dimensions, shape, or appearance options change.
-        public static void Fade(Bitmap bitmap,bool fade=true,int opacity=94,int mapLeft=-1,int mapTop=-1,int mapRight=-1,int mapBottom=-1,string shape="Square") {
+        public static void Fade(Bitmap bitmap,bool fade=true,int opacity=94,int mapLeft=-1,int mapTop=-1,int mapRight=-1,int mapBottom=-1,string shape="Square",Rectangle? viewport=null) {
             // A fully opaque, non-faded bitmap is already ready for UpdateLayeredWindow.
             // Avoid LockBits and a full per-pixel marshal/copy pass in full-map mode.
-            if(!fade && opacity>=100) return;
+            if(!fade && opacity>=100 && shape!="Circle") return;
             if(fadeMask==null || fadeWidth!=bitmap.Width || fadeHeight!=bitmap.Height || cachedFade!=fade || cachedOpacity!=opacity
-                || cachedMapLeft!=mapLeft || cachedMapTop!=mapTop || cachedMapRight!=mapRight || cachedMapBottom!=mapBottom || cachedShape!=shape) {
+                || cachedMapLeft!=mapLeft || cachedMapTop!=mapTop || cachedMapRight!=mapRight || cachedMapBottom!=mapBottom || cachedShape!=shape || cachedViewport!=viewport) {
+                cachedViewport=viewport;
                 cachedFade=fade; cachedOpacity=opacity;
                 cachedMapLeft=mapLeft; cachedMapTop=mapTop; cachedMapRight=mapRight; cachedMapBottom=mapBottom; cachedShape=shape;
                 fadeWidth=bitmap.Width; fadeHeight=bitmap.Height;
@@ -670,12 +682,11 @@ namespace ScumMiniMap {
                 bool hasMapBounds=(mapLeft!=-1 && mapTop!=-1 && mapRight!=-1 && mapBottom!=-1);
                 double cx=fadeWidth/2.0, cy=fadeHeight/2.0;
                 double maxRadius=Math.Min(fadeWidth,fadeHeight)/2.0;
-                if(shape=="Circle" && hasMapBounds) {
-                    // Fit circle inside the actual mapBounds area (excluding status bar)
-                    double mapAreaH = Math.Min(fadeHeight - 34.0, (double)fadeHeight);
-                    maxRadius = Math.Min(fadeWidth, mapAreaH) / 2.0;
-                    cx = fadeWidth / 2.0;
-                    cy = maxRadius + 2.0; // Place circle at top, leaving bottom 30px clear for info pill
+                if(shape=="Circle") {
+                    RectangleF circle=CircleBounds(bitmap.Size,hasMapBounds,viewport);
+                    maxRadius=circle.Width/2;
+                    cx=circle.Left+maxRadius;
+                    cy=circle.Top+maxRadius;
                 }
                 for(int y=0;y<fadeHeight;y++)for(int x=0;x<fadeWidth;x++) {
                     double t=1.0;

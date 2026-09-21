@@ -285,7 +285,9 @@ namespace ScumMiniMap {
 
 
 
-        internal static bool KeysBusy(int copyModifierKey=0xA2,int copyKey=0x43) {
+        internal static bool CursorBlocksCopy(bool cursorVisible,bool fullMapActive) { return cursorVisible && !fullMapActive; }
+
+        internal static bool KeysBusy(int copyModifierKey=0xA2,int copyKey=0x43,bool fullMapActive=false) {
 
 
 
@@ -293,7 +295,7 @@ namespace ScumMiniMap {
 
 
 
-            if(IsCursorVisible()) return true;
+            if(CursorBlocksCopy(IsCursorVisible(),fullMapActive)) return true;
 
 
 
@@ -445,7 +447,7 @@ namespace ScumMiniMap {
 
 
 
-        internal static async Task<CopyResult> Copy(Func<bool> allowed,int copyModifierKey=0xA2,int copyKey=0x43) {
+        internal static async Task<CopyResult> Copy(Func<bool> allowed,int copyModifierKey=0xA2,int copyKey=0x43,Func<bool> fullMapActive=null) {
 
 
 
@@ -453,7 +455,7 @@ namespace ScumMiniMap {
 
 
 
-            if(CopyInProgress || !allowed() || !GameFocused() || KeysBusy(copyModifierKey,copyKey) || IsAltOrTabOrWinDown()) { CopyError="Focus, chat, or modifier keys detected."; return CopyResult.Cancelled; }
+            if(CopyInProgress || !allowed() || !GameFocused() || KeysBusy(copyModifierKey,copyKey,fullMapActive!=null && fullMapActive()) || IsAltOrTabOrWinDown()) { CopyError="Focus, chat, or modifier keys detected."; return CopyResult.Cancelled; }
 
 
 
@@ -471,7 +473,7 @@ namespace ScumMiniMap {
 
 
                 bool sent=await CopyChord(activeCopy.Send,Task.Delay,()=>!activeCopy.Cancelled && allowed() && GetForegroundWindow()==game && GameFocused()
-                    && !UserTypingOrActive() && !IsCursorVisible() && !IsRightMouseDown() && !IsAltOrTabOrWinDown(),
+                    && !UserTypingOrActive() && !CursorBlocksCopy(IsCursorVisible(),fullMapActive!=null && fullMapActive()) && !IsRightMouseDown() && !IsAltOrTabOrWinDown(),
                     copyModifierKey,copyKey);
                 return ClassifyCopy(sent && !activeCopy.Cancelled,CopyError);
             } finally { CancelActiveCopy(); activeCopy=null; CopyInProgress=false; }

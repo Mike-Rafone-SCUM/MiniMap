@@ -184,6 +184,19 @@ static class InputVoiceTests {
                 Check(window.WindowState==FormWindowState.Normal && (bool)typeof(MapWindow).GetProperty("SettingsVisible",Hidden).GetValue(window,null),"Opening settings restores the taskbar window");
                 typeof(MapWindow).GetMethod("DismissSettings",Hidden).Invoke(window,null); Application.DoEvents();
                 Check(window.Visible && window.WindowState==FormWindowState.Minimized,"Dismissing settings retains the taskbar button");
+                typeof(MapWindow).GetField("lastHomeAction",Hidden).SetValue(window,DateTime.MinValue);
+                typeof(MapWindow).GetMethod("FocusSettingsShortcut",Hidden).Invoke(window,null); Application.DoEvents();
+                // Windows may deny foreground ownership to a background test process.
+                // Check restoration/topmost state here; ShowSettings also requests activation.
+                Check(window.WindowState==FormWindowState.Normal && window.Visible && window.TopMost,"Home restores minimized settings as a visible topmost window");
+                typeof(MapWindow).GetField("lastHomeAction",Hidden).SetValue(window,DateTime.MinValue);
+                typeof(MapWindow).GetMethod("FocusSettingsShortcut",Hidden).Invoke(window,null); Application.DoEvents();
+                Check(window.WindowState==FormWindowState.Normal,"Repeated Home keeps already-open settings visible");
+                typeof(MapWindow).GetField("lastHomeAction",Hidden).SetValue(window,DateTime.MinValue);
+                typeof(Control).GetMethod("OnKeyDown",Hidden).Invoke(window,new object[]{new KeyEventArgs(Keys.Home)}); Application.DoEvents();
+                Check(window.WindowState==FormWindowState.Normal,"Home inside the settings form no longer minimizes it");
+                typeof(Control).GetMethod("OnKeyDown",Hidden).Invoke(window,new object[]{new KeyEventArgs(Keys.Escape)}); Application.DoEvents();
+                Check(window.WindowState==FormWindowState.Minimized,"Escape still dismisses settings to the taskbar");
                 Check(!(bool)typeof(MapWindow).GetField("voiceEnabled",Hidden).GetValue(window),"Voice guidance defaults off");
                 File.WriteAllLines(Path.Combine(root,"settings.ini"),new[]{"Welcomed=True","VoiceEnabled=True","VoiceName=Second voice","VoiceVolume=45","CopyIntervalMs=1000","ScumCopyModifierKey=162","ScumCopyKey=67"});
                 typeof(MapWindow).GetMethod("LoadSettings",Hidden).Invoke(window,null);

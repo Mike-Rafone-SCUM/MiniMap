@@ -1,6 +1,15 @@
 # SCUM MiniMap input and voice navigation test
 
-This is an unpublished test build. The v1.4.8 release was halted; v1.4.7 remains public. Exit the current MiniMap and run `SkynettMiniMap-Test.exe`. Updates are disabled in this build.
+This is unpublished settings-shortcut test build 9, based on the public v1.4.8 release and destination-indicator test 8. Exit the current MiniMap and run `SkynettMiniMap-Test.exe`. Updates are disabled in this build.
+
+Home now restores Settings from the taskbar and brings it to the foreground. Repeated presses keep Settings open. Use Escape, Done or the close button to minimize Settings and return to gameplay.
+
+## Destination indicator and full-map tracking
+
+- Select a destination: a glowing arrow on the minimap edge points toward the final endpoint, using your route colour. Circular maps also show a short glowing arc. The indicator works independently of voice navigation and disappears when the destination is cleared or reached.
+- Check different bearings, zoom levels, circular/square shapes and status-bar positions. The arrow indicates the direct destination bearing, not the next road turn.
+- Open the full map while travelling. Position and heading should continue updating even though SCUM shows its map cursor. Chat, other applications, held keys and active mouse interactions still retain their normal input protections.
+- Test normal cursor-visible menus with the full map closed: automatic copying should remain paused there.
 
 Settings, zones, logs and voice packs use `%LocalAppData%\ScumMiniMap-ResponsivenessTest`. The installed app and its normal data folder are unchanged.
 

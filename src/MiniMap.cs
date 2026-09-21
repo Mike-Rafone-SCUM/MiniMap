@@ -72,15 +72,15 @@ using System.Drawing.Drawing2D;
 
 
 
-[assembly: AssemblyVersion("1.4.8.0")]
+[assembly: AssemblyVersion("1.4.9.0")]
 
 
 
-[assembly: AssemblyFileVersion("1.4.8.0")]
+[assembly: AssemblyFileVersion("1.4.9.0")]
 
 
 
-[assembly: AssemblyInformationalVersion("1.4.8")]
+[assembly: AssemblyInformationalVersion("1.4.9")]
 
 
 
@@ -1150,7 +1150,7 @@ namespace ScumMiniMap {
 
 
 
-                        DismissSettings();
+                        ShowSettings();
 
 
 
@@ -1599,7 +1599,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "1.4.8";
+        public const string VersionString = "1.4.9";
 
 
 
@@ -3301,7 +3301,7 @@ namespace ScumMiniMap {
 
 
 
-        void ToggleSettings() {
+        void FocusSettingsShortcut() {
 
 
 
@@ -3313,11 +3313,7 @@ namespace ScumMiniMap {
 
 
 
-            if(SettingsVisible && Native.GetForegroundWindow() == Handle) DismissSettings();
-
-
-
-            else ShowSettings();
+            ShowSettings();
 
 
 
@@ -3837,7 +3833,7 @@ namespace ScumMiniMap {
 
 
 
-        bool HotkeyContextAllowed() {
+        bool HotkeyContextAllowed(bool settingsShortcut=false) {
 
 
 
@@ -3849,7 +3845,7 @@ namespace ScumMiniMap {
 
 
 
-                !SettingsVisible && !searchOpen && (Native.GameFocused() || (fullMapActive && Native.IsOurWindow(Native.GetForegroundWindow())));
+                (!SettingsVisible || settingsShortcut) && !searchOpen && (Native.GameFocused() || ((fullMapActive || settingsShortcut) && Native.IsOurWindow(Native.GetForegroundWindow())));
 
 
 
@@ -4001,7 +3997,7 @@ namespace ScumMiniMap {
 
 
 
-            bool inputWindowFocused=Native.GameFocused() || (fullMapActive && Native.IsOurWindow(Native.GetForegroundWindow()));
+            bool inputWindowFocused=Native.GameFocused() || ((fullMapActive || key==0x24) && Native.IsOurWindow(Native.GetForegroundWindow()));
 
 
 
@@ -4044,7 +4040,7 @@ namespace ScumMiniMap {
 
 
 
-            if(!HotkeyContextAllowed()) return;
+            if(!HotkeyContextAllowed(key==0x24)) return;
 
 
 
@@ -4064,7 +4060,7 @@ namespace ScumMiniMap {
 
 
 
-                case 0x24: action=ToggleSettings; break;
+                case 0x24: action=FocusSettingsShortcut; break;
 
 
 
@@ -7612,7 +7608,7 @@ namespace ScumMiniMap {
                 if(fullMapActive && FallbackKeyPressed(0x1B)) SetFullMap(false);
                 // Map opening belongs exclusively to the physical keyboard hook.
                 if(FallbackKeyPressed(0x23)) TriggerToggleOverlay();
-                if(FallbackKeyPressed(0x24)) ToggleSettings();
+                if(FallbackKeyPressed(0x24)) FocusSettingsShortcut();
                 if(FallbackKeyPressed(0x2E)) TriggerZoneSearch();
                 if(FallbackKeyPressed(0x2D)) {
                     if(IsHandleCreated) BeginInvoke(new Action(TriggerPin));
@@ -7663,9 +7659,9 @@ namespace ScumMiniMap {
                     else if(Native.IsRightMouseDown())note=Localization.Get("NoteAdsActive");
                     else if(!keys.Available)note=Localization.Get("NoteChatMonitorUnavailable");
                     else if(!Native.GameFocused()) note=Localization.Get("NoteWaitingForeground");
-                    else if(Native.KeysBusy(scumCopyModifierKey,scumCopyKey)) note=Localization.Get("NoteWaitingUserKeys");
+                    else if(Native.KeysBusy(scumCopyModifierKey,scumCopyKey,fullMapActive)) note=Localization.Get("NoteWaitingUserKeys");
                 }
-                if(TrackingEnabled && keys.Available && !panelOpening && !SettingsVisible && !searchOpen && !chat.Paused && !pending && !copyInProgress && !altTabRecent && now>=resumeAfter && now>=next && Native.GameFocused() && !Native.KeysBusy(scumCopyModifierKey,scumCopyKey)) {
+                if(TrackingEnabled && keys.Available && !panelOpening && !SettingsVisible && !searchOpen && !chat.Paused && !pending && !copyInProgress && !altTabRecent && now>=resumeAfter && now>=next && Native.GameFocused() && !Native.KeysBusy(scumCopyModifierKey,scumCopyKey,fullMapActive)) {
                     int interval=Program.TrackingIntervalMs(copyIntervalMs,scumCopyModifierKey);
                     next=now.AddMilliseconds(interval);
                     PerformCopyAsync();
@@ -7783,12 +7779,12 @@ namespace ScumMiniMap {
                     savedDataObject=snapshot; clipboardSnapshotReady=true;
                 }
                 sequence = Native.GetClipboardSequenceNumber();
-                if(Native.GameFocused() && !Native.KeysBusy(scumCopyModifierKey, scumCopyKey) && !Native.IsAltOrTabOrWinDown()) {
+                if(Native.GameFocused() && !Native.KeysBusy(scumCopyModifierKey, scumCopyKey,fullMapActive) && !Native.IsAltOrTabOrWinDown()) {
                     attempts++;
                     BeginCopyRequest();
                     CopyResult copyResult = await Native.Copy(
                         () => !closing && !panelOpening && !SettingsVisible && !searchOpen && TrackingEnabled && !chat.Paused && DateTime.UtcNow >= resumeAfter,
-                        scumCopyModifierKey, scumCopyKey);
+                        scumCopyModifierKey, scumCopyKey,()=>fullMapActive);
                     CompleteCopyRequest(copyResult);
                     if(pending) note=Localization.Get("NoteAutoCopyActive");
                     if(copyResult != CopyResult.Sent) {
@@ -8059,6 +8055,7 @@ namespace ScumMiniMap {
                 .Append(showElevation).Append('|')
                 .Append(GetLocationDescription()).Append('|')
                 .Append(searchTarget==null?"":searchTarget.Name).Append('|')
+                .Append(searchTarget==null?PointF.Empty:searchTarget.Centroid).Append('|')
                 .Append(routeGuidanceColor.ToArgb()).Append('|')
                 .Append(playerConeColor.ToArgb()).Append('|')
                 .Append(mx).Append('|')
@@ -8386,7 +8383,12 @@ namespace ScumMiniMap {
 
 
 
-            OverlayWindow.Fade(bitmap,fullMapActive?false:edgeFade,fullMapActive?fullMapOpacity:mapOpacity,zoom==1?mapLeft:-1,zoom==1?mapTop:-1,zoom==1?mapRight:-1,zoom==1?mapBottom:-1,fullMapActive?"Square":overlayShape);
+            OverlayWindow.Fade(bitmap,fullMapActive?false:edgeFade,fullMapActive?fullMapOpacity:mapOpacity,zoom==1?mapLeft:-1,zoom==1?mapTop:-1,zoom==1?mapRight:-1,zoom==1?mapBottom:-1,fullMapActive?"Square":overlayShape,mapBounds);
+
+            // Keep destination guidance crisp above the terrain's edge fade.
+            using(Graphics g=Graphics.FromImage(bitmap)) {
+                DrawDestinationIndicator(g,mapBounds,zoom==1 && mapLeft!=-1 && mapTop!=-1 && mapRight!=-1 && mapBottom!=-1);
+            }
 
 
 
