@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.9] - 2026-09-21
+
+### Added
+- Destination-bearing arrow on the minimap edge, with a glowing arc for circular maps. Uses the selected route colour and follows the final endpoint independently of voice navigation.
+
+### Fixed
+- Home restores and foregrounds Settings instead of toggling it closed; it also works when Settings is already open behind the game. Escape, Done and the close button still minimize Settings.
+- Allow coordinate sampling while the full map's mouse cursor is visible, retaining chat, focus and physical-input protections. Player position and heading continue updating over cached map terrain.
+- Align the circular map mask and destination indicator with the map area when the status bar is above or below; retain circular clipping when edge fading is disabled at full opacity.
+
 ## [1.4.8] - 2026-09-21
 
 ### New copy-key default
