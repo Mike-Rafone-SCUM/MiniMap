@@ -7852,6 +7852,7 @@ namespace ScumMiniMap {
 
 
             string description=BuildLocationDescription();
+            if(searchTarget!=null && activeRoute!=null && !activeRoute.Success) description+=" | "+RouteUnavailableText;
 
 
 
@@ -8978,37 +8979,7 @@ namespace ScumMiniMap {
 
 
 
-                } else {
-
-
-
-                    // Fallback to straight dashed navigation line
-
-
-
-                    using(Pen navPen=new Pen(Color.FromArgb(220,routeGuidanceColor),3.0f)) {
-
-
-
-                        navPen.DashStyle=DashStyle.Dash;
-
-
-
-                        navPen.DashPattern=new float[]{6f,4f};
-
-
-
-                        g.DrawLine(navPen,px,py,tx,ty);
-
-
-
-                    }
-
-
-
                 }
-
-
 
                 // Target zone marker (pulsing ring)
 
@@ -9134,7 +9105,7 @@ namespace ScumMiniMap {
 
 
 
-                string distStr=distM>1000?string.Format(CultureInfo.InvariantCulture,"{0:F1} km{1}",distM/1000.0,distSuffix):((int)distM)+"m"+distSuffix;
+                string distStr=activeRoute!=null && !activeRoute.Success?RouteUnavailableText:(distM>1000?string.Format(CultureInfo.InvariantCulture,"{0:F1} km{1}",distM/1000.0,distSuffix):((int)distM)+"m"+distSuffix);
 
 
 

@@ -1,4 +1,4 @@
-param([string]$OutputDirectory)
+﻿param([string]$OutputDirectory)
 $ErrorActionPreference = 'Stop'
 # Build a versioned, isolated release without stopping the running app or modifying its installation.
 $repoRoot = Split-Path $PSScriptRoot -Parent
@@ -68,7 +68,7 @@ if ($replacementCount -ne 1) {
     throw "Expected exactly one MiniMap.cs compilation source; found $replacementCount."
 }
 
-& $compiler /nologo /optimize+ /target:winexe /platform:x64 @voiceResources "/out:$exe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll "/resource:$resDir\map.png,map.png" "/resource:$resDir\zones.tsv,zones.tsv" "/resource:$resDir\roads.bin,roads.bin" "/resource:$resDir\scummap.bin,scummap.bin" "/resource:$packDir\detect_zones.py,detect_zones.py" "/win32icon:$resDir\App-Icon.ico" @sources
+& $compiler /nologo /optimize+ /target:winexe /platform:x64 @voiceResources "/out:$exe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll "/resource:$resDir\map.png,map.png" "/resource:$resDir\zones.tsv,zones.tsv" "/resource:$resDir\roads.bin,roads.bin" "/resource:$resDir\water-mask.bin,water-mask.bin" "/resource:$resDir\scummap.bin,scummap.bin" "/resource:$packDir\detect_zones.py,detect_zones.py" "/win32icon:$resDir\App-Icon.ico" @sources
 $compileExitCode = $LASTEXITCODE
 Remove-Item -LiteralPath $releaseMiniMap -Force -ErrorAction SilentlyContinue
 if ($compileExitCode -ne 0) { throw 'Compilation failed.' }

@@ -46,12 +46,17 @@ namespace ScumMiniMap {
             playingAction=clips.Length>0?clips[clips.Length-1]:null;
         }
         void StopVoice() { if(voicePlayer!=null)voicePlayer.Stop(); voicePreview=false; voiceArrivalPlaying=false; playingAction=null; }
+        static string RouteUnavailableText {
+            get {
+                string[] errors={"Road route unavailable","Ruta por carretera no disponible","Itinéraire routier indisponible","Straßenroute nicht verfügbar","Wegroute niet beschikbaar","Автомобильный маршрут недоступен","道路路线不可用","Karayolu rotası bulunamadı","مسار الطريق غير متاح"};
+                return errors[(int)Localization.Current];
+            }
+        }
         void FinishVoiceReroute(bool success) {
             if(success) {
                 voiceNavigator.RouteReplaced(); voiceStatusUntil=DateTime.MinValue;
             } else {
-                string[] errors={"Route unavailable","Ruta no disponible","Itinéraire indisponible","Route nicht verfügbar","Route niet beschikbaar","Маршрут недоступен","路线不可用","Rota bulunamadı","المسار غير متاح"};
-                voiceStatus=errors[(int)Localization.Current]; voiceStatusUntil=DateTime.UtcNow.AddSeconds(5);
+                voiceStatus=RouteUnavailableText; voiceStatusUntil=DateTime.UtcNow.AddSeconds(5);
             }
             lastFrameKey=null;
         }

@@ -6,6 +6,45 @@ using System.IO.Compression;
 using System.Reflection;
 
 namespace ScumMiniMap {
+    // Fixed coverage derived from the bundled map; independent of custom user textures.
+    internal sealed class RoutingWaterMask {
+        byte[] bits;
+        int width,height;
+        internal bool IsLoaded { get { return bits!=null; } }
+        internal void Load() {
+            Stream raw=Assembly.GetExecutingAssembly().GetManifestResourceStream("water-mask.bin");
+            if(raw==null) {
+                foreach(string path in new[]{Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"water-mask.bin"),Path.Combine(Environment.CurrentDirectory,"resources","water-mask.bin")})
+                    if(File.Exists(path)) { raw=File.OpenRead(path); break; }
+            }
+            if(raw==null) return;
+            using(raw) using(var zip=new GZipStream(raw,CompressionMode.Decompress)) using(var reader=new BinaryReader(zip)) {
+                if(new string(reader.ReadChars(4))!="WATR") throw new InvalidDataException("Invalid water mask.");
+                width=reader.ReadInt32(); height=reader.ReadInt32();
+                if(width<1 || height<1 || width>8192 || height>8192) throw new InvalidDataException("Invalid water mask size.");
+                int count=(width*height+7)/8;
+                byte[] data=reader.ReadBytes(count);
+                if(data.Length!=count) throw new InvalidDataException("Truncated water mask.");
+                bits=data;
+            }
+        }
+        bool Water(float x,float y) {
+            if(float.IsNaN(x)||float.IsNaN(y)||x<0||y<0||x>=1||y>=1) return true;
+            int index=(int)(y*height)*width+(int)(x*width);
+            return (bits[index>>3]&(1<<(index&7)))!=0;
+        }
+        internal bool AllowsConnector(PointF a,PointF b) {
+            if(!IsLoaded) return false;
+            double dx=b.X-a.X,dy=b.Y-a.Y;
+            if(double.IsNaN(dx)||double.IsNaN(dy)||double.IsInfinity(dx)||double.IsInfinity(dy)) return false;
+            // Half-cell spacing preserves small streams and narrow lake inlets.
+            int samples=(int)Math.Ceiling(Math.Max(Math.Abs(dx)*width,Math.Abs(dy)*height)*2);
+            if(samples>32768) return false;
+            samples=Math.Max(1,samples);
+            for(int i=0;i<=samples;i++) if(Water(a.X+(float)(dx*i/samples),a.Y+(float)(dy*i/samples))) return false;
+            return true;
+        }
+    }
     public class RoadRoute {
         public bool Success;
         public PointF PlayerPoint;
@@ -72,6 +111,7 @@ namespace ScumMiniMap {
         private int componentCount;
         private List<int>[] componentNodes;
         private int mainComponentId;
+        private readonly RoutingWaterMask waterMask=new RoutingWaterMask();
 
         // Reusable zero-allocation A* search state
         private readonly object searchLock = new object();
@@ -197,6 +237,7 @@ namespace ScumMiniMap {
             }
 
             // Synthesize major bridges across water
+            waterMask.Load();
             AddBridges();
 
             // Stitch digitized micro-gaps at intersections (<= 35m)
@@ -410,7 +451,7 @@ namespace ScumMiniMap {
                             if (alreadyLinked) continue;
 
                             double d = DistanceMeters(uX, uY, nodesList[v].U, nodesList[v].V);
-                            if (d <= bestDist) {
+                            if (d <= bestDist && waterMask.AllowsConnector(new PointF(uX,uY),new PointF(nodesList[v].U,nodesList[v].V))) {
                                 bestDist = d;
                                 bestV = v;
                             }
@@ -492,7 +533,7 @@ namespace ScumMiniMap {
                             if (alreadyLinked) continue;
 
                             double d = DistanceMeters(uX, uY, nodesList[v].U, nodesList[v].V);
-                            if (d <= bestDist) {
+                            if (d <= bestDist && waterMask.AllowsConnector(new PointF(uX,uY),new PointF(nodesList[v].U,nodesList[v].V))) {
                                 bestDist = d;
                                 bestV = v;
                             }
@@ -624,7 +665,7 @@ namespace ScumMiniMap {
                                 }
                                 PointF proj = new PointF((float)(a.X + t * ldx), (float)(a.Y + t * ldy));
                                 double d = DistanceMeters(pt, proj);
-                                if (d < bestDist) {
+                                if (d < bestDist && waterMask.AllowsConnector(pt,proj)) {
                                     bestDist = d;
                                     bestSnap = new SnapResult {
                                         EdgeIndex = eid,
@@ -690,7 +731,7 @@ namespace ScumMiniMap {
                                 }
                                 PointF proj = new PointF((float)(a.X + t * ldx), (float)(a.Y + t * ldy));
                                 double d = DistanceMeters(pt, proj);
-                                if (d < bestEdgeDist) {
+                                if (d < bestEdgeDist && waterMask.AllowsConnector(pt,proj)) {
                                     bestEdgeDist = d;
                                     bestEdgeSnap = new SnapResult {
                                         EdgeIndex = eid,
@@ -799,10 +840,10 @@ namespace ScumMiniMap {
                 TotalDistanceMeters = DistanceMeters(playerPt, targetPt)
             };
 
-            if (!IsLoaded) return result;
+            if (!IsLoaded || !waterMask.IsLoaded) return result;
 
             // Direct distance threshold: if < 35m, direct line is sufficient
-            if (result.TotalDistanceMeters < 35.0) {
+            if (result.TotalDistanceMeters < 35.0 && waterMask.AllowsConnector(playerPt,targetPt)) {
                 result.Polyline = new PointF[] { playerPt, targetPt };
                 result.Success = true;
                 return result;
@@ -855,8 +896,8 @@ namespace ScumMiniMap {
                 }
             }
 
-            // 3. Fallback: ONLY for offshore islands where water traversal is absolutely unavoidable!
-            return ComputeMultiModalRoute(playerPt, targetPt, startCands[0], endCands[0]);
+            // Road navigation must never invent a swimming/boat crossing.
+            return result;
         }
 
         private RoadRoute ComputeConnectedRoute(PointF playerPt, PointF targetPt, SnapResult snapStart, SnapResult snapEnd) {
@@ -870,9 +911,11 @@ namespace ScumMiniMap {
                 ExitDistanceMeters = snapEnd.DistanceMeters
             };
 
+            if(!waterMask.AllowsConnector(playerPt,snapStart.Projected) || !waterMask.AllowsConnector(snapEnd.Projected,targetPt)) return result;
+
             // Direct walk optimization: if direct walk is shorter than driving off-road to road and back
             double directDist = DistanceMeters(playerPt, targetPt);
-            if (directDist < 60.0 && snapStart.DistanceMeters + snapEnd.DistanceMeters > directDist * 1.5) {
+            if (directDist < 60.0 && snapStart.DistanceMeters + snapEnd.DistanceMeters > directDist * 1.5 && waterMask.AllowsConnector(playerPt,targetPt)) {
                 result.Polyline = new PointF[] { playerPt, targetPt };
                 result.TotalDistanceMeters = directDist;
                 result.Success = true;
@@ -1034,101 +1077,5 @@ namespace ScumMiniMap {
             }
         }
 
-        private RoadRoute ComputeMultiModalRoute(PointF playerPt, PointF targetPt, SnapResult snapStart, SnapResult snapEnd) {
-            // Find coastal departure/arrival node pair connecting start component to end component
-            int compStart = nodeComponent[edges[snapStart.EdgeIndex].U];
-            int compEnd = nodeComponent[edges[snapEnd.EdgeIndex].U];
-
-            List<int> nodesS = componentNodes[compStart];
-            List<int> nodesE = componentNodes[compEnd];
-
-            int bestDep = -1;
-            int bestArr = -1;
-            double bestCost = double.MaxValue;
-
-            // Subsample large components to keep query sub-millisecond
-            int stepS = Math.Max(1, nodesS.Count / 80);
-            int stepE = Math.Max(1, nodesE.Count / 80);
-
-            for (int i = 0; i < nodesS.Count; i += stepS) {
-                int ns = nodesS[i];
-                float us = nodes[ns].U, vs = nodes[ns].V;
-                double dStart = DistanceMeters(playerPt.X, playerPt.Y, us, vs);
-
-                for (int j = 0; j < nodesE.Count; j += stepE) {
-                    int ne = nodesE[j];
-                    float ue = nodes[ne].U, ve = nodes[ne].V;
-                    double dWater = DistanceMeters(us, vs, ue, ve);
-                    double dTarget = DistanceMeters(ue, ve, targetPt.X, targetPt.Y);
-
-                    double totalCost = dStart + dWater * 1.8 + dTarget;
-                    if (totalCost < bestCost) {
-                        bestCost = totalCost;
-                        bestDep = ns;
-                        bestArr = ne;
-                    }
-                }
-            }
-
-            if (bestDep < 0 || bestArr < 0) {
-                return new RoadRoute {
-                    Success = false,
-                    PlayerPoint = playerPt,
-                    TargetPoint = targetPt,
-                    Polyline = new PointF[] { playerPt, targetPt },
-                    TotalDistanceMeters = DistanceMeters(playerPt, targetPt)
-                };
-            }
-
-            PointF depPt = new PointF(nodes[bestDep].U, nodes[bestDep].V);
-            PointF arrPt = new PointF(nodes[bestArr].U, nodes[bestArr].V);
-
-            // Compute land leg 1: Player -> departure point
-            SnapResult snapDep = SnapToRoad(depPt, 500.0);
-            RoadRoute leg1 = (snapDep.EdgeIndex >= 0) ? ComputeConnectedRoute(playerPt, depPt, snapStart, snapDep) : null;
-
-            // Compute land leg 2: Arrival point -> Target
-            SnapResult snapArr = SnapToRoad(arrPt, 500.0);
-            RoadRoute leg2 = (snapArr.EdgeIndex >= 0) ? ComputeConnectedRoute(arrPt, targetPt, snapArr, snapEnd) : null;
-
-            List<PointF> fullPoly = new List<PointF>();
-            if (leg1 != null && leg1.Success && leg1.Polyline != null) {
-                for (int i = 0; i < leg1.Polyline.Length; i++) fullPoly.Add(leg1.Polyline[i]);
-            } else {
-                fullPoly.Add(playerPt);
-                fullPoly.Add(depPt);
-            }
-
-            // Nautical link
-            fullPoly.Add(arrPt);
-
-            if (leg2 != null && leg2.Success && leg2.Polyline != null) {
-                for (int i = 1; i < leg2.Polyline.Length; i++) fullPoly.Add(leg2.Polyline[i]);
-            } else {
-                fullPoly.Add(targetPt);
-            }
-
-            double waterDist = DistanceMeters(depPt, arrPt);
-            double totalDist = (leg1 != null ? leg1.TotalDistanceMeters : DistanceMeters(playerPt, depPt)) +
-                               waterDist +
-                               (leg2 != null ? leg2.TotalDistanceMeters : DistanceMeters(arrPt, targetPt));
-
-            return new RoadRoute {
-                Success = true,
-                PlayerPoint = playerPt,
-                RoadEntryPoint = snapStart.Projected,
-                RoadExitPoint = snapEnd.Projected,
-                TargetPoint = targetPt,
-                Polyline = fullPoly.ToArray(),
-                TotalDistanceMeters = totalDist,
-                RoadDistanceMeters = totalDist - waterDist,
-                EntryDistanceMeters = snapStart.DistanceMeters,
-                ExitDistanceMeters = snapEnd.DistanceMeters,
-                HasWaterTransit = true,
-                WaterDeparturePoint = depPt,
-                WaterArrivalPoint = arrPt,
-                WaterDistanceMeters = waterDist
-            };
-        }
     }
 }

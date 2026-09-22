@@ -1,4 +1,4 @@
-﻿$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Stop'
 
 Write-Host "Compiling standalone bridge and water avoidance test harness..."
 
@@ -56,8 +56,9 @@ public class TestHarness {
         Console.WriteLine("PASS: Central-East Highway Bridge routed successfully without water!");
 
         // Test 3: West Rogoznica Bridge (A3 -> Z3)
-        PointF pWestMain = new PointF(0.18370f, 0.74100f);
-        PointF pWestIsland = new PointF(0.18000f, 0.81000f);
+        // Use the mapped Rogoznica bridge approaches; the old .18,.81 point is in the sea.
+        PointF pWestMain = new PointF(0.28624f, 0.75685f);
+        PointF pWestIsland = new PointF(0.29397f, 0.82816f);
         Console.WriteLine("\n--- Test 3: West Rogoznica Bridge crossing ---");
         RoadRoute rWest = RoadRouter.Instance.FindRoute(pWestMain, pWestIsland);
         Console.WriteLine(string.Format("Success: {0}, HasWaterTransit: {1}, Dist: {2:F1} m",
@@ -70,7 +71,7 @@ public class TestHarness {
 
         // Test 4: Long cross-island trip (Mainland interior -> South Island interior)
         PointF pMainlandInterior = new PointF(0.35000f, 0.45000f); // B3 / B2 area
-        PointF pIslandInterior = new PointF(0.40000f, 0.82000f); // Z2 area
+        PointF pIslandInterior = new PointF(0.29500f, 0.83500f); // Z island road, dry, near Rogoznica bridge S
         Console.WriteLine("\n--- Test 4: Mainland Interior -> South Island Interior ---");
         RoadRoute rCross = RoadRouter.Instance.FindRoute(pMainlandInterior, pIslandInterior);
         Console.WriteLine(string.Format("Success: {0}, HasWaterTransit: {1}, Dist: {2:F1} m",
@@ -94,19 +95,27 @@ public class TestHarness {
         }
         Console.WriteLine("PASS: Mainland off-road route stayed on land/road with ZERO water traversal!");
 
-        // A road graph cannot prove water coverage of off-road feeder segments.
-        // Validate the actual routing contract, not an unsupported water classification.
-        PointF pOceanFar = new PointF(0.95000f, 0.95000f);
-        RoadRoute rOcean = RoadRouter.Instance.FindRoute(pMainlandInterior, pOceanFar);
-        if (rOcean.Success) {
-            if(rOcean.Polyline==null || rOcean.Polyline.Length<2 ||
-               rOcean.TargetPoint!=pOceanFar || double.IsNaN(rOcean.TotalDistanceMeters) ||
-               double.IsInfinity(rOcean.TotalDistanceMeters) || rOcean.TotalDistanceMeters<=0 ||
-               (rOcean.HasWaterTransit && rOcean.WaterDistanceMeters<=0)) {
-                Console.WriteLine("FAIL: Invalid offshore route geometry or distance."); return 1;
+        var water=new RoutingWaterMask(); water.Load();
+        if(!water.IsLoaded) { Console.WriteLine("FAIL: Water coverage not loaded."); return 1; }
+        // Reproduction around the B2 town stream/lake: the old entry feeder crossed water.
+        foreach(float x in new[]{.411f,.414f,.417f}) {
+            PointF start=new PointF(x,.455f),target=new PointF(.439f,.463f);
+            RoadRoute route=RoadRouter.Instance.FindRoute(start,target);
+            if(!route.Success || route.HasWaterTransit || !water.AllowsConnector(start,route.RoadEntryPoint) || !water.AllowsConnector(route.RoadExitPoint,target)) {
+                Console.WriteLine("FAIL: B2 shoreline route crossed mapped water or lost the dry alternative."); return 1;
             }
         }
-        Console.WriteLine("PASS: Offshore route result is internally consistent; feeder terrain requires live validation.");
+        Console.WriteLine("PASS: B2 town routes use dry entry/exit connections.");
+        PointF pOceanFar = new PointF(0.02000f, 0.50000f); // deep ocean, west edge
+        RoadRoute rOcean = RoadRouter.Instance.FindRoute(pMainlandInterior, pOceanFar);
+        if (rOcean.Success || rOcean.HasWaterTransit) { Console.WriteLine("FAIL: Invented offshore road route."); return 1; }
+        RoadRoute formerSea=RoadRouter.Instance.FindRoute(pMainlandInterior,new PointF(.4f,.82f));
+        if(formerSea.Success) { Console.WriteLine("FAIL: Old offshore test destination still accepted."); return 1; }
+        PointF lake=new PointF(.418f,.487f);
+        RoadRoute shortWater=RoadRouter.Instance.FindRoute(lake,new PointF(.4181f,.487f));
+        if(water.AllowsConnector(lake,lake) || shortWater.Success) { Console.WriteLine("FAIL: Short-distance shortcut accepts water."); return 1; }
+        if(new RoutingWaterMask().AllowsConnector(pMainlandInterior,pMainlandInterior)) { Console.WriteLine("FAIL: Missing mask permits unverified connector."); return 1; }
+        Console.WriteLine("PASS: Offshore and short lake shortcuts rejected; missing coverage fails closed.");
 
         Console.WriteLine("\nALL BRIDGE AND WATER AVOIDANCE TESTS PASSED SUCCESSFULLY!");
         return 0;

@@ -1,4 +1,4 @@
-param([string]$OutputDirectory)
+﻿param([string]$OutputDirectory)
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 if(-not $OutputDirectory) { $OutputDirectory=Join-Path $root ('release\tests\responsiveness-'+(Get-Date -Format 'yyyyMMdd-HHmmss')) }
@@ -23,14 +23,14 @@ Remove-Item -LiteralPath $renderTest
 $testSource=Join-Path $output 'MiniMap.test.cs'
 $mainSource=Join-Path $root 'src\MiniMap.cs'
 $text=[IO.File]::ReadAllText($mainSource)
-$text=$text -replace 'AssemblyInformationalVersion\("[^"]+"\)', 'AssemblyInformationalVersion("1.4.8-settings-test.9")'
+$text=$text -replace 'AssemblyInformationalVersion\("[^"]+"\)', 'AssemblyInformationalVersion("1.4.9-water-test.10")'
 [IO.File]::WriteAllText($testSource,$text,[Text.UTF8Encoding]::new($false))
 $sources=@($sources | ForEach-Object { if($_ -eq $mainSource) { $testSource } else { $_ } })
 $res=Join-Path $root 'resources'
 $pack=Join-Path $root 'packaging'
 $exe=Join-Path $output 'SkynettMiniMap-Test.exe'
 try {
-    & $compiler /nologo /optimize+ /target:winexe /platform:x64 @voiceResources /define:MINIMAP_TEST "/out:$exe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll "/resource:$res\map.png,map.png" "/resource:$res\zones.tsv,zones.tsv" "/resource:$res\roads.bin,roads.bin" "/resource:$res\scummap.bin,scummap.bin" "/resource:$pack\detect_zones.py,detect_zones.py" "/win32icon:$res\App-Icon.ico" @sources
+    & $compiler /nologo /optimize+ /target:winexe /platform:x64 @voiceResources /define:MINIMAP_TEST "/out:$exe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll "/resource:$res\map.png,map.png" "/resource:$res\zones.tsv,zones.tsv" "/resource:$res\roads.bin,roads.bin" "/resource:$res\water-mask.bin,water-mask.bin" "/resource:$res\scummap.bin,scummap.bin" "/resource:$pack\detect_zones.py,detect_zones.py" "/win32icon:$res\App-Icon.ico" @sources
     if($LASTEXITCODE -ne 0) { throw 'Test package compilation failed' }
 } finally { Remove-Item -LiteralPath $testSource }
 $process=Start-Process -FilePath $exe -ArgumentList '-Check' -WindowStyle Hidden -PassThru
