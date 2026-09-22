@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Windows.Forms;
 
@@ -21,8 +21,8 @@ namespace ScumMiniMap {
         bool lastVoiceBusy;
         string VoiceStatus { get { return DateTime.UtcNow<voiceStatusUntil?voiceStatus:""; } }
         static string RerouteText(bool wrongWay) {
-            string[] recalculating={"Recalculating route","Recalculando ruta","Recalcul de l’itinéraire","Route wird neu berechnet","Route wordt opnieuw berekend","Пересчёт маршрута","正在重新规划路线","Rota yeniden hesaplanıyor","جارٍ إعادة حساب المسار"};
-            string[] wrong={"Wrong way","Dirección incorrecta","Mauvaise direction","Falsche Richtung","Verkeerde richting","Неверное направление","行驶方向错误","Yanlış yön","اتجاه خاطئ"};
+            string[] recalculating={"Recalculating route","Recalculando ruta","Recalcul de l’itinéraire","Route wird neu berechnet","Route wordt opnieuw berekend","Пересчёт маршрута","正在重新规划路线","Rota yeniden hesaplanıyor","جارٍ إعادة حساب المسار","Recalculando rota"};
+            string[] wrong={"Wrong way","Dirección incorrecta","Mauvaise direction","Falsche Richtung","Verkeerde richting","Неверное направление","行驶方向错误","Yanlış yön","اتجاه خاطئ","Direção errada"};
             int language=(int)Localization.Current;
             return (wrongWay?wrong[language]+" — ":"")+recalculating[language];
         }
@@ -48,7 +48,7 @@ namespace ScumMiniMap {
         void StopVoice() { if(voicePlayer!=null)voicePlayer.Stop(); voicePreview=false; voiceArrivalPlaying=false; playingAction=null; }
         static string RouteUnavailableText {
             get {
-                string[] errors={"Road route unavailable","Ruta por carretera no disponible","Itinéraire routier indisponible","Straßenroute nicht verfügbar","Wegroute niet beschikbaar","Автомобильный маршрут недоступен","道路路线不可用","Karayolu rotası bulunamadı","مسار الطريق غير متاح"};
+                string[] errors={"Road route unavailable","Ruta por carretera no disponible","Itinéraire routier indisponible","Straßenroute nicht verfügbar","Wegroute niet beschikbaar","Автомобильный маршрут недоступен","道路路线不可用","Karayolu rotası bulunamadı","مسار الطريق غير متاح","Rota rodoviária indisponível"};
                 return errors[(int)Localization.Current];
             }
         }
@@ -128,7 +128,8 @@ namespace ScumMiniMap {
                 new[]{"Голосовая навигация (в разработке)","Включить голосовую навигацию","Голос","Громкость голоса (%)","Прослушать голос","Добавьте папки голосов с теми же 12 именами MP3 в voice-navigation в данных приложения и снова откройте настройки."},
                 new[]{"语音导航（开发中）","启用语音导航","语音","语音音量 (%)","试听语音","在应用数据的 voice-navigation 文件夹中添加包含相同12个MP3文件名的语音文件夹，然后重新打开设置。"},
                 new[]{"Sesli navigasyon (geliştirme aşamasında)","Sesli navigasyonu etkinleştir","Ses","Ses düzeyi (%)","Sesi önizle","Uygulama verilerindeki voice-navigation klasörüne aynı 12 MP3 adıyla ses klasörleri ekleyin ve Ayarlar'ı yeniden açın."},
-                new[]{"الملاحة الصوتية (قيد التطوير)","تفعيل الملاحة الصوتية","الصوت","مستوى الصوت (%)","معاينة الصوت","أضف مجلدات أصوات بأسماء ملفات MP3 الاثني عشر نفسها في voice-navigation ضمن بيانات التطبيق، ثم أعد فتح الإعدادات."}
+                new[]{"الملاحة الصوتية (قيد التطوير)","تفعيل الملاحة الصوتية","الصوت","مستوى الصوت (%)","معاينة الصوت","أضف مجلدات أصوات بأسماء ملفات MP3 الاثني عشر نفسها في voice-navigation ضمن بيانات التطبيق، ثم أعد فتح الإعدادات."},
+                new[]{"Navegação por voz (em desenvolvimento)","Ativar navegação por voz","Voz","Volume da voz (%)","Ouvir prévia da voz","Adicione pastas de vozes com os mesmos 12 nomes de MP3 em voice-navigation na pasta de dados do aplicativo e reabra as Configurações."}
             };
             return labels[(int)Localization.Current][index];
         }

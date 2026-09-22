@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -30,7 +30,8 @@ namespace ScumMiniMap {
                     "Новый стандарт: обратная косая черта (\\), без модификатора. Назначьте копирование координат в SCUM на ту же клавишу. Старые привязки сохраняются. Одна клавиша: 250 мс; Ctrl+C: от 1 секунды.",
                     "新默认按键：反斜杠（\\），无修饰键。请在SCUM中将复制位置设为相同按键。保留已有绑定。单键支持250毫秒；Ctrl+C最短为1秒。",
                     "Yeni varsayılan: ters eğik çizgi (\\), değiştiricisiz. SCUM Konumu kopyala tuşunu da aynı yapın. Mevcut atamalar korunur. Tek tuş: 250 ms; Ctrl+C: en az 1 saniye.",
-                    "الافتراضي الجديد: الشرطة المائلة العكسية (\\)، دون مفتاح تعديل. عيّن نسخ الموقع في SCUM إلى المفتاح نفسه. تُحفظ التعيينات الحالية. مفتاح واحد: 250 مللي ثانية؛ Ctrl+C: ثانية على الأقل."
+                    "الافتراضي الجديد: الشرطة المائلة العكسية (\\)، دون مفتاح تعديل. عيّن نسخ الموقع في SCUM إلى المفتاح نفسه. تُحفظ التعيينات الحالية. مفتاح واحد: 250 مللي ثانية؛ Ctrl+C: ثانية على الأقل.",
+                    "Novo padrão: barra invertida (\\), sem modificador. Atribua Copiar localização no SCUM à mesma tecla. Atalhos anteriores são mantidos. Tecla única: 250 ms; Ctrl+C: mínimo de 1 segundo."
                 };
                 return text[(int)Localization.Current];
             }

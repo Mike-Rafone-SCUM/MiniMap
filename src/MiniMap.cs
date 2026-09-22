@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 
 
@@ -1364,7 +1364,8 @@ namespace ScumMiniMap {
                 "Русский",
                 "中文 (简体)",
                 "Türkçe",
-                "العربية"
+                "العربية",
+                "Português (Brasil)"
             });
             switch (Localization.Current) {
                 case AppLanguage.SpanishArgentina: langCombo.SelectedIndex = 1; break;
@@ -1375,6 +1376,7 @@ namespace ScumMiniMap {
                 case AppLanguage.Chinese: langCombo.SelectedIndex = 6; break;
                 case AppLanguage.Turkish: langCombo.SelectedIndex = 7; break;
                 case AppLanguage.Arabic: langCombo.SelectedIndex = 8; break;
+                case AppLanguage.Portuguese: langCombo.SelectedIndex = 9; break;
                 default: langCombo.SelectedIndex = 0; break;
             }
             langCombo.SelectedIndexChanged += (s, e) => {
@@ -1388,6 +1390,7 @@ namespace ScumMiniMap {
                     case 6: newLang = AppLanguage.Chinese; break;
                     case 7: newLang = AppLanguage.Turkish; break;
                     case 8: newLang = AppLanguage.Arabic; break;
+                    case 9: newLang = AppLanguage.Portuguese; break;
                     default: newLang = AppLanguage.English; break;
                 }
                 if (Localization.Current != newLang) {
