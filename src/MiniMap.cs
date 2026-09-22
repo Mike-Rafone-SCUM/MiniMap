@@ -2121,8 +2121,7 @@ namespace ScumMiniMap {
 
 
             if(key==0x20)return "Space";
-
-
+            if(key==0xDC)return "\\";
 
             string name=((Keys)key).ToString();
 

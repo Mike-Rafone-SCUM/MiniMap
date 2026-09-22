@@ -670,6 +670,7 @@ namespace ScumMiniMap {
             if (key == 0xBF) return "/";
             if (key == 0x6F) return "Num /";
             if (key == 0x20) return "Space";
+            if (key == 0xDC) return "\\";
             if (key == 0x11) return "Ctrl";
             if (key == 0x10) return "Shift";
             if (key == 0x12) return "Alt";
