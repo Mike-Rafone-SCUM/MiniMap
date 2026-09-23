@@ -285,6 +285,19 @@ namespace ScumMiniMap {
         }
         public void Reset() { openTime = DateTime.MinValue; }
     }
+    // Hook and polling must share edges: replaying an old Enter after a newer T
+    // would clear the chat gate while SCUM's text box is still open.
+    public sealed class ChatKeyMonitor {
+        readonly bool[] held=new bool[256];
+        public bool Observe(int key,bool down,bool focused,ChatState chat,int openKey) {
+            if(key<0 || key>=held.Length) return false;
+            bool fresh=down && !held[key];
+            held[key]=down;
+            if(!focused || !fresh || chat==null) return false;
+            chat.Key(key,openKey);
+            return true;
+        }
+    }
     public sealed class PhysicalKeyTransitions {
         readonly bool[] held=new bool[256];
         static readonly int[] ModifierKeys = new int[] {
@@ -338,7 +351,7 @@ namespace ScumMiniMap {
         IntPtr mouseHook;
         DateTime nextHookRefresh=DateTime.MinValue;
         bool disposed,wasFocused;
-        readonly bool[] polledChatKeys=new bool[256];
+        readonly ChatKeyMonitor chatKeys=new ChatKeyMonitor();
         static DateTime lastMouseAction=DateTime.MinValue;
         public static DateTime LastUserInputTime = DateTime.MinValue;
         public static DateTime LastFreshKeyDownTime = DateTime.MinValue;
@@ -372,11 +385,9 @@ namespace ScumMiniMap {
             foreach(int key in new[]{openKey,0xBF,0x6F,0x0D,0x1B}) {
                 if(key<0 || key>=256) continue;
                 bool down=(Native.GetAsyncKeyState(key)&0x8000)!=0;
-                if(focused && down && !polledChatKeys[key] && chatState!=null) {
-                    chatState.Key(key,openKey);
+                if(chatKeys.Observe(key,down,focused,chatState,openKey)) {
                     Native.CancelActiveCopy();
                 }
-                polledChatKeys[key]=down;
             }
         }
         IntPtr OnMouse(int code,IntPtr message,IntPtr data) {
@@ -401,6 +412,13 @@ namespace ScumMiniMap {
                 if((key.flags & 0x10)!=0) return CallNextHookEx(hook,code,message,data);
                 int k=(int)key.key;
                 bool isDown=message.ToInt32()==0x100 || message.ToInt32()==0x104;
+                // The hook runs synchronously on the Windows input path. Use the
+                // focus sample maintained by Resync() instead of querying the
+                // foreground process for every key transition; process lookup
+                // here can cause visible input/gameplay stutters.
+                bool gameFocused=wasFocused;
+                int openKey=getChatOpenKey!=null?getChatOpenKey():0x54;
+                chatKeys.Observe(k,isDown,gameFocused,chatState,openKey);
                 bool fresh=transitions.Update(k,isDown);
                 bool altDown=transitions.IsDown(0x12) || transitions.IsDown(0xA4) || transitions.IsDown(0xA5)
                     || (Native.GetAsyncKeyState(0x12)&0x8000)!=0 || (Native.GetAsyncKeyState(0xA4)&0x8000)!=0 || (Native.GetAsyncKeyState(0xA5)&0x8000)!=0;
@@ -410,15 +428,11 @@ namespace ScumMiniMap {
                 if(k==0x09 && altDown) {
                     Native.LastAltTabTime=DateTime.UtcNow;
                 }
-                if(Native.GameFocused()) {
+                if(gameFocused) {
                     LastUserInputTime=DateTime.UtcNow;
                     if(fresh && isDown) {
                         LastFreshKeyDownTime=DateTime.UtcNow;
                         Native.CancelActiveCopy();
-                        if(chatState!=null) {
-                            int openKey = getChatOpenKey != null ? getChatOpenKey() : 0x54;
-                            chatState.Key(k, openKey);
-                        }
                     }
                 }
                 // Dispatch only keys that can affect the application. The hook still tracks
