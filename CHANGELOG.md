@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.93] - 2026-09-23
+
+### Fixed
+- Hotfix for gameplay stuttering caused by foreground-process lookup work in the synchronous keyboard hook.
+- Existing v1.4.92 installations can now detect and install this corrected build through the normal updater.
+
 ## [1.4.92] - 2026-09-23
 
 ### Fixed
