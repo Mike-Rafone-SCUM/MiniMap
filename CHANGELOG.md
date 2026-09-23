@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.92] - 2026-09-23
+
+### Fixed
+- Hotfix: automatic coordinate copying stays paused while typing in SCUM chat, preventing repeated backslash characters in the chat box.
+- Keyboard-hook and fallback-polling chat detection now share key transitions, preventing an older Enter or Escape press from clearing a newly opened chat session.
+- Verified with regression tests for default and custom chat bindings, repeated sampling attempts, and reopening chat; the reporting user confirmed the fix in game.
+
+## [1.4.91] - 2026-09-23
+
+### Added
+- Water mask routing checks and a localized road-route-unavailable voice announcement.
+- Brazilian Portuguese as the tenth supported application language.
+
+### Changed
+- Removed misleading straight-line water-crossing fallback routes.
+
+### Fixed
+- Backslash key labels in settings and the startup guide.
+
 ## [1.4.9] - 2026-09-21
 
 ### Added
