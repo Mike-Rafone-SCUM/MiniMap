@@ -163,7 +163,11 @@ static class InputVoiceTests {
             foreach(string file in VoicePacks.Clips) File.Copy(Path.Combine(packs,VoicePacks.DefaultName,file),Path.Combine(second,file));
             Check(VoicePacks.Discover(packs).Length==2,"Additional voice folders are discovered without code changes");
             using(var player=new VoicePlayer { Volume=0 }) {
-                player.Speak(second,VoicePacks.Clips); Pump(player);
+                // Hosted CI runners have no reliable audio endpoint for Windows MCI playback.
+                // Keep decoder playback covered on developer machines and verify queue behavior everywhere.
+                if(!String.Equals(Environment.GetEnvironmentVariable("CI"),"true",StringComparison.OrdinalIgnoreCase)) {
+                    player.Speak(second,VoicePacks.Clips); Pump(player);
+                }
                 var audioWatch=System.Diagnostics.Stopwatch.StartNew();
                 for(int request=0;request<50;request++) { player.Speak(second,new[]{VoicePacks.Clips[10],VoicePacks.Clips[2],VoicePacks.Clips[5]}); player.Stop(); }
                 audioWatch.Stop();
