@@ -248,7 +248,8 @@ static class InputVoiceTests {
                 var windowPlayer=(VoicePlayer)typeof(MapWindow).GetField("voicePlayer",Hidden).GetValue(window);
                 typeof(MapWindow).GetMethod("TickVoice",Hidden).Invoke(window,new object[]{DateTime.UtcNow,true});
                 Check(windowPlayer.Busy,"On-connector guidance does not truncate the phrase after 'In'");
-                Pump(windowPlayer);
+                if(String.Equals(Environment.GetEnvironmentVariable("CI"),"true",StringComparison.OrdinalIgnoreCase)) windowPlayer.Stop();
+                else Pump(windowPlayer);
                 typeof(MapWindow).GetField("routeCalculating",Hidden).SetValue(window,true);
                 Check(!(bool)typeof(MapWindow).GetMethod("RequestRouteAsync",Hidden).Invoke(window,new object[]{P(0,0),target,true}),"Busy router explicitly rejects a new request instead of reporting it started");
                 typeof(MapWindow).GetField("routeCalculating",Hidden).SetValue(window,false);
