@@ -87,6 +87,18 @@ static class InputVoiceTests {
         var roundedT=Route(P(0,0),P(580,0),P(600,-20),P(600,-600)); roundedT.JunctionIndices=new[]{2};
         Check(navigator.NextCue(roundedT,P(500,0)).Action==VoicePacks.Clips[5],"Rounded T-junction uses the approach and departure to announce turn left");
         navigator.Reset();
+        var crossing=Route(P(0,0),P(400,0),P(400,400),P(200,400),P(200,-100));
+        navigator.NextCue(crossing,P(150,0));
+        VoiceCue crossingCue=navigator.NextCue(crossing,P(200,0));
+        Check(crossingCue!=null && Math.Abs(crossingCue.Distance-200)<1,"Crossing route sections keep the current progress and next junction");
+        navigator.Reset();
+        var parallel=Route(P(0,0),P(400,0),P(400,70),P(0,70));
+        navigator.Update(parallel,P(100,0),now);
+        navigator.Update(parallel,P(100,36),now.AddSeconds(1));
+        navigator.Update(parallel,P(102,36),now.AddSeconds(2));
+        navigator.Update(parallel,P(104,36),now.AddSeconds(3));
+        Check(!navigator.NeedsReroute && navigator.CurrentCue!=null,"Parallel route sections use the closest segment for deviation checks");
+        navigator.Reset();
         var straight=Route(P(0,0),P(1000,0));
         navigator.Update(straight,P(600,0),now);
         navigator.Update(straight,P(594,0),now.AddSeconds(.5),true);
@@ -161,9 +173,25 @@ static class InputVoiceTests {
                 Check(!player.Busy,"Disabling playback cancels current clip and remaining queue");
                 player.Dispose(); Check(player.WaitForExit(5000),"Audio worker closes files and exits after disposal");
             }
+            AppLanguage originalLanguage=Localization.Current;
+            foreach(AppLanguage language in Enum.GetValues(typeof(AppLanguage))) {
+                Localization.Current=language;
+                using(var reminder=new CopyKeyReminderDialog()) {
+                    var message=reminder.Controls.OfType<Label>().Single();
+                    var checkbox=reminder.Controls.OfType<CheckBox>().Single();
+                    var okay=reminder.Controls.OfType<Button>().Single();
+                    Check(message.Text.Contains("\\") && checkbox.Text.Length>0 && okay.Text.Length>0
+                        && okay.DialogResult==DialogResult.OK && !reminder.DoNotShowAgain,
+                        "Copy-key reminder is localized and confirmable: "+language);
+                    checkbox.Checked=true;
+                    Check(reminder.DoNotShowAgain,"Copy-key reminder offers persistent opt-out: "+language);
+                }
+            }
+            Localization.Current=originalLanguage;
             using(var bitmap=new Bitmap(32,32)) bitmap.Save(Path.Combine(root,"map.png"));
             using(var window=new MapWindow(root,true)) {
                 Check((int)typeof(MapWindow).GetField("scumCopyModifierKey",Hidden).GetValue(window)==0 && (int)typeof(MapWindow).GetField("scumCopyKey",Hidden).GetValue(window)==0xDC,"New installations default to backslash without a modifier");
+                Check(!(bool)typeof(MapWindow).GetField("suppressCopyKeyReminder",Hidden).GetValue(window),"Copy-key reminder appears by default");
                 using(var guide=new StartupGuideDialog()) {
                     Check((int)typeof(StartupGuideDialog).GetField("copyModKey",Hidden).GetValue(guide)==0 && (int)typeof(StartupGuideDialog).GetField("copyKey",Hidden).GetValue(guide)==0xDC,"First-run guide matches the single-key default");
                     typeof(StartupGuideDialog).GetMethod("RenderSlideKeybinds",Hidden).Invoke(guide,null);
@@ -226,6 +254,14 @@ static class InputVoiceTests {
                 while((bool)typeof(MapWindow).GetField("routeCalculating",Hidden).GetValue(window) && DateTime.UtcNow<routeTimeout) { Application.DoEvents(); Thread.Sleep(10); }
                 Check(!(bool)typeof(MapWindow).GetField("routeCalculating",Hidden).GetValue(window) && (DateTime)typeof(MapWindow).GetField("voiceStatusUntil",Hidden).GetValue(window)!=DateTime.MaxValue,"Recalculation completion clears the in-progress status or reports failure");
                 windowPlayer.Dispose(); Check(windowPlayer.WaitForExit(5000),"Window audio worker shuts down without leaving MP3 files locked");
+            }
+            using(var persistWindow=new MapWindow(root)) {
+                typeof(MapWindow).GetField("suppressCopyKeyReminder",Hidden).SetValue(persistWindow,true);
+                typeof(MapWindow).GetMethod("SaveSettings",Hidden).Invoke(persistWindow,null);
+            }
+            using(var reopened=new MapWindow(root,true)) {
+                Check((bool)typeof(MapWindow).GetField("suppressCopyKeyReminder",Hidden).GetValue(reopened)
+                    && File.ReadAllText(Path.Combine(root,"settings.ini")).Contains("SuppressCopyKeyReminder=True"),"Copy-key reminder opt-out persists across restarts");
             }
         } finally {
             if(Path.GetFullPath(root).StartsWith(Path.GetFullPath(Path.GetTempPath()),StringComparison.OrdinalIgnoreCase) && Path.GetFileName(root).StartsWith("MiniMap-voice-test-")) Directory.Delete(root,true);

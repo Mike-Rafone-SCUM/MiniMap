@@ -27,6 +27,8 @@ __pycache__/
 
 # Generated development previews
 /TestHarness.cs
+/discord-*.json
+/scummap-reference.json
 
 # Common editor / OS junk
 .vs/

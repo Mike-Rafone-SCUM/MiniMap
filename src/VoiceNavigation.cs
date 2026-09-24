@@ -147,16 +147,21 @@ namespace ScumMiniMap {
         internal double Speed { get; private set; }
         double nearest,along;
         int nearestSegment;
+        double previousAlong;
+        PointF projectedPlayer;
+        bool hasProjection;
         internal void Reset() {
             spoken.Clear(); route=null; path=null; lastSpoken=lastWrongWarning=DateTime.MinValue;
             hasPrevious=false; backwardsMetres=0; previousCue=CurrentCue=null;
             NeedsReroute=WrongWay=false; Speed=0;
             deviationSamples=0; deviationSince=DateTime.MinValue; outsideCorridor=false;
+            hasProjection=false;
         }
         internal void RouteReplaced() {
             route=null; previousCue=CurrentCue=null; spoken.Clear(); lastSpoken=DateTime.MinValue;
             hasPrevious=false; backwardsMetres=0; WrongWay=NeedsReroute=false;
             deviationSamples=0; deviationSince=DateTime.MinValue; outsideCorridor=false;
+            hasProjection=false;
         }
         static double SegmentProjection(PointF p,PointF a,PointF b,out double t) {
             double dx=(b.X-a.X)*15216.18,dy=(b.Y-a.Y)*15236.18;
@@ -184,6 +189,7 @@ namespace ScumMiniMap {
             if(current==null || !current.Success || current.HasWaterTransit || current.Polyline==null || current.Polyline.Length<2) return null;
             if(!Object.ReferenceEquals(route,current)) {
                 route=current;
+                hasProjection=false;
                 var complete=new List<PointF>(); junctionOffset=0;
                 // Polyline contains the road section; the renderer also draws these connectors.
                 if(current.EntryDistanceMeters>15 && RoadRouter.DistanceMeters(current.PlayerPoint,current.Polyline[0])>1) {
@@ -197,12 +203,29 @@ namespace ScumMiniMap {
                 for(int i=1;i<path.Length;i++) distances[i]=distances[i-1]+RoadRouter.DistanceMeters(path[i-1],path[i]);
             }
             nearest=double.MaxValue; along=0; nearestSegment=1;
+            double bestContinuity=double.MaxValue;
+            bool continuous=hasProjection && RoadRouter.DistanceMeters(projectedPlayer,player)<100;
+            double closest=double.MaxValue;
             for(int i=1;i<path.Length;i++) {
                 double t,d=SegmentProjection(player,path[i-1],path[i],out t);
-                if(d<nearest) { nearest=d; along=distances[i-1]+t*(distances[i]-distances[i-1]); nearestSegment=i; }
+                if(d<closest) closest=d;
             }
-            outsideCorridor=nearest>35;
+            for(int i=1;i<path.Length;i++) {
+                double t,d=SegmentProjection(player,path[i-1],path[i],out t);
+                double candidateAlong=distances[i-1]+t*(distances[i]-distances[i-1]);
+                double continuity=continuous?Math.Abs(candidateAlong-previousAlong):0;
+                // At crossings and parallel roads, near-equal projections should stay on the
+                // branch already being followed instead of jumping to another route section.
+                if(d<=closest+8 && (continuity<bestContinuity || (continuity==bestContinuity && d<nearest))) {
+                    nearest=d; along=candidateAlong; nearestSegment=i; bestContinuity=continuity;
+                }
+            }
+            // Deviation is geometric: a continuity preference must not turn a valid
+            // position near another part of the route into a false off-route sample.
+            outsideCorridor=closest>35;
             if(outsideCorridor) return null;
+            nearest=closest;
+            previousAlong=along; projectedPlayer=player; hasProjection=true;
             foreach(int junction in current.JunctionIndices ?? new int[0]) {
                 int i=junction+junctionOffset;
                 if(i<=0 || i>=path.Length-1 || distances[i]<=along+3) continue;

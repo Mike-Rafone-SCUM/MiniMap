@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Reflection;
 using ScumMiniMap;
 
@@ -8,6 +9,29 @@ static class MapRenderingTests {
     const BindingFlags Hidden=BindingFlags.NonPublic|BindingFlags.Instance;
     static void Set(object obj,string name,object value) { obj.GetType().GetField(name,Hidden).SetValue(obj,value); }
     static void Check(bool ok,string message) { if(!ok) throw new Exception(message); Console.WriteLine("PASS: "+message); }
+    static byte[] SolidTile(int width) {
+        using(var tile=new Bitmap(width,512))
+        using(var graphics=Graphics.FromImage(tile))
+        using(var data=new MemoryStream()) {
+            graphics.Clear(Color.FromArgb(40,100,160));
+            tile.Save(data,System.Drawing.Imaging.ImageFormat.Png);
+            return data.ToArray();
+        }
+    }
+    static MemoryStream SeamFixture() {
+        byte[] first=SolidTile(514),second=SolidTile(514);
+        var stream=new MemoryStream();
+        using(var writer=new BinaryWriter(stream,System.Text.Encoding.ASCII,true)) {
+            writer.Write(System.Text.Encoding.ASCII.GetBytes("MTL2"));
+            writer.Write(512); writer.Write(1);
+            writer.Write(1024); writer.Write(512); writer.Write(2); writer.Write(1);
+            long start=12+16+24;
+            writer.Write(start); writer.Write(first.Length);
+            writer.Write(start+first.Length); writer.Write(second.Length);
+            writer.Write(first); writer.Write(second);
+        }
+        stream.Position=0; return stream;
+    }
     [STAThread] static void Main(string[] args) {
         Check(Program.DataFolderName==(Program.IsTestBuild?"ScumMiniMap-ResponsivenessTest":"ScumMiniMap"),"Build uses the appropriate data folder");
         Check(Native.CursorBlocksCopy(true,false) && !Native.CursorBlocksCopy(true,true) && !Native.CursorBlocksCopy(false,false),"Visible cursor blocks ordinary menus but permits full-map tracking");
@@ -31,7 +55,37 @@ static class MapRenderingTests {
         Check(Math.Abs(motion.Point.X-.501)<.000001,"One-second samples settle within 180 ms");
         motion.Advance(9);
         Check(Math.Abs(motion.Point.X-.501)<.000001,"No extrapolation beyond the latest observed position");
-        using(var window=new MapWindow(args[0],true)) {
+        using(var fixture=SeamFixture())
+        using(var tiles=new MapTilePyramid(fixture))
+        using(var frame=new Bitmap(777,777)) {
+            using(var graphics=Graphics.FromImage(frame)) {
+                graphics.Clear(Color.Black);
+                graphics.InterpolationMode=System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+                tiles.Draw(graphics,new RectangleF(0,0,777,777),0,0,777);
+            }
+            bool solid=true;
+            for(int x=385;x<=392;x++) {
+                Color pixel=frame.GetPixel(x,200);
+                if(Math.Abs(pixel.R-40)>3 || Math.Abs(pixel.G-100)>3 || Math.Abs(pixel.B-160)>3) solid=false;
+            }
+            Check(solid,"Scaled tile joins have no dark gaps");
+        }
+        using(var tileStream=Assembly.GetExecutingAssembly().GetManifestResourceStream("map-tiles.bin"))
+        using(var tiles=new MapTilePyramid(tileStream))
+        using(var tileFrame=new Bitmap(600,600))
+        using(var overview=tiles.Overview()) {
+            using(var graphics=Graphics.FromImage(tileFrame)) tiles.Draw(graphics,new RectangleF(0,0,600,600),0,0,600);
+            Check(overview.Width>=768 && overview.Width<=1024 && tileFrame.GetPixel(300,300).A>0,"Tile pyramid renders the bundled map without decoding the full image");
+        }
+        string testFolder=Path.Combine(Path.GetTempPath(),"MiniMap-tile-render-"+Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(testFolder);
+        string customMap=Path.Combine(testFolder,"map.png");
+        File.WriteAllText(customMap,"invalid image");
+        using(var recovery=new MapWindow(testFolder,true))
+            Check(typeof(MapWindow).GetField("mapTiles",Hidden).GetValue(recovery)!=null,"Invalid custom map falls back to bundled tiles");
+        File.Delete(customMap);
+        using(var window=new MapWindow(testFolder,true)) {
+            Check(typeof(MapWindow).GetField("mapTiles",Hidden).GetValue(window)!=null,"Bundled map uses tiles in the application renderer");
             var overlay=(OverlayWindow)typeof(MapWindow).GetField("overlay",Hidden).GetValue(window);
             var marker=(MapMotion)typeof(MapWindow).GetField("motion",Hidden).GetValue(window);
             var draw=(Func<Bitmap>)Delegate.CreateDelegate(typeof(Func<Bitmap>),window,typeof(MapWindow).GetMethod("OverlayBitmap",Hidden));
@@ -104,5 +158,6 @@ static class MapRenderingTests {
                 Check(opaqueCircle.GetPixel(0,0).A==0 && opaqueCircle.GetPixel(50,50).A==255,"Circular shape remains clipped with fade disabled at full opacity");
             }
         }
+        Directory.Delete(testFolder,true);
     }
 }

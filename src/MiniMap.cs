@@ -144,6 +144,7 @@ namespace ScumMiniMap {
 
 
         readonly Image map;
+        readonly MapTilePyramid mapTiles;
 
 
 
@@ -547,6 +548,7 @@ namespace ScumMiniMap {
 
 
         bool isFirstLaunch=false;
+        bool suppressCopyKeyReminder=false;
 
 
 
@@ -889,14 +891,28 @@ namespace ScumMiniMap {
 
 
             string mapWarning;
-            map=SafeMapImage.Load(mapFile,()=>System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("map.png"),out mapWarning);
+            Stream tileResource=System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("map-tiles.bin");
+            mapWarning=null;
+            if(tileResource!=null) {
+                if(File.Exists(mapFile)) {
+                    try { using(var file=File.OpenRead(mapFile)) map=SafeMapImage.Decode(file); }
+                    catch(Exception ex) {
+                        if(!(ex is IOException) && !(ex is InvalidDataException) && !(ex is UnauthorizedAccessException)
+                            && !(ex is ArgumentException) && !(ex is OutOfMemoryException)
+                            && !(ex is System.Runtime.InteropServices.ExternalException)) throw;
+                        mapWarning=Localization.Get("CustomMapRecovery");
+                    }
+                }
+                if(map==null) { mapTiles=new MapTilePyramid(tileResource); map=mapTiles.Overview(); }
+                else tileResource.Dispose();
+            } else map=SafeMapImage.Load(mapFile,()=>System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("map.png"),out mapWarning);
             if(mapWarning!=null && !diagnosticMode) Shown+=(sender,e)=>MessageBox.Show(mapWarning,Localization.Get("ZoneEditorTitle"),MessageBoxButtons.OK,MessageBoxIcon.Warning);
 
             Image level=map;
 
 
 
-            while(level.Width>512 && level.Height>512) {
+            while(mapTiles==null && level.Width>512 && level.Height>512) {
 
 
 
@@ -1266,6 +1282,8 @@ namespace ScumMiniMap {
 
                 }
 
+                if(!diagnosticMode && !suppressCopyKeyReminder) ShowCopyKeyReminder();
+
 
 
                 if(!Program.IsTestBuild && !diagnosticMode && string.IsNullOrEmpty(Program.LocalUpdateSource)) {
@@ -1602,7 +1620,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "1.4.93";
+        public const string VersionString = "1.4.95";
 
 
 
@@ -1964,6 +1982,7 @@ namespace ScumMiniMap {
 
 
             foreach(Bitmap cachedLevel in mapLevels)cachedLevel.Dispose();
+            if(mapTiles!=null)mapTiles.Dispose();
 
 
 
@@ -2029,6 +2048,15 @@ namespace ScumMiniMap {
                 }
             } catch(Exception ex) {
                 Program.LogException("StartupGuide", ex);
+            }
+        }
+
+        void ShowCopyKeyReminder() {
+            using(var reminder=new CopyKeyReminderDialog()) {
+                if(reminder.ShowDialog()==DialogResult.OK && reminder.DoNotShowAgain) {
+                    suppressCopyKeyReminder=true;
+                    SaveSettings();
+                }
             }
         }
 
@@ -8738,16 +8766,19 @@ namespace ScumMiniMap {
                     background.SmoothingMode=SmoothingMode.AntiAlias;
                     background.InterpolationMode=InterpolationMode.Bilinear;
                     background.PixelOffsetMode=PixelOffsetMode.HighSpeed;
-                    Image texture=map;
-                    foreach(Bitmap level in mapLevels) { if(level.Width<side || level.Height<side)break; texture=level; }
                     // Crop before scaling: GDI+ otherwise processes a huge zoomed image
                     // even though only a small window onto it is visible.
                     RectangleF visibleTexture=RectangleF.Intersect(background.VisibleClipBounds,new RectangleF(left,top,side,side));
                     if(visibleTexture.Width>0 && visibleTexture.Height>0) {
-                        float textureScale=texture.Width/side, textureScaleY=texture.Height/side;
-                        background.DrawImage(texture,visibleTexture,new RectangleF(
-                            (visibleTexture.Left-left)*textureScale,(visibleTexture.Top-top)*textureScaleY,
-                            visibleTexture.Width*textureScale,visibleTexture.Height*textureScaleY),GraphicsUnit.Pixel);
+                        if(mapTiles!=null) mapTiles.Draw(background,visibleTexture,left,top,side);
+                        else {
+                            Image texture=map;
+                            foreach(Bitmap level in mapLevels) { if(level.Width<side || level.Height<side)break; texture=level; }
+                            float textureScale=texture.Width/side, textureScaleY=texture.Height/side;
+                            background.DrawImage(texture,visibleTexture,new RectangleF(
+                                (visibleTexture.Left-left)*textureScale,(visibleTexture.Top-top)*textureScaleY,
+                                visibleTexture.Width*textureScale,visibleTexture.Height*textureScaleY),GraphicsUnit.Pixel);
+                        }
                     }
                     DrawGrid(background,left,top,side);
                     float currentZoom=fullMapActive?fullMapZoom:zoom;

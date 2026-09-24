@@ -1,6 +1,6 @@
 # SCUM MiniMap input and voice navigation test
 
-This is unpublished settings-shortcut test build 9, based on the public v1.4.8 release and destination-indicator test 8. Exit the current MiniMap and run `SkynettMiniMap-Test.exe`. Updates are disabled in this build.
+Build the current source with `Build.ps1 -Configuration Test`. Exit the current MiniMap and run the resulting `SkynettMiniMap-Test.exe`. Its product version follows the source version with a `-test` suffix. Updates are disabled in this build.
 
 Home now restores Settings from the taskbar and brings it to the foreground. Repeated presses keep Settings open. Use Escape, Done or the close button to minimize Settings and return to gameplay.
 

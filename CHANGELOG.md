@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.95] - 2026-09-24
+
+### Added
+- A coordinate-copy key reminder in all ten app languages. It appears at startup until the user selects "Do not show again" and confirms.
+
+### Changed
+- The bundled map loads visible tiles on demand, reducing map startup memory use. The package no longer embeds a second, full-resolution copy of the map.
+- Tile borders overlap during rendering to prevent visible seams on the minimap and full map.
+
+### Fixed
+- Voice guidance keeps route progress stable where roads cross or run close together, and avoids false off-route recalculation near parallel route sections.
+
 ## [1.4.93] - 2026-09-23
 
 ### Fixed
