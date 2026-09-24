@@ -160,7 +160,9 @@ namespace ScumMiniMap {
 
 
 
-        bool gridLabels=true,gridBorders=true,edgeFade=true,showStatus=true,autoZoom=true;
+        // Keep sector lines opt-in. They are useful for grid searches but obscure the
+        // terrain at normal zoom, especially on the full map and circular minimap.
+        bool gridLabels=true,gridBorders=false,edgeFade=true,showStatus=true,autoZoom=true;
 
 
 
@@ -185,6 +187,16 @@ namespace ScumMiniMap {
 
 
         int gridOpacity=7;
+
+        bool locationHistory=true,locationHistoryTimestamps=false;
+        readonly List<LocationHistoryPoint> locationHistoryPoints=new List<LocationHistoryPoint>();
+        int locationHistoryRevision;
+        const int LocationHistoryLimit=1800;
+
+        sealed class LocationHistoryPoint {
+            internal PointF MapPoint;
+            internal DateTime SampledAtUtc;
+        }
 
 
 
@@ -1438,6 +1450,8 @@ namespace ScumMiniMap {
             OverlayTheme.Section(bar, Localization.Get("SecMapZones"));
             AddCheck(bar, Localization.Get("GridLabels"), gridLabels, value => gridLabels = value);
             AddCheck(bar, Localization.Get("GridBorders"), gridBorders, value => gridBorders = value);
+            AddCheck(bar, "Location history", locationHistory, value => { locationHistory=value; terrainKey=null; });
+            AddCheck(bar, "History timestamps", locationHistoryTimestamps, value => { locationHistoryTimestamps=value; terrainKey=null; });
             FlowLayoutPanel gridRow = new FlowLayoutPanel { Width = 365, Height = 32, WrapContents = false };
             Label gridValue = new Label { Text = Localization.T("GridOpacity", gridOpacity), Width = 150, Padding = new Padding(0, 5, 0, 0) };
             TacticalSlider gridSlider = new TacticalSlider { Minimum = 0, Maximum = 100, Value = gridOpacity, Width = 190, Height = 24, Margin = new Padding(3, 4, 3, 3) };
@@ -4337,6 +4351,7 @@ namespace ScumMiniMap {
 
 
             position=p; updated=now; if(SettingsVisible)canvas.Invalidate();
+            RecordLocationHistory(currentPt,now);
 
 
 
@@ -4352,6 +4367,18 @@ namespace ScumMiniMap {
 
 
 
+        }
+
+        void RecordLocationHistory(PointF point,DateTime sampledAtUtc) {
+            if(!locationHistory) return;
+            if(locationHistoryPoints.Count>0) {
+                LocationHistoryPoint last=locationHistoryPoints[locationHistoryPoints.Count-1];
+                double dx=point.X-last.MapPoint.X,dy=point.Y-last.MapPoint.Y;
+                if(dx*dx+dy*dy<0.00000004 && (sampledAtUtc-last.SampledAtUtc).TotalSeconds<15) return;
+            }
+            locationHistoryPoints.Add(new LocationHistoryPoint { MapPoint=point,SampledAtUtc=sampledAtUtc });
+            if(locationHistoryPoints.Count>LocationHistoryLimit) locationHistoryPoints.RemoveRange(0,locationHistoryPoints.Count-LocationHistoryLimit);
+            locationHistoryRevision++;
         }
 
 
@@ -6353,6 +6380,26 @@ namespace ScumMiniMap {
 
 
 
+            DrawScrollableToggle(g, innerX, itemY, innerW, toggleH, "Location history", locationHistory, viewportRect, () => {
+                locationHistory = !locationHistory;
+                SettingsChanged();
+                lastFrameKey = null;
+                RenderOverlay();
+            });
+
+            itemY += toggleH + toggleGap;
+
+            DrawScrollableToggle(g, innerX, itemY, innerW, toggleH, "History timestamps", locationHistoryTimestamps, viewportRect, () => {
+                locationHistoryTimestamps = !locationHistoryTimestamps;
+                SettingsChanged();
+                lastFrameKey = null;
+                RenderOverlay();
+            });
+
+            itemY += toggleH + toggleGap;
+
+
+
             DrawScrollableToggle(g, innerX, itemY, innerW, toggleH, Localization.Get("SidebarLayerLabels"), showZoneLabels, viewportRect, () => {
 
 
@@ -7565,6 +7612,7 @@ namespace ScumMiniMap {
 
 
         DateTime nextTimingLog=DateTime.MinValue;
+        DateTime nextTickRender=DateTime.MinValue;
         int timingLogBusy;
         int diagnosticWriteBusy;
         double lastTickStarted;
@@ -7753,7 +7801,10 @@ namespace ScumMiniMap {
 
 
 
-            RenderOverlay();
+            if(now>=nextTickRender) {
+                nextTickRender=now.AddMilliseconds(33);
+                RenderOverlay();
+            }
 
 
 
@@ -8824,6 +8875,7 @@ namespace ScumMiniMap {
             try {
                 g.SetClip(bounds,CombineMode.Intersect);
                 g.DrawImageUnscaled(fullMap,(int)Math.Round(left-terrainLeft)-TerrainMargin,(int)Math.Round(top-terrainTop)-TerrainMargin);
+                DrawLocationHistory(g,left,top,side);
             } finally { g.Restore(terrainState); }
 
 
@@ -9293,6 +9345,37 @@ namespace ScumMiniMap {
         }
 
 
+
+        void DrawLocationHistory(Graphics g,float left,float top,float side) {
+            if(!locationHistory || locationHistoryPoints.Count<2) return;
+            using(Pen trail=new Pen(Color.FromArgb(205,80,220,255),2.2f) { LineJoin=LineJoin.Round,StartCap=LineCap.Round,EndCap=LineCap.Round }) {
+                for(int i=1;i<locationHistoryPoints.Count;i++) {
+                    PointF a=locationHistoryPoints[i-1].MapPoint,b=locationHistoryPoints[i].MapPoint;
+                    g.DrawLine(trail,left+a.X*side,top+a.Y*side,left+b.X*side,top+b.Y*side);
+                }
+            }
+            if(!locationHistoryTimestamps) return;
+            using(Font font=new Font("Segoe UI",Math.Max(7,Math.Min(10,side/90f)),FontStyle.Bold))
+            using(Brush background=new SolidBrush(Color.FromArgb(155,8,14,20)))
+            using(Brush foreground=new SolidBrush(Color.FromArgb(230,225,245,255))) {
+                int first=Math.Max(0,locationHistoryPoints.Count-80);
+                for(int i=first;i<locationHistoryPoints.Count;i++) {
+                    LocationHistoryPoint sample=locationHistoryPoints[i];
+                    PointF screen=new PointF(left+sample.MapPoint.X*side,top+sample.MapPoint.Y*side);
+                    string age=FormatHistoryAge(DateTime.UtcNow-sample.SampledAtUtc);
+                    SizeF size=g.MeasureString(age,font);
+                    g.FillRectangle(background,screen.X+5,screen.Y-size.Height-3,size.Width+4,size.Height+2);
+                    g.DrawString(age,font,foreground,screen.X+7,screen.Y-size.Height-2);
+                }
+            }
+        }
+
+        static string FormatHistoryAge(TimeSpan age) {
+            if(age.TotalSeconds<60) return Math.Max(0,(int)age.TotalSeconds)+"s ago";
+            if(age.TotalMinutes<60) return (int)age.TotalMinutes+"m ago";
+            if(age.TotalHours<24) return (int)age.TotalHours+"h ago";
+            return (int)age.TotalDays+"d ago";
+        }
 
         void DrawGrid(Graphics g,float left,float top,float side) {
 
