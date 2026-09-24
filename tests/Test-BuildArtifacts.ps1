@@ -32,7 +32,7 @@ try {
 } finally { $zip.Dispose() }
 $assembly = [Reflection.Assembly]::LoadFile($exe)
 $resources = @($assembly.GetManifestResourceNames())
-foreach ($name in @('map-tiles.bin','zones.tsv','roads.bin','water-mask.bin','scummap.bin','detect_zones.py')) {
+foreach ($name in @('map-tiles.bin','zones.tsv','roads.bin','water-mask.bin','scummap.bin','detect_zones.py','copy-location-key.jpg')) {
     if ($resources -notcontains $name) { throw "Missing embedded resource: $name" }
 }
 if ($resources -contains 'map.png') { throw 'Redundant full-resolution map is embedded.' }

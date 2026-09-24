@@ -420,7 +420,7 @@ namespace ScumMiniMap {
         MapZone searchTarget;
 
         Color routeGuidanceColor = Color.FromArgb(255, 159, 28);
-        Color playerConeColor = Color.FromArgb(255, 174, 51);
+        Color playerConeColor = Color.FromArgb(220, 220, 45, 45);
         static readonly GraphicsPath ConeBasePath = CreateConeBasePath();
         static GraphicsPath CreateConeBasePath() {
             GraphicsPath path = new GraphicsPath();
@@ -560,6 +560,7 @@ namespace ScumMiniMap {
 
 
         bool isFirstLaunch=false;
+        bool updateResetPending=false;
         bool suppressCopyKeyReminder=false;
 
 
@@ -1294,6 +1295,18 @@ namespace ScumMiniMap {
 
                 }
 
+                if(updateResetPending && !isFirstLaunch && !diagnosticMode) {
+                    DialogResult reset = MessageBox.Show(this,
+                        "This update can reset your saved settings and run the first-time installer again. Do you want to wipe the old settings now?",
+                        "MiniMap update", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if(reset==DialogResult.Yes) {
+                        try { if(File.Exists(settingsPath)) File.Delete(settingsPath); } catch(Exception ex) { Program.LogException("Reset update settings",ex); }
+                        Application.Restart();
+                        return;
+                    }
+                    updateResetPending=false;
+                    SaveSettings();
+                }
                 if(!diagnosticMode && !suppressCopyKeyReminder) ShowCopyKeyReminder();
 
 
@@ -1634,7 +1647,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "1.4.95";
+        public const string VersionString = "1.4.96";
 
 
 

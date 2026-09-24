@@ -161,6 +161,7 @@ namespace ScumMiniMap {
 
 
                 catch(UnauthorizedAccessException) { return; }
+                try { string versionFile=settingsPath+".version"; updateResetPending=!File.Exists(versionFile) || File.ReadAllText(versionFile).Trim()!=VersionString; } catch { updateResetPending=true; }
 
 
 
@@ -390,7 +391,7 @@ namespace ScumMiniMap {
 
 
 
-                if(File.Exists(settingsPath)) File.Replace(settingsPath+".tmp",settingsPath,settingsPath+".bak"); else File.Move(settingsPath+".tmp",settingsPath); }
+                if(File.Exists(settingsPath)) File.Replace(settingsPath+".tmp",settingsPath,settingsPath+".bak"); else File.Move(settingsPath+".tmp",settingsPath); File.WriteAllText(settingsPath+".version",VersionString); }
 
 
 

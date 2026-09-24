@@ -182,9 +182,11 @@ static class InputVoiceTests {
                 Localization.Current=language;
                 using(var reminder=new CopyKeyReminderDialog()) {
                     var message=reminder.Controls.OfType<Label>().Single();
+                    var keyReference=reminder.Controls.OfType<PictureBox>().Single();
                     var checkbox=reminder.Controls.OfType<CheckBox>().Single();
                     var okay=reminder.Controls.OfType<Button>().Single();
-                    Check(message.Text.Contains("\\") && checkbox.Text.Length>0 && okay.Text.Length>0
+                    Check(message.Text.Contains("\\") && keyReference.Image!=null && keyReference.Image.Width>0
+                        && checkbox.Text.Length>0 && okay.Text.Length>0
                         && okay.DialogResult==DialogResult.OK && !reminder.DoNotShowAgain,
                         "Copy-key reminder is localized and confirmable: "+language);
                     checkbox.Checked=true;

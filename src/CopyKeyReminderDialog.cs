@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace ScumMiniMap {
@@ -18,13 +19,19 @@ namespace ScumMiniMap {
             new[]{"Verificar tecla de coordenadas","Confira se a tecla de copiar coordenadas no SCUM está definida como \\ (barra invertida). Se você já usa outra tecla, defina a mesma tecla nas configurações do MiniMap.","Não mostrar novamente","OK"}
         };
         static string Line(int index) { return Lines[(int)Localization.Current][index]; }
+        static Image LoadKeyReference() {
+            using(var stream=Assembly.GetExecutingAssembly().GetManifestResourceStream("copy-location-key.jpg")) {
+                if(stream==null) return null;
+                using(var decoded=Image.FromStream(stream)) return new Bitmap(decoded);
+            }
+        }
         readonly CheckBox doNotShowAgain;
         internal bool DoNotShowAgain { get { return doNotShowAgain.Checked; } }
 
         internal CopyKeyReminderDialog() {
             Text=Line(0);
-            ClientSize=new Size(620,245);
-            MinimumSize=new Size(540,245);
+            ClientSize=new Size(700,570);
+            MinimumSize=new Size(620,570);
             StartPosition=FormStartPosition.CenterScreen;
             FormBorderStyle=FormBorderStyle.FixedDialog;
             MaximizeBox=false; MinimizeBox=false; ShowIcon=false;
@@ -37,17 +44,26 @@ namespace ScumMiniMap {
 
             var message=new Label {
                 Text=Line(1),
-                AutoSize=false,Location=new Point(24,24),Size=new Size(572,120),
+                AutoSize=false,Location=new Point(24,24),Size=new Size(652,92),
                 TextAlign=rightToLeft?ContentAlignment.MiddleRight:ContentAlignment.MiddleLeft
             };
+            var keyReference=LoadKeyReference();
+            if(keyReference!=null) {
+                var picture=new PictureBox {
+                    Image=keyReference, SizeMode=PictureBoxSizeMode.Zoom,
+                    Location=new Point(24,124), Size=new Size(652,390),
+                    BorderStyle=BorderStyle.FixedSingle, BackColor=Color.Black
+                };
+                Controls.Add(picture);
+            }
             doNotShowAgain=new CheckBox {
                 Text=Line(2),
-                AutoSize=false,Location=new Point(24,157),Size=new Size(570,32),
+                AutoSize=false,Location=new Point(24,522),Size=new Size(520,32),
                 ForeColor=ForeColor
             };
             var okay=new Button {
                 Text=Line(3),
-                DialogResult=DialogResult.OK,Location=new Point(474,198),Size=new Size(122,32)
+                DialogResult=DialogResult.OK,Location=new Point(554,522),Size=new Size(122,32)
             };
             Controls.Add(message); Controls.Add(doNotShowAgain); Controls.Add(okay);
             AcceptButton=okay;

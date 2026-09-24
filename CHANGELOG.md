@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.96] - 2026-09-24
+
+### Added
+- Update startup prompt that offers to clear saved settings and run the first-time installer again.
+- Red default player marker and focus cone.
+- Compressed SCUM controls reference image in the coordinate-copy reminder.
+
+### Fixed
+- Settings version tracking prevents the update reset prompt from repeating after a user makes a choice.
+
 ## [1.4.95] - 2026-09-24
 
 ### Added
