@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.99] - 2026-09-25
+
+### Fixed
+- Copy Location now resolves the active SCUM keyboard layout and supports capturing the physical key, including Brazilian ABNT2 layouts.
+- Improved guidance when SCUM does not return coordinates after a copy-key attempt.
+
+## [1.4.98] - 2026-09-25
+
+### Changed
+- Cached location history paths, scaled map tiles and POI filter state to reduce repeated drawing and allocation.
+- Reduced full-map drag rendering work while keeping the settled map sharp.
+- Reduced duplicate focus checks and slowed idle UI polling when neither SCUM nor MiniMap is focused.
+- Reused route drawing buffers and limited terrain drawing to the visible map area.
+
+### Fixed
+- Tile joins remain seamless with the cached map rendering path.
+
 ## [1.4.97] - 2026-09-25
 
 ### Fixed

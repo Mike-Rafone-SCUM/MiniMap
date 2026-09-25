@@ -1,4 +1,4 @@
-# SCUM MiniMap v1.4.97
+# SCUM MiniMap v1.4.99
 
 SCUM MiniMap is an external map overlay and navigation utility for SCUM, made for the Skynett community. It displays player coordinates, heading, elevation, road routes, points of interest, and custom waypoints. It does not read game memory or inject DLLs; this is not an official anticheat certification.
 
@@ -34,6 +34,8 @@ Join the [SCUM MiniMap Discord](https://discord.gg/MYzcGaFDMn) for downloads, re
 The new MiniMap default is **backslash (`\`) without a modifier**. In SCUM controls, manually bind **Copy location** to that same key. MiniMap cannot change SCUM's controls. If your keyboard layout differs, capture the matching key in MiniMap's setup guide, or choose another unused single key in both apps.
 
 Existing saved bindings are preserved. When switching from Ctrl+C, select **Single key without modifier** in MiniMap as well. Single-key tracking supports a 250 ms interval without injecting Ctrl; Ctrl+C remains supported at a minimum one-second interval. Actual updates depend on SCUM supplying coordinates.
+
+On ABNT2 and other non-US keyboards, the physical backslash key may use a different Windows key code. MiniMap now resolves its default backslash binding through SCUM's active keyboard layout. For a custom binding, use **Capture** beside Copy Location in MiniMap's key wizard: it saves the physical scan code of the key you press and sends that same key to SCUM. If the marker still does not move, bind an unused key such as **F11** in SCUM and capture F11 in MiniMap. Existing saved bindings remain intact until you change them.
 
 ## Optional voice navigation (work in progress)
 
