@@ -192,10 +192,13 @@ namespace ScumMiniMap {
         readonly List<LocationHistoryPoint> locationHistoryPoints=new List<LocationHistoryPoint>();
         int locationHistoryRevision;
         const int LocationHistoryLimit=1800;
+        const int LocationHistoryTimestampIntervalSeconds=30;
+        DateTime lastLocationHistoryTimestampUtc=DateTime.MinValue;
 
         sealed class LocationHistoryPoint {
             internal PointF MapPoint;
             internal DateTime SampledAtUtc;
+            internal bool ShowTimestamp;
         }
 
 
@@ -1647,7 +1650,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "1.4.96";
+        public const string VersionString = "1.4.97";
 
 
 
@@ -4389,7 +4392,10 @@ namespace ScumMiniMap {
                 double dx=point.X-last.MapPoint.X,dy=point.Y-last.MapPoint.Y;
                 if(dx*dx+dy*dy<0.00000004 && (sampledAtUtc-last.SampledAtUtc).TotalSeconds<15) return;
             }
-            locationHistoryPoints.Add(new LocationHistoryPoint { MapPoint=point,SampledAtUtc=sampledAtUtc });
+            bool showTimestamp=lastLocationHistoryTimestampUtc==DateTime.MinValue ||
+                (sampledAtUtc-lastLocationHistoryTimestampUtc).TotalSeconds>=LocationHistoryTimestampIntervalSeconds;
+            locationHistoryPoints.Add(new LocationHistoryPoint { MapPoint=point,SampledAtUtc=sampledAtUtc,ShowTimestamp=showTimestamp });
+            if(showTimestamp) lastLocationHistoryTimestampUtc=sampledAtUtc;
             if(locationHistoryPoints.Count>LocationHistoryLimit) locationHistoryPoints.RemoveRange(0,locationHistoryPoints.Count-LocationHistoryLimit);
             locationHistoryRevision++;
         }
@@ -9371,11 +9377,12 @@ namespace ScumMiniMap {
             using(Font font=new Font("Segoe UI",Math.Max(7,Math.Min(10,side/90f)),FontStyle.Bold))
             using(Brush background=new SolidBrush(Color.FromArgb(155,8,14,20)))
             using(Brush foreground=new SolidBrush(Color.FromArgb(230,225,245,255))) {
-                int first=Math.Max(0,locationHistoryPoints.Count-80);
-                for(int i=first;i<locationHistoryPoints.Count;i++) {
+                DateTime nowUtc=DateTime.UtcNow;
+                for(int i=0;i<locationHistoryPoints.Count;i++) {
                     LocationHistoryPoint sample=locationHistoryPoints[i];
+                    if(!sample.ShowTimestamp) continue;
                     PointF screen=new PointF(left+sample.MapPoint.X*side,top+sample.MapPoint.Y*side);
-                    string age=FormatHistoryAge(DateTime.UtcNow-sample.SampledAtUtc);
+                    string age=FormatHistoryAge(nowUtc-sample.SampledAtUtc);
                     SizeF size=g.MeasureString(age,font);
                     g.FillRectangle(background,screen.X+5,screen.Y-size.Height-3,size.Width+4,size.Height+2);
                     g.DrawString(age,font,foreground,screen.X+7,screen.Y-size.Height-2);
@@ -9384,7 +9391,7 @@ namespace ScumMiniMap {
         }
 
         static string FormatHistoryAge(TimeSpan age) {
-            if(age.TotalSeconds<60) return Math.Max(0,(int)age.TotalSeconds)+"s ago";
+            if(age.TotalSeconds<60) return Math.Max(0,(int)age.TotalSeconds/LocationHistoryTimestampIntervalSeconds)*LocationHistoryTimestampIntervalSeconds+"s ago";
             if(age.TotalMinutes<60) return (int)age.TotalMinutes+"m ago";
             if(age.TotalHours<24) return (int)age.TotalHours+"h ago";
             return (int)age.TotalDays+"d ago";

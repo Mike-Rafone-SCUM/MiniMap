@@ -13,6 +13,24 @@ $miniTargetField = $miniForm.GetType().GetField('searchTarget', $miniFlags)
 $miniPinField = $miniForm.GetType().GetField('pin', $miniFlags)
 $miniAccept = $miniForm.GetType().GetMethod('Accept', $miniFlags)
 try {
+    $miniForm.GetType().GetField('locationHistory', $miniFlags).SetValue($miniForm, $true)
+    $historyRecord = $miniForm.GetType().GetMethod('RecordLocationHistory', $miniFlags)
+    $historyPoints = $miniForm.GetType().GetField('locationHistoryPoints', $miniFlags).GetValue($miniForm)
+    $historyStart = [DateTime]::UtcNow.AddMinutes(-2)
+    foreach ($historySecond in @(0, 10, 29, 30, 59, 60)) {
+        $historyRecord.Invoke($miniForm, @([Drawing.PointF]::new([single](0.1 + $historySecond * 0.001), 0.1), $historyStart.AddSeconds($historySecond)))
+    }
+    $timestampMarkCount = 0
+    foreach ($historyPoint in $historyPoints) {
+        $showTimestamp = $historyPoint.GetType().GetField('ShowTimestamp', [Reflection.BindingFlags]'NonPublic,Instance').GetValue($historyPoint)
+        if ($showTimestamp) { $timestampMarkCount++ }
+    }
+    if ($timestampMarkCount -ne 3) { throw "Expected three 30-second history timestamps, got $timestampMarkCount." }
+    $historyAge = $miniForm.GetType().GetMethod('FormatHistoryAge', [Reflection.BindingFlags]'NonPublic,Static')
+    if ($historyAge.Invoke($null, @([TimeSpan]::FromSeconds(29))) -ne '0s ago' -or
+        $historyAge.Invoke($null, @([TimeSpan]::FromSeconds(30))) -ne '30s ago') {
+        throw 'History age labels did not advance in 30-second steps.'
+    }
     $miniMapState = $miniForm.GetType().GetField('fullMapActive', $miniFlags)
     $miniSetMap = $miniForm.GetType().GetMethod('SetFullMap', $miniFlags)
     $miniKey = $miniForm.GetType().GetMethod('OnGameKey', $miniFlags)

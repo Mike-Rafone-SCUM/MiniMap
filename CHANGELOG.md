@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.4.97] - 2026-09-25
+
+### Fixed
+- Location history age labels appear at roughly 30-second intervals along the trail and update in 30-second steps, reducing clutter and redraw work.
+
 ## [1.4.96] - 2026-09-24
 
 ### Added
