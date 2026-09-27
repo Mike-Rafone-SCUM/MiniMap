@@ -6,6 +6,39 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [Unreleased]
+
+## [1.4.103] - 2026-09-27
+
+### Fixed
+- Keep the compact minimap mouse-transparent so moving the cursor over it does not move or aim the player in SCUM; the expanded interactive map still accepts mouse input.
+- Apply the inventory UI input lock to the M/full-map shortcut as well as coordinate sampling, preventing accidental map toggles while typing in inventory search fields.
+
+## [1.4.102] - 2026-09-27
+
+### Changed
+- Store zone polygons and custom waypoints in separate per-map sidecars, keyed to each custom map image so switching custom textures keeps annotations isolated.
+
+### Fixed
+- Migrate existing `zones.tsv` annotations to the active map once while retaining the original file as a backup.
+
+## [1.4.101] - 2026-09-27
+
+### Fixed
+- Detect the selected SCUM navigation tab by its visual highlight instead of its translated label, pausing coordinate sampling and MiniMap shortcut handling while game UI input is active.
+- Preserve SCUM text-entry input while preventing MiniMap shortcuts from firing over the inventory interface.
+
+## [1.4.100] - 2026-09-27
+
+### Added
+- Clear route history from Settings and choose how long the trail remains visible (1–240 minutes, default 30). History preferences are saved per user.
+- Configurable Settings, Add waypoint and Search shortcuts with direct key capture for compact and number-pad keyboards. Home, Insert and Delete remain the defaults.
+
+### Fixed
+- Prevent typing after Alt-Tab from opening a false chat gate that disables MiniMap shortcuts.
+- Preserve chat ownership through typing, Tab channel changes, and Escape/Enter closure. Suppress MiniMap-owned key-down and key-up events so SCUM does not also act on shortcut keys.
+- Ignore injected copy keys in chat-state polling, and let UI shortcuts work when the mouse hook is unavailable.
+
 ## [1.4.99] - 2026-09-25
 
 ### Fixed

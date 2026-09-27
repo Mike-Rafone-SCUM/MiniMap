@@ -1,4 +1,4 @@
-# SCUM MiniMap v1.4.99
+# SCUM MiniMap v1.4.103
 
 SCUM MiniMap is an external map overlay and navigation utility for SCUM, made for the Skynett community. It displays player coordinates, heading, elevation, road routes, points of interest, and custom waypoints. It does not read game memory or inject DLLs; this is not an official anticheat certification.
 
@@ -40,6 +40,10 @@ On ABNT2 and other non-US keyboards, the physical backslash key may use a differ
 ## Optional voice navigation (work in progress)
 
 Voice navigation is **off by default**. Enable it in Settings, select **Lyan (Female US)**, set the volume and use Preview voice. Guidance includes distance/turn prompts, arrival and wrong-way handling. Accuracy and prompt timing are still being refined; check the map and road signs when following a route. Recalculation appears on screen; the bundled clips do not include spoken “recalculating”.
+
+In Settings, **MiniMap shortcuts (single keys)** lets you capture alternatives for Settings (Home), Add waypoint (Insert) and Search (Delete). Click an action and press its new key; Escape cancels. Duplicate shortcuts and keys already used by SCUM Map, Chat or Copy location are rejected. For number-pad keys, keep Num Lock in the same state when capturing and using the key. Preferences are saved per user. If the default keys are unavailable, open Settings through the taskbar first. Chat editing retains priority over shortcuts, and Add waypoint requires a received location.
+
+In Settings, **History duration (minutes)** controls how long the recorded route trail remains visible (1–240 minutes; default 30). **Clear route history** removes the current trail immediately; tracking starts a new trail with subsequent samples. Reducing the duration removes older points immediately, including while stationary. Increasing it retains future history longer; expired or cleared points cannot be restored. These preferences are saved per user; trail points last only for the current session.
 
 Additional voices can be added as folders under `%LocalAppData%\ScumMiniMap\voice-navigation`, with these 12 filenames, then selected after reopening Settings:
 
@@ -85,7 +89,8 @@ Pressing <kbd>M</kbd> during gameplay seamlessly transitions the minimap into a 
 Choose English, Argentine Spanish, French, German, Dutch, Russian, Simplified Chinese, Turkish, or Arabic in Settings without restarting. The initial language follows your system language; untranslated labels fall back to English.
 
 ### Custom Map Textures & Zone Import
-* Supports custom `map.png` textures and custom `zones.tsv` files in `%LocalAppData%\ScumMiniMap`.
+* Supports a custom `map.png` texture in `%LocalAppData%\ScumMiniMap`. Each map image receives an isolated profile under `maps\<map-id>\` with separate `zones.tsv` polygons and `customwaypoints.tsv` waypoints. Map IDs are derived from the image contents, so replacing `map.png` with another upload automatically switches to that map's saved annotations.
+* Existing root-level `zones.tsv` data is migrated once to the map active on the first launch after this update. The original file is retained as a backup and is not copied to other map profiles.
 * Includes a **Reset to default map** option to revert to embedded high-resolution assets without manual file deletion.
 
 ---
@@ -150,7 +155,9 @@ All user settings, logs, and custom assets are stored in:
 %LocalAppData%\ScumMiniMap
 ```
 * `settings.ini`: Persistent user preferences, layout, filters, and language settings.
-* `zones.tsv`: Categorized point-of-interest database and saved custom waypoints.
+* `maps\default\zones.tsv` and `maps\default\customwaypoints.tsv`: saved polygons and waypoints for the bundled map.
+* `maps\custom-<sha256>\zones.tsv` and `maps\custom-<sha256>\customwaypoints.tsv`: per-image custom map annotations.
+* `zones.tsv`: pre-1.4.102 annotations retained as the migration backup.
 * `automatic.log`: Diagnostic communication and updater activity log.
 * `map.png`: Optional custom map override texture. If it is damaged or exceeds the image limits, the app keeps the file and uses the embedded map.
 * `update-result.txt`: Result of the latest update, displayed on the next launch.
