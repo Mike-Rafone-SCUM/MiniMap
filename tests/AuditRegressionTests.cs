@@ -126,7 +126,8 @@ static class AuditRegressionTests {
                 var current=(List<MapZone>)Field(window,"zones").GetValue(window);
                 var added=new List<MapZone>(current); added.Add(Zone("Must not commit"));
                 var deleted=new List<MapZone>();
-                using(var locked=new FileStream(zoneFile,FileMode.Open,FileAccess.Read,FileShare.Read)) {
+                string scopedZoneFile=(string)Field(window,"zonesPath").GetValue(window);
+                using(var locked=new FileStream(scopedZoneFile,FileMode.Open,FileAccess.Read,FileShare.Read)) {
                     Check(!(bool)Call(window,"TryCommitZones",added,null),"Locked-file addition reports failure");
                     Check(Object.ReferenceEquals(current,Field(window,"zones").GetValue(window)),"Failed addition preserves live collection");
                     Check(!(bool)Call(window,"TryCommitZones",deleted,null),"Locked-file deletion reports failure");

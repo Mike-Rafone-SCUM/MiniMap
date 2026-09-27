@@ -29,14 +29,27 @@ try {
     $motion.Sample([System.Drawing.PointF]::new(0.5, 0.5), 0, 0, $false)
     $motion.Sample([System.Drawing.PointF]::new(0.501, 0.5), 90, 1.0, $false)
 
+    if ($motion.Yaw -ne 90) { throw "Heading must update immediately when a sample arrives" }
     $motionSteps = 0
+    $previousX = $motion.Point.X
     for ($f = 1; $f -le 30; $f++) {
         $advTime = 1.0 + ($f * 0.033)
         $changed = $motion.Advance($advTime)
         if ($changed) { $motionSteps++ }
+        if ($motion.Point.X -lt $previousX -or $motion.Point.X -gt [single]0.501) {
+            throw "Motion reversed or extrapolated beyond the latest sample"
+        }
+        if ($f -eq 1 -and ($motion.Point.X -le [single]0.5 -or $motion.Point.X -ge [single]0.501)) {
+            throw "Motion must interpolate before settling"
+        }
+        if ($advTime -ge 1.18 -and $motion.Point.X -ne [single]0.501) {
+            throw "Motion did not settle within the 180 ms responsiveness budget"
+        }
+        if ($f -gt 6 -and $changed) { throw "Settled motion requested an idle redraw" }
+        $previousX = $motion.Point.X
     }
     Write-Output ("MapMotion advanced smoothly across {0}/30 frames (Point.X={1:N4}, Yaw={2:N1}°)" -f $motionSteps, $motion.Point.X, $motion.Yaw)
-    if ($motionSteps -lt 28) { throw "MapMotion stalled or failed to interpolate" }
+    if ($motionSteps -lt 2) { throw "MapMotion stalled or failed to interpolate" }
 
     # Test InfobarScrollFrame progression when active
     $activeField = $miniWindow.GetType().GetField('infobarScrollActive', [Reflection.BindingFlags]'NonPublic,Instance')

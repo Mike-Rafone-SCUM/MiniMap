@@ -46,6 +46,8 @@ using System.Drawing.Imaging;
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 
 
 using System.Drawing.Drawing2D;
@@ -191,14 +193,17 @@ namespace ScumMiniMap {
         bool locationHistory=true,locationHistoryTimestamps=false;
         readonly List<LocationHistoryPoint> locationHistoryPoints=new List<LocationHistoryPoint>();
         int locationHistoryRevision;
-        const int LocationHistoryLimit=1800;
+        int locationHistoryPathRevision=-1;
+        GraphicsPath locationHistoryPath;
+        int locationHistoryMinutes=30;
+        const int LocationHistoryLimit=14401;
         const int LocationHistoryTimestampIntervalSeconds=30;
-        DateTime lastLocationHistoryTimestampUtc=DateTime.MinValue;
+        Point? locationHistoryHoverPoint;
+        int displayedLocationHistorySegment=-1;
 
         sealed class LocationHistoryPoint {
             internal PointF MapPoint;
             internal DateTime SampledAtUtc;
-            internal bool ShowTimestamp;
         }
 
 
@@ -248,6 +253,7 @@ namespace ScumMiniMap {
 
 
         bool fullMapActive;
+        readonly GameFocusReturn fullMapFocusReturn=new GameFocusReturn();
 
 
 
@@ -455,6 +461,7 @@ namespace ScumMiniMap {
         readonly List<MapZone> categoryDrawList = new List<MapZone>();
         readonly List<MapZone> customZoneDrawList = new List<MapZone>();
         readonly List<MapZone> waypointDrawList = new List<MapZone>();
+        PointF[] routeScreenPoints=new PointF[0];
         readonly System.Text.StringBuilder frameKeyBuilder = new System.Text.StringBuilder(256);
         bool copyInProgress;
 
@@ -464,7 +471,7 @@ namespace ScumMiniMap {
 
 
 
-        // Map (M), Chat (T), and coordinate-copy (backslash, no modifier) bindings, but can be captured
+        // Map (M), Chat (T), and coordinate-copy (NumPad Divide, no modifier) bindings, but can be captured
 
 
 
@@ -477,6 +484,10 @@ namespace ScumMiniMap {
 
 
         int scumChatKey=0x54;
+        int scumMapScanCode,scumChatScanCode;
+        int settingsShortcutKey=0x24,pinShortcutKey=0x2D,searchShortcutKey=0x2E;
+        int settingsShortcutScanCode,pinShortcutScanCode,searchShortcutScanCode;
+        bool shortcutCaptureOpen;
 
 
 
@@ -485,6 +496,7 @@ namespace ScumMiniMap {
 
 
         int scumCopyKey=Program.DefaultCopyKey;
+        int scumCopyScanCode;
 
 
 
@@ -505,10 +517,14 @@ namespace ScumMiniMap {
 
 
         int keyWizardCaptureTarget;
+        int keyWizardCopyScanCode;
 
 
 
         int keyWizardMapKey,keyWizardChatKey,keyWizardCopyModifierKey,keyWizardCopyKey;
+        int keyWizardMapScanCode,keyWizardChatScanCode;
+        int keyWizardSettingsShortcutKey,keyWizardPinShortcutKey,keyWizardSearchShortcutKey;
+        int keyWizardSettingsShortcutScanCode,keyWizardPinShortcutScanCode,keyWizardSearchShortcutScanCode;
 
 
 
@@ -553,8 +569,11 @@ namespace ScumMiniMap {
 
 
 
-        readonly string zonesPath;
+        string zonesPath;
+        string customWaypointsPath;
+        MapSidecarPaths mapSidecarPaths;
         DateTime lastZonesFileWriteTimeUtc = DateTime.MinValue;
+        DateTime lastWaypointsFileWriteTimeUtc = DateTime.MinValue;
 
 
 
@@ -803,6 +822,9 @@ namespace ScumMiniMap {
 
 
         bool wasGameFocused;
+        volatile bool inventoryInputLocked;
+        DateTime nextInventoryProbe=DateTime.MinValue;
+        int inventoryProbeMisses;
 
 
 
@@ -847,22 +869,11 @@ namespace ScumMiniMap {
 
 
 
-            zonesPath=Path.Combine(folder,"zones.tsv");
-
-
-
             LoadSettings();
 
 
 
             note=Localization.Get("NoteAutoWaiting");
-
-
-
-            try {
-                zones=ZoneStore.Load(zonesPath);
-                if(File.Exists(zonesPath)) lastZonesFileWriteTimeUtc = File.GetLastWriteTimeUtc(zonesPath);
-            } catch(InvalidDataException) { zonesLoadFailed=true; note=Localization.Get("NoteZonesLoadFail"); } catch(IOException) { zonesLoadFailed=true; note=Localization.Get("NoteZonesLoadFail"); } catch(UnauthorizedAccessException) { zonesLoadFailed=true; note=Localization.Get("NoteZonesLoadFail"); }
 
 
 
@@ -907,11 +918,12 @@ namespace ScumMiniMap {
 
 
             string mapWarning;
+            bool customMapLoaded=false;
             Stream tileResource=System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("map-tiles.bin");
             mapWarning=null;
             if(tileResource!=null) {
                 if(File.Exists(mapFile)) {
-                    try { using(var file=File.OpenRead(mapFile)) map=SafeMapImage.Decode(file); }
+                    try { using(var file=File.OpenRead(mapFile)) map=SafeMapImage.Decode(file); customMapLoaded=true; }
                     catch(Exception ex) {
                         if(!(ex is IOException) && !(ex is InvalidDataException) && !(ex is UnauthorizedAccessException)
                             && !(ex is ArgumentException) && !(ex is OutOfMemoryException)
@@ -922,7 +934,20 @@ namespace ScumMiniMap {
                 if(map==null) { mapTiles=new MapTilePyramid(tileResource); map=mapTiles.Overview(); }
                 else tileResource.Dispose();
             } else map=SafeMapImage.Load(mapFile,()=>System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("map.png"),out mapWarning);
+            if(tileResource==null && File.Exists(mapFile) && mapWarning==null) customMapLoaded=true;
             if(mapWarning!=null && !diagnosticMode) Shown+=(sender,e)=>MessageBox.Show(mapWarning,Localization.Get("ZoneEditorTitle"),MessageBoxButtons.OK,MessageBoxIcon.Warning);
+
+            mapSidecarPaths=MapSidecarPaths.ForMap(dataFolder,customMapLoaded?mapFile:null);
+            zonesPath=mapSidecarPaths.ZonesPath;
+            customWaypointsPath=mapSidecarPaths.WaypointsPath;
+            try {
+                bool migrated;
+                zones=MapSidecarStore.Load(mapSidecarPaths,Path.Combine(dataFolder,"zones.tsv"),!customMapLoaded,out migrated);
+                if(File.Exists(zonesPath)) lastZonesFileWriteTimeUtc=File.GetLastWriteTimeUtc(zonesPath);
+                if(File.Exists(customWaypointsPath)) lastWaypointsFileWriteTimeUtc=File.GetLastWriteTimeUtc(customWaypointsPath);
+            } catch(InvalidDataException) { zonesLoadFailed=true; note=Localization.Get("NoteZonesLoadFail"); }
+              catch(IOException) { zonesLoadFailed=true; note=Localization.Get("NoteZonesLoadFail"); }
+              catch(UnauthorizedAccessException) { zonesLoadFailed=true; note=Localization.Get("NoteZonesLoadFail"); }
 
             Image level=map;
 
@@ -1048,6 +1073,7 @@ namespace ScumMiniMap {
 
 
             overlay.OnFullMapMouseMove = HandleFullMapMouseMove;
+            overlay.OnFullMapMouseLeave = () => UpdateLocationHistoryHover(null);
 
 
 
@@ -1082,19 +1108,19 @@ namespace ScumMiniMap {
 
 
 
-            keys=new GameKeys(key => {
+            keys=new GameKeys((key,scanCode) => {
 
 
 
-                if(closing || IsDisposed || !IsHandleCreated) return;
+                if(closing || IsDisposed || !IsHandleCreated || shortcutCaptureOpen) return;
 
 
 
-                try { BeginInvoke((Action)(()=>OnGameKey(key))); } catch(InvalidOperationException) { }
+                try { BeginInvoke((Action)(()=>OnGameKey(key,scanCode))); } catch(InvalidOperationException) { }
 
 
 
-            }, IsWatchedGameKey, chat, () => scumChatKey, () => scumCopyModifierKey);
+            }, IsWatchedPhysicalKey, chat, () => scumChatKey, () => scumCopyModifierKey, () => inventoryInputLocked, () => scumCopyKey, () => scumChatScanCode);
 
 
 
@@ -1170,7 +1196,9 @@ namespace ScumMiniMap {
 
 
 
-                if(e.KeyCode==Keys.Home) {
+                int settingsEventScan=0;
+                PhysicalKeyCapture.TryGet((int)e.KeyCode,out settingsEventScan);
+                if(PhysicalKeyCapture.Matches((int)e.KeyCode,settingsEventScan,settingsShortcutKey,settingsShortcutScanCode) && e.Modifiers==Keys.None) {
 
 
 
@@ -1461,13 +1489,29 @@ namespace ScumMiniMap {
             Button keyWizardButton = new Button { Text = Localization.Get("KeyRebindingWizard"), Width = 280 };
             keyWizardButton.Click += (s, e) => ShowKeyRebindingWizard();
             bar.Controls.Add(keyWizardButton);
+            AddShortcutSettings(bar);
 
             // 2. GRID & OVERLAY
             OverlayTheme.Section(bar, Localization.Get("SecMapZones"));
             AddCheck(bar, Localization.Get("GridLabels"), gridLabels, value => gridLabels = value);
             AddCheck(bar, Localization.Get("GridBorders"), gridBorders, value => gridBorders = value);
             AddCheck(bar, "Location history", locationHistory, value => { locationHistory=value; terrainKey=null; });
-            AddCheck(bar, "History timestamps", locationHistoryTimestamps, value => { locationHistoryTimestamps=value; terrainKey=null; });
+            AddCheck(bar, "History time on hover", locationHistoryTimestamps, value => { locationHistoryTimestamps=value; lastFrameKey=null; });
+            FlowLayoutPanel historyRow=new FlowLayoutPanel { Width=365,Height=32,WrapContents=false };
+            historyRow.Controls.Add(new Label { Text="History duration (minutes)",Width=210,Padding=new Padding(0,5,0,0) });
+            NumericUpDown historyDuration=new NumericUpDown { Minimum=1,Maximum=240,Value=locationHistoryMinutes,Width=90 };
+            historyDuration.ValueChanged+=(s,e)=> {
+                locationHistoryMinutes=(int)historyDuration.Value;
+                PruneLocationHistory(DateTime.UtcNow);
+                SettingsChanged();
+                lastFrameKey=null;
+                RenderOverlay();
+            };
+            historyRow.Controls.Add(historyDuration);
+            bar.Controls.Add(historyRow);
+            Button clearHistory=new Button { Text="Clear route history",Width=280 };
+            clearHistory.Click+=(s,e)=> { ClearLocationHistory(); RenderOverlay(); };
+            bar.Controls.Add(clearHistory);
             FlowLayoutPanel gridRow = new FlowLayoutPanel { Width = 365, Height = 32, WrapContents = false };
             Label gridValue = new Label { Text = Localization.T("GridOpacity", gridOpacity), Width = 150, Padding = new Padding(0, 5, 0, 0) };
             TacticalSlider gridSlider = new TacticalSlider { Minimum = 0, Maximum = 100, Value = gridOpacity, Width = 190, Height = 24, Margin = new Padding(3, 4, 3, 3) };
@@ -1650,7 +1694,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "1.4.97";
+        public const string VersionString = "1.5.0";
 
 
 
@@ -2018,6 +2062,7 @@ namespace ScumMiniMap {
 
             if(map!=null)map.Dispose();
             if(cachedConeBrush!=null) { try { cachedConeBrush.Dispose(); } catch {} cachedConeBrush=null; }
+            if(locationHistoryPath!=null) { locationHistoryPath.Dispose(); locationHistoryPath=null; }
 
 
 
@@ -2056,18 +2101,21 @@ namespace ScumMiniMap {
                 IWin32Window owner = (SettingsVisible && IsHandleCreated) ? (IWin32Window)this : null;
                 using(StartupGuideDialog guide = new StartupGuideDialog(
                     scumMapKey, scumChatKey, scumCopyModifierKey, scumCopyKey,
-                    (mKey, cKey, modKey, cpKey) => {
+                    (mKey, cKey, modKey, cpKey, scanCode, mapScanCode, chatScanCode) => {
                         scumMapKey = mKey;
                         scumChatKey = cKey;
+                        scumMapScanCode = mapScanCode;
+                        scumChatScanCode = chatScanCode;
                         scumCopyModifierKey = modKey;
                         scumCopyKey = cpKey;
+                        scumCopyScanCode = scanCode;
                         SettingsChanged();
                     },
                     () => {
                         SettingsChanged();
                         if(SettingsVisible) canvas.Invalidate();
                         RenderOverlay();
-                    })) {
+                    },scumCopyScanCode,scumMapScanCode,scumChatScanCode)) {
                     if(owner == null) guide.StartPosition = FormStartPosition.CenterScreen;
                     guide.ShowDialog(owner);
                     if(guide.LayoutRequested) {
@@ -2105,7 +2153,13 @@ namespace ScumMiniMap {
 
             IWin32Window owner = (SettingsVisible && IsHandleCreated) ? (IWin32Window)this : null;
             try {
-                using(ZoneEditor editor=new ZoneEditor(map,zones,zonesPath,value=> { zones=value; try { if(File.Exists(zonesPath)) lastZonesFileWriteTimeUtc = File.GetLastWriteTimeUtc(zonesPath); } catch {} SettingsChanged(); })) {
+                List<MapZone> existingWaypoints=zones.Where(IsCustomWaypointZone).ToList();
+                List<MapZone> editableZones=zones.Where(zone=>!IsCustomWaypointZone(zone)).ToList();
+                using(ZoneEditor editor=new ZoneEditor(map,editableZones,zonesPath,value=> {
+                    zones=value.Concat(existingWaypoints).ToList();
+                    try { if(File.Exists(zonesPath)) lastZonesFileWriteTimeUtc=File.GetLastWriteTimeUtc(zonesPath); } catch {}
+                    SettingsChanged();
+                },existingWaypoints)) {
                     if(!string.IsNullOrEmpty(file))editor.Shown+=async(s,e)=>await editor.ImportAutomatic(file);
                     OverlayTheme.Frame(editor,Localization.Get("HeaderMapZones"),()=>editor.Close());
                     if(owner == null) editor.StartPosition = FormStartPosition.CenterScreen;
@@ -2209,7 +2263,7 @@ namespace ScumMiniMap {
 
 
 
-        void CaptureKeyWizardKey(int key) {
+        void CaptureKeyWizardKey(int key,int scanCode) {
 
 
 
@@ -2277,9 +2331,15 @@ namespace ScumMiniMap {
 
             if(keyWizardCaptureTarget==1) {
 
+                if(!PhysicalKeyCapture.Valid(scanCode)) {
+                    keyWizardStatus.Text=Localization.Get("KeyWizardPressMap");
+                    return;
+                }
+
 
 
                 keyWizardMapKey=key;
+                keyWizardMapScanCode=scanCode;
 
 
 
@@ -2289,9 +2349,15 @@ namespace ScumMiniMap {
 
             } else if(keyWizardCaptureTarget==2) {
 
+                if(!PhysicalKeyCapture.Valid(scanCode)) {
+                    keyWizardStatus.Text=Localization.Get("KeyWizardPressChat");
+                    return;
+                }
+
 
 
                 keyWizardChatKey=key;
+                keyWizardChatScanCode=scanCode;
 
 
 
@@ -2316,7 +2382,12 @@ namespace ScumMiniMap {
 
 
 
+                if(!PhysicalKeyCapture.Valid(scanCode)) {
+                    keyWizardStatus.Text=Localization.Get("KeyWizardPressCopyKey");
+                    return;
+                }
                 keyWizardCopyKey=key;
+                keyWizardCopyScanCode=scanCode;
 
 
 
@@ -2357,6 +2428,14 @@ namespace ScumMiniMap {
 
 
             keyWizardChatKey=scumChatKey;
+            keyWizardMapScanCode=scumMapScanCode;
+            keyWizardChatScanCode=scumChatScanCode;
+            keyWizardSettingsShortcutKey=settingsShortcutKey;
+            keyWizardPinShortcutKey=pinShortcutKey;
+            keyWizardSearchShortcutKey=searchShortcutKey;
+            keyWizardSettingsShortcutScanCode=settingsShortcutScanCode;
+            keyWizardPinShortcutScanCode=pinShortcutScanCode;
+            keyWizardSearchShortcutScanCode=searchShortcutScanCode;
 
 
 
@@ -2365,6 +2444,7 @@ namespace ScumMiniMap {
 
 
             keyWizardCopyKey=scumCopyKey;
+            keyWizardCopyScanCode=scumCopyScanCode;
 
 
 
@@ -2484,7 +2564,7 @@ namespace ScumMiniMap {
 
 
 
-                    if(keyWizardMapKey==keyWizardChatKey) {
+                    if(KeyWizardBindingsConflict()) {
 
 
 
@@ -2513,18 +2593,6 @@ namespace ScumMiniMap {
 
 
                         keyWizardStatus.Text=Localization.Get("KeyWizardCopyPairInvalid");
-
-
-
-                        dlg.DialogResult=DialogResult.None;
-
-
-
-                    } else if(keyWizardCopyModifierKey==0 && (keyWizardCopyKey==keyWizardMapKey || keyWizardCopyKey==keyWizardChatKey)) {
-
-
-
-                        keyWizardStatus.Text=Localization.Get("KeyWizardDifferentKeys");
 
 
 
@@ -2597,6 +2665,14 @@ namespace ScumMiniMap {
 
 
                     scumChatKey=keyWizardChatKey;
+                    scumMapScanCode=keyWizardMapScanCode;
+                    scumChatScanCode=keyWizardChatScanCode;
+                    settingsShortcutKey=keyWizardSettingsShortcutKey;
+                    pinShortcutKey=keyWizardPinShortcutKey;
+                    searchShortcutKey=keyWizardSearchShortcutKey;
+                    settingsShortcutScanCode=keyWizardSettingsShortcutScanCode;
+                    pinShortcutScanCode=keyWizardPinShortcutScanCode;
+                    searchShortcutScanCode=keyWizardSearchShortcutScanCode;
 
 
 
@@ -2605,6 +2681,7 @@ namespace ScumMiniMap {
 
 
                     scumCopyKey=keyWizardCopyKey;
+                    scumCopyScanCode=keyWizardCopyScanCode;
 
 
 
@@ -3672,9 +3749,10 @@ namespace ScumMiniMap {
         bool TryCommitZones(List<MapZone> candidate,IWin32Window owner) {
             try {
                 if(zonesLoadFailed) throw new InvalidDataException(Localization.Get("NoteZonesLoadFail"));
-                ZoneStore.Save(zonesPath,candidate);
+                MapSidecarStore.Save(mapSidecarPaths,candidate);
                 zones=candidate;
                 try { lastZonesFileWriteTimeUtc=File.GetLastWriteTimeUtc(zonesPath); } catch(IOException) {} catch(UnauthorizedAccessException) {}
+                try { lastWaypointsFileWriteTimeUtc=File.GetLastWriteTimeUtc(customWaypointsPath); } catch(IOException) {} catch(UnauthorizedAccessException) {}
                 return true;
             } catch(Exception ex) {
                 if(!(ex is IOException) && !(ex is InvalidDataException) && !(ex is UnauthorizedAccessException) && !(ex is ArgumentException)) throw;
@@ -3901,7 +3979,7 @@ namespace ScumMiniMap {
 
 
 
-                keys.Available && !panelOpening && !chat.Paused &&
+                !panelOpening && !shortcutCaptureOpen && !chat.Paused && !inventoryInputLocked &&
 
 
 
@@ -3913,7 +3991,9 @@ namespace ScumMiniMap {
 
 
 
-        bool IsWatchedGameKey(int key) {
+        bool IsWatchedGameKey(int key) { return IsWatchedPhysicalKey(key,0); }
+
+        bool IsWatchedPhysicalKey(int key,int scanCode) {
 
 
 
@@ -3921,7 +4001,10 @@ namespace ScumMiniMap {
 
 
 
-            if(key==scumMapKey || key==scumChatKey) return true;
+            if(PhysicalKeyCapture.Matches(key,scanCode,scumMapKey,scumMapScanCode) || PhysicalKeyCapture.Matches(key,scanCode,scumChatKey,scumChatScanCode)) return true;
+            if(PhysicalKeyCapture.Matches(key,scanCode,settingsShortcutKey,settingsShortcutScanCode)
+                || PhysicalKeyCapture.Matches(key,scanCode,pinShortcutKey,pinShortcutScanCode)
+                || PhysicalKeyCapture.Matches(key,scanCode,searchShortcutKey,searchShortcutScanCode)) return true;
 
 
 
@@ -4005,7 +4088,7 @@ namespace ScumMiniMap {
 
 
 
-        void OnGameKey(int key) {
+        void OnGameKey(int key,int scanCode=0) {
 
 
 
@@ -4013,7 +4096,7 @@ namespace ScumMiniMap {
 
 
 
-                OnGameKeyCore(key);
+                OnGameKeyCore(key,scanCode);
 
 
 
@@ -4033,7 +4116,8 @@ namespace ScumMiniMap {
 
 
 
-        void OnGameKeyCore(int key) {
+        void OnGameKeyCore(int key,int scanCode=0) {
+            if(shortcutCaptureOpen) return;
 
 
 
@@ -4041,7 +4125,7 @@ namespace ScumMiniMap {
 
 
 
-                CaptureKeyWizardKey(key);
+                CaptureKeyWizardKey(key,scanCode);
 
 
 
@@ -4057,7 +4141,8 @@ namespace ScumMiniMap {
 
 
 
-            bool inputWindowFocused=Native.GameFocused() || ((fullMapActive || key==0x24) && Native.IsOurWindow(Native.GetForegroundWindow()));
+            bool settingsKey=PhysicalKeyCapture.Matches(key,scanCode,settingsShortcutKey,settingsShortcutScanCode);
+            bool inputWindowFocused=Native.GameFocused() || ((fullMapActive || settingsKey) && Native.IsOurWindow(Native.GetForegroundWindow()));
 
 
 
@@ -4073,11 +4158,14 @@ namespace ScumMiniMap {
 
 
 
-            bool chatKey=key==scumChatKey || key==0xBF || key==0x6F || key==0x0D || key==0x1B || key==0x09;
+            bool mapKey=PhysicalKeyCapture.Matches(key,scanCode,scumMapKey,scumMapScanCode);
+            bool pinKey=PhysicalKeyCapture.Matches(key,scanCode,pinShortcutKey,pinShortcutScanCode);
+            bool searchKey=PhysicalKeyCapture.Matches(key,scanCode,searchShortcutKey,searchShortcutScanCode);
+            bool chatKey=PhysicalKeyCapture.Matches(key,scanCode,scumChatKey,scumChatScanCode) || key==0xBF || key==0x6F || key==0x0D || key==0x1B || key==0x09;
 
 
 
-            if(keys.ShortcutModifiersDown(key!=scumMapKey && !chatKey)) return;
+            if(keys.ShortcutModifiersDown(!mapKey && !chatKey)) return;
 
 
 
@@ -4096,11 +4184,11 @@ namespace ScumMiniMap {
 
 
 
-            if(chat.Paused && key!=0x1B && key!=0x0D) return;
+            if((chat.Paused || inventoryInputLocked) && key!=0x1B && key!=0x0D) return;
 
 
 
-            if(!HotkeyContextAllowed(key==0x24)) return;
+            if(!HotkeyContextAllowed(settingsKey)) return;
 
 
 
@@ -4108,7 +4196,10 @@ namespace ScumMiniMap {
 
 
 
-            if(key==scumMapKey) action=TriggerFullMap;
+            if(mapKey) action=TriggerFullMap;
+            else if(settingsKey) action=FocusSettingsShortcut;
+            else if(pinKey) action=TriggerPin;
+            else if(searchKey) action=TriggerZoneSearch;
 
 
 
@@ -4120,11 +4211,9 @@ namespace ScumMiniMap {
 
 
 
-                case 0x24: action=FocusSettingsShortcut; break;
 
 
 
-                case 0x2E: action=TriggerZoneSearch; break;
 
 
 
@@ -4136,7 +4225,6 @@ namespace ScumMiniMap {
 
 
 
-                case 0x2D: action=TriggerPin; break;
 
 
 
@@ -4385,19 +4473,58 @@ namespace ScumMiniMap {
 
         }
 
+        bool KeyWizardBindingsConflict() {
+            int[] keys={keyWizardMapKey,keyWizardChatKey,keyWizardCopyKey,keyWizardSettingsShortcutKey,keyWizardPinShortcutKey,keyWizardSearchShortcutKey};
+            int[] scans={keyWizardMapScanCode,keyWizardChatScanCode,keyWizardCopyScanCode,keyWizardSettingsShortcutScanCode,keyWizardPinShortcutScanCode,keyWizardSearchShortcutScanCode};
+            for(int i=0;i<keys.Length;i++) for(int j=i+1;j<keys.Length;j++)
+                if(PhysicalKeyCapture.SameBinding(keys[i],scans[i],keys[j],scans[j])) return true;
+            return false;
+        }
+
+        bool FallbackBindingPressed(int key,int scanCode) {
+            if(PhysicalKeyCapture.Valid(scanCode)) {
+                int virtualKey=Native.ScanCodeToVirtualKey(scanCode);
+                return virtualKey>0 && virtualKey<256 && FallbackKeyPressed(virtualKey);
+            }
+            return FallbackKeyPressed(key);
+        }
+
         void RecordLocationHistory(PointF point,DateTime sampledAtUtc) {
+            PruneLocationHistory(sampledAtUtc);
             if(!locationHistory) return;
             if(locationHistoryPoints.Count>0) {
                 LocationHistoryPoint last=locationHistoryPoints[locationHistoryPoints.Count-1];
+                // Bound trail density independently of the coordinate polling frequency.
+                if((sampledAtUtc-last.SampledAtUtc).TotalSeconds<1) return;
                 double dx=point.X-last.MapPoint.X,dy=point.Y-last.MapPoint.Y;
                 if(dx*dx+dy*dy<0.00000004 && (sampledAtUtc-last.SampledAtUtc).TotalSeconds<15) return;
             }
-            bool showTimestamp=lastLocationHistoryTimestampUtc==DateTime.MinValue ||
-                (sampledAtUtc-lastLocationHistoryTimestampUtc).TotalSeconds>=LocationHistoryTimestampIntervalSeconds;
-            locationHistoryPoints.Add(new LocationHistoryPoint { MapPoint=point,SampledAtUtc=sampledAtUtc,ShowTimestamp=showTimestamp });
-            if(showTimestamp) lastLocationHistoryTimestampUtc=sampledAtUtc;
+            locationHistoryPoints.Add(new LocationHistoryPoint { MapPoint=point,SampledAtUtc=sampledAtUtc });
             if(locationHistoryPoints.Count>LocationHistoryLimit) locationHistoryPoints.RemoveRange(0,locationHistoryPoints.Count-LocationHistoryLimit);
             locationHistoryRevision++;
+            terrainKey=null; lastFrameKey=null;
+        }
+
+        void PruneLocationHistory(DateTime now) {
+            DateTime cutoff=now.AddMinutes(-locationHistoryMinutes);
+            int expired=0;
+            while(expired<locationHistoryPoints.Count && locationHistoryPoints[expired].SampledAtUtc<cutoff) expired++;
+            if(expired==0) return;
+            locationHistoryPoints.RemoveRange(0,expired);
+            InvalidateLocationHistory();
+        }
+
+        void ClearLocationHistory() {
+            locationHistoryPoints.Clear();
+            InvalidateLocationHistory();
+        }
+
+        void InvalidateLocationHistory() {
+            locationHistoryRevision++;
+            if(locationHistoryPath!=null) { locationHistoryPath.Dispose(); locationHistoryPath=null; }
+            locationHistoryHoverPoint=null;
+            displayedLocationHistorySegment=-1;
+            terrainKey=null; lastFrameKey=null;
         }
 
 
@@ -4407,7 +4534,7 @@ namespace ScumMiniMap {
 
         void TriggerFullMap() {
             if((DateTime.UtcNow-lastMToggleTime).TotalMilliseconds<250) return;
-            if(!fullMapActive && chat.Paused) return;
+            if(!fullMapActive && (chat.Paused || inventoryInputLocked)) return;
             lastMToggleTime = DateTime.UtcNow;
 
 
@@ -4437,16 +4564,17 @@ namespace ScumMiniMap {
 
 
             if(fullMapActive) {
+                fullMapFocusReturn.Capture();
                 try {
-                    if(File.Exists(zonesPath)) {
-                        DateTime wt = File.GetLastWriteTimeUtc(zonesPath);
-                        if(lastZonesFileWriteTimeUtc != DateTime.MinValue && wt > lastZonesFileWriteTimeUtc) {
-                            lastZonesFileWriteTimeUtc = wt;
-                            zones = ZoneStore.Load(zonesPath);
-                            InvalidateFullMapSidebar();
-                            terrainKey = null;
-                            lastFrameKey = null;
-                        }
+                    DateTime zonesWrite=File.Exists(zonesPath)?File.GetLastWriteTimeUtc(zonesPath):DateTime.MinValue;
+                    DateTime waypointsWrite=File.Exists(customWaypointsPath)?File.GetLastWriteTimeUtc(customWaypointsPath):DateTime.MinValue;
+                    if(zonesWrite>lastZonesFileWriteTimeUtc || waypointsWrite>lastWaypointsFileWriteTimeUtc) {
+                        zones=MapSidecarStore.Reload(mapSidecarPaths);
+                        lastZonesFileWriteTimeUtc=zonesWrite;
+                        lastWaypointsFileWriteTimeUtc=waypointsWrite;
+                        InvalidateFullMapSidebar();
+                        terrainKey=null;
+                        lastFrameKey=null;
                     }
                 } catch {}
                 fullMapOpenedAt=DateTime.UtcNow;
@@ -4498,6 +4626,15 @@ namespace ScumMiniMap {
 
 
             overlay.FullMapMode = fullMapActive;
+
+            overlay.SetFullMapActivation(fullMapActive);
+
+            if(fullMapActive) {
+                overlay.Activate();
+                Native.ForceForeground(overlay.Handle);
+            } else {
+                fullMapFocusReturn.Restore();
+            }
 
 
 
@@ -5147,6 +5284,8 @@ namespace ScumMiniMap {
 
             if(!FullMapInputAllowed()) return;
 
+            UpdateLocationHistoryHover(btn==MouseButtons.None && !draggingMap && !draggingSlider && !draggingSidebarScrollbar ? (Point?)pt : null);
+
 
 
             if(draggingSlider) {
@@ -5327,6 +5466,12 @@ namespace ScumMiniMap {
 
 
                 draggingMap = false;
+
+                if(mouseMoved) {
+                    terrainKey=null;
+                    lastFrameKey=null;
+                    RenderOverlay();
+                }
 
 
 
@@ -6408,7 +6553,7 @@ namespace ScumMiniMap {
 
             itemY += toggleH + toggleGap;
 
-            DrawScrollableToggle(g, innerX, itemY, innerW, toggleH, "History timestamps", locationHistoryTimestamps, viewportRect, () => {
+            DrawScrollableToggle(g, innerX, itemY, innerW, toggleH, "History time on hover", locationHistoryTimestamps, viewportRect, () => {
                 locationHistoryTimestamps = !locationHistoryTimestamps;
                 SettingsChanged();
                 lastFrameKey = null;
@@ -7661,15 +7806,33 @@ namespace ScumMiniMap {
             try {
             DateTime now=DateTime.UtcNow;
             if(now>=saveAfter)SaveSettings();
+            PruneLocationHistory(now);
             // Menus, dialogs, Alt-Tab and injected copy input can make a low-level hook
             // miss a matching key-up. Reconcile the hook's transition view with Windows'
             // physical state before it can block sampling or a shortcut.
-            keys.Resync();
             bool gameFocused=Native.GameFocused();
+            if(!gameFocused) {
+                inventoryInputLocked=false;
+                inventoryProbeMisses=0;
+            } else if(now>=nextInventoryProbe) {
+                nextInventoryProbe=now.AddMilliseconds(120);
+                bool inventoryVisible=Native.HasSelectedTopNavigationTab(Native.GetForegroundWindow());
+                if(inventoryVisible) {
+                    inventoryProbeMisses=0;
+                    if(!inventoryInputLocked) Native.CancelActiveCopy();
+                    inventoryInputLocked=true;
+                } else if(inventoryInputLocked && ++inventoryProbeMisses>=2) {
+                    inventoryInputLocked=false;
+                    inventoryProbeMisses=0;
+                }
+            }
+            keys.Resync(gameFocused);
             SyncChatState();
             TickVoice(now,gameFocused);
             bool ourWindowFocused=Native.IsOurWindow(Native.GetForegroundWindow());
             bool gameOrOurFocused=gameFocused || ourWindowFocused;
+            int desiredTickInterval=gameOrOurFocused ? 16 : 100;
+            if(timer.Interval!=desiredTickInterval) timer.Interval=desiredTickInterval;
             bool isAltDown=(Native.GetAsyncKeyState(0x12)&0x8000)!=0 || (Native.GetAsyncKeyState(0xA4)&0x8000)!=0 || (Native.GetAsyncKeyState(0xA5)&0x8000)!=0;
             if(isAltDown) lastAltDownTime=now;
             bool altTabRecent=isAltDown || (now - lastAltDownTime).TotalMilliseconds < 500 || (now - Native.LastAltTabTime).TotalMilliseconds < 500;
@@ -7697,17 +7860,16 @@ namespace ScumMiniMap {
             // still close it after the grace period when the user really Alt-Tabs away.
             if(fullMapActive && !gameOrOurFocused && (now-fullMapOpenedAt).TotalMilliseconds>750) SetFullMap(false);
             // Hardware polling fallback for non-text hotkeys in case the low-level hook drops.
-            // Do not poll M here: polling cannot tell whether SCUM's chat box owns the
+            // Do not poll M or Escape here: polling cannot tell whether SCUM's chat box owns the
             // keystroke, while the physical hook can.
             bool shortcutFocused=gameFocused || (fullMapActive && ourWindowFocused);
-            if(shortcutFocused && !panelOpening && !chat.Paused) {
+            if(shortcutFocused && !panelOpening && !shortcutCaptureOpen && !SettingsVisible && !searchOpen && !chat.Paused && !inventoryInputLocked && !keys.ShortcutModifiersDown(true)) {
                 if(!fallbackKeysArmed) ArmFallbackKeys();
-                if(fullMapActive && FallbackKeyPressed(0x1B)) SetFullMap(false);
                 // Map opening belongs exclusively to the physical keyboard hook.
                 if(FallbackKeyPressed(0x23)) TriggerToggleOverlay();
-                if(FallbackKeyPressed(0x24)) FocusSettingsShortcut();
-                if(FallbackKeyPressed(0x2E)) TriggerZoneSearch();
-                if(FallbackKeyPressed(0x2D)) {
+                if(FallbackBindingPressed(settingsShortcutKey,settingsShortcutScanCode)) FocusSettingsShortcut();
+                if(!panelOpening && !SettingsVisible && FallbackBindingPressed(searchShortcutKey,searchShortcutScanCode)) TriggerZoneSearch();
+                if(!panelOpening && !SettingsVisible && !searchOpen && FallbackBindingPressed(pinShortcutKey,pinShortcutScanCode)) {
                     if(IsHandleCreated) BeginInvoke(new Action(TriggerPin));
                     else TriggerPin();
                 }
@@ -7749,16 +7911,20 @@ namespace ScumMiniMap {
                 }
                 if(pending && !copyInProgress && (now-sent).TotalMilliseconds>Program.CopyResponseTimeoutMs(scumCopyModifierKey)) {
                     pending=false; failures++; note=Localization.T("NoteNoCoordsAttempt",failures);
-                    if(failures>=3) { next=now.AddMilliseconds(Program.CopyRetryDelayMs(scumCopyModifierKey)); note=Localization.T("NoteNoCoordsRetry",Program.CopyRetryDelayMs(scumCopyModifierKey)/1000); }
+                    if(failures>=3) {
+                        next=now.AddMilliseconds(Program.CopyRetryDelayMs(scumCopyModifierKey));
+                        note=scumCopyKey==Program.DefaultCopyKey && scumCopyScanCode==0?
+                            Localization.Get("NoteCaptureCopyKey"):Localization.T("NoteNoCoordsRetry",Program.CopyRetryDelayMs(scumCopyModifierKey)/1000);
+                    }
                 }
                 if(TrackingEnabled && !pending) {
                     if(chat.Paused)note=Localization.Get("NoteChatOpen");
                     else if(Native.IsRightMouseDown())note=Localization.Get("NoteAdsActive");
                     else if(!keys.Available)note=Localization.Get("NoteChatMonitorUnavailable");
-                    else if(!Native.GameFocused()) note=Localization.Get("NoteWaitingForeground");
+                    else if(!gameFocused) note=Localization.Get("NoteWaitingForeground");
                     else if(Native.KeysBusy(scumCopyModifierKey,scumCopyKey,fullMapActive)) note=Localization.Get("NoteWaitingUserKeys");
                 }
-                if(TrackingEnabled && keys.Available && !panelOpening && !SettingsVisible && !searchOpen && !chat.Paused && !pending && !copyInProgress && !altTabRecent && now>=resumeAfter && now>=next && Native.GameFocused() && !Native.KeysBusy(scumCopyModifierKey,scumCopyKey,fullMapActive)) {
+                if(TrackingEnabled && keys.Available && !panelOpening && !SettingsVisible && !searchOpen && !chat.Paused && !inventoryInputLocked && !pending && !copyInProgress && !altTabRecent && now>=resumeAfter && now>=next && gameFocused && !Native.KeysBusy(scumCopyModifierKey,scumCopyKey,fullMapActive)) {
                     int interval=Program.TrackingIntervalMs(copyIntervalMs,scumCopyModifierKey);
                     next=now.AddMilliseconds(interval);
                     PerformCopyAsync();
@@ -7883,8 +8049,8 @@ namespace ScumMiniMap {
                     attempts++;
                     BeginCopyRequest();
                     CopyResult copyResult = await Native.Copy(
-                        () => !closing && !panelOpening && !SettingsVisible && !searchOpen && TrackingEnabled && !chat.Paused && DateTime.UtcNow >= resumeAfter,
-                        scumCopyModifierKey, scumCopyKey,()=>fullMapActive);
+                        () => !closing && !panelOpening && !SettingsVisible && !searchOpen && TrackingEnabled && !chat.Paused && !inventoryInputLocked && DateTime.UtcNow >= resumeAfter,
+                        scumCopyModifierKey, scumCopyKey,()=>fullMapActive,scumCopyScanCode);
                     CompleteCopyRequest(copyResult);
                     if(pending) note=Localization.Get("NoteAutoCopyActive");
                     if(copyResult != CopyResult.Sent) {
@@ -8833,15 +8999,22 @@ namespace ScumMiniMap {
                 using(Graphics background=Graphics.FromImage(fullMap)) {
                     background.Clear(Color.FromArgb(12,17,22));
                     background.TranslateTransform(TerrainMargin,TerrainMargin);
+                    // The terrain buffer includes the sidebar, but only map pixels can be shown.
+                    background.SetClip(new RectangleF(bounds.Left-TerrainMargin,bounds.Top-TerrainMargin,
+                        bounds.Width+TerrainMargin*2,bounds.Height+TerrainMargin*2));
                     background.SmoothingMode=SmoothingMode.AntiAlias;
-                    background.InterpolationMode=InterpolationMode.Bilinear;
+                    background.InterpolationMode=draggingMap?InterpolationMode.NearestNeighbor:InterpolationMode.Bilinear;
                     background.PixelOffsetMode=PixelOffsetMode.HighSpeed;
                     // Crop before scaling: GDI+ otherwise processes a huge zoomed image
                     // even though only a small window onto it is visible.
                     RectangleF visibleTexture=RectangleF.Intersect(background.VisibleClipBounds,new RectangleF(left,top,side,side));
                     if(visibleTexture.Width>0 && visibleTexture.Height>0) {
-                        if(mapTiles!=null) mapTiles.Draw(background,visibleTexture,left,top,side);
-                        else {
+                        if(mapTiles!=null) {
+                            // Bundled tiles are opaque. Avoid alpha blending while copying them.
+                            background.CompositingMode=CompositingMode.SourceCopy;
+                            try { mapTiles.Draw(background,visibleTexture,left,top,side,draggingMap?0.75f:1f,fullMapActive && !draggingMap); }
+                            finally { background.CompositingMode=CompositingMode.SourceOver; }
+                        } else {
                             Image texture=map;
                             foreach(Bitmap level in mapLevels) { if(level.Width<side || level.Height<side)break; texture=level; }
                             float textureScale=texture.Width/side, textureScaleY=texture.Height/side;
@@ -8999,15 +9172,16 @@ namespace ScumMiniMap {
 
 
 
-                    PointF[] screenPts=new PointF[activeRoute.Polyline.Length];
+                    if(routeScreenPoints.Length!=activeRoute.Polyline.Length)
+                        routeScreenPoints=new PointF[activeRoute.Polyline.Length];
 
 
 
-                    for(int i=0; i<screenPts.Length; i++) {
+                    for(int i=0; i<routeScreenPoints.Length; i++) {
 
 
 
-                        screenPts[i]=new PointF(left+activeRoute.Polyline[i].X*side, top+activeRoute.Polyline[i].Y*side);
+                        routeScreenPoints[i]=new PointF(left+activeRoute.Polyline[i].X*side, top+activeRoute.Polyline[i].Y*side);
 
 
 
@@ -9023,7 +9197,7 @@ namespace ScumMiniMap {
 
 
 
-                        g.DrawLines(glowPen,screenPts);
+                        g.DrawLines(glowPen,routeScreenPoints);
 
 
 
@@ -9039,7 +9213,7 @@ namespace ScumMiniMap {
 
 
 
-                        g.DrawLines(routePen,screenPts);
+                        g.DrawLines(routePen,routeScreenPoints);
 
 
 
@@ -9366,28 +9540,79 @@ namespace ScumMiniMap {
 
 
         void DrawLocationHistory(Graphics g,float left,float top,float side) {
-            if(!locationHistory || locationHistoryPoints.Count<2) return;
-            using(Pen trail=new Pen(Color.FromArgb(205,80,220,255),2.2f) { LineJoin=LineJoin.Round,StartCap=LineCap.Round,EndCap=LineCap.Round }) {
-                for(int i=1;i<locationHistoryPoints.Count;i++) {
-                    PointF a=locationHistoryPoints[i-1].MapPoint,b=locationHistoryPoints[i].MapPoint;
-                    g.DrawLine(trail,left+a.X*side,top+a.Y*side,left+b.X*side,top+b.Y*side);
-                }
+            if(!locationHistory || locationHistoryPoints.Count<2 || side<=0) return;
+            if(locationHistoryPath==null || locationHistoryPathRevision!=locationHistoryRevision) {
+                if(locationHistoryPath!=null) locationHistoryPath.Dispose();
+                PointF[] points=new PointF[locationHistoryPoints.Count];
+                for(int i=0;i<points.Length;i++) points[i]=locationHistoryPoints[i].MapPoint;
+                locationHistoryPath=new GraphicsPath();
+                locationHistoryPath.AddLines(points);
+                locationHistoryPathRevision=locationHistoryRevision;
             }
-            if(!locationHistoryTimestamps) return;
-            using(Font font=new Font("Segoe UI",Math.Max(7,Math.Min(10,side/90f)),FontStyle.Bold))
+            GraphicsState pathState=g.Save();
+            try {
+                g.TranslateTransform(left,top);
+                g.ScaleTransform(side,side);
+                using(Pen trail=new Pen(Color.FromArgb(205,80,220,255),2.2f/side) { LineJoin=LineJoin.Round,StartCap=LineCap.Round,EndCap=LineCap.Round })
+                    g.DrawPath(trail,locationHistoryPath);
+            } finally { g.Restore(pathState); }
+            if(!fullMapActive || !locationHistoryTimestamps || !locationHistoryHoverPoint.HasValue) return;
+            PointF hover;
+            int segment=FindLocationHistoryHoverSegment(locationHistoryHoverPoint.Value,left,top,side,out hover);
+            displayedLocationHistorySegment=segment;
+            if(segment<0) return;
+            using(Font font=new Font("Segoe UI",9f,FontStyle.Bold))
             using(Brush background=new SolidBrush(Color.FromArgb(155,8,14,20)))
             using(Brush foreground=new SolidBrush(Color.FromArgb(230,225,245,255))) {
-                DateTime nowUtc=DateTime.UtcNow;
-                for(int i=0;i<locationHistoryPoints.Count;i++) {
-                    LocationHistoryPoint sample=locationHistoryPoints[i];
-                    if(!sample.ShowTimestamp) continue;
-                    PointF screen=new PointF(left+sample.MapPoint.X*side,top+sample.MapPoint.Y*side);
-                    string age=FormatHistoryAge(nowUtc-sample.SampledAtUtc);
-                    SizeF size=g.MeasureString(age,font);
-                    g.FillRectangle(background,screen.X+5,screen.Y-size.Height-3,size.Width+4,size.Height+2);
-                    g.DrawString(age,font,foreground,screen.X+7,screen.Y-size.Height-2);
-                }
+                string age=FormatHistoryAge(DateTime.UtcNow-locationHistoryPoints[segment].SampledAtUtc);
+                SizeF size=g.MeasureString(age,font);
+                float x=hover.X+8;
+                if(x+size.Width+4>overlay.Height) x=hover.X-size.Width-12;
+                float y=hover.Y-size.Height-6;
+                if(y<0) y=hover.Y+6;
+                g.FillRectangle(background,x,y,size.Width+4,size.Height+2);
+                g.DrawString(age,font,foreground,x+2,y+1);
             }
+        }
+
+        int FindLocationHistoryHoverSegment(Point mouse,float left,float top,float side,out PointF closest) {
+            closest=PointF.Empty;
+            if(!locationHistory || locationHistoryPoints.Count<2 || side<=0) return -1;
+            float bestDistanceSquared=49f; // Seven screen pixels around the drawn trail.
+            int bestSegment=-1;
+            for(int i=1;i<locationHistoryPoints.Count;i++) {
+                PointF a=locationHistoryPoints[i-1].MapPoint,b=locationHistoryPoints[i].MapPoint;
+                float ax=left+a.X*side,ay=top+a.Y*side;
+                float bx=left+b.X*side,by=top+b.Y*side;
+                float dx=bx-ax,dy=by-ay;
+                float lengthSquared=dx*dx+dy*dy;
+                float t=lengthSquared>0 ? Math.Max(0f,Math.Min(1f,((mouse.X-ax)*dx+(mouse.Y-ay)*dy)/lengthSquared)) : 0f;
+                float x=ax+t*dx,y=ay+t*dy;
+                float offsetX=mouse.X-x,offsetY=mouse.Y-y;
+                float distanceSquared=offsetX*offsetX+offsetY*offsetY;
+                if(distanceSquared>=bestDistanceSquared) continue;
+                bestDistanceSquared=distanceSquared;
+                bestSegment=i;
+                closest=new PointF(x,y);
+            }
+            return bestSegment;
+        }
+
+        void UpdateLocationHistoryHover(Point? point) {
+            locationHistoryHoverPoint=point;
+            int segment=-1;
+            if(point.HasValue && fullMapActive && locationHistory && locationHistoryTimestamps && overlay.Height>0 &&
+                point.Value.X>=0 && point.Value.X<overlay.Height && point.Value.Y>=0 && point.Value.Y<overlay.Height) {
+                float side=overlay.Height*fullMapZoom;
+                float left=overlay.Height/2f-side*fullMapPan.X;
+                float top=overlay.Height/2f-side*fullMapPan.Y;
+                PointF closest;
+                segment=FindLocationHistoryHoverSegment(point.Value,left,top,side,out closest);
+            }
+            if(segment==displayedLocationHistorySegment) return;
+            displayedLocationHistorySegment=segment;
+            lastFrameKey=null;
+            RenderOverlay();
         }
 
         static string FormatHistoryAge(TimeSpan age) {

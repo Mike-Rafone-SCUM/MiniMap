@@ -3,12 +3,49 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Linq;
 using ScumMiniMap;
 
 static class MapRenderingTests {
     const BindingFlags Hidden=BindingFlags.NonPublic|BindingFlags.Instance;
     static void Set(object obj,string name,object value) { obj.GetType().GetField(name,Hidden).SetValue(obj,value); }
     static void Check(bool ok,string message) { if(!ok) throw new Exception(message); Console.WriteLine("PASS: "+message); }
+    static void CheckMapSidecars(string root) {
+        string folder=Path.Combine(root,"sidecars");
+        Directory.CreateDirectory(folder);
+        string mapA=Path.Combine(folder,"map-a.png"),mapACopy=Path.Combine(folder,"copy.png"),mapB=Path.Combine(folder,"map-b.png");
+        File.WriteAllBytes(mapA,new byte[]{1,2,3,4});
+        File.Copy(mapA,mapACopy);
+        File.WriteAllBytes(mapB,new byte[]{4,3,2,1});
+        MapSidecarPaths pathsA=MapSidecarPaths.ForMap(folder,mapA);
+        MapSidecarPaths pathsSame=MapSidecarPaths.ForMap(folder,mapACopy);
+        MapSidecarPaths pathsB=MapSidecarPaths.ForMap(folder,mapB);
+        MapSidecarPaths pathsDefault=MapSidecarPaths.ForMap(folder,null);
+        Check(pathsA.MapId==pathsSame.MapId && pathsA.MapId!=pathsB.MapId && pathsDefault.MapId=="default" && pathsA.MapId!=pathsDefault.MapId,
+            "Each custom map image receives a stable, isolated sidecar identity");
+        Check(Path.GetFileName(pathsA.ZonesPath)=="zones.tsv" && Path.GetFileName(pathsA.WaypointsPath)=="customwaypoints.tsv",
+            "Map sidecars use separate zones.tsv and customwaypoints.tsv files");
+
+        string legacy=Path.Combine(folder,"zones.tsv");
+        var oldPolygon=new MapZone { Name="Old polygon",Argb=Color.Red.ToArgb(),Category=ZoneCategory.Custom,Points=new[]{new PointF(.1f,.1f),new PointF(.3f,.1f),new PointF(.2f,.3f)} };
+        var oldWaypoint=new MapZone { Name="Old waypoint",Argb=Color.Cyan.ToArgb(),Category=ZoneCategory.Custom,Points=new[]{new PointF(.7f,.8f)} };
+        ZoneStore.Save(legacy,new List<MapZone>{oldPolygon,oldWaypoint});
+        string legacyContents=File.ReadAllText(legacy);
+        bool migrated;
+        List<MapZone> loadedA=MapSidecarStore.Load(pathsA,legacy,false,out migrated);
+        Check(migrated && loadedA.Count==2 && loadedA.Any(z=>z.Name=="Old polygon") && loadedA.Any(z=>z.Name=="Old waypoint"),
+            "Legacy zones migrate to the active map without losing annotations");
+        Check(ZoneStore.Load(pathsA.ZonesPath).Count==1 && ZoneStore.Load(pathsA.WaypointsPath).Count==1 && File.ReadAllText(legacy)==legacyContents,
+            "Migration separates old waypoints and preserves the original zones file");
+
+        List<MapZone> loadedB=MapSidecarStore.Load(pathsB,legacy,false,out migrated);
+        Check(!migrated && loadedB.Count==0,"Legacy annotations are not copied into a different custom map");
+        var newPolygon=new MapZone { Name="Map B polygon",Argb=Color.Blue.ToArgb(),Category=ZoneCategory.Custom,Points=new[]{new PointF(.2f,.2f),new PointF(.4f,.2f),new PointF(.3f,.4f)} };
+        var newWaypoint=new MapZone { Name="Map B waypoint",Argb=Color.Cyan.ToArgb(),Category=ZoneCategory.Custom,Points=new[]{new PointF(.8f,.7f)} };
+        MapSidecarStore.Save(pathsB,new List<MapZone>{newPolygon,newWaypoint});
+        Check(MapSidecarStore.Reload(pathsA).Any(z=>z.Name=="Old waypoint") && MapSidecarStore.Reload(pathsB).Any(z=>z.Name=="Map B waypoint") &&
+            MapSidecarStore.Reload(pathsB).All(z=>z.Name!="Old waypoint"),"Saving and reloading map B cannot overwrite or mix map A annotations");
+    }
     static byte[] SolidTile(int width) {
         using(var tile=new Bitmap(width,512))
         using(var graphics=Graphics.FromImage(tile))
@@ -58,17 +95,20 @@ static class MapRenderingTests {
         using(var fixture=SeamFixture())
         using(var tiles=new MapTilePyramid(fixture))
         using(var frame=new Bitmap(777,777)) {
-            using(var graphics=Graphics.FromImage(frame)) {
-                graphics.Clear(Color.Black);
-                graphics.InterpolationMode=System.Drawing.Drawing2D.InterpolationMode.Bilinear;
-                tiles.Draw(graphics,new RectangleF(0,0,777,777),0,0,777);
+            for(int mode=0;mode<3;mode++) {
+                var interpolation=mode==1?System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor:System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+                using(var graphics=Graphics.FromImage(frame)) {
+                    graphics.Clear(Color.Black);
+                    graphics.InterpolationMode=interpolation;
+                    tiles.Draw(graphics,new RectangleF(0,0,777,777),0,0,777,.75f,mode==2);
+                }
+                bool solid=true;
+                for(int x=385;x<=392;x++) {
+                    Color pixel=frame.GetPixel(x,200);
+                    if(Math.Abs(pixel.R-40)>3 || Math.Abs(pixel.G-100)>3 || Math.Abs(pixel.B-160)>3) solid=false;
+                }
+                Check(solid,"Scaled tile joins have no dark gaps with "+(mode==2?"cached bilinear":interpolation.ToString()));
             }
-            bool solid=true;
-            for(int x=385;x<=392;x++) {
-                Color pixel=frame.GetPixel(x,200);
-                if(Math.Abs(pixel.R-40)>3 || Math.Abs(pixel.G-100)>3 || Math.Abs(pixel.B-160)>3) solid=false;
-            }
-            Check(solid,"Scaled tile joins have no dark gaps");
         }
         using(var tileStream=Assembly.GetExecutingAssembly().GetManifestResourceStream("map-tiles.bin"))
         using(var tiles=new MapTilePyramid(tileStream))
@@ -79,6 +119,7 @@ static class MapRenderingTests {
         }
         string testFolder=Path.Combine(Path.GetTempPath(),"MiniMap-tile-render-"+Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(testFolder);
+        CheckMapSidecars(testFolder);
         string customMap=Path.Combine(testFolder,"map.png");
         File.WriteAllText(customMap,"invalid image");
         using(var recovery=new MapWindow(testFolder,true))
@@ -86,6 +127,48 @@ static class MapRenderingTests {
         File.Delete(customMap);
         using(var window=new MapWindow(testFolder,true)) {
             Check(typeof(MapWindow).GetField("mapTiles",Hidden).GetValue(window)!=null,"Bundled map uses tiles in the application renderer");
+            Set(window,"locationHistory",true);
+            Set(window,"locationHistoryTimestamps",true);
+            var recordHistory=typeof(MapWindow).GetMethod("RecordLocationHistory",Hidden);
+            var drawHistory=typeof(MapWindow).GetMethod("DrawLocationHistory",Hidden);
+            DateTime historyTime=DateTime.UtcNow.AddMinutes(-2);
+            recordHistory.Invoke(window,new object[]{new PointF(.1f,.1f),historyTime});
+            recordHistory.Invoke(window,new object[]{new PointF(.2f,.1f),historyTime.AddSeconds(30)});
+            using(var plain=new Bitmap(200,200))
+            using(var hovered=new Bitmap(200,200)) {
+                Set(window,"locationHistoryHoverPoint",new Point(30,20));
+                Set(window,"fullMapActive",false);
+                using(var g=Graphics.FromImage(plain)) drawHistory.Invoke(window,new object[]{g,0f,0f,200f});
+                Set(window,"fullMapActive",true);
+                using(var g=Graphics.FromImage(hovered)) drawHistory.Invoke(window,new object[]{g,0f,0f,200f});
+                bool hoverLabelVisible=false;
+                for(int y=0;y<200;y++) for(int x=0;x<200;x++)
+                    if(plain.GetPixel(x,y)!=hovered.GetPixel(x,y)) hoverLabelVisible=true;
+                Check(hoverLabelVisible,"History age appears on the full map when the trail is hovered; hover="+
+                    typeof(MapWindow).GetField("locationHistoryHoverPoint",Hidden).GetValue(window)+", segment="+
+                    typeof(MapWindow).GetField("displayedLocationHistorySegment",Hidden).GetValue(window));
+                Set(window,"locationHistoryHoverPoint",null);
+                using(var g=Graphics.FromImage(hovered)) {
+                    g.Clear(Color.Transparent);
+                    drawHistory.Invoke(window,new object[]{g,0f,0f,200f});
+                }
+                bool noUnhoveredLabel=true;
+                for(int y=0;y<200;y++) for(int x=0;x<200;x++)
+                    if(plain.GetPixel(x,y)!=hovered.GetPixel(x,y)) noUnhoveredLabel=false;
+                Check(noUnhoveredLabel,"History age stays hidden on the minimap and unhovered full map");
+            }
+            var history=(System.Collections.IList)typeof(MapWindow).GetField("locationHistoryPoints",Hidden).GetValue(window);
+            Set(window,"locationHistoryMinutes",1);
+            typeof(MapWindow).GetMethod("PruneLocationHistory",Hidden).Invoke(window,new object[]{DateTime.UtcNow});
+            Check(history.Count==0,"Shorter history duration expires old trail points without new movement");
+            recordHistory.Invoke(window,new object[]{new PointF(.1f,.1f),DateTime.UtcNow});
+            recordHistory.Invoke(window,new object[]{new PointF(.2f,.1f),DateTime.UtcNow.AddSeconds(2)});
+            typeof(MapWindow).GetMethod("ClearLocationHistory",Hidden).Invoke(window,null);
+            Check(history.Count==0 && typeof(MapWindow).GetField("locationHistoryPath",Hidden).GetValue(window)==null,
+                "Clear route history removes points and cached drawing");
+            recordHistory.Invoke(window,new object[]{new PointF(.3f,.1f),DateTime.UtcNow.AddSeconds(3)});
+            Check(history.Count==1,"Tracking starts a fresh trail after clearing");
+            Set(window,"fullMapActive",false);
             var overlay=(OverlayWindow)typeof(MapWindow).GetField("overlay",Hidden).GetValue(window);
             var marker=(MapMotion)typeof(MapWindow).GetField("motion",Hidden).GetValue(window);
             var draw=(Func<Bitmap>)Delegate.CreateDelegate(typeof(Func<Bitmap>),window,typeof(MapWindow).GetMethod("OverlayBitmap",Hidden));

@@ -14,7 +14,8 @@ namespace ScumMiniMap {
         internal static string DataFolderName { get { return IsTestBuild?"ScumMiniMap-ResponsivenessTest":"ScumMiniMap"; } }
         internal static int MinimumCopyIntervalMs { get { return 250; } }
         internal const int DefaultCopyModifierKey = 0;
-        internal const int DefaultCopyKey = 0xDC;
+        // VK_DIVIDE (the physical NumPad / key) is stable across language layouts.
+        internal const int DefaultCopyKey = 0x6F;
         internal static int TrackingIntervalMs(int configured) { return Math.Max(MinimumCopyIntervalMs,configured); }
         internal static int TrackingIntervalMs(int configured,int modifier) { return Math.Max(modifier>0?1000:MinimumCopyIntervalMs,configured); }
         internal static int CopyResponseTimeoutMs(int modifier) { return modifier>0?1000:350; }
@@ -22,16 +23,16 @@ namespace ScumMiniMap {
         internal static string CopyBindingHelp {
             get {
                 string[] text={
-                    "New default: backslash (\\), no modifier. Bind Copy location in SCUM to the same key. Existing bindings are kept. Single-key tracking supports 250 ms; Ctrl+C remains supported at 1 second or slower.",
-                    "Nuevo valor: barra inversa (\\), sin modificador. Asigná Copiar ubicación en SCUM a esa misma tecla. Se conservan tus teclas anteriores. Una tecla permite 250 ms; Ctrl+C sigue disponible a 1 segundo o más.",
-                    "Nouveau défaut : barre oblique inverse (\\), sans modificateur. Affectez Copier la position dans SCUM à cette même touche. Vos touches sont conservées. Touche seule : 250 ms ; Ctrl+C : 1 seconde minimum.",
-                    "Neuer Standard: Backslash (\\), ohne Zusatztaste. Position kopieren in SCUM auf dieselbe Taste legen. Bestehende Belegungen bleiben erhalten. Einzelne Taste: 250 ms; Strg+C: mindestens 1 Sekunde.",
-                    "Nieuwe standaard: backslash (\\), zonder modifier. Stel Locatie kopiëren in SCUM in op dezelfde toets. Bestaande bindingen blijven behouden. Eén toets: 250 ms; Ctrl+C: minimaal 1 seconde.",
-                    "Новый стандарт: обратная косая черта (\\), без модификатора. Назначьте копирование координат в SCUM на ту же клавишу. Старые привязки сохраняются. Одна клавиша: 250 мс; Ctrl+C: от 1 секунды.",
-                    "新默认按键：反斜杠（\\），无修饰键。请在SCUM中将复制位置设为相同按键。保留已有绑定。单键支持250毫秒；Ctrl+C最短为1秒。",
-                    "Yeni varsayılan: ters eğik çizgi (\\), değiştiricisiz. SCUM Konumu kopyala tuşunu da aynı yapın. Mevcut atamalar korunur. Tek tuş: 250 ms; Ctrl+C: en az 1 saniye.",
-                    "الافتراضي الجديد: الشرطة المائلة العكسية (\\)، دون مفتاح تعديل. عيّن نسخ الموقع في SCUM إلى المفتاح نفسه. تُحفظ التعيينات الحالية. مفتاح واحد: 250 مللي ثانية؛ Ctrl+C: ثانية على الأقل.",
-                    "Novo padrão: barra invertida (\\), sem modificador. Atribua Copiar localização no SCUM à mesma tecla. Atalhos anteriores são mantidos. Tecla única: 250 ms; Ctrl+C: mínimo de 1 segundo."
+                    "Default: Num / (numpad divide), no modifier. Bind Copy location in SCUM to the same key. Existing bindings are kept. If your keyboard has no numpad, capture your chosen key in Settings. Single-key tracking supports 250 ms; Ctrl+C remains supported at 1 second or slower.",
+                    "Predeterminado: Num / (división del teclado numérico), sin modificador. Asigná Copiar ubicación en SCUM a la misma tecla. Se conservan las teclas anteriores. Si tu teclado no tiene teclado numérico, capturá la tecla elegida en Ajustes. Una tecla permite 250 ms; Ctrl+C requiere 1 segundo o más.",
+                    "Par défaut : Num / (division du pavé numérique), sans modificateur. Affectez Copier la position dans SCUM à la même touche. Vos raccourcis existants sont conservés. Si votre clavier n’a pas de pavé numérique, capturez la touche choisie dans les paramètres. Touche seule : 250 ms ; Ctrl+C : 1 seconde minimum.",
+                    "Standard: Num / (Division auf dem Ziffernblock), ohne Zusatztaste. Position kopieren in SCUM auf dieselbe Taste legen. Bestehende Belegungen bleiben erhalten. Wenn Ihre Tastatur keinen Ziffernblock hat, erfassen Sie Ihre Taste in den Einstellungen. Einzelne Taste: 250 ms; Strg+C: mindestens 1 Sekunde.",
+                    "Standaard: Num / (delen op het numerieke toetsenblok), zonder modifier. Stel Locatie kopiëren in SCUM in op dezelfde toets. Bestaande bindingen blijven behouden. Heeft je toetsenbord geen numeriek toetsenblok, leg dan je gekozen toets vast in Instellingen. Eén toets: 250 ms; Ctrl+C: minimaal 1 seconde.",
+                    "По умолчанию: Num / (деление на цифровом блоке), без модификатора. Назначьте копирование координат в SCUM на ту же клавишу. Существующие привязки сохраняются. Если на клавиатуре нет цифрового блока, назначьте выбранную клавишу в настройках. Одна клавиша: 250 мс; Ctrl+C: от 1 секунды.",
+                    "默认：Num /（数字键盘除号），无修饰键。请在 SCUM 中将复制位置设为同一按键。保留已有绑定。如果键盘没有数字键盘，请在设置中捕获所选按键。单键支持 250 毫秒；Ctrl+C 最短为 1 秒。",
+                    "Varsayılan: Num / (sayısal tuş takımında bölme), değiştiricisiz. SCUM'da Konumu kopyala işlevini aynı tuşa atayın. Mevcut atamalar korunur. Klavyenizde sayısal tuş takımı yoksa seçtiğiniz tuşu Ayarlar'da yakalayın. Tek tuş: 250 ms; Ctrl+C: en az 1 saniye.",
+                    "الافتراضي: Num / (القسمة على لوحة الأرقام)، دون مفتاح تعديل. عيّن نسخ الموقع في SCUM إلى المفتاح نفسه. تُحفظ التعيينات الحالية. إذا لم تتضمن لوحة المفاتيح لوحة أرقام، فالتقط المفتاح الذي اخترته في الإعدادات. مفتاح واحد: 250 مللي ثانية؛ Ctrl+C: ثانية على الأقل.",
+                    "Padrão: Num / (divisão do teclado numérico), sem modificador. Atribua Copiar localização no SCUM à mesma tecla. Os atalhos existentes são mantidos. Se seu teclado não tiver teclado numérico, capture a tecla escolhida nas configurações. Tecla única: 250 ms; Ctrl+C: mínimo de 1 segundo."
                 };
                 return text[(int)Localization.Current];
             }

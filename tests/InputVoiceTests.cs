@@ -39,6 +39,16 @@ static class InputVoiceTests {
         chat.Key(0x09); chat.Key(0x4D); Check(chat.Paused,"Tab and typed M leave chat protection active");
         chat.Key(0x0D); Check(!chat.Paused,"Enter ends chat protection");
         chat.Key(0x54); chat.Key(0x1B); Check(!chat.Paused,"Esc ends chat protection");
+        var localizedChat=new ChatState();
+        var localizedChatMonitor=new ChatKeyMonitor();
+        Check(localizedChatMonitor.Observe(0x51,true,true,localizedChat,0x4D,0,0x135,0x135)
+            && localizedChat.Paused,
+            "Configured chat key is detected from its physical scan code across keyboard layouts");
+        var otherLocalizedChat=new ChatState();
+        var otherLocalizedChatMonitor=new ChatKeyMonitor();
+        Check(otherLocalizedChatMonitor.Observe(0x51,true,true,otherLocalizedChat,0x4D,0,0x35,0x135)
+            && !otherLocalizedChat.Paused,
+            "A different physical key does not open localized chat protection");
         var physical=new PhysicalKeyTransitions();
         physical.Update(0x4D,true); physical.Resync(key=>false);
         Check(physical.Update(0x4D,true),"Missed M key-up is reconciled so the next press opens the map");
@@ -50,16 +60,41 @@ static class InputVoiceTests {
         }
         Check(true,"Map shortcut rearms across 10,000 missed-release cycles");
         chat.Key(0x54);
-        using(var hooks=new GameKeys(key=>{},key=>true,chat,()=>0x54)) {
+        using(var hooks=new GameKeys((key,scan)=>{},(key,scan)=>true,chat,()=>0x54)) {
             typeof(GameKeys).GetMethod("RefreshHooks",Hidden).Invoke(hooks,null);
             Check(hooks.Available && chat.Paused,"Hook renewal restores monitoring without clearing chat protection");
         }
         Check(Program.TrackingIntervalMs(250,0xA2)==1000 && Program.TrackingIntervalMs(250,0)==250 && Program.TrackingIntervalMs(3000,0xA2)==3000,"Modifier shortcuts use at most one copy per second; single-key tracking retains 250 ms");
         Check(Program.CopyResponseTimeoutMs(0)==350 && Program.CopyResponseTimeoutMs(0xA2)==1000 && Program.CopyRetryDelayMs(0)==1000,"Single-key misses no longer introduce a one-second response wait or five-second retry pause");
         var singleKeyDelays=new List<int>();
-        Native.CopyChord((key,up)=>true,ms=>{ singleKeyDelays.Add(ms); return Task.FromResult(0); },()=>true,0,0xDC).GetAwaiter().GetResult();
-        Check(singleKeyDelays.SequenceEqual(new[]{60}),"Backslash copy spans game frames without the redundant post-release delay");
+        Native.CopyChord((key,up)=>true,ms=>{ singleKeyDelays.Add(ms); return Task.FromResult(0); },()=>true,0,Program.DefaultCopyKey).GetAwaiter().GetResult();
+        Check(singleKeyDelays.SequenceEqual(new[]{60}),"Single-key copy spans game frames without the redundant post-release delay");
+        PhysicalKeyCapture.Observe(0xE2,0x56,0);
+        int physicalScan;
+        Check(PhysicalKeyCapture.TryGet(0xE2,out physicalScan) && physicalScan==0x56 &&
+            !PhysicalKeyCapture.TryGet(0xDC,out physicalScan),"ABNT2 physical copy key is captured independently of the US backslash virtual key");
+        PhysicalKeyCapture.Observe(0xE2,0x35,1);
+        Check(PhysicalKeyCapture.TryGet(0xE2,out physicalScan) && physicalScan==0x135,
+            "Extended physical key status survives capture");
+        Check(PhysicalKeyCapture.Matches(0x51,0x135,0x4D,0x135)
+            && !PhysicalKeyCapture.Matches(0x51,0x35,0x4D,0x135)
+            && PhysicalKeyCapture.Matches(0x51,0,0x51,0x135),
+            "Captured map/chat bindings match hardware scan codes across layout VK changes, with a VK fallback when the hook has no scan");
+        Check(Program.DefaultCopyKey==0x6F &&
+            PhysicalKeyCapture.Valid(0x135),
+            "Default copy binding is the layout-independent NumPad Divide key and extended physical scan codes are supported");
+        var nativeType=typeof(Native);
+        var hiddenStatic=BindingFlags.NonPublic|BindingFlags.Static;
+        IntPtr keyboardLayout=(IntPtr)nativeType.GetMethod("GetKeyboardLayout",hiddenStatic).Invoke(null,new object[]{(uint)0});
+        uint localScan=(uint)nativeType.GetMethod("MapVirtualKeyEx",hiddenStatic).Invoke(null,new object[]{(uint)Program.DefaultCopyKey,(uint)4,keyboardLayout});
+        Check(keyboardLayout!=IntPtr.Zero && (localScan&0xFF)==0x35 && (localScan&0xFF00)!=0,
+            "Windows maps NumPad Divide to its extended physical scan code independently of the text layout");
+        Check((int)nativeType.GetMethod("ScanCodeToVirtualKey",hiddenStatic).Invoke(null,new object[]{0x135})==0x6F,
+            "Hook-loss polling converts the captured NumPad Divide scan code back to its physical virtual key");
         Check(!GameKeys.MouseActionBlocksCopy(0x20A,0) && !GameKeys.MouseActionBlocksCopy(0x20E,0) && GameKeys.MouseActionBlocksCopy(0x20A,0xA2),"Single-key tracking continues through scrolling; modifier-based copying remains guarded");
+        Check(OverlayWindow.ShouldPassMouseThrough(true,false) && OverlayWindow.ShouldPassMouseThrough(false,false),"Compact minimap never captures mouse movement from the game");
+        Check(OverlayWindow.ShouldPassMouseThrough(true,true) && !OverlayWindow.ShouldPassMouseThrough(false,true),"Expanded map accepts pointer input when SCUM releases foreground focus");
+        Check(OverlayWindow.ShouldActivateForInput(true) && !OverlayWindow.ShouldActivateForInput(false),"Expanded map temporarily activates for cursor control while compact overlay stays non-activating");
         var navigator=new VoiceNavigator();
         var right=Route(P(0,0),P(600,0),P(600,600));
         var left=Route(P(0,0),P(600,0),P(600,-600));
@@ -181,11 +216,11 @@ static class InputVoiceTests {
             foreach(AppLanguage language in Enum.GetValues(typeof(AppLanguage))) {
                 Localization.Current=language;
                 using(var reminder=new CopyKeyReminderDialog()) {
-                    var message=reminder.Controls.OfType<Label>().Single();
-                    var keyReference=reminder.Controls.OfType<PictureBox>().Single();
+                    var message=reminder.Controls.OfType<Label>().Single(label=>label.Text!="Num /");
+                    var keyLabel=reminder.Controls.OfType<Label>().Single(label=>label.Text=="Num /");
                     var checkbox=reminder.Controls.OfType<CheckBox>().Single();
                     var okay=reminder.Controls.OfType<Button>().Single();
-                    Check(message.Text.Contains("\\") && keyReference.Image!=null && keyReference.Image.Width>0
+                    Check(message.Text.Contains("Num /") && keyLabel.Text=="Num /" && keyLabel.Width>0
                         && checkbox.Text.Length>0 && okay.Text.Length>0
                         && okay.DialogResult==DialogResult.OK && !reminder.DoNotShowAgain,
                         "Copy-key reminder is localized and confirmable: "+language);
@@ -196,14 +231,14 @@ static class InputVoiceTests {
             Localization.Current=originalLanguage;
             using(var bitmap=new Bitmap(32,32)) bitmap.Save(Path.Combine(root,"map.png"));
             using(var window=new MapWindow(root,true)) {
-                Check((int)typeof(MapWindow).GetField("scumCopyModifierKey",Hidden).GetValue(window)==0 && (int)typeof(MapWindow).GetField("scumCopyKey",Hidden).GetValue(window)==0xDC,"New installations default to backslash without a modifier");
+                Check((int)typeof(MapWindow).GetField("scumCopyModifierKey",Hidden).GetValue(window)==0 && (int)typeof(MapWindow).GetField("scumCopyKey",Hidden).GetValue(window)==0x6F,"New installations default to NumPad Divide without a modifier");
                 Check(!(bool)typeof(MapWindow).GetField("suppressCopyKeyReminder",Hidden).GetValue(window),"Copy-key reminder appears by default");
                 using(var guide=new StartupGuideDialog()) {
-                    Check((int)typeof(StartupGuideDialog).GetField("copyModKey",Hidden).GetValue(guide)==0 && (int)typeof(StartupGuideDialog).GetField("copyKey",Hidden).GetValue(guide)==0xDC,"First-run guide matches the single-key default");
+                    Check((int)typeof(StartupGuideDialog).GetField("copyModKey",Hidden).GetValue(guide)==0 && (int)typeof(StartupGuideDialog).GetField("copyKey",Hidden).GetValue(guide)==0x6F,"First-run guide matches the NumPad Divide single-key default");
                     typeof(StartupGuideDialog).GetMethod("RenderSlideKeybinds",Hidden).Invoke(guide,null);
                     var reset=Descendants(guide).OfType<Button>().First(button=>button.Text==Localization.Get("WizardBtnResetDefaults"));
                     typeof(Button).GetMethod("OnClick",Hidden).Invoke(reset,new object[]{EventArgs.Empty});
-                    Check((int)typeof(StartupGuideDialog).GetField("copyModKey",Hidden).GetValue(guide)==0 && (int)typeof(StartupGuideDialog).GetField("copyKey",Hidden).GetValue(guide)==0xDC,"Reset button retains the single-key default without checkbox events re-enabling Ctrl");
+                    Check((int)typeof(StartupGuideDialog).GetField("copyModKey",Hidden).GetValue(guide)==0 && (int)typeof(StartupGuideDialog).GetField("copyKey",Hidden).GetValue(guide)==0x6F,"Reset button retains the NumPad Divide single-key default without checkbox events re-enabling Ctrl");
                 }
                 window.Show(); Application.DoEvents();
                 typeof(MapWindow).GetMethod("BeginCopyRequest",Hidden).Invoke(window,null);
@@ -263,12 +298,69 @@ static class InputVoiceTests {
                 windowPlayer.Dispose(); Check(windowPlayer.WaitForExit(5000),"Window audio worker shuts down without leaving MP3 files locked");
             }
             using(var persistWindow=new MapWindow(root)) {
+                typeof(MapWindow).GetField("settingsShortcutKey",Hidden).SetValue(persistWindow,0x75);
+                typeof(MapWindow).GetField("pinShortcutKey",Hidden).SetValue(persistWindow,0x67);
+                typeof(MapWindow).GetField("searchShortcutKey",Hidden).SetValue(persistWindow,0x76);
+                typeof(MapWindow).GetField("settingsShortcutScanCode",Hidden).SetValue(persistWindow,0x135);
+                typeof(MapWindow).GetField("pinShortcutScanCode",Hidden).SetValue(persistWindow,0x152);
+                typeof(MapWindow).GetField("searchShortcutScanCode",Hidden).SetValue(persistWindow,0x153);
+                typeof(MapWindow).GetField("locationHistoryMinutes",Hidden).SetValue(persistWindow,75);
+                typeof(MapWindow).GetField("locationHistory",Hidden).SetValue(persistWindow,false);
+                typeof(MapWindow).GetField("locationHistoryTimestamps",Hidden).SetValue(persistWindow,true);
                 typeof(MapWindow).GetField("suppressCopyKeyReminder",Hidden).SetValue(persistWindow,true);
+                typeof(MapWindow).GetField("scumCopyScanCode",Hidden).SetValue(persistWindow,0x56);
+                typeof(MapWindow).GetField("scumMapScanCode",Hidden).SetValue(persistWindow,0x135);
+                typeof(MapWindow).GetField("scumChatScanCode",Hidden).SetValue(persistWindow,0x23);
                 typeof(MapWindow).GetMethod("SaveSettings",Hidden).Invoke(persistWindow,null);
             }
+            Check(File.ReadAllText(Path.Combine(root,"settings.ini")).Contains("ScumCopyScanCode=86"),"Physical copy scan code is saved");
+            Check(File.ReadAllText(Path.Combine(root,"settings.ini")).Contains("ScumMapScanCode=309")
+                && File.ReadAllText(Path.Combine(root,"settings.ini")).Contains("ScumChatScanCode=35"),"Physical map and chat scan codes are saved");
+            Check(File.ReadAllText(Path.Combine(root,"settings.ini")).Contains("SettingsShortcutScanCode=309")
+                && File.ReadAllText(Path.Combine(root,"settings.ini")).Contains("PinShortcutScanCode=338")
+                && File.ReadAllText(Path.Combine(root,"settings.ini")).Contains("SearchShortcutScanCode=339"),"All configurable MiniMap shortcut scan codes are saved");
             using(var reopened=new MapWindow(root,true)) {
+                Check((int)typeof(MapWindow).GetField("settingsShortcutKey",Hidden).GetValue(reopened)==0x75
+                    && (int)typeof(MapWindow).GetField("pinShortcutKey",Hidden).GetValue(reopened)==0x67
+                    && (int)typeof(MapWindow).GetField("searchShortcutKey",Hidden).GetValue(reopened)==0x76,
+                    "Captured function-key and number-pad shortcut preferences survive restart");
+                var watched=typeof(MapWindow).GetMethod("IsWatchedGameKey",Hidden);
+                foreach(int key in new[]{0x75,0x67,0x76}) Check((bool)watched.Invoke(reopened,new object[]{key}),"Rebound shortcut reaches keyboard dispatch: "+key);
+                var watchedPhysical=typeof(MapWindow).GetMethod("IsWatchedPhysicalKey",Hidden);
+                Check((bool)watchedPhysical.Invoke(reopened,new object[]{0x51,0x135})
+                    && !(bool)watchedPhysical.Invoke(reopened,new object[]{0x51,0x34})
+                    && (bool)watchedPhysical.Invoke(reopened,new object[]{0x51,0x152})
+                    && (bool)watchedPhysical.Invoke(reopened,new object[]{0x51,0x153}),
+                    "Settings, waypoint and search bindings are dispatched by physical scan code across layouts");
+                var validate=typeof(MapWindow).GetMethod("ShortcutKeyError",Hidden);
+                Check(validate.Invoke(reopened,new object[]{0x76,0x75})!=null && validate.Invoke(reopened,new object[]{0x54,0x75})!=null,
+                    "Shortcut capture rejects duplicate and SCUM chat bindings");
+                var validatePhysical=typeof(MapWindow).GetMethod("ShortcutBindingError",Hidden);
+                Check(validatePhysical.Invoke(reopened,new object[]{0x51,0x75,0x135,0x35})!=null
+                    && validatePhysical.Invoke(reopened,new object[]{0x75,0x75,0x35,0x135})==null,
+                    "Shortcut conflict checks use physical position, not matching layout-specific virtual keys");
+                PhysicalKeyCapture.Observe(0x78,0x3B,0);
+                using(var capture=new ShortcutCaptureDialog("Settings",(key,scan)=>(string)validate.Invoke(reopened,new object[]{key,0x75}))) {
+                    var captureKey=typeof(ShortcutCaptureDialog).GetMethod("ProcessCmdKey",Hidden);
+                    captureKey.Invoke(capture,new object[]{new Message(),Keys.Control|Keys.F9});
+                    Check(capture.DialogResult==DialogResult.None,"Shortcut capture rejects modifier combinations");
+                    captureKey.Invoke(capture,new object[]{new Message(),Keys.F9});
+                    Check(capture.DialogResult==DialogResult.OK && capture.CapturedKey==(int)Keys.F9 && capture.CapturedScanCode==0x3B,"Shortcut dialog captures the virtual key and physical scan code");
+                }
+                Check((int)typeof(MapWindow).GetField("locationHistoryMinutes",Hidden).GetValue(reopened)==75
+                    && !(bool)typeof(MapWindow).GetField("locationHistory",Hidden).GetValue(reopened)
+                    && (bool)typeof(MapWindow).GetField("locationHistoryTimestamps",Hidden).GetValue(reopened),
+                    "History duration and visibility preferences survive restart");
                 Check((bool)typeof(MapWindow).GetField("suppressCopyKeyReminder",Hidden).GetValue(reopened)
                     && File.ReadAllText(Path.Combine(root,"settings.ini")).Contains("SuppressCopyKeyReminder=True"),"Copy-key reminder opt-out persists across restarts");
+                Check((int)typeof(MapWindow).GetField("scumCopyScanCode",Hidden).GetValue(reopened)==0x56,"Physical copy scan code survives restart");
+                Check((int)typeof(MapWindow).GetField("scumMapScanCode",Hidden).GetValue(reopened)==0x135
+                    && (int)typeof(MapWindow).GetField("scumChatScanCode",Hidden).GetValue(reopened)==0x23,
+                    "Physical map and chat scan codes survive restart");
+                Check((int)typeof(MapWindow).GetField("settingsShortcutScanCode",Hidden).GetValue(reopened)==0x135
+                    && (int)typeof(MapWindow).GetField("pinShortcutScanCode",Hidden).GetValue(reopened)==0x152
+                    && (int)typeof(MapWindow).GetField("searchShortcutScanCode",Hidden).GetValue(reopened)==0x153,
+                    "All configurable MiniMap shortcut scan codes survive restart");
             }
         } finally {
             if(Path.GetFullPath(root).StartsWith(Path.GetFullPath(Path.GetTempPath()),StringComparison.OrdinalIgnoreCase) && Path.GetFileName(root).StartsWith("MiniMap-voice-test-")) Directory.Delete(root,true);

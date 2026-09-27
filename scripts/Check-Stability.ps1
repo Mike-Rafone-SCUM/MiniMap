@@ -20,12 +20,11 @@ try {
     foreach ($historySecond in @(0, 10, 29, 30, 59, 60)) {
         $historyRecord.Invoke($miniForm, @([Drawing.PointF]::new([single](0.1 + $historySecond * 0.001), 0.1), $historyStart.AddSeconds($historySecond)))
     }
-    $timestampMarkCount = 0
-    foreach ($historyPoint in $historyPoints) {
-        $showTimestamp = $historyPoint.GetType().GetField('ShowTimestamp', [Reflection.BindingFlags]'NonPublic,Instance').GetValue($historyPoint)
-        if ($showTimestamp) { $timestampMarkCount++ }
-    }
-    if ($timestampMarkCount -ne 3) { throw "Expected three 30-second history timestamps, got $timestampMarkCount." }
+    $hoverMethod = $miniForm.GetType().GetMethod('FindLocationHistoryHoverSegment', $miniFlags)
+    $hoverArgs = @([Drawing.Point]::new(13, 11), [single]0, [single]0, [single]100, [Drawing.PointF]::Empty)
+    if ($hoverMethod.Invoke($miniForm, $hoverArgs) -lt 1) { throw 'Cursor on the history line did not find a segment.' }
+    $hoverArgs[0] = [Drawing.Point]::new(13, 30)
+    if ($hoverMethod.Invoke($miniForm, $hoverArgs) -ne -1) { throw 'Cursor away from the history line still found a timestamp.' }
     $historyAge = $miniForm.GetType().GetMethod('FormatHistoryAge', [Reflection.BindingFlags]'NonPublic,Static')
     if ($historyAge.Invoke($null, @([TimeSpan]::FromSeconds(29))) -ne '0s ago' -or
         $historyAge.Invoke($null, @([TimeSpan]::FromSeconds(30))) -ne '30s ago') {
@@ -38,7 +37,7 @@ try {
     $miniSetMap.Invoke($miniForm, @($true))
     if (-not $miniMapState.GetValue($miniForm)) { throw 'Repeated map-open request toggled closed.' }
     foreach ($miniShortcut in @(0x4D,0x1B,0x23,0x24,0x2D,0x2E,0x21,0x22)) {
-        $miniKey.Invoke($miniForm, @($miniShortcut))
+        $miniKey.Invoke($miniForm, @($miniShortcut, 0))
     }
     [System.Windows.Forms.Application]::DoEvents()
     if (-not $miniMapState.GetValue($miniForm)) { throw 'Blocked shortcut changed map state.' }

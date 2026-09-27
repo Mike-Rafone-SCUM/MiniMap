@@ -32,6 +32,8 @@ packed=np.packbits(small.reshape(-1),bitorder='little').tobytes()
 raw=b'WATR'+struct.pack('<II',4096,4096)+packed
 (root/'resources/water-mask.bin').write_bytes(gzip.compress(raw,mtime=0))
 preview=Image.fromarray(np.uint8(small)*255)
-preview.resize((1024,1024)).save(root/'release/water-mask-preview.png')
+preview_dir=root/'release/checks/water-mask'
+preview_dir.mkdir(parents=True,exist_ok=True)
+preview.resize((1024,1024)).save(preview_dir/'water-mask-preview.png')
 print('Source SHA256:',hashlib.sha256(source.read_bytes()).hexdigest())
 print('Water cells:',int(small.sum()),'Compressed bytes:',(root/'resources/water-mask.bin').stat().st_size)

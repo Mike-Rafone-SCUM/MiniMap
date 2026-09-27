@@ -1,37 +1,30 @@
 using System;
 using System.Drawing;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace ScumMiniMap {
     internal sealed class CopyKeyReminderDialog : Form {
         // Same order as AppLanguage. Keep the reminder usable before Settings opens.
         static readonly string[][] Lines={
-            new[]{"Check coordinate-copy key","Please check that Copy Coordinates in SCUM is set to \\ (backslash). If you already use a different key, set the same key in MiniMap Settings.","Do not show again","OK"},
-            new[]{"Comprobar tecla de coordenadas","Comprobá que la tecla para copiar coordenadas en SCUM sea \\ (barra invertida). Si ya usás otra tecla, configurá esa misma tecla en los ajustes de MiniMap.","No volver a mostrar","Aceptar"},
-            new[]{"Vérifier la touche des coordonnées","Vérifiez que la touche de copie des coordonnées dans SCUM est \\ (barre oblique inverse). Si vous utilisez une autre touche, choisissez la même dans les paramètres de MiniMap.","Ne plus afficher","OK"},
-            new[]{"Koordinaten-Kopiertaste prüfen","Prüfen Sie, ob die Taste zum Kopieren der Koordinaten in SCUM auf \\ (Backslash) eingestellt ist. Wenn Sie eine andere Taste verwenden, stellen Sie dieselbe Taste in den MiniMap-Einstellungen ein.","Nicht erneut anzeigen","OK"},
-            new[]{"Toets voor coördinaten controleren","Controleer of de toets voor het kopiëren van coördinaten in SCUM op \\ (backslash) staat. Gebruikt u een andere toets, stel dan dezelfde toets in bij de MiniMap-instellingen.","Niet meer tonen","OK"},
-            new[]{"Проверьте клавишу копирования координат","Убедитесь, что в SCUM для копирования координат назначена клавиша \\ (обратная косая черта). Если вы используете другую клавишу, назначьте её же в настройках MiniMap.","Больше не показывать","ОК"},
-            new[]{"检查坐标复制按键","请确认 SCUM 中的复制坐标按键设置为 \\（反斜杠）。如果您已使用其他按键，请在 MiniMap 设置中使用相同按键。","不再显示","确定"},
-            new[]{"Koordinat kopyalama tuşunu kontrol edin","SCUM'da koordinat kopyalama tuşunun \\ (ters eğik çizgi) olarak ayarlandığını kontrol edin. Başka bir tuş kullanıyorsanız MiniMap ayarlarında da aynı tuşu seçin.","Bir daha gösterme","Tamam"},
-            new[]{"تحقق من مفتاح نسخ الإحداثيات","تأكد من ضبط مفتاح نسخ الإحداثيات في SCUM على \\ (الشرطة المائلة العكسية). إذا كنت تستخدم مفتاحًا آخر، فاضبط المفتاح نفسه في إعدادات MiniMap.","عدم الإظهار مرة أخرى","موافق"},
-            new[]{"Verificar tecla de coordenadas","Confira se a tecla de copiar coordenadas no SCUM está definida como \\ (barra invertida). Se você já usa outra tecla, defina a mesma tecla nas configurações do MiniMap.","Não mostrar novamente","OK"}
+            new[]{"Check coordinate-copy key","The default is Num / (numpad divide). Set Copy location in SCUM to the same key. If you use a different key or have no numpad, capture it in MiniMap Settings.","Do not show again","OK"},
+            new[]{"Comprobar tecla de coordenadas","La tecla predeterminada es Num / (división del teclado numérico). Asigná Copiar ubicación en SCUM a la misma tecla. Si usás otra tecla o no tenés teclado numérico, capturala en los ajustes de MiniMap.","No volver a mostrar","Aceptar"},
+            new[]{"Vérifier la touche des coordonnées","La touche par défaut est Num / (division du pavé numérique). Affectez Copier la position dans SCUM à la même touche. Si vous utilisez une autre touche ou n’avez pas de pavé numérique, capturez-la dans les paramètres de MiniMap.","Ne plus afficher","OK"},
+            new[]{"Koordinaten-Kopiertaste prüfen","Standard ist Num / (Division auf dem Ziffernblock). Legen Sie in SCUM dieselbe Taste für Position kopieren fest. Wenn Sie eine andere Taste verwenden oder keinen Ziffernblock haben, erfassen Sie sie in den MiniMap-Einstellungen.","Nicht erneut anzeigen","OK"},
+            new[]{"Toets voor coördinaten controleren","Standaard is Num / (delen op het numerieke toetsenblok). Stel in SCUM dezelfde toets in voor Locatie kopiëren. Gebruik je een andere toets of heb je geen numeriek toetsenblok, leg die dan vast in de MiniMap-instellingen.","Niet meer tonen","OK"},
+            new[]{"Проверьте клавишу копирования координат","По умолчанию используется Num / (деление на цифровом блоке). Назначьте эту же клавишу для копирования координат в SCUM. Если используете другую клавишу или у вас нет цифрового блока, задайте ее в настройках MiniMap.","Больше не показывать","ОК"},
+            new[]{"检查坐标复制按键","默认按键为 Num /（数字键盘除号）。请在 SCUM 中将复制位置设为同一按键。如果您使用其他按键或键盘没有数字键盘，请在 MiniMap 设置中捕获该按键。","不再显示","确定"},
+            new[]{"Koordinat kopyalama tuşunu kontrol edin","Varsayılan tuş Num / (sayısal tuş takımında bölme). SCUM'da Konumu kopyala işlevini aynı tuşa atayın. Farklı bir tuş kullanıyorsanız veya sayısal tuş takımınız yoksa tuşu MiniMap Ayarları'nda yakalayın.","Bir daha gösterme","Tamam"},
+            new[]{"تحقق من مفتاح نسخ الإحداثيات","المفتاح الافتراضي هو Num / (القسمة على لوحة الأرقام). عيّن المفتاح نفسه لنسخ الموقع في SCUM. إذا كنت تستخدم مفتاحًا آخر أو لا توجد لوحة أرقام، فالتقطه في إعدادات MiniMap.","عدم الإظهار","موافق"},
+            new[]{"Verificar tecla de coordenadas","A tecla padrão é Num / (divisão do teclado numérico). Atribua Copiar localização à mesma tecla no SCUM. Se usar outra tecla ou não tiver teclado numérico, capture-a nas configurações do MiniMap.","Não mostrar novamente","OK"}
         };
         static string Line(int index) { return Lines[(int)Localization.Current][index]; }
-        static Image LoadKeyReference() {
-            using(var stream=Assembly.GetExecutingAssembly().GetManifestResourceStream("copy-location-key.jpg")) {
-                if(stream==null) return null;
-                using(var decoded=Image.FromStream(stream)) return new Bitmap(decoded);
-            }
-        }
         readonly CheckBox doNotShowAgain;
         internal bool DoNotShowAgain { get { return doNotShowAgain.Checked; } }
 
         internal CopyKeyReminderDialog() {
             Text=Line(0);
-            ClientSize=new Size(700,570);
-            MinimumSize=new Size(620,570);
+            ClientSize=new Size(700,250);
+            MinimumSize=new Size(620,250);
             StartPosition=FormStartPosition.CenterScreen;
             FormBorderStyle=FormBorderStyle.FixedDialog;
             MaximizeBox=false; MinimizeBox=false; ShowIcon=false;
@@ -44,28 +37,25 @@ namespace ScumMiniMap {
 
             var message=new Label {
                 Text=Line(1),
-                AutoSize=false,Location=new Point(24,24),Size=new Size(652,92),
+                AutoSize=false,Location=new Point(24,24),Size=new Size(652,118),
                 TextAlign=rightToLeft?ContentAlignment.MiddleRight:ContentAlignment.MiddleLeft
             };
-            var keyReference=LoadKeyReference();
-            if(keyReference!=null) {
-                var picture=new PictureBox {
-                    Image=keyReference, SizeMode=PictureBoxSizeMode.Zoom,
-                    Location=new Point(24,124), Size=new Size(652,390),
-                    BorderStyle=BorderStyle.FixedSingle, BackColor=Color.Black
-                };
-                Controls.Add(picture);
-            }
+            var keyLabel=new Label {
+                Text="Num /",
+                AutoSize=false,Location=new Point(24,148),Size=new Size(150,44),
+                TextAlign=ContentAlignment.MiddleCenter,BackColor=Color.FromArgb(40,48,56),
+                ForeColor=Color.FromArgb(255,184,77),Font=new Font("Segoe UI",16f,FontStyle.Bold)
+            };
             doNotShowAgain=new CheckBox {
                 Text=Line(2),
-                AutoSize=false,Location=new Point(24,522),Size=new Size(520,32),
+                AutoSize=false,Location=new Point(24,202),Size=new Size(520,28),
                 ForeColor=ForeColor
             };
             var okay=new Button {
                 Text=Line(3),
-                DialogResult=DialogResult.OK,Location=new Point(554,522),Size=new Size(122,32)
+                DialogResult=DialogResult.OK,Location=new Point(554,200),Size=new Size(122,32)
             };
-            Controls.Add(message); Controls.Add(doNotShowAgain); Controls.Add(okay);
+            Controls.Add(message); Controls.Add(keyLabel); Controls.Add(doNotShowAgain); Controls.Add(okay);
             AcceptButton=okay;
         }
     }

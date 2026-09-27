@@ -6,8 +6,13 @@ $output=Join-Path $root 'release\performance-test'
 New-Item -ItemType Directory -Path $output -Force | Out-Null
 $compiler=Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 $sources=& (Join-Path $PSScriptRoot 'Get-MiniMapSources.ps1')
+$tilePack=Join-Path $root 'resources\map-tiles.bin'
+$scumMapPack=Join-Path $root 'resources\scummap.bin'
+$zonesPack=Join-Path $root 'resources\zones.tsv'
 $exe=Join-Path $output ($Label+'-probe.exe')
-& $compiler /nologo /optimize+ /target:exe /platform:x64 /main:MapPerformanceProbe "/out:$exe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll @sources (Join-Path $root 'tests\MapPerformanceProbe.cs')
+& $compiler /nologo /optimize+ /target:exe /platform:x64 /main:MapPerformanceProbe "/out:$exe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll "/resource:$tilePack,map-tiles.bin" "/resource:$scumMapPack,scummap.bin" "/resource:$zonesPack,zones.tsv" @sources (Join-Path $root 'tests\MapPerformanceProbe.cs')
 if($LASTEXITCODE -ne 0) { throw 'Benchmark compilation failed.' }
-& $exe (Join-Path $root 'resources') | Tee-Object -FilePath (Join-Path $output ($Label+'.csv'))
+$dataFolder=Join-Path $output ($Label+'-data')
+New-Item -ItemType Directory -Path $dataFolder -Force | Out-Null
+& $exe $dataFolder | Tee-Object -FilePath (Join-Path $output ($Label+'.csv'))
 if($LASTEXITCODE -ne 0) { throw 'Benchmark failed.' }

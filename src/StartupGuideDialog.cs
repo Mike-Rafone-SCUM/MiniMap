@@ -4,7 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace ScumMiniMap {
-    public delegate void KeybindSaveHandler(int mapKey, int chatKey, int copyModKey, int copyKey);
+    public delegate void KeybindSaveHandler(int mapKey, int chatKey, int copyModKey, int copyKey, int copyScanCode, int mapScanCode, int chatScanCode);
 
     public sealed class StartupGuideDialog : Form {
         readonly KeybindSaveHandler onSaveKeybinds;
@@ -17,8 +17,10 @@ namespace ScumMiniMap {
         // Keybind calibration state
         int mapKey = 0x4D;       // 'M'
         int chatKey = 0x54;      // 'T'
+        int mapScanCode,chatScanCode;
         int copyModKey = Program.DefaultCopyModifierKey;
         int copyKey = Program.DefaultCopyKey;
+        int copyScanCode;
         int captureTarget = 0;   // 0=none, 1=map, 2=chat, 3=mod, 4=copy
 
         Panel headerPanel;
@@ -55,11 +57,14 @@ namespace ScumMiniMap {
         public StartupGuideDialog(Action onSettingsChanged) : this(0x4D, 0x54, Program.DefaultCopyModifierKey, Program.DefaultCopyKey, null, onSettingsChanged) {}
 
         public StartupGuideDialog(int mapKey, int chatKey, int copyModKey, int copyKey,
-                                  KeybindSaveHandler onSaveKeybinds, Action onSettingsChanged = null) {
+                                  KeybindSaveHandler onSaveKeybinds, Action onSettingsChanged = null, int copyScanCode = 0, int mapScanCode = 0, int chatScanCode = 0) {
             this.mapKey = mapKey > 0 ? mapKey : 0x4D;
             this.chatKey = chatKey > 0 ? chatKey : 0x54;
             this.copyModKey = (copyModKey == 0 || IsModifierKey(copyModKey)) ? copyModKey : Program.DefaultCopyModifierKey;
             this.copyKey = copyKey > 0 && copyKey < 256 && !IsModifierKey(copyKey) ? copyKey : Program.DefaultCopyKey;
+            this.copyScanCode = PhysicalKeyCapture.Valid(copyScanCode) ? copyScanCode : 0;
+            this.mapScanCode = PhysicalKeyCapture.Valid(mapScanCode) ? mapScanCode : 0;
+            this.chatScanCode = PhysicalKeyCapture.Valid(chatScanCode) ? chatScanCode : 0;
             this.onSaveKeybinds = onSaveKeybinds;
             this.onSettingsChanged = onSettingsChanged;
 
@@ -95,9 +100,17 @@ namespace ScumMiniMap {
 
             switch (captureTarget) {
                 case 1:
+                    if(!PhysicalKeyCapture.TryGet(key,out mapScanCode)) {
+                        if(captureStatusLabel!=null) captureStatusLabel.Text=Localization.Get("WizardPressMap");
+                        e.Handled=true; e.SuppressKeyPress=true; return;
+                    }
                     mapKey = key;
                     break;
                 case 2:
+                    if(!PhysicalKeyCapture.TryGet(key,out chatScanCode)) {
+                        if(captureStatusLabel!=null) captureStatusLabel.Text=Localization.Get("WizardPressChat");
+                        e.Handled=true; e.SuppressKeyPress=true; return;
+                    }
                     chatKey = key;
                     break;
                 case 3:
@@ -108,7 +121,16 @@ namespace ScumMiniMap {
                     }
                     break;
                 case 4:
-                    if (!IsModifierKey(key)) copyKey = key;
+                    if (!IsModifierKey(key)) {
+                        int scan;
+                        if (!PhysicalKeyCapture.TryGet(key,out scan)) {
+                            if (captureStatusLabel != null) captureStatusLabel.Text = Localization.Get("WizardPressKeyPrompt");
+                            e.Handled = true; e.SuppressKeyPress = true;
+                            return;
+                        }
+                        copyKey = key;
+                        copyScanCode = scan;
+                    }
                     break;
             }
 
@@ -395,7 +417,7 @@ namespace ScumMiniMap {
 
         void CommitKeybindsIfApplicable() {
             if (onSaveKeybinds != null) {
-                onSaveKeybinds(mapKey, chatKey, copyModKey, copyKey);
+                onSaveKeybinds(mapKey, chatKey, copyModKey, copyKey, copyScanCode, mapScanCode, chatScanCode);
             }
         }
 
@@ -586,6 +608,7 @@ namespace ScumMiniMap {
                 chatKey = 0x54;
                 copyModKey = Program.DefaultCopyModifierKey;
                 copyKey = Program.DefaultCopyKey;
+                copyScanCode = 0;
                 captureTarget = 0;
                 if (chkNoMod != null) chkNoMod.Checked = true;
                 if (modCapBtn != null) modCapBtn.Enabled = false;

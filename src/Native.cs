@@ -17,6 +17,48 @@ namespace ScumMiniMap {
 
         [DllImport("user32.dll")] internal static extern IntPtr GetForegroundWindow();
 
+        [StructLayout(LayoutKind.Sequential)] internal struct WindowRect { public int Left,Top,Right,Bottom; }
+        [DllImport("user32.dll",SetLastError=true)] static extern bool GetWindowRect(IntPtr window,out WindowRect rect);
+
+        // SCUM's selected top navigation tab has a bright, rounded highlight
+        // regardless of the language used for its label. Sample just that
+        // narrow strip from the foreground game window; never OCR or retain it.
+        internal static bool HasSelectedTopNavigationTab(IntPtr gameWindow) {
+            if(gameWindow==IntPtr.Zero || GetForegroundWindow()!=gameWindow || !IsGameWindow(gameWindow)) return false;
+            WindowRect rect;
+            if(!GetWindowRect(gameWindow,out rect)) return false;
+            int width=rect.Right-rect.Left, height=rect.Bottom-rect.Top;
+            if(width<700 || height<300) return false;
+            int stripWidth=Math.Max(100,width/5);
+            int stripHeight=Math.Max(36,Math.Min(90,height/12));
+            try {
+                using(var captured=new System.Drawing.Bitmap(stripWidth,stripHeight))
+                using(var sample=new System.Drawing.Bitmap(200,20))
+                using(var sourceGraphics=System.Drawing.Graphics.FromImage(captured))
+                using(var graphics=System.Drawing.Graphics.FromImage(sample)) {
+                    sourceGraphics.CopyFromScreen(rect.Left,rect.Top,0,0,new System.Drawing.Size(stripWidth,stripHeight));
+                    graphics.DrawImage(captured,new System.Drawing.Rectangle(0,0,sample.Width,sample.Height));
+                    return HasSelectedTabHighlight(sample);
+                }
+            } catch { return false; }
+        }
+
+        internal static bool HasSelectedTabHighlight(System.Drawing.Bitmap sample) {
+            if(sample==null || sample.Width<40 || sample.Height<12) return false;
+            // Normalize brightness vertically: translated tab labels remain text,
+            // while the selected tab creates a broad, continuous light region.
+            int highlightedRows=0;
+            for(int y=1;y<sample.Height-1;y++) {
+                int brightPixels=0;
+                for(int x=0;x<sample.Width;x++) {
+                    System.Drawing.Color c=sample.GetPixel(x,y);
+                    if(c.R>170 && c.G>170 && c.B>170 && Math.Abs(c.R-c.G)<55 && Math.Abs(c.G-c.B)<55) brightPixels++;
+                }
+                if(brightPixels>=24) highlightedRows++;
+            }
+            return highlightedRows>=3;
+        }
+
 
 
         [DllImport("user32.dll")] internal static extern uint GetWindowThreadProcessId(IntPtr h,out uint pid);
@@ -76,6 +118,14 @@ namespace ScumMiniMap {
 
 
         [DllImport("user32.dll")] static extern uint MapVirtualKey(uint code,uint mapType);
+        [DllImport("user32.dll",EntryPoint="MapVirtualKeyExW")] static extern uint MapVirtualKeyEx(uint code,uint mapType,IntPtr layout);
+        internal static int ScanCodeToVirtualKey(int scanCode) {
+            if(!PhysicalKeyCapture.Valid(scanCode)) return 0;
+            uint encoded=(uint)((scanCode&0xFF)|((scanCode&0x100)!=0?0xE000:0));
+            uint mapped=MapVirtualKeyEx(encoded,3,GetKeyboardLayout(0));
+            return mapped>0 && mapped<256?(int)mapped:0;
+        }
+        [DllImport("user32.dll")] static extern IntPtr GetKeyboardLayout(uint threadId);
 
 
 
@@ -411,7 +461,7 @@ namespace ScumMiniMap {
 
 
 
-        static bool Key(uint vk,bool up) {
+        static bool Key(uint vk,bool up,int capturedScan=0,IntPtr layout=default(IntPtr)) {
 
 
 
@@ -419,15 +469,18 @@ namespace ScumMiniMap {
 
 
 
-            input.data.keyboard.vk=(ushort)vk;
+            input.data.keyboard.vk=0;
 
 
 
-            input.data.keyboard.scan=(ushort)MapVirtualKey(vk,0);
+            uint mapped=capturedScan!=0?(uint)capturedScan:MapVirtualKeyEx(vk,4,layout);
+            if(mapped==0) mapped=MapVirtualKey(vk,0);
+            if((mapped&0xFF)==0) { CopyError="Keyboard scan code is unavailable. Capture the Copy Location key in Settings."; return false; }
+            input.data.keyboard.scan=(ushort)(mapped&0xFF);
 
 
 
-            input.data.keyboard.flags=8u|(up?2u:0u);
+            input.data.keyboard.flags=8u|(up?2u:0u)|((mapped&0x100)!=0 || (mapped&0xFF00)!=0?1u:0u);
 
 
 
@@ -447,7 +500,7 @@ namespace ScumMiniMap {
 
 
 
-        internal static async Task<CopyResult> Copy(Func<bool> allowed,int copyModifierKey=0xA2,int copyKey=0x43,Func<bool> fullMapActive=null) {
+        internal static async Task<CopyResult> Copy(Func<bool> allowed,int copyModifierKey=0xA2,int copyKey=0x43,Func<bool> fullMapActive=null,int copyScanCode=0) {
 
 
 
@@ -460,11 +513,14 @@ namespace ScumMiniMap {
 
 
             IntPtr game=GetForegroundWindow();
+            uint processId;
+            IntPtr layout=GetKeyboardLayout(GetWindowThreadProcessId(game,out processId));
+            int effectiveCopyKey=copyKey;
 
 
 
             CopyInProgress=true;
-            activeCopy=new CopyInputLease(Key);
+            activeCopy=new CopyInputLease((vk,up)=>Key(vk,up,(int)vk==effectiveCopyKey?copyScanCode:0,layout));
 
 
 
@@ -474,7 +530,7 @@ namespace ScumMiniMap {
 
                 bool sent=await CopyChord(activeCopy.Send,Task.Delay,()=>!activeCopy.Cancelled && allowed() && GetForegroundWindow()==game && GameFocused()
                     && !UserTypingOrActive() && !CursorBlocksCopy(IsCursorVisible(),fullMapActive!=null && fullMapActive()) && !IsRightMouseDown() && !IsAltOrTabOrWinDown(),
-                    copyModifierKey,copyKey);
+                    copyModifierKey,effectiveCopyKey);
                 return ClassifyCopy(sent && !activeCopy.Cancelled,CopyError);
             } finally { CancelActiveCopy(); activeCopy=null; CopyInProgress=false; }
         }

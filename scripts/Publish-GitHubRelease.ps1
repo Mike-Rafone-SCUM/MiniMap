@@ -1,19 +1,21 @@
-﻿param(
+param(
     [Parameter(Mandatory=$true)][string]$Version
 )
 $ErrorActionPreference = 'Stop'
 if ($Version -notmatch '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$') { throw 'Expected X.Y.Z.' }
 $repo = 'Mike-Rafone-SCUM/MiniMap'
 Get-Command gh -ErrorAction Stop | Out-Null
-& gh auth status
-if ($LASTEXITCODE -ne 0) { throw 'Sign into GitHub CLI with gh auth login first.' }
 $repoRoot = Split-Path $PSScriptRoot -Parent
 $output = Join-Path $repoRoot "release\github\v$Version"
 $exe = Join-Path $output 'SkynettMiniMap.exe'
 $manifest = Join-Path $output 'update.txt'
 $zip = Join-Path $output 'SkynettMiniMap.zip'
+& powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File (Join-Path $repoRoot 'tests\Test-BuildArtifacts.ps1') -PackageDirectory $output -Configuration Release
+if ($LASTEXITCODE -ne 0) { throw 'Package integrity checks failed; nothing was uploaded.' }
 if ((Get-Item -LiteralPath $exe).VersionInfo.ProductVersion -ne $Version) { throw 'Executable version does not match the release tag.' }
-& (Join-Path $PSScriptRoot 'New-UpdateManifest.ps1') -Executable $exe -OutputPath $manifest
+$hash = (Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash.ToLowerInvariant()
+$expectedManifest = "schema=1`nversion=$Version`nsha256=$hash"
+if ([IO.File]::ReadAllText($manifest).Trim() -ne $expectedManifest) { throw 'Manifest does not match the built executable. Rebuild into a fresh directory.' }
 $notes = Join-Path $output 'release-notes.md'
 if (-not (Test-Path -LiteralPath $notes)) { throw "Prepare release notes at $notes first." }
 $existingRelease = $null
@@ -22,13 +24,16 @@ if ($LASTEXITCODE -eq 0 -and $existingRelease) {
     throw 'This version already exists. Published versions are immutable; choose a new version. Inspect any existing draft manually.'
 } else {
     # Creating a draft with both assets prevents clients seeing an incomplete release.
-    & gh release create "v$Version" $exe $manifest $zip --repo $repo --verify-tag --draft --title "SCUM MiniMap v$Version" --notes-file $notes
+    # GitHub creates the release tag against the existing remote default branch.
+    # This command never commits or pushes local source or operator files.
+    & gh release create "v$Version" $exe $manifest $zip --repo $repo --draft --title "SCUM MiniMap v$Version" --notes-file $notes
     if ($LASTEXITCODE -ne 0) { throw 'Draft creation failed. Inspect existing releases before retrying.' }
     $draft = & gh release view "v$Version" --repo $repo --json assets,isDraft | ConvertFrom-Json
     if ($LASTEXITCODE -ne 0 -or -not $draft.isDraft -or @($draft.assets).Count -ne 3) { throw 'Draft asset verification failed.' }
     foreach ($asset in @(@{name='SkynettMiniMap.exe';path=$exe},@{name='update.txt';path=$manifest},@{name='SkynettMiniMap.zip';path=$zip})) {
         $remote = @($draft.assets | Where-Object name -eq $asset.name)
-        if ($remote.Count -ne 1 -or $remote[0].size -ne (Get-Item -LiteralPath $asset.path).Length) { throw "Asset verification failed: $($asset.name)" }
+        $assetHash = (Get-FileHash -LiteralPath $asset.path -Algorithm SHA256).Hash.ToLowerInvariant()
+        if ($remote.Count -ne 1 -or $remote[0].size -ne (Get-Item -LiteralPath $asset.path).Length -or $remote[0].digest -ne "sha256:$assetHash") { throw "Asset verification failed: $($asset.name)" }
     }
     & gh release edit "v$Version" --repo $repo --draft=false --latest
     if ($LASTEXITCODE -ne 0) { throw 'Publishing failed.' }
@@ -43,5 +48,7 @@ for ($attempt=0; $attempt -lt 6; $attempt++) {
     Start-Sleep -Seconds 5
 }
 if (-not $verified) { throw 'Published latest manifest did not match. Check the release.' }
+& powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File (Join-Path $repoRoot 'tests\Test-LiveUpdater.ps1') -Version $Version -RequireLocalBinaryMatch
+if ($LASTEXITCODE -ne 0) { throw 'Published executable failed live updater verification.' }
 Write-Output "Published and verified https://github.com/$repo/releases/tag/v$Version"
 

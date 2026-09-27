@@ -90,6 +90,9 @@ namespace ScumMiniMap {
 
         // Filter state
         readonly HashSet<int> _disabledCategories = new HashSet<int>();
+        string cachedDisabledCategoriesKey;
+        string cachedFilterHashKey;
+        bool cachedFilterMasterEnabled;
         public bool MasterEnabled = true;
 
         public struct SettlementAnchor {
@@ -340,8 +343,8 @@ namespace ScumMiniMap {
         }
 
         public void SetCategoryEnabled(int catId, bool enabled) {
-            if (enabled) _disabledCategories.Remove(catId);
-            else _disabledCategories.Add(catId);
+            bool changed=enabled ? _disabledCategories.Remove(catId) : _disabledCategories.Add(catId);
+            if(changed) InvalidateFilterKey();
         }
 
         public bool IsSectionEnabled(string section) {
@@ -368,10 +371,11 @@ namespace ScumMiniMap {
         public void SetSectionEnabled(string section, bool enabled) {
             List<ScumMapCategory> cats;
             if (CategoriesBySection.TryGetValue(section, out cats)) {
+                bool changed=false;
                 foreach (var c in cats) {
-                    if (enabled) _disabledCategories.Remove(c.Id);
-                    else _disabledCategories.Add(c.Id);
+                    changed|=enabled ? _disabledCategories.Remove(c.Id) : _disabledCategories.Add(c.Id);
                 }
+                if(changed) InvalidateFilterKey();
             }
         }
 
@@ -380,6 +384,7 @@ namespace ScumMiniMap {
             if (!enabled) {
                 foreach (var c in Categories) _disabledCategories.Add(c.Id);
             }
+            InvalidateFilterKey();
         }
 
         public void ResetToDefaults() {
@@ -387,14 +392,27 @@ namespace ScumMiniMap {
             foreach (var c in Categories) {
                 if (!c.DefaultEnabled) _disabledCategories.Add(c.Id);
             }
+            InvalidateFilterKey();
+        }
+
+        void InvalidateFilterKey() {
+            cachedDisabledCategoriesKey=null;
+            cachedFilterHashKey=null;
+        }
+
+        string DisabledCategoriesKey() {
+            if(cachedDisabledCategoriesKey==null)
+                cachedDisabledCategoriesKey=string.Join(",",_disabledCategories.OrderBy(id=>id).Select(id=>id.ToString(CultureInfo.InvariantCulture)));
+            return cachedDisabledCategoriesKey;
         }
 
         public string GetDisabledCategoriesString() {
-            return "v2;"+string.Join(",", _disabledCategories.OrderBy(id=>id).Select(id => id.ToString(CultureInfo.InvariantCulture)));
+            return "v2;"+DisabledCategoriesKey();
         }
 
         public void ApplyDisabledCategoriesString(string value) {
             _disabledCategories.Clear();
+            InvalidateFilterKey();
             // Existing preferences predate habitats: leave these new, dense layers opt-in.
             if(value==null || !value.StartsWith("v2;",StringComparison.Ordinal))
                 foreach(var c in Categories) if(c.Id<0) _disabledCategories.Add(c.Id);
@@ -409,7 +427,11 @@ namespace ScumMiniMap {
         }
 
         public string GetFilterHashKey() {
-            return MasterEnabled + ":" + string.Join(",", _disabledCategories.OrderBy(x => x));
+            if(cachedFilterHashKey==null || cachedFilterMasterEnabled!=MasterEnabled) {
+                cachedFilterMasterEnabled=MasterEnabled;
+                cachedFilterHashKey=MasterEnabled+":"+DisabledCategoriesKey();
+            }
+            return cachedFilterHashKey;
         }
 
         public static string SectorOf(float x, float y) {

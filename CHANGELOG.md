@@ -8,6 +8,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-09-28
+
+This release consolidates the complete 1.4.x development line, from 1.4.0 through 1.4.103. The detailed version-by-version history remains below.
+
+### Added
+- Configurable SCUM map, chat and coordinate-copy bindings, plus MiniMap Settings, Add waypoint and Search shortcuts. Captured physical scan codes make bindings work across keyboard layouts; older virtual-key-only settings remain supported.
+- A layout-independent NumPad Divide default for coordinate copying, with setup guidance for keyboards without a number pad.
+- Optional voice navigation with selectable voice packs, volume and preview; route-based distance and turn cues, wrong-way detection and recalculation guidance.
+- Custom waypoint and zone tools, faction/custom zone layers, map import and per-custom-map `zones.tsv` and `customwaypoints.tsv` sidecars.
+- Route-history controls to clear the trail and set its visible duration from 1 to 240 minutes.
+- Destination-bearing indicators, player marker and heading-cone color controls, and expanded multilingual support for ten application languages.
+
+### Changed
+- Rebuilt map rendering around on-demand tiled assets, cached terrain, reusable drawing buffers and visible-area culling to reduce memory use and stutter.
+- Expanded routing across bridges and islands, added water-aware routing and improved road graph healing, snapping and route progress tracking.
+- Improved location sampling responsiveness, position smoothing, auto-zoom, and voice playback scheduling.
+- Refreshed the Settings, onboarding and key-rebinding interfaces, with persistent taskbar access and update/reset guidance.
+- Hardened updater version checks, downloaded-file integrity checks, installation rollback and release-package verification.
+
+### Fixed
+- Protect chat typing, Tab channel changes, inventory entry fields and other game UI input from MiniMap shortcuts and coordinate-copy injection; keep the NumPad Divide copy binding from being mistaken for slash-to-open-chat.
+- Match keyboard shortcuts by physical key position across localized layouts, and recover from missed key-up events or dropped keyboard hooks.
+- Keep full-map mouse input usable while returning focus to SCUM when the map closes; keep the compact minimap mouse-transparent.
+- Correct map rendering seams and clipping, route progress near crossing/parallel roads, waypoint dialog focus, zone editing and settings persistence.
+- Prevent false update prompts, startup reset loops, stale UI state, repeated route announcements and several rendering/audio/resource leaks.
+
 ## [1.4.103] - 2026-09-27
 
 ### Fixed

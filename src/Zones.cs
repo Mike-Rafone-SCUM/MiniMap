@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Drawing.Drawing2D;
+using System.Security.Cryptography;
 
 namespace ScumMiniMap {
     public static class SafeMapImage {
@@ -342,6 +343,74 @@ namespace ScumMiniMap {
             } finally { File.Delete(path);if(File.Exists(path+".tmp"))File.Delete(path+".tmp"); }
         }
     }
+    internal sealed class MapSidecarPaths {
+        internal readonly string DataFolder,Folder,ZonesPath,WaypointsPath,MapId;
+        MapSidecarPaths(string dataFolder,string id) {
+            DataFolder=dataFolder;
+            Folder=Path.Combine(dataFolder,"maps",id);
+            ZonesPath=Path.Combine(Folder,"zones.tsv");
+            WaypointsPath=Path.Combine(Folder,"customwaypoints.tsv");
+            MapId=id;
+            Directory.CreateDirectory(Folder);
+        }
+        internal static MapSidecarPaths ForMap(string dataFolder,string customMapPath) {
+            string id="default";
+            if(!string.IsNullOrWhiteSpace(customMapPath) && File.Exists(customMapPath)) {
+                using(SHA256 sha=SHA256.Create())
+                using(FileStream stream=File.OpenRead(customMapPath)) {
+                    id="custom-"+BitConverter.ToString(sha.ComputeHash(stream)).Replace("-","").ToLowerInvariant();
+                }
+            }
+            return new MapSidecarPaths(dataFolder,id);
+        }
+    }
+
+    internal static class MapSidecarStore {
+        internal static bool IsWaypoint(MapZone zone) { return zone!=null && zone.Points!=null && zone.Points.Length==1; }
+        static List<MapZone> LoadFile(string path) { return File.Exists(path)?ZoneStore.Load(path):new List<MapZone>(); }
+        internal static List<MapZone> Load(MapSidecarPaths paths,string legacyPath,bool includeBundledZones,out bool migrated) {
+            migrated=false;
+            bool hasScoped=File.Exists(paths.ZonesPath)||File.Exists(paths.WaypointsPath);
+            List<MapZone> polygons,waypoints;
+            string migrationMarker=Path.Combine(paths.DataFolder,"zones-migration-v1.txt");
+            string migratedMapId=null;
+            try { if(File.Exists(migrationMarker)) migratedMapId=File.ReadAllText(migrationMarker).Trim(); }
+            catch(IOException) {} catch(UnauthorizedAccessException) {}
+            bool legacyBelongsToThisMap=string.IsNullOrEmpty(migratedMapId) || string.Equals(migratedMapId,paths.MapId,StringComparison.Ordinal);
+            if(!hasScoped && File.Exists(legacyPath) && legacyBelongsToThisMap) {
+                List<MapZone> legacy=ZoneStore.Load(legacyPath);
+                polygons=legacy.Where(zone=>!IsWaypoint(zone)).ToList();
+                waypoints=legacy.Where(IsWaypoint).ToList();
+                Save(paths,polygons.Concat(waypoints).ToList());
+                File.WriteAllText(migrationMarker,paths.MapId);
+                migrated=true;
+            } else {
+                polygons=File.Exists(paths.ZonesPath)?ZoneStore.Load(paths.ZonesPath):
+                    (!hasScoped && includeBundledZones?ZoneStore.Load(paths.ZonesPath):new List<MapZone>());
+                waypoints=LoadFile(paths.WaypointsPath);
+                if(waypoints.Any(zone=>!IsWaypoint(zone))) throw new InvalidDataException("Custom waypoint file contains a non-waypoint entry.");
+            }
+            return polygons.Concat(waypoints).ToList();
+        }
+        internal static List<MapZone> Reload(MapSidecarPaths paths) {
+            List<MapZone> polygons=File.Exists(paths.ZonesPath)?ZoneStore.Load(paths.ZonesPath):new List<MapZone>();
+            List<MapZone> waypoints=LoadFile(paths.WaypointsPath);
+            if(waypoints.Any(zone=>!IsWaypoint(zone))) throw new InvalidDataException("Custom waypoint file contains a non-waypoint entry.");
+            return polygons.Concat(waypoints).ToList();
+        }
+        internal static void Save(MapSidecarPaths paths,List<MapZone> all) {
+            SaveFiles(paths.ZonesPath,paths.WaypointsPath,all);
+        }
+        internal static void SaveFiles(string zonesPath,string waypointsPath,List<MapZone> all) {
+            if(all==null) throw new InvalidDataException("No map data was provided.");
+            if(all.Count>ZoneStore.MaxZones) throw new InvalidDataException("Too many map annotations to save.");
+            List<MapZone> polygons=all.Where(zone=>!IsWaypoint(zone)).ToList();
+            List<MapZone> waypoints=all.Where(IsWaypoint).ToList();
+            ZoneStore.Save(zonesPath,polygons);
+            ZoneStore.Save(waypointsPath,waypoints);
+        }
+    }
+
     public sealed class ZoneEditor:Form {
         readonly MapCanvas source=new MapCanvas(),target=new MapCanvas();
         readonly Image map;
@@ -361,6 +430,7 @@ namespace ScumMiniMap {
         readonly string path;
         readonly Action<List<MapZone>> saved;
         readonly List<MapZone> zones;
+        readonly List<MapZone> preservedWaypoints;
         PointF s1,s2,m1,m2;
         int step;
         Color color=Color.OrangeRed;
@@ -585,8 +655,8 @@ namespace ScumMiniMap {
             }
         }
 
-        public ZoneEditor(Image map,List<MapZone> existing,string path,Action<List<MapZone>> saved) {
-            this.map=map;this.path=path;this.saved=saved;zones=new List<MapZone>();
+        public ZoneEditor(Image map,List<MapZone> existing,string path,Action<List<MapZone>> saved,List<MapZone> preservedWaypoints=null) {
+            this.map=map;this.path=path;this.saved=saved;this.preservedWaypoints=preservedWaypoints==null?new List<MapZone>():preservedWaypoints.Select(zone=>zone.Clone()).ToList();zones=new List<MapZone>();
             if(map!=null && (map.Width>2048 || map.Height>2048)) {
                 int maxDim=2048;
                 float s=Math.Min((float)maxDim/map.Width,(float)maxDim/map.Height);
@@ -652,7 +722,11 @@ namespace ScumMiniMap {
             save.Click+=(s,e)=> {
                 if(busy)return;
                 if(draft.Count>0) { MessageBox.Show(this,Localization.Get("ZeDraftWarning"));return; }
-                try { ZoneStore.Save(path,zones);saved(zones.Select(z=>z.Clone()).ToList());DialogResult=DialogResult.OK;Close(); }
+                try {
+                    string waypointPath=Path.Combine(Path.GetDirectoryName(path),"customwaypoints.tsv");
+                    MapSidecarStore.SaveFiles(path,waypointPath,zones.Concat(preservedWaypoints).ToList());
+                    saved(zones.Select(z=>z.Clone()).ToList());DialogResult=DialogResult.OK;Close();
+                }
                 catch(InvalidDataException ex) { MessageBox.Show(this,Localization.T("ZeSaveZonesError",ex.Message)); }
                 catch(IOException ex) { MessageBox.Show(this,Localization.T("ZeSaveZonesError",ex.Message)); }catch(UnauthorizedAccessException ex) { MessageBox.Show(this,ex.Message); }
             };
