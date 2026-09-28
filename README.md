@@ -1,6 +1,6 @@
-# SCUM MiniMap v1.5.0
+# SCUM MiniMap v1.5.1
 
-SCUM MiniMap is an external map overlay and navigation utility for SCUM, made for the Skynett community. It displays player coordinates, heading, elevation, road routes, points of interest, and custom waypoints. It does not read game memory or inject DLLs; this is not an official anticheat certification.
+SCUM MiniMap is an external map overlay and navigation utility for SCUM, made for the Skynett community. It displays player location, heading, road routes, points of interest, and custom waypoints. It does not read game memory or inject DLLs; this is not an official anticheat certification.
 
 Run `SkynettMiniMap.exe` from the extracted release directory. High-resolution map artwork, road networks, and over 8,000 categorized ScumMap points of interest across 106 categories are embedded directly into the executable.
 
@@ -25,17 +25,17 @@ Close the restart prompt to let the update helper replace the executable and res
 
 ### Discord support
 
-Join the [SCUM MiniMap Discord](https://discord.gg/MYzcGaFDMn) for downloads, release notices, guides, and support in English, Spanish (Argentina), French, German, Dutch, Russian, Chinese, Turkish, and Arabic. Select your preferred languages in **Channels & Roles** or through the Welcome gateway buttons. The app's language setting is separate from Discord's language selection.
+Join the [SCUM MiniMap Discord](https://discord.gg/MYzcGaFDMn) for downloads, release notices, guides, and support. Official information is in English; translation buttons provide private translations on demand. Localised community chats are also available. The app's language setting is separate from Discord.
 
 ---
 
-## Copy-key setup in v1.4.8
+## Copy-key setup
 
-The new MiniMap default is **backslash (`\`) without a modifier**. In SCUM controls, manually bind **Copy location** to that same key. MiniMap cannot change SCUM's controls. If your keyboard layout differs, capture the matching key in MiniMap's setup guide, or choose another unused single key in both apps.
+The default for new installations is **Num / (number-pad divide) without a modifier**. In SCUM controls, manually bind **Copy location** to that same key. MiniMap cannot change SCUM's controls. If your keyboard has no number pad, choose another unused single key in SCUM and capture it in MiniMap's setup guide or key wizard.
 
 Existing saved bindings are preserved. When switching from Ctrl+C, select **Single key without modifier** in MiniMap as well. Single-key tracking supports a 250 ms interval without injecting Ctrl; Ctrl+C remains supported at a minimum one-second interval. Actual updates depend on SCUM supplying coordinates.
 
-On ABNT2 and other non-US keyboards, the physical backslash key may use a different Windows key code. MiniMap now resolves its default backslash binding through SCUM's active keyboard layout. For a custom binding, use **Capture** beside Copy Location in MiniMap's key wizard: it saves the physical scan code of the key you press and sends that same key to SCUM. If the marker still does not move, bind an unused key such as **F11** in SCUM and capture F11 in MiniMap. Existing saved bindings remain intact until you change them.
+On ABNT2 and other non-US keyboards, use **Capture** beside Copy Location in MiniMap's key wizard: it saves the physical scan code of the key you press and sends that same key to SCUM. Map, Chat and MiniMap shortcuts also support physical-key capture. Existing saved bindings remain intact until you change them.
 
 ## Optional voice navigation (work in progress)
 
@@ -65,11 +65,11 @@ Pressing <kbd>M</kbd> during gameplay seamlessly transitions the minimap into a 
 * **Full Monitor Height & Centering:** Unconstrained display geometry detection expands the overlay to the full display height (1080p, 1152p, 1440p, 4K) and horizontally centers it (`(ScreenWidth - ScreenHeight) / 2`), leaving peripheral HUD elements (health, stamina, speedometer) visible.
 * **Mouse Wheel Zoom & Pan:** Roll the mouse wheel while viewing the full map to zoom smoothly from 1.0x up to 16.0x towards the cursor. Click and drag with the left mouse button to pan across the island. Right-click opens map actions, including resetting the view and adding a custom waypoint at the clicked location.
 * **Floating Opacity Slider:** An interactive glass pill at the top-right corner allows adjusting overlay opacity in real time from 20% to 100%, letting you see through the overlay directly into the game environment.
-* **Non-Activating Window Hit-Testing:** Interacting with the map (zooming, panning, sliding opacity) uses non-activating hit testing so SCUM never loses keyboard focus or gameplay responsiveness.
+* **Mouse Input:** The compact minimap passes mouse input through to the game. The expanded map can activate temporarily for zooming, panning and opacity controls, then returns focus to SCUM when closed.
 * **Smart Auto-Restore:** Restores normal minimap dimensions and position when pressing <kbd>M</kbd> again, pressing <kbd>Esc</kbd>, or switching away from the game. Cursor hiding alone does not close the overlay.
 
 ### Custom Waypoints & Search List Management
-* **Save at Current Location (Insert Key):** Press <kbd>Insert</kbd> while playing to capture your current GPS coordinates. An input dialog immediately captures keyboard focus to let you name the location, saving it persistently to `zones.tsv` with a cyan marker.
+* **Save at Current Location (Insert by default):** Use the Add waypoint shortcut while playing to capture your current GPS coordinates. A dialog lets you name the location, saving it in the current map's `customwaypoints.tsv` with a cyan marker.
 * **List Management & Right-Click Deletion:** Open the waypoint list (<kbd>Delete</kbd> key) to search, navigate to, or manage locations. Right-clicking any custom waypoint displays a context menu to delete it, or highlight it and press <kbd>Delete</kbd>.
 * **Proximity Clearing:** Pressing <kbd>Insert</kbd> within 50 meters of an existing custom waypoint prompts you to delete it directly in the field.
 * **SCUM Key Rebinding Wizard:** Settings can capture every SCUM binding used by MiniMap: Map, Chat, and the coordinate-copy modifier/key. This prevents custom bindings such as Ctrl for free look from moving the camera during tracking.
@@ -86,7 +86,7 @@ Pressing <kbd>M</kbd> during gameplay seamlessly transitions the minimap into a 
 * **Independent Border & Label Controls:** Toggle POI text names (`ShowZoneLabels`) independently from colored zone borders (`ShowZones`).
 
 ### Interface Languages
-Choose English, Argentine Spanish, French, German, Dutch, Russian, Simplified Chinese, Turkish, or Arabic in Settings without restarting. The initial language follows your system language; untranslated labels fall back to English.
+Choose English, Argentine Spanish, French, German, Dutch, Russian, Simplified Chinese, Turkish, Arabic, or Brazilian Portuguese in Settings without restarting. The initial language follows your system language. All ten UI catalogues are checked for matching keys and formatting placeholders during builds.
 
 ### Custom Map Textures & Zone Import
 * Supports a custom `map.png` texture in `%LocalAppData%\ScumMiniMap`. Each map image receives an isolated profile under `maps\<map-id>\` with separate `zones.tsv` polygons and `customwaypoints.tsv` waypoints. Map IDs are derived from the image contents, so replacing `map.png` with another upload automatically switches to that map's saved annotations.
@@ -110,7 +110,7 @@ Existing saved layouts are retained. Opening the full map does not replace your 
 | <kbd>Mouse Wheel</kbd> | Full Map | Zoom in and out smoothly (1.0x to 16.0x toward cursor) |
 | <kbd>Left Click + Drag</kbd> | Full Map | Pan across the map (when zoomed in) or drag opacity slider |
 | <kbd>Right Click</kbd> | Full Map | Open map actions: add custom waypoint here, reset zoom, or clear active GPS waypoint |
-| <kbd>Home</kbd> | Any | Open / Close Settings panel |
+| <kbd>Home</kbd> | Any | Open or restore Settings; Escape, Done or Close dismisses it |
 | <kbd>Delete</kbd> | Any | Open Waypoint Search & Destination Navigation |
 | <kbd>End</kbd> | Any | Show / Hide Minimap Overlay |
 | <kbd>Insert</kbd> | In-Game | Save custom waypoint at current GPS position |

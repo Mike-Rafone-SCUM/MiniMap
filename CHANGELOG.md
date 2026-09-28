@@ -8,6 +8,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.5.1] - 2026-09-28
+
+### Changed
+- Removed the nonfunctional Show player elevation setting and its unused persistence/cache state. Localised the full-map history toggles using the same strings as Settings.
+- Removed obsolete water-transit rendering and route fields, unused input wrappers, redundant key-wizard state and the unused copy-key screenshot resource.
+- Consolidated physical-key names, modifier validation, conflict detection and copy-key invocation across setup, Settings and regression checks.
+- Moved reminder, voice and copy-binding translations into the main localisation catalogue. Completed zone-layer, shortcut, history and update-reset translations in all ten languages.
+- Updated help and sidebar hints for configured shortcuts and per-map annotation storage. Added translation completeness and placeholder checks to the shared build checks, alongside bridge and water-avoidance regressions.
+
+### Fixed
+- Clear stale physical scan codes when reloading older settings or resetting setup bindings; retain the previous binding when a capture attempt fails.
+- Reject conflicting setup bindings before saving, while allowing navigation back to correct them.
+- Use one mouse-passthrough policy during both overlay handle creation and subsequent updates.
+
 ## [1.5.0] - 2026-09-28
 
 This release consolidates the complete 1.4.x development line, from 1.4.0 through 1.4.103. The detailed version-by-version history remains below.
