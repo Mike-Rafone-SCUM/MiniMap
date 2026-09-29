@@ -7,6 +7,44 @@ using System.Linq;
 using ScumMiniMap;
 
 static class MapRenderingTests {
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    static extern int GetWindowLong(IntPtr window,int index);
+    static void CheckOverlayMouseInteraction() {
+        using(var overlay=new OverlayWindow(()=>{},()=>{},z=>{},()=>{})) {
+            IntPtr handle=overlay.Handle;
+            Check((GetWindowLong(handle,-20)&0x20)!=0,"New overlay passes gameplay clicks through");
+            overlay.SetGameFocus(false);
+            Check((GetWindowLong(handle,-20)&0x20)==0,"Desktop compact map receives clicks for dragging and resizing");
+            Point location=new Point(100,120);
+            overlay.Location=location;
+            Action<string,int,int> mouse=(name,x,y)=>typeof(System.Windows.Forms.Control).GetMethod(name,BindingFlags.Instance|BindingFlags.NonPublic).Invoke(overlay,
+                new object[]{new System.Windows.Forms.MouseEventArgs(System.Windows.Forms.MouseButtons.Left,1,x,y,0)});
+            mouse("OnMouseDown",80,90);
+            mouse("OnMouseMove",120,110);
+            Check(overlay.Location==new Point(140,140),"Dragging compact map moves the real window by pointer displacement");
+            mouse("OnMouseUp",80,90);
+            mouse("OnMouseMove",150,160);
+            Check(overlay.Location==new Point(140,140) && !overlay.Capture,"Releasing drag ends capture and stops window movement");
+            mouse("OnMouseDown",80,90);
+            overlay.SetGameFocus(true);
+            mouse("OnMouseMove",150,160);
+            Check(overlay.Location==new Point(140,140) && !overlay.Capture,"Gameplay focus cancels an active drag");
+            overlay.SetGameFocus(false);
+            location=overlay.Location;
+            overlay.FullMapMode=true;
+            Check((GetWindowLong(handle,-20)&0x20)==0,"Full map receives desktop pointer input");
+            overlay.FullMapMode=false;
+            Check(overlay.Location==location && (GetWindowLong(handle,-20)&0x20)==0,"Closing full map restores position and compact-map interaction");
+            foreach(bool fullMap in new[]{false,true}) {
+                overlay.FullMapMode=fullMap;
+                overlay.SetGameFocus(true);
+                Check(((GetWindowLong(handle,-20)&0x20)!=0)==!fullMap,"Only compact mode passes gameplay mouse input through, full map="+fullMap);
+                Check((GetWindowLong(handle,-20)&0x8000000)!=0,"Map retains non-activating style, full map="+fullMap);
+                overlay.SetGameFocus(false);
+                Check((GetWindowLong(handle,-20)&0x20)==0,"Leaving gameplay restores mouse interaction, full map="+fullMap);
+            }
+        }
+    }
     const BindingFlags Hidden=BindingFlags.NonPublic|BindingFlags.Instance;
     static void Set(object obj,string name,object value) { obj.GetType().GetField(name,Hidden).SetValue(obj,value); }
     static void Check(bool ok,string message) { if(!ok) throw new Exception(message); Console.WriteLine("PASS: "+message); }
@@ -70,6 +108,7 @@ static class MapRenderingTests {
         stream.Position=0; return stream;
     }
     [STAThread] static void Main(string[] args) {
+        CheckOverlayMouseInteraction();
         Check(Program.DataFolderName==(Program.IsTestBuild?"ScumMiniMap-ResponsivenessTest":"ScumMiniMap"),"Build uses the appropriate data folder");
         Check(Native.CursorBlocksCopy(true,false) && !Native.CursorBlocksCopy(true,true) && !Native.CursorBlocksCopy(false,false),"Visible cursor blocks ordinary menus but permits full-map tracking");
         PointF edge,direction;
@@ -79,7 +118,7 @@ static class MapRenderingTests {
                 Math.Sign(edge.X-120)==Math.Sign(target.X) && Math.Sign(edge.Y-134)==Math.Sign(target.Y),"Destination edge follows map bearing within "+(circle?"circular":"rectangular")+" bounds: "+target);
         }
         Check(!MapWindow.TryDestinationEdge(new RectangleF(0,0,240,240),true,PointF.Empty,PointF.Empty,out edge,out direction),"No arbitrary direction when player and destination coincide");
-        Check(Program.TrackingIntervalMs(250)==250 && Program.TrackingIntervalMs(700)==700,"Fast tracking cadence has no stationary slowdown and respects slower settings");
+        Check(Program.TrackingIntervalMs(250,0)==250 && Program.TrackingIntervalMs(700,0)==700,"Fast tracking cadence has no stationary slowdown and respects slower settings");
         Check(Program.UpgradeCopyInterval(1000,false)==250 && Program.UpgradeCopyInterval(1000,true)==1000 &&
             Program.UpgradeCopyInterval(3000,false)==3000,"Previous default upgrades once without replacing slower custom intervals");
         var motion=new MapMotion();

@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 
 Write-Host "Compiling standalone bridge and water avoidance test harness..."
 
@@ -7,6 +7,7 @@ $miniRoot = Split-Path $PSScriptRoot -Parent
 $testBin = Join-Path $PSScriptRoot 'Test-BridgeAndWaterRouter.exe'
 $routerCs = Join-Path $miniRoot 'src\RoadRouter.cs'
 $roadsBin = Join-Path $miniRoot 'resources\roads.bin'
+$waterBin = Join-Path $miniRoot 'resources\water-mask.bin'
 
 $harnessCs = @"
 using System;
@@ -26,14 +27,10 @@ public class TestHarness {
         PointF pRailIsland = new PointF(0.49277f, 0.77264f);
         Console.WriteLine("\n--- Test 1: Diagonal Railway Bridge crossing ---");
         RoadRoute rRail = RoadRouter.Instance.FindRoute(pRailMain, pRailIsland);
-        Console.WriteLine(string.Format("Success: {0}, HasWaterTransit: {1}, Dist: {2:F1} m, Polyline pts: {3}",
-            rRail.Success, rRail.HasWaterTransit, rRail.TotalDistanceMeters, rRail.Polyline != null ? rRail.Polyline.Length : 0));
+        Console.WriteLine(string.Format("Success: {0}, Dist: {1:F1} m, Polyline pts: {2}",
+            rRail.Success, rRail.TotalDistanceMeters, rRail.Polyline != null ? rRail.Polyline.Length : 0));
         if (!rRail.Success) {
             Console.WriteLine("FAIL: Diagonal railway route failed.");
-            return 1;
-        }
-        if (rRail.HasWaterTransit) {
-            Console.WriteLine("FAIL: Diagonal railway bridge used multi-modal water transit instead of the bridge!");
             return 1;
         }
         if (rRail.TotalDistanceMeters > 1500) {
@@ -47,9 +44,9 @@ public class TestHarness {
         PointF pEastHwyIsland = new PointF(0.62606f, 0.79659f);
         Console.WriteLine("\n--- Test 2: Central-East Highway Bridge crossing ---");
         RoadRoute rHwy = RoadRouter.Instance.FindRoute(pEastHwyMain, pEastHwyIsland);
-        Console.WriteLine(string.Format("Success: {0}, HasWaterTransit: {1}, Dist: {2:F1} m, Polyline pts: {3}",
-            rHwy.Success, rHwy.HasWaterTransit, rHwy.TotalDistanceMeters, rHwy.Polyline != null ? rHwy.Polyline.Length : 0));
-        if (!rHwy.Success || rHwy.HasWaterTransit) {
+        Console.WriteLine(string.Format("Success: {0}, Dist: {1:F1} m, Polyline pts: {2}",
+            rHwy.Success, rHwy.TotalDistanceMeters, rHwy.Polyline != null ? rHwy.Polyline.Length : 0));
+        if (!rHwy.Success) {
             Console.WriteLine("FAIL: Central-East highway bridge route failed or used water.");
             return 1;
         }
@@ -61,9 +58,9 @@ public class TestHarness {
         PointF pWestIsland = new PointF(0.29397f, 0.82816f);
         Console.WriteLine("\n--- Test 3: West Rogoznica Bridge crossing ---");
         RoadRoute rWest = RoadRouter.Instance.FindRoute(pWestMain, pWestIsland);
-        Console.WriteLine(string.Format("Success: {0}, HasWaterTransit: {1}, Dist: {2:F1} m",
-            rWest.Success, rWest.HasWaterTransit, rWest.TotalDistanceMeters));
-        if (!rWest.Success || rWest.HasWaterTransit) {
+        Console.WriteLine(string.Format("Success: {0}, Dist: {1:F1} m",
+            rWest.Success, rWest.TotalDistanceMeters));
+        if (!rWest.Success) {
             Console.WriteLine("FAIL: West bridge route failed or used water.");
             return 1;
         }
@@ -74,9 +71,9 @@ public class TestHarness {
         PointF pIslandInterior = new PointF(0.29500f, 0.83500f); // Z island road, dry, near Rogoznica bridge S
         Console.WriteLine("\n--- Test 4: Mainland Interior -> South Island Interior ---");
         RoadRoute rCross = RoadRouter.Instance.FindRoute(pMainlandInterior, pIslandInterior);
-        Console.WriteLine(string.Format("Success: {0}, HasWaterTransit: {1}, Dist: {2:F1} m",
-            rCross.Success, rCross.HasWaterTransit, rCross.TotalDistanceMeters));
-        if (!rCross.Success || rCross.HasWaterTransit) {
+        Console.WriteLine(string.Format("Success: {0}, Dist: {1:F1} m",
+            rCross.Success, rCross.TotalDistanceMeters));
+        if (!rCross.Success) {
             Console.WriteLine("FAIL: Mainland-to-Island route used water transit instead of bridge!");
             return 1;
         }
@@ -87,9 +84,9 @@ public class TestHarness {
         PointF pOffroad2 = new PointF(0.60000f, 0.50000f);
         Console.WriteLine("\n--- Test 5: Off-road Mainland to Mainland ---");
         RoadRoute rOff = RoadRouter.Instance.FindRoute(pOffroad1, pOffroad2);
-        Console.WriteLine(string.Format("Success: {0}, HasWaterTransit: {1}, Dist: {2:F1} m",
-            rOff.Success, rOff.HasWaterTransit, rOff.TotalDistanceMeters));
-        if (!rOff.Success || rOff.HasWaterTransit) {
+        Console.WriteLine(string.Format("Success: {0}, Dist: {1:F1} m",
+            rOff.Success, rOff.TotalDistanceMeters));
+        if (!rOff.Success) {
             Console.WriteLine("FAIL: Mainland off-road route improperly used water transit!");
             return 1;
         }
@@ -101,14 +98,14 @@ public class TestHarness {
         foreach(float x in new[]{.411f,.414f,.417f}) {
             PointF start=new PointF(x,.455f),target=new PointF(.439f,.463f);
             RoadRoute route=RoadRouter.Instance.FindRoute(start,target);
-            if(!route.Success || route.HasWaterTransit || !water.AllowsConnector(start,route.RoadEntryPoint) || !water.AllowsConnector(route.RoadExitPoint,target)) {
+            if(!route.Success || !water.AllowsConnector(start,route.RoadEntryPoint) || !water.AllowsConnector(route.RoadExitPoint,target)) {
                 Console.WriteLine("FAIL: B2 shoreline route crossed mapped water or lost the dry alternative."); return 1;
             }
         }
         Console.WriteLine("PASS: B2 town routes use dry entry/exit connections.");
         PointF pOceanFar = new PointF(0.02000f, 0.50000f); // deep ocean, west edge
         RoadRoute rOcean = RoadRouter.Instance.FindRoute(pMainlandInterior, pOceanFar);
-        if (rOcean.Success || rOcean.HasWaterTransit) { Console.WriteLine("FAIL: Invented offshore road route."); return 1; }
+        if (rOcean.Success) { Console.WriteLine("FAIL: Invented offshore road route."); return 1; }
         RoadRoute formerSea=RoadRouter.Instance.FindRoute(pMainlandInterior,new PointF(.4f,.82f));
         if(formerSea.Success) { Console.WriteLine("FAIL: Old offshore test destination still accepted."); return 1; }
         PointF lake=new PointF(.418f,.487f);
@@ -127,7 +124,7 @@ $harnessPath = Join-Path $PSScriptRoot 'TestBridgeHarness.cs'
 [System.IO.File]::WriteAllText($harnessPath, $harnessCs, [System.Text.Encoding]::UTF8)
 
 try {
-    & $compiler /nologo /optimize+ /target:exe "/out:$testBin" /reference:System.Drawing.dll /reference:System.dll "/resource:$roadsBin,roads.bin" $routerCs $harnessPath
+    & $compiler /nologo /optimize+ /target:exe "/out:$testBin" /reference:System.Drawing.dll /reference:System.dll "/resource:$roadsBin,roads.bin" "/resource:$waterBin,water-mask.bin" $routerCs $harnessPath
     if ($LASTEXITCODE -ne 0) { throw "Compilation failed" }
 
     Write-Host "Running Test-BridgeAndWaterRouter.exe..."

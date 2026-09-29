@@ -6,7 +6,6 @@ $ErrorActionPreference = 'Stop'
 $buildRoot = Split-Path $PSScriptRoot -Parent
 $res = Join-Path $buildRoot 'resources'
 $tilePack = Join-Path $res 'map-tiles.bin'
-$mapSource = Join-Path $res 'map.png'
 $tileFormat = ''
 if (Test-Path -LiteralPath $tilePack) {
     $tileFile = [IO.File]::OpenRead($tilePack)
@@ -62,7 +61,6 @@ try {
     if (@($sources | Where-Object { $_ -eq $stampedPath }).Count -ne 1) { throw 'Expected exactly one main source file.' }
     $embedded = @('zones.tsv','roads.bin','water-mask.bin','scummap.bin' | ForEach-Object { '/resource:' + (Join-Path $res $_) + ',' + $_ })
     $embedded += '/resource:' + $tilePack + ',map-tiles.bin'
-    $embedded += '/resource:' + (Join-Path $res 'copy-location-key.jpg') + ',copy-location-key.jpg'
     $embedded += '/resource:' + (Join-Path $pack 'detect_zones.py') + ',detect_zones.py'
     $embedded += @(& (Join-Path $PSScriptRoot 'Get-VoiceResources.ps1'))
     $exe = Join-Path $stage $exeName

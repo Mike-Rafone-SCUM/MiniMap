@@ -9,6 +9,11 @@ static class ChatCopyRegressionTests {
         Console.WriteLine("PASS: "+message);
     }
     static void Main() {
+        bool probed=false;
+        Check(!Native.InventoryInputActive(false,()=>{ probed=true; return true; }) && !probed,
+            "Hidden gameplay cursor prevents bright scenery from locking tracking and M, without screen probing");
+        Check(Native.InventoryInputActive(true,()=>true),"Visible cursor and selected navigation tab protect inventory text input");
+        Check(!Native.InventoryInputActive(true,()=>false),"Visible cursor without a navigation highlight does not claim inventory input");
         using(var selectedTab=new Bitmap(200,20)) {
             using(Graphics g=Graphics.FromImage(selectedTab)) {
                 g.Clear(Color.Black);

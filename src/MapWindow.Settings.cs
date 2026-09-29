@@ -15,22 +15,23 @@ namespace ScumMiniMap {
         internal int CapturedScanCode { get; private set; }
         internal ShortcutCaptureDialog(string title,Func<int,int,string> validate) {
             this.validate=validate;
-            Text="Set "+title+" shortcut";
+            Text=Localization.T("ShortcutTitle",title);
             StartPosition=FormStartPosition.CenterParent;
             FormBorderStyle=FormBorderStyle.FixedDialog;
             MaximizeBox=false; MinimizeBox=false; ShowInTaskbar=false;
-            ClientSize=new Size(380,110);
-            instruction=new Label { Text="Press the key to use. Escape cancels.\nUse a single key without Ctrl, Alt, or Shift.",Dock=DockStyle.Fill,Padding=new Padding(12) };
+            ClientSize=new Size(460,150);
+            RightToLeft=Localization.Current==AppLanguage.Arabic?RightToLeft.Yes:RightToLeft.No;
+            instruction=new Label { Text=Localization.Get("ShortcutPrompt"),Dock=DockStyle.Fill,Padding=new Padding(12) };
             Controls.Add(instruction);
         }
         protected override bool ProcessCmdKey(ref Message msg,Keys keyData) {
             if((keyData&Keys.KeyCode)==Keys.Escape) { DialogResult=DialogResult.Cancel; return true; }
-            if((keyData&Keys.Modifiers)!=Keys.None) { instruction.Text="Use a single key without Ctrl, Alt, or Shift. Escape cancels."; return true; }
+            if((keyData&Keys.Modifiers)!=Keys.None) { instruction.Text=Localization.Get("ShortcutSingleKey")+"\n"+Localization.Get("ShortcutCancel"); return true; }
             int key=(int)(keyData&Keys.KeyCode);
             int scan;
-            if(!PhysicalKeyCapture.TryGet(key,out scan)) { instruction.Text="Press the key again so its physical position can be captured. Escape cancels."; return true; }
+            if(!PhysicalKeyCapture.TryGet(key,out scan)) { instruction.Text=Localization.Get("ShortcutRetry")+"\n"+Localization.Get("ShortcutCancel"); return true; }
             string error=validate(key,scan);
-            if(error!=null) { instruction.Text=error+"\nEscape cancels."; return true; }
+            if(error!=null) { instruction.Text=error+"\n"+Localization.Get("ShortcutCancel"); return true; }
             CapturedKey=key; CapturedScanCode=scan; DialogResult=DialogResult.OK;
             return true;
         }
@@ -41,15 +42,15 @@ namespace ScumMiniMap {
         bool SettingsVisible { get { return Visible && WindowState!=FormWindowState.Minimized; } }
         bool taskbarMinimized;
         void AddShortcutSettings(FlowLayoutPanel panel) {
-            panel.Controls.Add(new Label { Text="MiniMap shortcuts (single keys)",Width=365,Height=24 });
-            AddShortcutButton(panel,"Settings",()=>settingsShortcutKey,()=>settingsShortcutScanCode,(key,scan)=>{ settingsShortcutKey=key; settingsShortcutScanCode=scan; });
-            AddShortcutButton(panel,"Add waypoint",()=>pinShortcutKey,()=>pinShortcutScanCode,(key,scan)=>{ pinShortcutKey=key; pinShortcutScanCode=scan; });
-            AddShortcutButton(panel,"Search",()=>searchShortcutKey,()=>searchShortcutScanCode,(key,scan)=>{ searchShortcutKey=key; searchShortcutScanCode=scan; });
-            panel.Controls.Add(new Label { Text="Shortcuts are saved by physical key. Keep Num Lock in the same state for number-pad keys.",Width=365,Height=44 });
+            panel.Controls.Add(new Label { Text=Localization.Get("ShortcutHeading"),Width=365,Height=40 });
+            AddShortcutButton(panel,Localization.Get("Settings"),()=>settingsShortcutKey,()=>settingsShortcutScanCode,(key,scan)=>{ settingsShortcutKey=key; settingsShortcutScanCode=scan; });
+            AddShortcutButton(panel,Localization.Get("ShortcutWaypoint"),()=>pinShortcutKey,()=>pinShortcutScanCode,(key,scan)=>{ pinShortcutKey=key; pinShortcutScanCode=scan; });
+            AddShortcutButton(panel,Localization.Get("ShortcutSearch"),()=>searchShortcutKey,()=>searchShortcutScanCode,(key,scan)=>{ searchShortcutKey=key; searchShortcutScanCode=scan; });
+            panel.Controls.Add(new Label { Text=Localization.Get("ShortcutPhysicalHelp"),Width=365,Height=64 });
         }
 
         void AddShortcutButton(FlowLayoutPanel panel,string title,Func<int> read,Func<int> readScan,Action<int,int> write) {
-            Button button=new Button { Text=title+": "+KeyName(read()),Width=280 };
+            Button button=new Button { Text=title+": "+PhysicalKeyCapture.KeyName(read()),Width=280 };
             button.Click+=(s,e)=> {
                 shortcutCaptureOpen=true;
                 Native.CancelActiveCopy();
@@ -57,7 +58,7 @@ namespace ScumMiniMap {
                     using(var capture=new ShortcutCaptureDialog(title,(key,scan)=>ShortcutBindingError(key,read(),scan,readScan()))) {
                         if(capture.ShowDialog(this)!=DialogResult.OK) return;
                         write(capture.CapturedKey,capture.CapturedScanCode);
-                        button.Text=title+": "+KeyName(read());
+                        button.Text=title+": "+PhysicalKeyCapture.KeyName(read());
                         fallbackKeysArmed=false;
                         SettingsChanged();
                         SaveSettings();
@@ -68,19 +69,17 @@ namespace ScumMiniMap {
         }
 
         static bool ValidShortcutKey(int key) {
-            return key>=0x20 && key<0xFF && !IsModifierKey(key) && key!=0x5D
+            return key>=0x20 && key<0xFF && !PhysicalKeyCapture.IsModifierKey(key) && key!=0x5D
                 && key!=0xBF && key!=0x6F && key!=0x23 && key!=0x21 && key!=0x22;
         }
 
-        string ShortcutKeyError(int key,int previous) { return ShortcutBindingError(key,previous,0,0); }
-
         string ShortcutBindingError(int key,int previous,int scan,int previousScan) {
-            if(!ValidShortcutKey(key)) return "Choose a single key other than a reserved chat or map control.";
-            if(PhysicalKeyCapture.SameBinding(key,scan,scumMapKey,scumMapScanCode) || PhysicalKeyCapture.SameBinding(key,scan,scumChatKey,scumChatScanCode) || PhysicalKeyCapture.SameBinding(key,scan,scumCopyKey,scumCopyScanCode)) return "That key is already used by SCUM Map, Chat, or Copy location.";
+            if(!ValidShortcutKey(key)) return Localization.Get("ShortcutReserved");
+            if(PhysicalKeyCapture.SameBinding(key,scan,scumMapKey,scumMapScanCode) || PhysicalKeyCapture.SameBinding(key,scan,scumChatKey,scumChatScanCode) || PhysicalKeyCapture.SameBinding(key,scan,scumCopyKey,scumCopyScanCode)) return Localization.Get("ShortcutScumConflict");
             if(!PhysicalKeyCapture.SameBinding(key,scan,previous,previousScan) &&
                 (PhysicalKeyCapture.SameBinding(key,scan,settingsShortcutKey,settingsShortcutScanCode)
                 || PhysicalKeyCapture.SameBinding(key,scan,pinShortcutKey,pinShortcutScanCode)
-                || PhysicalKeyCapture.SameBinding(key,scan,searchShortcutKey,searchShortcutScanCode))) return "That key is already assigned to another MiniMap shortcut.";
+                || PhysicalKeyCapture.SameBinding(key,scan,searchShortcutKey,searchShortcutScanCode))) return Localization.Get("ShortcutConflict");
             return null;
         }
         void HandleTaskbarRestore(object sender,EventArgs args) {
@@ -222,6 +221,7 @@ namespace ScumMiniMap {
                 // Legacy settings contain only a virtual key. Never reuse a scan code from a previous load.
                 scumCopyScanCode=0;
                 scumMapScanCode=0; scumChatScanCode=0;
+                settingsShortcutScanCode=0; pinShortcutScanCode=0; searchShortcutScanCode=0;
                 string[] lines;
 
 
@@ -300,7 +300,7 @@ namespace ScumMiniMap {
 
 
 
-                            switch(key) { case "LocationHistory":locationHistory=b;break;case "LocationHistoryTimestamps":locationHistoryTimestamps=b;break;case "GridLabels":gridLabels=b;break;case "GridBorders":gridBorders=b;break;case "EdgeFade":edgeFade=b;break;case "ShowStatus":showStatus=b;break;case "ShowZones":showZones=b;break;case "AutoZoom":autoZoom=b;break;case "ShowHeading":showHeading=b;break;case "ShowCompass":showCompass=b;break;case "ShowElevation":showElevation=b;break;case "ZoneChime":zoneChime=b;break;case "ShowCustomWaypoints":showCustomWaypoints=b;break;case "ShowScumMap":showScumMap=b;break;case "ShowZoneLabels":showZoneLabels=b;break;case "SmartLabelLod":smartLabelLod=b;break;case "SidebarWildlifeExpanded":sidebarWildlifeExpanded=b;break;case "SidebarZonesExpanded":sidebarZonesExpanded=b;break; }
+                            switch(key) { case "LocationHistory":locationHistory=b;break;case "LocationHistoryTimestamps":locationHistoryTimestamps=b;break;case "GridLabels":gridLabels=b;break;case "GridBorders":gridBorders=b;break;case "EdgeFade":edgeFade=b;break;case "ShowStatus":showStatus=b;break;case "ShowZones":showZones=b;break;case "AutoZoom":autoZoom=b;break;case "ShowHeading":showHeading=b;break;case "ShowCompass":showCompass=b;break;case "ZoneChime":zoneChime=b;break;case "ShowCustomWaypoints":showCustomWaypoints=b;break;case "ShowScumMap":showScumMap=b;break;case "ShowZoneLabels":showZoneLabels=b;break;case "SmartLabelLod":smartLabelLod=b;break;case "SidebarWildlifeExpanded":sidebarWildlifeExpanded=b;break;case "SidebarZonesExpanded":sidebarZonesExpanded=b;break; }
                         }
                         if(key=="DisabledZoneLayers") {
                             disabledZoneLayers.Clear();
@@ -353,7 +353,7 @@ namespace ScumMiniMap {
 
 
 
-                            switch(key) { case "LocationHistoryMinutes":locationHistoryMinutes=Math.Max(1,Math.Min(240,n));break;case "Width":width=Math.Max(240,Math.Min(800,n));break;case "Height":height=Math.Max(240,Math.Min(800,n));break;case "Left":left=n;break;case "Top":top=n;break;case "Opacity":mapOpacity=Math.Max(30,Math.Min(100,n));break;case "FullMapOpacity":fullMapOpacity=Math.Max(20,Math.Min(100,n));break;case "GridOpacity":gridOpacity=Math.Max(0,Math.Min(100,n));break;case "LabelSize":labelSize=Math.Max(6,Math.Min(24,n));break;case "MaxZoom":maxZoom=Math.Max(4,Math.Min(32,n));break;case "AutoZoomMin":autoZoomMin=Math.Max(1,Math.Min(32,n));break;case "AutoZoomMax":autoZoomMax=Math.Max(1,Math.Min(32,n));break;case "ZoomStep":zoomStepPercent=Math.Max(10,Math.Min(100,n));break;case "CopyInterval":copyIntervalMs=ReadCopyInterval(n,true);break;case "CopyIntervalMs":copyIntervalMs=ReadCopyInterval(n,false);break;case "ScumMapKey":if(n>0&&n<256)scumMapKey=n;break;case "ScumChatKey":if(n>0&&n<256)scumChatKey=n;break;case "ScumCopyModifierKey":if(n==0||IsModifierKey(n))scumCopyModifierKey=n;break;case "ScumCopyKey":if(n>0&&n<256&&!IsModifierKey(n))scumCopyKey=n;break; }
+                            switch(key) { case "LocationHistoryMinutes":locationHistoryMinutes=Math.Max(1,Math.Min(240,n));break;case "Width":width=Math.Max(240,Math.Min(800,n));break;case "Height":height=Math.Max(240,Math.Min(800,n));break;case "Left":left=n;break;case "Top":top=n;break;case "Opacity":mapOpacity=Math.Max(30,Math.Min(100,n));break;case "FullMapOpacity":fullMapOpacity=Math.Max(20,Math.Min(100,n));break;case "GridOpacity":gridOpacity=Math.Max(0,Math.Min(100,n));break;case "LabelSize":labelSize=Math.Max(6,Math.Min(24,n));break;case "MaxZoom":maxZoom=Math.Max(4,Math.Min(32,n));break;case "AutoZoomMin":autoZoomMin=Math.Max(1,Math.Min(32,n));break;case "AutoZoomMax":autoZoomMax=Math.Max(1,Math.Min(32,n));break;case "ZoomStep":zoomStepPercent=Math.Max(10,Math.Min(100,n));break;case "CopyInterval":copyIntervalMs=ReadCopyInterval(n,true);break;case "CopyIntervalMs":copyIntervalMs=ReadCopyInterval(n,false);break;case "ScumMapKey":if(n>0&&n<256)scumMapKey=n;break;case "ScumChatKey":if(n>0&&n<256)scumChatKey=n;break;case "ScumCopyModifierKey":if(n==0||PhysicalKeyCapture.IsModifierKey(n))scumCopyModifierKey=n;break;case "ScumCopyKey":if(n>0&&n<256&&!PhysicalKeyCapture.IsModifierKey(n))scumCopyKey=n;break; }
 
 
 
@@ -408,11 +408,11 @@ namespace ScumMiniMap {
 
 
 
-                if(scumCopyModifierKey!=0 && !IsModifierKey(scumCopyModifierKey)) scumCopyModifierKey=Program.DefaultCopyModifierKey;
+                if(scumCopyModifierKey!=0 && !PhysicalKeyCapture.IsModifierKey(scumCopyModifierKey)) scumCopyModifierKey=Program.DefaultCopyModifierKey;
 
 
 
-                if(scumCopyKey<=0 || scumCopyKey>=256 || IsModifierKey(scumCopyKey)) scumCopyKey=Program.DefaultCopyKey;
+                if(scumCopyKey<=0 || scumCopyKey>=256 || PhysicalKeyCapture.IsModifierKey(scumCopyKey)) scumCopyKey=Program.DefaultCopyKey;
                 if(!PhysicalKeyCapture.Valid(scumCopyScanCode)) scumCopyScanCode=0;
                 if(!PhysicalKeyCapture.Valid(scumMapScanCode)) scumMapScanCode=0;
                 if(!PhysicalKeyCapture.Valid(scumChatScanCode)) scumChatScanCode=0;
@@ -480,7 +480,7 @@ namespace ScumMiniMap {
 
 
 
-            try { File.WriteAllLines(settingsPath+".tmp",new string[]{"Welcomed=True","TrackingRevision=1","LocationHistory="+locationHistory,"LocationHistoryTimestamps="+locationHistoryTimestamps,"LocationHistoryMinutes="+locationHistoryMinutes,"SuppressCopyKeyReminder="+suppressCopyKeyReminder,"VoiceEnabled="+voiceEnabled,"VoiceName="+voiceName,"VoiceVolume="+voiceVolume,"Language="+Localization.CurrentCode,"GridLabels="+gridLabels,"GridBorders="+gridBorders,"GridOpacity="+gridOpacity,"ShowZones="+showZones,"LabelSize="+labelSize,"EdgeFade="+edgeFade,"Shape="+overlayShape,"ShowHeading="+showHeading,"ShowCompass="+showCompass,"ShowElevation="+showElevation,"ZoneChime="+zoneChime,"CopyIntervalMs="+copyIntervalMs,"AutoZoom="+autoZoom,"AutoZoomMin="+autoZoomMin,"AutoZoomMax="+autoZoomMax,"ShowStatus="+showStatus,"StatusPos="+statusPos,"Opacity="+mapOpacity,"FullMapOpacity="+fullMapOpacity,"Width="+minimapBounds.Width,"Height="+minimapBounds.Height,"Left="+minimapBounds.Left,"Top="+minimapBounds.Top,"Zoom="+zoom.ToString(CultureInfo.InvariantCulture),"MaxZoom="+maxZoom,"ZoomStep="+zoomStepPercent,"ScumMapKey="+scumMapKey,"ScumChatKey="+scumChatKey,"ScumCopyModifierKey="+scumCopyModifierKey,"ScumCopyKey="+scumCopyKey,"ShowCustomWaypoints="+showCustomWaypoints,"ShowScumMap="+showScumMap,"ScumMapDisabledCats="+(scumMap!=null?scumMap.GetDisabledCategoriesString():""),"ShowZoneLabels="+showZoneLabels,"SmartLabelLod="+smartLabelLod,"SidebarWildlifeExpanded="+sidebarWildlifeExpanded,"SidebarZonesExpanded="+sidebarZonesExpanded,"DisabledZoneLayers="+string.Join(";",disabledZoneLayers),"RouteColor="+ColorTranslator.ToHtml(routeGuidanceColor),"PlayerColor="+ColorTranslator.ToHtml(playerConeColor)});
+            try { File.WriteAllLines(settingsPath+".tmp",new string[]{"Welcomed=True","TrackingRevision=1","LocationHistory="+locationHistory,"LocationHistoryTimestamps="+locationHistoryTimestamps,"LocationHistoryMinutes="+locationHistoryMinutes,"SuppressCopyKeyReminder="+suppressCopyKeyReminder,"VoiceEnabled="+voiceEnabled,"VoiceName="+voiceName,"VoiceVolume="+voiceVolume,"Language="+Localization.CurrentCode,"GridLabels="+gridLabels,"GridBorders="+gridBorders,"GridOpacity="+gridOpacity,"ShowZones="+showZones,"LabelSize="+labelSize,"EdgeFade="+edgeFade,"Shape="+overlayShape,"ShowHeading="+showHeading,"ShowCompass="+showCompass,"ZoneChime="+zoneChime,"CopyIntervalMs="+copyIntervalMs,"AutoZoom="+autoZoom,"AutoZoomMin="+autoZoomMin,"AutoZoomMax="+autoZoomMax,"ShowStatus="+showStatus,"StatusPos="+statusPos,"Opacity="+mapOpacity,"FullMapOpacity="+fullMapOpacity,"Width="+minimapBounds.Width,"Height="+minimapBounds.Height,"Left="+minimapBounds.Left,"Top="+minimapBounds.Top,"Zoom="+zoom.ToString(CultureInfo.InvariantCulture),"MaxZoom="+maxZoom,"ZoomStep="+zoomStepPercent,"ScumMapKey="+scumMapKey,"ScumChatKey="+scumChatKey,"ScumCopyModifierKey="+scumCopyModifierKey,"ScumCopyKey="+scumCopyKey,"ShowCustomWaypoints="+showCustomWaypoints,"ShowScumMap="+showScumMap,"ScumMapDisabledCats="+(scumMap!=null?scumMap.GetDisabledCategoriesString():""),"ShowZoneLabels="+showZoneLabels,"SmartLabelLod="+smartLabelLod,"SidebarWildlifeExpanded="+sidebarWildlifeExpanded,"SidebarZonesExpanded="+sidebarZonesExpanded,"DisabledZoneLayers="+string.Join(";",disabledZoneLayers),"RouteColor="+ColorTranslator.ToHtml(routeGuidanceColor),"PlayerColor="+ColorTranslator.ToHtml(playerConeColor)});
 
 
 

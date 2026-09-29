@@ -12,6 +12,32 @@ namespace ScumMiniMap {
 
 
     static class Native {
+        // Opt-in, bounded input diagnostics. Never record general typing or clipboard data.
+        internal static readonly bool InputTraceEnabled=Environment.GetEnvironmentVariable("SCUM_MINIMAP_INPUT_TRACE")=="1";
+        internal static readonly UIntPtr CopyInputTag=new UIntPtr(0x53434D4Du);
+        static readonly System.Collections.Concurrent.ConcurrentQueue<string> inputTrace=new System.Collections.Concurrent.ConcurrentQueue<string>();
+        static readonly DateTime inputTraceEnd=DateTime.UtcNow.AddMinutes(2);
+        static int traceWriting;
+        static readonly System.Threading.Timer inputTraceTimer=InputTraceEnabled?
+            new System.Threading.Timer(_=>FlushInputTrace(),null,1000,1000):null;
+        internal static void TraceInput(string text) {
+            if(!InputTraceEnabled || DateTime.UtcNow>inputTraceEnd || inputTrace.Count>=2048) return;
+            inputTrace.Enqueue(DateTime.UtcNow.ToString("o")+" "+text);
+        }
+        static void FlushInputTrace() {
+            if(System.Threading.Interlocked.Exchange(ref traceWriting,1)!=0) return;
+            try {
+                var lines=new System.Collections.Generic.List<string>();
+                string line;
+                while(inputTrace.TryDequeue(out line)) lines.Add(line);
+                if(lines.Count>0) {
+                    string folder=System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),Program.DataFolderName);
+                    System.IO.Directory.CreateDirectory(folder);
+                    System.IO.File.AppendAllLines(System.IO.Path.Combine(folder,"input-trace.log"),lines);
+                }
+            } catch(System.IO.IOException) {} catch(UnauthorizedAccessException) {}
+            finally { System.Threading.Interlocked.Exchange(ref traceWriting,0); }
+        }
 
 
 
@@ -25,6 +51,16 @@ namespace ScumMiniMap {
         // narrow strip from the foreground game window; never OCR or retain it.
         internal static bool HasSelectedTopNavigationTab(IntPtr gameWindow) {
             if(gameWindow==IntPtr.Zero || GetForegroundWindow()!=gameWindow || !IsGameWindow(gameWindow)) return false;
+            return InventoryInputActive(IsCursorVisible(),()=>DetectSelectedTopNavigationTab(gameWindow));
+        }
+
+        internal static bool InventoryInputActive(bool cursorVisible,Func<bool> detectSelectedTab) {
+            // Inventory/navigation menus expose the cursor. Bright scenery alone
+            // must never lock tracking and map shortcuts during normal gameplay.
+            return cursorVisible && detectSelectedTab();
+        }
+
+        static bool DetectSelectedTopNavigationTab(IntPtr gameWindow) {
             WindowRect rect;
             if(!GetWindowRect(gameWindow,out rect)) return false;
             int width=rect.Right-rect.Left, height=rect.Bottom-rect.Top;
@@ -236,10 +272,6 @@ namespace ScumMiniMap {
                 || (GetAsyncKeyState(0x5C)&0x8000)!=0;
         }
 
-        internal static void EmergencyReleaseModifier(int modifierKey=0xA2) {
-            if(modifierKey<=0) return;
-            try { Key((uint)modifierKey, true); } catch {}
-        }
 
 
 
@@ -337,7 +369,7 @@ namespace ScumMiniMap {
 
         internal static bool CursorBlocksCopy(bool cursorVisible,bool fullMapActive) { return cursorVisible && !fullMapActive; }
 
-        internal static bool KeysBusy(int copyModifierKey=0xA2,int copyKey=0x43,bool fullMapActive=false) {
+        internal static bool KeysBusy(int copyModifierKey,int copyKey,bool fullMapActive=false) {
 
 
 
@@ -470,6 +502,7 @@ namespace ScumMiniMap {
 
 
             input.data.keyboard.vk=0;
+            input.data.keyboard.extra=CopyInputTag;
 
 
 
@@ -485,10 +518,13 @@ namespace ScumMiniMap {
 
 
             bool ok=SendInput(1,new INPUT[]{input},Marshal.SizeOf(typeof(INPUT)))==1;
+            int inputError=ok?0:Marshal.GetLastWin32Error();
+            if(InputTraceEnabled) TraceInput("copy vk="+vk+" scan="+input.data.keyboard.scan+" flags="+input.data.keyboard.flags+" sent="+ok+
+                " W="+((GetAsyncKeyState(0x57)&0x8000)!=0)+" Shift="+((GetAsyncKeyState(0x10)&0x8000)!=0));
 
 
 
-            if(!ok) CopyError="SendInput failed (Windows error "+Marshal.GetLastWin32Error()+").";
+            if(!ok) CopyError="SendInput failed (Windows error "+inputError+").";
 
 
 
@@ -500,7 +536,7 @@ namespace ScumMiniMap {
 
 
 
-        internal static async Task<CopyResult> Copy(Func<bool> allowed,int copyModifierKey=0xA2,int copyKey=0x43,Func<bool> fullMapActive=null,int copyScanCode=0) {
+        internal static async Task<CopyResult> Copy(Func<bool> allowed,int copyModifierKey,int copyKey,Func<bool> fullMapActive=null,int copyScanCode=0) {
 
 
 
@@ -539,33 +575,33 @@ namespace ScumMiniMap {
             return sent?CopyResult.Sent:(string.IsNullOrEmpty(error)?CopyResult.Cancelled:CopyResult.Failed);
         }
 
-        // Leave Control down across game frames on both sides of C. Never send C
+        // Hold the configured modifier across game frames around the copy key. Never press it
         // after a focus/user-input change, and retain failed key-ups for cleanup.
-        internal static async Task<bool> CopyChord(Func<uint,bool,bool> key,Func<int,Task> delay,Func<bool> canPressC,int modifierKey=0xA2,int copyKey=0x43) {
-            bool ctrl=false,c=false,ok=false;
+        internal static async Task<bool> CopyChord(Func<uint,bool,bool> key,Func<int,Task> delay,Func<bool> canPressCopy,int modifierKey,int copyKey) {
+            bool modifierHeld=false,copyHeld=false,ok=false;
             try {
                 if(modifierKey>0) {
-                    ctrl=key((uint)modifierKey,false);
-                    if(ctrl) {
+                    modifierHeld=key((uint)modifierKey,false);
+                    if(modifierHeld) {
                         await delay(60);
-                        if(canPressC()) {
-                            c=key((uint)copyKey,false);
-                            if(c) {
+                        if(canPressCopy()) {
+                            copyHeld=key((uint)copyKey,false);
+                            if(copyHeld) {
                                 await delay(30);
                                 ok=key((uint)copyKey,true);
-                                c=!ok;
+                                copyHeld=!ok;
                             }
                             await delay(80);
                         }
                     }
                 } else {
-                    if(canPressC()) {
-                        c=key((uint)copyKey,false);
-                        if(c) {
+                    if(canPressCopy()) {
+                        copyHeld=key((uint)copyKey,false);
+                        if(copyHeld) {
                             // Cover more than one game frame without a modifier or a trailing hold.
                             await delay(60);
                             ok=key((uint)copyKey,true);
-                            c=!ok;
+                            copyHeld=!ok;
                         }
                     }
                 }
@@ -576,7 +612,7 @@ namespace ScumMiniMap {
 
 
 
-                if(c) { bool released=key((uint)copyKey,true); c=!released; ok=false; }
+                if(copyHeld) { bool released=key((uint)copyKey,true); copyHeld=!released; ok=false; }
 
 
 
@@ -584,11 +620,11 @@ namespace ScumMiniMap {
 
 
 
-                if(c) { key((uint)copyKey,true); ok=false; }
+                if(copyHeld) { key((uint)copyKey,true); ok=false; }
 
 
 
-                if(ctrl && !key((uint)modifierKey,true)) { key((uint)modifierKey,true); ok=false; }
+                if(modifierHeld && !key((uint)modifierKey,true)) { key((uint)modifierKey,true); ok=false; }
 
 
 

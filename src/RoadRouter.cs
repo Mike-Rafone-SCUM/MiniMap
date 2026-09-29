@@ -57,10 +57,6 @@ namespace ScumMiniMap {
         public double RoadDistanceMeters;
         public double EntryDistanceMeters;
         public double ExitDistanceMeters;
-        public bool HasWaterTransit;
-        public PointF WaterDeparturePoint;
-        public PointF WaterArrivalPoint;
-        public double WaterDistanceMeters;
     }
 
     public class RoadRouter {

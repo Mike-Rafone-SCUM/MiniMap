@@ -348,7 +348,7 @@ public void SaveSettingsPreview(string path) {
 
 
 
-            if(!Native.CopyChord(record,noDelay,()=>true).GetAwaiter().GetResult()
+            if(!Native.CopyChord(record,noDelay,()=>true,0xA2,0x43).GetAwaiter().GetResult()
 
 
 
@@ -360,7 +360,7 @@ public void SaveSettingsPreview(string path) {
 
 
 
-            if(Native.CopyChord(record,noDelay,()=>false).GetAwaiter().GetResult()
+            if(Native.CopyChord(record,noDelay,()=>false,0xA2,0x43).GetAwaiter().GetResult()
 
 
 
@@ -376,7 +376,7 @@ public void SaveSettingsPreview(string path) {
 
 
 
-            if(Native.CopyChord((key,up)=> { record(key,up); if(key==67 && up && !failedRelease) { failedRelease=true; return false; } return true; },noDelay,()=>true).GetAwaiter().GetResult()
+            if(Native.CopyChord((key,up)=> { record(key,up); if(key==67 && up && !failedRelease) { failedRelease=true; return false; } return true; },noDelay,()=>true,0xA2,0x43).GetAwaiter().GetResult()
 
 
 
@@ -388,7 +388,7 @@ public void SaveSettingsPreview(string path) {
 
 
 
-            if(Native.CopyChord((key,up)=> { record(key,up); return key!=162 || up; },noDelay,()=>true).GetAwaiter().GetResult()
+            if(Native.CopyChord((key,up)=> { record(key,up); return key!=162 || up; },noDelay,()=>true,0xA2,0x43).GetAwaiter().GetResult()
 
 
 
@@ -400,7 +400,7 @@ public void SaveSettingsPreview(string path) {
 
 
 
-            if(Native.CopyChord((key,up)=> { record(key,up); return key!=67 || up; },noDelay,()=>true).GetAwaiter().GetResult()
+            if(Native.CopyChord((key,up)=> { record(key,up); return key!=67 || up; },noDelay,()=>true,0xA2,0x43).GetAwaiter().GetResult()
 
 
 
@@ -416,7 +416,7 @@ public void SaveSettingsPreview(string path) {
 
 
 
-            if(Native.CopyChord((key,up)=> { record(key,up); if(key==162 && up && !ctrlReleaseFailed) { ctrlReleaseFailed=true; return false; } return true; },noDelay,()=>true).GetAwaiter().GetResult()
+            if(Native.CopyChord((key,up)=> { record(key,up); if(key==162 && up && !ctrlReleaseFailed) { ctrlReleaseFailed=true; return false; } return true; },noDelay,()=>true,0xA2,0x43).GetAwaiter().GetResult()
 
 
 
@@ -432,7 +432,7 @@ public void SaveSettingsPreview(string path) {
 
 
 
-                Native.CopyChord(record,ms=> { if(ms==30)throw new InvalidOperationException("Simulated interruption"); return Task.FromResult(0); },()=>true).GetAwaiter().GetResult();
+                Native.CopyChord(record,ms=> { if(ms==30)throw new InvalidOperationException("Simulated interruption"); return Task.FromResult(0); },()=>true,0xA2,0x43).GetAwaiter().GetResult();
 
 
 

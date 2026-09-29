@@ -8,6 +8,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.5.3] - 2026-09-29
+
+### Fixed
+- Let the configured map key reach SCUM so its own map opens underneath the overlay. Keep game keyboard focus while the expanded overlay accepts mouse input, and retain map state across Alt-Tab.
+- Drag the compact map with explicit mouse capture while Settings is open. Hovering no longer opens a menu over the drag target; use right-click for the desktop context menu.
+- Includes the v1.5.2 fix for false inventory detection blocking player tracking and the map key, plus desktop dragging/resizing and gameplay click-through.
+
+### Setup and compatibility
+- **NumPad / (number-pad divide), without a modifier, is the default Copy Location key for new installations. SCUM's Copy Location binding MUST match MiniMap.** Existing saved bindings are retained; configure both applications when changing keys.
+- Fixed the interaction with MusicalScumbag by moving that application's auto-walk shortcut from NumPad / to F10. MusicalScumbag users need its corrected build as well; MiniMap alone cannot update the other application's hotkeys.
+- Includes the earlier localisation, key-capture/reset consistency, and obsolete-code/settings cleanup from v1.5.1.
+
+## [1.5.2] - 2026-09-29
+
+### Fixed
+- Restore compact minimap dragging and resizing when SCUM is not focused, while retaining click-through during gameplay.
+- Require a visible cursor before detecting inventory navigation highlights, preventing bright gameplay scenery from blocking position tracking and the map shortcut.
+
 ## [1.5.1] - 2026-09-28
 
 ### Changed

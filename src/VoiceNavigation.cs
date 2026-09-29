@@ -186,7 +186,7 @@ namespace ScumMiniMap {
         }
         internal VoiceCue NextCue(RoadRoute current,PointF player) {
             NeedsReroute=false; CurrentCue=null; outsideCorridor=false;
-            if(current==null || !current.Success || current.HasWaterTransit || current.Polyline==null || current.Polyline.Length<2) return null;
+            if(current==null || !current.Success || current.Polyline==null || current.Polyline.Length<2) return null;
             if(!Object.ReferenceEquals(route,current)) {
                 route=current;
                 hasProjection=false;
@@ -256,7 +256,7 @@ namespace ScumMiniMap {
         }
         internal string[] Update(RoadRoute current,PointF player,DateTime now,bool busy=false) {
             VoiceCue cue=NextCue(current,player);
-            if(current==null || !current.Success || current.HasWaterTransit || current.Polyline==null || current.Polyline.Length<2) {
+            if(current==null || !current.Success || current.Polyline==null || current.Polyline.Length<2) {
                 outsideCorridor=false; WrongWay=false; backwardsMetres=0;
             }
             if(!outsideCorridor) { deviationSamples=0; deviationSince=DateTime.MinValue; }
@@ -265,7 +265,7 @@ namespace ScumMiniMap {
                 deviationPoint=player; deviationSamples++;
             }
             NeedsReroute=outsideCorridor && deviationSamples>=3 && (now-deviationSince).TotalSeconds>=.5;
-            TrackMovement(player,now,current!=null && current.Success && !current.HasWaterTransit && current.Polyline!=null && current.Polyline.Length>1);
+            TrackMovement(player,now,current!=null && current.Success && current.Polyline!=null && current.Polyline.Length>1);
             if(WrongWay) {
                 NeedsReroute=true;
                 if((now-lastWrongWarning).TotalSeconds>=12) {

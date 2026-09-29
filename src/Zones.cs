@@ -626,7 +626,7 @@ namespace ScumMiniMap {
             }) {
                 OverlayTheme.Frame(prompt, Localization.Get("ZeNewLayerTitle"), () => prompt.DialogResult = DialogResult.Cancel);
                 Label lbl = new Label { Left = 20, Top = 50, Width = 320, Text = Localization.Get("ZeNewLayerPrompt"), ForeColor = OverlayTheme.InkMuted, Font = new Font("Segoe UI", 9f) };
-                TextBox txt = new TextBox { Left = 20, Top = 76, Width = 320, Text = "Layer " + cboLayer.Items.Count, BackColor = OverlayTheme.Surface, ForeColor = OverlayTheme.Ink, BorderStyle = BorderStyle.FixedSingle, Font = new Font("Segoe UI", 9.5f) };
+            TextBox txt = new TextBox { Left = 20, Top = 76, Width = 320, Text = Localization.Get("ZeLayer") + " " + cboLayer.Items.Count, BackColor = OverlayTheme.Surface, ForeColor = OverlayTheme.Ink, BorderStyle = BorderStyle.FixedSingle, Font = new Font("Segoe UI", 9.5f) };
                 Button ok = new Button { Text = Localization.Get("Done"), Left = 170, Top = 114, Width = 80, Height = 30, DialogResult = DialogResult.OK, BackColor = OverlayTheme.Accent, ForeColor = Color.FromArgb(12, 12, 12), Font = new Font("Segoe UI", 9f, FontStyle.Bold), FlatStyle = FlatStyle.Flat, Cursor = Cursors.Hand };
                 ok.FlatAppearance.BorderColor = OverlayTheme.AccentHover;
                 Button cn = new Button { Text = Localization.Get("Cancel"), Left = 260, Top = 114, Width = 80, Height = 30, DialogResult = DialogResult.Cancel, BackColor = OverlayTheme.Surface, ForeColor = OverlayTheme.Ink, FlatStyle = FlatStyle.Flat, Cursor = Cursors.Hand };

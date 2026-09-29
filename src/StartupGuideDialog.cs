@@ -18,6 +18,8 @@ namespace ScumMiniMap {
         int mapKey = 0x4D;       // 'M'
         int chatKey = 0x54;      // 'T'
         int mapScanCode,chatScanCode;
+        readonly int settingsKey,waypointKey,searchKey;
+        readonly int settingsScan,waypointScan,searchScan;
         int copyModKey = Program.DefaultCopyModifierKey;
         int copyKey = Program.DefaultCopyKey;
         int copyScanCode;
@@ -57,11 +59,13 @@ namespace ScumMiniMap {
         public StartupGuideDialog(Action onSettingsChanged) : this(0x4D, 0x54, Program.DefaultCopyModifierKey, Program.DefaultCopyKey, null, onSettingsChanged) {}
 
         public StartupGuideDialog(int mapKey, int chatKey, int copyModKey, int copyKey,
-                                  KeybindSaveHandler onSaveKeybinds, Action onSettingsChanged = null, int copyScanCode = 0, int mapScanCode = 0, int chatScanCode = 0) {
+                                  KeybindSaveHandler onSaveKeybinds, Action onSettingsChanged = null, int copyScanCode = 0, int mapScanCode = 0, int chatScanCode = 0, int settingsKey = 0x24, int waypointKey = 0x2D, int searchKey = 0x2E, int settingsScan = 0, int waypointScan = 0, int searchScan = 0) {
+            this.settingsScan=settingsScan; this.waypointScan=waypointScan; this.searchScan=searchScan;
+            this.settingsKey=settingsKey; this.waypointKey=waypointKey; this.searchKey=searchKey;
             this.mapKey = mapKey > 0 ? mapKey : 0x4D;
             this.chatKey = chatKey > 0 ? chatKey : 0x54;
-            this.copyModKey = (copyModKey == 0 || IsModifierKey(copyModKey)) ? copyModKey : Program.DefaultCopyModifierKey;
-            this.copyKey = copyKey > 0 && copyKey < 256 && !IsModifierKey(copyKey) ? copyKey : Program.DefaultCopyKey;
+            this.copyModKey = (copyModKey == 0 || PhysicalKeyCapture.IsModifierKey(copyModKey)) ? copyModKey : Program.DefaultCopyModifierKey;
+            this.copyKey = copyKey > 0 && copyKey < 256 && !PhysicalKeyCapture.IsModifierKey(copyKey) ? copyKey : Program.DefaultCopyKey;
             this.copyScanCode = PhysicalKeyCapture.Valid(copyScanCode) ? copyScanCode : 0;
             this.mapScanCode = PhysicalKeyCapture.Valid(mapScanCode) ? mapScanCode : 0;
             this.chatScanCode = PhysicalKeyCapture.Valid(chatScanCode) ? chatScanCode : 0;
@@ -98,30 +102,38 @@ namespace ScumMiniMap {
                 return;
             }
 
+            if((captureTarget==1 || captureTarget==2 || captureTarget==4) && PhysicalKeyCapture.IsModifierKey(key)) {
+                if(captureStatusLabel!=null) captureStatusLabel.Text=Localization.Get("KeyWizardNonModifier");
+                e.Handled=true; e.SuppressKeyPress=true; return;
+            }
+
+            int capturedScan;
             switch (captureTarget) {
                 case 1:
-                    if(!PhysicalKeyCapture.TryGet(key,out mapScanCode)) {
-                        if(captureStatusLabel!=null) captureStatusLabel.Text=Localization.Get("WizardPressMap");
+                    if(!PhysicalKeyCapture.TryGet(key,out capturedScan)) {
+                        if(captureStatusLabel!=null) captureStatusLabel.Text=Localization.Get("KeyWizardPressMap");
                         e.Handled=true; e.SuppressKeyPress=true; return;
                     }
                     mapKey = key;
+                    mapScanCode = capturedScan;
                     break;
                 case 2:
-                    if(!PhysicalKeyCapture.TryGet(key,out chatScanCode)) {
-                        if(captureStatusLabel!=null) captureStatusLabel.Text=Localization.Get("WizardPressChat");
+                    if(!PhysicalKeyCapture.TryGet(key,out capturedScan)) {
+                        if(captureStatusLabel!=null) captureStatusLabel.Text=Localization.Get("KeyWizardPressChat");
                         e.Handled=true; e.SuppressKeyPress=true; return;
                     }
                     chatKey = key;
+                    chatScanCode = capturedScan;
                     break;
                 case 3:
                     if (key == 0x08 || key == 0x2E) {
                         copyModKey = 0;
-                    } else if (IsModifierKey(key)) {
+                    } else if (PhysicalKeyCapture.IsModifierKey(key)) {
                         copyModKey = key;
                     }
                     break;
                 case 4:
-                    if (!IsModifierKey(key)) {
+                    if (!PhysicalKeyCapture.IsModifierKey(key)) {
                         int scan;
                         if (!PhysicalKeyCapture.TryGet(key,out scan)) {
                             if (captureStatusLabel != null) captureStatusLabel.Text = Localization.Get("WizardPressKeyPrompt");
@@ -141,9 +153,7 @@ namespace ScumMiniMap {
             e.SuppressKeyPress = true;
         }
 
-        static bool IsModifierKey(int key) {
-            return key == 0x11 || key == 0x10 || key == 0x12 || key == 0xA2 || key == 0xA3 || key == 0xA0 || key == 0xA1;
-        }
+
 
         void BuildLayout() {
             // Header: Tactical Gunmetal Panel with Survival Amber Accent Line
@@ -410,15 +420,26 @@ namespace ScumMiniMap {
         }
 
         void FinishWizard() {
-            CommitKeybindsIfApplicable();
+            if(!CommitKeybindsIfApplicable(true)) return;
             DialogResult = DialogResult.OK;
             Close();
         }
 
-        void CommitKeybindsIfApplicable() {
+        bool BindingsConflict() {
+            return PhysicalKeyCapture.HasConflicts(
+                new[]{mapKey,chatKey,copyKey,settingsKey,waypointKey,searchKey},
+                new[]{mapScanCode,chatScanCode,copyScanCode,settingsScan,waypointScan,searchScan});
+        }
+
+        bool CommitKeybindsIfApplicable(bool requireValid=false) {
+            if(BindingsConflict()) {
+                if(requireValid) MessageBox.Show(this,Localization.Get("KeyWizardDifferentKeys"),Localization.Get("KeyWizardTitle"),MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                return false;
+            }
             if (onSaveKeybinds != null) {
                 onSaveKeybinds(mapKey, chatKey, copyModKey, copyKey, copyScanCode, mapScanCode, chatScanCode);
             }
+            return true;
         }
 
         void UpdateSlide() {
@@ -477,12 +498,12 @@ namespace ScumMiniMap {
         void RenderSlideControls() {
             FlowLayoutPanel flow = CreateContentFlow();
 
-            AddTacticalKeyCard(flow, "M", Localization.Get("WzKeyMTitle"), Localization.Get("WzKeyMDesc"));
-            AddTacticalKeyCard(flow, "Home", Localization.Get("WzKeyHomeTitle"), Localization.Get("WzKeyHomeDesc"));
-            AddTacticalKeyCard(flow, "Insert", Localization.Get("WzKeyInsertTitle"), Localization.Get("WzKeyInsertDesc"));
-            AddTacticalKeyCard(flow, "Delete", Localization.Get("WzKeyDeleteTitle"), Localization.Get("WzKeyDeleteDesc"));
+            AddTacticalKeyCard(flow, PhysicalKeyCapture.KeyName(mapKey), Localization.Get("WzKeyMTitle"), Localization.Get("WzKeyMDesc"));
+            AddTacticalKeyCard(flow, PhysicalKeyCapture.KeyName(settingsKey), Localization.Get("WzKeyHomeTitle"), Localization.Get("WzKeyHomeDesc"));
+            AddTacticalKeyCard(flow, PhysicalKeyCapture.KeyName(waypointKey), Localization.Get("WzKeyInsertTitle"), Localization.Get("WzKeyInsertDesc"));
+            AddTacticalKeyCard(flow, PhysicalKeyCapture.KeyName(searchKey), Localization.Get("WzKeyDeleteTitle"), Localization.Get("WzKeyDeleteDesc"));
             AddTacticalKeyCard(flow, "End", Localization.Get("WzKeyEndTitle"), Localization.Get("WzKeyEndDesc"));
-            string copyBindingLabel = copyModKey > 0 ? (KeyName(copyModKey) + "+" + KeyName(copyKey)) : KeyName(copyKey);
+            string copyBindingLabel = copyModKey > 0 ? (PhysicalKeyCapture.KeyName(copyModKey) + "+" + PhysicalKeyCapture.KeyName(copyKey)) : PhysicalKeyCapture.KeyName(copyKey);
             AddTacticalKeyCard(flow, copyBindingLabel, Localization.Get("WzKeyCopyTitle"), Localization.Get("WzKeyCopyDesc"));
 
             contentPanel.Controls.Add(flow);
@@ -531,9 +552,9 @@ namespace ScumMiniMap {
             flow.Controls.Add(banner);
 
             // 4 Key Calibration Rows
-            flow.Controls.Add(CreateKeybindRow(1, Localization.Get("WizardKeyMap"), KeyName(mapKey), out mapValLabel, out mapCapBtn));
-            flow.Controls.Add(CreateKeybindRow(2, Localization.Get("WizardKeyChat"), KeyName(chatKey), out chatValLabel, out chatCapBtn));
-            flow.Controls.Add(CreateKeybindRow(3, Localization.Get("WizardKeyModifier"), KeyName(copyModKey), out modValLabel, out modCapBtn));
+            flow.Controls.Add(CreateKeybindRow(1, Localization.Get("WizardKeyMap"), PhysicalKeyCapture.KeyName(mapKey), out mapValLabel, out mapCapBtn));
+            flow.Controls.Add(CreateKeybindRow(2, Localization.Get("WizardKeyChat"), PhysicalKeyCapture.KeyName(chatKey), out chatValLabel, out chatCapBtn));
+            flow.Controls.Add(CreateKeybindRow(3, Localization.Get("WizardKeyModifier"), PhysicalKeyCapture.KeyName(copyModKey), out modValLabel, out modCapBtn));
 
             Panel noModPanel = new Panel {
                 Width = Math.Max(740, contentPanel.Width - 60),
@@ -562,14 +583,14 @@ namespace ScumMiniMap {
                     }
                 } else {
                     if (copyModKey == 0) copyModKey = 0x11;
-                    if (modValLabel != null) modValLabel.Text = KeyName(copyModKey);
+                    if (modValLabel != null) modValLabel.Text = PhysicalKeyCapture.KeyName(copyModKey);
                     if (modCapBtn != null) modCapBtn.Enabled = true;
                 }
             };
             noModPanel.Controls.Add(chkNoMod);
             flow.Controls.Add(noModPanel);
 
-            flow.Controls.Add(CreateKeybindRow(4, Localization.Get("WizardKeyCopy"), KeyName(copyKey), out copyValLabel, out copyCapBtn));
+            flow.Controls.Add(CreateKeybindRow(4, Localization.Get("WizardKeyCopy"), PhysicalKeyCapture.KeyName(copyKey), out copyValLabel, out copyCapBtn));
 
             // Status and Reset Panel
             Panel statusRow = new Panel {
@@ -609,6 +630,7 @@ namespace ScumMiniMap {
                 copyModKey = Program.DefaultCopyModifierKey;
                 copyKey = Program.DefaultCopyKey;
                 copyScanCode = 0;
+                mapScanCode = 0; chatScanCode = 0;
                 captureTarget = 0;
                 if (chkNoMod != null) chkNoMod.Checked = true;
                 if (modCapBtn != null) modCapBtn.Enabled = false;
@@ -680,26 +702,15 @@ namespace ScumMiniMap {
         }
 
         void UpdateKeybindValues() {
-            if (mapValLabel != null) mapValLabel.Text = KeyName(mapKey);
-            if (chatValLabel != null) chatValLabel.Text = KeyName(chatKey);
-            if (modValLabel != null) modValLabel.Text = KeyName(copyModKey);
-            if (copyValLabel != null) copyValLabel.Text = KeyName(copyKey);
+            if (mapValLabel != null) mapValLabel.Text = PhysicalKeyCapture.KeyName(mapKey);
+            if (chatValLabel != null) chatValLabel.Text = PhysicalKeyCapture.KeyName(chatKey);
+            if (modValLabel != null) modValLabel.Text = PhysicalKeyCapture.KeyName(copyModKey);
+            if (copyValLabel != null) copyValLabel.Text = PhysicalKeyCapture.KeyName(copyKey);
             if (chkNoMod != null && chkNoMod.Checked != (copyModKey == 0)) chkNoMod.Checked = (copyModKey == 0);
             if (modCapBtn != null) modCapBtn.Enabled = (copyModKey != 0);
         }
 
-        static string KeyName(int key) {
-            if (key == 0) return Localization.Get("KeyNone");
-            if (key == 0xBF) return "/";
-            if (key == 0x6F) return "Num /";
-            if (key == 0x20) return "Space";
-            if (key == 0xDC) return "\\";
-            if (key == 0x11) return "Ctrl";
-            if (key == 0x10) return "Shift";
-            if (key == 0x12) return "Alt";
-            string name = ((Keys)key).ToString();
-            return string.IsNullOrEmpty(name) ? "VK " + key : name;
-        }
+
 
         void RenderSlideSafety() {
             FlowLayoutPanel flow = CreateContentFlow();

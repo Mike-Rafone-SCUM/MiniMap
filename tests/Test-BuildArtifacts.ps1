@@ -32,9 +32,10 @@ try {
 } finally { $zip.Dispose() }
 $assembly = [Reflection.Assembly]::LoadFile($exe)
 $resources = @($assembly.GetManifestResourceNames())
-foreach ($name in @('map-tiles.bin','zones.tsv','roads.bin','water-mask.bin','scummap.bin','detect_zones.py','copy-location-key.jpg')) {
+foreach ($name in @('map-tiles.bin','zones.tsv','roads.bin','water-mask.bin','scummap.bin','detect_zones.py')) {
     if ($resources -notcontains $name) { throw "Missing embedded resource: $name" }
 }
 if ($resources -contains 'map.png') { throw 'Redundant full-resolution map is embedded.' }
+if ($resources -contains 'copy-location-key.jpg') { throw 'Obsolete copy-key screenshot is embedded.' }
 if (@($resources | Where-Object { $_ -like 'voice-navigation/*' }).Count -lt 12) { throw 'Bundled voice resources missing.' }
 Write-Output "Verified $Configuration package ${version}: ZIP contents, embedded resources and executable hashes."

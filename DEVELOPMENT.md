@@ -33,6 +33,8 @@ Release output defaults to `release/github/vX.Y.Z`. An existing directory is rej
 
 Test builds use `SkynettMiniMap-Test.exe`, a `X.Y.Z-test` product version, disabled updates and a separate `%LocalAppData%\ScumMiniMap-ResponsivenessTest` profile. Release and test builds share the same compiler/resource list, including voices and the water mask. `scripts/Build-GitHubRelease.ps1` and `scripts/Build-TestPackage.ps1` remain compatibility wrappers.
 
+Localised UI text belongs in `src/Localization.cs`, including reminder and voice text. Add each key to all ten language catalogues and preserve its format arguments. `tests/Test-Localization.ps1` checks catalogue parity, formatting and literal source references; it runs through `Test.ps1` and both build configurations. Shortcut hints must use configured bindings rather than fixed Home/Insert/Delete labels. Bridge and water-avoidance checks also run in the shared check flow.
+
 ## Prepare and publish a release
 
 1. Write the real change list in `CHANGELOG.md` under the next version.

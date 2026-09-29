@@ -92,9 +92,23 @@ static class InputVoiceTests {
         Check((int)nativeType.GetMethod("ScanCodeToVirtualKey",hiddenStatic).Invoke(null,new object[]{0x135})==0x6F,
             "Hook-loss polling converts the captured NumPad Divide scan code back to its physical virtual key");
         Check(!GameKeys.MouseActionBlocksCopy(0x20A,0) && !GameKeys.MouseActionBlocksCopy(0x20E,0) && GameKeys.MouseActionBlocksCopy(0x20A,0xA2),"Single-key tracking continues through scrolling; modifier-based copying remains guarded");
-        Check(OverlayWindow.ShouldPassMouseThrough(true,false) && OverlayWindow.ShouldPassMouseThrough(false,false),"Compact minimap never captures mouse movement from the game");
-        Check(OverlayWindow.ShouldPassMouseThrough(true,true) && !OverlayWindow.ShouldPassMouseThrough(false,true),"Expanded map accepts pointer input when SCUM releases foreground focus");
-        Check(OverlayWindow.ShouldActivateForInput(true) && !OverlayWindow.ShouldActivateForInput(false),"Expanded map temporarily activates for cursor control while compact overlay stays non-activating");
+        using(var overlayInput=new OverlayWindow(()=>{},()=>{},delta=>{},()=>{})) {
+            var activation=typeof(OverlayWindow).GetProperty("ShowWithoutActivation",Hidden);
+            overlayInput.FullMapMode=true;
+            Check((bool)activation.GetValue(overlayInput,null),"Expanded map leaves keyboard focus with SCUM for the underlying map");
+            overlayInput.FullMapMode=false;
+            Check((bool)activation.GetValue(overlayInput,null),"Compact overlay stays non-activating");
+        }
+        using(var sharedMapKeys=new GameKeys((key,scan)=>{},(key,scan)=>key==0x4D || key==0x24,
+            sharedGameBinding:(key,scan)=>PhysicalKeyCapture.Matches(key,scan,0x4D,0))) {
+            Check(!sharedMapKeys.ConsumesBinding(0x4D,0),"Map binding reaches SCUM as well as MiniMap");
+            Check(sharedMapKeys.ConsumesBinding(0x24,0),"App-only Settings binding stays consumed");
+        }
+        using(var physicalMapKeys=new GameKeys((key,scan)=>{},(key,scan)=>true,
+            sharedGameBinding:(key,scan)=>PhysicalKeyCapture.Matches(key,scan,0x4D,0x32))) {
+            Check(!physicalMapKeys.ConsumesBinding(0xBA,0x32),"Captured map key reaches SCUM across keyboard layouts");
+            Check(physicalMapKeys.ConsumesBinding(0x4D,0x31),"A different physical key is not mistaken for the shared map binding");
+        }
         var navigator=new VoiceNavigator();
         var right=Route(P(0,0),P(600,0),P(600,600));
         var left=Route(P(0,0),P(600,0),P(600,-600));
@@ -114,8 +128,8 @@ static class InputVoiceTests {
         navigator.Reset();
         Check(navigator.Update(left,P(420,0),now)==null,"Do not announce 250 metres when the turn is 180 metres away");
         Check(navigator.NextCue(left,P(500,100))==null,"Off-route location suppresses outdated turn instructions");
-        left.HasWaterTransit=true;
-        Check(navigator.NextCue(left,P(500,0))==null,"Water transit does not receive road-turn instructions");
+        left.Success=false;
+        Check(navigator.NextCue(left,P(500,0))==null,"Unavailable routes do not receive road-turn instructions");
         navigator.Reset();
         var bend=Route(P(0,0),P(300,-100),P(600,-500)); bend.JunctionIndices=new int[0];
         Check(navigator.NextCue(bend,P(0,0)).Action==VoicePacks.Clips[4],"A curved road without branch nodes produces no turn or keep prompts");
@@ -163,7 +177,7 @@ static class InputVoiceTests {
         navigator.Update(connector,P(370,200),now.AddSeconds(2));
         Check(!navigator.NeedsReroute && !navigator.WrongWay,"Following the displayed exit connector does not loop in recalculation");
         navigator.Reset();
-        left.HasWaterTransit=false;
+        left.Success=true;
         navigator.Update(left,P(400,0),now);
         string[] fast=navigator.Update(left,P(450,0),now.AddSeconds(1));
         Check(fast!=null && fast.SequenceEqual(new[]{VoicePacks.Clips[5]}),"Vehicle-speed turn call starts three seconds before the junction");
@@ -236,9 +250,36 @@ static class InputVoiceTests {
                 using(var guide=new StartupGuideDialog()) {
                     Check((int)typeof(StartupGuideDialog).GetField("copyModKey",Hidden).GetValue(guide)==0 && (int)typeof(StartupGuideDialog).GetField("copyKey",Hidden).GetValue(guide)==0x6F,"First-run guide matches the NumPad Divide single-key default");
                     typeof(StartupGuideDialog).GetMethod("RenderSlideKeybinds",Hidden).Invoke(guide,null);
+                    foreach(string field in new[]{"copyScanCode","mapScanCode","chatScanCode"})
+                        typeof(StartupGuideDialog).GetField(field,Hidden).SetValue(guide,0x56);
                     var reset=Descendants(guide).OfType<Button>().First(button=>button.Text==Localization.Get("WizardBtnResetDefaults"));
                     typeof(Button).GetMethod("OnClick",Hidden).Invoke(reset,new object[]{EventArgs.Empty});
                     Check((int)typeof(StartupGuideDialog).GetField("copyModKey",Hidden).GetValue(guide)==0 && (int)typeof(StartupGuideDialog).GetField("copyKey",Hidden).GetValue(guide)==0x6F,"Reset button retains the NumPad Divide single-key default without checkbox events re-enabling Ctrl");
+                    Check(new[]{"copyScanCode","mapScanCode","chatScanCode"}.All(field=>(int)typeof(StartupGuideDialog).GetField(field,Hidden).GetValue(guide)==0),"Reset clears all previous SCUM physical scan codes");
+                    var conflicts=typeof(StartupGuideDialog).GetMethod("BindingsConflict",Hidden);
+                    Check(!(bool)conflicts.Invoke(guide,null),"Default setup bindings have no conflicts");
+                    typeof(StartupGuideDialog).GetField("mapKey",Hidden).SetValue(guide,0x24);
+                    Check((bool)conflicts.Invoke(guide,null),"Setup rejects SCUM map conflicts with MiniMap settings");
+                    typeof(StartupGuideDialog).GetField("mapKey",Hidden).SetValue(guide,0x4D);
+                    typeof(StartupGuideDialog).GetField("mapScanCode",Hidden).SetValue(guide,0x56);
+                    typeof(StartupGuideDialog).GetField("chatScanCode",Hidden).SetValue(guide,0x56);
+                    Check((bool)conflicts.Invoke(guide,null),"Setup detects physical key conflicts across different virtual keys");
+                    Check(!(bool)typeof(StartupGuideDialog).GetMethod("CommitKeybindsIfApplicable",Hidden).Invoke(guide,new object[]{false}),
+                        "Invalid setup bindings cannot be committed while navigating the guide");
+                    var captureSetup=typeof(StartupGuideDialog).GetMethod("HandleFormKeyDown",Hidden);
+                    foreach(var binding in new[]{new[]{1,0x4D},new[]{2,0x54}}) {
+                        string keyField=binding[0]==1?"mapKey":"chatKey";
+                        string scanField=binding[0]==1?"mapScanCode":"chatScanCode";
+                        typeof(StartupGuideDialog).GetField("captureTarget",Hidden).SetValue(guide,binding[0]);
+                        PhysicalKeyCapture.Observe(0x7A,0x57,0);
+                        captureSetup.Invoke(guide,new object[]{guide,new KeyEventArgs(Keys.F12)});
+                        Check((int)typeof(StartupGuideDialog).GetField(keyField,Hidden).GetValue(guide)==binding[1]
+                            && (int)typeof(StartupGuideDialog).GetField(scanField,Hidden).GetValue(guide)==0x56,
+                            "Failed physical capture preserves the previous "+keyField+" binding");
+                        captureSetup.Invoke(guide,new object[]{guide,new KeyEventArgs(Keys.RMenu)});
+                        Check((int)typeof(StartupGuideDialog).GetField(keyField,Hidden).GetValue(guide)==binding[1],
+                            "Right Alt cannot become the setup "+keyField+" binding");
+                    }
                 }
                 window.Show(); Application.DoEvents();
                 typeof(MapWindow).GetMethod("BeginCopyRequest",Hidden).Invoke(window,null);
@@ -268,7 +309,10 @@ static class InputVoiceTests {
                 Check(window.WindowState==FormWindowState.Minimized,"Escape still dismisses settings to the taskbar");
                 Check(!(bool)typeof(MapWindow).GetField("voiceEnabled",Hidden).GetValue(window),"Voice guidance defaults off");
                 File.WriteAllLines(Path.Combine(root,"settings.ini"),new[]{"Welcomed=True","VoiceEnabled=True","VoiceName=Second voice","VoiceVolume=45","CopyIntervalMs=1000","ScumCopyModifierKey=162","ScumCopyKey=67"});
+                foreach(string field in new[]{"settingsShortcutScanCode","pinShortcutScanCode","searchShortcutScanCode"})
+                    typeof(MapWindow).GetField(field,Hidden).SetValue(window,0x56);
                 typeof(MapWindow).GetMethod("LoadSettings",Hidden).Invoke(window,null);
+                Check(new[]{"settingsShortcutScanCode","pinShortcutScanCode","searchShortcutScanCode"}.All(field=>(int)typeof(MapWindow).GetField(field,Hidden).GetValue(window)==0),"Loading virtual-key-only settings clears stale shortcut scan codes");
                 Check((int)typeof(MapWindow).GetField("scumCopyModifierKey",Hidden).GetValue(window)==162 && (int)typeof(MapWindow).GetField("scumCopyKey",Hidden).GetValue(window)==67,"Existing Ctrl+C bindings survive the new-install default change");
                 Check((bool)typeof(MapWindow).GetField("voiceEnabled",Hidden).GetValue(window) && (string)typeof(MapWindow).GetField("voiceName",Hidden).GetValue(window)=="Second voice" && (int)typeof(MapWindow).GetField("voiceVolume",Hidden).GetValue(window)==45,"Voice preference, selected pack and volume load correctly");
                 typeof(MapWindow).GetMethod("SaveSettings",Hidden).Invoke(window,null);
@@ -324,23 +368,23 @@ static class InputVoiceTests {
                     && (int)typeof(MapWindow).GetField("pinShortcutKey",Hidden).GetValue(reopened)==0x67
                     && (int)typeof(MapWindow).GetField("searchShortcutKey",Hidden).GetValue(reopened)==0x76,
                     "Captured function-key and number-pad shortcut preferences survive restart");
-                var watched=typeof(MapWindow).GetMethod("IsWatchedGameKey",Hidden);
-                foreach(int key in new[]{0x75,0x67,0x76}) Check((bool)watched.Invoke(reopened,new object[]{key}),"Rebound shortcut reaches keyboard dispatch: "+key);
+                var watched=typeof(MapWindow).GetMethod("IsWatchedPhysicalKey",Hidden);
+                foreach(int key in new[]{0x75,0x67,0x76}) Check((bool)watched.Invoke(reopened,new object[]{key,0}),"Rebound shortcut reaches keyboard dispatch: "+key);
                 var watchedPhysical=typeof(MapWindow).GetMethod("IsWatchedPhysicalKey",Hidden);
                 Check((bool)watchedPhysical.Invoke(reopened,new object[]{0x51,0x135})
                     && !(bool)watchedPhysical.Invoke(reopened,new object[]{0x51,0x34})
                     && (bool)watchedPhysical.Invoke(reopened,new object[]{0x51,0x152})
                     && (bool)watchedPhysical.Invoke(reopened,new object[]{0x51,0x153}),
                     "Settings, waypoint and search bindings are dispatched by physical scan code across layouts");
-                var validate=typeof(MapWindow).GetMethod("ShortcutKeyError",Hidden);
-                Check(validate.Invoke(reopened,new object[]{0x76,0x75})!=null && validate.Invoke(reopened,new object[]{0x54,0x75})!=null,
+                var validate=typeof(MapWindow).GetMethod("ShortcutBindingError",Hidden);
+                Check(validate.Invoke(reopened,new object[]{0x76,0x75,0,0})!=null && validate.Invoke(reopened,new object[]{0x54,0x75,0,0})!=null,
                     "Shortcut capture rejects duplicate and SCUM chat bindings");
                 var validatePhysical=typeof(MapWindow).GetMethod("ShortcutBindingError",Hidden);
                 Check(validatePhysical.Invoke(reopened,new object[]{0x51,0x75,0x135,0x35})!=null
                     && validatePhysical.Invoke(reopened,new object[]{0x75,0x75,0x35,0x135})==null,
                     "Shortcut conflict checks use physical position, not matching layout-specific virtual keys");
                 PhysicalKeyCapture.Observe(0x78,0x3B,0);
-                using(var capture=new ShortcutCaptureDialog("Settings",(key,scan)=>(string)validate.Invoke(reopened,new object[]{key,0x75}))) {
+                using(var capture=new ShortcutCaptureDialog("Settings",(key,scan)=>(string)validate.Invoke(reopened,new object[]{key,0x75,scan,0}))) {
                     var captureKey=typeof(ShortcutCaptureDialog).GetMethod("ProcessCmdKey",Hidden);
                     captureKey.Invoke(capture,new object[]{new Message(),Keys.Control|Keys.F9});
                     Check(capture.DialogResult==DialogResult.None,"Shortcut capture rejects modifier combinations");
