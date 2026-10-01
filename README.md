@@ -1,4 +1,4 @@
-# SCUM MiniMap v1.5.3
+# SCUM MiniMap v1.5.4
 
 SCUM MiniMap is an external map overlay and navigation utility for SCUM, made for the Skynett community. It displays player location, heading, road routes, points of interest, and custom waypoints. It does not read game memory or inject DLLs; this is not an official anticheat certification.
 
@@ -36,6 +36,10 @@ Join the [SCUM MiniMap Discord](https://discord.gg/MYzcGaFDMn) for downloads, re
 ---
 
 ## Copy-key setup
+
+![Community keyboard guide: use the green-highlighted NumPad divide key](keyboard-setup.png)
+
+Keyboard illustration supplied by a member of the SCUM MiniMap Discord. The green box marks **NumPad /**; the red cross marks the main keyboard slash key. Bind SCUM's **Copy location** to the same key selected in MiniMap.
 
 The default for new installations is **Num / (number-pad divide) without a modifier**. In SCUM controls, manually bind **Copy location** to that same key. MiniMap cannot change SCUM's controls. If your keyboard has no number pad, choose another unused single key in SCUM and capture it in MiniMap's setup guide or key wizard.
 

@@ -8,6 +8,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.5.4] - 2026-10-01
+
+### Added
+- Display the community-supplied keyboard illustration in the key binding setup guide and Copy Location reminder, showing the NumPad divide key highlighted in green and the main keyboard slash crossed out.
+- Include the original keyboard illustration in the complete release archive and setup documentation.
+
+### Changed
+- Dispose setup slide controls and their image resources when navigating between pages.
+- Retain all v1.5.3 map-key, focus, dragging and tracking fixes, alongside existing saved key bindings.
+
 ## [1.5.3] - 2026-09-29
 
 ### Fixed
