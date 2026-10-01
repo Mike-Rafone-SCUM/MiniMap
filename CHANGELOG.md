@@ -8,6 +8,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.5.5] - 2026-10-01
+
+### Added
+- For admin players, hold either Ctrl key while the expanded map is open to temporarily hide MiniMap and interact directly with SCUM's map, so admins can select players and use SCUM teleport actions. Release Ctrl to restore the overlay when no map click was completed.
+- Complete a Ctrl-left-click on the exposed map to collapse MiniMap to its compact view and clear stale chat, inventory and pending-copy locks. Cleanup follows the click gesture; MiniMap does not receive a confirmed teleport event from SCUM. Newly opened chat remains protected.
+- Retain each map image beside its own `zones.tsv` and `customwaypoints.tsv` in `maps/<map-id>/`. Keep successful imports in separate subfolders containing the original image/file, map-coordinate TSV, source-coordinate TSV and detection report where applicable.
+
+### Fixed
+- Preserve measured screenshot zone boundaries instead of forcing imperfect circular detections into oversized enclosing rectangles. Smooth confidently circular outlines using fitted boundary pixels, retain other measured outlines and reduce aggressive green-mask merging.
+- Offer layer naming on every screenshot import, including the first import into an empty zone editor. Focus and select the proposed name for editing; disable append/replace when no zones exist.
+- Keep repeated import filenames and layer names from overwriting earlier source images or TSVs; failed archives leave no partial import folder.
+- Ignore injected Ctrl from automatic location copying when entering the admin map interaction mode.
+- Cancel overlay dragging and context menus during direct game-map interaction, preserve intentional overlay hiding, and restore visibility correctly after focus changes.
+- Isolate history regression fixtures from live coordinates already present on the clipboard.
+
+### Compatibility
+- Existing saved key bindings and annotations are retained. Previously imported zones need reimporting to use the corrected outline detection.
+- Includes the v1.5.4 community keyboard illustration, setup cleanup and all earlier map-key, focus, dragging and tracking fixes.
+
 ## [1.5.4] - 2026-10-01
 
 ### Added
