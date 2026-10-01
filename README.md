@@ -1,4 +1,4 @@
-# SCUM MiniMap v1.5.5
+# SCUM MiniMap v1.6.0
 
 SCUM MiniMap is an external map overlay and navigation utility for SCUM, made for the Skynett community. It displays player location, heading, road routes, points of interest, and custom waypoints. It does not read game memory or inject DLLs; this is not an official anticheat certification.
 
@@ -16,6 +16,18 @@ MusicalScumbag users: update MusicalScumbag to the corrected build with **F10** 
 ---
 
 ## Official Distribution & Automatic Updates
+
+### Admin command panel
+
+Open the full map's **Admin commands** dropdown from its right-click menu or sidebar Tools section. Each toggle sends `true` or `false` for God mode, player info or nameplates. **Edit commands…** opens the editor to add, edit or remove toggles; enter the base command without its final true/false argument. The editor is also accessible from Settings and the tray menu. Existing On/Off button pairs migrate into one toggle. Displayed values are the last submitted requests and start Off each session; check SCUM for the actual state.
+
+The presets send `#SetGodMode true/false`, `#ShowOtherPlayerInfo true/false` and `#ShowNameplates true/false`. God mode is SCUM's blueprint building mode; the server must grant the relevant admin permission. The panel cannot read the live state or confirm that a command succeeded.
+
+Close chat and inventory, then click the required button. MiniMap focuses SCUM, closes the expanded map when needed, opens chat using your configured physical chat key, pastes the displayed command, presses Enter, then sends Escape to dismiss chat. The sequence uses shorter delays and checks for held keys before starting. Avoid keyboard or mouse actions while it sends. Focus changes, physical input or another clipboard update stop further submission; if interrupted after chat opens, close SCUM chat before retrying. A command already submitted remains marked as submitted even if the subsequent Escape cleanup is interrupted.
+
+Use **Add command button**, **Edit** or **Remove** to manage your own single-line commands beginning with `#`. Buttons persist in `admin-commands.tsv` in your active user data folder. Location copying pauses during sending. The previous clipboard is restored only if no other application or action has replaced it.
+
+The editor provides **Label**, **Command**, an **Is boolean?** checkbox, **Quantity (optional)** and **Extra strings (optional)**. New commands start with the checkbox unchecked and run once. Check it for a command that accepts true/false to create an On/Off toggle. Enter a positive whole-number quantity when needed, and any additional single-line arguments in Extra strings. The preview shows the assembled command in this order: command, boolean value when enabled, quantity, extra strings. Leave unused fields blank; existing saved toggle commands remain compatible.
 
 Official binaries, update manifests, and cryptographic checksums are distributed exclusively via GitHub Releases:
 

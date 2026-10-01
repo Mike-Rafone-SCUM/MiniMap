@@ -8,6 +8,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-10-02
+
+### Fixed
+- Reduced admin-command focus and chat delays, with a held-key check in place of the location-copy mouse cooldown. Commands submit with Enter, then send Escape to dismiss chat; interrupted cleanup retains chat protection and distinguishes an already submitted command.
+- Chat/map keys immediately after game focus returns now validate the foreground window at the physical event. Chat-session changes invalidate queued map shortcuts, preventing an old M press from firing after chat opens and closes.
+- Admin-injected chat keys no longer enter the polling fallback's physical chat state.
+
+### Added
+- Command editor fields for Label, Command, Is boolean?, optional Quantity and optional Extra strings, with an assembled-command preview. Boolean entries toggle true/false; other entries run once. Optional arguments and boolean settings persist per command, and earlier saved toggles remain compatible.
+- Full-map Admin dropdown in the right-click menu and sidebar Tools section, with single On/Off toggles sending true/false and an Edit commands entry. Existing paired command buttons migrate to single toggles; displayed values are last submitted requests, not confirmed game state.
+- Admin command panel accessible from Settings and the tray menu, with boolean presets for God mode, player information and nameplates. Sends the displayed command through SCUM's configured chat key, clipboard paste, Enter and Escape; SCUM permissions and command results remain authoritative.
+- Admin panel appears above the game on the overlay's monitor and restores from minimization when reopened.
+- Add, edit and remove named command buttons, saved per user in `admin-commands.tsv`. Commands are limited to one line starting with `#`.
+- Admin sending pauses location copying and map shortcuts, closes the expanded map before opening chat, cancels further key presses after physical input or focus changes, and restores the clipboard only while it still owns it. Interrupted chat remains protected until explicitly closed.
+
 ## [1.5.5] - 2026-10-01
 
 ### Added
