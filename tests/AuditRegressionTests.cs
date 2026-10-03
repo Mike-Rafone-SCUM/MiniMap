@@ -123,6 +123,14 @@ static class AuditRegressionTests {
                 Field(window,"gridBorders").SetValue(window,true);
                 Call(window,"BuildSettingsPanel");
                 Check(((TacticalCheckBox)FindControl(settings,Localization.Get("GridBorders"))).Checked,"Rebuilt settings reflect sidebar layer changes");
+                Position deathPosition=new Position { X=12345,Y=54321,Z=100,Yaw=0 };
+                Field(window,"position").SetValue(window,new Position { X=-123456,Y=-54321,Z=100,Yaw=0 });
+                Call(window,"SaveDeathMarker",deathPosition,true);
+                var markerList=(List<MapZone>)Field(window,"zones").GetValue(window);
+                MapZone deathMarker=markerList.Find(z=>z.IsDeathMarker);
+                PointF expectedDeathPoint=MapWindow.ToMap(deathPosition);
+                Check(deathMarker!=null && deathMarker.Points[0]==expectedDeathPoint,"Automatic marker uses captured death position rather than later respawn position");
+                Check(ZoneStore.Load((string)Field(window,"customWaypointsPath").GetValue(window)).Exists(z=>z.IsDeathMarker && z.Points[0]==expectedDeathPoint),"Automatic death marker persists in current map waypoint file");
                 var current=(List<MapZone>)Field(window,"zones").GetValue(window);
                 var added=new List<MapZone>(current); added.Add(Zone("Must not commit"));
                 var deleted=new List<MapZone>();

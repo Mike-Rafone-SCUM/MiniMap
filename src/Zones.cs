@@ -35,6 +35,30 @@ namespace ScumMiniMap {
     }
     public enum ZoneCategory { City, Town, Farm, Trader, Faction, Military, Bunker, GasStation, Custom, Unknown }
     public sealed class MapZone {
+        public const string DeathMarkerLayer="Death markers";
+        public bool IsDeathMarker { get { return Category==ZoneCategory.Custom && Layer==DeathMarkerLayer && Points!=null && Points.Length==1; } }
+        public DateTime? DeathCreatedUtc;
+        internal DateTime? DeathTimeUtc {
+            get {
+                if(DeathCreatedUtc.HasValue)return DeathCreatedUtc;
+                // Earlier versions stored a local timestamp at the end of the name.
+                DateTime legacy;
+                if(IsDeathMarker && Name!=null && Name.Length>=19 && DateTime.TryParseExact(Name.Substring(Name.Length-19),
+                    "yyyy-MM-dd HH:mm:ss",CultureInfo.InvariantCulture,DateTimeStyles.AssumeLocal,out legacy))return legacy.ToUniversalTime();
+                return null;
+            }
+        }
+        public string DisplayName { get { return DisplayNameAt(DateTime.UtcNow); } }
+        internal string DisplayNameAt(DateTime now) {
+            if(!IsDeathMarker)return Localization.GetZoneName(Name);
+            DateTime? created=DeathTimeUtc;
+            if(!created.HasValue)return Localization.Get("DeathName");
+            TimeSpan age=now-created.Value;
+            string elapsed=age.TotalMinutes<1?Localization.T("HistorySecondsAgo",Math.Max(0,(int)age.TotalSeconds)):
+                age.TotalHours<1?Localization.T("HistoryMinutesAgo",(int)age.TotalMinutes):
+                age.TotalDays<1?Localization.T("HistoryHoursAgo",(int)age.TotalHours):Localization.T("HistoryDaysAgo",(int)age.TotalDays);
+            return Localization.Get("DeathName")+" "+elapsed;
+        }
         public string Name;
         public string Subtitle;
         public int Argb;
@@ -65,7 +89,7 @@ namespace ScumMiniMap {
         public bool IsFaction { get { return Argb == -1 || Argb == -657931 || (Argb & 0xFFFFFF) == 0xFFFFFF || IsFactionName(Name); } }
         public bool IsFuelStation { get { return Argb == -30720 || (Points != null && Points.Length < 3 && Name != null && Name.IndexOf("Gas", StringComparison.OrdinalIgnoreCase) >= 0); } }
         public string Layer = "Default";
-        public MapZone Clone() { return new MapZone { Name=Name,Subtitle=Subtitle,Argb=Argb,Points=Points==null?new PointF[0]:(PointF[])Points.Clone(),Category=Category,Layer=Layer }; }
+        public MapZone Clone() { return new MapZone { Name=Name,Subtitle=Subtitle,Argb=Argb,Points=Points==null?new PointF[0]:(PointF[])Points.Clone(),Category=Category,Layer=Layer,DeathCreatedUtc=DeathCreatedUtc }; }
         public PointF Centroid {
             get {
                 if(Points==null || Points.Length==0) return new PointF(0,0);
@@ -193,6 +217,10 @@ namespace ScumMiniMap {
                             zone.Layer = "Default";
                         }
                         if(parts.Length<=3 && (zone.Name??"").ToUpperInvariant().Contains("BUNKER") && !zone.IsFuelStation && !zone.IsFaction && zone.Category != ZoneCategory.Faction) zone.Category = ZoneCategory.Bunker;
+                        DateTime created;
+                        if(zone.IsDeathMarker && parts.Length>5 && DateTime.TryParseExact(parts[5],"o",CultureInfo.InvariantCulture,
+                            DateTimeStyles.RoundtripKind,out created))zone.DeathCreatedUtc=created.ToUniversalTime();
+                        else if(zone.IsDeathMarker)zone.DeathCreatedUtc=zone.DeathTimeUtc;
                         result.Add(zone);
                     }
                 }
@@ -211,6 +239,7 @@ namespace ScumMiniMap {
                         throw new InvalidDataException("Invalid zone coordinates; nothing was saved.");
                 string layer=string.IsNullOrWhiteSpace(z.Layer)?"Default":z.Layer;
                 string line=Uri.EscapeDataString(z.Name)+"\t"+z.Argb+"\t"+string.Join(";",z.Points.Select(pt=>pt.X.ToString("R",CultureInfo.InvariantCulture)+","+pt.Y.ToString("R",CultureInfo.InvariantCulture)))+"\t"+z.Category+"\t"+Uri.EscapeDataString(layer);
+                if(z.IsDeathMarker && z.DeathTimeUtc.HasValue)line+="\t"+z.DeathTimeUtc.Value.ToString("o",CultureInfo.InvariantCulture);
                 total+=line.Length+2;
                 if(line.Length>MaxLineLength || total>MaxTextChars) throw new InvalidDataException("Zone data exceeds the size limit.");
                 lines.Add(line);
@@ -271,7 +300,7 @@ namespace ScumMiniMap {
                         using(Pen pen=new Pen(Color.FromArgb(220,color),penWidth))g.DrawPolygon(pen,points);
                         bool isMajor = zone.Category==ZoneCategory.City || zone.Category==ZoneCategory.Trader || zone.Category==ZoneCategory.Custom || zone.Category==ZoneCategory.Faction || zone.IsFaction;
                         if(showLabels && (!zoomedOut || isMajor) && !string.IsNullOrEmpty(zone.Name)) {
-                            string displayName = Localization.GetZoneName(zone.Name);
+                            string displayName = zone.DisplayName;
                             SizeF sz=g.MeasureString(displayName,font);
                             RectangleF box=new RectangleF(cx-sz.Width/2f-4f,cy-sz.Height/2f-2f,sz.Width+8f,sz.Height+4f);
                             for(int pass=0;pass<10;pass++) {
@@ -294,12 +323,28 @@ namespace ScumMiniMap {
                                 if(showGasStations) DrawFuelIcon(g,cx,cy);
                             } else {
                                 Color c=Color.FromArgb(zone.Argb);
+                                if(zone.IsDeathMarker) {
+                                    using(var tombstone=new GraphicsPath()) {
+                                        tombstone.AddArc(cx-7,cy-10,14,14,180,180);
+                                        tombstone.AddLine(cx+7,cy-3,cx+7,cy+8);
+                                        tombstone.AddLine(cx+7,cy+8,cx-7,cy+8);
+                                        tombstone.CloseFigure();
+                                        using(Brush fill=new SolidBrush(c)) g.FillPath(fill,tombstone);
+                                        using(Pen outline=new Pen(Color.FromArgb(240,20,25,30),2)) {
+                                            g.DrawPath(outline,tombstone);
+                                            g.DrawLine(outline,cx,cy-5,cx,cy+4);
+                                            g.DrawLine(outline,cx-3,cy-2,cx+3,cy-2);
+                                            g.DrawLine(outline,cx-9,cy+9,cx+9,cy+9);
+                                        }
+                                    }
+                                } else {
                                 using(Brush shadow=new SolidBrush(Color.FromArgb(90,0,0,0))) g.FillEllipse(shadow,cx-7,cy-7+1.5f,14,14);
                                 using(Brush badge=new SolidBrush(c)) g.FillEllipse(badge,cx-7,cy-7,14,14);
                                 using(Pen border=new Pen(Color.FromArgb(220,20,25,30),1.4f)) g.DrawEllipse(border,cx-7,cy-7,14,14);
                                 using(Brush dot=new SolidBrush(Color.White)) g.FillEllipse(dot,cx-2.5f,cy-2.5f,5,5);
+                                }
                                 if(showLabels && !string.IsNullOrEmpty(zone.Name)) {
-                                    string displayName = Localization.GetZoneName(zone.Name);
+                                    string displayName = zone.DisplayName;
                                     SizeF sz=g.MeasureString(displayName,font);
                                     RectangleF box=new RectangleF(cx-sz.Width/2f-4f,cy+9f,sz.Width+8f,sz.Height+4f);
                                     placed.Add(box);
@@ -336,20 +381,26 @@ namespace ScumMiniMap {
             try {
                 List<MapZone> sample=new List<MapZone>{
                     new MapZone { Name="Test zone / 1",Argb=Color.Red.ToArgb(),Points=new[]{new PointF(.2f,.2f),new PointF(.5f,.2f),new PointF(.5f,.5f)} },
-                    new MapZone { Name="Gas Station - Test",Argb=-30720,Points=new[]{new PointF(.3f,.4f)} }
+                    new MapZone { Name="Gas Station - Test",Argb=-30720,Points=new[]{new PointF(.3f,.4f)} },
+                    new MapZone { Name="Death location test",Argb=Color.Beige.ToArgb(),Category=ZoneCategory.Custom,Layer=MapZone.DeathMarkerLayer,Points=new[]{new PointF(.6f,.7f)} }
                 };
                 Save(path,sample);List<MapZone> loaded=Load(path);
-                if(loaded.Count!=2 || loaded[0].Name!=sample[0].Name || loaded[1].Name!=sample[1].Name || loaded[1].Points[0]!=sample[1].Points[0])throw new Exception("Zone persistence failed.");
+                if(loaded.Count!=3 || loaded[0].Name!=sample[0].Name || loaded[1].Name!=sample[1].Name || loaded[1].Points[0]!=sample[1].Points[0])throw new Exception("Zone persistence failed.");
+                if(!loaded[2].IsDeathMarker || loaded[2].Points[0]!=sample[2].Points[0] || !loaded[2].Clone().IsDeathMarker)
+                    throw new Exception("Death marker persistence failed.");
+                using(var image=new Bitmap(100,100)) using(var graphics=Graphics.FromImage(image))
+                    Draw(graphics,new List<MapZone>{loaded[2]},new RectangleF(0,0,100,100),false,9,false,null,false);
             } finally { File.Delete(path);if(File.Exists(path+".tmp"))File.Delete(path+".tmp"); }
         }
     }
     internal sealed class MapSidecarPaths {
-        internal readonly string DataFolder,Folder,ZonesPath,WaypointsPath,MapId;
+        internal readonly string DataFolder,Folder,ZonesPath,WaypointsPath,ImagePath,MapId;
         MapSidecarPaths(string dataFolder,string id) {
             DataFolder=dataFolder;
             Folder=Path.Combine(dataFolder,"maps",id);
             ZonesPath=Path.Combine(Folder,"zones.tsv");
             WaypointsPath=Path.Combine(Folder,"customwaypoints.tsv");
+            ImagePath=Path.Combine(Folder,"map.png");
             MapId=id;
             Directory.CreateDirectory(Folder);
         }
@@ -361,11 +412,42 @@ namespace ScumMiniMap {
                     id="custom-"+BitConverter.ToString(sha.ComputeHash(stream)).Replace("-","").ToLowerInvariant();
                 }
             }
-            return new MapSidecarPaths(dataFolder,id);
+            MapSidecarPaths paths=new MapSidecarPaths(dataFolder,id);
+            if(id!="default" && !File.Exists(paths.ImagePath)) File.Copy(customMapPath,paths.ImagePath);
+            return paths;
+        }
+        internal void EnsureImage(Image image) {
+            if(File.Exists(ImagePath)) return;
+            string temporary=ImagePath+"."+Guid.NewGuid().ToString("N")+".tmp";
+            try {
+                image.Save(temporary,System.Drawing.Imaging.ImageFormat.Png);
+                File.Move(temporary,ImagePath);
+            } finally { if(File.Exists(temporary)) File.Delete(temporary); }
         }
     }
 
     internal static class MapSidecarStore {
+        internal static string SaveImport(string mapFolder,string sourcePath,List<MapZone> zones,List<MapZone> sourceZones,string report) {
+            // Each import has its own directory, so equal filenames and layer
+            // names cannot overwrite another image or its coordinate TSV.
+            string imports=Path.Combine(mapFolder,"imports");
+            Directory.CreateDirectory(imports);
+            string id=Guid.NewGuid().ToString("N");
+            string stage=Path.Combine(imports,".pending-"+id),destination=Path.Combine(imports,id);
+            Directory.CreateDirectory(stage);
+            try {
+                string extension=Path.GetExtension(sourcePath).ToLowerInvariant();
+                if(extension!=".png" && extension!=".jpg" && extension!=".jpeg" && extension!=".bmp" && extension!=".tsv" && extension!=".json")
+                    extension=".bin";
+                File.Copy(sourcePath,Path.Combine(stage,"source"+extension));
+                ZoneStore.Save(Path.Combine(stage,"zones.tsv"),zones);
+                if(sourceZones!=null) ZoneStore.Save(Path.Combine(stage,"source-zones.tsv"),sourceZones);
+                if(report!=null) File.WriteAllText(Path.Combine(stage,"detection.json"),report);
+                File.WriteAllText(Path.Combine(stage,"source-name.txt"),Path.GetFileName(sourcePath));
+                Directory.Move(stage,destination);
+                return destination;
+            } finally { if(Directory.Exists(stage)) Directory.Delete(stage,true); }
+        }
         internal static bool IsWaypoint(MapZone zone) { return zone!=null && zone.Points!=null && zone.Points.Length==1; }
         static List<MapZone> LoadFile(string path) { return File.Exists(path)?ZoneStore.Load(path):new List<MapZone>(); }
         internal static List<MapZone> Load(MapSidecarPaths paths,string legacyPath,bool includeBundledZones,out bool migrated) {
@@ -602,6 +684,8 @@ namespace ScumMiniMap {
                 dlg.CancelButton = btnCancel;
 
                 rbNew.CheckedChanged += (s, e) => { txtNewName.Enabled = rbNew.Checked; };
+                rbAppend.Enabled = rbReplace.Enabled = zones.Count > 0;
+                dlg.Shown += (s, e) => { txtNewName.Focus(); txtNewName.SelectAll(); };
 
                 if(dlg.ShowDialog(this) == DialogResult.OK) {
                     if(rbNew.Checked) {
@@ -850,14 +934,9 @@ namespace ScumMiniMap {
         }
         public async Task ImportAutomatic(string file) {
             if(busy)return;
-            ImportMode mode = ImportMode.NewLayer;
-            string chosenLayer = Path.GetFileNameWithoutExtension(file);
-            if(string.IsNullOrWhiteSpace(chosenLayer)) chosenLayer = "Faction War";
-
-            if(zones.Count > 0) {
-                mode = ShowImportDialog(file, GetSelectedLayer() ?? "Default", out chosenLayer);
-                if(mode == ImportMode.Cancel) return;
-            }
+            string chosenLayer;
+            ImportMode mode = ShowImportDialog(file, GetSelectedLayer() ?? "Default", out chosenLayer);
+            if(mode == ImportMode.Cancel) return;
 
             busy=true;
             spinAngle=0f;
@@ -1008,7 +1087,12 @@ namespace ScumMiniMap {
                     if(sourceZone.Category == ZoneCategory.Unknown) sourceZone.Category = ZoneCategory.Custom;
                     sourceZone.Layer = targetLayerName;
                 }
-                using(Image loaded=Image.FromFile(file)) { Image copy=new Bitmap(loaded);if(screenshot!=null)screenshot.Dispose();screenshot=copy; }
+                using(Image loaded=Image.FromFile(file)) {
+                    Image copy=new Bitmap(loaded);
+                    try { MapSidecarStore.SaveImport(folder,file,imported,sourceImported,report); }
+                    catch { copy.Dispose(); throw; }
+                    if(screenshot!=null)screenshot.Dispose();screenshot=copy;
+                }
 
                 if(mode == ImportMode.Replace) {
                     zones.RemoveAll(z => string.Equals(string.IsNullOrWhiteSpace(z.Layer) ? "Default" : z.Layer, targetLayerName, StringComparison.OrdinalIgnoreCase));
@@ -1136,7 +1220,7 @@ namespace ScumMiniMap {
             }
             using(SaveFileDialog sfd=new SaveFileDialog {
                 Filter="JSON files (*.json)|*.json|TSV files (*.tsv)|*.tsv|All files (*.*)|*.*",
-                Title=Localization.Get("ZeExportTitle"),FileName="zones.json"
+                Title=Localization.Get("ZeExportTitle"),FileName="zones.json",InitialDirectory=Path.GetDirectoryName(path)
             }) {
                 if(sfd.ShowDialog(this)==DialogResult.OK) {
                     try {
@@ -1152,7 +1236,7 @@ namespace ScumMiniMap {
             if(busy)return;
             using(OpenFileDialog ofd=new OpenFileDialog {
                 Filter="Zone files (*.json;*.tsv)|*.json;*.tsv|All files (*.*)|*.*",
-                Title=Localization.Get("ZeImportTitle")
+                Title=Localization.Get("ZeImportTitle"),InitialDirectory=Path.GetDirectoryName(path)
             }) {
                 if(ofd.ShowDialog(this)==DialogResult.OK) {
                     try {
@@ -1182,6 +1266,8 @@ namespace ScumMiniMap {
                                 importedZone.Layer = targetLayerName;
                             }
                         }
+
+                        MapSidecarStore.SaveImport(Path.GetDirectoryName(path),ofd.FileName,imported,null,null);
 
                         if(mode == ImportMode.Replace) {
                             zones.RemoveAll(z => string.Equals(string.IsNullOrWhiteSpace(z.Layer) ? "Default" : z.Layer, targetLayerName, StringComparison.OrdinalIgnoreCase));

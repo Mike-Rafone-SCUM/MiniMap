@@ -59,7 +59,7 @@ try {
     [IO.File]::WriteAllText($stampedPath, $stamped, [Text.UTF8Encoding]::new($false))
     $sources = @($sources | ForEach-Object { if ([IO.Path]::GetFullPath($_) -eq $sourcePath) { $stampedPath } else { $_ } })
     if (@($sources | Where-Object { $_ -eq $stampedPath }).Count -ne 1) { throw 'Expected exactly one main source file.' }
-    $embedded = @('zones.tsv','roads.bin','water-mask.bin','scummap.bin' | ForEach-Object { '/resource:' + (Join-Path $res $_) + ',' + $_ })
+    $embedded = @('zones.tsv','roads.bin','water-mask.bin','scummap.bin','keyboard-setup.png' | ForEach-Object { '/resource:' + (Join-Path $res $_) + ',' + $_ })
     $embedded += '/resource:' + $tilePack + ',map-tiles.bin'
     $embedded += '/resource:' + (Join-Path $pack 'detect_zones.py') + ',detect_zones.py'
     $embedded += @(& (Join-Path $PSScriptRoot 'Get-VoiceResources.ps1'))
@@ -77,8 +77,9 @@ try {
     if ($Configuration -eq 'Release') {
         & (Join-Path $PSScriptRoot 'New-UpdateManifest.ps1') -Executable $exe -OutputPath (Join-Path $stage 'update.txt')
         foreach ($doc in @('README.md','CHANGELOG.md')) { Copy-Item -LiteralPath (Join-Path $buildRoot $doc) -Destination $stage }
+        Copy-Item -LiteralPath (Join-Path $res 'keyboard-setup.png') -Destination $stage
         foreach ($asset in @('detect_zones.py','requirements.txt','Start-MiniMap.cmd')) { Copy-Item -LiteralPath (Join-Path $pack $asset) -Destination $stage }
-        $packageNames = @($exeName,'README.md','CHANGELOG.md','ATTRIBUTION.md','detect_zones.py','requirements.txt','Start-MiniMap.cmd')
+        $packageNames = @($exeName,'README.md','CHANGELOG.md','ATTRIBUTION.md','detect_zones.py','requirements.txt','Start-MiniMap.cmd','keyboard-setup.png')
         $zipName = 'SkynettMiniMap.zip'
         $notes = "SCUM MiniMap, made for the Skynett community.`n`n" + $section.Groups[1].Value.Trim() + "`n`nDownload SkynettMiniMap.exe or SkynettMiniMap.zip. Exit the previous app before replacing it. Saved settings and zones are retained.`n"
         [IO.File]::WriteAllText((Join-Path $stage 'release-notes.md'), $notes, [Text.UTF8Encoding]::new($false))

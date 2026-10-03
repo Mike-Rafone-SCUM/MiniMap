@@ -1,4 +1,4 @@
-# SCUM MiniMap v1.5.3
+# SCUM MiniMap v1.6.3
 
 SCUM MiniMap is an external map overlay and navigation utility for SCUM, made for the Skynett community. It displays player location, heading, road routes, points of interest, and custom waypoints. It does not read game memory or inject DLLs; this is not an official anticheat certification.
 
@@ -16,6 +16,18 @@ MusicalScumbag users: update MusicalScumbag to the corrected build with **F10** 
 ---
 
 ## Official Distribution & Automatic Updates
+
+### Admin command panel
+
+Open the full map's **Admin commands** dropdown from its right-click menu or sidebar Tools section. Select a command, then **ON** or **OFF** to send `true` or `false` for God mode, player info or nameplates. The panel also offers a toggle button and explicit **ON**/**OFF** buttons. **Edit commands…** opens the editor to add, edit or remove commands; enter the base command without its final true/false argument. The editor is also accessible from Settings and the tray menu. Existing On/Off button pairs migrate into one command. Displayed values are the last submitted requests and start **UNKNOWN** each session; use **OFF** to disable an effect that is already active in SCUM. Check SCUM for the actual state.
+
+The presets send `#SetGodMode true/false`, `#ShowOtherPlayerInfo true/false` and `#ShowNameplates true/false`. God mode is SCUM's blueprint building mode; the server must grant the relevant admin permission. The panel cannot read the live state or confirm that a command succeeded.
+
+Close chat and inventory, then click the required button. MiniMap closes the dropdown before focusing SCUM, pauses location copying and shortcuts throughout command preparation, closes the expanded map when needed, opens chat using your configured physical chat key, pastes the displayed command, presses Enter, then sends Escape to dismiss chat. The sequence uses shorter delays and checks for held keys before starting. Avoid keyboard or mouse actions while it sends. Focus changes, physical input or another clipboard update stop further submission; if interrupted after chat opens, close SCUM chat before retrying. Once Enter is dispatched, the requested value is recorded even if Enter release or Escape cleanup is interrupted. Sends cancelled before Enter leave the last submitted value unchanged.
+
+Use **Add command button**, **Edit** or **Remove** to manage your own single-line commands beginning with `#`. Buttons persist in `admin-commands.tsv` in your active user data folder. Location copying pauses during sending. The previous clipboard is restored only if no other application or action has replaced it.
+
+The editor provides **Label**, **Command**, an **Is boolean?** checkbox, **Quantity (optional)** and **Extra strings (optional)**. New commands start with the checkbox unchecked and run once. Check it for a command that accepts true/false to create an On/Off toggle. Enter a positive whole-number quantity when needed, and any additional single-line arguments in Extra strings. The preview shows the assembled command in this order: command, boolean value when enabled, quantity, extra strings. Leave unused fields blank; existing saved toggle commands remain compatible.
 
 Official binaries, update manifests, and cryptographic checksums are distributed exclusively via GitHub Releases:
 
@@ -37,17 +49,23 @@ Join the [SCUM MiniMap Discord](https://discord.gg/MYzcGaFDMn) for downloads, re
 
 ## Copy-key setup
 
+![Community keyboard guide: use the green-highlighted NumPad divide key](keyboard-setup.png)
+
+Keyboard illustration supplied by a member of the SCUM MiniMap Discord. The green box marks **NumPad /**; the red cross marks the main keyboard slash key. Bind SCUM's **Copy location** to the same key selected in MiniMap.
+
 The default for new installations is **Num / (number-pad divide) without a modifier**. In SCUM controls, manually bind **Copy location** to that same key. MiniMap cannot change SCUM's controls. If your keyboard has no number pad, choose another unused single key in SCUM and capture it in MiniMap's setup guide or key wizard.
 
 Existing saved bindings are preserved. When switching from Ctrl+C, select **Single key without modifier** in MiniMap as well. Single-key tracking supports a 250 ms interval without injecting Ctrl; Ctrl+C remains supported at a minimum one-second interval. Actual updates depend on SCUM supplying coordinates.
 
-On ABNT2 and other non-US keyboards, use **Capture** beside Copy Location in MiniMap's key wizard: it saves the physical scan code of the key you press and sends that same key to SCUM. Map, Chat and MiniMap shortcuts also support physical-key capture. Existing saved bindings remain intact until you change them.
+On ABNT2 and other non-US keyboards, use **Capture** beside Copy Location in MiniMap's key wizard: it saves the physical scan code of the key you press and sends that same key to SCUM. Map, Chat and every MiniMap shortcut also support physical-key capture. Existing saved bindings remain intact until you change them.
+
+Open **SCUM and MiniMap key rebinding wizard** in Settings to configure all game bindings and app actions together. Match SCUM Map, Chat and Copy location to the game's controls; MiniMap cannot change those controls for you. The same configured SCUM Map key opens and closes both SCUM's map and MiniMap's expanded overlay. See [Controls & Keybinds](#controls--keybinds) for the complete app action list.
 
 ## Optional voice navigation (work in progress)
 
 Voice navigation is **off by default**. Enable it in Settings, select **Lyan (Female US)**, set the volume and use Preview voice. Guidance includes distance/turn prompts, arrival and wrong-way handling. Accuracy and prompt timing are still being refined; check the map and road signs when following a route. Recalculation appears on screen; the bundled clips do not include spoken “recalculating”.
 
-In Settings, **MiniMap shortcuts (single keys)** lets you capture alternatives for Settings (Home), Add waypoint (Insert) and Search (Delete). Click an action and press its new key; Escape cancels. Duplicate shortcuts and keys already used by SCUM Map, Chat or Copy location are rejected. For number-pad keys, keep Num Lock in the same state when capturing and using the key. Preferences are saved per user. If the default keys are unavailable, open Settings through the taskbar first. Chat editing retains priority over shortcuts, and Add waypoint requires a received location.
+In Settings, **MiniMap shortcuts (single keys)** lets you capture or unbind every app action, including zoom, map visibility, waypoint tools and admin commands. The key rebinding wizard offers the same controls. Click an action and press a single physical key without Ctrl, Alt, Shift or Windows; Escape cancels capture. Duplicate shortcuts, reserved game/dialog controls and keys already used by SCUM Map, Chat or Copy location are rejected. For number-pad keys, keep Num Lock in the same state when capturing and using the key. Preferences are saved per user. If the default keys are unavailable, open Settings through the taskbar or tray menu first. Chat editing retains priority over shortcuts, and Add waypoint requires a received location.
 
 In Settings, **History duration (minutes)** controls how long the recorded route trail remains visible (1–240 minutes; default 30). **Clear route history** removes the current trail immediately; tracking starts a new trail with subsequent samples. Reducing the duration removes older points immediately, including while stationary. Increasing it retains future history longer; expired or cleared points cannot be restored. These preferences are saved per user; trail points last only for the current session.
 
@@ -61,24 +79,28 @@ Optional `13_recalculating.mp3` adds a spoken recalculation notice. Keep-left/ri
 
 - A glowing arrow on the minimap edge points toward your final destination. Circular maps also show a short glowing arc. The indicator uses your route colour and works independently of voice navigation; it indicates the endpoint bearing, not the next road turn.
 - Position and heading continue updating while the full map is open with SCUM’s map cursor visible. Chat, focus and physical-input protections remain active.
-- **Home** restores Settings from the taskbar and brings it forward. Repeated presses keep it open; use Escape, Done or Close to minimize it.
+- The configured **Settings** shortcut (<kbd>Home</kbd> by default) restores Settings from the taskbar and brings it forward. Repeated presses keep it open; use Escape, Done or Close to minimize it.
 - Circular clipping and indicator placement stay aligned with status bars above or below the map, including full opacity with edge fading disabled.
 
 ## Key Features
 
-### In-Game Full Map Mode (M Key)
-Pressing <kbd>M</kbd> during gameplay seamlessly transitions the minimap into a full-scale, 1:1 square tactical map centered directly over SCUM's built-in in-game map.
+### In-Game Full Map Mode
+Pressing your configured **SCUM Map** key (<kbd>M</kbd> by default) during gameplay transitions the minimap into a full-scale, 1:1 square tactical map centered directly over SCUM's built-in in-game map.
 * **Full Monitor Height & Centering:** Unconstrained display geometry detection expands the overlay to the full display height (1080p, 1152p, 1440p, 4K) and horizontally centers it (`(ScreenWidth - ScreenHeight) / 2`), leaving peripheral HUD elements (health, stamina, speedometer) visible.
 * **Mouse Wheel Zoom & Pan:** Roll the mouse wheel while viewing the full map to zoom smoothly from 1.0x up to 16.0x towards the cursor. Click and drag with the left mouse button to pan across the island. Right-click opens map actions, including resetting the view and adding a custom waypoint at the clicked location.
 * **Floating Opacity Slider:** An interactive glass pill at the top-right corner allows adjusting overlay opacity in real time from 20% to 100%, letting you see through the overlay directly into the game environment.
-* **Mouse Input:** The compact minimap passes mouse input through to the game. The expanded map can activate temporarily for zooming, panning and opacity controls, then returns focus to SCUM when closed.
-* **Smart Auto-Restore:** Restores normal minimap dimensions and position when pressing <kbd>M</kbd> again, pressing <kbd>Esc</kbd>, or switching away from the game. Cursor hiding alone does not close the overlay.
+* **Mouse Input:** The compact minimap passes mouse input through to the game. The expanded map keeps keyboard focus in SCUM while supporting zooming, panning and opacity controls. Hold either **Ctrl** key to temporarily hide the expanded overlay and click SCUM's map directly, so admins can select players and use SCUM teleport actions. Release Ctrl to restore MiniMap and its controls. Completing a Ctrl-left-click on the exposed map collapses MiniMap to its compact view and clears stale chat and inventory input locks for admin teleporting. Clicks use the underlying game map's current position and zoom.
+* **Smart Auto-Restore:** Restores normal minimap dimensions and position when pressing the configured Map key again, pressing <kbd>Esc</kbd>, or switching away from the game. Cursor hiding alone does not close the overlay.
 
 ### Custom Waypoints & Search List Management
+* **Death markers:** Automatic death markers are enabled by default and can be disabled in Settings under MiniMap shortcuts. MiniMap recognises the death-screen layout: a prominent red text heading above three aligned dark respawn buttons with visible labels. One complete layout match saves a tombstone immediately using the last known coordinates captured before that frame. Detection must then miss fourteen consecutive samples (about ten seconds) before another death can be marked. Detection does not read the wording, so translated text needs no calibration or extra key press. Detection operates on the heading and respawn panel; a right-side map is not required.
+* **Manual death marker:** Use **Add death marker** (<kbd>Down</kbd> by default) at the death screen before respawning to save the last received location. Markers appear on the minimap and full map, persist in the current map's waypoint file, and support navigation and deletion through the waypoint list. Using this action after receiving respawn coordinates marks the new location. Chat, inventory, dialogs, modifiers and conflicting bindings retain priority for this shortcut. Markers follow custom-waypoint visibility settings.
+* **Death marker age and collection:** Labels show relative age, such as Death 12m ago, including markers created by previous versions. Tracking must first see you at least 50 metres away, then returning within 25 metres removes the marker permanently and clears navigation to it. Ordinary waypoints are retained. Labels update every ten seconds while MiniMap is running.
+* **Automatic detection limits:** SCUM must be foreground, with the heading and respawn panel unobstructed and MiniMap's expanded map, Settings and dialogs closed. Automatic placement uses the last known location received in the current session, even when death or menus pause tracking for more than 30 seconds. An older sample may be less precise if you moved after tracking stopped. If MiniMap has never received coordinates, the death is skipped; subsequent respawn coordinates are not substituted. Detection uses local screen pixels, without game memory access, online OCR or stored screenshots. It depends on the red-heading/three-button layout; substantially different death screens may be missed. The configured Add death marker shortcut remains available as a manual fallback. The supplied recording's fade and outlined respawn selection pass regression checks. A bounded `death-detection.log` in the active data folder records blocked detection, unavailable captures, confirmation and saved/skipped/failed markers with coordinate age, without recording coordinates or screenshots.
 * **Save at Current Location (Insert by default):** Use the Add waypoint shortcut while playing to capture your current GPS coordinates. A dialog lets you name the location, saving it in the current map's `customwaypoints.tsv` with a cyan marker.
-* **List Management & Right-Click Deletion:** Open the waypoint list (<kbd>Delete</kbd> key) to search, navigate to, or manage locations. Right-clicking any custom waypoint displays a context menu to delete it, or highlight it and press <kbd>Delete</kbd>.
-* **Proximity Clearing:** Pressing <kbd>Insert</kbd> within 50 meters of an existing custom waypoint prompts you to delete it directly in the field.
-* **SCUM Key Rebinding Wizard:** Settings can capture every SCUM binding used by MiniMap: Map, Chat, and the coordinate-copy modifier/key. This prevents custom bindings such as Ctrl for free look from moving the camera during tracking.
+* **List Management & Right-Click Deletion:** Open the waypoint list with your configured Search shortcut (<kbd>Delete</kbd> by default) to search, navigate to, or manage locations. Right-clicking any custom waypoint displays a context menu to delete it, or highlight it and press <kbd>Delete</kbd> while the list is focused.
+* **Proximity Clearing:** Using Add waypoint within 50 meters of an existing custom waypoint prompts you to delete it directly in the field. Clear waypoint removes the active navigation destination; it does not delete saved waypoints.
+* **SCUM and MiniMap Key Rebinding Wizard:** Settings can capture every SCUM binding used by MiniMap and every app action, including zoom in/out, show/hide map, waypoint actions and tools. SCUM bindings must match the game; app shortcuts can be changed or unbound. This prevents custom bindings such as Ctrl for free look from moving the camera during tracking.
 
 ### Road-Aware GPS Navigation
 * **A* Driving Route Pathfinding:** Real-time pathfinding across SCUM's road network calculates driving trajectories, turns, and remaining road distance in milliseconds.
@@ -103,26 +125,44 @@ Choose English, Argentine Spanish, French, German, Dutch, Russian, Simplified Ch
 
 ## First Launch: Size and Position
 
-New installations start with a compact 240 × 240 minimap in the upper-right corner. The setup guide's **Move and resize minimap** button opens the Appearance settings. Switch to the desktop to drag the minimap into position or drag its edges to resize it; use **Home → Appearance** for exact width and height. Changes save automatically. Reopen the setup guide from Settings whenever needed.
+New installations start with a compact 240 × 240 minimap in the upper-right corner. The setup guide's **Move and resize minimap** button opens the Appearance settings. Switch to the desktop to drag the minimap into position or drag its edges to resize it; use **Settings → Appearance** for exact width and height. Changes save automatically. Reopen the setup guide from Settings whenever needed.
 
 Existing saved layouts are retained. Opening the full map does not replace your saved minimap size or position.
 
 ## Controls & Keybinds
 
-| Input | Mode | Action |
+All twelve MiniMap app actions are configurable through **MiniMap shortcuts (single keys)** in Settings and the **SCUM and MiniMap key rebinding wizard**. The startup guide uses the same saved bindings. These are the defaults; displayed shortcut hints follow your configured keys.
+
+| MiniMap action | Default | Effect |
 |---|---|---|
-| <kbd>M</kbd> | In-Game | Toggle Full Map Mode (centered full-height overlay; ignored while typing in chat) |
-| <kbd>Left Click</kbd> | Full Map | Click anywhere to place/route GPS marker (re-click marker to clear) |
-| <kbd>Mouse Wheel</kbd> | Full Map | Zoom in and out smoothly (1.0x to 16.0x toward cursor) |
-| <kbd>Left Click + Drag</kbd> | Full Map | Pan across the map (when zoomed in) or drag opacity slider |
-| <kbd>Right Click</kbd> | Full Map | Open map actions: add custom waypoint here, reset zoom, or clear active GPS waypoint |
-| <kbd>Home</kbd> | Any | Open or restore Settings; Escape, Done or Close dismisses it |
-| <kbd>Delete</kbd> | Any | Open Waypoint Search & Destination Navigation |
-| <kbd>End</kbd> | Any | Show / Hide Minimap Overlay |
-| <kbd>Insert</kbd> | In-Game | Save custom waypoint at current GPS position |
-| <kbd>Page Up</kbd> | Minimap | Manual zoom in |
-| <kbd>Page Down</kbd> | Minimap | Manual zoom out |
-| <kbd>Escape</kbd> | Any | Close active search/settings dialog, or exit full map mode |
+| Settings | <kbd>Home</kbd> | Open or restore Settings |
+| Add waypoint | <kbd>Insert</kbd> | Save a named waypoint at the last received location; offers removal near an existing waypoint |
+| Search | <kbd>Delete</kbd> | Open waypoint search and destination navigation |
+| Show / hide map | <kbd>End</kbd> | Toggle overlay visibility |
+| Zoom in | <kbd>Page Up</kbd> | Increase manual zoom in the compact or full map |
+| Zoom out | <kbd>Page Down</kbd> | Decrease manual zoom in the compact or full map |
+| Add death marker | <kbd>Down</kbd> | Save a death marker at the last received location |
+| Reset zoom | Unbound | Restore the default map view |
+| Clear waypoint | Unbound | Clear the active navigation destination |
+| Zone Creator Wizard | Unbound | Open the zone editor and import tools |
+| Getting Started Guide | Unbound | Open the startup guide |
+| Admin commands | Unbound | Open the admin command panel |
+
+**Capture** assigns a single physical key without modifiers. **Unbind** disables an app shortcut while its button or menu entry remains available. **Reset defaults** restores the standard SCUM and app bindings in the wizard; the five additional tool actions above return to Unbound. Check SCUM's controls before saving reset game bindings. Existing saved bindings are retained during updates, and accepted changes persist per user in `settings.ini`, including physical scan codes and unbound actions.
+
+Each assigned app shortcut must be distinct from other app shortcuts and SCUM Map, Chat and Copy location. Reserved game/dialog controls are rejected. Capture and Save validate these conflicts; the rebinding wizard keeps changes pending until Save, so Cancel leaves the previous bindings intact. The startup guide also keeps a draft while moving between pages and saves all controls together when finished. Keyboard shortcuts respect chat, inventory, dialogs, held modifiers and admin-command sending. Bindings control app actions; they do not change SCUM's controls or reassign standard mouse gestures and dialog navigation.
+
+| Input | Context | Action |
+|---|---|---|
+| Configured SCUM Map key (<kbd>M</kbd> by default) | In game | Toggle SCUM's map and the full-map overlay together; ignored while typing in chat |
+| Configured SCUM Chat key | In game | Open SCUM chat and pause MiniMap shortcuts and coordinate copying |
+| Configured Copy location key/modifier (<kbd>Num /</kbd>, no modifier, by default) | In game | Copy coordinates for tracking; must match SCUM |
+| <kbd>Left Click</kbd> | Full map | Place or route a GPS marker; click it again to clear |
+| <kbd>Mouse Wheel</kbd> | Full map | Zoom from 1.0x to 16.0x toward the cursor |
+| <kbd>Left Click + Drag</kbd> | Full map | Pan when zoomed in or drag the opacity slider |
+| <kbd>Right Click</kbd> | Full map | Open waypoint, view and admin actions |
+| <kbd>Ctrl</kbd> | Full map | Temporarily expose SCUM's map for direct interaction |
+| <kbd>Escape</kbd> | Dialog or full map | Cancel capture, close the active dialog or exit full-map mode |
 
 ---
 

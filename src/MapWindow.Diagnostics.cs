@@ -489,6 +489,7 @@ public void SaveSettingsPreview(string path) {
 
 
             ZoneStore.SelfTest();
+            DeathBannerDetector.SelfTest();
 
 
 

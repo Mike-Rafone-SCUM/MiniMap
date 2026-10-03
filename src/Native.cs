@@ -11,7 +11,7 @@ namespace ScumMiniMap {
 
 
 
-    static class Native {
+    static partial class Native {
         // Opt-in, bounded input diagnostics. Never record general typing or clipboard data.
         internal static readonly bool InputTraceEnabled=Environment.GetEnvironmentVariable("SCUM_MINIMAP_INPUT_TRACE")=="1";
         internal static readonly UIntPtr CopyInputTag=new UIntPtr(0x53434D4Du);

@@ -105,7 +105,7 @@ namespace ScumMiniMap {
                 if(factionOnly && !zone.IsFaction) continue;
                 if(sector!=null && Sector(zone.Centroid)!=sector)continue;
                 int score=Rank(Normalize(zone.Name),filter);
-                string locName=Localization.GetZoneName(zone.Name);
+                string locName=zone.DisplayName;
                 if(!string.IsNullOrEmpty(locName) && locName!=zone.Name) {
                     int locScore=Rank(Normalize(locName),filter);
                     if(locScore>=0 && (score<0 || locScore<score)) score=locScore;

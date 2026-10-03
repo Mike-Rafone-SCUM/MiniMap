@@ -97,6 +97,40 @@ def register(screenshot, reference):
                     'median_error_px': float(np.median(error[mask.ravel() != 0]))}
 
 
+def trace_outline(contour):
+    """Preserve measured geometry; only smooth a confidently circular boundary."""
+    perimeter = cv2.arcLength(contour, True)
+    polygon = cv2.approxPolyDP(contour, max(1.0, perimeter * .008), True)[:, 0].astype(np.float32)
+    # Fit using uniformly sampled boundary pixels, rather than the unevenly
+    # spaced corners returned by CHAIN_APPROX_SIMPLE or an enclosing circle.
+    boundary = contour[:, 0].astype(np.float64)
+    origin = boundary.mean(axis=0)
+    local = boundary - origin
+    design = np.column_stack((2 * local, np.ones(len(local))))
+    squared = np.sum(local * local, axis=1)
+    selected = np.ones(len(local), dtype=bool)
+    for _ in range(5):
+        coefficients, _, _, _ = np.linalg.lstsq(design[selected], squared[selected], rcond=None)
+        fit_center = coefficients[:2]
+        fit_radius = math.sqrt(max(0.0, coefficients[2] + np.sum(fit_center ** 2)))
+        errors = np.abs(np.linalg.norm(local - fit_center, axis=1) - fit_radius)
+        selected = errors <= np.percentile(errors, 75)
+    center = coefficients[:2] + origin
+    radius = math.sqrt(max(0.0, coefficients[2] + np.sum(coefficients[:2] ** 2)))
+    residual = np.abs(np.linalg.norm(boundary - center, axis=1) - radius)
+    # Rectangles, clipped circles and irregular polygons keep their vertices.
+    inliers = residual <= max(1.5, radius * .04)
+    angles = np.sort(np.arctan2(boundary[inliers, 1] - center[1], boundary[inliers, 0] - center[0]))
+    if len(angles) < 3:
+        return polygon
+    gap = np.max(np.diff(np.r_[angles, angles[0] + 2 * np.pi]))
+    if (len(polygon) > 6 and radius >= 5 and gap < .6
+            and inliers.mean() >= .70):
+        angles = np.arange(64) * (2 * np.pi / 64)
+        return (center + radius * np.column_stack((np.cos(angles), np.sin(angles)))).astype(np.float32)
+    return polygon
+
+
 def extract(screenshot, reference, matrix):
     height, width = screenshot.shape[:2]
     aligned = cv2.warpPerspective(reference, np.linalg.inv(matrix), (width, height))
@@ -163,10 +197,10 @@ def extract(screenshot, reference, matrix):
             continue
 
         binary = np.uint8(pixels) * 255
-        close_size = 21 if colour == 'Green' else 5
+        close_size = 5
         binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, np.ones((close_size, close_size), np.uint8))
         binary = cv2.morphologyEx(binary, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
-        contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         for contour in contours:
             area = cv2.contourArea(contour)
             if area < (750 if colour in ('Red', 'Yellow') else 650 if colour == 'Green' else 550 if colour == 'Blue' else 350) or area > width * height * .03:
@@ -182,24 +216,14 @@ def extract(screenshot, reference, matrix):
                 continue
             if min(w, h) < 10 or max(w, h) / min(w, h) > 5:
                 continue
-            rot_rect = cv2.minAreaRect(contour)
-            w_rot, h_rot = rot_rect[1]
-            aspect_rot = max(w_rot, h_rot) / (min(w_rot, h_rot) + 1e-6)
-            dists = np.linalg.norm(contour[:, 0] - np.array([cx, cy]), axis=1)
-            r_var = np.std(dists) / (radius + 1e-6)
-
-            if r_var > 0.12 or aspect_rot > 1.25:
-                # Rectangle
-                box = cv2.boxPoints(rot_rect).astype(np.float32)
-                approx = box
-            else:
-                # Circle (smooth 32-point polygon)
-                circle_pts = []
-                r_fit = float(np.percentile(dists, 90))
-                for s in range(32):
-                    ang = 2 * np.pi * s / 32
-                    circle_pts.append([cx + r_fit * np.cos(ang), cy + r_fit * np.sin(ang)])
-                approx = np.array(circle_pts, dtype=np.float32)
+            # Overlay tint can disappear against buildings and labels, leaving
+            # inward notches. Recover the outer envelope without an enclosing
+            # rectangle or radius that extends past the measured boundary.
+            hull = cv2.convexHull(contour)
+            envelope = np.zeros((h + 2, w + 2), np.uint8)
+            cv2.fillPoly(envelope, [hull - np.array([[[x - 1, y - 1]]])], 255)
+            edges, _ = cv2.findContours(envelope, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+            approx = trace_outline(edges[0] + np.array([[[x - 1, y - 1]]]))
 
             found.append({'colour': colour, 'rgb': colours[colour], 'points': approx,
                           'area': area, 'center': (cx, cy)})

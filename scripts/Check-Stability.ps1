@@ -16,6 +16,9 @@ try {
     $miniForm.GetType().GetField('locationHistory', $miniFlags).SetValue($miniForm, $true)
     $historyRecord = $miniForm.GetType().GetMethod('RecordLocationHistory', $miniFlags)
     $historyPoints = $miniForm.GetType().GetField('locationHistoryPoints', $miniFlags).GetValue($miniForm)
+    # A live coordinate on the clipboard may seed a newer constructor sample.
+    # Start this historical fixture from an empty trail.
+    $historyPoints.Clear()
     $historyStart = [DateTime]::UtcNow.AddMinutes(-2)
     foreach ($historySecond in @(0, 10, 29, 30, 59, 60)) {
         $historyRecord.Invoke($miniForm, @([Drawing.PointF]::new([single](0.1 + $historySecond * 0.001), 0.1), $historyStart.AddSeconds($historySecond)))

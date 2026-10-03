@@ -1,1 +1,5 @@
 Habitat origins are a golden regression snapshot of the audited resources/scummap.bin on 2026-09-19. They detect geometry drift; they are not independent upstream coordinate verification.
+
+`scum-death-screen.jpg` is the full death-screen reference supplied by the user on 2026-10-03. Rendering checks recognise this image, the native capture crop and resized versions. Synthetic variants replace the heading and labels with unrelated text in several scripts and add simulated right-side map content. They verify independence from English wording; they do not certify every live SCUM language, map layout or future UI version.
+
+`death-recording/` contains unmodified frames extracted at 4 fps from the user's 2026-10-03 00:41:44 SCUM recording: frame 001 is gameplay, 004 is death onset, 008 is the fading death screen and 016 has the dark background and outlined respawn selection. Tests replay their actual matches through the marker-saving path with a 95-second-old coordinate sample, then inject a different respawn location. Exactly one waypoint must persist at the original location; missing coordinates must never be filled using a later respawn sample.

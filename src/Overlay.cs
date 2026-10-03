@@ -258,6 +258,8 @@ namespace ScumMiniMap {
         }
     }
     public sealed class ChatState {
+        internal long Revision { get; private set; }
+        internal bool AllowsQueuedShortcut(long revision) { return !Paused && Revision==revision; }
         DateTime openTime = DateTime.MinValue;
         public bool Paused {
             get {
@@ -269,11 +271,13 @@ namespace ScumMiniMap {
         public void Key(int key,int chatOpenKey=0x54,int copyKey=0,int scanCode=0,int chatOpenScanCode=0) {
             // Enter (0x0D) and Escape (0x1B) close chat in SCUM
             if(key==0x0D || key==0x1B) {
+                Revision++;
                 openTime = DateTime.MinValue;
                 return;
             }
             // Opening chat via configured chat key, '/' or keypad '/'
             if(PhysicalKeyCapture.Matches(key,scanCode,chatOpenKey,chatOpenScanCode) || ((key==0xBF || key==0x6F) && key!=copyKey)) {
+                Revision++;
                 openTime = DateTime.UtcNow;
                 return;
             }
@@ -283,7 +287,7 @@ namespace ScumMiniMap {
                 openTime = DateTime.UtcNow;
             }
         }
-        public void Reset() { openTime = DateTime.MinValue; }
+        public void Reset() { Revision++;openTime = DateTime.MinValue; }
     }
     // Hook and polling must share edges: replaying an old Enter after a newer T
     // would clear the chat gate while SCUM's text box is still open.
@@ -414,12 +418,18 @@ namespace ScumMiniMap {
         readonly ChatKeyMonitor chatKeys=new ChatKeyMonitor();
         static DateTime lastMouseAction=DateTime.MinValue;
         public static DateTime LastUserInputTime = DateTime.MinValue;
+        internal static long PhysicalInputRevision;
         public static DateTime LastFreshKeyDownTime = DateTime.MinValue;
         internal static bool UserActiveRecently(int windowMs = 90) {
             return (DateTime.UtcNow - LastFreshKeyDownTime).TotalMilliseconds < windowMs || (DateTime.UtcNow-lastMouseAction).TotalMilliseconds<400;
         }
         public bool Available { get { return hook!=IntPtr.Zero && mouseHook!=IntPtr.Zero; } }
         public bool ShortcutModifiersDown(bool includeShift) { return transitions.ShortcutModifiersDown(includeShift); }
+        internal bool PhysicalControlDown { get { return transitions.IsDown(0x11) || transitions.IsDown(0xA2) || transitions.IsDown(0xA3); } }
+        internal Action<int,Point> OnPhysicalMouse;
+        internal static void ClearInputCooldowns() {
+            lastMouseAction=LastUserInputTime=LastFreshKeyDownTime=DateTime.MinValue;
+        }
         public GameKeys(Action<int,int> action,Func<int,int,bool> shouldDispatch,ChatState chatState=null,Func<int> getChatOpenKey=null,Func<int> getCopyModifier=null,Func<bool> inventoryOwnsInput=null,Func<int> getCopyKey=null,Func<int> getChatScanCode=null,Func<int,int,bool> sharedGameBinding=null) {
             this.sharedGameBinding=sharedGameBinding;
             this.action=action; this.shouldDispatch=shouldDispatch; this.chatState=chatState; this.getChatOpenKey=getChatOpenKey; this.getCopyModifier=getCopyModifier; this.inventoryOwnsInput=inventoryOwnsInput; this.getCopyKey=getCopyKey; this.getChatScanCode=getChatScanCode; callback=OnKey;
@@ -439,17 +449,17 @@ namespace ScumMiniMap {
             if(Native.InputTraceEnabled && focused!=wasFocused) Native.TraceInput("game focus="+focused);
             // Windows may silently remove a hook after a long UI stall; a non-zero handle
             // alone is not proof it still receives input. Refresh without changing chat state.
-            if(!Native.CopyInProgress && (DateTime.UtcNow>=nextHookRefresh || (focused && !wasFocused))) RefreshHooks();
+            if(!Native.CopyInProgress && !Native.AdminInputInProgress && (DateTime.UtcNow>=nextHookRefresh || (focused && !wasFocused))) RefreshHooks();
             wasFocused=focused;
             sampledGameWindow=focused?Native.GetForegroundWindow():IntPtr.Zero;
-            if(!Native.CopyInProgress) {
+            if(!Native.CopyInProgress && !Native.AdminInputInProgress) {
                 transitions.Resync(key => (Native.GetAsyncKeyState(key)&0x8000)!=0);
                 for(int key=0;key<suppressedShortcuts.Length;key++)
                     if(suppressedShortcuts[key] && (Native.GetAsyncKeyState(key)&0x8000)==0) suppressedShortcuts[key]=false;
             }
             // GetAsyncKeyState includes our injected copy key. The hook already
             // handles physical chat input during copying and ignores injected events.
-            if(Native.CopyInProgress) return;
+            if(Native.CopyInProgress || Native.AdminInputInProgress) return;
             int openKey=getChatOpenKey!=null?getChatOpenKey():0x54;
             int copyKey=getCopyKey!=null?getCopyKey():0;
             int chatScan=getChatScanCode!=null?getChatScanCode():0;
@@ -466,6 +476,8 @@ namespace ScumMiniMap {
             int kind=message.ToInt32();
             if(code>=0 && kind!=0x200 && Native.GameFocused()) {
                 MouseData mouse=(MouseData)Marshal.PtrToStructure(data,typeof(MouseData));
+                if((mouse.flags&1)==0) PhysicalInputRevision++;
+                if((mouse.flags&1)==0 && OnPhysicalMouse!=null) OnPhysicalMouse(kind,new Point(mouse.x,mouse.y));
                 if((mouse.flags&1)==0 && MouseActionBlocksCopy(kind,getCopyModifier!=null?getCopyModifier():0xA2)) {
                     lastMouseAction=DateTime.UtcNow;
                     Native.CancelActiveCopy();
@@ -490,6 +502,7 @@ namespace ScumMiniMap {
                         " suppressed="+(key.key<256 && suppressedShortcuts[(int)key.key]));
                 // Injected events must never alter physical held-key or chat state, even after copying ends.
                 if((key.flags & 0x10)!=0) return CallNextHookEx(hook,code,message,data);
+                PhysicalInputRevision++;
                 int k=(int)key.key;
                 bool isDown=message.ToInt32()==0x100 || message.ToInt32()==0x104;
                 bool shortcutWasSuppressed=k>=0 && k<suppressedShortcuts.Length && suppressedShortcuts[k];
@@ -503,11 +516,15 @@ namespace ScumMiniMap {
                 // foreground process for every key transition. Validate the cheap
                 // window handle too: desktop typing just after Alt-Tab must not
                 // open a phantom chat gate using the previous timer's focus sample.
-                bool gameFocused=FocusStillMatches(wasFocused,sampledGameWindow,Native.GetForegroundWindow());
+                IntPtr foreground=Native.GetForegroundWindow();
+                bool gameFocused=FocusStillMatches(wasFocused,sampledGameWindow,foreground);
                 int openKey=getChatOpenKey!=null?getChatOpenKey():0x54;
                 int copyKey=getCopyKey!=null?getCopyKey():0;
                 int chatScan=getChatScanCode!=null?getChatScanCode():0;
                 int eventScan=PhysicalKeyCapture.EncodeScanCode(key.scan,key.flags);
+                // A chat/map press can arrive before the sampler sees focus return.
+                // Resolve watched keys against the actual foreground window at that event.
+                gameFocused=ShortcutEventFocused(gameFocused,(shouldDispatch!=null && shouldDispatch(k,eventScan)) || PhysicalKeyCapture.Matches(k,eventScan,openKey,chatScan),()=>Native.IsGameWindow(foreground));
                 bool chatWasPaused=chatState!=null && chatState.Paused;
                 chatKeys.Observe(k,isDown,gameFocused,chatState,openKey,copyKey,eventScan,chatScan);
                 bool chatIsPaused=chatState!=null && chatState.Paused;
@@ -552,6 +569,7 @@ namespace ScumMiniMap {
             // This includes Escape/Enter closing chat and Tab changing its channel.
             return wasPaused || isPaused;
         }
+        internal static bool ShortcutEventFocused(bool sampled,bool watched,Func<bool> verify) { return sampled || (watched && verify()); }
         internal static bool FocusStillMatches(bool focused,IntPtr sampledWindow,IntPtr foreground) {
             return focused && sampledWindow!=IntPtr.Zero && sampledWindow==foreground;
         }
@@ -581,6 +599,11 @@ namespace ScumMiniMap {
         bool movingMinimap;
         Point minimapDragOffset;
         bool fullMapMode;
+        bool fullMapClickThrough;
+        bool hiddenForClickThrough;
+        bool fullMapRightButtonDown;
+        internal bool FullMapClickThrough { get { return fullMapClickThrough; } }
+        public Action OnFullMapClickThrough;
         public bool ChangingMapMode { get; private set; }
         Size savedSize;
         Point savedLocation;
@@ -601,6 +624,8 @@ namespace ScumMiniMap {
         readonly ToolStripMenuItem fullMapRouteColorMenu;
         public Action OnPlayerColorRequested;
         readonly ToolStripMenuItem fullMapPlayerColorMenu;
+        readonly ToolStripMenuItem fullMapAdminMenu;
+        internal Action<ToolStripMenuItem> PopulateAdminCommands;
         public Func<bool> CanAddFullMapWaypoint;
         public Func<bool> CanShowFullMapContextMenu;
         Point fullMapContextPoint;
@@ -614,6 +639,10 @@ namespace ScumMiniMap {
                 ChangingMapMode=true;
                 try {
                 fullMapMode=value;
+                // Physical Ctrl polling belongs to the live sampling timer;
+                // diagnostic windows must not inherit the user's game input.
+                if(!value) UpdateFullMapClickThrough(false,Native.GameFocused());
+                fullMapRightButtonDown=false;
                 if(value) {
                     savedSize=Size;
                     savedLocation=Location;
@@ -647,6 +676,7 @@ namespace ScumMiniMap {
                 if(fullMapWaypointMenu!=null) fullMapWaypointMenu.Visible=value;
                 if(fullMapRouteColorMenu!=null) fullMapRouteColorMenu.Visible=value;
                 if(fullMapPlayerColorMenu!=null) fullMapPlayerColorMenu.Visible=value;
+                if(fullMapAdminMenu!=null) fullMapAdminMenu.Visible=value;
                 } finally { ChangingMapMode=false; }
             }
         }
@@ -682,6 +712,10 @@ namespace ScumMiniMap {
             });
             fullMapPlayerColorMenu.Visible=false;
             menu.Items.Add(fullMapPlayerColorMenu);
+            fullMapAdminMenu=new ToolStripMenuItem("Admin commands") { Visible=false };
+            fullMapAdminMenu.DropDownItems.Add("Edit commands...");
+            fullMapAdminMenu.DropDownOpening+=(s,e)=> { if(PopulateAdminCommands!=null)PopulateAdminCommands(fullMapAdminMenu); };
+            menu.Items.Add(fullMapAdminMenu);
             menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add(Localization.Get("SearchPlaceOrGrid"),null,(s,e)=>search());
             menu.Items.Add(Localization.Get("Settings"),null,(s,e)=>settings());
@@ -698,9 +732,19 @@ namespace ScumMiniMap {
             Localization.LanguageChanged+=languageChanged;
             Disposed+=(s,e)=>Localization.LanguageChanged-=languageChanged;
             MouseCaptureChanged+=(s,e)=> { if(!Capture) movingMinimap=false; };
+            VisibleChanged+=(s,e)=> {
+                // A focus-return or map-opening Show must not put the window
+                // back above SCUM while the user is still holding Ctrl.
+                if(fullMapClickThrough && Visible) {
+                    hiddenForClickThrough=true;
+                    base.Hide();
+                }
+            };
             MouseDown+=(s,e)=> {
+                if(fullMapClickThrough) return;
                 if(fullMapMode) {
                     if(e.Button==MouseButtons.Right) {
+                        fullMapRightButtonDown=true;
                         fullMapContextPoint=e.Location;
                         fullMapContextScreenPoint=PointToScreen(e.Location);
                         if(OnFullMapMouseDown!=null) OnFullMapMouseDown(e.Location, e.Button);
@@ -718,6 +762,7 @@ namespace ScumMiniMap {
                 }
             };
             MouseMove+=(s,e)=> {
+                if(fullMapClickThrough) return;
                 if(movingMinimap && !fullMapMode && !through) {
                     Point screen=PointToScreen(e.Location);
                     Location=new Point(screen.X-minimapDragOffset.X,screen.Y-minimapDragOffset.Y);
@@ -731,13 +776,16 @@ namespace ScumMiniMap {
                 if(fullMapMode && OnFullMapMouseLeave!=null) OnFullMapMouseLeave();
             };
             MouseUp+=(s,e)=> {
+                if(fullMapClickThrough) return;
                 if(movingMinimap && e.Button==MouseButtons.Left) {
                     movingMinimap=false;
                     Capture=false;
                 }
                 if(fullMapMode) {
                     if(e.Button==MouseButtons.Right) {
-                        if(!menu.Visible && (CanShowFullMapContextMenu==null || CanShowFullMapContextMenu()))
+                        bool ownedPress=fullMapRightButtonDown;
+                        fullMapRightButtonDown=false;
+                        if(ownedPress && !menu.Visible && (CanShowFullMapContextMenu==null || CanShowFullMapContextMenu()))
                             menu.Show(fullMapContextScreenPoint);
                         return;
                     }
@@ -745,6 +793,7 @@ namespace ScumMiniMap {
                 }
             };
             MouseWheel+=(s,e)=> {
+                if(fullMapClickThrough) return;
                 if(fullMapMode) {
                     if(OnFullMapWheel!=null) OnFullMapWheel(e.Delta, PointToClient(Cursor.Position));
                 } else if(!through) {
@@ -753,14 +802,40 @@ namespace ScumMiniMap {
             };
         }
         protected override bool ShowWithoutActivation { get { return true; } }
-        protected override CreateParams CreateParams { get { CreateParams p=base.CreateParams; p.ExStyle|=0x80000|0x80|0x8000000; if(through && !fullMapMode)p.ExStyle|=0x20; return p; } }
+        protected override CreateParams CreateParams { get { CreateParams p=base.CreateParams; p.ExStyle|=0x80000|0x80|0x8000000; if(fullMapClickThrough || (through && !fullMapMode))p.ExStyle|=0x20; return p; } }
+        internal void UpdateFullMapClickThrough(bool controlHeld,bool gameFocused) {
+            bool enabled=fullMapMode && controlHeld && gameFocused;
+            if(fullMapClickThrough==enabled) {
+                if(!enabled && hiddenForClickThrough && gameFocused) RestoreClickThroughVisibility();
+                return;
+            }
+            fullMapClickThrough=enabled;
+            if(enabled) {
+                fullMapRightButtonDown=false;
+                Capture=false;
+                if(menu.Visible) menu.Close();
+                if(OnFullMapClickThrough!=null) OnFullMapClickThrough();
+                if(Visible) { hiddenForClickThrough=true; base.Hide(); }
+            }
+            ApplyMousePassthrough();
+            if(!enabled && hiddenForClickThrough && gameFocused) RestoreClickThroughVisibility();
+        }
+        void RestoreClickThroughVisibility() {
+            hiddenForClickThrough=false;
+            if(!IsDisposed && !Disposing) Show();
+        }
+        public new void Hide() {
+            // Explicit hide requests take precedence over a pending Ctrl restore.
+            hiddenForClickThrough=false;
+            base.Hide();
+        }
         void ApplyMousePassthrough() {
             if(!IsHandleCreated) return;
             int style=GetWindowLong(Handle,-20);
             style|=0x8000000;
             // SCUM keeps keyboard focus; its open map supplies the free cursor.
             // The compact overlay remains click-through during normal gameplay.
-            style=through && !fullMapMode?style|0x20:style&~0x20;
+            style=fullMapClickThrough || (through && !fullMapMode)?style|0x20:style&~0x20;
             SetWindowLong(Handle,-20,style);
             SetWindowPos(Handle,IntPtr.Zero,0,0,0,0,0x37);
         }
@@ -776,7 +851,7 @@ namespace ScumMiniMap {
                 // The full map intentionally owns right-clicks for its context menu.
                 // Outside full-map mode, leave the right button transparent so SCUM's
                 // ADS hold remains gameplay-controlled.
-                if(fullMapMode) { m.Result=new IntPtr(1); return; }
+                if(fullMapMode) { m.Result=new IntPtr(fullMapClickThrough?-1:1); return; }
                 if(Native.GameFocused()) { m.Result=new IntPtr(-1); return; }
                 long packed=m.LParam.ToInt64();
                 Point point=PointToClient(new Point((short)(packed&0xffff),(short)((packed>>16)&0xffff)));

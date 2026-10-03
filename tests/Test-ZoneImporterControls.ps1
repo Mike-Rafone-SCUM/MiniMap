@@ -109,6 +109,53 @@ try {
     if ($listBox.Items.Count -ne 0) { throw "DeleteAll did not clear list items." }
     if ($zones.Count -ne 0) { throw "DeleteAll did not clear zones collection." }
 
+    # First screenshot import must still offer a layer name. Cancel before detection.
+    $script:layerDialogSeen = $false
+    $dialogTimer = [System.Windows.Forms.Timer]::new()
+    $dialogTimer.Interval = 100
+    $dialogTimer.Add_Tick({
+        foreach ($form in [System.Windows.Forms.Application]::OpenForms) {
+            if ($form.Text -eq [ScumMiniMap.Localization]::Get('ZeImportActionTitle')) {
+                $script:layerDialogSeen = $true
+                $form.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+                $dialogTimer.Stop()
+                break
+            }
+        }
+    })
+    $dialogTimer.Start()
+    try {
+        $null = $editor.ImportAutomatic('first-screenshot.png').GetAwaiter().GetResult()
+        if (-not $script:layerDialogSeen) { throw 'First screenshot import skipped layer naming.' }
+        if ($zones.Count -ne 0) { throw 'Cancelled layer naming changed zones.' }
+    } finally { $dialogTimer.Stop(); $dialogTimer.Dispose() }
+
+    $nameTimer = [System.Windows.Forms.Timer]::new()
+    $nameTimer.Interval = 100
+    $nameTimer.Add_Tick({
+        foreach ($form in [System.Windows.Forms.Application]::OpenForms) {
+            if ($form.Text -eq [ScumMiniMap.Localization]::Get('ZeImportActionTitle')) {
+                foreach ($control in $form.Controls) {
+                    if ($control -is [System.Windows.Forms.TextBox]) { $control.Text = '  Server Zones  ' }
+                    if ($control -is [System.Windows.Forms.RadioButton] -and -not $control.Checked -and $control.Enabled) {
+                        throw 'Empty import offers append or replace.'
+                    }
+                }
+                $form.AcceptButton.PerformClick()
+                $nameTimer.Stop()
+                break
+            }
+        }
+    })
+    $dialogArguments = [object[]]@('first-screenshot.png', 'Default', '')
+    $nameTimer.Start()
+    try {
+        $mode = $editor.GetType().GetMethod('ShowImportDialog', $flags).Invoke($editor, $dialogArguments)
+        if ($mode.ToString() -ne 'NewLayer' -or $dialogArguments[2] -ne 'Server Zones') {
+            throw 'Import dialog did not return the chosen layer name.'
+        }
+    } finally { $nameTimer.Stop(); $nameTimer.Dispose() }
+
     # 10. Test Append Mode Import from File
     $cboLayer = $cboLayerField.GetValue($editor)
     if ($null -eq $cboLayer) { throw "cboLayer control not found." }

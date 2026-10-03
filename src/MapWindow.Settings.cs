@@ -23,6 +23,13 @@ namespace ScumMiniMap {
             RightToLeft=Localization.Current==AppLanguage.Arabic?RightToLeft.Yes:RightToLeft.No;
             instruction=new Label { Text=Localization.Get("ShortcutPrompt"),Dock=DockStyle.Fill,Padding=new Padding(12) };
             Controls.Add(instruction);
+            Button unbind=new Button { Text=Localization.Get("ControlUnbind"),Dock=DockStyle.Bottom,Height=32 };
+            unbind.Click+=(s,e)=> {
+                string error=validate(0,0);
+                if(error!=null) { instruction.Text=error; return; }
+                CapturedKey=0; CapturedScanCode=0; DialogResult=DialogResult.OK;
+            };
+            Controls.Add(unbind);
         }
         protected override bool ProcessCmdKey(ref Message msg,Keys keyData) {
             if((keyData&Keys.KeyCode)==Keys.Escape) { DialogResult=DialogResult.Cancel; return true; }
@@ -43,25 +50,31 @@ namespace ScumMiniMap {
         bool taskbarMinimized;
         void AddShortcutSettings(FlowLayoutPanel panel) {
             panel.Controls.Add(new Label { Text=Localization.Get("ShortcutHeading"),Width=365,Height=40 });
-            AddShortcutButton(panel,Localization.Get("Settings"),()=>settingsShortcutKey,()=>settingsShortcutScanCode,(key,scan)=>{ settingsShortcutKey=key; settingsShortcutScanCode=scan; });
-            AddShortcutButton(panel,Localization.Get("ShortcutWaypoint"),()=>pinShortcutKey,()=>pinShortcutScanCode,(key,scan)=>{ pinShortcutKey=key; pinShortcutScanCode=scan; });
-            AddShortcutButton(panel,Localization.Get("ShortcutSearch"),()=>searchShortcutKey,()=>searchShortcutScanCode,(key,scan)=>{ searchShortcutKey=key; searchShortcutScanCode=scan; });
+            foreach(var action in AppControlBindings.AllActions) {
+                var selected=action;
+                AddShortcutButton(panel,Localization.Get(AppControlBindings.LabelKey(selected)),
+                    ()=>AppControlKey(selected),()=>AppControlScanCode(selected),
+                    (key,scan)=> {
+                        var bindings=CurrentAppControls();
+                        bindings.Set(selected,key,scan);
+                        ApplyAppControls(bindings);
+                    },(key,scan)=>AppControlBindingError(selected,key,scan));
+            }
             panel.Controls.Add(new Label { Text=Localization.Get("ShortcutPhysicalHelp"),Width=365,Height=64 });
+            AddCheck(panel,Localization.Get("AutomaticDeathMarkers"),automaticDeathMarkers,SetAutomaticDeathMarkers);
         }
 
-        void AddShortcutButton(FlowLayoutPanel panel,string title,Func<int> read,Func<int> readScan,Action<int,int> write) {
-            Button button=new Button { Text=title+": "+PhysicalKeyCapture.KeyName(read()),Width=280 };
+        void AddShortcutButton(FlowLayoutPanel panel,string title,Func<int> read,Func<int> readScan,Action<int,int> write,Func<int,int,string> bindingValidator=null) {
+            Button button=new Button { Text=title+": "+PhysicalKeyCapture.KeyName(read()),Width=365,Height=32 };
             button.Click+=(s,e)=> {
                 shortcutCaptureOpen=true;
                 Native.CancelActiveCopy();
                 try {
-                    using(var capture=new ShortcutCaptureDialog(title,(key,scan)=>ShortcutBindingError(key,read(),scan,readScan()))) {
+                    using(var capture=new ShortcutCaptureDialog(title,bindingValidator??((key,scan)=>ShortcutBindingError(key,read(),scan,readScan())))) {
                         if(capture.ShowDialog(this)!=DialogResult.OK) return;
                         write(capture.CapturedKey,capture.CapturedScanCode);
                         button.Text=title+": "+PhysicalKeyCapture.KeyName(read());
                         fallbackKeysArmed=false;
-                        SettingsChanged();
-                        SaveSettings();
                     }
                 } finally { shortcutCaptureOpen=false; }
             };
@@ -69,18 +82,19 @@ namespace ScumMiniMap {
         }
 
         static bool ValidShortcutKey(int key) {
-            return key>=0x20 && key<0xFF && !PhysicalKeyCapture.IsModifierKey(key) && key!=0x5D
-                && key!=0xBF && key!=0x6F && key!=0x23 && key!=0x21 && key!=0x22;
+            return key==0 || AppControlBindings.ValidKey(key);
         }
 
         string ShortcutBindingError(int key,int previous,int scan,int previousScan) {
             if(!ValidShortcutKey(key)) return Localization.Get("ShortcutReserved");
-            if(PhysicalKeyCapture.SameBinding(key,scan,scumMapKey,scumMapScanCode) || PhysicalKeyCapture.SameBinding(key,scan,scumChatKey,scumChatScanCode) || PhysicalKeyCapture.SameBinding(key,scan,scumCopyKey,scumCopyScanCode)) return Localization.Get("ShortcutScumConflict");
-            if(!PhysicalKeyCapture.SameBinding(key,scan,previous,previousScan) &&
-                (PhysicalKeyCapture.SameBinding(key,scan,settingsShortcutKey,settingsShortcutScanCode)
-                || PhysicalKeyCapture.SameBinding(key,scan,pinShortcutKey,pinShortcutScanCode)
-                || PhysicalKeyCapture.SameBinding(key,scan,searchShortcutKey,searchShortcutScanCode))) return Localization.Get("ShortcutConflict");
-            return null;
+            var bindings=CurrentAppControls();
+            foreach(var action in AppControlBindings.AllActions) {
+                if(bindings.Key(action)==previous || PhysicalKeyCapture.SameBinding(previous,previousScan,bindings.Key(action),bindings.ScanCode(action))) {
+                    bindings.Set(action,key,scan);
+                    return bindings.BindingError(scumMapKey,scumMapScanCode,scumChatKey,scumChatScanCode,scumCopyKey,scumCopyScanCode);
+                }
+            }
+            return Localization.Get("ShortcutConflict");
         }
         void HandleTaskbarRestore(object sender,EventArgs args) {
             if(WindowState==FormWindowState.Minimized) { taskbarMinimized=true; return; }
@@ -221,6 +235,8 @@ namespace ScumMiniMap {
                 // Legacy settings contain only a virtual key. Never reuse a scan code from a previous load.
                 scumCopyScanCode=0;
                 scumMapScanCode=0; scumChatScanCode=0;
+                appControls=new AppControlBindings();
+                settingsShortcutKey=0x24; pinShortcutKey=0x2D; searchShortcutKey=0x2E;
                 settingsShortcutScanCode=0; pinShortcutScanCode=0; searchShortcutScanCode=0;
                 string[] lines;
 
@@ -297,6 +313,7 @@ namespace ScumMiniMap {
 
 
                         if(bool.TryParse(val,out b)) {
+                            if(key=="AutomaticDeathMarkers") automaticDeathMarkers=b;
 
 
 
@@ -341,6 +358,16 @@ namespace ScumMiniMap {
 
 
                         if(int.TryParse(val,out n)) {
+                            foreach(var action in AppControlBindings.AllActions) {
+                                string prefix="AppControl"+action;
+                                if(key==prefix+"Key" || key==prefix+"ScanCode") {
+                                    var loadedControl=CurrentAppControls();
+                                    loadedControl.Set(action,key==prefix+"Key"?n:AppControlKey(action),
+                                        key==prefix+"ScanCode"?n:AppControlScanCode(action));
+                                    StoreAppControls(loadedControl);
+                                }
+                            }
+
                             if(key=="SettingsShortcutKey" && ValidShortcutKey(n)) settingsShortcutKey=n;
                             if(key=="PinShortcutKey" && ValidShortcutKey(n)) pinShortcutKey=n;
                             if(key=="SearchShortcutKey" && ValidShortcutKey(n)) searchShortcutKey=n;
@@ -419,12 +446,11 @@ namespace ScumMiniMap {
                 if(!PhysicalKeyCapture.Valid(settingsShortcutScanCode)) settingsShortcutScanCode=0;
                 if(!PhysicalKeyCapture.Valid(pinShortcutScanCode)) pinShortcutScanCode=0;
                 if(!PhysicalKeyCapture.Valid(searchShortcutScanCode)) searchShortcutScanCode=0;
-                if(PhysicalKeyCapture.SameBinding(settingsShortcutKey,settingsShortcutScanCode,pinShortcutKey,pinShortcutScanCode)
-                    || PhysicalKeyCapture.SameBinding(settingsShortcutKey,settingsShortcutScanCode,searchShortcutKey,searchShortcutScanCode)
-                    || PhysicalKeyCapture.SameBinding(pinShortcutKey,pinShortcutScanCode,searchShortcutKey,searchShortcutScanCode)) {
-                    settingsShortcutKey=0x24; pinShortcutKey=0x2D; searchShortcutKey=0x2E;
-                    settingsShortcutScanCode=0; pinShortcutScanCode=0; searchShortcutScanCode=0;
-                }
+                var loadedBindings=CurrentAppControls();
+                loadedBindings.Sanitize(scumMapKey,scumMapScanCode,scumChatKey,scumChatScanCode,scumCopyKey,scumCopyScanCode);
+                StoreAppControls(loadedBindings);
+                controlBindingRevision++;
+                fallbackKeysArmed=false;
                 autoZoomMax=Math.Max(autoZoomMin,autoZoomMax);
                 zoom=Math.Max(1,Math.Min(maxZoom,zoom)); targetZoom=zoom;
                 savedWidth=width; savedHeight=height; savedLeft=left; savedTop=top;
@@ -485,7 +511,13 @@ namespace ScumMiniMap {
 
 
                 File.AppendAllText(settingsPath+".tmp","ScumCopyScanCode="+scumCopyScanCode+Environment.NewLine+"ScumMapScanCode="+scumMapScanCode+Environment.NewLine+"ScumChatScanCode="+scumChatScanCode+Environment.NewLine);
+                File.AppendAllText(settingsPath+".tmp","AutomaticDeathMarkers="+automaticDeathMarkers+Environment.NewLine);
                 File.AppendAllLines(settingsPath+".tmp",new[]{"SettingsShortcutKey="+settingsShortcutKey,"PinShortcutKey="+pinShortcutKey,"SearchShortcutKey="+searchShortcutKey,"SettingsShortcutScanCode="+settingsShortcutScanCode,"PinShortcutScanCode="+pinShortcutScanCode,"SearchShortcutScanCode="+searchShortcutScanCode});
+                foreach(var action in AppControlBindings.AllActions) {
+                    // Preserve legacy keys for the first three actions; new actions have stable names.
+                    if(action==AppControlAction.Settings || action==AppControlAction.AddWaypoint || action==AppControlAction.Search) continue;
+                    File.AppendAllLines(settingsPath+".tmp",new[]{"AppControl"+action+"Key="+AppControlKey(action),"AppControl"+action+"ScanCode="+AppControlScanCode(action)});
+                }
                 if(File.Exists(settingsPath)) File.Replace(settingsPath+".tmp",settingsPath,settingsPath+".bak"); else File.Move(settingsPath+".tmp",settingsPath); File.WriteAllText(settingsPath+".version",VersionString); }
 
 

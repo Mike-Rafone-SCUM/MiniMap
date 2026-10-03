@@ -8,6 +8,90 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.6.3] - 2026-10-04
+
+### Changed
+
+- Expand Settings, the SCUM/MiniMap rebinding wizard and first-launch setup to configure all twelve app actions: Settings, Add waypoint, Search, Show/hide map, Zoom in, Zoom out, Add death marker, Reset zoom, Clear waypoint, Zone Creator Wizard, Getting Started Guide and Admin commands.
+- Use one control catalogue for physical-key capture, collision checks, persistence, default reset and shortcut dispatch. Game bindings must match SCUM; app actions use a single physical key and can be unbound. Preserve existing saved shortcuts and default the five additional tool actions to unbound.
+- Keep wizard changes pending until Save or setup completion, validating and applying SCUM and app bindings together. Cancelling leaves the previous controls intact.
+- Apply zoom shortcuts to the current compact or expanded map, and route the additional tool shortcuts through the same actions as their buttons and menus. Update shortcut hints to follow configured bindings, including overlay visibility and death markers.
+- Translate the complete controls UI and guidance in all ten supported languages, and document every app action, default, unbinding and reset behavior.
+
+### Fixed
+
+- Stop watching old fixed shortcuts after rebinding, prevent hook/polling duplicate presses, and discard queued shortcuts when bindings change. Keep capture feedback visible while scrolling the complete wizard.
+- Keep expanded-map zoom responsive while a cancelled coordinate-copy operation finishes releasing its keys. Clearing navigation immediately stops its voice guidance.
+
+## [1.6.2] - 2026-10-03
+
+### Fixed
+
+- Dispatch admin dropdown commands after the native menu closes so it releases focus and mouse capture before sending. Block direct location-copy preparation and shortcut dispatch while an admin command is active.
+- Record an admin request when Enter is dispatched, including when input or key-release failure interrupts the following cleanup. This prevents the next toggle from repeating the value SCUM may already have received.
+- Show UNKNOWN for admin commands on each app launch and provide explicit ON/OFF actions in the dropdown and panel. Panel toggles use the current last-submitted request across both interfaces; cancelled sends preserve that value. These values do not confirm SCUM's live state.
+- Normalize saved boolean commands containing a trailing true/false value before assembling a new request, preventing duplicate values from keeping a command enabled. Preserve optional arguments and non-boolean command text.
+
+## [1.6.1] - 2026-10-03
+
+### Added
+
+- Death markers display relative age, such as Death 12m ago, including markers saved by earlier versions. Returning within 25 metres removes the marker and its active navigation after tracking has first seen the player at least 50 metres away.
+
+- Full-map right-click menu offers Admin commands > Teleport here. It converts the clicked map location into SCUM X/Y coordinates and submits #Teleport through the existing chat sender, using Z=0 because map terrain height is unavailable.
+
+- Automatic death markers recognise the red heading and three stacked respawn buttons without reading text or requiring calibration. A complete layout match immediately saves the last known coordinates. Fourteen consecutive misses (about ten seconds) are required to rearm detection. The detector supports changed text and excludes unrelated right-side map content from the button checks.
+- Down arrow saves the last received location as a persistent tombstone waypoint. Place it before respawning; navigate to or delete it through the waypoint list. Chat, inventory, focus and binding conflicts retain priority for the manual shortcut.
+
+### Fixed
+
+- Death detection retains the last known location when death or menus pause coordinate tracking for more than 30 seconds. Missing coordinates remain missing rather than adopting a later respawn location.
+- Added bounded death-detection diagnostics for blocked probes, unavailable captures and saved/skipped/failed markers, including location age without coordinates or screenshots.
+
+## [1.6.0] - 2026-10-02
+
+### Fixed
+- Reduced admin-command focus and chat delays, with a held-key check in place of the location-copy mouse cooldown. Commands submit with Enter, then send Escape to dismiss chat; interrupted cleanup retains chat protection and distinguishes an already submitted command.
+- Chat/map keys immediately after game focus returns now validate the foreground window at the physical event. Chat-session changes invalidate queued map shortcuts, preventing an old M press from firing after chat opens and closes.
+- Admin-injected chat keys no longer enter the polling fallback's physical chat state.
+
+### Added
+- Command editor fields for Label, Command, Is boolean?, optional Quantity and optional Extra strings, with an assembled-command preview. Boolean entries toggle true/false; other entries run once. Optional arguments and boolean settings persist per command, and earlier saved toggles remain compatible.
+- Full-map Admin dropdown in the right-click menu and sidebar Tools section, with single On/Off toggles sending true/false and an Edit commands entry. Existing paired command buttons migrate to single toggles; displayed values are last submitted requests, not confirmed game state.
+- Admin command panel accessible from Settings and the tray menu, with boolean presets for God mode, player information and nameplates. Sends the displayed command through SCUM's configured chat key, clipboard paste, Enter and Escape; SCUM permissions and command results remain authoritative.
+- Admin panel appears above the game on the overlay's monitor and restores from minimization when reopened.
+- Add, edit and remove named command buttons, saved per user in `admin-commands.tsv`. Commands are limited to one line starting with `#`.
+- Admin sending pauses location copying and map shortcuts, closes the expanded map before opening chat, cancels further key presses after physical input or focus changes, and restores the clipboard only while it still owns it. Interrupted chat remains protected until explicitly closed.
+
+## [1.5.5] - 2026-10-01
+
+### Added
+- For admin players, hold either Ctrl key while the expanded map is open to temporarily hide MiniMap and interact directly with SCUM's map, so admins can select players and use SCUM teleport actions. Release Ctrl to restore the overlay when no map click was completed.
+- Complete a Ctrl-left-click on the exposed map to collapse MiniMap to its compact view and clear stale chat, inventory and pending-copy locks. Cleanup follows the click gesture; MiniMap does not receive a confirmed teleport event from SCUM. Newly opened chat remains protected.
+- Retain each map image beside its own `zones.tsv` and `customwaypoints.tsv` in `maps/<map-id>/`. Keep successful imports in separate subfolders containing the original image/file, map-coordinate TSV, source-coordinate TSV and detection report where applicable.
+
+### Fixed
+- Preserve measured screenshot zone boundaries instead of forcing imperfect circular detections into oversized enclosing rectangles. Smooth confidently circular outlines using fitted boundary pixels, retain other measured outlines and reduce aggressive green-mask merging.
+- Offer layer naming on every screenshot import, including the first import into an empty zone editor. Focus and select the proposed name for editing; disable append/replace when no zones exist.
+- Keep repeated import filenames and layer names from overwriting earlier source images or TSVs; failed archives leave no partial import folder.
+- Ignore injected Ctrl from automatic location copying when entering the admin map interaction mode.
+- Cancel overlay dragging and context menus during direct game-map interaction, preserve intentional overlay hiding, and restore visibility correctly after focus changes.
+- Isolate history regression fixtures from live coordinates already present on the clipboard.
+
+### Compatibility
+- Existing saved key bindings and annotations are retained. Previously imported zones need reimporting to use the corrected outline detection.
+- Includes the v1.5.4 community keyboard illustration, setup cleanup and all earlier map-key, focus, dragging and tracking fixes.
+
+## [1.5.4] - 2026-10-01
+
+### Added
+- Display the community-supplied keyboard illustration in the key binding setup guide and Copy Location reminder, showing the NumPad divide key highlighted in green and the main keyboard slash crossed out.
+- Include the original keyboard illustration in the complete release archive and setup documentation.
+
+### Changed
+- Dispose setup slide controls and their image resources when navigating between pages.
+- Retain all v1.5.3 map-key, focus, dragging and tracking fixes, alongside existing saved key bindings.
+
 ## [1.5.3] - 2026-09-29
 
 ### Fixed

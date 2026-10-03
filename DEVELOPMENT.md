@@ -6,6 +6,7 @@
 
 - `src/`: application source. `MiniMap.cs` contains the authoritative `VersionString`.
 - `resources/`: required map, road, water-mask, icon and voice assets.
+- User map data lives in `maps/<map-id>/` beneath the active data folder: `map.png`, `zones.tsv` and `customwaypoints.tsv`. Successful imports are retained in separate `imports/<import-id>/` folders with the original `source` image/file, `zones.tsv`, and (for screenshot detection) `source-zones.tsv` and `detection.json`. Import IDs prevent repeated filenames or layer names from overwriting earlier imports. The main `zones.tsv` contains the edited annotations saved from the zone editor; import TSVs preserve the initial detection.
 - `resources/map-tiles.bin`: generated 512-pixel tile pyramid used for the bundled map. Regenerate with `python scripts/Build-MapTiles.py resources/map.png resources/map-tiles.bin` after changing the map image (requires Pillow). Commit the resulting tile pack with the map; builds require the checked-in pack and do not need Pillow.
 - `packaging/`: files shipped alongside the executable.
 - `scripts/`: shared build, verification and explicit publication commands.

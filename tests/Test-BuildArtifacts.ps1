@@ -11,7 +11,7 @@ $exe = Join-Path $artifactRoot $exeName
 $version = (Get-Item -LiteralPath $exe).VersionInfo.ProductVersion
 if ($Configuration -eq 'Release') {
     if ($version -notmatch '^\d+\.\d+\.\d+$') { throw 'Invalid release product version.' }
-    $expected = @($exeName,'README.md','CHANGELOG.md','ATTRIBUTION.md','detect_zones.py','requirements.txt','Start-MiniMap.cmd')
+    $expected = @($exeName,'README.md','CHANGELOG.md','ATTRIBUTION.md','detect_zones.py','requirements.txt','Start-MiniMap.cmd','keyboard-setup.png')
 } else {
     if ($version -notmatch '^\d+\.\d+\.\d+-test$') { throw 'Invalid test product version.' }
     if (Test-Path -LiteralPath (Join-Path $artifactRoot 'update.txt')) { throw 'Test packages must not include an updater manifest.' }
@@ -32,7 +32,7 @@ try {
 } finally { $zip.Dispose() }
 $assembly = [Reflection.Assembly]::LoadFile($exe)
 $resources = @($assembly.GetManifestResourceNames())
-foreach ($name in @('map-tiles.bin','zones.tsv','roads.bin','water-mask.bin','scummap.bin','detect_zones.py')) {
+foreach ($name in @('map-tiles.bin','zones.tsv','roads.bin','water-mask.bin','scummap.bin','detect_zones.py','keyboard-setup.png')) {
     if ($resources -notcontains $name) { throw "Missing embedded resource: $name" }
 }
 if ($resources -contains 'map.png') { throw 'Redundant full-resolution map is embedded.' }
