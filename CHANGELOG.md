@@ -8,6 +8,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Add an opt-in, two-minute shortcut support capture with configured key events, hook installation errors, input gates, hook/polling dispatch, process integrity information and coordinate-response outcomes. It records no clipboard contents or screenshots.
+- Run the support package in a unique test profile seeded with the player's current settings, preserving the installed app and any existing test profile. Collect the session logs into a ZIP for diagnosis.
+
+## [1.6.4] - 2026-10-05
+
+### Added
+
+- Show a floating Admin tab beside the expanded map's left edge. It starts horizontally collapsed on each map opening and expands to the left within the available space, with a gap between the panel and map. Commands and Directional teleport have separate expandable sections; Commands retains Add, Edit and Remove.
+- Teleport up, down, left, right, forward or back by a distance in metres from the latest received coordinates. Horizontal directions follow the recorded facing direction; up/down change elevation. Review the clean `#Teleport X Y Z` preview before sending, and wait for a new coordinate sample after each submission.
+
+### Changed
+
+- Match the admin panel to the full-map sidebar with blue-black surfaces, compact text, rounded buttons, orange selections, flat command rows and a thin blue scrollbar. The panel hides with map closure, focus loss and Ctrl map interaction; Settings and the tray retain explicit access.
+
+### Fixed
+
+- Preserve the expanded map's original full-screen size and position when opening, expanding, collapsing or closing the admin panel. Fit the panel into the available left margin and hide the attached tab when there is insufficient space.
+
 ## [1.6.3] - 2026-10-04
 
 ### Changed
