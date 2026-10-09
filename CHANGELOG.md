@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.4] - 2026-10-09
+
+- Add circle drawing to the zone wizard: drag from the centre to set the radius, with equal map-pixel radii at every zoom level and automatic fitting within the map boundaries.
+
 ## [1.7.3] - 2026-10-09
 
 - The zone import wizard supports independent zoom/pan previews, direct polygon and rectangle drawing on the destination map, and vertex dragging, insertion and deletion without screenshot calibration. Manual corrections retain existing zones and layers.
