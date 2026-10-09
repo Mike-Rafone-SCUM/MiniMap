@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.5] - 2026-10-09
+
+- Scale white faction-circle detection to the reference-map resolution and retain circles touching screenshot edges.
+
 ## [1.7.4] - 2026-10-09
 
 - Add circle drawing to the zone wizard: drag from the centre to set the radius, with equal map-pixel radii at every zoom level and automatic fitting within the map boundaries.
