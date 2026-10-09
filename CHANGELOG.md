@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.6] - 2026-10-09
+
+- Automatically imported outlines are fitted to circles or rectangles (including squares and rotated rectangles), replacing irregular detected polygons. Manual custom outlines remain available.
+
 ## [1.7.5] - 2026-10-09
 
 - Scale white faction-circle detection to the reference-map resolution and retain circles touching screenshot edges.
