@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.2] - 2026-10-09
+
+- Opening the full-map admin context menu preserves zoom, pan and navigation while retaining the exact clicked teleport target.
+- Zooming the full map temporarily forces 100% opacity without changing the saved setting. Teleport cleanup, closing the full map, zooming back out or resetting zoom restores the configured opacity.
+
 ## [1.7.1] - 2026-10-09
 
 - Keep the admin player directory responsive by loading server data and clipboard imports off the UI thread, caching asset counts between refreshes, debouncing search, and building player cards in short batches only in tile view.
