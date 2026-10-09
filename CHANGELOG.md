@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.3] - 2026-10-09
+
+- The zone import wizard supports independent zoom/pan previews, direct polygon and rectangle drawing on the destination map, and vertex dragging, insertion and deletion without screenshot calibration. Manual corrections retain existing zones and layers.
+- Imported town names use outline containment and one-outline ownership instead of assigning the same nearby town to several zones. Source-preview naming and selection remain paired with the correct destination outline after importing, reordering or adding zones.
+
+- Holding Ctrl on the full map temporarily forces 0% opacity and passes clicks to SCUM. Releasing Ctrl or completing a player click restores configured opacity, including after a temporary zoom-opacity override, without changing the setting.
+
 ## [1.7.2] - 2026-10-09
 
 - Opening the full-map admin context menu preserves zoom, pan and navigation while retaining the exact clicked teleport target.
