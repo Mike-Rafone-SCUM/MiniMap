@@ -1,4 +1,4 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to **SkynettMiniMap** are documented in this file.
 
@@ -8,10 +8,257 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-10-09
+
+- Enable every map category by default except Hunting and Fishing, including saved zone display; preserve saved filter preferences.
+- Replace the first-launch guide's opening page with a localized quick start using the actual settings, full-map and search keys, waypoint clicks and individual death-marker removal.
+
+- Use verified, finalized clipboard publication for individual ASCII admin commands as well as spawn batches, avoiding false clipboard-change failures caused by Windows text-format synthesis.
+
+- Right-click a death marker on the full map to remove that marker only, preserving other markers and unrelated navigation.
+
+- Reduce language-switch UI work by disposing settings controls as complete trees and caching built-in map-name translations separately for each language.
+
+- Fix a native dropdown crash when switching app languages by rebuilding settings after the selection notification completes.
+
+- Add European Portuguese as a separate app language with independent UI text, system-language detection and saved preferences. Preserve Brazilian Portuguese and existing language values.
+- Add offline translation drafts for all 2,328 spawn items and 136 catalogue headings in the remaining app languages. Expand French, Simplified Chinese, Turkish, Arabic, Brazilian Portuguese and Korean marker coverage, including generated labels and all 130 map categories. Native-speaker terminology approval remains pending; see `docs/LOCALIZATION-REVIEW.md`.
+- Improve Arabic item-selector text direction and mixed ID presentation while preserving raw commands and selections during language changes. Measure modifier-label widths and extend catalogue, search and language-switching regressions across all thirteen languages.
+
+## [1.6.24] - 2026-10-09
+
+- Translate all 130 bundled map categories in German, Dutch, Russian, Argentine Spanish and Polish, including animals, fish, crops, traders and loot containers. Add German, Dutch, Russian and Polish coverage for the 120 existing named map locations and translate generated object labels while retaining settlement names and sector codes. Search accepts translated and English map object names; selected map objects refresh their display names when the language changes. Custom waypoint text remains unchanged.
+
+- Add Polish to first-time setup, Settings, system-language detection and saved preferences. Translate all 604 UI strings, 16 map sections, map categories and named locations. Include Polish display names for all 2,328 bundled spawn items, translated item categories, subtypes, results and cart names. Search accepts Polish with or without accents, English names and canonical IDs. Open item selectors refresh on language changes while preserving selections, cart quantities, modifiers and command IDs. Weapon model codes, brands and player-authored names remain intact.
+
+- Add Korean to first-time setup and Settings, system-language detection and saved preferences. Translate all 604 UI strings, 16 map sections, 48 categories and 120 named map locations with matching format arguments.
+
+- Keep player and squad refreshes responsive by validating reports and saving/loading local snapshots in background tasks. Keep clipboard access and game input on the UI thread, and recheck clipboard ownership after validation.
+- Build replacement player cards in short batches while the previous directory stays visible, then swap the completed view. Batch squad-card layout and asset-table redraws, restore layout in failure paths, and double-buffer player/profile windows to reduce incomplete painting.
+- Verify UI message processing during refresh alongside the existing report, pagination, profile and map-marker regressions.
+
+## [1.6.23] - 2026-10-08
+
+- Replace per-player squad refresh loops with `#DumpAllSquadsInfoList true` and paginated `#ListFlags <page> true`. Full directory/profile refresh captures players, vehicles, all squads and every reported flag page; two flag pages need five commands regardless of population size.
+- Parse bulk squad membership, Unicode names and ranks, paged flags and unowned flags. Derive online status from a fresh population report during full refresh; standalone bulk imports show unreported status instead of inventing it.
+- Replace squad membership per server and commit a complete flag snapshot only after every page validates. Wrong, missing, duplicate or inconsistent pages preserve the previous complete flags. Manual flag-page imports merge safely, and older individual SquadInfo reports remain supported.
+- Refresh profile identity, statistics and title after population capture; both clipboard import buttons accept the supported report formats. Add copy commands for bulk squads and flag page 1.
+- Passed 161 admin-player checks, including supplied reports, a five-command two-page refresh, interrupted capture and complete flag transactions. Added five strings in all ten languages.
+
+## [1.6.22] - 2026-10-08
+
+- Stop timer-driven sidebar visibility and TopMost updates during the pending command focus handoff. The dispatcher explicitly hides the expanded admin palette after requesting SCUM focus, preserving expanded/collapsed state.
+- Explicitly close the full-map context menu and release mouse capture before queued admin commands and map teleports.
+- Map-originated commands now display the real failure popup even without a tool-window owner, and retain the actual failure reason in map status. Previously this path silently skipped the popup.
+
+## [1.6.21] - 2026-10-08
+
+- Request SCUM focus before hiding the initiating admin windows. Allow a bounded transient empty foreground during handoff and one pre-dispatch focus retry while MiniMap or that transient state remains foreground. Another application, held keys, chat/inventory and target validation still stop dispatch. Submitted commands are never retried.
+- Display the actual localized command failure and diagnostic stop reason instead of replacing every failure with a generic held-key instruction.
+
+## [1.6.20] - 2026-10-08
+
+- Restore admin player/profile/cart windows through one foreground-aware path after command dispatch, including normal window state, topmost ordering, capture release and activation. Preserve the active child above its directory and do not steal focus after switching to another application.
+- Hide the visible admin tool stack during dispatch instead of leaving a parent above SCUM. Do not restore the map while a command is running. Apply the shared restoration path to refresh, teleport and cart completion, including interrupted commands.
+
+## [1.6.19] - 2026-10-08
+
+- Sort player tiles and table rows by A–Z / Z–A, squad size, flag count or vehicle count, with ascending and descending count order. Search remains available; no numeric range filters are added. Counts use saved reports for the selected server, including shared squad flags.
+- Add teleport, Steam profile and copy-information context menus across player cards, squad members, profile identity, vehicle/flag rows and admin map markers. Copy IDs, names, coordinates, details and commands; unavailable data stays disabled.
+- Add right-click copy IDs, names and spawn commands to item results and cart entries, with add/edit/remove actions and preserved multi-selection. Clipboard writes are blocked while sending commands.
+- Verified 132 player checks, 892 cart checks and all 599 strings in ten languages; inspected the compact player directory.
+
+## [1.6.18] - 2026-10-08
+
+### Changed
+
+- Compact player directory and profile menus with smaller title bars, dark page navigation, styled scrolling and tighter spacing. Squad pages show one squad header and member cards instead of repeating every member in a text box. Profile actions follow the selected page; duplicate footer controls are hidden in tile view.
+- Player cards show a clear name, identity, copied fame/bank/gold values and visible Teleport to player / Bring player here actions.
+- Add the supplied Steam logo beside player IDs on directory cards, profile headers and squad cards. Clicking opens the validated Steam Community profile in the default browser.
+- Retrieve public Steam usernames asynchronously with two concurrent requests, a timeout and per-session caching. Verify returned Steam IDs, reject unsafe XML, and retain SCUM's reported platform name when a lookup is unavailable. Character names and server ownership are unchanged.
+
+### Validation
+
+- Passed 124 player checks, including quick teleport targets, Steam link validation and public-name parsing. Inspected directory and squad previews, including the minimum profile window size. Diagnostic forms do not launch browsers or query Steam.
+
+## [1.6.17] - 2026-10-08
+
+### Fixed
+
+- Automatically capture and import a fresh SCUM report after command submission even if Escape cleanup was interrupted or focus returned to MiniMap. Physical input still cancels further key sending; read-only capture retains clipboard freshness, SCUM ownership and report validation. Interrupted cleanup stops subsequent commands rather than resending.
+- Keep player profiles above the player directory through explicit window ownership. Opening a profile no longer immediately rebuilds the directory underneath it.
+- Allow up to fifteen seconds for a squad clipboard report to arrive, without resending the command. Population and vehicle refresh retain their existing timeouts; focus, physical-input and clipboard ownership checks remain active.
+- Record command dispatch stages locally without command text or clipboard contents, so remaining game-specific failures can be diagnosed.
+
+### Validation
+
+- Passed 118 admin player checks, including owned profile windows, delayed clipboard replies, interrupted Escape and automatic squad import. Live SCUM verification remains pending.
+
+## [1.6.16] - 2026-10-08
+
+### Fixed
+
+- Keep player profiles alive while SCUM command sending temporarily hides them. The previous modal dialog could finish and dispose the profile before its asynchronous squad reply was imported. Reopening a player reuses the profile and focuses the requested page.
+- Include profile windows in map/popup protection and admin-disable handling. Hide profiles when changing servers and preserve the active server if a previous refresh finishes later.
+- Show flags owned by known squad members in player profiles and tile counts, retaining the reported owner rather than assigning ownership to every member.
+
+### Validation
+
+- Reproduce the real squad-refresh button hiding its profile and receiving a delayed reply without sending live game input. Verify window survival, database import, rendered squad flags, profile reuse and the supplied Saints report's Steam IDs and spacing.
+
+## [1.6.15] - 2026-10-08
+
 ### Added
 
+- Refresh the player directory's population, vehicles and squad/flag information together. Squad reports are shared across their members to avoid duplicate queries. Individual profiles include a full refresh and separate vehicle/squad refresh controls.
+- Add teleport context menus to player tiles, directory rows, profile identities, squad members, vehicles and flags. Right-click shown map markers for the corresponding teleport actions.
+- Add an Admin tools pill toggle in the full-map navigation bar and Settings. Admin tools are disabled by default and the preference is saved.
+
+### Fixed
+
+- Capture and validate fresh game-owned SquadInfo clipboard replies for the requested player before saving profile information. Keep existing information when reports are unavailable and show incomplete refresh status.
+- Resolve offline vehicle database-owner IDs only through matching, unambiguous flag-owner observations from the same server; aliases remain separate.
+- Align profile page backgrounds, identity cards, summaries and context menus with the map theme. Asset teleports preserve reported XYZ coordinates.
+
+### Validation
+
+- Validate report capture, requested-player matching, offline ownership links, teleport coordinates, map hit testing and disabled-by-default admin controls with regressions. No live SCUM commands were submitted during checks.
+
+## [1.6.14] - 2026-10-08
+
+### Added
+
+- Add Mila (German) and Isabel (Spanish Argentine) as selectable voice navigators, using navigation prompts extracted from the supplied recordings.
+- Compose German distance cues as distance followed by action, and Spanish cues with the isolated “En” prefix. North-specific and location-placeholder examples are excluded from reusable guidance.
+
+### Validation
+
+- Check discovery and cue composition for all four bundled voices, rejection of missing turn clips, and decoding of the new audio clips.
+
+## [1.6.13] - 2026-10-08
+
+### Added
+
+- Bundle Mira (Russian) as a selectable navigator, with distance, straight/left/right/keep/U-turn and arrival prompts extracted from the supplied ElevenLabs recording. Russian distance cues speak the distance followed by the action; the English voice retains its existing phrasing.
+- Include the tile-based player profile system from the verified, unpublished v1.6.12 build: overview links, squad membership and linked member profiles, vehicle/flag imports, scoped SQLite storage, fresh game-owned vehicle refreshes and selected asset map markers.
+- Translate the profile controls, statuses and explanations into all ten app languages.
+
+### Fixed
+
+- Include the bounded map-close settling fix for quick commands before chat opens, without automatically repeating command submissions.
+
+### Validation
+
+- Verify both bundled voice packs are discoverable and complete, Russian/English cue composition, and decoded MP3 durations. Run the complete build checks including profile parser/database/UI regressions without live game input.
+
+## [1.6.12] - 2026-10-08
+
+### Added
+
+- Replace the default player table with a searchable tile directory and quick Overview, Vehicles, Flags and Squad links. Keep a table-view option for administration.
+- Add full profile pages with copied player statistics, squad membership/ranks/status, links to other squad members' profiles, owned vehicle and flag locations, and multi-selection of asset snapshot markers.
+- Import the current SCUM vehicle and SquadInfo/flag report formats into a separate per-server AppData SQLite profile database. Preserve vehicle aliases separately from ownership and leave offline database-only owners unresolved. Keep imported squad members available as profiles even before a population-list import.
+- Refresh vehicle lists through one ListSpawnedVehicles command with a fresh SCUM-owned clipboard response; also support manual command copying and validated clipboard imports. Replace scoped snapshots atomically and retain unrelated server data.
+
+### Fixed
+
+- Give quick commands the same bounded, owned map-close settling check as cart commands before opening chat. Clear the map state only after the map key is accepted; never retry a submitted command automatically.
+- Protect profile dialogs through the shared modal-input path and keep dynamic tile/squad buttons consistent with the map's dark theme. Clear asset markers on server changes.
+
+### Validation
+
+- Extend player checks with vehicle/flag/squad parsing, alias-versus-owner handling, SQLite persistence/isolation/atomicity, fresh clipboard capture, tile links, profile navigation, map selections and server changes. Use synthetic fixtures without live SCUM input.
+
+## [1.6.11] - 2026-10-08
+
+### Fixed
+
+- Change the admin sidebar's topmost state only when visibility changes. Repeated timer updates must not raise the panel over its popup menus.
+- Suspend the map window while player or cart tools are visible, block automatic map restoration over those tools, and restore the previous map only after the last tool hides or closes. Leave sidebar window positioning untouched while tools are open.
+- Verify native window order across sidebar timer synchronization and map suspension/restoration through player-window Close, alongside server-selection checks.
+
+## [1.6.10] - 2026-10-08
+
+### Fixed
+
+- Show the attached admin sidebar only while the full map is open. Hide it on returning to the corner minimap, including collapsed tabs and explicit settings requests; preserve the same controls and choices for reopening the full map.
+- Allow full-map sidebar buttons to respond during coordinate-copy cleanup instead of discarding the first click. Cancel pending copying before opening settings, and allow Done and framed Close buttons to bypass unfinished field validation.
+- Activate the player directory for normal user opens while keeping diagnostic windows inactive. Commit saved-server choices immediately, accept Enter after typing a server name, and retain explicit per-server separation before importing lists.
+
+## [1.6.9] - 2026-10-08
+
+### Fixed
+
+- Apply shared modal input protection to settings, shortcut capture, colours, search, waypoint prompts, zone editors, admin command editors, update dialogs and error/confirmation messages. Release mouse confinement, pause tracking and shortcuts, hide map overlays and preserve nested dialog state until closing.
+- Protect the cart's modifier, kit, replacement, clear-cart and legacy-import dialogs through the same interaction path. Restore the previously active tool above the map after a child dialog closes.
+- Release mouse capture when opening the cart, player directory and map context menus. Keep attached admin controls hidden while either tool is visible and keep the player directory above the topmost map. Avoid using minimized settings as the owner of map-menu prompts.
+
+
+## [1.6.8] - 2026-10-08
+
+### Fixed
+
+- Release mouse capture and cursor confinement while the saved-settings Yes/No prompt, first-time setup guide and copy-key reminder are open. Hide the map and attached admin controls, pause tracking and suppress shortcuts until the prompt closes, restoring those states even if opening fails.
+- Open the saved-settings prompt without the minimized settings window as its owner, keeping the startup choice accessible.
+
+## [1.6.7] - 2026-10-08
+
+### Fixed
+
+- Keep Add command, Item spawner / cart and Admin players buttons within matching ten-pixel side margins. Initialize their container at the correct width before anchoring controls, eliminating the negative margin that let buttons extend past the panel edge.
+- Fit command cards to their actual available width, align edit/remove actions to the right, and preserve button and preview bounds after command refreshes, panel resizing and horizontal scrolling on narrow displays.
+- Reflow command actions and teleport directions on narrow panels, wrap help and coordinate previews, and use horizontal scrolling only when the viewport is too small for the supported compact layout.
+
+## [1.6.6] - 2026-10-08
+
+### Added
+
+- Add an admin player directory using SCUM's `#ListPlayers true` clipboard result, with character/platform names, stable platform IDs, coordinates, capture times and read-only fame/bank/gold information. Import an already copied list or request a fresh list through the configured chat controls; no server bridge is required.
+- Save players and their last reported positions in `%LocalAppData%\ScumMiniMap\admin-players.db`. Select a named server before importing, isolate each server's population, update returning players by ID and retain missing players as history. Reject incomplete, malformed or duplicate results before changing saved data.
+- Search the directory by either name or ID, teleport to a player or bring them to you, and optionally draw players from the latest snapshot on both map modes. Markers show coordinate age, turn gray after 60 seconds and disappear after five minutes. History entries remain searchable; positions are refreshed snapshots, not a continuous feed.
+- Translate the player directory into all ten supported app languages. Require a fresh clipboard result from the original SCUM process for automatic refresh, stop on input/focus changes, and restore the previous clipboard only while the captured command/result still owns it.
+
+### Changed
+
+- Attach admin controls to both the compact minimap and expanded map. Collapse to a 28-pixel Admin tab; use its arrow or label to expand. Close, Escape and native window closing collapse the same controls instead of dismissing them. Preserve command sections and teleport choices between map modes.
+- Follow map moves, resizes and monitor edges immediately, use available space on either side and preserve the map's size and position. Hide the attached controls with the map, input suppression or command transport, then restore the same instance without activation.
+- Ignore the previous Settings-only persistent dismissal preference so older profiles retain an accessible attached tab. Settings and menu shortcuts expand that same panel.
+
+## [1.6.5] - 2026-10-08
+
+### Added
+
+- Remove the current map's death markers directly from the map sidebar without clearing ordinary waypoints or zones.
+- Browse a bundled SCUM Database item catalogue in a visible category tree with six groups and source categories/subcategories. Search by display name, spawn ID or subtype, including individual item variants. Build a quantity-based cart, review its commands and save or load reusable spawn kits.
+- Include source-listed magazines, ammunition, attachments and adapters when searching for a weapon. Normalize ID punctuation and spacing, support combined searches such as `AK47 scope`, deduplicate shared parts and identify matching guns and possible adapter requirements. Bundle 3,882 explicit compatibility links from SCUM Database for offline searching.
+- Send the spawn cart through the existing configured SCUM chat controls in one action. Pace commands, stop on input/focus/clipboard interference and retain only unsent entries after an interruption. Translate the selector and result messages in all ten languages.
+- Select per-item Health, Uses, Dirtiness, Location, KeyCardSector, StackCount, Radiation and Weight overrides using checkboxes and value dropdowns. Offer numeric presets and all sixteen keycard sectors, retain custom numeric values, include validated modifiers in command previews and saved kits, and import legacy kits. Location accepts coordinates, copied SCUM location text or a Steam ID and preserves the required quoting.
 - Add an opt-in, two-minute shortcut support capture with configured key events, hook installation errors, input gates, hook/polling dispatch, process integrity information and coordinate-response outcomes. It records no clipboard contents or screenshots.
 - Run the support package in a unique test profile seeded with the player's current settings, preserving the installed app and any existing test profile. Collect the session logs into a ZIP for diagnosis.
+- Offer installation from a newly downloaded standalone EXE when an older MiniMap is running, with an alternative `Update-MiniMap.cmd` launcher in the ZIP. Verify the release checksum, close only the identified MiniMap, replace its executable and restart it while preserving AppData.
+
+### Changed
+
+- Match the admin panel to the map sidebar and retain an explicitly opened panel in the background across map and focus changes. Restore and focus the existing panel when requested. Keep an explicitly closed panel dismissed until reopened from Settings.
+- Store named spawn kits and the working cart together in an AppData SQLite database. Replace kit file pickers with a saved-kit list, retain ordered quantities and modifiers, migrate the previous cart once and support importing legacy TSV kits without removing their source files.
+- Organize item search results into collapsible sections using source categories and subtypes, including ammunition calibres, scopes, sights, rails and suppressors. Show section counts, keep collapse state while filtering, offer expand/collapse-all controls and clear hidden selections before adding. Preserve multi-selection across open sections and full compatibility details.
+- Refine the spawn cart layout with a wider browser, readable name/compatibility columns, selection counts, search reset and empty-result feedback, Ctrl+F search access, compact cart actions and command preview, and consistent dark styling. Translate the new controls in all ten languages.
+- Request administrator rights when launching either the test or release executable. Verify the embedded elevation manifest during packaging and run the packaged self-check through an isolated STA reflection runner without launching the interactive app or requesting elevation during builds.
+- Reduce the pause between spawn-cart commands from 250 ms to 60 ms while preserving chat-open, paste and key-release timing and interruption checks.
+- Edit modifiers for multiple selected cart items at once. Show mixed values, apply only changed properties, preserve individual untouched modifiers and unselected rows, and validate the complete selection before committing it.
+- Apply accepted updates automatically after verification, request elevation when needed, and allow a bounded force-close fallback for the exact verified MiniMap process if it does not exit normally. Cancelled elevation or failed verification leaves the previous app intact; failed replacement or restart restores the previous executable.
+
+### Fixed
+
+- Persist manual death-marker removal immediately and invalidate the map display. Ignore death-screen samples captured before a manual clear so an outstanding probe cannot recreate the removed markers.
+- Allow a bounded wait for the original SCUM window to receive focus and for held keys to release before admin input. Display the configured chat key, show the reason when no cart command was sent, and preserve native input rejection details. Log admin gates and submission counts without recording commands or clipboard contents.
+- Queue cart submission after the button's click event finishes. Validate active cart editors explicitly so automatic focus validation cannot suppress the Send handler, and log the click and any preparation step that blocks it.
+- Stop timer-based inventory detection from cancelling an admin send during its own map/chat transitions. Check inventory once after map closure and before opening chat, retain physical-input cancellation, and preserve the specific reason when a send stops before pasting.
+- Publish and verify cart command text eagerly under a clipboard lock, then verify ownership and all text formats after Windows' close-time synthesis to retain the final stable sequence. Allow a short wait for clipboard acquisition. Keep the expanded-map state until its closing key is accepted, and wait for the closing menu to disappear before opening chat. This prevents an early clipboard failure from leaving the game map open while MiniMap believes it has closed. Never repeat a map toggle or submitted command automatically.
+
+### Upgrading to this release
+
+Windows now requests administrator access when MiniMap starts so its input can reach an elevated SCUM process. For the first upgrade from an older unelevated version, download and run the new `SkynettMiniMap.exe` while the old MiniMap is running. Approve Windows' administrator prompt, then accept the offer to update the existing installation. The app verifies the release, closes the old MiniMap, replaces it and restarts it automatically. ZIP users can extract the package and run `Update-MiniMap.cmd`. Future accepted updates use the app's updater. SCUM stays running. Keep the existing AppData folder; settings, zones and waypoints are retained, and legacy spawn carts migrate to the kit database.
 
 ## [1.6.4] - 2026-10-05
 
@@ -433,6 +680,8 @@ This release consolidates the complete 1.4.x development line, from 1.4.0 throug
 - Performance refinements and maintenance release.
 
 ## [Unreleased]
+
+## [1.7.0] - 2026-10-09
 
 ### Added
 - **Full-Map Waypoint Action**: Full-map right-click options can now save a named custom waypoint at the clicked map location using the existing persistent cyan-marker workflow.
