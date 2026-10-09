@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.1] - 2026-10-09
+
+- Keep the admin player directory responsive by loading server data and clipboard imports off the UI thread, caching asset counts between refreshes, debouncing search, and building player cards in short batches only in tile view.
+- Restore the originating admin controls after command dispatch, including when dispatch closed the full map, so another command can be sent without reopening the map.
+
 ## [1.7.0] - 2026-10-09
 
 - Enable every map category by default except Hunting and Fishing, including saved zone display; preserve saved filter preferences.
