@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.7] - 2026-10-10
+
+- Change a selected imported zone to a rectangle, square or circle and drag the whole zone into position. Shape changes and moves support undo and retain zone names, colours and layers.
+
 ## [1.7.6] - 2026-10-09
 
 - Automatically imported outlines are fitted to circles or rectangles (including squares and rotated rectangles), replacing irregular detected polygons. Manual custom outlines remain available.
