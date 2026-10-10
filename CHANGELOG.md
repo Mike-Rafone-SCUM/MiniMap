@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.12] - 2026-10-10
+
+- Navigate player-directory pages with the mouse wheel over the list or its cards: down for the next page, up for the previous page. Accumulate high-resolution wheel movement, support multiple notches, and stop at the first and last pages without wrapping.
+- Match registered vehicles to their reported STEAMID instead of assigning them to another squad member through the trailing owner field or flag-owner database ID. Preserve unowned vehicles, ownership observations and legitimate multiple vehicle registrations; use unambiguous flag-owner matches only when no registration tag is available.
+
 ## [1.7.11] - 2026-10-10
 
 - Replace the player directory's scrolling card virtualization with viewport-sized pages, Previous/Next controls and direct page-number selection. Create at most 24 cards per page, retain cards while scrolling, and start search/sort results on page one. Reopening retains the server, search and selected page.
