@@ -8,6 +8,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.10] - 2026-10-10
+
+- Keep manual map controls, explicit map rendering and manually copied position updates available while MusicalScumbag is open. Continue pausing automatic copy injection and animation; player tools retain their separate intensive-work pause.
+
+## [1.7.9] - 2026-10-10
+
+- Cache admin player, asset and profile data across window reopenings, invalidate it when the local databases change, and load databases in the background. Reuse player cards when the visible rows do not change, create only cards around the viewport, and keep the entire list reachable beyond WinForms' native height limit.
+
+## [1.7.8] - 2026-10-10
+
+- Pause automatic tracking, input polling and overlay animation/rendering while MusicalScumbag is open to protect music playback timing. Resume automatically when it closes.
+- Pause the same intensive loops while opening and using the admin player directory or player profiles. Resume after all player tools are hidden or closed, provided MusicalScumbag is also closed.
+
 ## [1.7.7] - 2026-10-10
 
 - Change a selected imported zone to a rectangle, square or circle and drag the whole zone into position. Shape changes and moves support undo and retain zone names, colours and layers.
