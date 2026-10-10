@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.13] - 2026-10-10
+
+- Queue custom admin-command Add and Edit dialogs after the current button event finishes. Keep the editor above the map, avoid ownership by the hidden command palette, and restore command controls after Save, Cancel or Close. Report editor failures without terminating the app.
+- Allow optional custom-command numeric values, including zero and decimal values such as 0.5, using SCUM's decimal-point format independently of Windows locale. Preserve saved values and show validation errors within the editor.
+
 ## [1.7.12] - 2026-10-10
 
 - Navigate player-directory pages with the mouse wheel over the list or its cards: down for the next page, up for the previous page. Accumulate high-resolution wheel movement, support multiple notches, and stop at the first and last pages without wrapping.
