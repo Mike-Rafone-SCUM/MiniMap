@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.14] - 2026-10-10
+
+- Simplify custom commands with a command-type selector: run once with free-text arguments, a true/false pill toggle, a 1/0 pill toggle, or a numeric value. Show both toggle commands in the preview and retain compatibility with existing saved commands.
+- Render toggles as pill buttons and allow numeric values to be edited directly on command cards. Validate and save numeric edits before sending, keep invalid values from submitting, and preserve quoted single-line arguments.
+
 ## [1.7.13] - 2026-10-10
 
 - Queue custom admin-command Add and Edit dialogs after the current button event finishes. Keep the editor above the map, avoid ownership by the hidden command palette, and restore command controls after Save, Cancel or Close. Report editor failures without terminating the app.
