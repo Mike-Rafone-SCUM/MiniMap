@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.11] - 2026-10-10
+
+- Replace the player directory's scrolling card virtualization with viewport-sized pages, Previous/Next controls and direct page-number selection. Create at most 24 cards per page, retain cards while scrolling, and start search/sort results on page one. Reopening retains the server, search and selected page.
+- Keep the player directory and profiles hidden after a player-tool teleport is submitted, including interrupted chat cleanup. Commands stopped before submission retain the normal tool restoration behavior.
+- Add a configurable Admin players shortcut, defaulting to NumPad +, to reopen the directory. Include it in Settings, the rebinding wizard, physical-key capture, conflict validation and saved preferences.
+
 ## [1.7.10] - 2026-10-10
 
 - Keep manual map controls, explicit map rendering and manually copied position updates available while MusicalScumbag is open. Continue pausing automatic copy injection and animation; player tools retain their separate intensive-work pause.
