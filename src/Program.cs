@@ -11,7 +11,19 @@ namespace ScumMiniMap {
 #else
         internal static readonly bool IsTestBuild=false;
 #endif
-        internal static string DataFolderName { get { return IsTestBuild?"ScumMiniMap-ResponsivenessTest":"ScumMiniMap"; } }
+        internal static string DiagnosticDataFolderName(bool testBuild,string traceFlag,string session) {
+            Guid id;
+            if(testBuild && traceFlag=="1" && Guid.TryParseExact(session,"N",out id))
+                return "ScumMiniMap-ShortcutDiagnostics-"+id.ToString("N");
+            return testBuild?"ScumMiniMap-ResponsivenessTest":"ScumMiniMap";
+        }
+        internal static string DataFolderName { get {
+            return DiagnosticDataFolderName(IsTestBuild,Environment.GetEnvironmentVariable("SCUM_MINIMAP_INPUT_TRACE"),
+                Environment.GetEnvironmentVariable("SCUM_MINIMAP_DIAGNOSTIC_SESSION"));
+        } }
+        internal static bool IsShortcutDiagnosticSession { get {
+            return IsTestBuild && DataFolderName.StartsWith("ScumMiniMap-ShortcutDiagnostics-",StringComparison.Ordinal);
+        } }
         internal static int MinimumCopyIntervalMs { get { return 250; } }
         internal const int DefaultCopyModifierKey = 0;
         // VK_DIVIDE (the physical NumPad / key) is stable across language layouts.
@@ -27,6 +39,60 @@ namespace ScumMiniMap {
 
 
         internal static string LocalUpdateSource;
+
+        static bool TryInstallDownloadedUpdate(string[] args) {
+            bool requested=args!=null && args.Length>0 && args[0].Equals("-InstallUpdate",StringComparison.OrdinalIgnoreCase);
+            if(IsTestBuild)return false;
+            string source=System.Reflection.Assembly.GetExecutingAssembly().Location;
+            try {
+                Version version=UpdateBootstrap.ReadStableVersion(source);
+                var running=UpdateBootstrap.RunningInstallations(source,version);
+                if(!requested && running.Count==0)return false;
+                Localization.DetectSystemLanguage();
+                string settings=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"ScumMiniMap","settings.ini");
+                if(File.Exists(settings) && new FileInfo(settings).Length<1048576)foreach(string line in File.ReadAllLines(settings))
+                    if(line.StartsWith("Language=",StringComparison.OrdinalIgnoreCase)) { Localization.SetLanguage(line.Substring(9));break; }
+                string explicitPath=requested && args.Length==2?args[1]:null;
+                if(requested && args.Length>2)throw new FormatException("Use -InstallUpdate with an optional installed executable path.");
+                if(string.IsNullOrWhiteSpace(explicitPath) && running.Count!=1) {
+                    if(running.Count>1)MessageBox.Show(Localization.Get("UpdateInstallAmbiguous"),Localization.Get("UpdateInstallTitle"),MessageBoxButtons.OK,MessageBoxIcon.Information);
+                    using(var picker=new OpenFileDialog { Title=Localization.Get("UpdateInstallChoose"),Filter="SCUM MiniMap (*.exe)|*.exe",CheckFileExists=true,FileName="SkynettMiniMap.exe" }) {
+                        if(picker.ShowDialog()!=DialogResult.OK)return true;
+                        explicitPath=picker.FileName;
+                    }
+                }
+                var target=UpdateBootstrap.SelectInstallation(running,explicitPath,version,source);
+                if(MessageBox.Show(Localization.T("UpdateInstallPrompt",target.Version.ToString(3),target.InstalledPath,version.ToString(3)),
+                    Localization.Get("UpdateInstallTitle"),MessageBoxButtons.YesNo,MessageBoxIcon.Information)!=DialogResult.Yes)return true;
+                string bundled=Path.Combine(Path.GetDirectoryName(source),"update.txt"),manifest;
+                string packageManifest=Path.Combine(Path.GetDirectoryName(source),"package.txt");
+                if(requested && File.Exists(packageManifest)) {
+                    if(new FileInfo(packageManifest).Length>4096)throw new FormatException("The package manifest is too large.");
+                    var fields=new System.Collections.Generic.Dictionary<string,string>(StringComparer.Ordinal);
+                    foreach(string line in File.ReadAllLines(packageManifest)) {
+                        string[] pair=line.Split('=');if(pair.Length!=2 || fields.ContainsKey(pair[0]))throw new FormatException("Invalid package manifest.");
+                        fields.Add(pair[0],pair[1]);
+                    }
+                    string packagedVersion,packagedHash;
+                    if(fields.Count!=4 || !fields.TryGetValue("version",out packagedVersion) || !fields.TryGetValue("SkynettMiniMap.exe",out packagedHash))throw new FormatException("Incomplete package manifest.");
+                    InstallationAssets.Validate();
+                    manifest="schema=1\nversion="+packagedVersion+"\nsha256="+packagedHash+"\n";
+                } else if(requested && File.Exists(bundled)) {
+                    if(new FileInfo(bundled).Length>4096)throw new FormatException("The update manifest is too large.");
+                    manifest=File.ReadAllText(bundled);
+                } else {
+                    var service=new UpdateService(UpdateService.Repository,Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"ScumMiniMap","updates"),null);
+                    var release=service.CheckVersion(version.ToString(3));
+                    manifest="schema=1\nversion="+release.VersionText+"\nsha256="+release.Sha256+"\n";
+                }
+                string status=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"ScumMiniMap","update-result.txt");
+                UpdateBootstrap.Install(source,manifest,target,status);
+                return true;
+            }catch(Exception ex) {
+                MessageBox.Show(Localization.T("UpdateFailedMsg",ex.Message),Localization.Get("UpdateInstallTitle"),MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                return true;
+            }
+        }
 
 
 
@@ -66,7 +132,7 @@ namespace ScumMiniMap {
 
 
 
-                    ex != null ? ex.Message : "No message",
+                    IsShortcutDiagnosticSession ? "Exception details omitted from shortcut capture." : (ex != null ? ex.Message : "No message"),
 
 
 
@@ -74,7 +140,7 @@ namespace ScumMiniMap {
 
 
 
-                    ex != null ? ex.StackTrace : "");
+                    IsShortcutDiagnosticSession ? "" : (ex != null ? ex.StackTrace : ""));
 
 
 
@@ -155,7 +221,7 @@ namespace ScumMiniMap {
 
 
 
-                foreach(string f in toMigrate) {
+                foreach(string f in IsShortcutDiagnosticSession?new string[0]:toMigrate) {
 
 
 
@@ -343,6 +409,17 @@ namespace ScumMiniMap {
 
 
 
+            // Release downloads can install over an older running copy before the normal
+            // single-instance mutex rejects them. Self-checks/previews and test profiles bypass this.
+            if(TryInstallDownloadedUpdate(args))return;
+            try { InstallationAssets.Validate(); }
+            catch(Exception error) {
+                LogException("InstallationAssets",error);
+                Localization.DetectSystemLanguage();
+                MessageBox.Show(Localization.Get("InstallationAssetsMissing")+"\n\n"+error.Message,
+                    "SCUM MiniMap",MessageBoxButtons.OK,MessageBoxIcon.Error);return;
+            }
+
             bool createdNew;
 
 
@@ -377,6 +454,7 @@ namespace ScumMiniMap {
 
 
                         Application.Run(window);
+                        Native.FlushInputTrace();
 
 
 

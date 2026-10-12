@@ -1,0 +1,137 @@
+# Offline localized catalogue; model IDs and technical identifiers retained.
+weapons	Armi
+clothing	Vestiario e armatura
+survival	Cibo, salute e sopravvivenza
+crafting	Attrezzature e lavorazione
+vehicles	Parti del veicolo
+other	Altri articoli
+weapon_ranged	Armi a distanza
+weapon_melee	Armi da mischia
+melee_weapon	Armi da mischia
+ammunition	Munizioni
+armor	Armatura
+attachment	Accessori per armi
+book	Libri
+buildable	Elementi di espansione della base
+consumable	Cibo, bevande e medicine
+equipment	Equipaggiamento
+farming	Agricoltura
+fishing	Pesca
+fishing_attachment	Accessori da pesca
+fortification	Elementi di fortificazione
+hunting	Caccia
+magazine	Caricatori
+material	Materiali
+player_modification	Modifiche del giocatore
+seasonal_event	Articoli stagionali
+throwable	Lanciabili e trappole
+vehicle_part	Parti del veicolo
+weapon_part	Parti di armi
+general	Generale
+Arrow	Freccia
+Crossbow Bolt	Dardo di balestra
+Flare	Bagliore
+12 Gauge	Manometro 12
+accessories	Accessori
+adhesive	Adesivo
+alcoholic	Bevande alcoliche
+animal_part	Parti di animali
+assault_rifle	Fucili d'assalto
+axe	Assi
+backpack	Zaini
+base_upgrades	Aggiornamenti della base
+bayonet	Baionette
+beverage	Bevande
+blunt	Armi contundenti
+body	Corpo
+body_armor	Armatura
+bow	Archi
+bumper	Paraurti
+clip	Clip
+cookbook	Libro di cucina
+cosmetic	Cosmetico
+craft_station	Stazioni di lavorazione
+crafting_material	Materiale per la lavorazione
+door	Porta
+earmuffs	Paraorecchie
+engine	Motore
+enhancement	Miglioramento
+event	Evento
+eyewear	Occhiali
+fender	Parafango
+fire_starter	Accendifuoco
+fishing_catch	Cattura di pesca
+flash_hider	Spegnifiamma
+flashlight	Torce elettriche
+food	Cibo
+footwear	Calzature
+fuel	Carburante
+ghillie	Ghillie si avvolge
+ghillie_jacket	Giacca Ghillie
+gloves	Guanti
+hazmat_suit	Tuta ignifuga
+headwear	Copricapo
+heavy	Armi pesanti
+holster	Fondina
+jacket	Giacca
+knife	Coltelli
+leggings	Gambali
+light	Luce
+lmg	Mitragliatrici leggere
+lockpick	Grimaldello
+mask	Maschera
+medical	Medicina
+miscellaneous	Varie
+organic	Biologico
+paint	Dipingere
+pants	Pantaloni
+pistol	Pistole
+pistol_parts	Parti di pistola
+quiver	Faretra
+rail	Slitte
+raincoat	Impermeabile
+ranged_parts	Parti a distanza
+repair_kit	Kit di riparazione
+repair_material	Materiale di riparazione
+results	Risultati
+revolver	Rivoltelle
+rifle_parts	Parti del fucile
+scarf	Sciarpa
+scope	Mirini telescopici
+seasonal_craft	Mestiere stagionale
+seat	Sedile
+security	Sicurezza
+seed	Semi
+shirt	Camicia
+shotgun	Fucili da caccia
+shotgun_parts	Parti di fucili
+sight	Mirini
+single_shot	Fucili a colpo singolo
+skirt	Gonna
+smg	Fucili mitragliatori
+smg_parts	Parti SMG
+sniper	Fucili da cecchino
+socks	Calzini
+soft_drink	Bevande analcoliche
+spear	Lance
+stabilizer	Stabilizzatori
+storage	Stoccaggio
+suppressor	Soppressori
+sweater	Maglione
+sword	Spade
+tool	Strumenti
+undershirt	Canottiera
+underwear	Biancheria intima
+unknown_parts	Parti sconosciute
+utility	Utilità
+vehicle_attachment	Attacco al veicolo
+water	Acqua
+wheel	Ruota
+Health	Condizione
+Uses	Usi rimanenti
+Dirtiness	Sporcizia
+Location	Posizione
+KeyCardSector	Settore delle chiavi magnetiche
+StackCount	Conteggio delle pile
+Radiation	Radiazione
+Weight	Peso (kg)

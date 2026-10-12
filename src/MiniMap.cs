@@ -102,7 +102,7 @@ namespace ScumMiniMap {
 
 
 
-        bool TrackingEnabled { get { return !diagnosticMode && !closing && !adminCommandBusy && !shortcutCaptureOpen; } }
+        bool TrackingEnabled { get { return !IntensiveWorkPaused && !diagnosticMode && !closing && !adminCommandBusy && !shortcutCaptureOpen; } }
 
 
 
@@ -212,7 +212,7 @@ namespace ScumMiniMap {
 
 
 
-        bool showZones=false;
+        bool showZones=true;
 
 
 
@@ -268,6 +268,14 @@ namespace ScumMiniMap {
 
 
         int fullMapOpacity=100;
+        bool fullMapZoomOpacityOverride;
+        internal int EffectiveFullMapOpacity { get { return overlay!=null && overlay.FullMapClickThrough?0:fullMapZoomOpacityOverride?100:fullMapOpacity; } }
+        void RestoreFullMapOpacityAfterTeleport() {
+            if(!fullMapZoomOpacityOverride)return;
+            fullMapZoomOpacityOverride=false;
+            InvalidateFullMapSidebar();lastFrameKey=null;
+            if(!closing && !IsDisposed)RenderOverlay();
+        }
 
 
 
@@ -679,7 +687,7 @@ namespace ScumMiniMap {
         PointF lastVisitedAnchorPoint;
         struct LocationAnchor {
             public string Name;
-            public string DisplayName { get { return Zone!=null?Zone.DisplayName:Localization.GetZoneName(Name); } }
+            public string DisplayName { get { return Zone!=null?Zone.DisplayName:Localization.GetMapObjectName(Name); } }
             public PointF Point;
             public MapZone Zone;
             public double Radius;
@@ -800,6 +808,7 @@ namespace ScumMiniMap {
 
 
         bool hiddenByFocusLoss;
+        bool wasObsFocused;
         DateTime lastAltDownTime = DateTime.MinValue;
 
 
@@ -841,6 +850,7 @@ namespace ScumMiniMap {
 
 
             LoadSettings();
+            TraceShortcutBindings();
 
 
 
@@ -890,7 +900,7 @@ namespace ScumMiniMap {
 
             string mapWarning;
             bool customMapLoaded=false;
-            Stream tileResource=System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("map-tiles.bin");
+            Stream tileResource=InstallationAssets.Open("map-tiles.bin");
             mapWarning=null;
             if(tileResource!=null) {
                 if(File.Exists(mapFile)) {
@@ -906,7 +916,7 @@ namespace ScumMiniMap {
                 else tileResource.Dispose();
             } else map=SafeMapImage.Load(mapFile,()=>System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("map.png"),out mapWarning);
             if(tileResource==null && File.Exists(mapFile) && mapWarning==null) customMapLoaded=true;
-            if(mapWarning!=null && !diagnosticMode) Shown+=(sender,e)=>MessageBox.Show(mapWarning,Localization.Get("ZoneEditorTitle"),MessageBoxButtons.OK,MessageBoxIcon.Warning);
+            if(mapWarning!=null && !diagnosticMode) Shown+=(sender,e)=>RunUiModal(() => MessageBox.Show(mapWarning,Localization.Get("ZoneEditorTitle"),MessageBoxButtons.OK,MessageBoxIcon.Warning));
 
             mapSidecarPaths=MapSidecarPaths.ForMap(dataFolder,customMapLoaded?mapFile:null);
             mapSidecarPaths.EnsureImage(map);
@@ -1050,6 +1060,16 @@ namespace ScumMiniMap {
                 draggingMap=false; draggingSlider=false; mouseMoved=true;
                 UpdateLocationHistoryHover(null);
                 Native.CancelActiveCopy();
+                SyncFullMapAdminControls(false,true);
+            };
+            overlay.OnFullMapClickThroughChanged=enabled=> {
+                if(!enabled)fullMapZoomOpacityOverride=false;
+                InvalidateFullMapSidebar();lastFrameKey=null;
+                if(!closing && !IsDisposed && !overlay.ChangingMapMode)RenderOverlay();
+            };
+            overlay.VisibleChanged+=(s,e)=> {
+                if(overlay.Visible && ToolWindowVisible) { toolMapRestore=true;overlay.Hide();return; }
+                AdminControlsMapModeChanged();
             };
 
 
@@ -1070,7 +1090,9 @@ namespace ScumMiniMap {
 
 
             overlay.CanShowFullMapContextMenu = () => fullMapActive && !closing && !IsDisposed && !Native.CopyInProgress;
+            overlay.AdminToolsEnabled=()=>adminToolsEnabled;
             overlay.PopulateAdminCommands=PopulateFullMapAdminMenu;
+            overlay.PopulateMarkerContextMenu=PopulateAdminMarkerContextMenu;
 
 
 
@@ -1090,7 +1112,11 @@ namespace ScumMiniMap {
 
 
 
-                if(closing || IsDisposed || !IsHandleCreated || shortcutCaptureOpen) return;
+                if(closing || IsDisposed || !IsHandleCreated || shortcutCaptureOpen) {
+                    TraceShortcutContext("queue rejected",key,scanCode);
+                    return;
+                }
+                TraceShortcutContext("queued",key,scanCode);
 
 
 
@@ -1099,7 +1125,12 @@ namespace ScumMiniMap {
                 long chatRevision=chat.Revision;
                 IntPtr origin=Native.GetForegroundWindow();
                 try { BeginInvoke((Action)(()=> {
-                    if(bindingRevision!=controlBindingRevision || !chat.AllowsQueuedShortcut(chatRevision) || Native.GetForegroundWindow()!=origin || adminCommandBusy) return;
+                    if(bindingRevision!=controlBindingRevision || !chat.AllowsQueuedShortcut(chatRevision) || Native.GetForegroundWindow()!=origin || adminCommandBusy) {
+                        if(Native.InputTraceActive) Native.TraceInput("shortcut queued rejected vk="+key+" scan="+scanCode+
+                            " bindingsChanged="+(bindingRevision!=controlBindingRevision)+" chatChanged="+!chat.AllowsQueuedShortcut(chatRevision)+
+                            " focusChanged="+(Native.GetForegroundWindow()!=origin)+" admin="+adminCommandBusy);
+                        return;
+                    }
                     OnGameKey(key,scanCode);
                 })); } catch(InvalidOperationException) { }
 
@@ -1119,6 +1150,7 @@ namespace ScumMiniMap {
             ShowInTaskbar=true;
             Resize+=HandleTaskbarRestore;
             tray=new NotifyIcon { Icon=Icon,Text="SCUM MiniMap v"+VersionString+(Program.IsTestBuild?" TEST":""),Visible=true };
+            tray.BalloonTipClicked+=(s,e)=>CheckForUpdates(true);
 
 
 
@@ -1152,6 +1184,7 @@ namespace ScumMiniMap {
             settingsDoneBtn.Text=Localization.Get("Done");
             settingsDoneBtn.Width=100;
             settingsDoneBtn.Height=28;
+            settingsDoneBtn.CausesValidation=false;
             settingsDoneBtn.Click+=(s,e)=>DismissSettings();
 
             settingsOpenFolderBtn.Text=Localization.Get("OpenDataFolder");
@@ -1162,7 +1195,7 @@ namespace ScumMiniMap {
                     if(!Directory.Exists(dataFolder)) Directory.CreateDirectory(dataFolder);
                     Process.Start(new ProcessStartInfo { FileName="explorer.exe",Arguments="\""+dataFolder+"\"",UseShellExecute=true });
                 } catch(Exception ex) {
-                    MessageBox.Show(this,Localization.T("DataFolderOpenError",ex.Message));
+                    RunUiModal(() => MessageBox.Show(UiDialogOwner,Localization.T("DataFolderOpenError",ex.Message)));
                 }
             };
 
@@ -1234,6 +1267,7 @@ namespace ScumMiniMap {
 
 
             overlay.SizeChanged+=(s,e)=> {
+                PositionFullMapAdminControls();
                 if(overlay.FullMapMode || overlay.ChangingMapMode) return;
                 savedWidth=overlay.Width; savedHeight=overlay.Height;
 
@@ -1256,6 +1290,7 @@ namespace ScumMiniMap {
 
 
             overlay.LocationChanged+=(s,e)=> {
+                PositionFullMapAdminControls();
                 if(overlay.FullMapMode || overlay.ChangingMapMode) return;
                 savedLeft=overlay.Left; savedTop=overlay.Top;
                 saveAfter=DateTime.UtcNow.AddMilliseconds(700);
@@ -1311,16 +1346,16 @@ namespace ScumMiniMap {
 
 
 
-                if(isFirstLaunch && !diagnosticMode) {
+                if(isFirstLaunch && !diagnosticMode && !Program.IsShortcutDiagnosticSession) {
 
                     OpenStartupGuide();
 
                 }
 
-                if(updateResetPending && !isFirstLaunch && !diagnosticMode) {
-                    DialogResult reset = MessageBox.Show(this,
+                if(updateResetPending && !isFirstLaunch && !diagnosticMode && !Program.IsShortcutDiagnosticSession) {
+                    DialogResult reset = RunUiModal(() => MessageBox.Show(
                         Localization.Get("UpdateResetBody"),
-                        Localization.Get("UpdateResetTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        Localization.Get("UpdateResetTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question));
                     if(reset==DialogResult.Yes) {
                         try { if(File.Exists(settingsPath)) File.Delete(settingsPath); } catch(Exception ex) { Program.LogException("Reset update settings",ex); }
                         Application.Restart();
@@ -1329,7 +1364,7 @@ namespace ScumMiniMap {
                     updateResetPending=false;
                     SaveSettings();
                 }
-                if(!diagnosticMode && !suppressCopyKeyReminder) ShowCopyKeyReminder();
+                if(!diagnosticMode && !suppressCopyKeyReminder && !Program.IsShortcutDiagnosticSession) ShowCopyKeyReminder();
 
 
 
@@ -1404,8 +1439,8 @@ namespace ScumMiniMap {
             if(parent==null) return;
             for(int i=parent.Controls.Count-1; i>=0; i--) {
                 Control child=parent.Controls[i];
-                parent.Controls.RemoveAt(i);
-                DisposeChildControls(child);
+                // Control.Dispose owns its descendants. Removing every nested child
+                // individually causes repeated native layout work during a rebuild.
                 child.Dispose();
             }
         }
@@ -1421,54 +1456,25 @@ namespace ScumMiniMap {
             FlowLayoutPanel langRow = new FlowLayoutPanel { Width = 365, Height = 32 };
             langRow.Controls.Add(new Label { Text = Localization.Get("Language"), Width = 160, Padding = new Padding(0, 5, 0, 0) });
             TacticalComboBox langCombo = new TacticalComboBox { Width = 160 };
-            langCombo.Items.AddRange(new object[] {
-                "English",
-                "Español (Argentina)",
-                "Français",
-                "Deutsch",
-                "Nederlands",
-                "Русский",
-                "中文 (简体)",
-                "Türkçe",
-                "العربية",
-                "Português (Brasil)"
-            });
-            switch (Localization.Current) {
-                case AppLanguage.SpanishArgentina: langCombo.SelectedIndex = 1; break;
-                case AppLanguage.French: langCombo.SelectedIndex = 2; break;
-                case AppLanguage.German: langCombo.SelectedIndex = 3; break;
-                case AppLanguage.Dutch: langCombo.SelectedIndex = 4; break;
-                case AppLanguage.Russian: langCombo.SelectedIndex = 5; break;
-                case AppLanguage.Chinese: langCombo.SelectedIndex = 6; break;
-                case AppLanguage.Turkish: langCombo.SelectedIndex = 7; break;
-                case AppLanguage.Arabic: langCombo.SelectedIndex = 8; break;
-                case AppLanguage.Portuguese: langCombo.SelectedIndex = 9; break;
-                default: langCombo.SelectedIndex = 0; break;
-            }
+            langCombo.Items.AddRange(Localization.LanguageDisplayNames);
+            langCombo.SelectedIndex = Enum.IsDefined(typeof(AppLanguage),Localization.Current) ? (int)Localization.Current : 0;
             langCombo.SelectedIndexChanged += (s, e) => {
-                AppLanguage newLang;
-                switch (langCombo.SelectedIndex) {
-                    case 1: newLang = AppLanguage.SpanishArgentina; break;
-                    case 2: newLang = AppLanguage.French; break;
-                    case 3: newLang = AppLanguage.German; break;
-                    case 4: newLang = AppLanguage.Dutch; break;
-                    case 5: newLang = AppLanguage.Russian; break;
-                    case 6: newLang = AppLanguage.Chinese; break;
-                    case 7: newLang = AppLanguage.Turkish; break;
-                    case 8: newLang = AppLanguage.Arabic; break;
-                    case 9: newLang = AppLanguage.Portuguese; break;
-                    default: newLang = AppLanguage.English; break;
-                }
+                AppLanguage newLang = Localization.LanguageAt(langCombo.SelectedIndex);
                 if (Localization.Current != newLang) {
-                    Localization.Current = newLang;
-                    Text = Localization.T("HeaderSettings", VersionString+(Program.IsTestBuild?" TEST":""));
-                    BuildTrayMenu();
-                    BuildSettingsPanel();
-                    terrainKey = null;
-                    lastFrameKey = null;
-                    if (SettingsVisible) canvas.Invalidate();
-                    SettingsChanged();
-                    RenderOverlay();
+                    // The native combo must finish its selection notification before
+                    // rebuilding the panel disposes its window handle.
+                    BeginInvoke((MethodInvoker)delegate {
+                        if (IsDisposed || Disposing || langCombo.IsDisposed) return;
+                        Localization.Current = newLang;
+                        Text = Localization.T("HeaderSettings", VersionString+(Program.IsTestBuild?" TEST":""));
+                        BuildTrayMenu();
+                        BuildSettingsPanel();
+                        terrainKey = null;
+                        lastFrameKey = null;
+                        if (SettingsVisible) canvas.Invalidate();
+                        SettingsChanged();
+                        RenderOverlay();
+                    });
                 }
             };
             langRow.Controls.Add(langCombo);
@@ -1482,9 +1488,10 @@ namespace ScumMiniMap {
             keyWizardButton.Click += (s, e) => ShowKeyRebindingWizard();
             bar.Controls.Add(keyWizardButton);
             AddShortcutSettings(bar);
-            Button adminButton=new Button { Text="Admin command panel",Width=280 };
-            adminButton.Click+=(s,e)=>ShowAdminCommands();
-            bar.Controls.Add(adminButton);
+            var adminToggle=new Panel { Name="AdminToolsToggle",Width=365,Height=32,Cursor=Cursors.Hand };
+            adminToggle.Paint+=(s,e)=> { DrawSwitchPill(e.Graphics,new Rectangle(8,9,30,14),adminToolsEnabled,false);TextRenderer.DrawText(e.Graphics,Localization.Get("AdminToolsEnabled"),adminToggle.Font,new Rectangle(48,0,310,32),OverlayTheme.Ink,TextFormatFlags.VerticalCenter); };
+            adminToggle.Click+=(s,e)=> { SetAdminToolsEnabled(!adminToolsEnabled);adminToggle.Invalidate(); };
+            bar.Controls.Add(adminToggle);
 
             // 2. GRID & OVERLAY
             OverlayTheme.Section(bar, Localization.Get("SecMapZones"));
@@ -1575,7 +1582,7 @@ namespace ScumMiniMap {
                     if (SettingsVisible) canvas.Invalidate();
                     RenderOverlay();
                 })) {
-                    dlg.ShowDialog(this);
+                    RunUiModal(() => dlg.ShowDialog(UiDialogOwner));
                 }
             };
             bar.Controls.Add(poiFilterButton);
@@ -1588,15 +1595,15 @@ namespace ScumMiniMap {
             Button clearZonesBtn = new Button { Text = Localization.Get("ClearAllCustomZones"), Width = 280 };
             clearZonesBtn.Click += (s, e) => {
                 if (zones == null || zones.Count == 0) {
-                    MessageBox.Show(this, Localization.Get("NoCustomZonesToDelete"), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    RunUiModal(() => MessageBox.Show(UiDialogOwner, Localization.Get("NoCustomZonesToDelete"), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information));
                     return;
                 }
-                if (MessageBox.Show(this, Localization.T("ClearAllZonesConfirm", zones.Count), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes) {
+                if (RunUiModal(() => MessageBox.Show(UiDialogOwner, Localization.T("ClearAllZonesConfirm", zones.Count), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning)) == DialogResult.Yes) {
                     if(!TryCommitZones(new List<MapZone>(),this)) return;
                     searchTarget=null; activeRoute=null; routeGeneration++; lastRouteTarget=null;
                     SettingsChanged();
                     RenderOverlay();
-                    MessageBox.Show(this, Localization.Get("AllZonesDeletedDone"), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    RunUiModal(() => MessageBox.Show(UiDialogOwner, Localization.Get("AllZonesDeletedDone"), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information));
                 }
             };
             bar.Controls.Add(clearZonesBtn);
@@ -1652,13 +1659,13 @@ namespace ScumMiniMap {
             OverlayTheme.Section(bar, Localization.Get("SecToolsShortcuts"));
             Button resetMapBtn = new Button { Text = Localization.Get("ResetDefaultMap"), Width = 280 };
             resetMapBtn.Click += (s, e) => {
-                if (MessageBox.Show(this, Localization.Get("ResetDefaultMapConfirm"), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+                if (RunUiModal(() => MessageBox.Show(UiDialogOwner, Localization.Get("ResetDefaultMapConfirm"), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question)) == DialogResult.Yes) {
                     try {
                         string customMap = Path.Combine(dataFolder, "map.png");
                         if (File.Exists(customMap)) File.Delete(customMap);
-                        MessageBox.Show(this, Localization.Get("ResetDefaultMapDone"), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        RunUiModal(() => MessageBox.Show(UiDialogOwner, Localization.Get("ResetDefaultMapDone"), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information));
                     } catch (Exception ex) {
-                        MessageBox.Show(this, Localization.T("MapResetFailed", ex.Message), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        RunUiModal(() => MessageBox.Show(UiDialogOwner, Localization.T("MapResetFailed", ex.Message), Localization.Get("ZoneEditorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error));
                     }
                 }
             };
@@ -1688,7 +1695,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "1.6.3";
+        public const string VersionString = "1.7.22";
 
 
 
@@ -1697,6 +1704,8 @@ namespace ScumMiniMap {
 
 
         bool updateCheckRunning;
+        readonly UpdateCheckSchedule updateCheckSchedule=new UpdateCheckSchedule(DateTime.UtcNow);
+        string notifiedUpdateVersion;
 
 
 
@@ -1734,7 +1743,7 @@ namespace ScumMiniMap {
 
 
 
-                if(closing || IsDisposed) { File.Delete(staged); return; }
+                if(closing || IsDisposed) { UpdatePackage.Cleanup(staged); return; }
                 await Task.Run(()=>RestartWithVerifiedUpdate(staged,installed));
 
 
@@ -1743,7 +1752,7 @@ namespace ScumMiniMap {
 
 
 
-                try { if(File.Exists(staged)) File.Delete(staged); } catch { }
+                try { UpdatePackage.Cleanup(staged); } catch { }
 
 
 
@@ -1843,11 +1852,11 @@ namespace ScumMiniMap {
 
 
 
-                if(MessageBox.Show(this,Localization.T("UpdateAvailableDialogMsg",VersionString,release.VersionText,release.Filename),
+                if(RunUiModal(() => MessageBox.Show(UiDialogOwner,Localization.T("UpdateAvailableDialogMsg",VersionString,release.VersionText,release.Filename),
 
 
 
-                    "Local Update Test",MessageBoxButtons.YesNo,MessageBoxIcon.Information)!=DialogResult.Yes) return;
+                    "Local Update Test",MessageBoxButtons.YesNo,MessageBoxIcon.Information))!=DialogResult.Yes) return;
 
 
 
@@ -1859,7 +1868,7 @@ namespace ScumMiniMap {
 
 
 
-                MessageBox.Show(this,Localization.Get("UpdateReadyRestarting"),"Local Update Test",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                note=Localization.Get("UpdateReadyRestarting");
 
 
 
@@ -1875,7 +1884,7 @@ namespace ScumMiniMap {
 
 
 
-                if(!closing && !IsDisposed) MessageBox.Show(this,"Local update test failed: "+ex.Message,"Local Update Test",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                if(!closing && !IsDisposed) RunUiModal(() => MessageBox.Show(UiDialogOwner,"Local update test failed: "+ex.Message,"Local Update Test",MessageBoxButtons.OK,MessageBoxIcon.Warning));
 
 
 
@@ -1887,7 +1896,7 @@ namespace ScumMiniMap {
 
 
 
-        async void CheckForUpdates(bool userInitiated) {
+        async void CheckForUpdates(bool userInitiated,bool periodic=false) {
 
 
 
@@ -1896,6 +1905,7 @@ namespace ScumMiniMap {
 
 
             updateCheckRunning = true;
+            updateCheckSchedule.RecordCheck(DateTime.UtcNow);
 
 
 
@@ -1925,14 +1935,22 @@ namespace ScumMiniMap {
 
 
                     note = Localization.T("UpdateAvailableNote", release.VersionText, PhysicalKeyCapture.KeyName(settingsShortcutKey));
+                    if(periodic) {
+                        if(notifiedUpdateVersion!=release.VersionText) {
+                            notifiedUpdateVersion=release.VersionText;
+                            tray.ShowBalloonTip(5000,Localization.Get("UpdateAvailableDialogTitle"),note,ToolTipIcon.Info);
+                        }
+                        return;
+                    }
+                    notifiedUpdateVersion=release.VersionText;
 
 
 
-                    if(MessageBox.Show(this, Localization.T("UpdateAvailableDialogMsg", VersionString, release.VersionText, release.Filename),
+                    if(RunUiModal(() => MessageBox.Show(UiDialogOwner, Localization.T("UpdateAvailableDialogMsg", VersionString, release.VersionText, release.Filename),
 
 
 
-                        Localization.Get("UpdateAvailableDialogTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Information) != DialogResult.Yes) return;
+                        Localization.Get("UpdateAvailableDialogTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Information)) != DialogResult.Yes) return;
 
 
 
@@ -1948,7 +1966,7 @@ namespace ScumMiniMap {
 
 
 
-                    MessageBox.Show(this, Localization.Get("UpdateReadyRestarting"), Localization.Get("UpdateCheckTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    note=Localization.Get("UpdateReadyRestarting");
 
 
 
@@ -1964,7 +1982,7 @@ namespace ScumMiniMap {
 
 
 
-                    MessageBox.Show(this, Localization.T("UpdateUpToDateMsg", VersionString, release.VersionText), Localization.Get("UpdateUpToDateTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    RunUiModal(() => MessageBox.Show(UiDialogOwner, Localization.T("UpdateUpToDateMsg", VersionString, release.VersionText), Localization.Get("UpdateUpToDateTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information));
 
 
 
@@ -1976,7 +1994,7 @@ namespace ScumMiniMap {
 
 
 
-                if(userInitiated && !closing && !IsDisposed) MessageBox.Show(this, Localization.T("UpdateRateLimited",ex.RetryAt.ToLocalTime().ToString("g")), Localization.Get("UpdateCheckTitle"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if(userInitiated && !closing && !IsDisposed) RunUiModal(() => MessageBox.Show(UiDialogOwner, Localization.T("UpdateRateLimited",ex.RetryAt.ToLocalTime().ToString("g")), Localization.Get("UpdateCheckTitle"), MessageBoxButtons.OK, MessageBoxIcon.Warning));
 
 
 
@@ -1984,7 +2002,7 @@ namespace ScumMiniMap {
 
 
 
-                if(userInitiated && !closing && !IsDisposed) MessageBox.Show(this, Localization.Get("UpdateConnectError"), Localization.Get("UpdateCheckTitle"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if(userInitiated && !closing && !IsDisposed) RunUiModal(() => MessageBox.Show(UiDialogOwner, Localization.Get("UpdateConnectError"), Localization.Get("UpdateCheckTitle"), MessageBoxButtons.OK, MessageBoxIcon.Warning));
 
 
 
@@ -1992,7 +2010,7 @@ namespace ScumMiniMap {
 
 
 
-                if(userInitiated && !closing && !IsDisposed) MessageBox.Show(this, Localization.Get("UpdateVersionUnknown"), Localization.Get("UpdateCheckTitle"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if(userInitiated && !closing && !IsDisposed) RunUiModal(() => MessageBox.Show(UiDialogOwner, Localization.Get("UpdateVersionUnknown"), Localization.Get("UpdateCheckTitle"), MessageBoxButtons.OK, MessageBoxIcon.Warning));
 
 
 
@@ -2000,7 +2018,7 @@ namespace ScumMiniMap {
 
 
 
-                if(userInitiated && !closing && !IsDisposed) MessageBox.Show(this, Localization.T("UpdateFailedMsg", ex.Message), Localization.Get("UpdateCheckTitle"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if(userInitiated && !closing && !IsDisposed) RunUiModal(() => MessageBox.Show(UiDialogOwner, Localization.T("UpdateFailedMsg", ex.Message), Localization.Get("UpdateCheckTitle"), MessageBoxButtons.OK, MessageBoxIcon.Warning));
 
 
 
@@ -2086,6 +2104,87 @@ namespace ScumMiniMap {
 
 
 
+        T RunUiModal<T>(Func<T> showDialog) {
+            Form activeOwner=Form.ActiveForm;
+            bool previousPanelOpening=panelOpening, previousCapture=shortcutCaptureOpen;
+            bool resumeTimer=timer.Enabled, restoreOverlay=overlay.Visible;
+            panelOpening=true;
+            shortcutCaptureOpen=true;
+            timer.Stop();
+            try {
+                Native.CancelActiveCopy();
+                PrepareUiInput();
+                overlay.Hide();
+                return showDialog();
+            }
+            finally {
+                panelOpening=previousPanelOpening;
+                shortcutCaptureOpen=previousCapture;
+                fallbackKeysArmed=false;
+                if(!closing && !IsDisposed) {
+                    if(restoreOverlay)overlay.Show();
+                    if(activeOwner!=null && !activeOwner.IsDisposed && activeOwner.Visible && activeOwner.Enabled
+                        && !diagnosticMode && Native.IsOurWindow(Native.GetForegroundWindow()))activeOwner.BringToFront();
+                    if(resumeTimer)timer.Start();
+                }
+            }
+        }
+
+        void PrepareUiInput() {
+            adminControlsCommandReturn=false;
+            Native.CancelActiveCopy();
+            Native.ReleaseCapture();
+            Cursor.Clip=Rectangle.Empty;
+            if(adminCommandsPanel!=null && !adminCommandsPanel.IsDisposed)adminCommandsPanel.Hide();
+        }
+
+        IWin32Window UiDialogOwner { get { return SettingsVisible && IsHandleCreated ? (IWin32Window)this : null; } }
+
+        bool ToolWindowVisible {
+            get { return (spawnCartDialog!=null && !spawnCartDialog.IsDisposed && spawnCartDialog.Visible)
+                || (adminPlayersPanel!=null && !adminPlayersPanel.IsDisposed && adminPlayersPanel.Visible)
+                || adminProfileWindows.Any(profile=>!profile.IsDisposed && profile.Visible); }
+        }
+
+        bool toolMapRestore;
+        int adminPlayerToolOpening;
+        bool IntensiveWorkPaused {
+            get { return musicalScumbagOpen || AdminPlayerWorkPaused; }
+        }
+        bool AdminPlayerWorkPaused {
+            get { return adminPlayerToolOpening>0
+                || (adminPlayersPanel!=null && !adminPlayersPanel.IsDisposed && adminPlayersPanel.Visible)
+                || adminProfileWindows.Any(profile=>!profile.IsDisposed && profile.Visible); }
+        }
+        internal static bool CanRestoreAdminTool(IntPtr foreground,IntPtr game,bool ownWindow) {
+            return ownWindow || (game!=IntPtr.Zero && foreground==game);
+        }
+        void RestoreAdminTool(Form tool,IntPtr game) {
+            if(closing || IsDisposed || tool==null || tool.IsDisposed || !tool.Enabled)return;
+            if(playerToolsAwaitingReopen && IsPlayerTool(tool))return;
+            IntPtr foreground=Native.GetForegroundWindow();
+            if(!diagnosticMode && !CanRestoreAdminTool(foreground,game,Native.IsOurWindow(foreground)))return;
+            Native.ReleaseCapture();Cursor.Clip=Rectangle.Empty;
+            tool.WindowState=FormWindowState.Normal;tool.TopMost=true;
+            tool.Show();tool.BringToFront();
+            if(!diagnosticMode) { tool.Activate();Native.ForceForeground(tool.Handle); }
+        }
+        void ProtectToolWindow(Form tool) {
+            Action update=()=> {
+                UpdateIntensiveWorkPause();
+                if(ToolWindowVisible) {
+                    toolMapRestore=toolMapRestore || overlay.Visible;
+                    PrepareUiInput();overlay.Hide();
+                } else if(toolMapRestore && !adminCommandBusy && !closing && !overlay.IsDisposed) {
+                    toolMapRestore=false;
+                    overlay.Show();
+                }
+            };
+            tool.VisibleChanged+=(s,e)=>update();
+            tool.FormClosed+=(s,e)=>update();
+            tool.Disposed+=(s,e)=>update();
+        }
+
         public void OpenStartupGuide(bool bindingsOnly=false) {
             if(IsHandleCreated && InvokeRequired) {
                 BeginInvoke(new Action(() => OpenStartupGuide(bindingsOnly)));
@@ -2113,8 +2212,7 @@ namespace ScumMiniMap {
                     if(owner == null) guide.StartPosition = FormStartPosition.CenterScreen;
                     if(bindingsOnly) guide.ShowKeyBindings();
                     Native.CancelActiveCopy();
-                    shortcutCaptureOpen=true;
-                    try { guide.ShowDialog(owner); } finally { shortcutCaptureOpen=false; fallbackKeysArmed=false; }
+                    RunUiModal(() => guide.ShowDialog(owner));
                     BuildSettingsPanel();
                     SaveSettings();
                     if(guide.LayoutRequested) {
@@ -2130,7 +2228,7 @@ namespace ScumMiniMap {
 
         void ShowCopyKeyReminder() {
             using(var reminder=new CopyKeyReminderDialog()) {
-                if(reminder.ShowDialog()==DialogResult.OK && reminder.DoNotShowAgain) {
+                if(RunUiModal(() => reminder.ShowDialog())==DialogResult.OK && reminder.DoNotShowAgain) {
                     suppressCopyKeyReminder=true;
                     SaveSettings();
                 }
@@ -2138,7 +2236,7 @@ namespace ScumMiniMap {
         }
 
         public void OpenZoneImport(string file) {
-            if(zonesLoadFailed) { if(!diagnosticMode) MessageBox.Show(Localization.Get("NoteZonesLoadFail")); return; }
+            if(zonesLoadFailed) { if(!diagnosticMode) RunUiModal(() => MessageBox.Show(Localization.Get("NoteZonesLoadFail"))); return; }
             if(IsHandleCreated && InvokeRequired) {
                 BeginInvoke(new Action(() => OpenZoneImport(file)));
                 return;
@@ -2162,11 +2260,11 @@ namespace ScumMiniMap {
                     if(!string.IsNullOrEmpty(file))editor.Shown+=async(s,e)=>await editor.ImportAutomatic(file);
                     OverlayTheme.Frame(editor,Localization.Get("HeaderMapZones"),()=>editor.Close());
                     if(owner == null) editor.StartPosition = FormStartPosition.CenterScreen;
-                    editor.ShowDialog(owner);
+                    RunUiModal(() => editor.ShowDialog(owner));
                 }
             } catch(Exception ex) {
                 Program.LogException("ZoneEditor", ex);
-                MessageBox.Show(owner,Localization.T("ZoneEditorOpenError",ex.Message),Localization.Get("ZoneEditorTitle"),MessageBoxButtons.OK,MessageBoxIcon.Error);
+                RunUiModal(() => MessageBox.Show(owner,Localization.T("ZoneEditorOpenError",ex.Message),Localization.Get("ZoneEditorTitle"),MessageBoxButtons.OK,MessageBoxIcon.Error));
             } finally {
                 if(visible && overlay != null && !overlay.IsDisposed) {
                     overlay.Show();
@@ -2205,7 +2303,7 @@ namespace ScumMiniMap {
 
 
 
-                editor.ShowDialog();
+                RunUiModal(() => editor.ShowDialog());
 
 
 
@@ -2904,7 +3002,7 @@ namespace ScumMiniMap {
 
 
 
-                    if(dlg.ShowDialog(SettingsVisible?this:null)==DialogResult.OK && selected!=null) {
+                    if(RunUiModal(() => dlg.ShowDialog(SettingsVisible?this:null))==DialogResult.OK && selected!=null) {
 
 
 
@@ -3171,7 +3269,7 @@ namespace ScumMiniMap {
                 dlg.FullOpen = true;
                 dlg.AnyColor = true;
                 IWin32Window owner = (SettingsVisible && IsHandleCreated) ? (IWin32Window)this : (overlay != null && overlay.IsHandleCreated ? (IWin32Window)overlay : null);
-                DialogResult res = owner != null ? dlg.ShowDialog(owner) : dlg.ShowDialog();
+                DialogResult res = owner != null ? RunUiModal(() => dlg.ShowDialog(owner)) : RunUiModal(() => dlg.ShowDialog());
                 if(res == DialogResult.OK) {
                     routeGuidanceColor = dlg.Color;
                     SettingsChanged();
@@ -3190,7 +3288,7 @@ namespace ScumMiniMap {
                 dlg.FullOpen = true;
                 dlg.AnyColor = true;
                 IWin32Window owner = (SettingsVisible && IsHandleCreated) ? (IWin32Window)this : (overlay != null && overlay.IsHandleCreated ? (IWin32Window)overlay : null);
-                DialogResult res = owner != null ? dlg.ShowDialog(owner) : dlg.ShowDialog();
+                DialogResult res = owner != null ? RunUiModal(() => dlg.ShowDialog(owner)) : RunUiModal(() => dlg.ShowDialog());
                 if(res == DialogResult.OK) {
                     playerConeColor = dlg.Color;
                     SettingsChanged();
@@ -3276,7 +3374,7 @@ namespace ScumMiniMap {
                         txt.Cursor=Cursors.IBeam;
                     }));
                     IWin32Window owner = (SettingsVisible && IsHandleCreated) ? (IWin32Window)this : null;
-                    if(prompt.ShowDialog(owner)==DialogResult.OK && !string.IsNullOrWhiteSpace(txt.Text)) {
+                    if(RunUiModal(() => prompt.ShowDialog(owner))==DialogResult.OK && !string.IsNullOrWhiteSpace(txt.Text)) {
                         string name=txt.Text.Trim();
                         if(name.Length>80) name=name.Substring(0,80);
                         MapZone wp=new MapZone { Name=name, Argb=Color.FromArgb(255,0,200,255).ToArgb(), Points=new PointF[]{mapPt}, Category=ZoneCategory.Custom };
@@ -3316,7 +3414,7 @@ namespace ScumMiniMap {
                 if(!(ex is IOException) && !(ex is InvalidDataException) && !(ex is UnauthorizedAccessException) && !(ex is ArgumentException)) throw;
                 note=Localization.T("ZeSaveZonesError",ex.Message);
                 Program.LogException("SaveWaypoints",ex);
-                if(!diagnosticMode && !silent) MessageBox.Show(owner,note,Localization.Get("ZoneEditorTitle"),MessageBoxButtons.OK,MessageBoxIcon.Error);
+                if(!diagnosticMode && !silent) RunUiModal(() => MessageBox.Show(owner,note,Localization.Get("ZoneEditorTitle"),MessageBoxButtons.OK,MessageBoxIcon.Error));
                 return false;
             }
         }
@@ -3338,7 +3436,7 @@ namespace ScumMiniMap {
 
                 using(Form prompt=CreateWaypointRemovalPrompt(displayName)) {
                     IWin32Window dialogOwner=owner ?? ((SettingsVisible && IsHandleCreated) ? (IWin32Window)this : null);
-                    return prompt.ShowDialog(dialogOwner)==DialogResult.Yes;
+                    return RunUiModal(() => prompt.ShowDialog(dialogOwner))==DialogResult.Yes;
 
                 }
 
@@ -3560,7 +3658,7 @@ namespace ScumMiniMap {
 
 
 
-                !adminCommandBusy && !panelOpening && !shortcutCaptureOpen && !chat.Paused && !inventoryInputLocked &&
+                !AdminPlayerWorkPaused && !adminCommandBusy && !panelOpening && !shortcutCaptureOpen && !chat.Paused && !inventoryInputLocked &&
 
 
 
@@ -3664,6 +3762,7 @@ namespace ScumMiniMap {
 
 
         void OnGameKeyCore(int key,int scanCode=0) {
+            TraceShortcutContext("UI received",key,scanCode);
             if(shortcutCaptureOpen) return;
 
 
@@ -3677,7 +3776,7 @@ namespace ScumMiniMap {
 
 
 
-            if(diagnosticMode || closing || IsDisposed || panelOpening || adminCommandBusy || !inputWindowFocused) { inputGeneration++; return; }
+            if(AdminPlayerWorkPaused || diagnosticMode || closing || IsDisposed || panelOpening || adminCommandBusy || !inputWindowFocused) { inputGeneration++; return; }
 
 
 
@@ -3731,6 +3830,7 @@ namespace ScumMiniMap {
             else if((key==0x09 || key==0x1B) && fullMapActive) action=()=>SetFullMap(false);
 
             if(action==null) return;
+            if(Native.InputTraceActive) Native.TraceInput("shortcut game action vk="+key+" scan="+scanCode+" map="+mapKey);
 
 
 
@@ -4071,6 +4171,7 @@ namespace ScumMiniMap {
 
 
             fullMapActive=active;
+            adminControlsCommandReturn=false;
             adminMapClickArmed=false;
 
 
@@ -4119,6 +4220,7 @@ namespace ScumMiniMap {
 
 
                 fullMapZoom = 1.0f;
+                fullMapZoomOpacityOverride=false;
 
 
 
@@ -4139,6 +4241,7 @@ namespace ScumMiniMap {
 
 
             overlay.FullMapMode = fullMapActive;
+            AdminControlsMapModeChanged();
 
             // The physical map key reaches SCUM too. Keep its keyboard focus so
             // key-up, the next map toggle and Escape reach the underlying game map.
@@ -4205,7 +4308,7 @@ namespace ScumMiniMap {
 
 
 
-                int deltaScroll = delta > 0 ? -48 : 48;
+                int deltaScroll = -(delta/120)*48;
 
 
 
@@ -4246,7 +4349,10 @@ namespace ScumMiniMap {
 
 
 
-            if(!FullMapInputAllowed()) return;
+            // Copy key-up cleanup must not discard a physical sidebar click.
+            bool sidebarInput=fullMapActive && !overlay.FullMapClickThrough && pt.X>=overlay.Height && !closing && !IsDisposed;
+            if(!sidebarInput && !FullMapInputAllowed()) return;
+            if(sidebarInput)Native.CancelActiveCopy();
 
 
 
@@ -4504,6 +4610,8 @@ namespace ScumMiniMap {
 
             } else if(btn == MouseButtons.Right) {
 
+                if(TryRemoveDeathMarkerAtScreenPoint(pt))return;
+
 
 
                 PointF rightClickMapPoint;
@@ -4511,6 +4619,9 @@ namespace ScumMiniMap {
 
 
                 pendingFullMapWaypointMapPoint=TryGetFullMapPoint(pt,out rightClickMapPoint)?(PointF?)rightClickMapPoint:null;
+                // Opening an admin context menu must not change the view or clear
+                // navigation before its captured teleport target is used.
+                if(adminToolsEnabled && pendingFullMapWaypointMapPoint.HasValue)return;
 
 
 
@@ -4519,6 +4630,7 @@ namespace ScumMiniMap {
 
 
                     fullMapZoom = 1.0f;
+                    fullMapZoomOpacityOverride=false;
 
 
 
@@ -5154,140 +5266,12 @@ namespace ScumMiniMap {
 
 
         void DrawMiniButton(Graphics g, Rectangle rect, string text, bool active) {
-
-
-
-            using (GraphicsPath path = new GraphicsPath()) {
-
-
-
-                int r = 6;
-
-
-
-                path.AddArc(rect.X, rect.Y, r, r, 180, 90);
-
-
-
-                path.AddArc(rect.Right - r, rect.Y, r, r, 270, 90);
-
-
-
-                path.AddArc(rect.Right - r, rect.Bottom - r, r, r, 0, 90);
-
-
-
-                path.AddArc(rect.X, rect.Bottom - r, r, r, 90, 90);
-
-
-
-                path.CloseFigure();
-
-
-
-                Color bg = active ? Color.FromArgb(45, 56, 68) : Color.FromArgb(22, 27, 32);
-
-
-
-                using (Brush b = new SolidBrush(bg)) g.FillPath(b, path);
-
-
-
-                using (Pen p = new Pen(active ? Color.FromArgb(255, 159, 28) : Color.FromArgb(42, 52, 61), 1.0f)) g.DrawPath(p, path);
-
-
-
-            }
-
-
-
-            using (Font f = new Font("Segoe UI", 7.0f, FontStyle.Bold))
-
-
-
-            using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center }) {
-
-
-
-                Brush b = active ? new SolidBrush(Color.FromArgb(255, 174, 51)) : new SolidBrush(Color.FromArgb(180, 190, 200));
-
-
-
-                g.DrawString(text, f, b, rect, sf);
-
-
-
-            }
-
-
-
+            FullMapSidebarStyle.DrawMiniButton(g,rect,text,active);
         }
-
-
 
         void DrawActionButton(Graphics g, Rectangle rect, string text, Color baseColor) {
-
-
-
-            using (GraphicsPath path = new GraphicsPath()) {
-
-
-
-                int r = 7;
-
-
-
-                path.AddArc(rect.X, rect.Y, r, r, 180, 90);
-
-
-
-                path.AddArc(rect.Right - r, rect.Y, r, r, 270, 90);
-
-
-
-                path.AddArc(rect.Right - r, rect.Bottom - r, r, r, 0, 90);
-
-
-
-                path.AddArc(rect.X, rect.Bottom - r, r, r, 90, 90);
-
-
-
-                path.CloseFigure();
-
-
-
-                using (Brush b = new SolidBrush(baseColor)) g.FillPath(b, path);
-
-
-
-                using (Pen p = new Pen(OverlayTheme.Border, 1.0f)) g.DrawPath(p, path);
-
-
-
-            }
-
-
-
-            using (Font f = new Font("Segoe UI", 7.5f, FontStyle.Bold))
-
-
-
-            using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center }) {
-
-
-
-                g.DrawString(text, f, Brushes.WhiteSmoke, rect, sf);
-
-
-
-            }
-
-
-
+            FullMapSidebarStyle.DrawActionButton(g,rect,text,baseColor);
         }
-
-
 
         void DrawFullMapSidebar(Graphics g, int sidebarX, int sidebarW, int sidebarH) {
 
@@ -5421,7 +5405,7 @@ namespace ScumMiniMap {
 
 
 
-            string opText = string.Format(CultureInfo.InvariantCulture, "{0} {1}%", Localization.Get("OpacityLabel"), fullMapOpacity);
+            string opText = string.Format(CultureInfo.InvariantCulture, "{0} {1}%", Localization.Get("OpacityLabel"), EffectiveFullMapOpacity);
 
 
 
@@ -5473,7 +5457,7 @@ namespace ScumMiniMap {
 
 
 
-            float frac = (fullMapOpacity - 20) / 80f;
+            float frac = Math.Max(0f,Math.Min(1f,(EffectiveFullMapOpacity - 20) / 80f));
 
 
 
@@ -6463,8 +6447,13 @@ namespace ScumMiniMap {
 
             Rectangle toolSettingsRect = new Rectangle(innerX, itemY, innerW, 24);
             Rectangle adminMenuRect=new Rectangle(innerX,itemY,innerW,24);
-            DrawActionButton(g,adminMenuRect,"Admin commands...",OverlayTheme.Surface);
-            RegisterClickable(adminMenuRect,viewportRect,()=>ShowAdminDropdown(adminMenuRect));
+            DrawScrollableToggle(g,innerX,itemY,innerW,24,Localization.Get("AdminToolsEnabled"),adminToolsEnabled,viewportRect,()=>SetAdminToolsEnabled(!adminToolsEnabled));
+            itemY+=28;
+            Rectangle clearDeathsRect=new Rectangle(innerX,itemY,innerW,24);
+            bool hasDeathMarkers=zones.Any(marker=>marker.IsDeathMarker);
+            using(var toolFont=new Font("Segoe UI",7.5f,FontStyle.Bold))
+                FullMapSidebarStyle.DrawActionButton(g,clearDeathsRect,Localization.Get("ClearDeathMarkers"),OverlayTheme.Surface,toolFont,hasDeathMarkers,false);
+            if(hasDeathMarkers)RegisterClickable(clearDeathsRect,viewportRect,RemoveDeathMarkersFromSidebar);
             itemY+=28;
             toolSettingsRect=new Rectangle(innerX,itemY,innerW,24);
             DrawActionButton(g, toolSettingsRect, Localization.T("SidebarSettings",PhysicalKeyCapture.KeyName(settingsShortcutKey)), OverlayTheme.Surface);
@@ -6985,6 +6974,7 @@ namespace ScumMiniMap {
 
 
                     Name = mName,
+                    IsMapObject = true,
 
 
 
@@ -7004,7 +6994,7 @@ namespace ScumMiniMap {
 
 
 
-                note = Localization.T("NoteWaypointSet", Localization.GetZoneName(mName), PhysicalKeyCapture.KeyName(searchShortcutKey));
+                note = Localization.T("NoteWaypointSet", searchTarget.DisplayName, PhysicalKeyCapture.KeyName(searchShortcutKey));
 
 
 
@@ -7108,10 +7098,74 @@ namespace ScumMiniMap {
                 finally { System.Threading.Interlocked.Exchange(ref timingLogBusy,0); }
             });
         }
+        volatile bool musicalScumbagOpen;
+        int musicProcessCheckBusy;
+        DateTime nextMusicProcessCheck=DateTime.MinValue;
+        bool intensiveWorkWasPaused;
+        void CheckMusicProcess(DateTime now) {
+            if(now<nextMusicProcessCheck) return;
+            nextMusicProcessCheck=now.AddSeconds(1);
+            if(Interlocked.Exchange(ref musicProcessCheckBusy,1)!=0) return;
+            // Process discovery must not stall the UI or compete with the music input loop.
+            ThreadPool.QueueUserWorkItem(_=> {
+                try {
+                    var processes=Process.GetProcessesByName("MusicalScumbag");
+                    try { musicalScumbagOpen=processes.Length>0; }
+                    finally { foreach(var process in processes) process.Dispose(); }
+                } catch { /* Keep the last known state until discovery succeeds. */ }
+                finally { Interlocked.Exchange(ref musicProcessCheckBusy,0); }
+            });
+        }
+        bool UpdateIntensiveWorkPause() {
+            if(closing || IsDisposed || resourcesReleased) return true;
+            if(IntensiveWorkPaused) {
+                if(!intensiveWorkWasPaused) {
+                    intensiveWorkWasPaused=true;
+                    Native.CancelActiveCopy();
+                    inputGeneration++;
+                    pending=false;
+                    clipboardSnapshotReady=false;
+                    fallbackKeysArmed=false;
+                }
+                if(DateTime.UtcNow>=saveAfter) SaveSettings();
+                timer.Interval=250;
+                return true;
+            }
+            if(intensiveWorkWasPaused) {
+                intensiveWorkWasPaused=false;
+                failures=0;
+                next=DateTime.UtcNow;
+                lastTickStarted=0;
+                lastFrameKey=null;
+                timer.Interval=100;
+            }
+            return false;
+        }
+        void PollMusicPausedInput() {
+            // Keep manual controls and copied coordinates usable without automatic
+            // copy injection, animation, or repeated overlay rendering.
+            bool gameFocused=Native.GameFocused();
+            keys.Resync(gameFocused);
+            SyncChatState();
+            overlay.SetGameFocus(gameFocused);
+            overlay.UpdateFullMapClickThrough(keys.PhysicalControlDown,gameFocused);
+            if(adminCommandBusy || closing || IsDisposed) return;
+            uint current=Native.GetClipboardSequenceNumber();
+            if(current==sequence) return;
+            string text;
+            if(!Native.TryReadCoordinateClipboard(out text)) return;
+            sequence=current;
+            if(Position.Parse(text)!=null) Accept(text);
+        }
         void Tick(object sender,EventArgs args) {
             Debug.Assert(!InvokeRequired,"Sampling timer must run on the WinForms UI thread.");
             if(diagnosticMode || closing || IsDisposed) return;
             if(tickBusy) return;
+            CheckMusicProcess(DateTime.UtcNow);
+            if(UpdateIntensiveWorkPause()) {
+                if(musicalScumbagOpen && !AdminPlayerWorkPaused) PollMusicPausedInput();
+                return;
+            }
             double tickStarted=motionClock.Elapsed.TotalMilliseconds;
             double tickGap=lastTickStarted==0?0:tickStarted-lastTickStarted;
             lastTickStarted=tickStarted;
@@ -7120,27 +7174,17 @@ namespace ScumMiniMap {
             DateTime now=DateTime.UtcNow;
             if(now>=saveAfter)SaveSettings();
             PruneLocationHistory(now);
+            if(!Program.IsTestBuild && string.IsNullOrEmpty(Program.LocalUpdateSource)
+                && updateCheckSchedule.TryBegin(now,!updateCheckRunning && !adminCommandBusy && !relativeTeleportBusy
+                    && !copyInProgress && !Native.CopyInProgress && !chat.Paused && !inventoryInputLocked))
+                CheckForUpdates(false,true);
             // Menus, dialogs, Alt-Tab and injected copy input can make a low-level hook
             // miss a matching key-up. Reconcile the hook's transition view with Windows'
             // physical state before it can block sampling or a shortcut.
             bool gameFocused=Native.GameFocused();
             PollDeathBanner(now,gameFocused);
             RefreshDeathLabels(now);
-            if(!gameFocused || fullMapActive) {
-                inventoryInputLocked=false;
-                inventoryProbeMisses=0;
-            } else if(now>=nextInventoryProbe) {
-                nextInventoryProbe=now.AddMilliseconds(120);
-                bool inventoryVisible=Native.HasSelectedTopNavigationTab(Native.GetForegroundWindow());
-                if(inventoryVisible) {
-                    inventoryProbeMisses=0;
-                    if(!inventoryInputLocked) Native.CancelActiveCopy();
-                    inventoryInputLocked=true;
-                } else if(inventoryInputLocked && ++inventoryProbeMisses>=2) {
-                    inventoryInputLocked=false;
-                    inventoryProbeMisses=0;
-                }
-            }
+            UpdateInventoryInputGate(now,gameFocused,()=>Native.HasSelectedTopNavigationTab(Native.GetForegroundWindow()));
             keys.Resync(gameFocused);
             // Use reconciled physical Ctrl state. Injected Ctrl from location
             // copying must not hide the map or cancel its own copy operation.
@@ -7149,6 +7193,7 @@ namespace ScumMiniMap {
             TickVoice(now,gameFocused);
             bool ourWindowFocused=Native.IsOurWindow(Native.GetForegroundWindow());
             bool gameOrOurFocused=gameFocused || ourWindowFocused;
+            bool obsFocused=Native.ObsFocused();
             int desiredTickInterval=gameOrOurFocused ? 16 : 100;
             if(timer.Interval!=desiredTickInterval) timer.Interval=desiredTickInterval;
             bool isAltDown=(Native.GetAsyncKeyState(0x12)&0x8000)!=0 || (Native.GetAsyncKeyState(0xA4)&0x8000)!=0 || (Native.GetAsyncKeyState(0xA5)&0x8000)!=0;
@@ -7156,6 +7201,11 @@ namespace ScumMiniMap {
             bool altTabRecent=isAltDown || (now - lastAltDownTime).TotalMilliseconds < 500 || (now - Native.LastAltTabTime).TotalMilliseconds < 500;
             if(!altTabRecent) {
                 overlay.SetGameFocus(gameFocused);
+                // Keep the actual map available to OBS's window picker. This
+                // affects visibility only; game input still requires gameFocused.
+                if(obsFocused && hiddenByFocusLoss && !ToolWindowVisible) {
+                    overlay.Show();RenderOverlay();hiddenByFocusLoss=false;
+                }
                 if(gameFocused && !wasGameFocused) {
                     // SCUM regained focus: restore overlay and engage Auto mode
                     if(hiddenByFocusLoss) { overlay.Show(); RenderOverlay(); hiddenByFocusLoss=false; }
@@ -7163,12 +7213,15 @@ namespace ScumMiniMap {
                     failures=0;
                     next=now; // trigger immediate request
                 }
-                if(!gameOrOurFocused && wasGameFocused && !SettingsVisible && !searchOpen) {
+                if(!gameOrOurFocused && !obsFocused && (wasGameFocused || wasObsFocused) && !SettingsVisible && !searchOpen) {
                     // Both SCUM and our overlay lost focus: hide overlay entirely and cease input
                     if(overlay.Visible) { overlay.Hide(); hiddenByFocusLoss=true; }
                 }
                 wasGameFocused=gameOrOurFocused;
+                wasObsFocused=obsFocused;
             }
+            SyncFullMapAdminControls(gameOrOurFocused,keys.PhysicalControlDown || altTabRecent || chat.Paused
+                || inventoryInputLocked || searchOpen || panelOpening || SettingsVisible);
             if(gameFocused && Native.IsRightMouseDown()) {
                 resumeAfter = now.AddMilliseconds(600);
             }
@@ -7179,20 +7232,24 @@ namespace ScumMiniMap {
             // Do not poll M or Escape here: polling cannot tell whether SCUM's chat box owns the
             // keystroke, while the physical hook can.
             bool shortcutFocused=AppShortcutWindowFocused();
+            TraceShortcutState();
             if(shortcutFocused && !adminCommandBusy && !panelOpening && !shortcutCaptureOpen && !SettingsVisible && !searchOpen && !chat.Paused && !inventoryInputLocked && !keys.ShortcutModifiersDown(true)) {
                 if(!fallbackKeysArmed) ArmFallbackKeys();
                 // Every application binding shares the hook's dispatcher and gates.
                 // The SCUM map/chat controls continue to belong to the physical hook.
                 foreach(var action in AppControlBindings.AllActions) {
                     int binding=AppControlKey(action);
-                    if(binding!=0 && FallbackBindingPressed(binding,AppControlScanCode(action)))
+                    if(binding!=0 && FallbackBindingPressed(binding,AppControlScanCode(action))) {
+                        if(Native.InputTraceActive) Native.TraceInput("shortcut polling edge action="+action+" vk="+binding+" scan="+AppControlScanCode(action));
                         DispatchAppControl(action);
+                    }
                     if(!HotkeyContextAllowed()) break;
                 }
             } else {
                 fallbackKeysArmed=false;
             }
             // Cursor visibility is not an authoritative map-open signal.
+            if(UpdateIntensiveWorkPause()) return;
             motion.Advance(motionClock.Elapsed.TotalSeconds);
             if(autoZoom && Math.Abs(targetZoom-zoom)>0.001f) {
                 float zoomDelta=targetZoom-zoom;
@@ -7208,6 +7265,7 @@ namespace ScumMiniMap {
                     string text;
                     if(!Native.TryReadCoordinateClipboard(out text)) throw new ExternalException("Clipboard is busy.");
                     Position p=Position.Parse(text);
+                    if(Native.InputTraceActive && pending) Native.TraceInput("copy clipboard changed parsed="+(p!=null));
                     sequence=current;
                     if(p!=null) {
                         Accept(text); failures=0;
@@ -7224,6 +7282,7 @@ namespace ScumMiniMap {
                     else { clipboardSnapshotReady=false; if(pending) clipboardRestoreAllowed=false; }
                 }
                 if(pending && !copyInProgress && (now-sent).TotalMilliseconds>Program.CopyResponseTimeoutMs(scumCopyModifierKey)) {
+                    if(Native.InputTraceActive) Native.TraceInput("copy response timed out");
                     pending=false; failures++; note=Localization.T("NoteNoCoordsAttempt",failures);
                     if(failures>=3) {
                         next=now.AddMilliseconds(Program.CopyRetryDelayMs(scumCopyModifierKey));
@@ -7349,13 +7408,13 @@ namespace ScumMiniMap {
         }
 
         async void PerformCopyAsync() {
-            if(adminCommandBusy || copyInProgress || closing || IsDisposed) return;
+            if(IntensiveWorkPaused || adminCommandBusy || copyInProgress || closing || IsDisposed) return;
             copyInProgress = true;
             try {
                 if(!clipboardSnapshotReady) {
                     uint beforeCapture=Native.GetClipboardSequenceNumber();
                     IDataObject snapshot=await Native.CaptureClipboardAsync();
-                    if(adminCommandBusy || closing || IsDisposed || Native.GetClipboardSequenceNumber()!=beforeCapture) return;
+                    if(IntensiveWorkPaused || adminCommandBusy || closing || IsDisposed || Native.GetClipboardSequenceNumber()!=beforeCapture) return;
                     savedDataObject=snapshot; clipboardSnapshotReady=true;
                 }
                 sequence = Native.GetClipboardSequenceNumber();
@@ -7363,7 +7422,7 @@ namespace ScumMiniMap {
                     attempts++;
                     BeginCopyRequest();
                     CopyResult copyResult = await Native.Copy(
-                        () => !closing && !panelOpening && !SettingsVisible && !searchOpen && TrackingEnabled && !chat.Paused && !inventoryInputLocked && DateTime.UtcNow >= resumeAfter,
+                        () => !IntensiveWorkPaused && !closing && !panelOpening && !SettingsVisible && !searchOpen && TrackingEnabled && !chat.Paused && !inventoryInputLocked && DateTime.UtcNow >= resumeAfter,
                         scumCopyModifierKey, scumCopyKey,()=>fullMapActive,scumCopyScanCode);
                     CompleteCopyRequest(copyResult);
                     if(pending) note=Localization.Get("NoteAutoCopyActive");
@@ -7643,8 +7702,11 @@ namespace ScumMiniMap {
                 .Append((int)Math.Round(fullMapZoom*100)).Append('|')
                 .Append((int)Math.Round(fullMapPan.X*1000)).Append('|')
                 .Append((int)Math.Round(fullMapPan.Y*1000)).Append('|')
-                .Append(fullMapOpacity).Append('|')
-                .Append(InfobarScrollFrame());
+                .Append(EffectiveFullMapOpacity).Append('|')
+                .Append(InfobarScrollFrame()).Append('|')
+                .Append(showAdminPlayers).Append('|')
+                .Append(adminPlayerRevision).Append('|')
+                .Append(AdminPlayerFrame());
             return frameKeyBuilder.ToString();
         }
 
@@ -7961,7 +8023,7 @@ namespace ScumMiniMap {
 
 
 
-            OverlayWindow.Fade(bitmap,fullMapActive?false:edgeFade,fullMapActive?fullMapOpacity:mapOpacity,zoom==1?mapLeft:-1,zoom==1?mapTop:-1,zoom==1?mapRight:-1,zoom==1?mapBottom:-1,fullMapActive?"Square":overlayShape,mapBounds);
+            OverlayWindow.Fade(bitmap,fullMapActive?false:edgeFade,fullMapActive?EffectiveFullMapOpacity:mapOpacity,zoom==1?mapLeft:-1,zoom==1?mapTop:-1,zoom==1?mapRight:-1,zoom==1?mapBottom:-1,fullMapActive?"Square":overlayShape,mapBounds);
 
             // Keep destination guidance crisp above the terrain's edge fade.
             using(Graphics g=Graphics.FromImage(bitmap)) {
@@ -8230,6 +8292,7 @@ namespace ScumMiniMap {
                 return;
             }
             Debug.Assert(!InvokeRequired,"Overlay rendering must run on the WinForms UI thread.");
+            if(AdminPlayerWorkPaused) return;
 
 
 
@@ -8379,6 +8442,7 @@ namespace ScumMiniMap {
                 g.SetClip(bounds,CombineMode.Intersect);
                 g.DrawImageUnscaled(fullMap,(int)Math.Round(left-terrainLeft)-TerrainMargin,(int)Math.Round(top-terrainTop)-TerrainMargin);
                 DrawLocationHistory(g,left,top,side);
+                DrawAdminPlayers(g,bounds,left,top,side);
             } finally { g.Restore(terrainState); }
 
 

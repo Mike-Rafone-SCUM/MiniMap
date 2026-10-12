@@ -5,7 +5,7 @@ $repoRoot = Split-Path $PSScriptRoot -Parent
 $srcDir = Join-Path $repoRoot 'src'
 $resDir = Join-Path $repoRoot 'resources'
 $miniSources = & (Join-Path (Split-Path $PSScriptRoot -Parent) 'scripts\Get-MiniMapSources.ps1')
-Add-Type -Path $miniSources -ReferencedAssemblies System.Windows.Forms,System.Drawing
+Add-Type -Path $miniSources -ReferencedAssemblies System.Windows.Forms,System.Drawing,System.Xml,System.IO.Compression
 [ScumMiniMap.MapWindow]::SelfTest()
 $miniForm = [ScumMiniMap.MapWindow]::new($resDir, $true)
 $miniFlags = [Reflection.BindingFlags]'NonPublic,Instance'

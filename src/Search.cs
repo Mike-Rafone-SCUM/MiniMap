@@ -149,6 +149,8 @@ namespace ScumMiniMap {
                     score = 0;
                 } else {
                     score = Rank(Normalize(name), filter);
+                    int translatedScore = Rank(Normalize(Localization.GetMapObjectName(name)), filter);
+                    if (translatedScore >= 0 && (score < 0 || translatedScore < score)) score = translatedScore;
                     if (!string.IsNullOrEmpty(m.Title) && !string.Equals(m.Title, name, StringComparison.OrdinalIgnoreCase)) {
                         int tScore = Rank(Normalize(m.Title), filter);
                         if (tScore >= 0 && (score < 0 || tScore < score)) score = tScore;
@@ -170,6 +172,7 @@ namespace ScumMiniMap {
                 if (score >= 0) {
                     MapZone mz = new MapZone {
                         Name = name,
+                        IsMapObject = true,
                         Subtitle = !string.IsNullOrEmpty(catName) ? catName : secName,
                         Points = new PointF[] { pt },
                         Category = ZoneCategory.Custom

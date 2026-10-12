@@ -1,4 +1,4 @@
-﻿$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Stop'
 
 Write-Host "Compiling standalone bridge and water avoidance test harness..."
 
@@ -124,7 +124,7 @@ $harnessPath = Join-Path $PSScriptRoot 'TestBridgeHarness.cs'
 [System.IO.File]::WriteAllText($harnessPath, $harnessCs, [System.Text.Encoding]::UTF8)
 
 try {
-    & $compiler /nologo /optimize+ /target:exe "/out:$testBin" /reference:System.Drawing.dll /reference:System.dll "/resource:$roadsBin,roads.bin" "/resource:$waterBin,water-mask.bin" $routerCs $harnessPath
+    & $compiler /nologo /optimize+ /target:exe "/out:$testBin" /reference:System.Drawing.dll /reference:System.dll "/resource:$roadsBin,roads.bin" "/resource:$waterBin,water-mask.bin" $routerCs (Join-Path $miniRoot 'src\InstallationAssets.cs') $harnessPath
     if ($LASTEXITCODE -ne 0) { throw "Compilation failed" }
 
     Write-Host "Running Test-BridgeAndWaterRouter.exe..."

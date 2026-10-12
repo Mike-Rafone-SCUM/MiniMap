@@ -1,0 +1,2329 @@
+# Offline translation draft; native terminology review pending. Canonical identities retained.
+Cal_22	Mühimmat — .22
+Cal_22_Ammobox	.22 Mühimmat Kutusu
+Cal_22_Crafted	El yapımı mühimmat — .22
+Cal_22_TR	İzli mühimmat — .22
+Cal_22_Ammobox_TR	.22 Tracer Mühimmat Kutusu
+Cal_30-06	Mühimmat — .30-06
+Cal_30-06_Ammobox	.30-06 Mühimmat Kutusu
+Cal_30-06_AP	Zırh delici mühimmat — .30-06 (AP)
+Cal_30-06_AP_CR	El yapımı zırh delici mühimmat — .30-06 (AP)
+Cal_30-06_Ammobox_AP	.30-06 Zırh Delici Mühimmat Kutusu
+Cal_30-06_Crafted	El yapımı mühimmat — .30-06
+Cal_30-06_TR	İzli mühimmat — .30-06
+Cal_30-06_Ammobox_TR	.30-06 Tracer Mühimmat Kutusu
+Cal_308	Mühimmat — .308
+Cal_308_Ammobox	.308 Mühimmat Kutusu
+Cal_308_AP	Zırh delici mühimmat — .308 (AP)
+Cal_308_Ammobox_AP	.308 AP Mühimmat Kutusu
+Cal_308_AP_CR	El yapımı zırh delici mühimmat — .308 (AP)
+Cal_308_Crafted	El yapımı mühimmat — .308
+WeaponSuppressor_308_Black	Susturucu — .308
+Cal_308_TR	İzli mühimmat — .308 (TR)
+Cal_308_Ammobox_TR	.308 TR Mühimmat Kutusu
+Cal_338	Mühimmat — .338
+Cal_338_Ammobox	.338 Mühimmat Kutusu
+Cal_338_AP	Zırh delici mühimmat — .338 (AP)
+Cal_338_Ammobox_AP	.338 AP Mühimmat Kutusu
+Cal_338_AP_CR	El yapımı zırh delici mühimmat — .338 (AP)
+Cal_338_Crafted	El yapımı mühimmat — .338
+WeaponSuppressor_338_Black	Susturucu — .338
+WeaponSuppressor_338_Green	.338 Baskılayıcı Yeşil
+WeaponSuppressor_338_Tan	.338 Baskılayıcı Tan
+Cal_338_TR	İzli mühimmat — .338 (TR)
+Cal_338_Ammobox_TR	.338 Tracer Mühimmat Kutusu
+Cal_357_Viper	Mühimmat — .357
+Cal_357_Ammobox	.357 Mühimmat Kutusu
+Cal_357_Viper_AP	Zırh delici mühimmat — .357 (AP)
+Cal_357_Viper_AP_CR	El yapımı zırh delici mühimmat — .357 (AP)
+Cal_357_Ammobox_AP	.357 Zırh Delici Mühimmat Kutusu
+Cal_357_Viper_Crafted	El yapımı mühimmat — .357
+Cal_357_Viper_TR	İzli mühimmat — .357
+Cal_357_Ammobox_TR	.357 Tracer Mühimmat Kutusu
+Cal_38	Mühimmat — .38
+Cal_38_Ammobox	.38 Mühimmat Kutusu
+Cal_38_Ammobox_AP	.38 Mühimmat Kutusu Zırh Delici Mermiler
+Cal_38_Ammobox_TR	.38 Mühimmat Kutusu Takip Mermileri
+Cal_38_AP	Zırh delici mühimmat — .38 (AP)
+Cal_38_AP_CR	El yapımı zırh delici mühimmat — .38 (AP)
+Cal_38_Crafted	El yapımı mühimmat — .38
+Cal_38_TR	İzli mühimmat — .38 (TR)
+Cal_44_Viper	Mühimmat — .44
+Cal_44_Viper_Ammobox	.44 Mühimmat Kutusu
+Cal_44_Viper_AP_CR	El yapımı zırh delici mühimmat — .44 (AP)
+Cal_44_Viper_Ammobox_AP	.44 Zırh Delici Mühimmat Kutusu
+Cal_44_Viper_AP	Zırh delici mühimmat — .44
+Cal_44_Viper_Crafted	El yapımı mühimmat — .44
+Cal_44_Viper_TR	İzli mühimmat — .44
+Cal_44_Viper_Ammobox_TR	.44 Tracer Mühimmat Kutusu
+Cal_45	Mühimmat — .45 ACP
+Cal_45_Ammobox	.45 ACP Mühimmat Kutusu
+Cal_45_AP_CR	El yapımı zırh delici mühimmat — .45 ACP (AP)
+Cal_45_AP	Zırh delici mühimmat — .45 ACP
+Cal_45_AP_Ammobox	.45 ACP Zırh Delici Mühimmat Kutusu
+Cal_45_Crafted	El yapımı mühimmat — .45 ACP
+WeaponSuppressor_45ACP	Susturucu — .45 ACP
+Cal_45_TR	İzli mühimmat — .45 ACP
+Cal_45_Ammobox_TR	.45 ACP İzli Mühimmat Kutusu
+Cal_50_AE	Mühimmat — .50 AE
+Cal_50_AE_Ammobox	.50 AE Mühimmat Kutusu
+Cal_50_AE_AP	Zırh delici mühimmat — .50 AE (AP)
+Cal_50_AE_AP_CR	El yapımı zırh delici mühimmat — .50 AE (AP)
+Cal_50_AE_AP_Ammobox	.50 AE Zırh Delici Mühimmat Kutusu
+Cal_50_AE_Crafted	El yapımı mühimmat — .50 AE
+Cal_50_AE_TR	İzli mühimmat — .50 AE
+Cal_50_AE_Ammobox_TR	.50 AE İzli Mühimmat Kutusu
+Cal_50BMG	Mühimmat — .50 BMG
+Cal_50BMG_Ammobox	.50 BMG Mühimmat Kutusu
+Cal_50BMG_AP	Zırh delici mühimmat — .50 BMG (AP)
+Cal_50BMG_AP_Ammobox	.50 BMG Zırh Delici Mühimmat Kutusu
+Cal_50BMG_Crafted	El yapımı mühimmat — .50 BMG
+Cal_50BMG_TR	İzli mühimmat — .50 BMG
+Cal_50BMG_Ammobox_TR	.50 BMG İzli Mühimmat Kutusu
+Weapon_DT11B_Sawed_Off	"The Mule" DT11B kısa
+12_Gauge_Birdshot	12 Göstergeli Kuş Atışı Kartuşu
+12_Gauge_Buckshot	12 Gösterge Buckshot Kartuşu
+12_Gauge_Buckshot_Crafted	12 Gösterge Buckshot Doğaçlama Kartuş
+12_Gauge_Slug	12 Göstergeli Sümüklü Atış Kartuşu
+WeaponSuppressor_12_Gauge	12 Gösterge Bastırıcı
+Cal_40x46	40x46 El Bombası
+Cal_5_45x39mm	Mühimmat — 5.45x39mm
+Cal_5_45x39mm_Ammobox	5.45x39mm Mühimmat Kutusu
+Cal_5_45x39mm_AP	Zırh delici mühimmat — 5.45x39mm (AP)
+Cal_5_45x39mm_AP_CR	El yapımı zırh delici mühimmat — 5.45x39mm (AP)
+Cal_5_45x39mm_AP_Ammobox	5.45x39mm Zırh Delici Mühimmat Kutusu
+Cal_5_45x39mm_Crafted	El yapımı mühimmat — 5.45x39mm
+WeaponSuppressor_5_45x39	Susturucu — 5.45x39mm
+Cal_5_45x39mm_TR	İzli mühimmat — 5.45x39mm
+Cal_5_45x39mm_Ammobox_TR	5.45x39mm İzli Mühimmat Kutusu
+Cal_5_56x45mm	Mühimmat — 5.56x45mm
+Cal_5_56x45mm_Ammobox	5.56x45mm Mühimmat Kutusu
+Cal_5_56x45mm_AP	Zırh delici mühimmat — 5.56x45mm (AP)
+Cal_5_56x45mm_AP_CR	El yapımı zırh delici mühimmat — 5.56x45mm (AP)
+Cal_5_56x45mm_AP_Ammobox	5.56x45mm Zırh Delici Mühimmat Kutusu
+Cal_5_56x45mm_Crafted	El yapımı mühimmat — 5.56x45mm
+Cal_5_56x45mm_TR	İzli mühimmat — 5.56x45mm
+Cal_5_56x45mm_Ammobox_TR	5.56x45mm İzli Mühimmat Kutusu
+Cal_7_62x39mm	Mühimmat — 7.62x39mm
+Cal_7_62x39mm_Ammobox	7.62x39mm Mühimmat Kutusu
+Cal_7_62x39mm_AP	Zırh delici mühimmat — 7.62x39mm (AP)
+Cal_7_62x39mm_AP_CR	El yapımı zırh delici mühimmat — 7.62x39mm (AP)
+Cal_7_62x39mm_AP_Ammobox	7.62x39mm Zırh Delici Mühimmat Kutusu
+Cal_7_62x39mm_Crafted	El yapımı mühimmat — 7.62x39mm
+Cal_7_62x39mm_TR	İzli mühimmat — 7.62x39mm
+Cal_7_62x39mm_Ammobox_TR	7.62x39mm İzli Mühimmat Kutusu
+Cal_7_62x54mmR	Mühimmat — 7.62x54mmR
+Cal_7_62x54mmR_Ammobox	7.62x54mmR Mühimmat Kutusu
+Cal_7_62x54mmR_AP	Zırh delici mühimmat — 7.62x54mmR (AP)
+Cal_7_62x54mmR_AP_CR	El yapımı zırh delici mühimmat — 7.62x54mmR (AP)
+Cal_7_62x54mmR_AP_Ammobox	7.62x54mmR Zırh Delici Mühimmat Kutusu
+Cal_7_62x54mmR_Crafted	El yapımı mühimmat — 7.62x54mmR
+Cal_7_62x54mmR_TR	İzli mühimmat — 7.62x54mmR
+Cal_7_62x54mmR_Ammobox_TR	7.62x54mmR İzli Mühimmat Kutusu
+Cal_7_92x57mm	Mühimmat — 7.92x57mm
+Cal_7_92x57mm_Ammobox	7.92x57mm Mühimmat Kutusu
+Cal_7_92x57mm_AP	Zırh delici mühimmat — 7.92x57mm (AP)
+Cal_7_92x57mm_AP_CR	El yapımı zırh delici mühimmat — 7.92x57mm (AP)
+Cal_7_92x57mm_AP_Ammobox	7.92x57mm Zırh Delici Mühimmat Kutusu
+Cal_7_92x57mm_Crafted	El yapımı mühimmat — 7.92x57mm
+Cal_7_92x57mm_TR	İzli mühimmat — 7.92x57mm
+Cal_7_92x57mm_Ammobox_TR	7.92x57mm İzli Mühimmat Kutusu
+Cal_9mm	Mühimmat — 9mm
+Cal_9mm_Ammobox	9mm Mühimmat Kutusu
+Cal_9mm_AP	Zırh delici mühimmat — 9mm (AP)
+Cal_9mm_AP_CR	El yapımı zırh delici mühimmat — 9mm (AP)
+Cal_9mm_AP_Ammobox	9mm Zırh Delici Mühimmat Kutusu
+Cal_9mm_Crafted	El yapımı mühimmat — 9mm
+Cal_9mm_TR	İzli mühimmat — 9mm
+Cal_9mm_Ammobox_TR	9mm İzli Mühimmat Kutusu
+Cal_9x39mm	Mühimmat — 9x39mm
+Cal_9x39mm_Ammobox	9x39mm Mühimmat Kutusu
+Cal_9x39mm_AP	Zırh delici mühimmat — 9x39mm (AP)
+Cal_9x39mm_AP_CR	El yapımı zırh delici mühimmat — 9x39mm (AP)
+Cal_9x39mm_AP_Ammobox	9x39mm Zırh Delici Mühimmat Kutusu
+Cal_9x39mm_Crafted	El yapımı mühimmat — 9x39mm
+Cal_9x39mm_TR	İzli mühimmat — 9x39mm
+Cal_9x39mm_Ammobox_TR	9x39mm İzli Mühimmat Kutusu
+Absinthe	Absinthe Father
+WeaponScope_ACOG_01	ACOG
+ActivatedCharcoal_01	Aktif Kömür - Blister
+ActivatedCharcoal_02	Aktif Kömür - Kutu
+ActivatedCharcoal_03	Aktif Kömür - Kavanoz
+Compass_Advanced	Gelişmiş Pusula
+Lock_Security_Lvl3	Gelişmiş Kilit Koruması
+Lockpick_Advanced_Item	Gelişmiş Kilit Seçimi
+Aeroplane_Repair_Kit	Uçak Tamir Takımı
+African_Biltong	Afrika Biltong'u
+Agaricus_Augustus	Agaricus Augustus
+Agaricus_Campestris	Agaricus Campestris
+Aloe_Vera	Agav Yaprağı
+WeaponSights_AimPRO	Kırmızı nokta nişangâhı — AimPRO
+Air_Pump	Hava Pompası
+Weapon_AK15	AK-15
+Weapon_AK47	AK-47
+Magazine_AK15	Şarjör — AK15
+WeaponSuppressor_AK15	Susturucu — AK15
+Weapon_Parts_AK15	AK15 Silah Parçaları
+Weapon_AK47_Engraved	AK47 Kazınmış
+Magazine_AK47	Şarjör — AK47
+Weapon_Parts_AK47	AK47 Silah Parçaları
+Weapon_AKM	AKM
+Weapon_Parts_AKM	AKM Silah Parçaları
+Weapon_Parts_AKS_74U	AKS 74U Silah Parçaları
+Weapon_AKS_74U	AKS-74U
+Magazine_AKS_74U	Şarjör — AKS-74U
+Bag_of_Almonds	Badem
+Amanita_Muscaria	Amanita Muscaria
+Amanita_Pantherina	Amanita Pantherina
+Amanita_Phalloides	Amanita Phalloides
+Amanita_Virosa	Amanita Virosa
+ColorCan_AmberYellow	Amber Sarı Boya Kutusu
+Fish_Amur	Ot sazanı
+Amur_Fillet	Amur Fileto
+WeaponCharm_Anchor	Çapa Silahı Büyüsü
+Suite_Pants_01	Angel'ın uçuş pantolonu
+Monkfish_Fillet	Balıkçı Filetosu
+WeaponCharm_Angry_Emoji	Kızgın Emoji Silah Charm'ı
+Small_Animal_Fat	Hayvansal Yağ
+Animal_skin	Hayvan Derisi
+Bear_Improvised_Jacket	Hayvan Derisi Ceket
+Bear_Improvised_Pants	Hayvan Derisi Pantolon
+Improvised_Quiver_01	Hayvan Derisi Sadak
+HH_Shoes_01_01	Ayak Bileği Çizmeler
+HH_Shoes_01_02	Ayak Bileği Çizmeler
+HH_Shoes_01_03	Ayak Bileği Çizmeler
+HH_Shoes_01_04	Ayak Bileği Çizmeler
+Anode_Plate	Anot Plakası
+Mine_01	Anti-personel mayın
+Antibiotic_Pill_Single	Antibiyotikler - 1000mg
+Antibiotics_01	Antibiyotikler - Kabarcık - 1000mg
+Antibiotics_02	Antibiyotikler - Kutu - 1000mg
+Antibiotics_03	Antibiyotikler - Kavanoz - 1000mg
+Apple	Elma
+Apple_2	Elma
+Crab_Apple	Elma
+Apple_Seed_Bag	Elma Çekirdeği Torbası
+Apple_Seeds	Elma Tohumları
+RH_Arm_Guard	Kol koruması
+Armband_01	Kol bandı
+Armillaria_Mellea	Armillaria Mellea
+Armor_Tactical_Vest_01_01	Zırh Taktik Yelek
+Armor_Tactical_Vest_01_02	Zırh Taktik Yelek
+Armor_Tactical_Vest_01_03	Zırh Taktik Yelek
+Armor_Tactical_Vest_01_04	Zırh Taktik Yelek
+Armor_Tactical_Vest_01_05	Zırh Taktik Yelek
+Weapon_AS_Val	AS Val
+Weapon_Parts_AS_Val	AS Val Silah Parçaları
+WeaponFlashlight_AS_Val	AS Val/VSS El Feneri
+Magazine_AS_Val	AS Val/VSS Dergi
+Aspirin	Aspirin
+Military_Backpack_01_01	Saldırı Sırt Çantası
+Military_Backpack_01_02	Saldırı Sırt Çantası
+Military_Backpack_01_03	Saldırı Sırt Çantası
+Military_Backpack_01_04	Saldırı Sırt Çantası
+Military_Backpack_01_05	Saldırı Sırt Çantası
+Military_Backpack_01_06	Saldırı Sırt Çantası
+Military_Backpack_01_07	Saldırı Sırt Çantası
+Military_Backpack_01_08	Saldırı Sırt Çantası
+Military_Backpack_01_09	Saldırı Sırt Çantası
+Weapon_AT4_HEAT	AT4 HEAT
+AtropineInjection	Atropin Enjeksiyonu
+Weapon_AWM	AWM
+Weapon_AWM_Desert	AWM Çöl
+Weapon_AWM_Green	AWM Yeşil
+Magazine_AWM	Şarjör — AWM
+Weapon_AWM_Snake	AWM Yılan
+Weapon_Parts_AWM	AWM Silah Parçaları
+Weapon_AWP	AWP
+Weapon_AWP_Desert	AWP Çöl
+Weapon_AWP_Green	AWP Yeşil
+Magazine_AWP	Şarjör — AWP
+Weapon_AWP_Snake	AWP Yılan
+Weapon_Parts_AWP	AWP Silah Parçaları
+2H_Axe	Balta
+WeaponCharm_Axe	Balta Silah Tılsımı
+BabyFood	Bebek Maması
+Backpack_02_01	Sırt çantası
+Backpack_02_02	Sırt çantası
+Backpack_02_03	Sırt çantası
+Backpack_02_04	Sırt çantası
+Backpack_02_05	Sırt çantası
+Military_Backpack_03_01	Sırt çantası
+Military_Backpack_03_02	Sırt çantası
+Military_Backpack_03_03	Sırt çantası
+Military_Backpack_03_04	Sırt çantası
+Military_Backpack_03_05	Sırt çantası
+Military_Backpack_03_06	Sırt çantası
+Military_Backpack_03_07	Sırt çantası
+Military_Backpack_03_08	Sırt çantası
+AnimalBaitFeederItem	Yem Besleyici
+BakedBeans	Fırında Fasulye
+BakingSoda	Karbonat
+Military_Mask_01	Kar maskesi
+Military_Mask_02	Kar maskesi
+Military_Mask_03	Kar maskesi
+Military_Mask_04	Kar maskesi
+Military_Mask_05	Kar maskesi
+Military_Mask_06	Kar maskesi
+Military_Mask_07	Kar maskesi
+Military_Mask_08	Kar maskesi
+Police_Mask_01	Kar maskesi
+Recurve_Bow_100	Ballista 100#
+Bamboo_Hat_01	Bambu Şapka
+Bamboo_Hat_02	Bambu Şapka
+Banana	Muz
+Banjo	Banço
+Barbed_Wire	Dikenli Tel
+Barberry	Kızamık
+ColorCan_BaronBrown	Baron Kahverengi Boya Kutusu
+BaseExpansionKit_Lvl1	Temel Genişletme Kiti Seviye 1
+BaseExpansionKit_Lvl2	Temel Genişletme Kiti Seviye 2
+2H_Baseball_Bat	Beyzbol Sopası
+2H_Baseball_Bat_with_spikes	Çivili Beyzbol Sopası
+Baseball_Cap_01	Beyzbol Şapkası
+Baseball_Cap_02	Beyzbol Şapkası
+Baseball_Cap_03	Beyzbol Şapkası
+Baseball_Cap_04	Beyzbol Şapkası
+Baseball_Cap_05	Beyzbol Şapkası
+Baseball_Cap_06	Beyzbol Şapkası
+Baseball_Cap_07	Beyzbol Şapkası
+Baseball_Cap_08	Beyzbol Şapkası
+Baseball_Cap_09	Beyzbol Şapkası
+Baseball_Cap_10	Beyzbol Şapkası
+Compass_Basic	Temel Pusula
+Lock_Security	Temel Kilit Koruması
+Fish_Bass	Levrek
+Bass_Fillet	Levrek Fileto
+1H_Police_Baton	cop
+Batteries	Piller
+Weapon_BayRifferBlock21	Bay Riffer Block21
+Book_Cooking_BBQ	BBQ Yemek Kitabı
+BCU_Chip	BCU Çip
+BCULock_Item	BCU Kilitle
+WeaponCharm_BCU	BCU Silah Büyüsü
+1H_Beam_Dildo	Beamasaurus Yapay penis
+Dish_Sandwich_Beans	Fasulyeli Sandviç
+Beenie_01	Bere
+Beenie_02	Bere
+Beenie_03	Bere
+Beenie_04	Bere
+Beenie_05	Bere
+Beenie_06	Bere
+Beenie_07	Bere
+Beenie_08	Bere
+Beenie_09	Bere
+Military_Beanie_01	Bere
+Military_Beanie_02	Bere
+Military_Beanie_03	Bere
+Military_Beanie_04	Bere
+Military_Beanie_05	Bere
+Military_Beanie_06	Bere
+Military_Beanie_07	Bere
+Military_Beanie_08	Bere
+Bear_Head	Ayı Kafası
+Bear_Head_Hat_01	Ayı Kafalı Şapka
+Bear_Left_Back_Leg	Ayı Bacağı
+Bear_Left_Front_Leg	Ayı Bacağı
+Bear_Right_Back_Leg	Ayı Bacağı
+Bear_Right_Front_Leg	Ayı Bacağı
+Bear_Back_Paws	Ayı Pençeleri
+Bear_Front_Paws	Ayı Pençeleri
+Bear_Steak	Ayı Bifteği
+Bear_Torso	Ayı Gövdesi
+Bear_Left_Torso_Half	Ayı Gövde Yarımı
+Bear_Right_Torso_Half	Ayı Gövde Yarımı
+Bedroll	Yatak Örtüsü
+BeefRavioli	Dana mantı
+BeefStew	Dana Yahnisi
+MRE_Stew	Dana Yahnisi MRE
+Beer	Bira
+Beet	Pancar
+Beijing_Shoes_01	Pekin Ayakkabı
+Beijing_Shoes_02	Pekin Ayakkabı
+Beijing_Shoes_03	Pekin Ayakkabı
+Beijing_Shoes_04	Pekin Ayakkabı
+Bell_Pepper	dolmalık biber
+2H_Pitchfork_Bent	Bükülmüş Dirgen
+Beret_01	Bere
+Beret_02	Bere
+Beret_03	Bere
+Beret_04	Bere
+Beret_05	Bere
+Beret_06	Bere
+Big_Animal_Fat	Büyük Hayvan Yağı
+Big_Animal_guts	Büyük Hayvan Bağırsakları
+Christmas_Present_03	Büyük Noel Hediyesi
+Christmas_Present_AK15	Büyük Noel Hediyesi
+Christmas_Present_AK15_01	Büyük Noel Hediyesi
+Christmas_Present_AK15_02	Büyük Noel Hediyesi
+Christmas_Present_AKS_74U	Büyük Noel Hediyesi
+Christmas_Present_AKS_74U_01	Büyük Noel Hediyesi
+Christmas_Present_AKS_74U_02	Büyük Noel Hediyesi
+Christmas_Present_AS_Val	Büyük Noel Hediyesi
+Christmas_Present_AS_Val_01	Büyük Noel Hediyesi
+Christmas_Present_AS_Val_02	Büyük Noel Hediyesi
+Christmas_Present_Ghillie	Büyük Noel Hediyesi
+Christmas_Present_Ghillie_01	Büyük Noel Hediyesi
+Christmas_Present_Ghillie_02	Büyük Noel Hediyesi
+Christmas_Present_Kar98	Büyük Noel Hediyesi
+Christmas_Present_Kar98_01	Büyük Noel Hediyesi
+Christmas_Present_Kar98_02	Büyük Noel Hediyesi
+Christmas_Present_Laika_Alternator	Büyük Noel Hediyesi
+Christmas_Present_M1	Büyük Noel Hediyesi
+Christmas_Present_M1_01	Büyük Noel Hediyesi
+Christmas_Present_M1_02	Büyük Noel Hediyesi
+Christmas_Present_M16A4	Büyük Noel Hediyesi
+Christmas_Present_M16A4_01	Büyük Noel Hediyesi
+Christmas_Present_M16A4_02	Büyük Noel Hediyesi
+Christmas_Present_M1887	Büyük Noel Hediyesi
+Christmas_Present_M249	Büyük Noel Hediyesi
+Christmas_Present_M82A1	Büyük Noel Hediyesi
+Christmas_Present_M82A1_01	Büyük Noel Hediyesi
+Christmas_Present_M82A1_02	Büyük Noel Hediyesi
+Christmas_Present_MAC10	Büyük Noel Hediyesi
+Christmas_Present_MAC10_01	Büyük Noel Hediyesi
+Christmas_Present_MAC10_02	Büyük Noel Hediyesi
+Christmas_Present_MK18	Büyük Noel Hediyesi
+Christmas_Present_MK18_01	Büyük Noel Hediyesi
+Christmas_Present_MK18_02	Büyük Noel Hediyesi
+Christmas_Present_MP5	Büyük Noel Hediyesi
+Christmas_Present_MP5_01	Büyük Noel Hediyesi
+Christmas_Present_MP5_02	Büyük Noel Hediyesi
+Christmas_Present_Rager_Alternator	Büyük Noel Hediyesi
+Christmas_Present_RPK	Büyük Noel Hediyesi
+Christmas_Present_RPK_01	Büyük Noel Hediyesi
+Christmas_Present_RPK_02	Büyük Noel Hediyesi
+Christmas_Present_SCAR_DMR	Büyük Noel Hediyesi
+Christmas_Present_SCAR_L	Büyük Noel Hediyesi
+Christmas_Present_SCAR_L_01	Büyük Noel Hediyesi
+Christmas_Present_SCAR_L_02	Büyük Noel Hediyesi
+Christmas_Present_SVD	Büyük Noel Hediyesi
+Christmas_Present_SVD_01	Büyük Noel Hediyesi
+Christmas_Present_SVD_02	Büyük Noel Hediyesi
+Christmas_Present_UMP	Büyük Noel Hediyesi
+Christmas_Present_UMP_01	Büyük Noel Hediyesi
+Christmas_Present_UMP_02	Büyük Noel Hediyesi
+Christmas_Present_WW_Alternator	Büyük Noel Hediyesi
+2H_Stone_Axe	Büyük Taş Balta
+2H_Stone_Axe_Head	Büyük Taş Balta Kafası
+Big_Vehicle_StorageRack	Büyük Araç Depolama Rafı
+Leather_Jacket	Biker Deri Ceket
+Negan_Jacket	Biker Deri Ceket
+Binoculars	Dürbün
+12_Gauge_BirdShot_Ammobox	Birdshot Av Tüfeği Mühimmat Kutusu
+Birthday_Cap_01	Doğum Günü Şapkası
+Ghillie_Suit_Pants_02	Siyah Ghillie Takım Elbise Altı
+Ghillie_Suit_Jacket_02	Siyah Ghillie Takım Elbise Üstü
+BlackOlives	Siyah Zeytin
+ColorCan_Black	Siyah Boya Kutusu
+BlackPepper	Karabiber
+Blackberry	Böğürtlen
+Recurve_Bow_90	BlackHawk 90#
+Weapon_BlackHawk_Crossbow	Blackhawk Arbalet
+BlankSign	Boş İşaret
+Blast_Cap	Patlama Kapağı
+2H_Baseball_Bat_Blaze	Blaze Yarasa
+Fish_Bleak	İnci balığı
+Bleak_Fillet	Kasvetli Fileto
+FishingBait_Bleak	Kasvetli Balık Yemi
+Weapon_Block21	Block 21
+Magazine_Block21	Şarjör — Block 21
+Weapon_Parts_Block21	Block 21 Silah Parçaları
+MemoryModule_Level2	Mavi Bellek Modülü
+Blueberries	yaban mersini
+Boar_Head	Domuz kafası
+Boar_Head_Hat_01	Domuz Kafalı Şapka
+Boar_Hooves_Back	Domuz Toynakları
+Boar_Hooves_front	Domuz Toynakları
+Boar_Back_Leg	Domuz Bacağı
+Boar_Front_Leg	Domuz Bacağı
+Boar_Torso	Yaban domuzu gövdesi
+Bobby_pin	Tel toka
+Bobby_Pin_Package	Bobby Rozet Kutusu
+FishingBait_BoiliesPrm1	Boliies Balık Yemi
+Boletus_Edulis	Boletus Edulis
+Bolts	Cıvatalar
+Bone	Kemik
+Bone_Needle	Kemik - İğne
+BoomBox_01	Boom Kutusu
+WeaponCharm_Bottle_Opener	Şişe Açacağı Silah Charm'ı
+BowSilencer	Yay Susturucu
+Bow_MicroStabilizer	Yay Sabitleyici
+Bolts_Package_Box	Cıvata Kutusu
+Nails_Package_Box	Çivi Kutusu
+Boxer_Briefs_01	Boxer Külot
+F_Undershirt_Bra_01	Sütyen
+F_Undershirt_Bra_02	Sütyen
+F_Undershirt_Bra_03	Sütyen
+F_Undershirt_Bra_04	Sütyen
+F_Undershirt_Bra_05	Sütyen
+Brake_Oil	Fren Yağı
+Improvised_Plant_rope	Şube Halatı
+1H_Brass_knuckles	Muştalar
+FishingBait_Bread	Ekmek Balık Yemi
+Breathing_Tube_01	Solunum Tüpü
+Brick	Tuğla
+Carbon_BroadHead_Arrow	Geniş Kafalı Karbon Ok
+Metal_BroadHead_Arrow	Broadhead Metal Ok
+Broccoli	Brokoli
+Broccoli_Seed_Bag	Brokoli Tohum Torbası - Brokoli Tohum Torbası
+Broccoli_Seeds	Brokoli Tohumları
+Kilt_Brogue_Shoe_01	Brogue Ayakkabı
+Can03	Bubbles
+Buck_Head	Buck Kafası
+Buck_Left_Back_Leg	Buck Bacak
+Buck_Left_Front_Leg	Buck Bacak
+Buck_Right_Back_Leg	Buck Bacak
+Buck_Right_Front_Leg	Buck Bacak
+Buck_Torso	Buck Gövdesi
+12_Gauge_Buckshot_Ammobox	Kurşun Av Tüfeği Mühimmat Kutusu
+WeaponCharm_Bullet	Mermi Silah Charm'ı
+Bulletproof_Vest_01	Kurşun Geçirmez Yelek
+Bulletproof_Vest_01_02	Kurşun Geçirmez Yelek
+Bulletproof_Vest_01_03	Kurşun Geçirmez Yelek
+Bulletproof_Vest_01_04	Kurşun Geçirmez Yelek
+Bulletproof_Vest_01_05	Kurşun Geçirmez Yelek
+Bundle_Of_Bobby_Pins	Bobby Pin Paketi
+Bundle_Of_Bricks	Tuğla Demeti
+Bundle_Of_Improvised_Lockpicks	Doğaçlama Kilitleme Paketi
+Bundle_Of_Lockpicks	Kilit Seçimi Paketi
+Bundle_Rag_Stripes	Paçavra Şeritleri Paketi
+Bundle_Of_Rags	Paçavra Paketi
+Bundle_Of_Safety_Pins	Emniyet Pimleri Paketi
+Bundle_Wooden_Plank	Ahşap Kalas Paketi
+Wooden_Sticks_Bundle_Large	Tahta Çubuk Demeti
+Bunny_Slippers	Tavşan Terlikleri - Tavşan Terlikleri
+Cereal_BunnyStars	Tavşan Yıldızları Tahıl
+AntiburnGel	Yanık Jeli
+1H_Bushman	Ormancı
+Butter	Tereyağı
+RH_Bycoket_01	Bycoket
+C4	C4 Bombası
+C4_Detonator	C4 Patlatıcı
+C4_Keypad	C4 Tuş Takımı Devre Kartı
+C4_CircuitBoard	C4 Zamanlayıcı Devre Kartı
+Cabbage	Lahana
+Cabbage_Seed_Bag	Lahana Tohumu Torbası - Lahana Tohumu Torbası
+Cabbage_Seeds	Lahana tohumları
+Book_Cooking_Cake	Kek Yemek Kitabı
+WeaponSuppressor_30_06	Susturucu — .30-06
+Camera_Lens	Kamera Lensi
+Military_Backpack_02_01	Kamuflaj Yürüyüş Sırt Çantası
+Military_Backpack_02_02	Kamuflaj Yürüyüş Sırt Çantası
+Military_Backpack_02_03	Kamuflaj Yürüyüş Sırt Çantası
+Military_Backpack_02_04	Kamuflaj Yürüyüş Sırt Çantası
+Military_Backpack_02_05	Kamuflaj Yürüyüş Sırt Çantası
+Military_Backpack_02_06	Kamuflaj Yürüyüş Sırt Çantası
+Military_Backpack_02_07	Kamuflaj Yürüyüş Sırt Çantası
+Military_Backpack_02_08	Kamuflaj Yürüyüş Sırt Çantası
+Camouflage_Jacket_01	Kamuflaj Ceket
+Camouflage_Jacket_02	Kamuflaj Ceket
+Camouflage_Jacket_03	Kamuflaj Ceket
+CanOpener	Konserve Açacağı
+Candle_01	Mum
+Candy_Bob	Candy Bob
+WeaponCharm_Candy_Cane	Şeker Kamışı Silah Charm'ı
+CandyCorn_01	Şekerli Mısır
+Cannabis_Bud	Esrar tomurcuğu
+Cannabis_Seed_Bag	Esrar Tohumu Torbası
+Cannabis_Seeds	Kenevir Tohumu
+CannedGoulash	Konserve Dana Gulaş
+CannedSeafoodMix	Konserve Deniz Ürünleri Karışımı
+Canned_Tuna	Konserve Ton Balığı
+CantaloupeMelon	Kavun Kavun
+CantaloupeMelon_Slice	Kavun Kavun
+CantaloupeMelon_Seeds	Kavun Tohumları
+Canteen	kantin
+Cantharellus_Cibarius	Cantharellus Cibarius
+Car_Battery	Araç Aküsü
+Car_Battery_Cables	Araç Akü Kabloları
+Car_Jack	Kriko
+Car_Radio_Item	Araba Radyosu
+Car_Repair_Kit	Araba Tamir Takımı
+PETBottle01	Karamelli Soda
+PETBottle02	Karamelli Soda
+Carbon_Arrow	Karbon Ok
+Ammo_Crossbow_Bolt_Carbon	Karbon Arbalet Cıvatası
+Weapon_CarbonHunter	Karbon Avcısı
+Weapon_CarbonBear	Karbon Avcısı Ironpaw
+Magazine_CarbonHunter	Karbon Avcısı Dergisi
+Weapon_Parts_Carbon_Hunter	Karbon Avcısı Silah Parçaları
+Fish_Carp	Sazan
+Carp_Fillet	Sazan Fileto
+Carp_Head	Sazan Başı
+Carrot	Havuç
+GlassBottle01	Havuç Suyu
+Carrot_Seed_Bag	Havuç Tohumu Torbası - Havuç Tohumu Torbası
+Carrot_Seeds	Havuç Tohumları
+CartridgeTrap	Kartuş Tuzağı
+Cash	Nakit
+Book_Cooking_Casseroles	Güveç Yemek Kitabı
+CannedCatfood	Kedi Maması
+Fish_Catfish	Yayın balığı
+Catfish_Fillet	Yayın balığı filetosu
+Catfish_Head	Yayın balığı kafası
+Cauliflower	karnabahar
+CD_Player	CD Oyuncu
+Celery	Kereviz
+CementBag	Çimento Torbası
+Chainsaw	Testere
+Charcoal	Kömür
+Cheese	Peynir
+FishingBait_Cheese	Peynirli Balık Yemi
+Dish_Sandwich_Cheese	Peynirli Sandviç
+CheesePacked	Peynir Dilimleri
+MRE_Cheeseburger	Çizburger MRE
+ColorCan_CherryRed	Kiraz Kırmızı Boya Kutusu
+Cherry_Seed_Bag	Kiraz Çekirdeği Torbası - Kiraz Çekirdeği Torbası
+Cherry_Seeds	Kiraz Tohumları
+ChickenDrumstick	Tavuk Baget
+ChickenMeat	Tavuk Eti
+Chili_Pepper	Acı Biber
+ChilliPeppers_Seeds	Acı Biber Tohumları
+Chillipepper_Seed_Bag	Biber Tohumu Torbası
+Chips	Cips Klasik
+ChocolateCandy_10	ChocCandy
+ChocolateCandy_11	ChocoBar
+ChocolateCandy_04	Çikolata
+ChocolateCandy_05	Çikolata
+ChocolateCandy_06	Çikolata
+ChocolateCandy_07	Çikolata
+ChocolateCandy_08	Çikolata Barı
+ChocolateCandy_09	Çikolata Barı
+ChocolateCandy_03	Çikolatalı Kek Şekeri
+ChocolateCandy_01	Çikolatalı Şeker Barı
+Chow_Mein	Chow Mein
+Christmas_Beanie_02	Noel Bere
+Christmas_Decoration	Noel Süslemeleri
+Christmas_Present_02	Noel Hediyesi
+Christmas_Ball_01	Noel Süsü
+Christmas_Ball_02	Noel Süsü
+Christmas_Ball_03	Noel Süsü
+Christmas_Ball_04	Noel Süsü
+Christmas_Ball_05	Noel Süsü
+Christmas_Ball_06	Noel Süsü
+Christmas_Pants_01	Noel Pantolonu
+Christmas_Pants_02	Noel Pantolonu
+Christmas_Slippers	Noel Terlikleri
+Christmas_Vest_01	Noel Kazak
+Fish_Chub	Tatlı su kefali
+Chub_Fillet	Kefal Fileto
+Credit_Card_Classic	Klasik Banka Kartı
+Classic_Shirt_01	Klasik Gömlek
+Classic_Shirt_02	Klasik Gömlek
+Cigarette	Klasik Sigara
+Cigarettes	Klasik Sigara Paketi
+Claymore	Claymore
+1H_Cleaver	satır
+Coal_01	Kömür
+CoalBag	Kömür Torbası
+Recurve_Bow_50	Cobra 50#
+Cocoa_Powder	Kakao Tozu
+Coconut	Hindistan cevizi
+Coffee	Kahve
+Coffee_Cup	Kahve Fincanı
+Can04	Kola
+ColorCan_ColdCyan	Soğuk Camgöbeği Boya Kutusu
+ColorCan_ColdGrey	Soğuk Gri Boya Kutusu
+CombatBoots	Savaş Botları
+Combat_Helmet_01	Savaş Kaskı
+Combat_Helmet_02	Savaş Kaskı
+Combat_Helmet_03	Savaş Kaskı
+Combat_Helmet_04	Savaş Kaskı
+M1_Vietnam_Helmet	Savaş Kaskı
+RH_Jacket	Kombine ceket
+Compound_Bow	Bileşik Yay
+Compound_Bow_Desert	Bileşik Yay
+Compound_Bow_Digital	Bileşik Yay
+Compound_Bow_Snow	Bileşik Yay
+Compound_Bow_US_Scorpion	Bileşik Yay
+Compound_Bow_Woodland	Bileşik Yay
+CompoundBowSight_3_Pin	Bileşik Yay Görüşü
+CompoundBowSight_5_Pin	Bileşik Yay Görüşü
+Boots_06_01	İnşaat Botları
+Boots_06_02	İnşaat Botları
+Construction_Gloves_01_01	İnşaat Eldivenleri
+Construction_Gloves_01_02	İnşaat Eldivenleri
+Construction_Gloves_01_03	İnşaat Eldivenleri
+Construction_Pants_01	İnşaat Pantolonu
+Construction_Pants_02	İnşaat Pantolonu
+Construction_Pants_03	İnşaat Pantolonu
+Boots_07_01	İnşaat Lastik Çizme
+Boots_07_02	İnşaat Lastik Çizme
+Boots_07_03	İnşaat Lastik Çizme
+Pot1	Tencere
+Copper_Coins	Bakır Paralar
+Coprinus_Comatus	Coprinus Comatus
+Corn	Mısır
+Corn_flakes	Mısır gevreği
+FishingBait_Corn	Mısır Balık Yemi
+Corn_Seed_Bag	Mısır Tohumu Torbası - Mısır Tohumu Torbası
+Corn_Seeds	Mısır Tohumları
+ColorCan_CottonCandy	Pamuk Şeker Boya Kutusu
+Hoodie_01	Pamuklu Kapüşonlu Üst
+Hoodie_02	Pamuklu Kapüşonlu Üst
+Hoodie_03	Pamuklu Kapüşonlu Üst
+Hoodie_04	Pamuklu Kapüşonlu Üst
+Hoodie_05	Pamuklu Kapüşonlu Üst
+Inmate_Hoodie_01	Pamuklu Kapüşonlu Üst
+Inmate_Shirt_01_Snow_DigitalDeluxe	Pamuklu Kapüşonlu Üst
+Shirt_01	Pamuklu Gömlek
+Shirt_02	Pamuklu Gömlek
+Shirt_03	Pamuklu Gömlek
+Shirt_04	Pamuklu Gömlek
+Backpack_DigitalDeluxe	Kurye Sırt Çantası
+Cowboys_Boots_01	Kovboy Çizmesi
+Crackers	Kraker
+Cream	Krem
+Cricket	Kriket
+FishingBait_Cricket	Kriket Balık Yemi
+1H_Crowbar	Kazayağı
+Fish_CrucianCarp	Havuz Sazanı
+Cruiser_Brakelight_Item	Kruvazör Fren Lambası
+Cruiser_Fender_Front_Item	Kruvazör Ön Çamurluk
+Cruiser_Seat_Front_Item	Kruvazör Ön Koltuğu
+Cruiser_Headlight_Item	Kruvazör Far
+Cruiser_Fender_Rear_Item	Kruvazör Arka Çamurluk
+Cruiser_Seat_Rear_Item	Kruvazör Arka Koltuk
+Cruiser_Wind_Deflector_Item	Kruvazör Rüzgar Deflektörü
+Crutch	Koltuk değneği
+Cuban_Cigar	Küba Purosu
+Cucumber	Salatalık
+Cucumber_Seed_Bag	Salatalık Tohumu Çanta - Salatalık Tohumu Çanta
+Cucumber_Seeds	Salatalık Tohumları
+Currant	Frenk üzümü
+Zombie_Impersonator_Suit	Lanetli Kukla Elbisesi
+WeaponCharm_Ear	Kesilmiş Kulak Silah Charm'ı
+WeaponCharm_Finger	Kesici Parmak Silah Charm'ı
+Dentex_Fillet	Dantex Fileto
+ColorCan_DarkBrown	Koyu Kahverengi Boya Kutusu
+ColorCan_DarkGreen	Koyu Yeşil Boya Kutusu
+ColorCan_DarkGrey	Koyu Gri Boya Kutusu
+ColorCan_DarkUrban	Koyu Kentsel Boya Kutusu
+Date	Tarih
+Weapon_Deagle_357	DEagle .357
+Magazine_DEagle_357	Şarjör — DEagle .357
+Magazine_DEagle_50	Şarjör — DEagle .50
+Weapon_Parts_Deagle_357	DEagle 357 Silah Parçaları
+Weapon_DEagle_50	DEagle 50
+Weapon_DEagle_50Gold	DEagle 50
+Weapon_Parts_DEagle_50	DEagle 50 Silah Parçaları
+Christmas_Paper_01	Dekorasyon Kağıdı
+Christmas_Paper_02	Dekorasyon Kağıdı
+Christmas_Paper_03	Dekorasyon Kağıdı
+ColorCan_DeepOrange	Derin Turuncu Boya Kutusu
+Buck_Antlers	Geyik Boynuzları
+Deer_Steak	Geyik bifteği
+Fish_Dentex	Sinarit
+Dentex_Head	Dentex Başkanı
+Depleted_Uranium	Seyreltilmiş Uranyum
+Depleted_Uranium_Container	Seyreltilmiş Uranyum - Konteyner
+WeaponFlashlight_DesertEagle	Çöl Kartalı Feneri
+WeaponSights_Deagle_RedDot	Kırmızı nokta nişangâhı — Desert Eagle
+Ghillie_Suit_Pants_03	Desert Ghillie Takım Elbise Altı
+Ghillie_Suit_Jacket_03	Desert Ghillie Takım Elbise Üstü
+DialLock_Item	Arama Kilidi
+Diary	Günlük
+1H_Dildo	yapay penis
+Dildo_Spear	yapay penis mızrak
+Dildo_Arrow	yapay penis tahta ok
+Ammo_Crossbow_Bolt_Dildo	Yapay Penis Ahşap Arbalet Cıvatası
+Dinghy_Item	Bot Çantası
+Dirtbike_Body_Item	Dirtbike Gövdesi
+Dirtbike_Brakelight_Item	Dirtbike Fren Lambası
+Dirtbike_Fender_Item	Dirtbike Çamurluk
+Dirtbike_Front_Shield_Item	Dirtbike Ön Kalkanı
+Dirtbike_Front_Wheel_Cover_Item	Dirtbike Ön Jant Kapağı
+Dirtbike_Headlight_Item	Dirtbike Farlar
+Dirtbike_Body_Hellrider_Item	Dirtbike Hellrider Gövde
+Dirtbike_Hellrider_Skull_Item	Dirtbike Hellrider Kafatası
+Disposable_Mask	Tek Kullanımlık Maske
+Diving_Mask	Dalış Maskesi
+Diving_Mask_With_Breathing_Tube	Solunum Tüplü Dalış Maskesi
+Doe_Head	Doe Kafası
+Doe_Left_Back_Leg	Doe Bacak
+Doe_Left_Front_Leg	Doe Bacak
+Doe_Right_Back_Leg	Doe Bacak
+Doe_Right_Front_Leg	Doe Bacak
+Doe_01_Steak	Doe biftek
+Doe_Torso	Gövde mi
+CannedDogFood	Köpek Maması
+Donkey_Head	Eşek Kafası
+Donkey_Back_Leg	Eşek Bacağı
+Donkey_Front_Leg	Eşek Bacağı
+Donkey_Steak	Eşek bifteği
+Donkey_Torso	Eşek gövdesi
+FishingHook2	Çift Balık Kancası
+FishingHookPack3	İkili Balık Kancası Paketi
+Double_Bang_Firecracker	Çift Patlama Havai Fişek
+Christmas_tree	Douglas Köknar
+Baseball_Cap_11	Dreamreaper Kapak
+Drill	Matkap
+Book_Cooking_Drinks	İçecek Yemek Kitabı
+Driving_Gloves_01_01	Sürüş Eldivenleri
+Driving_Gloves_01_02	Sürüş Eldivenleri
+Driving_Gloves_01_03	Sürüş Eldivenleri
+Driving_Gloves_01_04	Sürüş Eldivenleri
+Weapon_DT11B	DT11B
+Weapon_Parts_DT11B	DT11B Silah Parçaları
+Duct_Tape	Koli Bandı
+2_pieces_Ear_Necklace	Kulak Kolye
+4_pieces_Ear_Necklace	Kulak Kolye
+6_pieces_Ear_Necklace	Kulak Kolye
+Ear_Plugs	Kulak Tıkaçları
+Construction_Earmuffs_01	Kulaklıklar
+Construction_Earmuffs_02	Kulaklıklar
+Construction_Earmuffs_03	Kulaklıklar
+Construction_Earmuffs_04	Kulaklıklar
+ColorCan_EarthGreen	Toprak Yeşili Boya Kutusu
+ColorCan_EarthGrey	Toprak Gri Boya Kutusu
+ColorCan_EarthRed	Toprak Kırmızı Boya Kutusu
+ColorCan_EarthYellow	Toprak Sarı Boya Kutusu
+Earthworm	Solucan
+Egg	Yumurta
+Electrical_Repair_Kit	Elektrik Tamir Takımı
+Electrician_Tools	Elektrikçi Aletleri
+WeaponCharm_Elephant	Fil Silah Charm'ı
+Emergency_bandage	Acil Durum Bandajı
+Emergency_bandage_Deluxe	Acil Durum Bandajı
+Emergency_bandage_Big	Acil Durum Bandajı Paketi
+Emergency_bandage_Big_Deluxe	Acil Durum Bandajı Paketi
+EMP_Grenade	EMP El bombası
+1H_EMpossible_Knife	EMpossible Bıçak
+EmptyBag	Boş Çanta
+Christmas_Box	Boş Kutu
+Lock_Item_Advanced	Zorunlu Kilit
+EuropeanBass_Fillet	Avrupa Levrek Fileto
+WeaponCharm_EvilEye	Nazar Silah Charm'ı
+Explosive_Arrow_Carbon	Patlayıcı Karbon Ok
+Explosive_Arrow_Metal	Patlayıcı Metal Ok
+Explosive_Arrow	Patlayıcı Tahta Ok
+Ammo_Crossbow_Bolt_Explosive	Patlayıcı Ahşap Arbalet Cıvatası
+Extreme_Helmet_01	Aşırı Kask
+Faceroll_Smasher	Facerolls Face Smasher
+Fascinator_Hat_01	Büyüleyici Şapka
+Fascinator_Hat_02	Büyüleyici Şapka
+Fascinator_Hat_03	Büyüleyici Şapka
+Fascinator_Hat_04	Büyüleyici Şapka
+Fascinator_Hat_05	Büyüleyici Şapka
+Zombie_Fat	Şişman
+Feather	tüy
+Medieval_Helmet_01	Feodal'ın Cilalı Miğferi
+Fig	incir
+Fig_Seed_Bag	İncir Tohumu Torbası - İncir Tohumu Torbası
+Fig_Seeds	İncir Tohumları
+Fire_deflector_shield	Yangın Deflektör Kalkanı
+Fire_Hand_Drill_new	Yangın Tatbikatı
+ColorCan_FireEngineRed	İtfaiye Kırmızı Boya Kutusu
+Fireman_Helmet_01	Yangın Kaskı
+Fireman_Helmet_02	Yangın Kaskı
+Fireman_Helmet_03	Yangın Kaskı
+Work_Jacket_01	İtfaiyeci Ceketi
+Work_Jacket_02	İtfaiyeci Ceketi
+Work_Jacket_03	İtfaiyeci Ceketi
+Working_pants_01_01	İtfaiyeci Pantolonu
+Working_pants_01_02	İtfaiyeci Pantolonu
+Working_pants_01_03	İtfaiyeci Pantolonu
+Fireworks_Small	Havai Fişek Küçük
+Fireworks_Big	Fireworks Küçük - Fireworks Büyük
+Fish	Balık
+FishingHook	Balık Kancası
+FishItem	Balık Öğesi
+Dish_Salad_Fish	Balık Salatası
+WeaponCharm_Fish_Bowl	Akvaryum Silah Tılsımı
+FishingFloater	Balıkçılık Şamandırası
+FishingFloater1	Balıkçılık Şamandırası
+FishingFloaterPack1	Balıkçılık Şamandıra Paketi
+FishingFloaterPack2	Balıkçılık Şamandıra Paketi
+Boonie_Hat_01	Balıkçı Şapkası
+Boonie_Hat_02	Balıkçı Şapkası
+Boonie_Hat_03	Balıkçı Şapkası
+Boonie_Hat_04	Balıkçı Şapkası
+Boonie_Hat_05	Balıkçı Şapkası
+Boonie_Hat_06	Balıkçı Şapkası
+Military_Boonie_Hat_01	Balıkçı Şapkası
+Military_Boonie_Hat_02	Balıkçı Şapkası
+Military_Boonie_Hat_03	Balıkçı Şapkası
+Military_Boonie_Hat_04	Balıkçı Şapkası
+Military_Boonie_Hat_05	Balıkçı Şapkası
+Military_Boonie_Hat_06	Balıkçı Şapkası
+Military_Boonie_Hat_07	Balıkçı Şapkası
+Military_Boonie_Hat_08	Balıkçı Şapkası
+Redneck_Hat_07	Balıkçı Şapkası
+Fishing_hook	Balıkçılık Kancası
+FishingReel	Balıkçılık Makarası
+ImprovisedFishingReel	Balıkçılık Makarası
+FishingReelPro	Balıkçılık Reel Pro
+FishingRod	Olta
+FishingRod_A	Olta
+FishingRod_B	Olta
+Fistula_Hepatica	Fistül hepatika
+FlareItem	parlama
+FlareItem_Blue	parlama
+FlareItem_Green	parlama
+FlareCartridge	İşaret Fişek Kartuşu
+Weapon_FlareGun	İşaret fişeği tabancası
+Weapon_Parts_FlareGun	İşaret Fişeği Silah Parçaları
+FlareTrap	İşaret fişeği tuzağı
+ColorCan_FlatBrown	Düz Kahverengi Boya Kutusu
+ColorCan_FlatGrey	Düz Gri Boya Kutusu
+ColorCan_FlatWhite	Düz Beyaz Boya Kutusu
+Wooden_ArrowFeathers	Fleched Ahşap Ok
+Flint_And_Steel	Çakmaktaşı ve Çelik
+Christmas_tree_Folded	Katlanmış Douglas Köknar
+ColorCan_ForestGreen	Orman Yeşili Boya Kutusu
+Steel_Fork	Çatal
+CannedFruitCocktail	Meyve Kokteyli
+Dish_Salad_Fruit	Meyve Salatası
+Fungicide	Mantar ilacı
+Fuse_1000A	Sigorta 1000A
+Fuse_200A	Sigorta 200A
+Fuse_400A	Sigorta 400A
+Fuse_600A	Sigorta 600A
+Fuse_800A	Sigorta 800A
+ColorCan_GalaxyBlue	Galaxy Mavi Boya Kutusu
+ColorCan_GalaxyGrey	Galaxy Gri Boya Kutusu
+Garlic	Sarımsak
+Garlic_Seed_Bag	Sarımsak Tohumu Torbası - Sarımsak Tohumu Torbası
+Garlic_Seeds	Sarımsak Tohumları
+Garrison_Cap_01	Garnizon Şapkası
+Garrison_Cap_02	Garnizon Şapkası
+Garrison_Cap_03	Garnizon Şapkası
+Garrison_Cap_04	Garnizon Şapkası
+Garrison_Cap_05	Garnizon Şapkası
+Gas_Mask_01	Gaz Maskesi
+Gas_Mask_02	Gaz Maskesi
+Gas_Mask_03	Gaz Maskesi
+Gas_Mask_04	Gaz Maskesi
+GasTank	Gaz Tankı
+Gasoline_Canister	Benzin Bidonu
+Gear	Dişli
+Ghillie_Suit_Pants_01	Ghillie Takım Elbise Alt
+Ghillie_Suit_Jacket_01	Ghillie Takım Elbise Üstü
+Glass	Cam
+Glue	Tutkal
+Goat_Head	Keçi Kafası
+Goat_Horns	Keçi Boynuzu
+Goat_Back_Limb	Keçi Bacağı
+Goat_Front_Limb	Keçi Bacağı
+Goat_Skull_Hat_01	Keçi Kafatası Şapkası
+Goat_Steak	Keçi Biftek
+Goat_Torso	Keçi Gövdesi
+Credit_Card_Gold	Altın Banka Kartı
+MemoryModule_Level4	Altın Bellek Modülü
+GrapeFruit	Greyfurt
+GlassBottle02	Greyfurt Suyu
+Graphite	Grafit
+Grasshopper	çekirge
+FishingBait_Grasshopper	Çekirge Balık Yemi
+GravelBag	Çakıl Çantası
+MemoryModule_Level1	Gri Bellek Modülü
+CannedPeas	Yeşil Bezelye
+Frag_Grenade	el bombası
+Grinding_Stone_02	Bileme Taşı
+GuavaHalves	Guava
+Guitar	Gitar
+Gun_Powder	Silah Tozu
+Zombie_guts	Cesaret
+Halloween_Anonymous_Mask_01	Guy Fawkes Maske
+Halloween_Mask_BabyDoll_02	Cadılar Bayramı Maskesi
+Halloween_Mask_Clown_03	Cadılar Bayramı Maskesi
+Halloween_Mask_Greek	Cadılar Bayramı Maskesi
+Halloween_Mask_Hockey_04	Cadılar Bayramı Maskesi
+Halloween_Mask_JohnDoe_05	Cadılar Bayramı Maskesi
+Halloween_Mask_Knife	Cadılar Bayramı Maskesi
+Halloween_Mask_Lecter_06	Cadılar Bayramı Maskesi
+Halloween_Mask_Plague_07	Cadılar Bayramı Maskesi
+Halloween_Mask_Smiley_08	Cadılar Bayramı Maskesi
+Halloween_Mask_Wooden_09	Cadılar Bayramı Maskesi
+Hand_Drill	El Matkabı
+Hand_Fan_01	El Fanı
+WeaponSuppressor_Handgun	Tabanca Bastırıcı
+WeaponCharm_Happy_Emoji	Mutlu Emoji Silah Charm'ı
+Harmonica	Mızıka
+Hazelnuts	ela
+ColorCan_HazyPurple	Puslu Mor Boya Kutusu
+Head_Bags_01	Kafa Çuval
+Hemostatic_Dressing	Hemostatik Pansuman
+HH_Shoes_03_01	Yüksek Topuk Ayak Bileği Çizmeler
+HH_Shoes_03_02	Yüksek Topuk Ayak Bileği Çizmeler
+HH_Shoes_03_03	Yüksek Topuk Ayak Bileği Çizmeler
+HH_Shoes_03_04	Yüksek Topuk Ayak Bileği Çizmeler
+HH_Shoes_03_05	Yüksek Topuk Ayak Bileği Çizmeler
+HH_Shoes_03_06	Yüksek Topuk Ayak Bileği Çizmeler
+HH_Shoes_03_07	Yüksek Topuk Ayak Bileği Çizmeler
+HH_Shoes_04_01	Yüksek Topuk Pompaları
+HH_Shoes_04_02	Yüksek Topuk Pompaları
+HH_Shoes_04_03	Yüksek Topuk Pompaları
+HH_Shoes_04_04	Yüksek Topuk Pompaları
+HH_Shoes_02_01	Yüksek Topuklu Sandalet
+HH_Shoes_02_02	Yüksek Topuklu Sandalet
+HH_Shoes_02_03	Yüksek Topuklu Sandalet
+RH_Shoe_01	Yüksek Bilekli Ayakkabılar
+Sneakers_02_01	Yüksek Bilekli Ayakkabılar
+Sneakers_02_02	Yüksek Bilekli Ayakkabılar
+Sneakers_02_03	Yüksek Bilekli Ayakkabılar
+Sneakers_02_04	Yüksek Bilekli Ayakkabılar
+Hiking_Backpack_01_01	Yürüyüş Sırt Çantası
+Hiking_Backpack_01_02	Yürüyüş Sırt Çantası
+Hiking_Backpack_01_03	Yürüyüş Sırt Çantası
+Hiking_Backpack_01_04	Yürüyüş Sırt Çantası
+Hiking_Backpack_01_05	Yürüyüş Sırt Çantası
+Hiking_Boots_01	Yürüyüş Botları
+Hiking_Boots_02	Yürüyüş Botları
+Hiking_Boots_03	Yürüyüş Botları
+Hiking_Boots_04	Yürüyüş Botları
+Hip_Flask	Cep Şişesi
+Hippie_Pants_01	Hippi Pantolonu
+Hippie_Pants_02	Hippi Pantolonu
+Hippie_Pants_03	Hippi Pantolonu
+Hippie_Pants_04	Hippi Pantolonu
+Hippie_Pants_05	Hippi Pantolonu
+Hippie_Pants_06	Hippi Pantolonu
+Hippie_Pants_07	Hippi Pantolonu
+Hippie_Pants_08	Hippi Pantolonu
+Hippie_Shirt_01	Hippi Gömlek
+Hippie_Shirt_02	Hippi Gömlek
+Horse_Head	At Kafası
+Horse_Mask	At Başı Maskesi
+Horse_Back_Limb	At Bacağı
+Horse_Front_Limb	At Bacağı
+Horse_Steak	At Biftek
+Horse_Torso	At Gövdesi
+Horse_Torso_Half	At Gövdesi - Yarım
+WeaponCharm_Horseshoe	At Nalı Silah Charm'ı
+Hose	Hortum
+Hospital_Pants	Hastane Pantolonu
+Hospital_Shirt_01	Hastane Gömleği
+Weapon_SF19	HS SF19
+Magazine_SF19	Şarjör — HS SF19
+Weapon_Parts_SF19	HS SF19 Silah Parçaları
+Weapon_HS9	HS-9
+Weapon_Parts_HS9	HS-9 Silah Parçaları
+Magazine_HS9	Şarjör — HS9
+Prisoner_Left_Arm	İnsan Kolu
+Prisoner_Right_Arm	İnsan Kolu
+Human_Ears	İnsan Kulağı
+Prisoner_Left_Foot	İnsan ayağı
+Prisoner_Right_Foot	İnsan Ayağı
+Human_guts	İnsan Bağırsakları
+Prisoner_Head	İnsan kafası
+Prisoner_Head_No_Teeth	İnsan kafası
+Prisoner_Left_Leg	İnsan Bacağı
+Prisoner_Right_Leg	İnsan Bacağı
+Human_Skin	İnsan Derisi
+Human_Steak	İnsan Biftek
+Human_Teeth	İnsan Dişleri
+Prisoner_Torso	İnsan Gövdesi
+1H_Hunter	Avcı
+Weapon_Hunter85_V2	Hunter 85
+Magazine_Hunter85_V2	Şarjör — Hunter 85
+Weapon_Parts_Hunter85	Hunter 85 Silah Parçaları
+WeaponSuppressor_Hunter	Susturucu — Hunter
+WeaponScope_HuntingScope	Dürbün — avcılık
+Icing_Sugar	Pudra Şekeri
+ImprovisedCal50Turret	Doğaçlama .50 Cal Taret
+Improvised_Backpack_Big	Doğaçlama Sırt Çantası
+ImprovisedBasicTurret	Doğaçlama Temel Taret
+Improvised_Shelter	Doğaçlama Yatak
+Improvised_Shoes_01	Doğaçlama Çizmeler
+WeaponSuppressor_ImprovisedBottle_Grey	Doğaçlama Şişe Bastırıcı
+WeaponSuppressor_ImprovisedBottle_White	Doğaçlama Şişe Bastırıcı
+Improvised_Bow	Doğaçlama Yay 20#
+Improvised_Bow_25	Doğaçlama Yay 25#
+Improvised_Bow_30	Doğaçlama Yay 30#
+Improvised_Bow_35	Doğaçlama Yay 35#
+Bow_ImprovisedStabilizer	Doğaçlama Yay Sabitleyici
+Improvised_Bulletproof_Armor	Doğaçlama Kurşun Geçirmez Zırh
+AntiburnGel_Improvised	Doğaçlama Yanık Jeli
+WeaponSuppressor_ImprovisedCan_Grey	Doğaçlama Kutu Bastırıcı
+WeaponSuppressor_ImprovisedCan_Red	Doğaçlama Kutu Bastırıcı
+Improvised_Chandelier_Light	Doğaçlama Avize
+ImprovisedClaymore	Doğaçlama Claymore
+Improvised_compass	Doğaçlama Pusula
+Improvised_Bag_Small_01	Doğaçlama Kurye Sırt Çantası
+Weapon_Improvised_Crossbow	Doğaçlama Arbalet
+Improvised_Electric_Lamp_Ceiling	Doğaçlama Elektrik Lambası
+ImprovisedFishingHook	Doğaçlama Balık Kancası
+ImprovisedFishingFloater	Doğaçlama Balık Tutma Şamandırası
+Improvised_FishingLine	Doğaçlama Olta
+ImprovisedFishingRod	Doğaçlama Olta
+Weapon_Improvised_Flamethrower	Doğaçlama Alev Atıcı
+ImprovisedFlamethrowerTurret	Doğaçlama Alev Atıcı Taret
+ImprovisedFlashlight	Doğaçlama El Feneri
+2H_Improvised_Gardening_Hoe	Doğaçlama Bahçe Çapası
+Geiger_Counter_Improvised	Doğaçlama Geiger Sayacı
+Improvised_Ghillie_Jacket	Doğaçlama Ghillie Ceket
+Improvised_Ghillie_Pants	Doğaçlama Ghillie Pantolon
+1H_Improvised_Glass_Shiv	Doğaçlama Cam Bıçak
+Weapon_ImprovisedGrenadeLauncher	Doğaçlama El Bombası Atar
+Weapon_Parts_ImprovisedGrenadeLauncher	Doğaçlama El Bombası Atar Silah Parçaları
+1H_Improvised_Hammer	Doğaçlama Çekiç
+Weapon_Improvised_Handgun	Doğaçlama Tabanca
+1H_Hatchet	Doğaçlama Balta
+Improvised_Lockpick	Doğaçlama Kilitleme
+Magnifying_Glass	Doğaçlama Büyüteç
+Scary_Mask_01	Doğaçlama Maske
+ImprovisedMetalDetector	Doğaçlama Metal Dedektörü
+2H_Improvised_metal_shovel	Doğaçlama Metal Kürek
+Improvised_Metal_Spear	Doğaçlama Metal Mızrak
+ImprovisedMine	Doğaçlama Maden
+ImprovisedMinigunTurret	Doğaçlama Minigun Taret
+Improvised_Motorcycle_Wheel	Doğaçlama Motosiklet Tekerleği
+WeaponSuppressor_ImprovisedOilCan_01	Doğaçlama Yağ Kutusu Bastırıcı
+PaintSprayer	Doğaçlama Boya Püskürtücü
+Dish_Pasta_Improvised	Doğaçlama Makarna Yemeği
+Weapon_Parts_Impro_Pistol	Doğaçlama Tabanca Silah Parçaları
+Improvised_Quiver_02_Rags	Doğaçlama Sadak
+Raincoat_Improvised	Doğaçlama Yağmurluk
+Dish_Rice_Improvised	Doğaçlama Pilav Yemeği
+Weapon_Improvised_Rifle	Doğaçlama Tüfek
+ImprovisedRail_Side	Doğaçlama Tüfek Rayı
+Weapon_Parts_Impro_rifle	Doğaçlama Tüfek Silah Parçaları
+ImprovisedRocketTurret	Doğaçlama Roket Kulesi
+Improvised_rope	Doğaçlama Halat
+Dish_Salad_Improvised	Doğaçlama Salata
+Dish_Sandwich_Improvised	Doğaçlama Sandviç
+WeaponSights_ImprovisedScope	Dürbün — doğaçlama üretim
+Improvised_Sewing_kit	Doğaçlama Dikiş Seti
+ImprovisedSmallPaddle	Doğaçlama Kısa Kürek
+2H_Improvised_shovel	Doğaçlama Kürek
+Dish_Soup_Improvised	Doğaçlama Çorba
+Improvised_Stabproof	Doğaçlama Bıçak Korumalı Yelek
+Dish_Stew_Improvised	Doğaçlama Güveç
+Improvised_Stone_Spear	Doğaçlama Taş Mızrak
+Improvised_Tire_Repair_Kit	Doğaçlama Lastik Tamir Takımı
+1H_Improvised_Tomahawk	Doğaçlama Tomahawk
+Improvised_Tool_Box	Doğaçlama Alet Kutusu
+Improvised_Water_container	Doğaçlama Su Kabı
+Improvised_Wheel	Doğaçlama Tekerlek
+Improvised_Wooden_Spear	Doğaçlama Ahşap Mızrak
+Improvised_Workbench	Doğaçlama Tezgah
+Industrial_Fertilizer	Endüstriyel Gübre
+2H_Industrial_Gardening_Hoe	Endüstriyel Bahçe Çapası
+Inonotus_Obliquus	Inonotus Obliquus
+Instant_OatMeal	Hazır Yulaf Ezmesi
+Electrician_Glove_01_01	Yalıtımlı lastik eldiven
+Electrician_Glove_01_02	Yalıtımlı lastik eldiven
+Electrician_Glove_01_03	Yalıtımlı lastik eldiven
+IntEA_Level1	Zeka Geliştirme Ampul Seviyesi 1
+IntEA_Level2	Zeka Geliştirme Ampul Seviyesi 2
+IntEA_Level3	Zeka Geliştirme Ampul Seviyesi 3
+Lock_Item_Basic	Demir Kilit
+Isopropyl_alcohol	İzopropil alkol
+Jack_o_Lantern_01	Jack-o'-fener
+Jack_o_Lantern_02	Jack-o'-fener
+Jack_o_Lantern_03	Jack-o'-fener
+Jeans_01_01	Kot pantolon
+Jeans_01_02	Kot pantolon
+Jeans_01_03	Kot pantolon
+Jeans_01_04	Kot pantolon
+Jeans_02_01_V2	Kot pantolon
+Jeans_02_02	Kot pantolon
+Jeans_02_03	Kot pantolon
+Jeans_02_04	Kot pantolon
+Jeans_02_05	Kot pantolon
+Jeans_02_06	Kot pantolon
+Jeans_02_07	Kot pantolon
+Jeans_02_08	Kot pantolon
+Jeans_02_09	Kot pantolon
+Jersey_01	Jersey Gömlek
+Jersey_02	Jersey Gömlek
+Jersey_03	Jersey Gömlek
+Jersey_04	Jersey Gömlek
+Jersey_05	Jersey Gömlek
+Jersey_06	Jersey Gömlek
+Jersey_07	Jersey Gömlek
+Jersey_08	Jersey Gömlek
+Jersey_09	Jersey Gömlek
+Jock_Jacket_01	Sporcu Ceketi
+Jock_Jacket_02	Sporcu Ceketi
+Jock_Jacket_03	Sporcu Ceketi
+Jock_Jacket_04	Sporcu Ceketi
+Joint01	Ortak
+Weapon_Judge44	Yargıç 44
+Weapon_Parts_Judge44	Yargıç 44 Silah Parçaları
+Baseball_Cap_12	JW Kapak
+K6-3_Helmet	K6-3 Kask
+Weapon_98k_Karabiner	Kar98
+Kar98_Bayonet	Kar98 Süngü
+WeaponSuppressor_Kar98k	Susturucu — Kar98k
+Weapon_Parts_Kar98k	Kar98k Silah Parçaları
+2H_Katana	Katana
+Ketchup	Ketçap
+KeyCard	Anahtar Kart
+KeyCardBunker_Level01	Anahtar Kart
+KeyCardBunker_Level02	Anahtar Kart
+Keyhole_Shirt_01	Anahtar Deliği Gömlek
+Keyhole_Shirt_02	Anahtar Deliği Gömlek
+Keyhole_Shirt_03	Anahtar Deliği Gömlek
+Keyhole_Shirt_04	Anahtar Deliği Gömlek
+Keyhole_Shirt_05	Anahtar Deliği Gömlek
+Keyhole_Shirt_06	Anahtar Deliği Gömlek
+Keyhole_Shirt_07	Anahtar Deliği Gömlek
+Keyhole_Shirt_08	Anahtar Deliği Gömlek
+Kicmovaca	Kicmovaca
+Kilt_01	İskoç eteği
+Kilt_02	İskoç eteği
+Kilt_03	İskoç eteği
+Kilt_04	İskoç eteği
+Kilt_05	İskoç eteği
+Kilt_06	İskoç eteği
+Kitchen_Board_01	Mutfak Tahtası
+Kitchen_Board_02	Mutfak Tahtası
+1H_KitchenKnife	Mutfak Bıçağı
+1H_KitchenKnife_02	Mutfak Bıçağı
+1H_KitchenKnife_02_Deluxe	Mutfak Bıçağı
+1H_KitchenKnife_03	Mutfak Bıçağı
+1H_KitchenKnife_04	Mutfak Bıçağı
+1H_KitchenKnife_DigitalDeluxe	Mutfak Bıçağı
+Kiwi	Kivi
+Socks_02	Diz Boyu Çorap
+Recurve_Bow_60	Kodiak 60#
+Slippers_01	Kroks
+Weapon_Krueger	Krueger
+Magazine_Krueger	Şarjör — Krueger
+Weapon_Parts_Krueger	Krueger Silah Parçaları
+1H_Kunai	Kunai
+Laika_Engine_Alternator_Item	Laika Alternatör
+Laika_Body_ArmorHeavy_Left	Laika Vücut Zırhı Ağır Sol
+Laika_Body_ArmorHeavy_Right	Laika Vücut Zırhı Ağır Sağ
+Laika_Body_ArmorLight_Left	Laika Vücut Zırhı Işığı Sol
+Laika_Body_ArmorLight_Right	Laika Vücut Zırhı Hafif Sağ
+Laika_Body_ArmorLight_Top	Laika Body Armor Hafif Üst
+Laika_Body_Front	Laika Gövde Önü
+Laika_Body_Left	Laika Gövde Sol
+Laika_Body_Right	Laika Gövde Sağ
+Laika_Body_Top	Laika Body Üstü
+Laika_Bumper_Armor_Back_Item	Laika Tampon Zırhı Sırtı
+Laika_Bumper_Back_Item	Laika Tampon Arkası
+Laika_Bumper_Front_Item	Laika Tampon Önü
+Laika_Door_ArmorHeavy_FrontLeft_Item	Laika Kapı Ağır Zırh Ön Sol
+Laika_Door_ArmorHeavy_FrontRight_Item	Laika Kapı Ağır Zırh Ön Sağ
+Laika_Door_Left_Item	Laika Kapı Sol
+Laika_Door_ArmorLight_FrontLeft_Item	Laika Kapı Işık Zırhı Ön Sol
+Laika_Door_ArmorLight_FrontRight_Item	Laika Kapı Işık Zırhı Ön Sağ
+Laika_Door_Right_Item	Laika Kapı Sağ
+Laika_Body_ArmorHeavy_Top_Item	Laika Ağır Zırh Üstü
+Laika_DoorHood_Item	Laika Başlık
+Laika_Lights_FrontLeft	Laika Işıklar Ön Sol
+Laika_Lights_FrontRight	Laika Işıklar Ön Sağ
+Laika_Lights_RearLeft	Laika Arka Sol Işıklar
+Laika_Lights_RearRight	Laika Arka Sağ Işıklar
+Laika_Seat_FrontLeft_Item	Laika Koltuk Ön Sol
+Laika_Seat_FrontRight_Item	Laika Koltuk Ön Sağ
+Laika_DoorTrunk_ArmorHeavy_Item	Laika Ağır Gövde Zırhı
+Laika_DoorTrunk_ArmorLight_Item	Laika Gövde Zırhı Işığı
+Laika_DoorTrunk_Item	Laika Bagaj Kapısı
+Battery_Charger_Large	Büyük Pil Şarj Cihazı
+LogShed_1	Büyük Kütük Kulübesi
+Stone_Large	Büyük Taş
+Larve	Larva
+Laser_Detonator	Lazer Patlatıcı
+Lead_Plate	Kurşun Plaka
+Leather_Backpack_01	Deri Sırt Çantası
+Leather_Backpack_02	Deri Sırt Çantası
+Leather_Backpack_03	Deri Sırt Çantası
+Belt_Pistol_Holster	Deri Kemer Tabanca Kılıfı
+Leather_MiniSkirt_01	Deri Mini Etek
+Leather_MiniSkirt_02	Deri Mini Etek
+Leather_MiniSkirt_03	Deri Mini Etek
+Leather_Sheet	Deri Sac
+Leather_Shoes_02	Deri Ayakkabı
+Lemon	Limon
+Lemon_Seed_Bag	Limon Çekirdeği Torbası - Limon Çekirdeği Torbası
+Lemon_Seeds	Limon Tohumları
+Lepiota_Procera	Lepiota Procera
+Lettuce	Marul
+Lettuce_Seed_Bag	Marul Tohumu Torbası - Marul Tohumu Torbası
+Lettuce_Seeds	Marul Tohumları
+ColorCan_LightBrown	Açık Kahverengi Boya Kutusu
+ColorCan_LightUrban	Hafif Kentsel Boya Kutusu
+Lighter	Çakmak
+Lime	kireç
+ColorCan_LimeGreen	Limon Yeşili Boya Kutusu
+GlassBottle03	Limon Suyu
+PETBottle03	Limonlu Soda
+PETBottle04	Limonlu Soda
+Ganoderma_Lucidum	Lingzhi Mantarı
+WeaponCharm_Emoji	LMAO Emoji Silah Charm'ı
+Lockpick_Item	Kilitli
+LockpickingBoard	Kilit Açma Tahtası
+ImprovisedRail_Long	Uzun Doğaçlama Ray
+Long_Paddle	Uzun kürek
+Long_wooden_stick	Uzun Tahta Çubuk
+Vest_01	Uzun kollu gömlek
+Vest_02	Uzun kollu gömlek
+Vest_03	Uzun kollu gömlek
+Vest_04	Uzun kollu gömlek
+Vest_05	Uzun kollu gömlek
+Cigarettes1	Lucky Star Sigara Paketi
+Cigarette1	Şanslı Yıldız Sigarası
+Lycoperdon_Gigantea	Lycoperdon Gigantea
+M1_Bayonet	M1 Süngü
+M1_Clip	Fişek klipsi — M1
+WeaponSights_M1_Experimental	M1 Deneysel Manzaralar
+WeaponFlashHider	M1 Flaş Gizleyici
+M1_Medical_Helmet	M1 Tıbbi Kask
+Weapon_M1_Garand	M1 Tüfek
+WeaponSights_M1_ScopeAndSights	Dürbün — M1
+WeaponSuppressor_M1	Susturucu — M1
+Weapon_Parts_M1_Garand	M1 Silah Parçaları
+Magazine_M16	Şarjör — M16
+Weapon_M16A4	M16A4
+WeaponSights_M16A4_FoldingSights	M16A4 Katlanır Nişangahlar
+Weapon_Parts_M16A4	M16A4 Silah Parçaları
+Weapon_M1887	M1887
+Weapon_M1887_Sawed_off	M1887 Kesilmiş
+Weapon_Parts_M1887	M1887 Silah Parçaları
+Weapon_MosinNagant	M1891
+Mosin_Bayonet	M1891 Süngü
+WeaponSuppressor_M1891	Susturucu — M1891
+Weapon_Parts_MosinNagant	M1891 Silah Parçaları
+Weapon_M1911	M1911
+Weapon_M1911_Engraved	M1911 Kazınmış
+Weapon_M1911_Gold	M1911 Altın
+Weapon_M1911_JayW	M1911 JayW
+Magazine_M1911	Şarjör — M1911
+M1911_Rail	Montaj rayı — M1911
+Weapon_Parts_M1911	M1911 Silah Parçaları
+Weapon_M249	M249
+Magazine_M249	M249 Cephane Kutusu
+Weapon_Parts_M249	M249 Silah Parçaları
+M70_Bayonet	M70 Süngü
+WeaponSuppressor_M82A1	Susturucu — M82 QDL
+WeaponSuppressor_M82A1_Black	Susturucu — M82 QDL
+WeaponSuppressor_M82A1_Desert	Susturucu — M82 QDL
+WeaponSuppressor_M82A1_Snow	Susturucu — M82 QDL
+WeaponScope_M82A1	Dürbün — M82
+WeaponScope_M82A1_Black	Dürbün — M82
+WeaponScope_M82A1_Desert	Dürbün — M82
+WeaponScope_M82A1_Snow	Dürbün — M82
+Weapon_M82A1	M82A1
+Weapon_M82A1_Black	M82A1
+Weapon_M82A1_Desert	M82A1
+Weapon_M82A1_Snow	M82A1
+Magazine_M82A1	Şarjör — M82A1
+Weapon_Parts_M82A1	M82A1 Silah Parçaları
+Flashbang	M84 Sersemletici el bombası
+WeaponFlashlight_M9	M9 El Feneri
+Magazine_M9	Şarjör — M9
+Weapon_Parts_M9	M9 Silah Parçaları
+Weapon_MAC10	MAC-10
+Magazine_MAC10	Şarjör — MAC-10
+WeaponSuppressor_MAC10	Susturucu — MAC-10
+Weapon_Parts_MAC10	MAC-10 Silah Parçaları
+Magnifying_Glass1	Büyüteç
+Vodka	Majestic Bear Votka
+Manchu_Bow_50	Manchu Yay
+Mango	mango
+Marine_Cap_01	Denizcilik Şapkası
+Marine_Cap_02	Denizcilik Şapkası
+Marine_Cap_03	Denizcilik Şapkası
+Marine_Cap_04	Denizcilik Şapkası
+Marine_Cap_05	Denizcilik Şapkası
+Marine_Cap_06	Denizcilik Şapkası
+Marine_Cap_07	Denizcilik Şapkası
+Marine_Cap_08	Denizcilik Şapkası
+Matches	Maçlar
+Mayonnaise	Mayonez
+FishingBait_Meat	Et Balık Yemi
+MeatSnack_01	Etli Aperatif Baharatlı
+MeatSnack_02	Etli Aperatif Baharatlı
+Medical_Glove_01	Medikal Eldivenler
+1H_Medieval_Sword	Ortaçağ Kılıcı
+Battery_Charger_Medium	Orta Boy Pil Şarj Cihazı
+FishingHookPack2	Orta Kanca Paketi
+Lock_Security_Lvl2	Orta Kilit Koruması
+Medium_Vehicle_StorageRack	Orta Boy Araç Depolama Rafı
+FishingHook1	Orta Boy Balık Tutma Kancası
+Knife_Sheath	Yakın Dövüş Silahı Kılıfı
+Metal_Arrow	Metal Ok
+2H_Metal_Axe	Metal Balta
+2H_Metal_Baseball_Bat	Metal Beyzbol Sopası
+Ammo_Crossbow_Bolt_Metal	Metal Arbalet Cıvatası
+MetalDetector	Metal Dedektörü
+1H_Improvised_metal_knife	Metal Bıçak
+1H_Metal_Pipe	Metal Boru
+Saw	Metal Testere
+Metal_Scrap_01	Metal Hurda
+Metal_Scrap_02	Metal Hurda
+Metal_Scrap_03	Metal Hurda
+Metal_Scrap_04	Metal Hurda
+Metal_Scrap_05	Metal Hurda
+1H_Metal_Sword	Metal Kılıç
+Ammo_Crossbow_Bolt_WoodenMetalTip	Metal Uçlu Arbalet Cıvatası
+Wooden_ArrowMetalTip	Metal Uçlu Ahşap Ok
+Bundle_Of_Metal_Tips	Metal İpuçları
+HH_Shoes_05_01	Orta Topuklu Sandalet
+HH_Shoes_05_02	Orta Topuklu Sandalet
+HH_Shoes_05_03	Orta Topuklu Sandalet
+MilitaryBoots_JNA	Askeri Bot
+MilitaryBoots_Peace	Askeri Bot
+Military_Cap_01	Askeri Şapka
+Military_Cap_02	Askeri Şapka
+Military_Cap_03	Askeri Şapka
+Military_Cap_04	Askeri Şapka
+Military_Cap_05	Askeri Şapka
+Military_Cap_06	Askeri Şapka
+Military_Cap_07	Askeri Şapka
+Military_Cap_08	Askeri Şapka
+Compass	Askeri Pusula
+Military_Goggles_01	Askeri Gözlük
+Tactical_Sunglasses_01	Askeri Gözlük
+Tactical_Sunglasses_02	Askeri Gözlük
+Military_Helmet_01_01	Askeri Kask
+Military_Helmet_01_02	Askeri Kask
+Military_Helmet_01_03	Askeri Kask
+Military_Helmet_01_04	Askeri Kask
+Military_Helmet_01_05	Askeri Kask
+Military_Helmet_01_06	Askeri Kask
+Military_Helmet_01_07	Askeri Kask
+Military_Helmet_01_08	Askeri Kask
+Military_Helmet_01_09	Askeri Kask
+Military_Quiver_01	Askeri Sadak
+Military_Quiver_02	Askeri Sadak
+Military_Quiver_03	Askeri Sadak
+Military_Quiver_04	Askeri Sadak
+Military_Quiver_05	Askeri Sadak
+Military_Quiver_06	Askeri Sadak
+Military_Quiver_07	Askeri Sadak
+Military_Quiver_08	Askeri Sadak
+Military_Shirt_01	Askeri Gömlek
+Military_Shirt_02	Askeri Gömlek
+Military_Shirt_03	Askeri Gömlek
+Military_Shirt_04	Askeri Gömlek
+Military_Shirt_05	Askeri Gömlek
+Military_Shirt_06	Askeri Gömlek
+Military_Shirt_07	Askeri Gömlek
+Military_Shirt_08	Askeri Gömlek
+1H_Military_Shovel	Askeri Kürek
+1H_Military_Survival_Knife	Askeri Hayatta Kalma Bıçağı
+1H_Military_Tomahawk	Askeri Tomahawk
+Milk	Süt
+Leather_Shoes	Mirdas Ayakkabı
+Weapon_MK18	MK18
+WeaponSuppressor_MK18	Susturucu — MK18
+Weapon_Parts_MK18	MK18 Silah Parçaları
+1H_MK5000_Black	MK5000
+1H_MK5000_Metal	MK5000
+MMA_Glove_01	MMA Eldiven
+Mobile_Phone	Cep telefonu
+Hazmat_Suit_Modern	Modern Tehlikeli Madde Elbisesi
+Recurve_Bow_80	Mohawk 80#
+Sensor_Detonator	Hareket Sensörü Patlatıcı
+Motorbike_Battery	Motosiklet Aküsü
+Motorcycle_Boots_01	Motosiklet botları
+Motorcycle_Boots_02	Motosiklet botları
+Motorcycle_Boots_03	Motosiklet botları
+Motorcycle_Glasses_01	Motosiklet Gözlükleri
+Motorcycle_Glasses_02	Motosiklet Gözlükleri
+Motorcycle_Jacket_01	Motosiklet Ceketi
+Motorcycle_Jacket_02	Motosiklet Ceketi
+Motorcycle_Jacket_03	Motosiklet Ceketi
+Motorcycle_Mask_01	Motosiklet Maskesi
+Motorcycle_Mask_02	Motosiklet Maskesi
+Motorcycle_Pants_01	Motosiklet Pantolonu
+Motorcycle_Pants_02	Motosiklet Pantolonu
+Motorcycle_Pants_03	Motosiklet Pantolonu
+Weapon_MP5	MP5
+Weapon_MP5_K	MP5 K
+Magazine_MP5	Şarjör — MP5
+MP5_Rail_Short	MP5 demiryolu
+Weapon_MP5_SD	MP5 SD
+WeaponSuppressor_MP5	Susturucu — MP5
+Weapon_Parts_MP5	MP5 Silah Parçaları
+WeaponSights_MRO_Red_Dot	Kırmızı nokta nişangâhı — MRO
+Mulberry	Dut
+Mustard	Hardal
+Mutant_Animal_Skin	Mutant Hayvan Derisi - Mutant Hayvan Derisi
+Bear_Head_Mutant	Mutant Ayı Kafası
+Mutant_Bear_Steak	Mutant Ayı Bifteği - Mutant Ayı Bifteği
+Boar_Head_Mutant	Mutant Domuz Kafası
+Buck_Head_Mutant	Mutant Buck Kafası
+Mutant_Buck_Steak	Mutant Geyik Bifteği
+Wolf_Head_Mutant	Mutant Kurt Kafası
+Mutant_Wolf_Steak	Mutant Kurt Bifteği - Mutant Kurt Bifteği
+1H_N9_Black	N9 Süngü
+1H_N9_White	N9 Süngü
+Nails	Çiviler
+ColorCan_NavyBlue	Lacivert Boya Kutusu
+ColorCan_NavyGrey	Lacivert Gri Boya Kutusu
+Needle	İğne
+Night_Vision_Goggles_01	Gece Görüş Gözlüğü
+FishingLine_2	Naylon ip, orta, 0.18 mm
+FishingLinePiece_2	Naylon ip, orta, 0.18 mm
+FishingLine_3	Naylon ip, kalın, 0.25 mm
+FishingLinePiece_3	Naylon ip, kalın, 0.25 mm
+FishingLine_4	Naylon ip, kalın, 0.5 mm
+FishingLinePiece_4	Naylon ip, kalın, 0.5 mm
+FishingLine_1	Naylon ip, ince, 0.12 mm
+FishingLinePiece_1	Naylon ip, ince, 0.12 mm
+Oak_Nuts	Meşe Fındığı
+Cal_40_OG-7V	OG-7V
+WeaponCharm_Ogre	Ogre Silah Büyüsü
+Oil_Filter	Yağ Filtresi
+WeaponSights_OKP-7_Holographic	Holografik nişangâh — OKP
+Olives	zeytin
+Onion	Soğan
+Chips3	Soğan Halkaları
+Open_Finger_Gloves_01	Açık Parmaklı Eldiven
+Open_Finger_Gloves_02	Açık Parmaklı Eldiven
+Open_Finger_Gloves_03	Açık Parmaklı Eldiven
+Open_Finger_Gloves_04	Açık Parmaklı Eldiven
+Open_Finger_Gloves_05	Açık Parmaklı Eldiven
+Open_Finger_Gloves_06	Açık Parmaklı Eldiven
+Opuntia_Fig	Opuntia İnciri
+Orange	Turuncu
+Can02	Portakal suyu
+GlassBottle04	Portakal Suyu
+Orange_Seed_Bag	Portakal Çekirdeği Torbası - Portakal Çekirdeği Torbası
+Orange_Seeds	Portakal Tohumları
+Fish_Orata	Çipura
+Orata_Fillet	Orata Fileto
+Organic_Fertilizer	Organik Gübre
+HH_Boots_01	Diz üstü çizmeler
+WeaponScope_Dragunov	Dürbün — P-223
+P17_Bayonet	P17 Süngü
+C4_Pack	Paketlenmiş C4
+Padlock	Asma kilit
+Painkillers_01	Ağrı kesiciler - Kabarcık
+Painkillers_02	Ağrı kesici - Kutu
+PainKillers_03	Ağrı kesici - Kavanoz
+Pajama_Pants	Pijama Pantolonu
+Pajama_Shirt_01	Pijama Gömleği
+Pan	Tava
+Inmate_pants	Pantolon
+Inmate_Pants_01_Forest_DigitalDeluxe	Pantolon
+Inmate_Pants_01_Snow_DigitalDeluxe	Pantolon
+Inmate_Pants_01_South_DigitalDeluxe	Pantolon
+Pantyhose_01	Külotlu çorap
+Paper	Kağıt
+Parachute	Paraşüt
+Parking_Sensor	Park Sensörü
+Parsley	Yaban havucu
+Party_Glasses_01	Parti Gözlükleri
+Party_Glasses_02	Parti Gözlükleri
+Pasta	Makarna
+Book_Cooking_Pasta	Makarna Yemek Kitabı
+Weapon_PeaceKeeper38	Barış Muhafızı 38
+Weapon_Parts_PeaceKeeper38	Barış Muhafızı 38 Parçalar
+Peach	şeftali
+CannedPeach	Şeftali Kompostosu
+Peach_Seed_Bag	Şeftali Çekirdeği Çantası - Şeftali Çekirdeği Çantası
+Peach_Seeds	Şeftali Tohumları
+Pear	Armut
+CannedPear	Armut Kompostosu
+Pear_Seed_Bag	Armut Çekirdeği Torbası - Armut Çekirdeği Torbası
+Pear_Seeds	Armut Tohumları
+Pen	Kalem
+Penicillin01	penisilin
+Peppers_Seeds	Biber Tohumları
+Peppers_Seed_Bag	Biber Tohumu Torbası - Biber Tohumu Torbası
+Pesticide	Pestisit
+Cal_40_PG-7M	PG-7M
+2H_Pickaxe	kazma
+Rubber_sheet	Kauçuk Parçası
+Pike_Fillet	Turna Filetosu
+Fish_Pike	Turna Balığı
+Pike_Head	Turna Kafası
+Pilot_Glasses	Pilot Gözlüğü
+Pilot_Hat_01	Pilot Şapkası
+Pilot_Jacket	Pilot Ceket
+Pine_Cone	Çam Kozalağı
+Pineapple	Ananas
+Ghillie_Suit_Pants_04	Pembe Ghillie Takım Elbise Altı
+Ghillie_Suit_Jacket_04	Pembe Ghillie Takım Elbise Üstü
+PipeBomb	Boru Bombası
+1H_Pipe_Wrench	Boru Anahtarı
+WeaponCharm_PirateCat	Korsan Kedi Silah Charm'ı
+Pirate_EyePatch	Korsan Göz Bandı
+Pirate_Hat_01	Korsan Şapkası
+Pirate_Hat_Sparrow_02	Korsan Şapkası
+2H_Pitchfork	Dirgen
+Book_Cooking_Pizza	Pizza Yemek Kitabı
+Scissors_Plastic	Plastik Makas
+Hen_Torso	Koparılmış Tavuk
+Plum	Erik
+Plum_Seed_Bag	Erik Çekirdeği Torbası - Erik Çekirdeği Torbası
+Plum_Seeds	Erik Tohumları
+Police_Backpack_01	Polis Saldırı Sırt Çantası
+Police_Backpack_03	Polis Sırt Çantası
+Police_Beanie_01	Polis Beresi
+ColorCan_PoliceBlue	Polis Mavi Boya Kutusu
+Police_Bulletproof_Vest_01	Polis Kurşun Geçirmez Yelek
+Police_Cap_01	Polis Şapkası
+Police_Boonie_Hat_01	Polis Balıkçı Şapkası
+Police_Gloves_01	Polis Eldivenleri
+Police_Cap_02	Polis Şapkası
+Police_Backpack_02	Polis Yürüyüş Sırt Çantası
+Police_Jacket_01	Polis Ceketi
+Police_Open_Finger_Gloves_01	Polis Açık Parmak Eldiveni
+Police_Shirt_01	Polis Gömleği
+pOLICE_Sweater_01	Polis Kazak
+Armor_Police_Vest_01	Polis Taktik Yeleği
+Pork_Steak	Domuz bifteği
+Mutant_Pork_Steak	Domuz Biftek - Mutant Domuz Biftek
+WeaponScope_POSP	POSP 4x24V
+PotassiumIodide_Pills_01	Potasyum İyodür Hapları - Blister
+PotassiumIodide_Pills_02	Potasyum İyodür Hapları - Kutu
+PotassiumIodide_Pills_03	Potasyum İyodür Hapları - Kavanoz
+Potato	Patates
+Chips4	Patates Cipsi Tuzlu
+Potato_Seed_Bag	Patates Tohumu Torbası - Patates Tohumu Torbası
+Potatoes_Seeds	Patates Tohumları
+PracticeTrap	Bomba Alıştırması
+Recurve_Bow_70	Predator 70#
+BlankSign_Premium	Sigorta primi boş işareti
+PremiumBoiliesPack	Premium Boilies Yem Paketi
+Car_Lamp_Ceiling	Premium Elektrik Lambası
+PressureCookerBomb	Düdüklü Tencere Bombası
+Pressure_Dressing	Basınçlı Pansuman
+Compass_Primitive	İlkel Pusula
+PromTrap	PROM-1 Benimki
+Fish_PrussianCarp	Gümüşi havuz balığı
+Psilocybe_Cyanescens	Psilocybe Cyanescens
+WeaponScope_PU	Dürbün — PU
+Pumpkin	Balkabağı
+Pumpkin_Seed_Bag	Kabak Çekirdeği Çanta - Kabak Çekirdeği Çanta
+Pumpkin_Seeds	Kabak Çekirdeği
+Zombie_01_Left_Arm	Kukla Kolu
+Zombie_01_Right_Arm	Kukla Kolu
+Puppet_Eye	Kukla Gözü
+Zombie_01_Left_Foot	Kukla Ayak
+Zombie_01_Right_Foot	Kukla Ayak
+Zombie_01_Head	Kukla Kafası
+Zombie_01_Head_No_teeth	Kukla Kafası
+Zombie_01_Left_Leg	Kukla Bacak
+Zombie_01_Right_Leg	Kukla Bacak
+ZombieMeat	Kukla Eti
+Zombie_01_Torso	Kukla Gövdesi
+MemoryModule_Level3	Mor Bellek Modülü
+Qipao_Dress_01	Qipao Elbise
+Qipao_Dress_02	Qipao Elbise
+Qipao_Dress_03	Qipao Elbise
+Qipao_Dress_04	Qipao Elbise
+Qipao_Dress_05	Qipao Elbise
+Qipao_Dress_06	Qipao Elbise
+HH_Wedge_Heels_01_01	Qipao Ayakkabı
+HH_Wedge_Heels_01_02	Qipao Ayakkabı
+HH_Wedge_Heels_01_03	Qipao Ayakkabı
+HH_Wedge_Heels_01_04	Qipao Ayakkabı
+HH_Wedge_Heels_01_05	Qipao Ayakkabı
+HH_Wedge_Heels_01_06	Qipao Ayakkabı
+Rabbit_Left_Front	Tavşan Sol Ön Çeyrek
+Rabbit_Left_Back	Tavşanın Sol Arka Çeyreği
+RabbitLeg	Tavşan Bacağı
+RabbitMeat	Tavşan Eti
+Rabbit_Right_Front	Tavşan Sağ Ön Çeyrek
+Rabbit_Right_Back	Tavşanın Sağ Arka Kısmı
+Racing_Helmet_01	Yarış Kaskı
+Radio	Radyo
+Improvised_Gloves	Bez Eldiven
+Improvised_Shoes_02	Bez Ayakkabı
+Rag_Stripes	Bez Şeritler
+Rager_Engine_Alternator_Item	Rager Alternatör
+Rager_Body_ArmorHeavy_Back_Item	Rager Vücut Zırhı Ağır Sırt
+Rager_Body_ArmorHeavy_Left_Item	Rager Vücut Zırhı Ağır Sol
+Rager_Body_ArmorHeavy_Right_Item	Rager Vücut Zırhı Ağır Sağ
+Rager_Body_ArmorHeavy_Top_Item	Rager Vücut Zırhı Ağır Üst
+Rager_Body_ArmorLight_Back_Item	Rager Vücut Zırhı Hafif Sırt
+Rager_Body_ArmorLight_Left_Item	Rager Vücut Zırhı Işığı Sol
+Rager_Body_ArmorLight_Right_Item	Rager Vücut Zırhı Hafif Sağ
+Rager_Body_ArmorLight_Top_Item	Rager Body Armor Hafif Üst
+Rager_Body_Front	Rager Gövde Önü
+Rager_Body_Left	Rager Gövde Sol
+Rager_Body_Right	Rager Gövde Sağ
+Rager_Body_Top	Rager Body Üstü
+Rager_Bumper_Back_Item	Rager Tampon Arkası
+Rager_Bumper_Front_Item	Rager Tampon Önü
+Rager_Door_ArmorHeavy_BackLeft_Item	Rager Kapı Zırhı Ağır Arka Sol
+Rager_Door_ArmorHeavy_BackRight_Item	Rager Kapı Zırhı Ağır Arka Sağ
+Rager_Door_ArmorHeavy_FrontLeft_Item	Rager Kapı Zırhı Ağır Ön Sol
+Rager_Door_ArmorHeavy_FrontRight_Item	Rager Kapı Zırhı Ağır Ön Sağ
+Rager_Door_ArmorLight_BackLeft_Item	Rager Kapı Zırh Işığı Arka Sol
+Rager_Door_ArmorLight_BackRight_Item	Rager Kapı Zırh Işığı Arka Sağ
+Rager_Door_ArmorLight_FrontLeft_Item	Rager Kapı Zırh Işığı Ön Sol
+Rager_Door_ArmorLight_FrontRight_Item	Rager Kapı Zırh Işığı Ön Sağ
+Rager_Door_BackLeft_Item	Rager Kapı Arka Sol
+Rager_Door_BackRight_Item	Rager Kapı Arka Sağ
+Rager_Door_FrontLeft_Item	Rager Kapı Ön Sol
+Rager_Door_FrontRight_Item	Rager Kapı Ön Sağ
+Rager_DoorHood_Item	Rager Başlık
+Rager_Lights_FrontLeft	Rager Işıklar Ön Sol
+Rager_Lights_FrontRight	Rager Işıklar Ön Sağ
+Rager_Lights_RearLeft	Rager Arka Sol Işıklar
+Rager_Lights_RearRight	Rager Arka Sağ Işıklar
+Rager_Lights_RearTop	Rager Arka Üst Işıklar
+Rager_Seat_FrontLeft_Item	Rager Koltuk Ön Sol
+Rager_Seat_FrontRight_Item	Rager Koltuk Ön Sağ
+Rager_DoorTrunk_ArmorHeavy_Item	Rager Ağır Gövde Zırhı
+Rager_DoorTrunk_ArmorLight_Item	Rager Gövde Zırhı Işığı
+Rager_DoorTrunk_Item	Rager Bagaj Kapısı
+Rager_Wheel_ArmorHeavy_FrontLeft_Item	Rager Tekerlek Zırhı Ağır Ön Sol
+Rager_Wheel_ArmorHeavy_FrontRight_Item	Rager Tekerlek Zırhı Ağır Ön Sağ
+Rager_Wheel_ArmorLight_FrontLeft_Item	Rager Tekerlek Zırhı Işığı Ön Sol
+Rager_Wheel_ArmorLight_FrontRight_Item	Rager Tekerlek Zırhı Işığı Ön Sağ
+Rags	Paçavra
+Raincoat_01	Yağmurluk
+Raincoat_02	Yağmurluk
+Raincoat_03	Yağmurluk
+Raincoat_04	Yağmurluk
+Raincoat_05	Yağmurluk
+Raincoat_06	Yağmurluk
+Raisins	kuru üzüm
+Ramsons	Ramson'lar
+Grapes_Raw	Çiğ Üzüm
+RK_Beanie_01	Raykit Bere
+RK_Hoodie_01	Raykit Kapüşonlu Üst
+Razor_Blade	Jilet
+Rebar_Cutter	İnşaat demiri kesici
+ColorCan_RedChocolate	Kırmızı Çikolata Boya Kutusu
+WeaponSights_RedDot_CA401B	Kırmızı Nokta Görüşü
+Energy_Drink_Red_Ghoul	Red Ghoul Enerji İçeceği
+RedOnion_Seed_Bag	Kırmızı Soğan Tohumu Torbası
+RedOnion_Seeds	Kırmızı Soğan Tohumları
+FishingBait_RedWorm	Kırmızı Solucan Balık Yemi
+Christmas_Headband_01	Ren geyiği kulakları
+Remote_Door_Key	Uzaktan Kapı Anahtarı
+Remote_Door_Sensor	Uzaktan Kapı Sensörü
+KeyCardApex	Araştırma Tesisi Anahtar Kartı
+Respirator_01	Solunum cihazı
+Retro_Helmet_01	Retro Kask
+Book_Cooking_Rice	Pirinç Yemek Kitabı
+Richards_Cheese	Richard Peyniri
+Rider_Helmet_01	Binici Kaskı
+Rider_Helmet_02	Binici Kaskı
+Rider_Helmet_03	Binici Kaskı
+Riot_Helmet_02	İsyan Kaskı
+ScopeRail_AK47	RIS Adaptör
+RIS_Armor_Military_Front_Item	RIS Zırh Askeri Cephesi
+RIS_Body_Military_Item	RIS Vücut Askeri
+RIS_BrakeLight_Center_Item	RIS Fren Lambası Merkezi
+RIS_BrakeLight_Left_Item	RIS Fren Lambası Sol
+RIS_BrakeLight_Right_Item	RIS Fren Lambası Sağ
+RIS_Headlight_Left_Item	RIS Far Sol
+RIS_Headlight_Right_Item	RIS Far Sağ
+RIS_Plow_Civilian	RIS Sivil Pulluk
+RIS_Spikes_Military	RIS Spikes Askeri
+RIS_Wheel_Armor_Item	RIS Tekerlek Zırhı
+Tobacco_Rolled	Haddelenmiş Tütün
+WeaponCharm_Roller_Skate	Paten Silahı Charm'ı
+Rope1	Halat 5m
+Dog_Rose	Kuşburnu
+Weapon_Parts_RPG	RPG Silah Parçaları
+Weapon_RPG7	RPG7
+Weapon_RPK-74	RPK
+Magazine_RPK	Şarjör — RPK
+Weapon_Parts_RPK-74	RPK Silah Parçaları
+Rubber_band	Lastik Bant
+Fish_Ruffe	Trakya levreği
+Ruffe_Fillet	Fırfır Fileto
+Skirt_02_01	Fırfırlı Etek
+Skirt_02_02	Fırfırlı Etek
+Skirt_02_03	Fırfırlı Etek
+Skirt_02_04	Fırfırlı Etek
+Skirt_02_05	Fırfırlı Etek
+Skirt_02_06	Fırfırlı Etek
+Skirt_02_07	Fırfırlı Etek
+Safety_Goggles	Güvenlik Gözlükleri
+Safety_pin	Emniyet Pimi
+Salsify_roots	Salsifikasyon - kökler
+SaltBag	Tuz Torbası
+SaltGrain	Tuz Tanesi
+SandBag	Kum Torbası
+Santa_Hat_01	Noel Baba şapkası
+Santa_Jacket	Noel Baba Ceketi
+Santa_Pants	Noel Baba Pantolonu
+CannedSardine	Sardalya
+CannedSardine_Deluxe	Sardalya
+Sardine_Fillet	Sardalya Fileto
+FishingBait_Sardine	Sardalya Balık Yemi
+1H_Scalpel	Neşter
+Weapon_Parts_SCAR_L	SCAR L Silah Parçaları
+Weapon_SCAR_DMR	SCAR-DMR
+Magazine_SCAR_DMR	Şarjör — SCAR-DMR
+Weapon_Parts_SCAR_DMR	SCAR-DMR Silah Parçaları
+Weapon_SCAR_L	SCAR-L
+Rabbit_Mask_01	Korkunç Tavşan Maskesi
+School_Backpack_01	Okul Sırt Çantası
+School_Backpack_Boy_02	Okul Sırt Çantası
+School_Backpack_Boy_03	Okul Sırt Çantası
+School_Backpack_Girl_04	Okul Sırt Çantası
+School_Backpack_Girl_05	Okul Sırt Çantası
+School_Backpack_Girl_06	Okul Sırt Çantası
+Scissors_01	Makas
+Recurve_Bow	Akrep 40#
+1H_Scout_Black	Scout
+1H_Scout_White	Scout
+Screwdriver	Tornavida
+Scum_Sunrise	SCUM Sunrise
+SCUMkin_Spice_Latte	SCUMkin Spice Latter
+Weapon_SDASS	SDASS 12M
+Weapon_Parts_SDASS	SDASS Silah Parçaları
+SeaSalt_01	Deniz Tuzu
+SeaSalt_02	Deniz Tuzu
+WeaponSights_Sentry_RDRS	Nöbetçi RDRS
+WeaponCharm_Sentry	Nöbetçi Silah Büyüsü
+Weapon_Serpent357	Yılan 357
+Weapon_Parts_Serpent357	Yılan 357 Silah Parçaları
+Sewing_kit	Dikiş Seti
+Sexy_Jeans_Shorts_01	Seksi Kot Şort
+Sexy_Jeans_Shorts_02	Seksi Kot Şort
+Sexy_Jeans_Shorts_03	Seksi Kot Şort
+Sexy_Jeans_Shorts_04	Seksi Kot Şort
+Sexy_Jeans_Shorts_05	Seksi Kot Şort
+Sexy_Jeans_Shorts_06	Seksi Kot Şort
+Sexy_Jeans_Shorts_07	Seksi Kot Şort
+WeaponSights_Shark	Refleks nişangâh — Shark
+Shemagh_Scarf_01	Shemagh Eşarp
+Shemagh_Scarf_02	Shemagh Eşarp
+Shemagh_Scarf_03	Shemagh Eşarp
+Shemagh_Scarf_04	Shemagh Eşarp
+Shemagh_Scarf_05	Shemagh Eşarp
+Shemagh_Scarf_06	Shemagh Eşarp
+Shemagh_Scarf_07	Shemagh Eşarp
+Shemagh_Scarf_08	Shemagh Eşarp
+Shimoro_Vest	Shimoro Yelek
+Inmate_shirt_01	Gömlek
+Inmate_Shirt_01_Forest_DigitalDeluxe	Gömlek
+Inmate_Shirt_01_South_DigitalDeluxe	Gömlek
+ImprovisedRail_Short	Kısa Doğaçlama Ray
+Short_Paddle_A	Kısa kürek
+Short_Paddle_B	Kısa kürek
+Shorts_Pants_01_01	Kısa Pantolon
+Shorts_Pants_01_02	Kısa Pantolon
+Shorts_Pants_01_03	Kısa Pantolon
+Shorts_Pants_01_04	Kısa Pantolon
+Shorts_Pants_01_05	Kısa Pantolon
+Shorts_Pants_01_06	Kısa Pantolon
+Shorts_Pants_01_07	Kısa Pantolon
+Shorts_Pants_01_08	Kısa Pantolon
+Shorts_Pants_01_09	Kısa Pantolon
+Shorts_Pants_01_10	Kısa Pantolon
+Short_Trousers_01_01	Kısa Pantolon
+Short_Trousers_01_02	Kısa Pantolon
+Short_Trousers_01_03	Kısa Pantolon
+Short_Trousers_01_04	Kısa Pantolon
+Short_Trousers_01_05	Kısa Pantolon
+2H_Shovel_02	Kürek
+1H_Shuriken	Şuriken
+SidecarBike_Brakelight_Item	Sepet Bisiklet Fren Lambası
+SidecarBike_Fender_Front_Item	Sepetli Bisiklet Çamurluk Önü
+SidecarBike_Fender_Rear_Item	Sepet Bisiklet Çamurluğu Arka
+SidecarBike_Fender_Sidecar_Item	Sepet Bisiklet Çamurluk Sepeti
+SidecarBike_Headlight_Item	Sepet Bisiklet Farı
+SidecarBike_Seat_Back_Item	Sepet Bisiklet Koltuğu Arkalığı
+SidecarBike_Seat_Front_Item	Sepetli Bisiklet Koltuğu Önü
+SidecarBike_Sidecar_Brakelight_Item	Sepet Bisiklet Sepeti Fren Lambası
+SidecarBike_Sidecar_Headlight_Item	Sepet Bisiklet Sepeti Far
+SidecarBike_Sidecar_WeaponStation_Item	Sepet Bisiklet Sepeti Silah İstasyonu
+SidecarBike_Wheel_4x16_Item	Sepet Bisiklet Tekerleği
+SilentAlarm	Sessiz Alarm
+Lock_Item_Medium	Gümüş Kilit
+Skewer	Şiş
+Skewer_02	Şiş
+Bear_Skinned	Derisi Yüzülen Ayı
+Boar_Skinned	Derisi yüzülmüş domuz
+Buck_Skinned	Derili Buck
+Doe_Skinned	Derisi yüzülmüş geyik
+Donkey_skinned	Derisi yüzülmüş eşek
+Goat_Skinned	Derili Keçi
+Horse_Skinned	Derisi yüzülmüş at
+Rabbit_Skinned	Derisi yüzülmüş tavşan
+Wolf_Skinned	Derisi yüzülmüş kurt
+Skirt_01_01	Etek
+Skirt_01_02	Etek
+Skirt_01_03	Etek
+Skirt_02_08	Etek
+Weapon_SKS	SKS
+SKS_Bayonet	SKS Süngü
+Magazine_Clip_SKS	Fişek klipsi — SKS
+Weapon_Parts_SKS	SKS Silah Parçaları
+Halloween_Mask_Scream	Kafatası Maskesi
+WeaponCharm_Skull	Kafatası Silah Charm'ı
+Slav_Reviver	Slav Reviver
+Slavic_Gent	Slavic Gent
+Sledgehammer	Balyoz
+Sleeveless_Camo_Shirt_01	Kolsuz Kamuflaj Gömlek
+Sleeveless_Camo_Shirt_02	Kolsuz Kamuflaj Gömlek
+Sleeveless_Camo_Shirt_03	Kolsuz Kamuflaj Gömlek
+Sleeveless_Camo_Shirt_04	Kolsuz Kamuflaj Gömlek
+Sleeveless_Camo_Shirt_05	Kolsuz Kamuflaj Gömlek
+Sleeveless_Camo_Shirt_06	Kolsuz Kamuflaj Gömlek
+Sleeveless_Shirt_01	Kolsuz Gömlek
+Sleeveless_Shirt_02	Kolsuz Gömlek
+BowSilencer_SlipOn	Geçmeli yay susturucusu
+Slippers_03	Terlik
+Slouch_Camo_Hat_01	Slouch Kamuflaj Şapka
+Slouch_Camo_Hat_02	Slouch Kamuflaj Şapka
+Slouch_Camo_Hat_03	Slouch Kamuflaj Şapka
+Slouch_Camo_Hat_04	Slouch Kamuflaj Şapka
+Slouch_Camo_Hat_05	Slouch Kamuflaj Şapka
+Slouch_Camo_Hat_06	Slouch Kamuflaj Şapka
+Slouch_Hat_01	Kambur Şapka
+Slouch_Hat_02	Kambur Şapka
+12_Gauge_Slug_Ammobox	Slugs Av Tüfeği Mühimmat Kutusu
+Small_Animal_guts	Küçük Hayvan Bağırsakları
+Mine_02	Küçük anti-personel mayını
+1H_Small_Axe	Küçük Balta
+Battery_Charger_Small	Küçük Pil Şarj Cihazı
+WeaponCharm_SmallBullet	Küçük Kurşun Silah Charm'ı
+Christmas_Present_01	Küçük Noel Hediyesi
+FishingHookPack1	Küçük Balık Kancası Paketi
+Gasoline_Canister_Small	Küçük Benzin Bidonu
+Improvised_Bag_Small_02	Küçük Doğaçlama Sırt Çantası
+LogShed_2	Küçük Kütük Kulübesi
+Screwdriver_Small	Küçük Tornavida
+1H_Little_Spade	Küçük Maça
+Wooden_Sticks_Bundle_Meduim	Küçük Çubuklar Paketi
+Stone_Small	Küçük Taş
+1H_Stone_Axe_Head	Küçük Taş Balta Başlığı
+Tool_Box_SMall	Küçük Alet Kutusu
+Small_Vehicle_StorageRack	Küçük Araç Depolama Rafı
+Wooden_Log_Small_01	Küçük Ahşap Kütük
+Wooden_Log_Small_02	Küçük Ahşap Kütük
+Wooden_Log_Small_03	Küçük Ahşap Kütük
+Wooden_Stick	Küçük Tahta Çubuk
+Smartphone_Battery	Akıllı Telefon Pili
+Smoke_Grenade	Sis bombası
+Smoke_Grenade_Green	Sis bombası
+Smoke_Grenade_Red	Sis bombası
+Smoke_Grenade_Violet	Sis bombası
+Smoke_Grenade_Yellow	Sis bombası
+Dish_Smoked_Drumstick	Füme Baget
+Dish_Smoked_Fish	Füme Balık Fileto
+Dish_Smoked_RabbitLeg	Füme Tavşan Bacağı
+Dish_Smoked_Meat	Füme Kırmızı Et
+WeaponSights_Snake	Refleks nişangâh — Snake
+ColorCan_SnowWhite	Pamuk Prenses Boya Kutusu
+Snowballs_01	Kartopu
+Soap	Sabun
+Kilt_Sock_01	Çorap
+Kilt_Socks_02	Çorap
+Kilt_Socks_03	Çorap
+Kilt_Socks_04	Çorap
+Kilt_Socks_05	Çorap
+Kilt_Socks_06	Çorap
+Sock_01	Çorap
+Can01	soda
+Sodium_Hydroxide	Sodyum Hidroksit
+Book_Cooking_Soup	Çorba Yemek Kitabı
+SoySauce	Soya Sosu
+2H_Shovel_01	Maça Küreği
+CannedSpaghetti	Köfteli Spagetti
+Snake_Skin_Bow	Specialist Archer Yay
+WeaponScope_Spektral_DR	SpektralDR
+SpicesMix_01	Baharat Karışımı
+SpicesMix_02	Baharat Karışımı
+Chips2	Baharatlı Nacho Cipsleri
+Spinach	Ispanak
+Spinach_Seed_Bag	Ispanak Tohumu Torbası - Ispanak Tohumu Torbası
+Spinach_Seeds	Ispanak Tohumları
+College_Jacket_01	Spitfire Ceket
+College_Jacket_02	Spitfire Ceket
+College_Jacket_03	Spitfire Ceket
+College_Jacket_04	Spitfire Ceket
+College_Jacket_05	Spitfire Ceket
+College_Jacket_06	Spitfire Ceket
+College_Jacket_07	Spitfire Ceket
+College_Jacket_08	Spitfire Ceket
+MA1_Spitfire_01	Spitfire Ceket
+MA1_Spitfire_02	Spitfire Ceket
+MA1_Spitfire_03	Spitfire Ceket
+MA1_Spitfire_04	Spitfire Ceket
+Spliff	Spliff
+Spon	SPON
+Dish_Sandwich_Spon	Kaşık Sandviç
+Spoon	Kaşık
+Scottish_Sporran_Bag_01	Sporran Çanta
+Sportbike_Seat_Brakelight_Item	Spor Motosiklet Fren Lambası
+Sportbike_Fender_Item	Spor Motosiklet Çamurluğu
+Sportbike_Wind_Deflector_Headlight_Item	Spor Bisiklet Farı
+Sportbike_Seat_Item	Spor Bisiklet Koltuğu
+Sportbike_Body_Street_Item	Sportbike Sokak Gövdesi
+Sportbike_Fender_Street_Item	Sportbike Sokak Çamurluğu
+Sportbike_Wind_Deflector_Street_Headlight_Item	Sportbike Sokak Farı
+Sportbike_Seat_Street_Item	Sportbike Sokak Koltuğu
+Sportbike_Wind_Deflector_Street_Item	Sportbike Sokak Rüzgar Deflektörü
+Sportbike_Wind_Deflector_Item	Sportbike Rüzgar Deflektörü
+Fish_Sardine	Benekli Sardalya
+Spring	Bahar
+Stabproof_Vest_01_01	Bıçaklanmaya Dayanıklı Yelek
+Stabproof_Vest_01_02	Bıçaklanmaya Dayanıklı Yelek
+Stabproof_Vest_01_03	Bıçaklanmaya Dayanıklı Yelek
+Stabproof_Vest_01_04	Bıçaklanmaya Dayanıklı Yelek
+Stabproof_Vest_01_05	Bıçaklanmaya Dayanıklı Yelek
+Stabproof_Vest_01_06	Bıçaklanmaya Dayanıklı Yelek
+Stabproof_Vest_01_07	Bıçaklanmaya Dayanıklı Yelek
+Stabproof_Vest_01_08	Bıçaklanmaya Dayanıklı Yelek
+Stabproof_Vest_01_09	Bıçaklanmaya Dayanıklı Yelek
+Credit_Card_Starter	Başlangıç Banka Kartı
+Book_Cooking_Stew	Güveç Yemek Kitabı
+Stinging_Nettle	Isırgan Otu
+Stockings_01	Çoraplar
+Stockings_02	Çoraplar
+Stockings_03	Çoraplar
+Stockings_04	Çoraplar
+Stockings_05	Çoraplar
+Stockings_06	Çoraplar
+Stockings_07	Çoraplar
+Stockings_08	Çoraplar
+Stone	Taş
+1H_Stone_Axe	Taş Balta
+1H_ImprovisedKnife	Taş Bıçak
+Ammo_Crossbow_Bolt_WoodenStoneTip	Taş Ucu Arbalet Oku
+Wooden_ArrowStoneTip	Taş Ucu Ahşap Ok
+Bundle_Of_Stone_Tips	Taş İpuçları
+Strait_Jacket	Deli gömleği
+Wild_Strawberry	Çilek
+Sugar	Şeker
+SugarBeet	Şeker Pancarı
+Round_Sunglasses	Güneş gözlüğü
+WeaponCharm_Sunglasses_Emoji	Güneş Gözlüğü Emoji Silah Charmı
+Super_Glue	Süper Tutkal
+Weapon_SVD_Dragunov	SVD
+Magazine_SVD_Dragunov	Şarjör — SVD
+WeaponSuppressor_SVD	Susturucu — SVD
+Weapon_Parts_SVD	SVD Silah Parçaları
+Sweater_01	Kazak
+Sweater_02	Kazak
+Sweater_03	Kazak
+Sweater_04	Kazak
+Sweater_05	Kazak
+Tracksuit_Pants_01_01	Eşofman Altı
+Tracksuit_Pants_01_02	Eşofman Altı
+Tracksuit_Pants_01_03	Eşofman Altı
+Tracksuit_Pants_01_04	Eşofman Altı
+Tracksuit_Pants_01_05	Eşofman Altı
+Tracksuit_Pants_02_01	Eşofman Altı
+Tracksuit_Pants_02_02	Eşofman Altı
+Tracksuit_Pants_02_03	Eşofman Altı
+Tracksuit_Pants_02_04	Eşofman Altı
+Tracksuit_Pants_02_05	Eşofman Altı
+Shimoro_Pants	Eşofman Altı - Shimoro Pantolon
+Canned_Corn	tatlı mısır
+CantaloupeMelon_Seed_Bag	Tatlı Kavun Çekirdeği Torbası
+WeaponCharm_Sword	Kılıç Silah Charm'ı
+Syringe	Şırınga
+TC_Backpack	T0pCL4SS Sırt Çantası
+Baseball_Cap_13	T0pCL4SS Kapak
+Tactical_Gloves_01_01	Taktik Eldivenler
+Tactical_Gloves_01_02	Taktik Eldivenler
+Tactical_Gloves_01_03	Taktik Eldivenler
+Tactical_Gloves_01_04	Taktik Eldivenler
+Tactical_Gloves_01_05	Taktik Eldivenler
+Tactical_Gloves_01_06	Taktik Eldivenler
+Tactical_Gloves_01_07	Taktik Eldivenler
+Tactical_Gloves_01_08	Taktik Eldivenler
+Police_Handgun_Holster	Taktik Tabanca Kılıfı
+Tactical_Handgun_Holster_01	Taktik tabanca kılıfı
+Tactical_Handgun_Holster_02	Taktik tabanca kılıfı
+Tactical_Handgun_Holster_03	Taktik tabanca kılıfı
+Tactical_Handgun_Holster_04	Taktik tabanca kılıfı
+Tactical_Handgun_Holster_05	Taktik tabanca kılıfı
+Tactical_Handgun_Holster_06	Taktik tabanca kılıfı
+Tactical_Handgun_Holster_07	Taktik tabanca kılıfı
+Tactical_Jacket_01_01	Taktik Ceket
+Tactical_Jacket_01_02	Taktik Ceket
+Tactical_Jacket_01_03	Taktik Ceket
+Tactical_Jacket_01_04	Taktik Ceket
+Tactical_Jacket_01_05	Taktik Ceket
+Tactical_Jacket_01_06	Taktik Ceket
+Tactical_Jacket_01_07	Taktik Ceket
+Tactical_Jacket_01_09	Taktik Ceket
+MilitaryPants_01	Taktik Askeri Pantolon
+MilitaryPants_02	Taktik Askeri Pantolon
+MilitaryPants_03	Taktik Askeri Pantolon
+MilitaryPants_04	Taktik Askeri Pantolon
+MilitaryPants_05	Taktik Askeri Pantolon
+MilitaryPants_06	Taktik Askeri Pantolon
+MilitaryPants_07	Taktik Askeri Pantolon
+MilitaryPants_08	Taktik Askeri Pantolon
+MilitaryPants_09	Taktik Askeri Pantolon
+MilitaryPants_10	Taktik Askeri Pantolon
+Tactical_Sweater_01	Taktik Kazak
+Tactical_Sweater_02	Taktik Kazak
+Tactical_Sweater_03	Taktik Kazak
+Tactical_Sweater_04	Taktik Kazak
+Tactical_Sweater_05	Taktik Kazak
+Tactical_Sweater_06	Taktik Kazak
+Tactical_Sweater_07	Taktik Kazak
+Tactical_Vest_01	Taktik Yelek
+Takedown_Bow	Yayından Kaldırma Yayı
+2H_Tang_Dao	Tang Dao
+2H_Tang_Dao_Black_Dragon	Tang Dao Kara Ejderha
+2H_Tang_Dao_Damascus	Tang Dao Şam
+Tang_pants_01	Tang Pantolon
+Tang_pants_02	Tang Pantolon
+Tang_pants_03	Tang Pantolon
+Tang_pants_04	Tang Pantolon
+Tang_pants_05	Tang Pantolon
+Tang_shirt_01	Tang Gömlek
+Tang_shirt_02	Tang Gömlek
+Tang_shirt_03	Tang Gömlek
+Tang_shirt_04	Tang Gömlek
+Tang_shirt_05	Tang Gömlek
+Tangerine	Mandalina
+Tangerine_Seed_Bag	Mandalina Çekirdeği Torbası - Mandalina Çekirdeği Torbası
+Tangerine_Seeds	Mandalina Tohumları
+Tea_Pack	Çay Paketi
+TearGasGrenade	Göz yaşartıcı gaz bombası
+Weapon_590A11	TEC01 490
+Weapon_Parts_590A11	TEC01 490 Silah Parçaları
+Weapon_M9	TEC01 M9
+Weapon_M9_Silver	TEC01 M9
+WeaponCharm_TEC1	TEC1 Silah Büyüsü
+Tequila	Tekila
+The_Island_Special	Ada Özel
+Thermometer	Termometre
+Thread	Konu
+WeaponCharm_Tiger	Kaplan Silahı Charm'ı
+RH_Tights	Tayt
+Tinder	Çıra
+Tire_Repair_Kit	Lastik Tamir Takımı
+TNT	TNT
+Toaster_Pastries	Ekmek kızartma makinesi hamur işleri
+Toaster_Pastries2	Ekmek kızartma makinesi hamur işleri
+Tobacco	Tütün
+Tobacco_Seed_Bag	Tütün Tohumu Torbası - Tütün Tohumu Torbası
+Tobacco_Seeds	Tütün Tohumları
+Tomato	Domates
+TomatoPelate	Domates Pelati
+TomatoSauce	Domates Sosu
+Tomato_Seed_Bag	Domates Tohumu Torbası - Domates Tohumu Torbası
+Tomato_Seeds	Domates Tohumları
+Weapon_TommyGun	Tommy Gun
+Magazine_TommyGun	Şarjör — Tommy Gun
+Weapon_Parts_TommyGun	Tommy Gun Silah Parçaları
+Tool_Box	Alet Kutusu
+05_Teeth_Necklace	Diş Kolye
+10_Teeth_Necklace	Diş Kolye
+15_Teeth_Necklace	Diş Kolye
+WeaponCharm_Tooth	Diş Silah Charm'ı
+Torch	Meşale
+Tourniquet	Turnike
+Tracksuit_Top_01	Eşofman Üstü
+Tracksuit_Top_02	Eşofman Üstü
+Tracksuit_Top_03	Eşofman Üstü
+Tracksuit_Top_04	Eşofman Üstü
+Tracksuit_Top_05	Eşofman Üstü
+Tractor_Engine_Alternator_Item	Traktör Alternatörü
+Tractor_Body_Left_ArmorHeavy_Item	Traktör Vücut Zırhı Ağır Sol
+Tractor_Body_Right_ArmorHeavy_Item	Traktör Vücut Zırhı Ağır Sağ
+Tractor_Body_Top_ArmorHeavy_Back_Item	Traktör Vücut Zırhı Ağır Üst Sırt
+Tractor_Body_Top_ArmorHeavy_Front_Item	Traktör Vücut Zırhı Ağır Üst Ön
+Tractor_Body_Top_ArmorHeavy_Left_Item	Traktör Vücut Zırhı Ağır Üst Sol
+Tractor_Body_Top_ArmorHeavy_Right_Item	Traktör Vücut Zırhı Ağır Üst Sağ
+Tractor_Body_Left_Item	Traktör Gövdesi Sol
+Tractor_Body_Right_Item	Traktör Gövdesi Sağ
+Tractor_Body_Left_Brakelight_Item	Traktör Fren Lambası Sol
+Tractor_Body_Right_Brakelight_Item	Traktör Fren Lambası Sağ
+Tractor_Door_Left_ArmorHeavy_Item	Traktör Kapı Zırhı Ağır Sol
+Tractor_Door_Right_ArmorHeavy_Item	Traktör Kapı Zırhı Ağır Sağ
+Tractor_Body_Top_Door_Left_Item	Traktör Kapısı Sol
+Tractor_Body_Top_Door_Right_Item	Traktör Kapısı Sağ
+Tractor_Seat_Driver_Item	Traktör Sürücü Koltuğu
+Tractor_Door_Hood_Headlight_Left_Item	Traktör Farı Sol
+Tractor_Door_Hood_Headlight_Right_Item	Traktör Farı Sağ
+Tractor_Door_Hood_Item	Traktör Kaputu
+Tractor_WheelArmorHeavy_Front_Item	Traktör Tekerleği Zırhı Ağır Ön
+HighTop_Shoes	Antrenör Ayakkabısı
+1H_Traynors_Axe	Traynor'un Baltası
+FishingHookPack4	Tiz Balık Kancası Paketi
+FishingHook3	Tiz Balıkçılık Kancası
+Tree_Bark	Ağaç Kabuğu
+Tree_Branches	Ağaç Dalı
+Weapon_Trench_Gun	Hendek Tabancası
+Weapon_Parts_Trench_Gun	Hendek Silahı Silah Parçaları
+Fish_Carp_Trophy	Kupa Sazanı
+Fish_Catfish_Trophy	Kupa Yayın Balığı
+Fish_Dentex_Trophy	Kupa Dentex
+Fish_Pike_Trophy	Kupa Turnası
+Fish_Tuna_Trophy	Ödül Ton Balığı
+Jeans_Jersey_Jacket_01	Kamyoncu Ceketi
+Jeans_Jersey_Jacket_02	Kamyoncu Ceketi
+Trucker_Jacket_01	Kamyoncu Ceketi
+Trucker_Jacket_02	Kamyoncu Ceketi
+Trucker_Jacket_03	Kamyoncu Ceketi
+Trucker_Jacket_04	Kamyoncu Ceketi
+Fish_Tuna	Ton balığı
+Tuna_Fillet	Ton Balığı Fileto
+Tuna_Head	Ton Balığı Kafası
+MRE_TunaSalad	Ton Balıklı Salata MRE
+Dish_Sandwich_Tuna	Ton Balıklı Sandviç
+Hiking_Backpack_Tyrone	Tyrone Yürüyüş Sırt Çantası
+Tyrone_Shoelacez_Mask	Tyrone Shoelacez Maske
+Weapon_Parts_UMP	UMP Silah Parçaları
+Weapon_UMP45	UMP-45
+Magazine_UMP45	Şarjör — UMP-45
+Rice	Uncle Pong Pirinç
+Underpants_01	külot
+Underpants_02	külot
+Underpants_03	külot
+Underpants_04	külot
+Underpants_05	külot
+F_Bra_Supporter_01	Fanila
+Scum_Shirt_Supporter_Pack_Black_01	Fanila
+Undershirt_01	Fanila
+Cereal_UpNGo	UpNGo Tahıl
+Utility_Belt_01	Yardımcı Kemer
+WeaponSights_V3_Holographic	Holografik nişangâh — V3
+WeaponScope_Vampyr	Dürbün — Vampyr
+VegetableOil	Bitkisel Yağ
+ColorCan_VelvetBrown	Kadife Kahverengi Boya Kutusu
+2H_Katana1	Vhendya'nın Katanası
+Weapon_VHS2_Rail	VHS 2
+Weapon_VHS2	VHS 2 CT
+Weapon_VHS_BG	VHS BG
+Weapon_Parts_VHSBG	VHS BG Silah Parçaları
+Magazine_VHS2	Şarjör — VHS
+Weapon_Parts_VHS	VHS2 Silah Parçaları
+Vinegar	Sirke
+Hazmat_Suit_Vintage	Vintage Tehlikeli Madde Elbisesi
+Vintage_Jail_Cap_01	Vintage Hapishane Şapkası
+Vintage_Jail_Pants_01	Vintage Hapishane Pantolonu
+Vintage_Jail_Shirt_01	Vintage Hapishane Gömleği
+Weapon_Viper_M357	Engerek M357
+DW715_Rail	Viper M357 Ray
+Weapon_Parts_Viper_M357	Viper M357 Silah Parçaları
+Geek_Goggels	Görüş Camları
+Vitamins_01	Vitamin Hapları - Blister
+Vitamins_02	Vitamin Hapları - Kutu
+Vitamins_03	Vitamin Hapları - Kavanoz
+Weapon_VSS_VZ	VSS VZ
+Weapon_Parts_VSS_VZ	VSS VZ Silah Parçaları
+Waist_Bag_Small_01	Bel Çantası
+Waist_Bag_Small_02	Bel Çantası
+Waist_Bag_Small_03	Bel Çantası
+Dish_Salad_Waldorf	Waldorf Salata
+Walnut	Ceviz
+ColorCan_WarmGrey	Sıcak Gri Boya Kutusu
+WeaponSights_Wasp	Refleks nişangâh — Wasp
+Water_05l	Su Şişesi
+Water_Bucket	Su Kovası
+Watering_Can	Su Kovası - Sulama Kabı
+Watermelon	karpuz
+Watermelon_Seed_Bag	Karpuz Çekirdeği Çantası - Karpuz Çekirdeği Çantası
+Watermelon_Seeds	Karpuz Çekirdeği
+Watermelon_slice	Karpuz dilimi
+WeaponGhillie_Desert	Silah Ghillie'si
+WeaponGhillie_Winter	Silah Ghillie'si
+WeaponGhillie_Woodland	Silah Ghillie'si
+Herbicide	Ot Kovucu
+WhiteFlour	Buğday Unu
+Sportbike_Wheel_100_90_R18_Item	Tekerlek 100 90 R18
+Dirtbike_Wheel_110_80_R19_Item	Tekerlek 110 80 R19
+Cruiser_Wheel_155_66_R17	Tekerlek 155 66 R17
+Cruiser_Wheel_188_53_R17	Tekerlek 188 53 R17
+Wheel_155_R65_Item	Tekerlek 205 55 R16
+Wheel_205_80_R12_Item	Tekerlek 205 80 R12
+Wheel_255_55_R16_Item	Tekerlek 215 65 R16
+Wheel_265_60_R18_Item	Tekerlek 265 60 R18
+Bicycle_Wheel_54_622_Item	Tekerlek 54 622
+Wheel_6x16_Item	Tekerlek 6 16
+Bicycle_Wheel_60_622_Item	Tekerlek 60 622
+Sportbike_Wheel_90_90_R18_Item	Tekerlek 90 90 R18
+Dirtbike_Wheel_90_90_R21_Item	Tekerlek 90 90 R21
+Whiskey	Viski
+Wild_Cherry	Yabani Kiraz
+PenisWarmer_01	Willy Isıtıcı
+PenisWarmer_02	Willy Isıtıcı
+PenisWarmer_03	Willy Isıtıcı
+Wine	Şarap
+WineCork	Şarap mantarı
+Ghillie_Suit_Pants_05	Kış Ghillie Takım Elbise Alt
+Ghillie_Suit_Jacket_05	Kışlık Ghillie Takım Elbise Üstü
+Wire	Tel 10m
+2H_Baseball_Bat_with_wire	Tel Beyzbol Sopası
+Wire_Cutters_01	Tel Kesiciler
+1H_Wooden_club_with_wire	Tel Ahşap Kulübü
+Wolf_Head	Kurt Kafası
+Wolf_Hat_01	Kurt Başı Maskesi
+Wolf_Left_Back_Leg	Kurt Bacağı
+Wolf_Left_Front_Leg	Kurt Bacağı
+Wolf_Right_Back_Leg	Kurt Bacağı
+Wolf_Right_Front_Leg	Kurt Bacağı
+Wolf_Steak	Kurt Bifteği
+Wolf_Torso	Kurt Gövdesi
+Woodcuters_Shirt_01	Oduncu Gömleği
+Woodcuters_Shirt_02	Oduncu Gömleği
+Woodcuters_Shirt_03	Oduncu Gömleği
+Wooden_Arrow	Ahşap Ok
+Wooden_Arrows_6pc	Ahşap Ok
+1H_Wooden_club	Ahşap Kulübü
+1H_Wooden_club_with_spikes	Çivili Ahşap Sopa
+Ammo_Crossbow_Bolt_Wooden	Ahşap Arbalet Cıvatası
+Wooden_Fork	Tahta Çatal
+Wooden_Log_01	Ahşap Kütük
+Wooden_Log_02	Ahşap Kütük
+Wooden_Plank	Ahşap Kalas
+Wooden_Spoon	Tahta Kaşık
+2H_Wooden_Sword	Tahta Kılıç
+Penobscot_Bow_40	Woodland Hunter Yay
+Wool_Gloves_01_01	Yün Eldiven
+Wool_Gloves_01_02	Yün Eldiven
+Wool_Gloves_01_03	Yün Eldiven
+Wool_Gloves_01_04	Yün Eldiven
+Wool_Gloves_01_05	Yün Eldiven
+Wool_Gloves_01_06	Yün Eldiven
+Wool_Gloves_01_07	Yün Eldiven
+Working_Helmet_01	İş Kaskı
+Working_Helmet_02	İş Kaskı
+Working_Helmet_03	İş Kaskı
+Working_Helmet_04	İş Kaskı
+FishingBait_Worm	Solucan Balık Yemi
+Wushu_Spear_Metal	Wushu Mızrak Metal
+Wushu_Spear_Wooden	Wushu Mızrak Metal - Wushu Mızrak Ahşap
+WW_Engine_Alternator_Item	WW Alternatör
+WW_Bumper_Back_Item	WW Arka Tampon
+WW_Body_Back	WW Vücut Sırtı
+WW_Body_Front	WW Gövde Önü
+WW_Body_Left	WW Gövde Sol
+WW_Body_Right	WW Gövde Sağ
+WW_Body_Top	WW Body Üstü
+WW_Bumper_Armor_Back_Item	WW Tampon Zırhı Sırtı
+WW_Door_ArmorHeavy_BackLeft_Item	WW Kapı Zırhı Ağır Arka Sol
+WW_Door_ArmorHeavy_BackRight_Item	WW Kapı Zırhı Ağır Arka Sağ
+WW_Door_ArmorHeavy_FrontLeft_Item	WW Kapı Zırhı Ağır Ön Sol
+WW_Door_ArmorHeavy_FrontRight_Item	WW Kapı Zırhı Ağır Ön Sağ
+WW_Door_ArmorLight_BackLeft_Item	WW Kapı Zırh Işığı Arka Sol
+WW_Door_ArmorLight_BackRight_Item	WW Kapı Zırh Işığı Arka Sağ
+WW_Door_ArmorLight_FrontLeft_Item	WW Kapı Zırh Işığı Ön Sol
+WW_Door_ArmorLight_FrontRight_Item	WW Kapı Zırh Işığı Ön Sağ
+WW_Door_BackLeft_Item	WW Kapı Arka Sol
+WW_Door_BackRight_Item	WW Kapı Arka Sağ
+WW_Door_FrontLeft_Item	WW Kapı Ön Sol
+WW_Door_FrontRight_Item	WW Kapı Ön Sağ
+WW_Bumper_Front_Item	WW Ön Tampon
+WW_Body_ArmorHeavy_Top_Item	WW Ağır Zırh Üstü
+WW_DoorHood_Item	WW Başlık
+WW_Lights_FrontLeft	WW Işıklar Ön Sol
+WW_Lights_FrontRight	WW Işıklar Ön Sağ
+WW_Lights_RearLeft	WW Arka Sol Işıklar
+WW_Lights_RearRight	WW Arka Sağ Işıklar
+WW_Seat_BackLeft_Item	WW Koltuk Arkası Sol
+WW_Seat_BackRight_Item	WW Koltuk Arkası Sağ
+WW_Seat_FrontLeft_Item	WW Koltuk Ön Sol
+WW_Seat_FrontRight_Item	WW Koltuk Ön Sağ
+WW_DoorTrunk_Item	WW Gövde
+WW_DoorTrunk_ArmorHeavy_Item	WW Ağır Gövde Zırhı
+WW_DoorTrunk_ArmorLight_Item	WW Gövde Zırhı Işığı
+WW_Wheel_ArmorLight_FrontLeft_Item	WW Tekerlek Zırhı Ön Sol
+WW_Wheel_ArmorLight_FrontRight_Item	WW Tekerlek Zırhı Ön Sağ
+WW2_German_Helmet_01	WW2 Alman Kaskı
+WeaponSights_XPS300_Holographic	Holografik nişangâh — XPS
+Yeast	Maya
+Snowballs_02	Sarı Kartopu
+WeaponCharm_Yingyang	Yin Yang Silah Büyüsü
+Tights_01_01	Yoga Taytı
+Tights_01_02	Yoga Taytı
+Tights_01_03	Yoga Taytı
+Tights_01_04	Yoga Taytı
+Tights_01_05	Yoga Taytı
+Tights_01_06	Yoga Taytı
+WeaponScope_ZF39	ZF39
+2H_ZhanMaDao_Sword	Zhan Ma Dao
+Zucchini	Kabak
+Zucchini_Seed_Bag	Kabak Çekirdeği Torbası - Kabak Çekirdeği Torbası
+Zucchini_Seeds	Kabak Çekirdeği

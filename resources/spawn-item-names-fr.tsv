@@ -1,0 +1,2329 @@
+# Offline translation draft; native terminology review pending. Canonical identities retained.
+Cal_22	Munitions — .22
+Cal_22_Ammobox	.22 Boîte de munitions
+Cal_22_Crafted	Munitions fabriquées — .22
+Cal_22_TR	Munitions traçantes — .22
+Cal_22_Ammobox_TR	.22 Boîte de munitions Tracer
+Cal_30-06	Munitions — .30-06
+Cal_30-06_Ammobox	.30-06 Boîte de munitions
+Cal_30-06_AP	Munitions perforantes — .30-06 (AP)
+Cal_30-06_AP_CR	Munitions perforantes fabriquées — .30-06 (AP)
+Cal_30-06_Ammobox_AP	.30-06 Boîte de munitions perforantes
+Cal_30-06_Crafted	Munitions fabriquées — .30-06
+Cal_30-06_TR	Munitions traçantes — .30-06
+Cal_30-06_Ammobox_TR	.30-06 Boîte de munitions traçantes
+Cal_308	Munitions — .308
+Cal_308_Ammobox	.308 Boîte de munitions
+Cal_308_AP	Munitions perforantes — .308 (AP)
+Cal_308_Ammobox_AP	.308 AP Boîte de munitions
+Cal_308_AP_CR	Munitions perforantes fabriquées — .308 (AP)
+Cal_308_Crafted	Munitions fabriquées — .308
+WeaponSuppressor_308_Black	Silencieux — .308
+Cal_308_TR	Munitions traçantes — .308 (TR)
+Cal_308_Ammobox_TR	.308 TR Boîte de munitions
+Cal_338	Munitions — .338
+Cal_338_Ammobox	.338 Boîte de munitions
+Cal_338_AP	Munitions perforantes — .338 (AP)
+Cal_338_Ammobox_AP	.338 AP Boîte de munitions
+Cal_338_AP_CR	Munitions perforantes fabriquées — .338 (AP)
+Cal_338_Crafted	Munitions fabriquées — .338
+WeaponSuppressor_338_Black	Silencieux — .338
+WeaponSuppressor_338_Green	.338 Suppresseur Vert
+WeaponSuppressor_338_Tan	.338 Suppresseur Bronzage
+Cal_338_TR	Munitions traçantes — .338 (TR)
+Cal_338_Ammobox_TR	.338 Boîte de munitions Tracer
+Cal_357_Viper	Munitions — .357
+Cal_357_Ammobox	.357 Boîte de munitions
+Cal_357_Viper_AP	Munitions perforantes — .357 (AP)
+Cal_357_Viper_AP_CR	Munitions perforantes fabriquées — .357 (AP)
+Cal_357_Ammobox_AP	.357 Boîte de munitions perforantes
+Cal_357_Viper_Crafted	Munitions fabriquées — .357
+Cal_357_Viper_TR	Munitions traçantes — .357
+Cal_357_Ammobox_TR	.357 Boîte de munitions Tracer
+Cal_38	Munitions — .38
+Cal_38_Ammobox	.38 Boîte de munitions
+Cal_38_Ammobox_AP	.38 Munition Box Armor Piercing Rounds
+Cal_38_Ammobox_TR	.38 Munitions Traceur de Boîtes
+Cal_38_AP	Munitions perforantes — .38 (AP)
+Cal_38_AP_CR	Munitions perforantes fabriquées — .38 (AP)
+Cal_38_Crafted	Munitions fabriquées — .38
+Cal_38_TR	Munitions traçantes — .38 (TR)
+Cal_44_Viper	Munitions — .44
+Cal_44_Viper_Ammobox	.44 Boîte de munitions
+Cal_44_Viper_AP_CR	Munitions perforantes fabriquées — .44 (AP)
+Cal_44_Viper_Ammobox_AP	.44 Boîte de munitions perforantes
+Cal_44_Viper_AP	Munitions perforantes — .44
+Cal_44_Viper_Crafted	Munitions fabriquées — .44
+Cal_44_Viper_TR	Munitions traçantes — .44
+Cal_44_Viper_Ammobox_TR	.44 Boîte de munitions Tracer
+Cal_45	Munitions — .45 ACP
+Cal_45_Ammobox	.45 ACP Boîte de munitions
+Cal_45_AP_CR	Munitions perforantes fabriquées — .45 ACP (AP)
+Cal_45_AP	Munitions perforantes — .45 ACP
+Cal_45_AP_Ammobox	.45 ACP Boîte de munitions perforantes
+Cal_45_Crafted	Munitions fabriquées — .45 ACP
+WeaponSuppressor_45ACP	Silencieux — .45 ACP
+Cal_45_TR	Munitions traçantes — .45 ACP
+Cal_45_Ammobox_TR	.45 ACP Boîte de munitions traçantes
+Cal_50_AE	Munitions — .50 AE
+Cal_50_AE_Ammobox	.50 AE Boîte de munitions
+Cal_50_AE_AP	Munitions perforantes — .50 AE (AP)
+Cal_50_AE_AP_CR	Munitions perforantes fabriquées — .50 AE (AP)
+Cal_50_AE_AP_Ammobox	.50 AE Boîte de munitions perforantes
+Cal_50_AE_Crafted	Munitions fabriquées — .50 AE
+Cal_50_AE_TR	Munitions traçantes — .50 AE
+Cal_50_AE_Ammobox_TR	.50 AE Boîte de munitions traçantes
+Cal_50BMG	Munitions — .50 BMG
+Cal_50BMG_Ammobox	.50 BMG Boîte de munitions
+Cal_50BMG_AP	Munitions perforantes — .50 BMG (AP)
+Cal_50BMG_AP_Ammobox	.50 BMG Boîte de munitions perforantes
+Cal_50BMG_Crafted	Munitions fabriquées — .50 BMG
+Cal_50BMG_TR	Munitions traçantes — .50 BMG
+Cal_50BMG_Ammobox_TR	.50 BMG Boîte de munitions traçantes
+Weapon_DT11B_Sawed_Off	"The Mule" DT11B court
+12_Gauge_Birdshot	Cartouche Birdshot de calibre 12 
+12_Gauge_Buckshot	12 Cartouche Buckshot de calibre
+12_Gauge_Buckshot_Crafted	12 Cartouche improvisée Buckshot de calibre 0
+12_Gauge_Slug	12 Cartouche de tir de balle de calibre 0
+WeaponSuppressor_12_Gauge	12 Suppresseur de jauge
+Cal_40x46	Grenades 40x46
+Cal_5_45x39mm	Munitions — 5.45x39mm
+Cal_5_45x39mm_Ammobox	5.45x39mm Boîte de munitions
+Cal_5_45x39mm_AP	Munitions perforantes — 5.45x39mm (AP)
+Cal_5_45x39mm_AP_CR	Munitions perforantes fabriquées — 5.45x39mm (AP)
+Cal_5_45x39mm_AP_Ammobox	5.45x39mm Boîte de munitions perforantes
+Cal_5_45x39mm_Crafted	Munitions fabriquées — 5.45x39mm
+WeaponSuppressor_5_45x39	Silencieux — 5.45x39mm
+Cal_5_45x39mm_TR	Munitions traçantes — 5.45x39mm
+Cal_5_45x39mm_Ammobox_TR	5.45x39mm Boîte de munitions traceuses
+Cal_5_56x45mm	Munitions — 5.56x45mm
+Cal_5_56x45mm_Ammobox	5.56x45mm Boîte de munitions
+Cal_5_56x45mm_AP	Munitions perforantes — 5.56x45mm (AP)
+Cal_5_56x45mm_AP_CR	Munitions perforantes fabriquées — 5.56x45mm (AP)
+Cal_5_56x45mm_AP_Ammobox	5.56x45mm Boîte de munitions perforantes
+Cal_5_56x45mm_Crafted	Munitions fabriquées — 5.56x45mm
+Cal_5_56x45mm_TR	Munitions traçantes — 5.56x45mm
+Cal_5_56x45mm_Ammobox_TR	5.56x45mm Boîte de munitions traceuses
+Cal_7_62x39mm	Munitions — 7.62x39mm
+Cal_7_62x39mm_Ammobox	7.62x39mm Boîte de munitions
+Cal_7_62x39mm_AP	Munitions perforantes — 7.62x39mm (AP)
+Cal_7_62x39mm_AP_CR	Munitions perforantes fabriquées — 7.62x39mm (AP)
+Cal_7_62x39mm_AP_Ammobox	7.62x39mm Boîte de munitions perforantes
+Cal_7_62x39mm_Crafted	Munitions fabriquées — 7.62x39mm
+Cal_7_62x39mm_TR	Munitions traçantes — 7.62x39mm
+Cal_7_62x39mm_Ammobox_TR	7.62x39mm Boîte de munitions traceuses
+Cal_7_62x54mmR	Munitions — 7.62x54mmR
+Cal_7_62x54mmR_Ammobox	Boîte de munitions 7.62x54mmR
+Cal_7_62x54mmR_AP	Munitions perforantes — 7.62x54mmR (AP)
+Cal_7_62x54mmR_AP_CR	Munitions perforantes fabriquées — 7.62x54mmR (AP)
+Cal_7_62x54mmR_AP_Ammobox	7.62x54mmR Boîte de munitions perforantes
+Cal_7_62x54mmR_Crafted	Munitions fabriquées — 7.62x54mmR
+Cal_7_62x54mmR_TR	Munitions traçantes — 7.62x54mmR
+Cal_7_62x54mmR_Ammobox_TR	7.62x54mmR Boîte de munitions Tracer
+Cal_7_92x57mm	Munitions — 7.92x57mm
+Cal_7_92x57mm_Ammobox	7.92x57mm Boîte de munitions
+Cal_7_92x57mm_AP	Munitions perforantes — 7.92x57mm (AP)
+Cal_7_92x57mm_AP_CR	Munitions perforantes fabriquées — 7.92x57mm (AP)
+Cal_7_92x57mm_AP_Ammobox	7.92x57mm Boîte de munitions perforantes
+Cal_7_92x57mm_Crafted	Munitions fabriquées — 7.92x57mm
+Cal_7_92x57mm_TR	Munitions traçantes — 7.92x57mm
+Cal_7_92x57mm_Ammobox_TR	7.92x57mm Boîte de munitions traceuses
+Cal_9mm	Munitions — 9mm
+Cal_9mm_Ammobox	9mm Boîte de munitions
+Cal_9mm_AP	Munitions perforantes — 9mm (AP)
+Cal_9mm_AP_CR	Munitions perforantes fabriquées — 9mm (AP)
+Cal_9mm_AP_Ammobox	9mm Boîte de munitions perforantes
+Cal_9mm_Crafted	Munitions fabriquées — 9mm
+Cal_9mm_TR	Munitions traçantes — 9mm
+Cal_9mm_Ammobox_TR	9mm Boîte de munitions traçantes
+Cal_9x39mm	Munitions — 9x39mm
+Cal_9x39mm_Ammobox	Boîte à munitions 9x39mm
+Cal_9x39mm_AP	Munitions perforantes — 9x39mm (AP)
+Cal_9x39mm_AP_CR	Munitions perforantes fabriquées — 9x39mm (AP)
+Cal_9x39mm_AP_Ammobox	Boîte de munitions perforantes 9x39mm
+Cal_9x39mm_Crafted	Munitions fabriquées — 9x39mm
+Cal_9x39mm_TR	Munitions traçantes — 9x39mm
+Cal_9x39mm_Ammobox_TR	Boîte de munitions traceur 9x39mm
+Absinthe	Absinthe Father
+WeaponScope_ACOG_01	ACOG
+ActivatedCharcoal_01	Charbon Actif - Blister
+ActivatedCharcoal_02	Charbon Actif - Boîte
+ActivatedCharcoal_03	Charbon actif - Pot
+Compass_Advanced	Boussole avancée
+Lock_Security_Lvl3	Protection de verrouillage avancée
+Lockpick_Advanced_Item	Crochetage avancé
+Aeroplane_Repair_Kit	Kit de réparation d'avion
+African_Biltong	Biltong africain
+Agaricus_Augustus	Agaricus Augustus
+Agaricus_Campestris	Agaricus Campestris
+Aloe_Vera	Feuille d'agave
+WeaponSights_AimPRO	Viseur point rouge — AimPRO
+Air_Pump	Pompe à air
+Weapon_AK15	AK-15
+Weapon_AK47	AK-47
+Magazine_AK15	Chargeur — AK15
+WeaponSuppressor_AK15	Silencieux — AK15
+Weapon_Parts_AK15	AK15 Pièces d'armes
+Weapon_AK47_Engraved	AK47 Gravé
+Magazine_AK47	Chargeur — AK47
+Weapon_Parts_AK47	AK47 Pièces d'armes
+Weapon_AKM	AKM
+Weapon_Parts_AKM	AKM Pièces d'armes
+Weapon_Parts_AKS_74U	AKS Pièces d'armes 74U
+Weapon_AKS_74U	AKS-74U
+Magazine_AKS_74U	Chargeur — AKS-74U
+Bag_of_Almonds	Amandes
+Amanita_Muscaria	Amanita Muscaria
+Amanita_Pantherina	Amanita Pantherina
+Amanita_Phalloides	Amanita Phalloides
+Amanita_Virosa	Amanita Virosa
+ColorCan_AmberYellow	Pot de peinture jaune ambre
+Fish_Amur	Amour blanc
+Amur_Fillet	Filet de l'Amour
+WeaponCharm_Anchor	Charme d'arme d'ancre
+Suite_Pants_01	Pantalon de vol d'Angel
+Monkfish_Fillet	Filet de pêcheur
+WeaponCharm_Angry_Emoji	Charme d'arme Emoji en colère
+Small_Animal_Fat	Graisse animale
+Animal_skin	Peau d'animal
+Bear_Improvised_Jacket	Veste en peau d'animal
+Bear_Improvised_Pants	Pantalon en peau d'animal
+Improvised_Quiver_01	Carquois en peau d'animal
+HH_Shoes_01_01	Bottines
+HH_Shoes_01_02	Bottines
+HH_Shoes_01_03	Bottines
+HH_Shoes_01_04	Bottines
+Anode_Plate	Plaque d'anode
+Mine_01	Mine antipersonnel
+Antibiotic_Pill_Single	Antibiotiques - 1000mg
+Antibiotics_01	Antibiotiques - Blister - 1000mg
+Antibiotics_02	Antibiotiques - Coffret - 1000mg
+Antibiotics_03	Antibiotiques - Pot - 1000mg
+Apple	Pomme
+Apple_2	Pomme
+Crab_Apple	Pomme
+Apple_Seed_Bag	Sac de graines de pomme
+Apple_Seeds	Graines de pomme
+RH_Arm_Guard	Protège-bras
+Armband_01	Brassard
+Armillaria_Mellea	Armillaria Mellea
+Armor_Tactical_Vest_01_01	Gilet tactique blindé
+Armor_Tactical_Vest_01_02	Gilet tactique blindé
+Armor_Tactical_Vest_01_03	Gilet tactique blindé
+Armor_Tactical_Vest_01_04	Gilet tactique blindé
+Armor_Tactical_Vest_01_05	Gilet tactique blindé
+Weapon_AS_Val	ASVal
+Weapon_Parts_AS_Val	AS Pièces d'armes Val
+WeaponFlashlight_AS_Val	AS Val/VSS Lampe de poche
+Magazine_AS_Val	Magazine AS Val/VSS
+Aspirin	Aspirine
+Military_Backpack_01_01	Sac à dos d'assaut
+Military_Backpack_01_02	Sac à dos d'assaut
+Military_Backpack_01_03	Sac à dos d'assaut
+Military_Backpack_01_04	Sac à dos d'assaut
+Military_Backpack_01_05	Sac à dos d'assaut
+Military_Backpack_01_06	Sac à dos d'assaut
+Military_Backpack_01_07	Sac à dos d'assaut
+Military_Backpack_01_08	Sac à dos d'assaut
+Military_Backpack_01_09	Sac à dos d'assaut
+Weapon_AT4_HEAT	AT4 HEAT
+AtropineInjection	Atropine injectable
+Weapon_AWM	AWM
+Weapon_AWM_Desert	AWM Désert
+Weapon_AWM_Green	AWM Vert
+Magazine_AWM	Chargeur — AWM
+Weapon_AWM_Snake	AWM Serpent
+Weapon_Parts_AWM	AWM Pièces d'armes
+Weapon_AWP	AWP
+Weapon_AWP_Desert	AWP Désert
+Weapon_AWP_Green	AWP Vert
+Magazine_AWP	Chargeur — AWP
+Weapon_AWP_Snake	AWP Serpent
+Weapon_Parts_AWP	AWP Pièces d'armes
+2H_Axe	Hache
+WeaponCharm_Axe	Charme d'arme de hache
+BabyFood	Nourriture pour bébé
+Backpack_02_01	Sac à dos
+Backpack_02_02	Sac à dos
+Backpack_02_03	Sac à dos
+Backpack_02_04	Sac à dos
+Backpack_02_05	Sac à dos
+Military_Backpack_03_01	Sac à dos
+Military_Backpack_03_02	Sac à dos
+Military_Backpack_03_03	Sac à dos
+Military_Backpack_03_04	Sac à dos
+Military_Backpack_03_05	Sac à dos
+Military_Backpack_03_06	Sac à dos
+Military_Backpack_03_07	Sac à dos
+Military_Backpack_03_08	Sac à dos
+AnimalBaitFeederItem	Mangeoire à appâts
+BakedBeans	Fèves au lard
+BakingSoda	Bicarbonate de soude
+Military_Mask_01	Cagoule
+Military_Mask_02	Cagoule
+Military_Mask_03	Cagoule
+Military_Mask_04	Cagoule
+Military_Mask_05	Cagoule
+Military_Mask_06	Cagoule
+Military_Mask_07	Cagoule
+Military_Mask_08	Cagoule
+Police_Mask_01	Cagoule
+Recurve_Bow_100	Ballista 100#
+Bamboo_Hat_01	Chapeau en bambou
+Bamboo_Hat_02	Chapeau en bambou
+Banana	Banane
+Banjo	Banjo
+Barbed_Wire	Fil de fer barbelé
+Barberry	Épine-vinette
+ColorCan_BaronBrown	Pot de peinture marron Baron
+BaseExpansionKit_Lvl1	Kit d'extension de base niveau 1
+BaseExpansionKit_Lvl2	Kit d'extension de base niveau 2
+2H_Baseball_Bat	Batte de baseball
+2H_Baseball_Bat_with_spikes	Batte de baseball avec clous
+Baseball_Cap_01	Casquette de baseball
+Baseball_Cap_02	Casquette de baseball
+Baseball_Cap_03	Casquette de baseball
+Baseball_Cap_04	Casquette de baseball
+Baseball_Cap_05	Casquette de baseball
+Baseball_Cap_06	Casquette de baseball
+Baseball_Cap_07	Casquette de baseball
+Baseball_Cap_08	Casquette de baseball
+Baseball_Cap_09	Casquette de baseball
+Baseball_Cap_10	Casquette de baseball
+Compass_Basic	Boussole de base
+Lock_Security	Protection de verrouillage de base
+Fish_Bass	Bar
+Bass_Fillet	Filet de bar
+1H_Police_Baton	Bâton
+Batteries	Piles
+Weapon_BayRifferBlock21	Bay Riffer Block21
+Book_Cooking_BBQ	BBQ Livre de recettes
+BCU_Chip	BCU Puce
+BCULock_Item	BCU Verrouiller
+WeaponCharm_BCU	BCU Charme d'arme
+1H_Beam_Dildo	Beamasaurus Gode
+Dish_Sandwich_Beans	Sandwich aux haricots
+Beenie_01	Bonnet
+Beenie_02	Bonnet
+Beenie_03	Bonnet
+Beenie_04	Bonnet
+Beenie_05	Bonnet
+Beenie_06	Bonnet
+Beenie_07	Bonnet
+Beenie_08	Bonnet
+Beenie_09	Bonnet
+Military_Beanie_01	Bonnet
+Military_Beanie_02	Bonnet
+Military_Beanie_03	Bonnet
+Military_Beanie_04	Bonnet
+Military_Beanie_05	Bonnet
+Military_Beanie_06	Bonnet
+Military_Beanie_07	Bonnet
+Military_Beanie_08	Bonnet
+Bear_Head	Tête d'ours
+Bear_Head_Hat_01	Chapeau tête d'ours
+Bear_Left_Back_Leg	Patte d'ours
+Bear_Left_Front_Leg	Patte d'ours
+Bear_Right_Back_Leg	Patte d'ours
+Bear_Right_Front_Leg	Patte d'ours
+Bear_Back_Paws	Pattes d'ours
+Bear_Front_Paws	Pattes d'ours
+Bear_Steak	Steak d'ours
+Bear_Torso	Torse d'ours
+Bear_Left_Torso_Half	Moitié du torse de l'ours
+Bear_Right_Torso_Half	Moitié du torse de l'ours
+Bedroll	Sac de couchage
+BeefRavioli	Raviolis au boeuf
+BeefStew	Ragoût de boeuf
+MRE_Stew	Ragoût de boeuf MRE
+Beer	Bière
+Beet	Betterave
+Beijing_Shoes_01	Chaussures de Pékin
+Beijing_Shoes_02	Chaussures de Pékin
+Beijing_Shoes_03	Chaussures de Pékin
+Beijing_Shoes_04	Chaussures de Pékin
+Bell_Pepper	Poivron
+2H_Pitchfork_Bent	Fourche pliée
+Beret_01	Béret
+Beret_02	Béret
+Beret_03	Béret
+Beret_04	Béret
+Beret_05	Béret
+Beret_06	Béret
+Big_Animal_Fat	Grosse graisse animale
+Big_Animal_guts	Gros tripes d’animaux
+Christmas_Present_03	Grand cadeau de Noël
+Christmas_Present_AK15	Grand cadeau de Noël
+Christmas_Present_AK15_01	Grand cadeau de Noël
+Christmas_Present_AK15_02	Grand cadeau de Noël
+Christmas_Present_AKS_74U	Grand cadeau de Noël
+Christmas_Present_AKS_74U_01	Grand cadeau de Noël
+Christmas_Present_AKS_74U_02	Grand cadeau de Noël
+Christmas_Present_AS_Val	Grand cadeau de Noël
+Christmas_Present_AS_Val_01	Grand cadeau de Noël
+Christmas_Present_AS_Val_02	Grand cadeau de Noël
+Christmas_Present_Ghillie	Grand cadeau de Noël
+Christmas_Present_Ghillie_01	Grand cadeau de Noël
+Christmas_Present_Ghillie_02	Grand cadeau de Noël
+Christmas_Present_Kar98	Grand cadeau de Noël
+Christmas_Present_Kar98_01	Grand cadeau de Noël
+Christmas_Present_Kar98_02	Grand cadeau de Noël
+Christmas_Present_Laika_Alternator	Grand cadeau de Noël
+Christmas_Present_M1	Grand cadeau de Noël
+Christmas_Present_M1_01	Grand cadeau de Noël
+Christmas_Present_M1_02	Grand cadeau de Noël
+Christmas_Present_M16A4	Grand cadeau de Noël
+Christmas_Present_M16A4_01	Grand cadeau de Noël
+Christmas_Present_M16A4_02	Grand cadeau de Noël
+Christmas_Present_M1887	Grand cadeau de Noël
+Christmas_Present_M249	Grand cadeau de Noël
+Christmas_Present_M82A1	Grand cadeau de Noël
+Christmas_Present_M82A1_01	Grand cadeau de Noël
+Christmas_Present_M82A1_02	Grand cadeau de Noël
+Christmas_Present_MAC10	Grand cadeau de Noël
+Christmas_Present_MAC10_01	Grand cadeau de Noël
+Christmas_Present_MAC10_02	Grand cadeau de Noël
+Christmas_Present_MK18	Grand cadeau de Noël
+Christmas_Present_MK18_01	Grand cadeau de Noël
+Christmas_Present_MK18_02	Grand cadeau de Noël
+Christmas_Present_MP5	Grand cadeau de Noël
+Christmas_Present_MP5_01	Grand cadeau de Noël
+Christmas_Present_MP5_02	Grand cadeau de Noël
+Christmas_Present_Rager_Alternator	Grand cadeau de Noël
+Christmas_Present_RPK	Grand cadeau de Noël
+Christmas_Present_RPK_01	Grand cadeau de Noël
+Christmas_Present_RPK_02	Grand cadeau de Noël
+Christmas_Present_SCAR_DMR	Grand cadeau de Noël
+Christmas_Present_SCAR_L	Grand cadeau de Noël
+Christmas_Present_SCAR_L_01	Grand cadeau de Noël
+Christmas_Present_SCAR_L_02	Grand cadeau de Noël
+Christmas_Present_SVD	Grand cadeau de Noël
+Christmas_Present_SVD_01	Grand cadeau de Noël
+Christmas_Present_SVD_02	Grand cadeau de Noël
+Christmas_Present_UMP	Grand cadeau de Noël
+Christmas_Present_UMP_01	Grand cadeau de Noël
+Christmas_Present_UMP_02	Grand cadeau de Noël
+Christmas_Present_WW_Alternator	Grand cadeau de Noël
+2H_Stone_Axe	Grande hache de pierre
+2H_Stone_Axe_Head	Tête de hache en grosse pierre
+Big_Vehicle_StorageRack	Grand support de stockage de véhicules
+Leather_Jacket	Veste en cuir de motard
+Negan_Jacket	Veste en cuir de motard
+Binoculars	Jumelles
+12_Gauge_BirdShot_Ammobox	Boîte de munitions pour fusil de chasse Birdshot
+Birthday_Cap_01	Chapeau d'anniversaire
+Ghillie_Suit_Pants_02	Bas de costume Ghillie noir
+Ghillie_Suit_Jacket_02	Haut de costume Ghillie noir
+BlackOlives	Olives noires
+ColorCan_Black	Pot de peinture noire
+BlackPepper	Poivre Noir
+Blackberry	Mûre
+Recurve_Bow_90	BlackHawk 90#
+Weapon_BlackHawk_Crossbow	Blackhawk Arbalète
+BlankSign	Signe vierge
+Blast_Cap	Capuchon anti-souffle
+2H_Baseball_Bat_Blaze	Blaze Chauve-souris
+Fish_Bleak	Ablette
+Bleak_Fillet	Filet sombre
+FishingBait_Bleak	Appât à poisson sombre
+Weapon_Block21	Block 21
+Magazine_Block21	Chargeur — Block 21
+Weapon_Parts_Block21	Pièces d'armes Block 21
+MemoryModule_Level2	Module de mémoire bleu
+Blueberries	Bleuets
+Boar_Head	Tête de Sanglier
+Boar_Head_Hat_01	Chapeau tête de sanglier
+Boar_Hooves_Back	Sabots de sanglier
+Boar_Hooves_front	Sabots de sanglier
+Boar_Back_Leg	Cuisse de Sanglier
+Boar_Front_Leg	Cuisse de Sanglier
+Boar_Torso	Torse de Sanglier
+Bobby_pin	Épingle à cheveux
+Bobby_Pin_Package	Boîte à épingles à cheveux
+FishingBait_BoiliesPrm1	Bouillettes Poisson Appât
+Boletus_Edulis	Boletus Edulis
+Bolts	Boulons
+Bone	Os
+Bone_Needle	Os - Aiguille
+BoomBox_01	Boîte à flèche
+WeaponCharm_Bottle_Opener	Charme d'arme ouvre-bouteille
+BowSilencer	Silencieux d'arc
+Bow_MicroStabilizer	Stabilisateur d'arc
+Bolts_Package_Box	Boîte de boulons
+Nails_Package_Box	Boîte de clous
+Boxer_Briefs_01	Boxers
+F_Undershirt_Bra_01	Soutien-gorge
+F_Undershirt_Bra_02	Soutien-gorge
+F_Undershirt_Bra_03	Soutien-gorge
+F_Undershirt_Bra_04	Soutien-gorge
+F_Undershirt_Bra_05	Soutien-gorge
+Brake_Oil	Huile de frein
+Improvised_Plant_rope	Corde de branche
+1H_Brass_knuckles	Coup de poing américain
+FishingBait_Bread	Appât de poisson de pain
+Breathing_Tube_01	Tube respiratoire
+Brick	Brique
+Carbon_BroadHead_Arrow	Flèche en carbone à tête large
+Metal_BroadHead_Arrow	Flèche en métal à tête large
+Broccoli	Brocoli
+Broccoli_Seed_Bag	Sachet de graines de brocoli - Sachet de graines de brocoli
+Broccoli_Seeds	Graines de brocoli
+Kilt_Brogue_Shoe_01	Chaussure richelieu
+Can03	Bubbles
+Buck_Head	Tête de mâle
+Buck_Left_Back_Leg	Jambe de mâle
+Buck_Left_Front_Leg	Jambe de mâle
+Buck_Right_Back_Leg	Jambe de mâle
+Buck_Right_Front_Leg	Jambe de mâle
+Buck_Torso	Torse de Buck
+12_Gauge_Buckshot_Ammobox	Boîte de munitions pour fusil de chasse Buckshot
+WeaponCharm_Bullet	Charme d'arme à balle
+Bulletproof_Vest_01	Gilet pare-balles
+Bulletproof_Vest_01_02	Gilet pare-balles
+Bulletproof_Vest_01_03	Gilet pare-balles
+Bulletproof_Vest_01_04	Gilet pare-balles
+Bulletproof_Vest_01_05	Gilet pare-balles
+Bundle_Of_Bobby_Pins	Lot d'épingles à cheveux
+Bundle_Of_Bricks	Paquet de briques
+Bundle_Of_Improvised_Lockpicks	Lot de crochets improvisés
+Bundle_Of_Lockpicks	Lot de crochets
+Bundle_Rag_Stripes	Paquet de bandes de chiffon
+Bundle_Of_Rags	Paquet de chiffons
+Bundle_Of_Safety_Pins	Lot d'épingles de sûreté
+Bundle_Wooden_Plank	Paquet de planches de bois
+Wooden_Sticks_Bundle_Large	Paquet de bâtons en bois
+Bunny_Slippers	Pantoufles de lapin - Pantoufles de lapin
+Cereal_BunnyStars	Céréales Bunny Stars
+AntiburnGel	Gel pour brûlures
+1H_Bushman	Bushman
+Butter	Beurre
+RH_Bycoket_01	Vélo
+C4	Bombe C4
+C4_Detonator	Détonateur C4
+C4_Keypad	Carte de circuit imprimé du clavier C4
+C4_CircuitBoard	Circuit imprimé de minuterie C4
+Cabbage	Chou
+Cabbage_Seed_Bag	Sachet de graines de chou - Sachet de graines de chou
+Cabbage_Seeds	Graines de chou
+Book_Cooking_Cake	Livre de recettes de gâteaux
+WeaponSuppressor_30_06	Silencieux — .30-06
+Camera_Lens	Objectif de la caméra
+Military_Backpack_02_01	Sac à dos de randonnée camouflage
+Military_Backpack_02_02	Sac à dos de randonnée camouflage
+Military_Backpack_02_03	Sac à dos de randonnée camouflage
+Military_Backpack_02_04	Sac à dos de randonnée camouflage
+Military_Backpack_02_05	Sac à dos de randonnée camouflage
+Military_Backpack_02_06	Sac à dos de randonnée camouflage
+Military_Backpack_02_07	Sac à dos de randonnée camouflage
+Military_Backpack_02_08	Sac à dos de randonnée camouflage
+Camouflage_Jacket_01	Veste camouflage
+Camouflage_Jacket_02	Veste camouflage
+Camouflage_Jacket_03	Veste camouflage
+CanOpener	Ouvre-boîte
+Candle_01	Bougie
+Candy_Bob	Candy Bob
+WeaponCharm_Candy_Cane	Charme d'arme en forme de canne à sucre
+CandyCorn_01	Bonbons au maïs
+Cannabis_Bud	Bourgeon de cannabis
+Cannabis_Seed_Bag	Sachet de graines de cannabis
+Cannabis_Seeds	Graines de cannabis
+CannedGoulash	Goulasch de bœuf en conserve
+CannedSeafoodMix	Mélange de fruits de mer en conserve
+Canned_Tuna	Thon en conserve
+CantaloupeMelon	Melon Cantaloup
+CantaloupeMelon_Slice	Melon Cantaloup
+CantaloupeMelon_Seeds	Graines de cantaloup
+Canteen	Cantine
+Cantharellus_Cibarius	Cantharellus Cibarius
+Car_Battery	Batterie de voiture
+Car_Battery_Cables	Câbles de batterie de voiture
+Car_Jack	Cric de voiture
+Car_Radio_Item	Autoradio
+Car_Repair_Kit	Kit de réparation de voiture
+PETBottle01	Soda au caramel
+PETBottle02	Soda au caramel
+Carbon_Arrow	Flèche en carbone
+Ammo_Crossbow_Bolt_Carbon	Boulon d'arbalète en carbone
+Weapon_CarbonHunter	Chasseur de carbone
+Weapon_CarbonBear	Chasseur de carbone Ironpaw
+Magazine_CarbonHunter	Magazine Chasseur de Carbone
+Weapon_Parts_Carbon_Hunter	Pièces d'armes de chasseur de carbone
+Fish_Carp	Carpe
+Carp_Fillet	Filet De Carpe
+Carp_Head	Tête de carpe
+Carrot	Carotte
+GlassBottle01	Jus de Carotte
+Carrot_Seed_Bag	Sachet de graines de carotte - Sachet de graines de carotte
+Carrot_Seeds	Graines de carotte
+CartridgeTrap	Piège à cartouche
+Cash	Espèces
+Book_Cooking_Casseroles	Livre de recettes en cocotte
+CannedCatfood	Nourriture pour chat
+Fish_Catfish	Poisson-chat
+Catfish_Fillet	Filet de poisson-chat
+Catfish_Head	Tête de poisson-chat
+Cauliflower	Chou-fleur
+CD_Player	CD Joueur
+Celery	Céleri
+CementBag	Sac de ciment
+Chainsaw	Tronçonneuse
+Charcoal	Charbon de bois
+Cheese	Fromage
+FishingBait_Cheese	Appât de poisson au fromage
+Dish_Sandwich_Cheese	Sandwich au Fromage
+CheesePacked	Tranches de fromage
+MRE_Cheeseburger	Cheeseburger MRE
+ColorCan_CherryRed	Pot de peinture rouge cerise
+Cherry_Seed_Bag	Sachet de graines de cerise - Sachet de graines de cerise
+Cherry_Seeds	Graines de cerise
+ChickenDrumstick	Pilon De Poulet
+ChickenMeat	Viande de poulet
+Chili_Pepper	Piment
+ChilliPeppers_Seeds	Graines de piment
+Chillipepper_Seed_Bag	Sac de graines de piment
+Chips	Chips Classiques
+ChocolateCandy_10	ChocCandy
+ChocolateCandy_11	ChocoBar
+ChocolateCandy_04	Chocolat
+ChocolateCandy_05	Chocolat
+ChocolateCandy_06	Chocolat
+ChocolateCandy_07	Chocolat
+ChocolateCandy_08	Barre de chocolat
+ChocolateCandy_09	Barre de chocolat
+ChocolateCandy_03	Bonbons au gâteau au chocolat
+ChocolateCandy_01	Barre chocolatée
+Chow_Mein	Chow Mein
+Christmas_Beanie_02	Bonnet de Noël
+Christmas_Decoration	Décorations de Noël
+Christmas_Present_02	Cadeau de Noël
+Christmas_Ball_01	Ornement de Noël
+Christmas_Ball_02	Ornement de Noël
+Christmas_Ball_03	Ornement de Noël
+Christmas_Ball_04	Ornement de Noël
+Christmas_Ball_05	Ornement de Noël
+Christmas_Ball_06	Ornement de Noël
+Christmas_Pants_01	Pantalon de Noël
+Christmas_Pants_02	Pantalon de Noël
+Christmas_Slippers	Pantoufles de Noël
+Christmas_Vest_01	Pull de Noël
+Fish_Chub	Chevesne
+Chub_Fillet	Filet de chevesne
+Credit_Card_Classic	Carte Bancaire Classique
+Classic_Shirt_01	Chemise classique
+Classic_Shirt_02	Chemise classique
+Cigarette	Cigarettes classiques
+Cigarettes	Paquet de cigarettes classiques
+Claymore	Claymore
+1H_Cleaver	Couperet
+Coal_01	Charbon
+CoalBag	Sac de charbon
+Recurve_Bow_50	Cobra 50#
+Cocoa_Powder	Poudre de cacao
+Coconut	Noix de coco
+Coffee	Café
+Coffee_Cup	Tasse à café
+Can04	Cola
+ColorCan_ColdCyan	Pot de peinture cyan froid
+ColorCan_ColdGrey	Pot de peinture gris froid
+CombatBoots	Bottes de combat
+Combat_Helmet_01	Casque de combat
+Combat_Helmet_02	Casque de combat
+Combat_Helmet_03	Casque de combat
+Combat_Helmet_04	Casque de combat
+M1_Vietnam_Helmet	Casque de combat
+RH_Jacket	Veste combinée
+Compound_Bow	Arc à poulies
+Compound_Bow_Desert	Arc à poulies
+Compound_Bow_Digital	Arc à poulies
+Compound_Bow_Snow	Arc à poulies
+Compound_Bow_US_Scorpion	Arc à poulies
+Compound_Bow_Woodland	Arc à poulies
+CompoundBowSight_3_Pin	Viseur d'arc à poulies
+CompoundBowSight_5_Pin	Viseur d'arc à poulies
+Boots_06_01	Bottes de chantier
+Boots_06_02	Bottes de chantier
+Construction_Gloves_01_01	Gants de chantier
+Construction_Gloves_01_02	Gants de chantier
+Construction_Gloves_01_03	Gants de chantier
+Construction_Pants_01	Pantalons de chantier
+Construction_Pants_02	Pantalons de chantier
+Construction_Pants_03	Pantalons de chantier
+Boots_07_01	Bottes en caoutchouc de construction
+Boots_07_02	Bottes en caoutchouc de construction
+Boots_07_03	Bottes en caoutchouc de construction
+Pot1	Marmite
+Copper_Coins	Pièces de cuivre
+Coprinus_Comatus	Coprinus Comatus
+Corn	Maïs
+Corn_flakes	Flocons de maïs
+FishingBait_Corn	Appât pour poisson de maïs
+Corn_Seed_Bag	Sac de graines de maïs - Sac de graines de maïs
+Corn_Seeds	Semences de maïs
+ColorCan_CottonCandy	Pot de peinture barbe à papa
+Hoodie_01	Sweat à capuche en coton
+Hoodie_02	Sweat à capuche en coton
+Hoodie_03	Sweat à capuche en coton
+Hoodie_04	Sweat à capuche en coton
+Hoodie_05	Sweat à capuche en coton
+Inmate_Hoodie_01	Sweat à capuche en coton
+Inmate_Shirt_01_Snow_DigitalDeluxe	Sweat à capuche en coton
+Shirt_01	Chemise en coton
+Shirt_02	Chemise en coton
+Shirt_03	Chemise en coton
+Shirt_04	Chemise en coton
+Backpack_DigitalDeluxe	Sac à dos de courrier
+Cowboys_Boots_01	Bottes de cowboy
+Crackers	Craquelins
+Cream	Crème
+Cricket	Grillon
+FishingBait_Cricket	Appât pour poisson grillon
+1H_Crowbar	Pied de biche
+Fish_CrucianCarp	Carassin
+Cruiser_Brakelight_Item	Feu stop croiseur
+Cruiser_Fender_Front_Item	Garde-boue avant du croiseur
+Cruiser_Seat_Front_Item	Siège avant du croiseur
+Cruiser_Headlight_Item	Phare de croiseur
+Cruiser_Fender_Rear_Item	Garde-boue arrière du croiseur
+Cruiser_Seat_Rear_Item	Siège arrière du croiseur
+Cruiser_Wind_Deflector_Item	Déflecteur de vent Cruiser
+Crutch	Béquille
+Cuban_Cigar	Cigare Cubain
+Cucumber	Concombre
+Cucumber_Seed_Bag	Sachet de graines de concombre - Sachet de graines de concombre
+Cucumber_Seeds	Graines de concombre
+Currant	Groseille
+Zombie_Impersonator_Suit	Costume de marionnette maudite
+WeaponCharm_Ear	Charme d'arme à oreille coupée
+WeaponCharm_Finger	Charme d'arme à doigt coupé
+Dentex_Fillet	Filet de Dantex
+ColorCan_DarkBrown	Pot de peinture marron foncé
+ColorCan_DarkGreen	Pot de peinture vert foncé
+ColorCan_DarkGrey	Pot de peinture gris foncé
+ColorCan_DarkUrban	Pot de peinture urbain foncé
+Date	Date
+Weapon_Deagle_357	DEagle .357
+Magazine_DEagle_357	Chargeur — DEagle .357
+Magazine_DEagle_50	Chargeur — DEagle .50
+Weapon_Parts_Deagle_357	DEagle 357 Pièces d'armes
+Weapon_DEagle_50	DEagle 50
+Weapon_DEagle_50Gold	DEagle 50
+Weapon_Parts_DEagle_50	DEagle 50 Pièces d'armes
+Christmas_Paper_01	Papier de décoration
+Christmas_Paper_02	Papier de décoration
+Christmas_Paper_03	Papier de décoration
+ColorCan_DeepOrange	Pot de peinture orange foncé
+Buck_Antlers	Bois de cerf
+Deer_Steak	Steak de cerf
+Fish_Dentex	Denté
+Dentex_Head	Tête Dentex
+Depleted_Uranium	Uranium appauvri
+Depleted_Uranium_Container	Uranium appauvri - Conteneur
+WeaponFlashlight_DesertEagle	Lampe de poche Aigle du Désert
+WeaponSights_Deagle_RedDot	Viseur point rouge — Desert Eagle
+Ghillie_Suit_Pants_03	Bas de costume Desert Ghillie
+Ghillie_Suit_Jacket_03	Haut de costume Ghillie du désert
+DialLock_Item	Verrouillage du cadran
+Diary	Journal
+1H_Dildo	Gode
+Dildo_Spear	Gode Lance
+Dildo_Arrow	Gode Flèche En Bois
+Ammo_Crossbow_Bolt_Dildo	Gode Boulon D'Arbalète En Bois
+Dinghy_Item	Sac de canot
+Dirtbike_Body_Item	Corps de moto tout-terrain
+Dirtbike_Brakelight_Item	Feu stop pour moto tout-terrain
+Dirtbike_Fender_Item	Garde-boue de moto tout-terrain
+Dirtbike_Front_Shield_Item	Bouclier avant de moto tout-terrain
+Dirtbike_Front_Wheel_Cover_Item	Enjoliveur de roue avant Dirtbike
+Dirtbike_Headlight_Item	Phares de moto tout-terrain
+Dirtbike_Body_Hellrider_Item	Dirtbike Hellrider Corps
+Dirtbike_Hellrider_Skull_Item	Dirtbike Hellrider Crâne
+Disposable_Mask	Masque jetable
+Diving_Mask	Masque de plongée
+Diving_Mask_With_Breathing_Tube	Masque de plongée avec tube respiratoire
+Doe_Head	Tête de biche
+Doe_Left_Back_Leg	Patte de biche
+Doe_Left_Front_Leg	Patte de biche
+Doe_Right_Back_Leg	Patte de biche
+Doe_Right_Front_Leg	Patte de biche
+Doe_01_Steak	Steak de biche
+Doe_Torso	Torse de biche
+CannedDogFood	Nourriture pour chiens
+Donkey_Head	Tête d'âne
+Donkey_Back_Leg	Jambe d'âne
+Donkey_Front_Leg	Jambe d'âne
+Donkey_Steak	Steak d'Âne
+Donkey_Torso	Torse d'âne
+FishingHook2	Hameçon Double
+FishingHookPack3	Pack d'hameçons doubles
+Double_Bang_Firecracker	Pétard à double détonation
+Christmas_tree	Sapin de Douglas
+Baseball_Cap_11	Dreamreaper Casquette
+Drill	Perceuse
+Book_Cooking_Drinks	Livre de recettes sur les boissons
+Driving_Gloves_01_01	Gants de conduite
+Driving_Gloves_01_02	Gants de conduite
+Driving_Gloves_01_03	Gants de conduite
+Driving_Gloves_01_04	Gants de conduite
+Weapon_DT11B	DT11B
+Weapon_Parts_DT11B	DT11B Pièces d'armes
+Duct_Tape	Ruban adhésif
+2_pieces_Ear_Necklace	Collier d'oreille
+4_pieces_Ear_Necklace	Collier d'oreille
+6_pieces_Ear_Necklace	Collier d'oreille
+Ear_Plugs	Bouchons d'oreilles
+Construction_Earmuffs_01	Cache-oreilles
+Construction_Earmuffs_02	Cache-oreilles
+Construction_Earmuffs_03	Cache-oreilles
+Construction_Earmuffs_04	Cache-oreilles
+ColorCan_EarthGreen	Pot de peinture vert terre
+ColorCan_EarthGrey	Pot de peinture gris terre
+ColorCan_EarthRed	Pot de peinture rouge terre
+ColorCan_EarthYellow	Pot de peinture jaune terre
+Earthworm	Ver de terre
+Egg	Oeuf
+Electrical_Repair_Kit	Kit de réparation électrique
+Electrician_Tools	Outils d'électricien
+WeaponCharm_Elephant	Charme d'arme d'éléphant
+Emergency_bandage	Pansement d'urgence
+Emergency_bandage_Deluxe	Pansement d'urgence
+Emergency_bandage_Big	Pack de bandages d'urgence
+Emergency_bandage_Big_Deluxe	Pack de bandages d'urgence
+EMP_Grenade	EMP Grenade
+1H_EMpossible_Knife	EMpossible Couteau
+EmptyBag	Sac vide
+Christmas_Box	Boîte vide
+Lock_Item_Advanced	Verrouillage forcé
+EuropeanBass_Fillet	Filet de bar européen
+WeaponCharm_EvilEye	Charme d'arme du mauvais œil
+Explosive_Arrow_Carbon	Flèche de carbone explosive
+Explosive_Arrow_Metal	Flèche en métal explosif
+Explosive_Arrow	Flèche en bois explosive
+Ammo_Crossbow_Bolt_Explosive	Carreau d'arbalète en bois explosif
+Extreme_Helmet_01	Casque extrême
+Faceroll_Smasher	Facerolls Face Smasher
+Fascinator_Hat_01	Chapeau fascinateur
+Fascinator_Hat_02	Chapeau fascinateur
+Fascinator_Hat_03	Chapeau fascinateur
+Fascinator_Hat_04	Chapeau fascinateur
+Fascinator_Hat_05	Chapeau fascinateur
+Zombie_Fat	Graisse
+Feather	Plume
+Medieval_Helmet_01	Casque poli de féodal
+Fig	Figue
+Fig_Seed_Bag	Sachet graines de figue - Sachet graines de figue
+Fig_Seeds	Graines de figue
+Fire_deflector_shield	Bouclier déflecteur de feu
+Fire_Hand_Drill_new	Exercice d'incendie
+ColorCan_FireEngineRed	Pot de peinture rouge pour camion de pompiers
+Fireman_Helmet_01	Casque de pompier
+Fireman_Helmet_02	Casque de pompier
+Fireman_Helmet_03	Casque de pompier
+Work_Jacket_01	Veste de pompier
+Work_Jacket_02	Veste de pompier
+Work_Jacket_03	Veste de pompier
+Working_pants_01_01	Pantalon de pompier
+Working_pants_01_02	Pantalon de pompier
+Working_pants_01_03	Pantalon de pompier
+Fireworks_Small	Feux d'artifice petit
+Fireworks_Big	Feux d'artifice petits - Feux d'artifice grands
+Fish	Poisson
+FishingHook	Hameçon
+FishItem	Article de poisson
+Dish_Salad_Fish	Salade de poisson
+WeaponCharm_Fish_Bowl	Charme d'arme de bocal à poissons
+FishingFloater	Flotteur de pêche
+FishingFloater1	Flotteur de pêche
+FishingFloaterPack1	Pack flotteur de pêche
+FishingFloaterPack2	Pack flotteur de pêche
+Boonie_Hat_01	Chapeau de pêche
+Boonie_Hat_02	Chapeau de pêche
+Boonie_Hat_03	Chapeau de pêche
+Boonie_Hat_04	Chapeau de pêche
+Boonie_Hat_05	Chapeau de pêche
+Boonie_Hat_06	Chapeau de pêche
+Military_Boonie_Hat_01	Chapeau de pêche
+Military_Boonie_Hat_02	Chapeau de pêche
+Military_Boonie_Hat_03	Chapeau de pêche
+Military_Boonie_Hat_04	Chapeau de pêche
+Military_Boonie_Hat_05	Chapeau de pêche
+Military_Boonie_Hat_06	Chapeau de pêche
+Military_Boonie_Hat_07	Chapeau de pêche
+Military_Boonie_Hat_08	Chapeau de pêche
+Redneck_Hat_07	Chapeau de pêche
+Fishing_hook	Hameçon de pêche
+FishingReel	Moulinet de pêche
+ImprovisedFishingReel	Moulinet de pêche
+FishingReelPro	Moulinet de pêche Pro
+FishingRod	Canne à pêche
+FishingRod_A	Canne à pêche
+FishingRod_B	Canne à pêche
+Fistula_Hepatica	Fistule hépatique
+FlareItem	Flamme
+FlareItem_Blue	Flamme
+FlareItem_Green	Flamme
+FlareCartridge	Cartouche éclairante
+Weapon_FlareGun	Pistolet lance-fusées
+Weapon_Parts_FlareGun	Pièces d'armes pour pistolet lance-fusées
+FlareTrap	Piège à fusée éclairante
+ColorCan_FlatBrown	Pot de peinture marron mat
+ColorCan_FlatGrey	Pot de peinture gris mat
+ColorCan_FlatWhite	Pot de peinture blanc mat
+Wooden_ArrowFeathers	Flèche en bois empennée
+Flint_And_Steel	Silex et acier
+Christmas_tree_Folded	Sapin de Douglas plié
+ColorCan_ForestGreen	Pot de peinture vert forêt
+Steel_Fork	Fourchette
+CannedFruitCocktail	Cocktail de fruits
+Dish_Salad_Fruit	Salade De Fruits
+Fungicide	Fongicide
+Fuse_1000A	Fusible 1000A
+Fuse_200A	Fusible 200A
+Fuse_400A	Fusible 400A
+Fuse_600A	Fusible 600A
+Fuse_800A	Fusible 800A
+ColorCan_GalaxyBlue	Pot de peinture bleu galaxie
+ColorCan_GalaxyGrey	Pot de peinture gris galaxie
+Garlic	Ail
+Garlic_Seed_Bag	Sachet de graines d'ail - Sachet de graines d'ail
+Garlic_Seeds	Graines d'ail
+Garrison_Cap_01	Casquette de garnison
+Garrison_Cap_02	Casquette de garnison
+Garrison_Cap_03	Casquette de garnison
+Garrison_Cap_04	Casquette de garnison
+Garrison_Cap_05	Casquette de garnison
+Gas_Mask_01	Masque à gaz
+Gas_Mask_02	Masque à gaz
+Gas_Mask_03	Masque à gaz
+Gas_Mask_04	Masque à gaz
+GasTank	Réservoir de gaz
+Gasoline_Canister	Bidon d'essence
+Gear	Équipement
+Ghillie_Suit_Pants_01	Bas de costume Ghillie
+Ghillie_Suit_Jacket_01	Haut de costume Ghillie
+Glass	Verre
+Glue	Colle
+Goat_Head	Tête de chèvre
+Goat_Horns	Cornes de chèvre
+Goat_Back_Limb	Cuisse de chèvre
+Goat_Front_Limb	Cuisse de chèvre
+Goat_Skull_Hat_01	Chapeau de crâne de chèvre
+Goat_Steak	Steak de Chèvre
+Goat_Torso	Torse de chèvre
+Credit_Card_Gold	Carte bancaire en or
+MemoryModule_Level4	Module de mémoire doré
+GrapeFruit	Pamplemousse
+GlassBottle02	Jus de Pamplemousse
+Graphite	Graphite
+Grasshopper	Sauterelle
+FishingBait_Grasshopper	Appât pour poisson sauterelle
+GravelBag	Sac de gravier
+MemoryModule_Level1	Module de mémoire gris
+CannedPeas	Pois Verts
+Frag_Grenade	Grenade
+Grinding_Stone_02	Meule
+GuavaHalves	Goyave
+Guitar	Guitare
+Gun_Powder	Poudre à canon
+Zombie_guts	Des tripes
+Halloween_Anonymous_Mask_01	Guy Fawkes Masque
+Halloween_Mask_BabyDoll_02	Masque d'Halloween
+Halloween_Mask_Clown_03	Masque d'Halloween
+Halloween_Mask_Greek	Masque d'Halloween
+Halloween_Mask_Hockey_04	Masque d'Halloween
+Halloween_Mask_JohnDoe_05	Masque d'Halloween
+Halloween_Mask_Knife	Masque d'Halloween
+Halloween_Mask_Lecter_06	Masque d'Halloween
+Halloween_Mask_Plague_07	Masque d'Halloween
+Halloween_Mask_Smiley_08	Masque d'Halloween
+Halloween_Mask_Wooden_09	Masque d'Halloween
+Hand_Drill	Perceuse à main
+Hand_Fan_01	Éventail à main
+WeaponSuppressor_Handgun	Suppresseur d'armes de poing
+WeaponCharm_Happy_Emoji	Charme d'arme Emoji heureux
+Harmonica	Harmonica
+Hazelnuts	Noisette
+ColorCan_HazyPurple	Pot de peinture violet brumeux
+Head_Bags_01	Sac de tête
+Hemostatic_Dressing	Pansement hémostatique
+HH_Shoes_03_01	Bottines à talons hauts
+HH_Shoes_03_02	Bottines à talons hauts
+HH_Shoes_03_03	Bottines à talons hauts
+HH_Shoes_03_04	Bottines à talons hauts
+HH_Shoes_03_05	Bottines à talons hauts
+HH_Shoes_03_06	Bottines à talons hauts
+HH_Shoes_03_07	Bottines à talons hauts
+HH_Shoes_04_01	Escarpins à talons hauts
+HH_Shoes_04_02	Escarpins à talons hauts
+HH_Shoes_04_03	Escarpins à talons hauts
+HH_Shoes_04_04	Escarpins à talons hauts
+HH_Shoes_02_01	Sandales à talons hauts
+HH_Shoes_02_02	Sandales à talons hauts
+HH_Shoes_02_03	Sandales à talons hauts
+RH_Shoe_01	Chaussures montantes
+Sneakers_02_01	Chaussures montantes
+Sneakers_02_02	Chaussures montantes
+Sneakers_02_03	Chaussures montantes
+Sneakers_02_04	Chaussures montantes
+Hiking_Backpack_01_01	Sac à dos de randonnée
+Hiking_Backpack_01_02	Sac à dos de randonnée
+Hiking_Backpack_01_03	Sac à dos de randonnée
+Hiking_Backpack_01_04	Sac à dos de randonnée
+Hiking_Backpack_01_05	Sac à dos de randonnée
+Hiking_Boots_01	Bottes de randonnée
+Hiking_Boots_02	Bottes de randonnée
+Hiking_Boots_03	Bottes de randonnée
+Hiking_Boots_04	Bottes de randonnée
+Hip_Flask	Flasque
+Hippie_Pants_01	Pantalon hippie
+Hippie_Pants_02	Pantalon hippie
+Hippie_Pants_03	Pantalon hippie
+Hippie_Pants_04	Pantalon hippie
+Hippie_Pants_05	Pantalon hippie
+Hippie_Pants_06	Pantalon hippie
+Hippie_Pants_07	Pantalon hippie
+Hippie_Pants_08	Pantalon hippie
+Hippie_Shirt_01	Chemise hippie
+Hippie_Shirt_02	Chemise hippie
+Horse_Head	Tête de cheval
+Horse_Mask	Masque tête de cheval
+Horse_Back_Limb	Jambe de cheval
+Horse_Front_Limb	Jambe de cheval
+Horse_Steak	Steak de cheval
+Horse_Torso	Torse de cheval
+Horse_Torso_Half	Torse de cheval - Demi
+WeaponCharm_Horseshoe	Charme d'arme en fer à cheval
+Hose	Tuyau
+Hospital_Pants	Pantalon d'hôpital
+Hospital_Shirt_01	Chemise d'hôpital
+Weapon_SF19	HS SF19
+Magazine_SF19	Chargeur — HS SF19
+Weapon_Parts_SF19	HS SF19 Pièces d'armes
+Weapon_HS9	HS-9
+Weapon_Parts_HS9	HS-9 Pièces d'armes
+Magazine_HS9	Chargeur — HS9
+Prisoner_Left_Arm	Bras humain
+Prisoner_Right_Arm	Bras humain
+Human_Ears	Oreilles humaines
+Prisoner_Left_Foot	Pied humain
+Prisoner_Right_Foot	Pied humain
+Human_guts	Tripes humaines
+Prisoner_Head	Tête humaine
+Prisoner_Head_No_Teeth	Tête humaine
+Prisoner_Left_Leg	Jambe humaine
+Prisoner_Right_Leg	Jambe humaine
+Human_Skin	Peau humaine
+Human_Steak	Steak humain
+Human_Teeth	Dents humaines
+Prisoner_Torso	Torse humain
+1H_Hunter	Chasseur
+Weapon_Hunter85_V2	Hunter 85
+Magazine_Hunter85_V2	Chargeur — Hunter 85
+Weapon_Parts_Hunter85	Hunter 85 Pièces d'armes
+WeaponSuppressor_Hunter	Silencieux — Hunter
+WeaponScope_HuntingScope	Lunette de visée — chasse
+Icing_Sugar	Sucre Glace
+ImprovisedCal50Turret	Tourelle improvisée .50 Cal
+Improvised_Backpack_Big	Sac à dos improvisé
+ImprovisedBasicTurret	Tourelle de base improvisée
+Improvised_Shelter	Lit improvisé
+Improvised_Shoes_01	Bottes improvisées
+WeaponSuppressor_ImprovisedBottle_Grey	Suppresseur de bouteille improvisé
+WeaponSuppressor_ImprovisedBottle_White	Suppresseur de bouteille improvisé
+Improvised_Bow	Arc improvisé 20#
+Improvised_Bow_25	Arc improvisé 25#
+Improvised_Bow_30	Arc improvisé 30#
+Improvised_Bow_35	Arc improvisé 35#
+Bow_ImprovisedStabilizer	Stabilisateur d'arc improvisé
+Improvised_Bulletproof_Armor	Armure pare-balles improvisée
+AntiburnGel_Improvised	Gel contre les brûlures improvisé
+WeaponSuppressor_ImprovisedCan_Grey	Suppresseur de canettes improvisé
+WeaponSuppressor_ImprovisedCan_Red	Suppresseur de canettes improvisé
+Improvised_Chandelier_Light	Lustre improvisé
+ImprovisedClaymore	Claymore improvisée
+Improvised_compass	Boussole improvisée
+Improvised_Bag_Small_01	Sac à dos de courrier improvisé
+Weapon_Improvised_Crossbow	Arbalète improvisée
+Improvised_Electric_Lamp_Ceiling	Lampe électrique improvisée
+ImprovisedFishingHook	Hameçon improvisé
+ImprovisedFishingFloater	Flotteur de pêche improvisé
+Improvised_FishingLine	Ligne de pêche improvisée
+ImprovisedFishingRod	Canne à pêche improvisée
+Weapon_Improvised_Flamethrower	Lance-flammes improvisé
+ImprovisedFlamethrowerTurret	Tourelle lance-flammes improvisée
+ImprovisedFlashlight	Lampe de poche improvisée
+2H_Improvised_Gardening_Hoe	Houe de jardinage improvisée
+Geiger_Counter_Improvised	Compteur Geiger improvisé
+Improvised_Ghillie_Jacket	Veste Ghillie improvisée
+Improvised_Ghillie_Pants	Pantalon Ghillie improvisé
+1H_Improvised_Glass_Shiv	Shiv en verre improvisé
+Weapon_ImprovisedGrenadeLauncher	Lance-grenades improvisé
+Weapon_Parts_ImprovisedGrenadeLauncher	Pièces d'armes pour lance-grenades improvisées
+1H_Improvised_Hammer	Marteau improvisé
+Weapon_Improvised_Handgun	Arme de poing improvisée
+1H_Hatchet	Hachette improvisée
+Improvised_Lockpick	Crochetage improvisé
+Magnifying_Glass	Loupe improvisée
+Scary_Mask_01	Masque improvisé
+ImprovisedMetalDetector	Détecteur de métaux improvisé
+2H_Improvised_metal_shovel	Pelle en métal improvisée
+Improvised_Metal_Spear	Lance en métal improvisée
+ImprovisedMine	Mine improvisée
+ImprovisedMinigunTurret	Tourelle Minigun improvisée
+Improvised_Motorcycle_Wheel	Roue de moto improvisée
+WeaponSuppressor_ImprovisedOilCan_01	Suppresseur de bidon d'huile improvisé
+PaintSprayer	Pulvérisateur de peinture improvisé
+Dish_Pasta_Improvised	Plat de pâtes improvisé
+Weapon_Parts_Impro_Pistol	Pièces d'armes de pistolet improvisées
+Improvised_Quiver_02_Rags	Carquois improvisé
+Raincoat_Improvised	Imperméable improvisé
+Dish_Rice_Improvised	Plat de riz improvisé
+Weapon_Improvised_Rifle	Fusil improvisé
+ImprovisedRail_Side	Rail de fusil improvisé
+Weapon_Parts_Impro_rifle	Pièces d'armes à feu improvisées
+ImprovisedRocketTurret	Tourelle de fusée improvisée
+Improvised_rope	Corde improvisée
+Dish_Salad_Improvised	Salade improvisée
+Dish_Sandwich_Improvised	Sandwich improvisé
+WeaponSights_ImprovisedScope	Lunette de visée — fabrication improvisée
+Improvised_Sewing_kit	Kit de couture improvisé
+ImprovisedSmallPaddle	Pagaie courte improvisée
+2H_Improvised_shovel	Pelle improvisée
+Dish_Soup_Improvised	Soupe improvisée
+Improvised_Stabproof	Gilet anti-couteau improvisé
+Dish_Stew_Improvised	Ragoût improvisé
+Improvised_Stone_Spear	Lance de pierre improvisée
+Improvised_Tire_Repair_Kit	Kit de réparation de pneus improvisé
+1H_Improvised_Tomahawk	Tomahawk improvisé
+Improvised_Tool_Box	Boîte à outils improvisée
+Improvised_Water_container	Conteneur d'eau improvisé
+Improvised_Wheel	Roue improvisée
+Improvised_Wooden_Spear	Lance en bois improvisée
+Improvised_Workbench	Établi improvisé
+Industrial_Fertilizer	Engrais industriel
+2H_Industrial_Gardening_Hoe	Houe de jardinage industrielle
+Inonotus_Obliquus	Inonotus Obliquus
+Instant_OatMeal	Gruau instantané
+Electrician_Glove_01_01	Gant en caoutchouc isolant
+Electrician_Glove_01_02	Gant en caoutchouc isolant
+Electrician_Glove_01_03	Gant en caoutchouc isolant
+IntEA_Level1	Niveau d'ampoule d'amélioration de l'intelligence 1
+IntEA_Level2	Niveau d'ampoule d'amélioration de l'intelligence 2
+IntEA_Level3	Niveau d'ampoule d'amélioration de l'intelligence 3
+Lock_Item_Basic	Serrure en fer
+Isopropyl_alcohol	Alcool isopropylique
+Jack_o_Lantern_01	Jack-o'-lanterne
+Jack_o_Lantern_02	Jack-o'-lanterne
+Jack_o_Lantern_03	Jack-o'-lanterne
+Jeans_01_01	Jean
+Jeans_01_02	Jean
+Jeans_01_03	Jean
+Jeans_01_04	Jean
+Jeans_02_01_V2	Jean
+Jeans_02_02	Jean
+Jeans_02_03	Jean
+Jeans_02_04	Jean
+Jeans_02_05	Jean
+Jeans_02_06	Jean
+Jeans_02_07	Jean
+Jeans_02_08	Jean
+Jeans_02_09	Jean
+Jersey_01	Chemise en jersey
+Jersey_02	Chemise en jersey
+Jersey_03	Chemise en jersey
+Jersey_04	Chemise en jersey
+Jersey_05	Chemise en jersey
+Jersey_06	Chemise en jersey
+Jersey_07	Chemise en jersey
+Jersey_08	Chemise en jersey
+Jersey_09	Chemise en jersey
+Jock_Jacket_01	Veste Jock
+Jock_Jacket_02	Veste Jock
+Jock_Jacket_03	Veste Jock
+Jock_Jacket_04	Veste Jock
+Joint01	Commune
+Weapon_Judge44	Juge 44
+Weapon_Parts_Judge44	Juge 44 Pièces d'armes
+Baseball_Cap_12	JW Casquette
+K6-3_Helmet	K6-3 Casque
+Weapon_98k_Karabiner	Kar98
+Kar98_Bayonet	Baïonnette Kar98
+WeaponSuppressor_Kar98k	Silencieux — Kar98k
+Weapon_Parts_Kar98k	Pièces d'armes Kar98k
+2H_Katana	Katana
+Ketchup	Ketchup
+KeyCard	Carte-clé
+KeyCardBunker_Level01	Carte-clé
+KeyCardBunker_Level02	Carte-clé
+Keyhole_Shirt_01	Chemise trou de serrure
+Keyhole_Shirt_02	Chemise trou de serrure
+Keyhole_Shirt_03	Chemise trou de serrure
+Keyhole_Shirt_04	Chemise trou de serrure
+Keyhole_Shirt_05	Chemise trou de serrure
+Keyhole_Shirt_06	Chemise trou de serrure
+Keyhole_Shirt_07	Chemise trou de serrure
+Keyhole_Shirt_08	Chemise trou de serrure
+Kicmovaca	Kicmovaca
+Kilt_01	Kilts
+Kilt_02	Kilts
+Kilt_03	Kilts
+Kilt_04	Kilts
+Kilt_05	Kilts
+Kilt_06	Kilts
+Kitchen_Board_01	Planche de cuisine
+Kitchen_Board_02	Planche de cuisine
+1H_KitchenKnife	Couteau de cuisine
+1H_KitchenKnife_02	Couteau de cuisine
+1H_KitchenKnife_02_Deluxe	Couteau de cuisine
+1H_KitchenKnife_03	Couteau de cuisine
+1H_KitchenKnife_04	Couteau de cuisine
+1H_KitchenKnife_DigitalDeluxe	Couteau de cuisine
+Kiwi	Kiwi
+Socks_02	Chaussettes hautes
+Recurve_Bow_60	Kodiak 60#
+Slippers_01	Kroks
+Weapon_Krueger	Krueger
+Magazine_Krueger	Chargeur — Krueger
+Weapon_Parts_Krueger	Krueger Pièces d'armes
+1H_Kunai	Kunaï
+Laika_Engine_Alternator_Item	Laika Alternateur
+Laika_Body_ArmorHeavy_Left	Laika Gilet pare-balles lourd gauche
+Laika_Body_ArmorHeavy_Right	Laika Gilet pare-balles lourd à droite
+Laika_Body_ArmorLight_Left	Laika Gilet pare-balles léger gauche
+Laika_Body_ArmorLight_Right	Laika Gilet pare-balles léger à droite
+Laika_Body_ArmorLight_Top	Laika Haut léger pour armure corporelle
+Laika_Body_Front	Laika Devant du corps
+Laika_Body_Left	Laika Corps gauche
+Laika_Body_Right	Laika Corps droit
+Laika_Body_Top	Laika Haut du corps
+Laika_Bumper_Armor_Back_Item	Laika Armure de pare-chocs arrière
+Laika_Bumper_Back_Item	Laika Pare-chocs arrière
+Laika_Bumper_Front_Item	Laika Pare-chocs avant
+Laika_Door_ArmorHeavy_FrontLeft_Item	Laika Porte Armure Lourde Avant Gauche
+Laika_Door_ArmorHeavy_FrontRight_Item	Laika Porte Armure Lourde Avant Droite
+Laika_Door_Left_Item	Laika Porte gauche
+Laika_Door_ArmorLight_FrontLeft_Item	Laika Armure d'éclairage de porte avant gauche
+Laika_Door_ArmorLight_FrontRight_Item	Laika Armure De Lumière De Porte Avant Droite
+Laika_Door_Right_Item	Laika Porte droite
+Laika_Body_ArmorHeavy_Top_Item	Laika Haut d'armure lourde
+Laika_DoorHood_Item	Laika Capot
+Laika_Lights_FrontLeft	Laika Feux avant gauche
+Laika_Lights_FrontRight	Laika Feux avant droit
+Laika_Lights_RearLeft	Laika Feux arrière gauche
+Laika_Lights_RearRight	Laika Feux arrière droit
+Laika_Seat_FrontLeft_Item	Laika Siège Avant Gauche
+Laika_Seat_FrontRight_Item	Laika Siège Avant Droit
+Laika_DoorTrunk_ArmorHeavy_Item	Laika Armure de coffre lourde
+Laika_DoorTrunk_ArmorLight_Item	Laika Lumière d'armure de coffre
+Laika_DoorTrunk_Item	Laika Porte du coffre
+Battery_Charger_Large	Grand chargeur de batterie
+LogShed_1	Grand hangar à bûches
+Stone_Large	Grosse pierre
+Larve	Larve
+Laser_Detonator	Détonateur laser
+Lead_Plate	Plaque de plomb
+Leather_Backpack_01	Sac à dos en cuir
+Leather_Backpack_02	Sac à dos en cuir
+Leather_Backpack_03	Sac à dos en cuir
+Belt_Pistol_Holster	Étui à pistolet avec ceinture en cuir
+Leather_MiniSkirt_01	Minijupe en cuir
+Leather_MiniSkirt_02	Minijupe en cuir
+Leather_MiniSkirt_03	Minijupe en cuir
+Leather_Sheet	Feuille de cuir
+Leather_Shoes_02	Chaussure en cuir
+Lemon	Citron
+Lemon_Seed_Bag	Sachet de graines de citron - Sachet de graines de citron
+Lemon_Seeds	Graines de citron
+Lepiota_Procera	Lepiota Procera
+Lettuce	Laitue
+Lettuce_Seed_Bag	Sachet de graines de laitue - Sachet de graines de laitue
+Lettuce_Seeds	Graines de laitue
+ColorCan_LightBrown	Pot de peinture marron clair
+ColorCan_LightUrban	Pot de peinture urbain léger
+Lighter	Plus léger
+Lime	Chaux
+ColorCan_LimeGreen	Pot de peinture vert lime
+GlassBottle03	Jus de citron vert
+PETBottle03	Soda à la chaux
+PETBottle04	Soda à la chaux
+Ganoderma_Lucidum	Champignon Lingzhi
+WeaponCharm_Emoji	LMAO Charme d'arme Emoji
+Lockpick_Item	Crochetage
+LockpickingBoard	Tableau de crochetage
+ImprovisedRail_Long	Long rail improvisé
+Long_Paddle	Longue pagaie
+Long_wooden_stick	Long bâton en bois
+Vest_01	Chemise à manches longues
+Vest_02	Chemise à manches longues
+Vest_03	Chemise à manches longues
+Vest_04	Chemise à manches longues
+Vest_05	Chemise à manches longues
+Cigarettes1	Lucky Star Paquet de cigarettes
+Cigarette1	Cigarette Étoiles Chanceuses
+Lycoperdon_Gigantea	Lycoperdon Gigantea
+M1_Bayonet	Baïonnette M1
+M1_Clip	Lame-chargeur — M1
+WeaponSights_M1_Experimental	Sites expérimentaux M1
+WeaponFlashHider	Cache-Flash M1
+M1_Medical_Helmet	Casque médical M1
+Weapon_M1_Garand	Fusil M1
+WeaponSights_M1_ScopeAndSights	Lunette de visée — M1
+WeaponSuppressor_M1	Silencieux — M1
+Weapon_Parts_M1_Garand	Pièces d'armes M1
+Magazine_M16	Chargeur — M16
+Weapon_M16A4	M16A4
+WeaponSights_M16A4_FoldingSights	Viseur pliable M16A4
+Weapon_Parts_M16A4	Pièces d'armes M16A4
+Weapon_M1887	M1887
+Weapon_M1887_Sawed_off	M1887 Scié
+Weapon_Parts_M1887	Pièces d'armes M1887
+Weapon_MosinNagant	M1891
+Mosin_Bayonet	Baïonnette M1891
+WeaponSuppressor_M1891	Silencieux — M1891
+Weapon_Parts_MosinNagant	Pièces d'armes M1891
+Weapon_M1911	M1911
+Weapon_M1911_Engraved	M1911 gravé
+Weapon_M1911_Gold	M1911 Or
+Weapon_M1911_JayW	M1911 JayW
+Magazine_M1911	Chargeur — M1911
+M1911_Rail	Rail de montage — M1911
+Weapon_Parts_M1911	Pièces d'armes M1911
+Weapon_M249	M249
+Magazine_M249	Boîte de munitions M249
+Weapon_Parts_M249	Pièces d'armes M249
+M70_Bayonet	Baïonnette M70
+WeaponSuppressor_M82A1	Silencieux — M82 QDL
+WeaponSuppressor_M82A1_Black	Silencieux — M82 QDL
+WeaponSuppressor_M82A1_Desert	Silencieux — M82 QDL
+WeaponSuppressor_M82A1_Snow	Silencieux — M82 QDL
+WeaponScope_M82A1	Lunette de visée — M82
+WeaponScope_M82A1_Black	Lunette de visée — M82
+WeaponScope_M82A1_Desert	Lunette de visée — M82
+WeaponScope_M82A1_Snow	Lunette de visée — M82
+Weapon_M82A1	M82A1
+Weapon_M82A1_Black	M82A1
+Weapon_M82A1_Desert	M82A1
+Weapon_M82A1_Snow	M82A1
+Magazine_M82A1	Chargeur — M82A1
+Weapon_Parts_M82A1	Pièces d'armes M82A1
+Flashbang	Grenade assourdissante M84
+WeaponFlashlight_M9	Lampe de poche M9
+Magazine_M9	Chargeur — M9
+Weapon_Parts_M9	Pièces d'armes M9
+Weapon_MAC10	MAC-10
+Magazine_MAC10	Chargeur — MAC-10
+WeaponSuppressor_MAC10	Silencieux — MAC-10
+Weapon_Parts_MAC10	MAC-10 Pièces d'armes
+Magnifying_Glass1	Loupe
+Vodka	Vodka Majestic Bear
+Manchu_Bow_50	Manchu Arc
+Mango	Mangue
+Marine_Cap_01	Casquette Marine
+Marine_Cap_02	Casquette Marine
+Marine_Cap_03	Casquette Marine
+Marine_Cap_04	Casquette Marine
+Marine_Cap_05	Casquette Marine
+Marine_Cap_06	Casquette Marine
+Marine_Cap_07	Casquette Marine
+Marine_Cap_08	Casquette Marine
+Matches	Matchs
+Mayonnaise	Mayonnaise
+FishingBait_Meat	Viande Poisson Appât
+MeatSnack_01	Viande Snack Épicé
+MeatSnack_02	Viande Snack Épicé
+Medical_Glove_01	Gants médicaux
+1H_Medieval_Sword	Épée médiévale
+Battery_Charger_Medium	Chargeur de batterie moyen
+FishingHookPack2	Pack de crochets moyens
+Lock_Security_Lvl2	Protection de verrouillage moyenne
+Medium_Vehicle_StorageRack	Support de stockage pour véhicule moyen
+FishingHook1	Hameçon de pêche de taille moyenne
+Knife_Sheath	Étui pour arme de mêlée
+Metal_Arrow	Flèche en métal
+2H_Metal_Axe	Hache en métal
+2H_Metal_Baseball_Bat	Batte de baseball en métal
+Ammo_Crossbow_Bolt_Metal	Boulon d'arbalète en métal
+MetalDetector	Détecteur de métaux
+1H_Improvised_metal_knife	Couteau en métal
+1H_Metal_Pipe	Tuyau en métal
+Saw	Scie à métaux
+Metal_Scrap_01	Ferraille métallique
+Metal_Scrap_02	Ferraille métallique
+Metal_Scrap_03	Ferraille métallique
+Metal_Scrap_04	Ferraille métallique
+Metal_Scrap_05	Ferraille métallique
+1H_Metal_Sword	Épée en métal
+Ammo_Crossbow_Bolt_WoodenMetalTip	Boulon d'arbalète à pointe métallique
+Wooden_ArrowMetalTip	Flèche en bois à pointe métallique
+Bundle_Of_Metal_Tips	Conseils en métal
+HH_Shoes_05_01	Sandales à talons mi-hauts
+HH_Shoes_05_02	Sandales à talons mi-hauts
+HH_Shoes_05_03	Sandales à talons mi-hauts
+MilitaryBoots_JNA	Bottes militaires
+MilitaryBoots_Peace	Bottes militaires
+Military_Cap_01	Casquette militaire
+Military_Cap_02	Casquette militaire
+Military_Cap_03	Casquette militaire
+Military_Cap_04	Casquette militaire
+Military_Cap_05	Casquette militaire
+Military_Cap_06	Casquette militaire
+Military_Cap_07	Casquette militaire
+Military_Cap_08	Casquette militaire
+Compass	Boussole militaire
+Military_Goggles_01	Lunettes militaires
+Tactical_Sunglasses_01	Lunettes militaires
+Tactical_Sunglasses_02	Lunettes militaires
+Military_Helmet_01_01	Casque militaire
+Military_Helmet_01_02	Casque militaire
+Military_Helmet_01_03	Casque militaire
+Military_Helmet_01_04	Casque militaire
+Military_Helmet_01_05	Casque militaire
+Military_Helmet_01_06	Casque militaire
+Military_Helmet_01_07	Casque militaire
+Military_Helmet_01_08	Casque militaire
+Military_Helmet_01_09	Casque militaire
+Military_Quiver_01	Carquois militaire
+Military_Quiver_02	Carquois militaire
+Military_Quiver_03	Carquois militaire
+Military_Quiver_04	Carquois militaire
+Military_Quiver_05	Carquois militaire
+Military_Quiver_06	Carquois militaire
+Military_Quiver_07	Carquois militaire
+Military_Quiver_08	Carquois militaire
+Military_Shirt_01	Chemise militaire
+Military_Shirt_02	Chemise militaire
+Military_Shirt_03	Chemise militaire
+Military_Shirt_04	Chemise militaire
+Military_Shirt_05	Chemise militaire
+Military_Shirt_06	Chemise militaire
+Military_Shirt_07	Chemise militaire
+Military_Shirt_08	Chemise militaire
+1H_Military_Shovel	Pelle militaire
+1H_Military_Survival_Knife	Couteau de survie militaire
+1H_Military_Tomahawk	Tomahawk militaire
+Milk	Lait
+Leather_Shoes	Mirdas Chaussures
+Weapon_MK18	MK18
+WeaponSuppressor_MK18	Silencieux — MK18
+Weapon_Parts_MK18	MK18 Pièces d'armes
+1H_MK5000_Black	MK5000
+1H_MK5000_Metal	MK5000
+MMA_Glove_01	MMA Gants
+Mobile_Phone	Téléphone portable
+Hazmat_Suit_Modern	Combinaison Hazmat moderne
+Recurve_Bow_80	Mohawk 80#
+Sensor_Detonator	Détonateur à capteur de mouvement
+Motorbike_Battery	Batterie de moto
+Motorcycle_Boots_01	Bottes de moto
+Motorcycle_Boots_02	Bottes de moto
+Motorcycle_Boots_03	Bottes de moto
+Motorcycle_Glasses_01	Lunettes de moto
+Motorcycle_Glasses_02	Lunettes de moto
+Motorcycle_Jacket_01	Veste de moto
+Motorcycle_Jacket_02	Veste de moto
+Motorcycle_Jacket_03	Veste de moto
+Motorcycle_Mask_01	Masque de moto
+Motorcycle_Mask_02	Masque de moto
+Motorcycle_Pants_01	Pantalon de moto
+Motorcycle_Pants_02	Pantalon de moto
+Motorcycle_Pants_03	Pantalon de moto
+Weapon_MP5	MP5
+Weapon_MP5_K	MP5 K
+Magazine_MP5	Chargeur — MP5
+MP5_Rail_Short	Rail MP5
+Weapon_MP5_SD	MP5 SD
+WeaponSuppressor_MP5	Silencieux — MP5
+Weapon_Parts_MP5	MP5 Pièces d'armes
+WeaponSights_MRO_Red_Dot	Viseur point rouge — MRO
+Mulberry	Mûrier
+Mustard	Moutarde
+Mutant_Animal_Skin	Peau d'animal mutant - Peau d'animal mutant
+Bear_Head_Mutant	Tête d'ours mutant
+Mutant_Bear_Steak	Steak d'ours mutant - Steak d'ours mutant
+Boar_Head_Mutant	Tête de Sanglier Mutant
+Buck_Head_Mutant	Tête de mâle mutant
+Mutant_Buck_Steak	Steak de cerf mutant
+Wolf_Head_Mutant	Tête de loup mutant
+Mutant_Wolf_Steak	Steak de loup mutant - Steak de loup mutant
+1H_N9_Black	Baïonnette N9
+1H_N9_White	Baïonnette N9
+Nails	Ongles
+ColorCan_NavyBlue	Pot de peinture bleu marine
+ColorCan_NavyGrey	Pot de peinture gris marine
+Needle	Aiguille
+Night_Vision_Goggles_01	Lunettes de vision nocturne
+FishingLine_2	Ligne nylon, moyenne, 0.18 mm
+FishingLinePiece_2	Ligne nylon, moyenne, 0.18 mm
+FishingLine_3	Ligne en nylon, épaisse, 0.25 mm
+FishingLinePiece_3	Ligne en nylon, épaisse, 0.25 mm
+FishingLine_4	Ligne en nylon, épaisse, 0.5 mm
+FishingLinePiece_4	Ligne en nylon, épaisse, 0.5 mm
+FishingLine_1	Ligne en nylon, fine, 0.12 mm
+FishingLinePiece_1	Ligne en nylon, fine, 0.12 mm
+Oak_Nuts	Noix de Chêne
+Cal_40_OG-7V	OG-7V
+WeaponCharm_Ogre	Charme d'arme ogre
+Oil_Filter	Filtre à huile
+WeaponSights_OKP-7_Holographic	Viseur holographique — OKP
+Olives	Olivier
+Onion	Oignon
+Chips3	Rondelles d'oignon
+Open_Finger_Gloves_01	Gants à doigts ouverts
+Open_Finger_Gloves_02	Gants à doigts ouverts
+Open_Finger_Gloves_03	Gants à doigts ouverts
+Open_Finger_Gloves_04	Gants à doigts ouverts
+Open_Finger_Gloves_05	Gants à doigts ouverts
+Open_Finger_Gloves_06	Gants à doigts ouverts
+Opuntia_Fig	Figue Opuntia
+Orange	Orange
+Can02	Jus d'orange
+GlassBottle04	Jus d'Orange
+Orange_Seed_Bag	Sachet de graines d'orange - Sachet de graines d'orange
+Orange_Seeds	Graines d'oranges
+Fish_Orata	Dorade royale
+Orata_Fillet	Filet d'Orata
+Organic_Fertilizer	Engrais Organique
+HH_Boots_01	Cuissardes
+WeaponScope_Dragunov	Lunette de visée — P-223
+P17_Bayonet	Baïonnette P17
+C4_Pack	Emballé C4
+Padlock	Cadenas
+Painkillers_01	Analgésiques - Blister
+Painkillers_02	Antidouleurs - Coffret
+PainKillers_03	Analgésiques - Pot
+Pajama_Pants	Pantalon de pyjama
+Pajama_Shirt_01	Chemise de pyjama
+Pan	Poêle
+Inmate_pants	Pantalon
+Inmate_Pants_01_Forest_DigitalDeluxe	Pantalon
+Inmate_Pants_01_Snow_DigitalDeluxe	Pantalon
+Inmate_Pants_01_South_DigitalDeluxe	Pantalon
+Pantyhose_01	Collants
+Paper	Papier
+Parachute	Parachute
+Parking_Sensor	Capteur de stationnement
+Parsley	Panais
+Party_Glasses_01	Lunettes de fête
+Party_Glasses_02	Lunettes de fête
+Pasta	Pâtes
+Book_Cooking_Pasta	Livre de recettes de pâtes
+Weapon_PeaceKeeper38	Gardien de la paix 38
+Weapon_Parts_PeaceKeeper38	Peacekeeper 38 Pièces
+Peach	Pêche
+CannedPeach	Compote de pêches
+Peach_Seed_Bag	Sac de graines de pêche - Sac de graines de pêche
+Peach_Seeds	Graines de pêche
+Pear	Poire
+CannedPear	Compote de poire
+Pear_Seed_Bag	Sachet de graines de poire - Sachet de graines de poire
+Pear_Seeds	Graines de poire
+Pen	Stylo
+Penicillin01	Pénicilline
+Peppers_Seeds	Graines de poivre
+Peppers_Seed_Bag	Sachet de graines de poivrons - Sachet de graines de poivrons
+Pesticide	Pesticide
+Cal_40_PG-7M	PG-7M
+2H_Pickaxe	Pioche
+Rubber_sheet	Morceau de caoutchouc
+Pike_Fillet	Filet de brochet
+Fish_Pike	Brochet
+Pike_Head	Tête de brochet
+Pilot_Glasses	Lunettes pilotes
+Pilot_Hat_01	Chapeau de pilote
+Pilot_Jacket	Veste pilote
+Pine_Cone	Pomme de pin
+Pineapple	Ananas
+Ghillie_Suit_Pants_04	Bas de costume Ghillie rose
+Ghillie_Suit_Jacket_04	Haut de costume Ghillie rose
+PipeBomb	Bombe artisanale
+1H_Pipe_Wrench	Clé à tube
+WeaponCharm_PirateCat	Charme d'arme de chat pirate
+Pirate_EyePatch	Cache-œil de pirate
+Pirate_Hat_01	Chapeau de pirate
+Pirate_Hat_Sparrow_02	Chapeau de pirate
+2H_Pitchfork	Fourche
+Book_Cooking_Pizza	Livre de recettes de pizzas
+Scissors_Plastic	Ciseaux en plastique
+Hen_Torso	Poulet plumé
+Plum	Prune
+Plum_Seed_Bag	Sachet de graines de prune - Sachet de graines de prune
+Plum_Seeds	Graines de prune
+Police_Backpack_01	Sac à dos d'assaut de la police
+Police_Backpack_03	Sac à dos policier
+Police_Beanie_01	Bonnet de police
+ColorCan_PoliceBlue	Pot de peinture bleu police
+Police_Bulletproof_Vest_01	Gilet pare-balles de police
+Police_Cap_01	Casquette de police
+Police_Boonie_Hat_01	Chapeau de pêche de police
+Police_Gloves_01	Gants de police
+Police_Cap_02	Chapeau de police
+Police_Backpack_02	Sac à dos de randonnée de la police
+Police_Jacket_01	Veste de police
+Police_Open_Finger_Gloves_01	Gants de police à doigts ouverts
+Police_Shirt_01	Chemise de police
+pOLICE_Sweater_01	Pull policier
+Armor_Police_Vest_01	Gilet tactique de police
+Pork_Steak	Steak de porc
+Mutant_Pork_Steak	Steak de porc - Steak de porc mutant
+WeaponScope_POSP	POSP 4x24V
+PotassiumIodide_Pills_01	Pilules d'iodure de potassium - Blister
+PotassiumIodide_Pills_02	Pilules d'iodure de potassium - Boîte
+PotassiumIodide_Pills_03	Pilules d'iodure de potassium - Pot
+Potato	Pomme de terre
+Chips4	Chips De Pommes De Terre Salées
+Potato_Seed_Bag	Sac de graines de pomme de terre - Sac de graines de pomme de terre
+Potatoes_Seeds	Graines de pommes de terre
+PracticeTrap	Bombe d'entraînement
+Recurve_Bow_70	Predator 70#
+BlankSign_Premium	Panneau vierge de qualité supérieure.
+PremiumBoiliesPack	Pack d'appâts bouillettes premium
+Car_Lamp_Ceiling	Lampe électrique haut de gamme
+PressureCookerBomb	Bombe pour autocuiseur
+Pressure_Dressing	Pansement sous pression
+Compass_Primitive	Boussole primitive
+PromTrap	PROM-1 Le mien
+Fish_PrussianCarp	Carassin argenté
+Psilocybe_Cyanescens	Psilocybe Cyanescens
+WeaponScope_PU	Lunette de visée — PU
+Pumpkin	Citrouille
+Pumpkin_Seed_Bag	Sachet de graines de citrouille - Sachet de graines de citrouille
+Pumpkin_Seeds	Graines de citrouille
+Zombie_01_Left_Arm	Bras de marionnette
+Zombie_01_Right_Arm	Bras de marionnette
+Puppet_Eye	Oeil de marionnette
+Zombie_01_Left_Foot	Pied de marionnette
+Zombie_01_Right_Foot	Pied de marionnette
+Zombie_01_Head	Tête de marionnette
+Zombie_01_Head_No_teeth	Tête de marionnette
+Zombie_01_Left_Leg	Jambe de marionnette
+Zombie_01_Right_Leg	Jambe de marionnette
+ZombieMeat	Viande de marionnette
+Zombie_01_Torso	Torse de marionnette
+MemoryModule_Level3	Module de mémoire violet
+Qipao_Dress_01	Robe Qipao
+Qipao_Dress_02	Robe Qipao
+Qipao_Dress_03	Robe Qipao
+Qipao_Dress_04	Robe Qipao
+Qipao_Dress_05	Robe Qipao
+Qipao_Dress_06	Robe Qipao
+HH_Wedge_Heels_01_01	Chaussures Qipao
+HH_Wedge_Heels_01_02	Chaussures Qipao
+HH_Wedge_Heels_01_03	Chaussures Qipao
+HH_Wedge_Heels_01_04	Chaussures Qipao
+HH_Wedge_Heels_01_05	Chaussures Qipao
+HH_Wedge_Heels_01_06	Chaussures Qipao
+Rabbit_Left_Front	Lapin Quartier Avant Gauche
+Rabbit_Left_Back	Quartier arrière gauche du lapin
+RabbitLeg	Patte de lapin
+RabbitMeat	Viande de lapin
+Rabbit_Right_Front	Quartier avant droit du lapin
+Rabbit_Right_Back	Quartier arrière droit de lapin
+Racing_Helmet_01	Casque de course
+Radio	Radio
+Improvised_Gloves	Gants de chiffon
+Improvised_Shoes_02	Chaussures de chiffon
+Rag_Stripes	Bandes de chiffon
+Rager_Engine_Alternator_Item	Rager Alternateur
+Rager_Body_ArmorHeavy_Back_Item	Rager Gilet pare-balles dos lourd
+Rager_Body_ArmorHeavy_Left_Item	Rager Gilet pare-balles lourd gauche
+Rager_Body_ArmorHeavy_Right_Item	Rager Gilet pare-balles lourd à droite
+Rager_Body_ArmorHeavy_Top_Item	Rager Haut lourd pour gilet pare-balles
+Rager_Body_ArmorLight_Back_Item	Rager Gilet pare-balles léger dans le dos
+Rager_Body_ArmorLight_Left_Item	Rager Gilet pare-balles léger gauche
+Rager_Body_ArmorLight_Right_Item	Rager Gilet pare-balles léger à droite
+Rager_Body_ArmorLight_Top_Item	Rager Haut léger pour armure corporelle
+Rager_Body_Front	Rager Devant du corps
+Rager_Body_Left	Rager Corps gauche
+Rager_Body_Right	Rager Corps droit
+Rager_Body_Top	Rager Haut du corps
+Rager_Bumper_Back_Item	Rager Pare-chocs arrière
+Rager_Bumper_Front_Item	Rager Pare-chocs avant
+Rager_Door_ArmorHeavy_BackLeft_Item	Rager Armure De Porte Lourde Arrière Gauche
+Rager_Door_ArmorHeavy_BackRight_Item	Rager Armure De Porte Lourde Arrière Droite
+Rager_Door_ArmorHeavy_FrontLeft_Item	Rager Armure De Porte Lourde Avant Gauche
+Rager_Door_ArmorHeavy_FrontRight_Item	Rager Armure De Porte Lourde Avant Droite
+Rager_Door_ArmorLight_BackLeft_Item	Rager Lumière de blindage de porte arrière gauche
+Rager_Door_ArmorLight_BackRight_Item	Rager Lumière de blindage de porte arrière droite
+Rager_Door_ArmorLight_FrontLeft_Item	Rager Lumière de blindage de porte avant gauche
+Rager_Door_ArmorLight_FrontRight_Item	Rager Éclairage de blindage de porte avant droit
+Rager_Door_BackLeft_Item	Rager Porte arrière gauche
+Rager_Door_BackRight_Item	Rager Porte arrière droite
+Rager_Door_FrontLeft_Item	Rager Porte Avant Gauche
+Rager_Door_FrontRight_Item	Rager Porte Avant Droite
+Rager_DoorHood_Item	Rager Capot
+Rager_Lights_FrontLeft	Rager Feux avant gauche
+Rager_Lights_FrontRight	Rager Feux avant droit
+Rager_Lights_RearLeft	Rager Feux arrière gauche
+Rager_Lights_RearRight	Rager Feux arrière droit
+Rager_Lights_RearTop	Rager Feux arrière supérieurs
+Rager_Seat_FrontLeft_Item	Rager Siège Avant Gauche
+Rager_Seat_FrontRight_Item	Rager Siège Avant Droit
+Rager_DoorTrunk_ArmorHeavy_Item	Rager Armure de coffre lourde
+Rager_DoorTrunk_ArmorLight_Item	Rager Lumière d'armure de coffre
+Rager_DoorTrunk_Item	Rager Porte du coffre
+Rager_Wheel_ArmorHeavy_FrontLeft_Item	Rager Armure de roue lourde avant gauche
+Rager_Wheel_ArmorHeavy_FrontRight_Item	Rager Armure de roue lourde avant droite
+Rager_Wheel_ArmorLight_FrontLeft_Item	Rager Feu de protection de roue avant gauche
+Rager_Wheel_ArmorLight_FrontRight_Item	Rager Feu de protection de roue avant droit
+Rags	Chiffons
+Raincoat_01	Imperméable
+Raincoat_02	Imperméable
+Raincoat_03	Imperméable
+Raincoat_04	Imperméable
+Raincoat_05	Imperméable
+Raincoat_06	Imperméable
+Raisins	Raisins secs
+Ramsons	Ramson
+Grapes_Raw	Raisins crus
+RK_Beanie_01	Bonnet Raykit
+RK_Hoodie_01	Sweat à capuche Raykit
+Razor_Blade	Lame de Rasoir
+Rebar_Cutter	Coupeur de barres d'armature
+ColorCan_RedChocolate	Pot de peinture au chocolat rouge
+WeaponSights_RedDot_CA401B	Viseur point rouge
+Energy_Drink_Red_Ghoul	Boisson énergisante Red Ghoul
+RedOnion_Seed_Bag	Sachet de graines d'oignon rouge
+RedOnion_Seeds	Graines d'oignon rouge
+FishingBait_RedWorm	Appât pour poisson ver rouge
+Christmas_Headband_01	Oreilles de renne
+Remote_Door_Key	Clé de porte à distance
+Remote_Door_Sensor	Capteur de porte à distance
+KeyCardApex	Carte-clé du centre de recherche
+Respirator_01	Respirateur
+Retro_Helmet_01	Casque rétro
+Book_Cooking_Rice	Livre de recettes de riz
+Richards_Cheese	Le fromage de Richard
+Rider_Helmet_01	Casque de cavalier
+Rider_Helmet_02	Casque de cavalier
+Rider_Helmet_03	Casque de cavalier
+Riot_Helmet_02	Casque anti-émeute
+ScopeRail_AK47	RIS Adaptateur
+RIS_Armor_Military_Front_Item	RIS Front militaire blindé
+RIS_Body_Military_Item	RIS Corps Militaire
+RIS_BrakeLight_Center_Item	RIS Centre des feux stop
+RIS_BrakeLight_Left_Item	RIS Feu stop gauche
+RIS_BrakeLight_Right_Item	RIS Feu stop droit
+RIS_Headlight_Left_Item	RIS Phare gauche
+RIS_Headlight_Right_Item	RIS Phare droit
+RIS_Plow_Civilian	RIS Labourer Civil
+RIS_Spikes_Military	RIS Pointes militaires
+RIS_Wheel_Armor_Item	RIS Armure de roue
+Tobacco_Rolled	Tabac roulé
+WeaponCharm_Roller_Skate	Charme d'arme de patin à roulettes
+Rope1	Corde 5m
+Dog_Rose	Rose Musquée
+Weapon_Parts_RPG	RPG Pièces d'armes
+Weapon_RPG7	RPG7
+Weapon_RPK-74	RPK
+Magazine_RPK	Chargeur — RPK
+Weapon_Parts_RPK-74	RPK Pièces d'armes
+Rubber_band	Élastique
+Fish_Ruffe	Grémille
+Ruffe_Fillet	Filet de Ruffe
+Skirt_02_01	Jupe à volants
+Skirt_02_02	Jupe à volants
+Skirt_02_03	Jupe à volants
+Skirt_02_04	Jupe à volants
+Skirt_02_05	Jupe à volants
+Skirt_02_06	Jupe à volants
+Skirt_02_07	Jupe à volants
+Safety_Goggles	Lunettes de sécurité
+Safety_pin	Épingle de sécurité
+Salsify_roots	Salsifis - racines
+SaltBag	Sac de sel
+SaltGrain	Grains de sel
+SandBag	Sac de sable
+Santa_Hat_01	Chapeau de Père Noël
+Santa_Jacket	Veste Père Noël
+Santa_Pants	Pantalon Père Noël
+CannedSardine	Sardine
+CannedSardine_Deluxe	Sardine
+Sardine_Fillet	Filet De Sardines
+FishingBait_Sardine	Appât pour poisson sardine
+1H_Scalpel	Scalpel
+Weapon_Parts_SCAR_L	SCAR Pièces d'armes L
+Weapon_SCAR_DMR	SCAR-DMR
+Magazine_SCAR_DMR	Chargeur — SCAR-DMR
+Weapon_Parts_SCAR_DMR	SCAR-DMR Pièces d'armes
+Weapon_SCAR_L	SCAR-L
+Rabbit_Mask_01	Masque de lapin effrayant
+School_Backpack_01	Sac à dos d'école
+School_Backpack_Boy_02	Sac à dos d'école
+School_Backpack_Boy_03	Sac à dos d'école
+School_Backpack_Girl_04	Sac à dos d'école
+School_Backpack_Girl_05	Sac à dos d'école
+School_Backpack_Girl_06	Sac à dos d'école
+Scissors_01	Ciseaux
+Recurve_Bow	Scorpion 40#
+1H_Scout_Black	Scout
+1H_Scout_White	Scout
+Screwdriver	Tournevis
+Scum_Sunrise	SCUM Sunrise
+SCUMkin_Spice_Latte	SCUMkin Spice Latter
+Weapon_SDASS	SDASS 12M
+Weapon_Parts_SDASS	SDASS Pièces d'armes
+SeaSalt_01	Sel de mer
+SeaSalt_02	Sel de mer
+WeaponSights_Sentry_RDRS	Sentinelle RDRS
+WeaponCharm_Sentry	Charme d'arme de sentinelle
+Weapon_Serpent357	Serpent 357
+Weapon_Parts_Serpent357	Serpent 357 Pièces d'armes
+Sewing_kit	Kit de couture
+Sexy_Jeans_Shorts_01	Short en jean sexy
+Sexy_Jeans_Shorts_02	Short en jean sexy
+Sexy_Jeans_Shorts_03	Short en jean sexy
+Sexy_Jeans_Shorts_04	Short en jean sexy
+Sexy_Jeans_Shorts_05	Short en jean sexy
+Sexy_Jeans_Shorts_06	Short en jean sexy
+Sexy_Jeans_Shorts_07	Short en jean sexy
+WeaponSights_Shark	Viseur réflexe — Shark
+Shemagh_Scarf_01	Écharpe Shemagh
+Shemagh_Scarf_02	Écharpe Shemagh
+Shemagh_Scarf_03	Écharpe Shemagh
+Shemagh_Scarf_04	Écharpe Shemagh
+Shemagh_Scarf_05	Écharpe Shemagh
+Shemagh_Scarf_06	Écharpe Shemagh
+Shemagh_Scarf_07	Écharpe Shemagh
+Shemagh_Scarf_08	Écharpe Shemagh
+Shimoro_Vest	Shimoro Gilet
+Inmate_shirt_01	Chemise
+Inmate_Shirt_01_Forest_DigitalDeluxe	Chemise
+Inmate_Shirt_01_South_DigitalDeluxe	Chemise
+ImprovisedRail_Short	Rail court improvisé
+Short_Paddle_A	Pagaie courte
+Short_Paddle_B	Pagaie courte
+Shorts_Pants_01_01	Pantalon court
+Shorts_Pants_01_02	Pantalon court
+Shorts_Pants_01_03	Pantalon court
+Shorts_Pants_01_04	Pantalon court
+Shorts_Pants_01_05	Pantalon court
+Shorts_Pants_01_06	Pantalon court
+Shorts_Pants_01_07	Pantalon court
+Shorts_Pants_01_08	Pantalon court
+Shorts_Pants_01_09	Pantalon court
+Shorts_Pants_01_10	Pantalon court
+Short_Trousers_01_01	Pantalon court
+Short_Trousers_01_02	Pantalon court
+Short_Trousers_01_03	Pantalon court
+Short_Trousers_01_04	Pantalon court
+Short_Trousers_01_05	Pantalon court
+2H_Shovel_02	Pelle
+1H_Shuriken	Shuriken
+SidecarBike_Brakelight_Item	Feu stop pour vélo side-car
+SidecarBike_Fender_Front_Item	Garde-boue avant de vélo Sidecar
+SidecarBike_Fender_Rear_Item	Garde-boue arrière pour vélo side-car
+SidecarBike_Fender_Sidecar_Item	Side-car
+SidecarBike_Headlight_Item	Phare de vélo side-car
+SidecarBike_Seat_Back_Item	Dossier de siège de vélo side-car
+SidecarBike_Seat_Front_Item	Siège de vélo side-car avant
+SidecarBike_Sidecar_Brakelight_Item	Feu stop side-car pour vélo
+SidecarBike_Sidecar_Headlight_Item	Phare de side-car de vélo de side-car
+SidecarBike_Sidecar_WeaponStation_Item	Station d'armes side-car pour vélo side-car
+SidecarBike_Wheel_4x16_Item	Roue de vélo side-car
+SilentAlarm	Alarme silencieuse
+Lock_Item_Medium	Serrure argentée
+Skewer	Brochette
+Skewer_02	Brochette
+Bear_Skinned	Ours écorché
+Boar_Skinned	Sanglier écorché
+Buck_Skinned	Buck écorché
+Doe_Skinned	Biche écorchée
+Donkey_skinned	Âne écorché
+Goat_Skinned	Chèvre écorchée
+Horse_Skinned	Cheval écorché
+Rabbit_Skinned	Lapin écorché
+Wolf_Skinned	Loup écorché
+Skirt_01_01	Jupe
+Skirt_01_02	Jupe
+Skirt_01_03	Jupe
+Skirt_02_08	Jupe
+Weapon_SKS	SKS
+SKS_Bayonet	SKS Baïonnette
+Magazine_Clip_SKS	Lame-chargeur — SKS
+Weapon_Parts_SKS	SKS Pièces d'armes
+Halloween_Mask_Scream	Masque de crâne
+WeaponCharm_Skull	Charme d'arme de crâne
+Slav_Reviver	Slav Reviver
+Slavic_Gent	Slavic Gent
+Sledgehammer	Marteau
+Sleeveless_Camo_Shirt_01	Chemise camouflage sans manches
+Sleeveless_Camo_Shirt_02	Chemise camouflage sans manches
+Sleeveless_Camo_Shirt_03	Chemise camouflage sans manches
+Sleeveless_Camo_Shirt_04	Chemise camouflage sans manches
+Sleeveless_Camo_Shirt_05	Chemise camouflage sans manches
+Sleeveless_Camo_Shirt_06	Chemise camouflage sans manches
+Sleeveless_Shirt_01	Chemise sans manches
+Sleeveless_Shirt_02	Chemise sans manches
+BowSilencer_SlipOn	Silencieux d'étrave à enfiler
+Slippers_03	Pantoufles
+Slouch_Camo_Hat_01	Chapeau camouflage ample
+Slouch_Camo_Hat_02	Chapeau camouflage ample
+Slouch_Camo_Hat_03	Chapeau camouflage ample
+Slouch_Camo_Hat_04	Chapeau camouflage ample
+Slouch_Camo_Hat_05	Chapeau camouflage ample
+Slouch_Camo_Hat_06	Chapeau camouflage ample
+Slouch_Hat_01	Chapeau souple
+Slouch_Hat_02	Chapeau souple
+12_Gauge_Slug_Ammobox	Boîte de munitions pour fusil de chasse Slugs
+Small_Animal_guts	Intestins de petits animaux
+Mine_02	Petite mine antipersonnel
+1H_Small_Axe	Petite hache
+Battery_Charger_Small	Petit chargeur de batterie
+WeaponCharm_SmallBullet	Charme d'arme à petite balle
+Christmas_Present_01	Petit cadeau de Noël
+FishingHookPack1	Pack de petits hameçons
+Gasoline_Canister_Small	Petit bidon d'essence
+Improvised_Bag_Small_02	Petit sac à dos improvisé
+LogShed_2	Petit hangar à bûches
+Screwdriver_Small	Petit tournevis
+1H_Little_Spade	Petite pelle
+Wooden_Sticks_Bundle_Meduim	Paquet de petits bâtons
+Stone_Small	Petite pierre
+1H_Stone_Axe_Head	Petite tête de hache en pierre
+Tool_Box_SMall	Petite boîte à outils
+Small_Vehicle_StorageRack	Support de stockage pour petits véhicules
+Wooden_Log_Small_01	Petite bûche de bois
+Wooden_Log_Small_02	Petite bûche de bois
+Wooden_Log_Small_03	Petite bûche de bois
+Wooden_Stick	Petit bâton en bois
+Smartphone_Battery	Batterie de smartphone
+Smoke_Grenade	Grenade fumigène
+Smoke_Grenade_Green	Grenade fumigène
+Smoke_Grenade_Red	Grenade fumigène
+Smoke_Grenade_Violet	Grenade fumigène
+Smoke_Grenade_Yellow	Grenade fumigène
+Dish_Smoked_Drumstick	Pilon Fumé
+Dish_Smoked_Fish	Filet De Poisson Fumé
+Dish_Smoked_RabbitLeg	Cuisse De Lapin Fumée
+Dish_Smoked_Meat	Viande Rouge Fumée
+WeaponSights_Snake	Viseur réflexe — Snake
+ColorCan_SnowWhite	Pot de peinture Blanche Neige
+Snowballs_01	Boule de neige
+Soap	Savon
+Kilt_Sock_01	Chaussettes
+Kilt_Socks_02	Chaussettes
+Kilt_Socks_03	Chaussettes
+Kilt_Socks_04	Chaussettes
+Kilt_Socks_05	Chaussettes
+Kilt_Socks_06	Chaussettes
+Sock_01	Chaussettes
+Can01	soude
+Sodium_Hydroxide	Hydroxyde de sodium
+Book_Cooking_Soup	Livre de recettes de soupe
+SoySauce	Sauce soja
+2H_Shovel_01	Pelle à pelle
+CannedSpaghetti	Spaghetti Aux Boulettes De Viande
+Snake_Skin_Bow	Specialist Archer Arc
+WeaponScope_Spektral_DR	SpektralDR
+SpicesMix_01	Mélange d'épices
+SpicesMix_02	Mélange d'épices
+Chips2	Chips de nachos épicées
+Spinach	Épinards
+Spinach_Seed_Bag	Sachet de graines d'épinards - Sachet de graines d'épinards
+Spinach_Seeds	Graines d'épinards
+College_Jacket_01	Veste Spitfire
+College_Jacket_02	Veste Spitfire
+College_Jacket_03	Veste Spitfire
+College_Jacket_04	Veste Spitfire
+College_Jacket_05	Veste Spitfire
+College_Jacket_06	Veste Spitfire
+College_Jacket_07	Veste Spitfire
+College_Jacket_08	Veste Spitfire
+MA1_Spitfire_01	Veste Spitfire
+MA1_Spitfire_02	Veste Spitfire
+MA1_Spitfire_03	Veste Spitfire
+MA1_Spitfire_04	Veste Spitfire
+Spliff	Joint
+Spon	SPON
+Dish_Sandwich_Spon	Sandwich Spon
+Spoon	Cuillère
+Scottish_Sporran_Bag_01	Sac Sporran
+Sportbike_Seat_Brakelight_Item	Feu stop pour moto sportive
+Sportbike_Fender_Item	Garde-boue de moto sportive
+Sportbike_Wind_Deflector_Headlight_Item	Phare de moto sportive
+Sportbike_Seat_Item	Siège de moto sportive
+Sportbike_Body_Street_Item	Carrosserie de rue Sportbike
+Sportbike_Fender_Street_Item	Garde-boue de rue Sportbike
+Sportbike_Wind_Deflector_Street_Headlight_Item	Phare de rue Sportbike
+Sportbike_Seat_Street_Item	Siège de rue Sportbike
+Sportbike_Wind_Deflector_Street_Item	Déflecteur d'air Sportbike Street
+Sportbike_Wind_Deflector_Item	Déflecteur d'air Sportbike
+Fish_Sardine	Sardine tachetée
+Spring	Printemps
+Stabproof_Vest_01_01	Gilet anti-coups de couteau
+Stabproof_Vest_01_02	Gilet anti-coups de couteau
+Stabproof_Vest_01_03	Gilet anti-coups de couteau
+Stabproof_Vest_01_04	Gilet anti-coups de couteau
+Stabproof_Vest_01_05	Gilet anti-coups de couteau
+Stabproof_Vest_01_06	Gilet anti-coups de couteau
+Stabproof_Vest_01_07	Gilet anti-coups de couteau
+Stabproof_Vest_01_08	Gilet anti-coups de couteau
+Stabproof_Vest_01_09	Gilet anti-coups de couteau
+Credit_Card_Starter	Carte bancaire de démarrage
+Book_Cooking_Stew	Livre de recettes de ragoût
+Stinging_Nettle	Ortie piquante
+Stockings_01	Bas
+Stockings_02	Bas
+Stockings_03	Bas
+Stockings_04	Bas
+Stockings_05	Bas
+Stockings_06	Bas
+Stockings_07	Bas
+Stockings_08	Bas
+Stone	Pierre
+1H_Stone_Axe	Hache de pierre
+1H_ImprovisedKnife	Couteau en pierre
+Ammo_Crossbow_Bolt_WoodenStoneTip	Boulon d'arbalète à pointe de pierre
+Wooden_ArrowStoneTip	Flèche en bois à pointe de pierre
+Bundle_Of_Stone_Tips	Conseils pour la pierre
+Strait_Jacket	Camisole de force
+Wild_Strawberry	Fraise
+Sugar	Sucre
+SugarBeet	Betterave sucrière
+Round_Sunglasses	Lunettes de soleil
+WeaponCharm_Sunglasses_Emoji	Charme d'arme Emoji de lunettes de soleil
+Super_Glue	Super Colle
+Weapon_SVD_Dragunov	SVD
+Magazine_SVD_Dragunov	Chargeur — SVD
+WeaponSuppressor_SVD	Silencieux — SVD
+Weapon_Parts_SVD	SVD Pièces d'armes
+Sweater_01	Pull
+Sweater_02	Pull
+Sweater_03	Pull
+Sweater_04	Pull
+Sweater_05	Pull
+Tracksuit_Pants_01_01	Pantalons de survêtement
+Tracksuit_Pants_01_02	Pantalons de survêtement
+Tracksuit_Pants_01_03	Pantalons de survêtement
+Tracksuit_Pants_01_04	Pantalons de survêtement
+Tracksuit_Pants_01_05	Pantalons de survêtement
+Tracksuit_Pants_02_01	Pantalons de survêtement
+Tracksuit_Pants_02_02	Pantalons de survêtement
+Tracksuit_Pants_02_03	Pantalons de survêtement
+Tracksuit_Pants_02_04	Pantalons de survêtement
+Tracksuit_Pants_02_05	Pantalons de survêtement
+Shimoro_Pants	Pantalons de survêtement - Shimoro Pantalons
+Canned_Corn	Maïs sucré
+CantaloupeMelon_Seed_Bag	Sachet de graines de melon sucré
+WeaponCharm_Sword	Charme d'arme épée
+Syringe	Seringue
+TC_Backpack	T0pCL4SS Sac à dos
+Baseball_Cap_13	T0pCL4SS Casquette
+Tactical_Gloves_01_01	Gants tactiques
+Tactical_Gloves_01_02	Gants tactiques
+Tactical_Gloves_01_03	Gants tactiques
+Tactical_Gloves_01_04	Gants tactiques
+Tactical_Gloves_01_05	Gants tactiques
+Tactical_Gloves_01_06	Gants tactiques
+Tactical_Gloves_01_07	Gants tactiques
+Tactical_Gloves_01_08	Gants tactiques
+Police_Handgun_Holster	Étui pour arme de poing tactique
+Tactical_Handgun_Holster_01	Étui pour arme de poing tactique
+Tactical_Handgun_Holster_02	Étui pour arme de poing tactique
+Tactical_Handgun_Holster_03	Étui pour arme de poing tactique
+Tactical_Handgun_Holster_04	Étui pour arme de poing tactique
+Tactical_Handgun_Holster_05	Étui pour arme de poing tactique
+Tactical_Handgun_Holster_06	Étui pour arme de poing tactique
+Tactical_Handgun_Holster_07	Étui pour arme de poing tactique
+Tactical_Jacket_01_01	Veste tactique
+Tactical_Jacket_01_02	Veste tactique
+Tactical_Jacket_01_03	Veste tactique
+Tactical_Jacket_01_04	Veste tactique
+Tactical_Jacket_01_05	Veste tactique
+Tactical_Jacket_01_06	Veste tactique
+Tactical_Jacket_01_07	Veste tactique
+Tactical_Jacket_01_09	Veste tactique
+MilitaryPants_01	Pantalon militaire tactique
+MilitaryPants_02	Pantalon militaire tactique
+MilitaryPants_03	Pantalon militaire tactique
+MilitaryPants_04	Pantalon militaire tactique
+MilitaryPants_05	Pantalon militaire tactique
+MilitaryPants_06	Pantalon militaire tactique
+MilitaryPants_07	Pantalon militaire tactique
+MilitaryPants_08	Pantalon militaire tactique
+MilitaryPants_09	Pantalon militaire tactique
+MilitaryPants_10	Pantalon militaire tactique
+Tactical_Sweater_01	Pull tactique
+Tactical_Sweater_02	Pull tactique
+Tactical_Sweater_03	Pull tactique
+Tactical_Sweater_04	Pull tactique
+Tactical_Sweater_05	Pull tactique
+Tactical_Sweater_06	Pull tactique
+Tactical_Sweater_07	Pull tactique
+Tactical_Vest_01	Gilet tactique
+Takedown_Bow	Arc de démontage
+2H_Tang_Dao	Tang Dao
+2H_Tang_Dao_Black_Dragon	Dragon Noir Tang Dao
+2H_Tang_Dao_Damascus	Tang Dao Damas
+Tang_pants_01	Pantalon Tang
+Tang_pants_02	Pantalon Tang
+Tang_pants_03	Pantalon Tang
+Tang_pants_04	Pantalon Tang
+Tang_pants_05	Pantalon Tang
+Tang_shirt_01	Chemise Tang
+Tang_shirt_02	Chemise Tang
+Tang_shirt_03	Chemise Tang
+Tang_shirt_04	Chemise Tang
+Tang_shirt_05	Chemise Tang
+Tangerine	Mandarine
+Tangerine_Seed_Bag	Sachet de graines de mandarine - Sachet de graines de mandarine
+Tangerine_Seeds	Graines de mandarine
+Tea_Pack	Paquet de thé
+TearGasGrenade	Grenade lacrymogène
+Weapon_590A11	TEC01 490
+Weapon_Parts_590A11	TEC01 490 Pièces d'armes
+Weapon_M9	TEC01 M9
+Weapon_M9_Silver	TEC01 M9
+WeaponCharm_TEC1	TEC1 Charme d'arme
+Tequila	Téquila
+The_Island_Special	Le spécial île
+Thermometer	Thermomètre
+Thread	Sujet
+WeaponCharm_Tiger	Charme d'arme du tigre
+RH_Tights	Collants
+Tinder	Amadou
+Tire_Repair_Kit	Kit de réparation de pneus
+TNT	TNT
+Toaster_Pastries	Pâtisseries grille-pain
+Toaster_Pastries2	Pâtisseries grille-pain
+Tobacco	Tabac
+Tobacco_Seed_Bag	Sachet de graines de tabac - Sachet de graines de tabac
+Tobacco_Seeds	Graines de tabac
+Tomato	Tomate
+TomatoPelate	Tomate Pelati
+TomatoSauce	Sauce Tomate
+Tomato_Seed_Bag	Sac de graines de tomates - Sac de graines de tomates
+Tomato_Seeds	Graines de tomates
+Weapon_TommyGun	Tommy Gun
+Magazine_TommyGun	Chargeur — Tommy Gun
+Weapon_Parts_TommyGun	Pièces d'armes Tommy Gun
+Tool_Box	Boîte à outils
+05_Teeth_Necklace	Collier de dents
+10_Teeth_Necklace	Collier de dents
+15_Teeth_Necklace	Collier de dents
+WeaponCharm_Tooth	Charme d'arme dentaire
+Torch	Torche
+Tourniquet	Garrot
+Tracksuit_Top_01	Haut de survêtement
+Tracksuit_Top_02	Haut de survêtement
+Tracksuit_Top_03	Haut de survêtement
+Tracksuit_Top_04	Haut de survêtement
+Tracksuit_Top_05	Haut de survêtement
+Tractor_Engine_Alternator_Item	Alternateur de tracteur
+Tractor_Body_Left_ArmorHeavy_Item	Gilet pare-balles pour tracteur lourd gauche
+Tractor_Body_Right_ArmorHeavy_Item	Gilet pare-balles pour tracteur lourd à droite
+Tractor_Body_Top_ArmorHeavy_Back_Item	Gilet pare-balles pour tracteur, haut lourd, dos
+Tractor_Body_Top_ArmorHeavy_Front_Item	Gilet pare-balles pour tracteur, haut lourd, avant
+Tractor_Body_Top_ArmorHeavy_Left_Item	Gilet pare-balles pour tracteur lourd en haut à gauche
+Tractor_Body_Top_ArmorHeavy_Right_Item	Gilet pare-balles pour tracteur lourd en haut à droite
+Tractor_Body_Left_Item	Carrosserie du tracteur gauche
+Tractor_Body_Right_Item	Carrosserie du tracteur droite
+Tractor_Body_Left_Brakelight_Item	Feu stop du tracteur gauche
+Tractor_Body_Right_Brakelight_Item	Feu stop du tracteur droit
+Tractor_Door_Left_ArmorHeavy_Item	Armure de porte de tracteur lourde gauche
+Tractor_Door_Right_ArmorHeavy_Item	Armure De Porte De Tracteur Lourde Droite
+Tractor_Body_Top_Door_Left_Item	Porte du tracteur gauche
+Tractor_Body_Top_Door_Right_Item	Porte du tracteur droite
+Tractor_Seat_Driver_Item	Siège conducteur de tracteur
+Tractor_Door_Hood_Headlight_Left_Item	Phare de tracteur gauche
+Tractor_Door_Hood_Headlight_Right_Item	Phare de tracteur droit
+Tractor_Door_Hood_Item	Capot de tracteur
+Tractor_WheelArmorHeavy_Front_Item	Armure de roue de tracteur avant lourd
+HighTop_Shoes	Chaussures d'entraînement
+1H_Traynors_Axe	Hache de Traynor
+FishingHookPack4	Pack d'hameçons triples
+FishingHook3	Hameçon de pêche triple
+Tree_Bark	Écorce d'arbre
+Tree_Branches	Branche d'arbre
+Weapon_Trench_Gun	Pistolet de tranchée
+Weapon_Parts_Trench_Gun	Pièces d'armes pour canons de tranchée
+Fish_Carp_Trophy	Carpe Trophée
+Fish_Catfish_Trophy	Poisson-chat trophée
+Fish_Dentex_Trophy	Trophée Dentex
+Fish_Pike_Trophy	Brochet trophée
+Fish_Tuna_Trophy	Thon Trophée
+Jeans_Jersey_Jacket_01	Veste de camionneur
+Jeans_Jersey_Jacket_02	Veste de camionneur
+Trucker_Jacket_01	Veste de camionneur
+Trucker_Jacket_02	Veste de camionneur
+Trucker_Jacket_03	Veste de camionneur
+Trucker_Jacket_04	Veste de camionneur
+Fish_Tuna	Thon
+Tuna_Fillet	Filet de thon
+Tuna_Head	Tête de thon
+MRE_TunaSalad	Salade de thon MRE
+Dish_Sandwich_Tuna	Sandwich au thon
+Hiking_Backpack_Tyrone	Tyrone Sac à dos de randonnée
+Tyrone_Shoelacez_Mask	Tyrone Shoelacez Masque
+Weapon_Parts_UMP	UMP Pièces d'armes
+Weapon_UMP45	UMP-45
+Magazine_UMP45	Chargeur — UMP-45
+Rice	Uncle Pong Riz
+Underpants_01	Slip
+Underpants_02	Slip
+Underpants_03	Slip
+Underpants_04	Slip
+Underpants_05	Slip
+F_Bra_Supporter_01	Maillot de corps
+Scum_Shirt_Supporter_Pack_Black_01	Maillot de corps
+Undershirt_01	Maillot de corps
+Cereal_UpNGo	UpNGo Céréales
+Utility_Belt_01	Ceinture utilitaire
+WeaponSights_V3_Holographic	Viseur holographique — V3
+WeaponScope_Vampyr	Lunette de visée — Vampyr
+VegetableOil	Huile végétale
+ColorCan_VelvetBrown	Pot de peinture marron velours
+2H_Katana1	Katana de Vhendya
+Weapon_VHS2_Rail	VHS 2
+Weapon_VHS2	VHS 2 CT
+Weapon_VHS_BG	VHS BG
+Weapon_Parts_VHSBG	VHS BG Pièces d'armes
+Magazine_VHS2	Chargeur — VHS
+Weapon_Parts_VHS	VHS2 Pièces d'armes
+Vinegar	Vinaigre
+Hazmat_Suit_Vintage	Costume de matières dangereuses vintage
+Vintage_Jail_Cap_01	Casquette de prison vintage
+Vintage_Jail_Pants_01	Pantalon de prison vintage
+Vintage_Jail_Shirt_01	Chemise de prison vintage
+Weapon_Viper_M357	Vipère M357
+DW715_Rail	Rail Viper M357
+Weapon_Parts_Viper_M357	Pièces d'armes Viper M357
+Geek_Goggels	Lunettes de vue
+Vitamins_01	Pilules de vitamines - Blister
+Vitamins_02	Pilules de vitamines - Boîte
+Vitamins_03	Pilules de vitamines - Pot
+Weapon_VSS_VZ	VSS VZ
+Weapon_Parts_VSS_VZ	VSS VZ Pièces d'armes
+Waist_Bag_Small_01	Sac de taille
+Waist_Bag_Small_02	Sac de taille
+Waist_Bag_Small_03	Sac de taille
+Dish_Salad_Waldorf	Waldorf Salade
+Walnut	Noyer
+ColorCan_WarmGrey	Pot de peinture gris chaud
+WeaponSights_Wasp	Viseur réflexe — Wasp
+Water_05l	Bouteille d'eau
+Water_Bucket	Seau d'eau
+Watering_Can	Seau à eau - Arrosoir
+Watermelon	Pastèque
+Watermelon_Seed_Bag	Sachet de graines de pastèque - Sachet de graines de pastèque
+Watermelon_Seeds	Graines de pastèque
+Watermelon_slice	Tranche de pastèque
+WeaponGhillie_Desert	Arme Ghillie
+WeaponGhillie_Winter	Arme Ghillie
+WeaponGhillie_Woodland	Arme Ghillie
+Herbicide	Répulsif contre les mauvaises herbes
+WhiteFlour	Farine de blé
+Sportbike_Wheel_100_90_R18_Item	Roue 100 90 R18
+Dirtbike_Wheel_110_80_R19_Item	Roue 110 80 R19
+Cruiser_Wheel_155_66_R17	Roue 155 66 R17
+Cruiser_Wheel_188_53_R17	Roue 188 53 R17
+Wheel_155_R65_Item	Roue 205 55 R16
+Wheel_205_80_R12_Item	Roue 205 80 R12
+Wheel_255_55_R16_Item	Roue 215 65 R16
+Wheel_265_60_R18_Item	Roue 265 60 R18
+Bicycle_Wheel_54_622_Item	Roue 54 622
+Wheel_6x16_Item	Roue 6 16
+Bicycle_Wheel_60_622_Item	Roue 60 622
+Sportbike_Wheel_90_90_R18_Item	Roue 90 90 R18
+Dirtbike_Wheel_90_90_R21_Item	Roue 90 90 R21
+Whiskey	Whisky
+Wild_Cherry	Cerise sauvage
+PenisWarmer_01	Willy plus chaud
+PenisWarmer_02	Willy plus chaud
+PenisWarmer_03	Willy plus chaud
+Wine	Vin
+WineCork	Bouchon de vin
+Ghillie_Suit_Pants_05	Bas de costume Ghillie d'hiver
+Ghillie_Suit_Jacket_05	Haut de costume Ghillie d'hiver
+Wire	Fil 10m
+2H_Baseball_Bat_with_wire	Batte de baseball en fil de fer
+Wire_Cutters_01	Coupe-fils
+1H_Wooden_club_with_wire	Club en bois en fil de fer
+Wolf_Head	Tête de loup
+Wolf_Hat_01	Masque tête de loup
+Wolf_Left_Back_Leg	Jambe de loup
+Wolf_Left_Front_Leg	Jambe de loup
+Wolf_Right_Back_Leg	Jambe de loup
+Wolf_Right_Front_Leg	Jambe de loup
+Wolf_Steak	Steak de loup
+Wolf_Torso	Torse de loup
+Woodcuters_Shirt_01	Chemise de bûcheron
+Woodcuters_Shirt_02	Chemise de bûcheron
+Woodcuters_Shirt_03	Chemise de bûcheron
+Wooden_Arrow	Flèche en bois
+Wooden_Arrows_6pc	Flèche en bois
+1H_Wooden_club	Massue en bois
+1H_Wooden_club_with_spikes	Club en bois avec clous
+Ammo_Crossbow_Bolt_Wooden	Carreau d'arbalète en bois
+Wooden_Fork	Fourchette en bois
+Wooden_Log_01	Bûche de bois
+Wooden_Log_02	Bûche de bois
+Wooden_Plank	Planche de bois
+Wooden_Spoon	Cuillère en bois
+2H_Wooden_Sword	Épée en bois
+Penobscot_Bow_40	Woodland Hunter Arc
+Wool_Gloves_01_01	Gants en laine
+Wool_Gloves_01_02	Gants en laine
+Wool_Gloves_01_03	Gants en laine
+Wool_Gloves_01_04	Gants en laine
+Wool_Gloves_01_05	Gants en laine
+Wool_Gloves_01_06	Gants en laine
+Wool_Gloves_01_07	Gants en laine
+Working_Helmet_01	Casque de travail
+Working_Helmet_02	Casque de travail
+Working_Helmet_03	Casque de travail
+Working_Helmet_04	Casque de travail
+FishingBait_Worm	Appât pour poisson ver
+Wushu_Spear_Metal	Lance Wushu Métal
+Wushu_Spear_Wooden	Lance Wushu en métal - Lance Wushu en bois
+WW_Engine_Alternator_Item	WW Alternateur
+WW_Bumper_Back_Item	WW Pare-chocs arrière
+WW_Body_Back	WW Corps Retour
+WW_Body_Front	WW Devant du corps
+WW_Body_Left	WW Corps gauche
+WW_Body_Right	WW Corps droit
+WW_Body_Top	WW Haut du corps
+WW_Bumper_Armor_Back_Item	WW Armure de pare-chocs arrière
+WW_Door_ArmorHeavy_BackLeft_Item	WW Armure De Porte Lourde Arrière Gauche
+WW_Door_ArmorHeavy_BackRight_Item	WW Armure De Porte Lourde Arrière Droite
+WW_Door_ArmorHeavy_FrontLeft_Item	WW Armure De Porte Lourde Avant Gauche
+WW_Door_ArmorHeavy_FrontRight_Item	WW Armure De Porte Lourde Avant Droite
+WW_Door_ArmorLight_BackLeft_Item	WW Lumière de blindage de porte arrière gauche
+WW_Door_ArmorLight_BackRight_Item	WW Lumière de blindage de porte arrière droite
+WW_Door_ArmorLight_FrontLeft_Item	WW Lumière de blindage de porte avant gauche
+WW_Door_ArmorLight_FrontRight_Item	WW Éclairage de blindage de porte avant droit
+WW_Door_BackLeft_Item	WW Porte arrière gauche
+WW_Door_BackRight_Item	WW Porte arrière droite
+WW_Door_FrontLeft_Item	WW Porte Avant Gauche
+WW_Door_FrontRight_Item	WW Porte Avant Droite
+WW_Bumper_Front_Item	WW Pare-chocs avant
+WW_Body_ArmorHeavy_Top_Item	WW Haut d'armure lourde
+WW_DoorHood_Item	WW Capot
+WW_Lights_FrontLeft	WW Feux avant gauche
+WW_Lights_FrontRight	WW Feux avant droit
+WW_Lights_RearLeft	WW Feux arrière gauche
+WW_Lights_RearRight	WW Feux arrière droit
+WW_Seat_BackLeft_Item	WW Siège arrière gauche
+WW_Seat_BackRight_Item	WW Dossier du siège droit
+WW_Seat_FrontLeft_Item	WW Siège Avant Gauche
+WW_Seat_FrontRight_Item	WW Siège Avant Droit
+WW_DoorTrunk_Item	WW Coffre
+WW_DoorTrunk_ArmorHeavy_Item	WW Armure de coffre lourde
+WW_DoorTrunk_ArmorLight_Item	WW Lumière d'armure de coffre
+WW_Wheel_ArmorLight_FrontLeft_Item	WW Blindage de roue avant gauche
+WW_Wheel_ArmorLight_FrontRight_Item	WW Blindage de roue avant droit
+WW2_German_Helmet_01	WW2 Casque allemand
+WeaponSights_XPS300_Holographic	Viseur holographique — XPS
+Yeast	Levure
+Snowballs_02	Boule de neige jaune
+WeaponCharm_Yingyang	Charme d'arme Yin Yang
+Tights_01_01	Jambières de yoga
+Tights_01_02	Jambières de yoga
+Tights_01_03	Jambières de yoga
+Tights_01_04	Jambières de yoga
+Tights_01_05	Jambières de yoga
+Tights_01_06	Jambières de yoga
+WeaponScope_ZF39	ZF39
+2H_ZhanMaDao_Sword	Zhan Ma Dao
+Zucchini	Courgettes
+Zucchini_Seed_Bag	Sachet de graines de courgettes - Sachet de graines de courgettes
+Zucchini_Seeds	Graines de courgettes

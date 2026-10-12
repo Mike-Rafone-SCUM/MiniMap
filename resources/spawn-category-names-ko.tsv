@@ -1,0 +1,137 @@
+# Offline translation draft; native terminology review pending. Canonical identities retained.
+weapons	무기
+clothing	의류 및 갑옷
+survival	음식, 건강 및 생존
+crafting	장비 및 제작
+vehicles	자동차 부품
+other	기타 품목
+weapon_ranged	원거리 무기
+weapon_melee	근접 무기
+melee_weapon	근접 무기
+ammunition	탄약
+armor	갑옷
+attachment	무기 부착물
+book	책
+buildable	기본 확장 아이템
+consumable	음식, 음료 및 의약품
+equipment	장비
+farming	농업
+fishing	낚시
+fishing_attachment	낚시용 부착물
+fortification	강화 아이템
+hunting	사냥
+magazine	탄창
+material	재료
+player_modification	플레이어 수정
+seasonal_event	계절상품
+throwable	투척 무기 및 함정
+vehicle_part	자동차 부품
+weapon_part	무기 부품
+general	일반
+Arrow	화살표
+Crossbow Bolt	석궁 볼트
+Flare	플레어
+12 Gauge	12게이지
+accessories	액세서리
+adhesive	접착제
+alcoholic	알코올 음료
+animal_part	동물 부위
+assault_rifle	돌격 소총
+axe	축
+backpack	백팩
+base_upgrades	기본 업그레이드
+bayonet	총검
+beverage	음료
+blunt	둔기
+body	차체
+body_armor	갑옷
+bow	활
+bumper	범퍼
+clip	장전 클립
+cookbook	요리책
+cosmetic	화장품
+craft_station	제작 스테이션
+crafting_material	제작 재료
+door	문
+earmuffs	귀마개
+engine	엔진
+enhancement	향상
+event	이벤트
+eyewear	안경
+fender	펜더
+fire_starter	불 시동기
+fishing_catch	잡은 물고기
+flash_hider	플래시 하이더
+flashlight	손전등
+food	음식
+footwear	신발
+fuel	연료
+ghillie	Ghillie 랩
+ghillie_jacket	길리 재킷
+gloves	장갑
+hazmat_suit	방호복
+headwear	모자
+heavy	중무기
+holster	홀스터
+jacket	재킷
+knife	칼
+leggings	레깅스
+light	경량
+lmg	경기관총
+lockpick	자물쇠 따기
+mask	마스크
+medical	의학
+miscellaneous	기타
+organic	유기농
+paint	페인트
+pants	바지
+pistol	권총
+pistol_parts	권총 부품
+quiver	떨림
+rail	장착 레일
+raincoat	비옷
+ranged_parts	원거리 부품
+repair_kit	수리 키트
+repair_material	수리 재료
+results	결과
+revolver	리볼버
+rifle_parts	라이플 부품
+scarf	스카프
+scope	조준경
+seasonal_craft	계절 공예품
+seat	좌석
+security	보안
+seed	씨앗
+shirt	셔츠
+shotgun	산탄총
+shotgun_parts	산탄총 부품
+sight	조준 장치
+single_shot	단발 소총
+skirt	스커트
+smg	기관단총
+smg_parts	SMG 부품
+sniper	저격소총
+socks	양말
+soft_drink	청량음료
+spear	스피어스
+stabilizer	안정제
+storage	저장
+suppressor	소음기
+sweater	스웨터
+sword	검
+tool	도구
+undershirt	언더셔츠
+underwear	속옷
+unknown_parts	알 수 없는 부분
+utility	유틸리티
+vehicle_attachment	차량 부착
+water	물
+wheel	휠
+Health	상태
+Uses	남은 용도
+Dirtiness	더러움
+Location	위치
+KeyCardSector	키카드 부문
+StackCount	스택 수
+Radiation	방사선
+Weight	체중(kg)

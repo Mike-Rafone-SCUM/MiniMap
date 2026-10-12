@@ -3,7 +3,7 @@ using System;
 namespace ScumMiniMap {
     public enum AppControlAction {
         Settings, AddWaypoint, Search, ToggleOverlay, ZoomIn, ZoomOut, DeathMarker,
-        ResetZoom, ClearWaypoint, ZoneEditor, StartupGuide, AdminCommands
+        ResetZoom, ClearWaypoint, ZoneEditor, StartupGuide, AdminCommands, AdminPlayers
     }
 
     // One binding catalogue is shared by settings, setup guides and input dispatch.
@@ -12,10 +12,11 @@ namespace ScumMiniMap {
             AppControlAction.Settings, AppControlAction.AddWaypoint, AppControlAction.Search,
             AppControlAction.ToggleOverlay, AppControlAction.ZoomIn, AppControlAction.ZoomOut,
             AppControlAction.DeathMarker, AppControlAction.ResetZoom, AppControlAction.ClearWaypoint,
-            AppControlAction.ZoneEditor, AppControlAction.StartupGuide, AppControlAction.AdminCommands
+            AppControlAction.ZoneEditor, AppControlAction.StartupGuide, AppControlAction.AdminCommands,
+            AppControlAction.AdminPlayers
         };
-        readonly int[] keys = new int[12];
-        readonly int[] scans = new int[12];
+        readonly int[] keys = new int[AllActions.Length];
+        readonly int[] scans = new int[AllActions.Length];
 
         public AppControlBindings() {
             Set(AppControlAction.Settings, 0x24, 0);
@@ -25,6 +26,7 @@ namespace ScumMiniMap {
             Set(AppControlAction.ZoomIn, 0x21, 0);
             Set(AppControlAction.ZoomOut, 0x22, 0);
             Set(AppControlAction.DeathMarker, 0x28, 0);
+            Set(AppControlAction.AdminPlayers, 0x6B, 0);
         }
 
         public AppControlBindings Clone() {
@@ -44,7 +46,7 @@ namespace ScumMiniMap {
 
         static int Index(AppControlAction action) {
             int index = (int)action;
-            if(index < 0 || index >= 12) throw new ArgumentOutOfRangeException("action");
+            if(index < 0 || index >= AllActions.Length) throw new ArgumentOutOfRangeException("action");
             return index;
         }
 
@@ -62,6 +64,7 @@ namespace ScumMiniMap {
                 case AppControlAction.ZoneEditor: return "SidebarZoneEditor";
                 case AppControlAction.StartupGuide: return "OpenStartupGuide";
                 case AppControlAction.AdminCommands: return "ControlAdminCommands";
+                case AppControlAction.AdminPlayers: return "PlayersTitle";
                 default: throw new ArgumentOutOfRangeException("action");
             }
         }

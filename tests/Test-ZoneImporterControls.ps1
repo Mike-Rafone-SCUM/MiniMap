@@ -1,8 +1,8 @@
-﻿$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Stop'
 $miniRoot = Split-Path $PSScriptRoot -Parent
 Add-Type -AssemblyName System.Windows.Forms,System.Drawing
 $miniSources = & (Join-Path (Split-Path $PSScriptRoot -Parent) 'scripts\Get-MiniMapSources.ps1')
-Add-Type -Path $miniSources -ReferencedAssemblies System.Windows.Forms,System.Drawing
+Add-Type -Path $miniSources -ReferencedAssemblies System.Windows.Forms,System.Drawing,System.Xml,System.IO.Compression
 
 $testMap = [Drawing.Image]::FromFile((Join-Path $miniRoot 'resources\map.png'))
 $testDir = Join-Path $miniRoot 'release\test-zone-controls'

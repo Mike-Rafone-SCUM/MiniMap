@@ -1,0 +1,137 @@
+# Offline translation draft; native terminology review pending. Canonical identities retained.
+weapons	Оружие
+clothing	Одежда и доспехи
+survival	Еда, здоровье и выживание
+crafting	Снаряжение и изготовление
+vehicles	Запчасти для автомобилей
+other	Другие предметы
+weapon_ranged	Оружие дальнего боя
+weapon_melee	Холодное оружие
+melee_weapon	Холодное оружие
+ammunition	Боеприпасы
+armor	Броня
+attachment	Насадки на оружие
+book	Книги
+buildable	Базовые предметы расширения
+consumable	Еда, напитки и лекарства
+equipment	Оборудование
+farming	Земледелие
+fishing	Рыбалка
+fishing_attachment	Рыболовные приспособления
+fortification	Предметы укрепления
+hunting	Охота
+magazine	Магазины
+material	Материалы
+player_modification	Модификации игрока
+seasonal_event	Сезонные товары
+throwable	Метательное оружие и ловушки
+vehicle_part	Запчасти для автомобилей
+weapon_part	Части оружия
+general	Общий
+Arrow	Стрелка
+Crossbow Bolt	Арбалетные болты
+Flare	Вспышка
+12 Gauge	12-й калибр
+accessories	Аксессуары
+adhesive	Клей
+alcoholic	Алкогольные напитки
+animal_part	Части животных
+assault_rifle	Штурмовые винтовки
+axe	Топоры
+backpack	Рюкзаки
+base_upgrades	Базовые улучшения
+bayonet	Штыки
+beverage	Напитки
+blunt	Дробящее оружие
+body	Кузова
+body_armor	Броня
+bow	Луки
+bumper	Бампер
+clip	Обоймы
+cookbook	Поваренная книга
+cosmetic	Косметический
+craft_station	Станции крафта
+crafting_material	Материал для изготовления
+door	Дверь
+earmuffs	Наушники
+engine	Двигатель
+enhancement	Улучшение
+event	Событие
+eyewear	Очки
+fender	крыло
+fire_starter	Пускатели огня
+fishing_catch	Пойманная рыба
+flash_hider	Пламегасители
+flashlight	Фонарики
+food	Еда
+footwear	Обувь
+fuel	Топливо
+ghillie	Маскировочные накидки
+ghillie_jacket	Маскировочная куртка
+gloves	Перчатки
+hazmat_suit	Защитный костюм
+headwear	Головной убор
+heavy	Тяжелое вооружение
+holster	кобура
+jacket	Куртка
+knife	Ножи
+leggings	Леггинсы
+light	Лёгкие
+lmg	Легкие пулеметы
+lockpick	Взлом
+mask	Маска
+medical	Медицина
+miscellaneous	Разное
+organic	Органический
+paint	Краска
+pants	Брюки
+pistol	Пистолеты
+pistol_parts	Детали пистолета
+quiver	Колчан
+rail	Крепёжные планки
+raincoat	Плащ
+ranged_parts	Детали дальнего боя
+repair_kit	Ремкомплекты
+repair_material	Ремонтный материал
+results	Результаты
+revolver	Револьверы
+rifle_parts	Детали винтовки
+scarf	Шарф
+scope	Оптические прицелы
+seasonal_craft	Сезонное ремесло
+seat	Сиденье
+security	Безопасность
+seed	Семена
+shirt	Рубашка
+shotgun	Ружья
+shotgun_parts	Детали для дробовика
+sight	Прицельные приспособления
+single_shot	Однозарядные винтовки
+skirt	Юбка
+smg	Пистолеты-пулеметы
+smg_parts	Смг части
+sniper	Снайперские винтовки
+socks	Носки
+soft_drink	Безалкогольные напитки
+spear	Спирс
+stabilizer	Стабилизаторы
+storage	Хранение
+suppressor	Глушители
+sweater	Свитер
+sword	Мечи
+tool	Инструменты
+undershirt	Майка
+underwear	Нижнее белье
+unknown_parts	Неизвестные детали
+utility	Утилита
+vehicle_attachment	Крепление автомобиля
+water	Вода
+wheel	Колесо
+Health	Состояние
+Uses	Оставшееся использование
+Dirtiness	Грязь
+Location	Позиция
+KeyCardSector	Сектор карты-ключа
+StackCount	Количество стеков
+Radiation	Радиация
+Weight	Вес (кг)

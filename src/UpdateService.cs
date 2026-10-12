@@ -1,16 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Security.Principal;
+using System.Security.AccessControl;
 
 namespace ScumMiniMap {
+    internal sealed class UpdateCheckSchedule {
+        DateTime nextCheckUtc;
+        internal UpdateCheckSchedule(DateTime now) { RecordCheck(now); }
+        internal void RecordCheck(DateTime now) { nextCheckUtc=now.AddHours(1); }
+        internal bool TryBegin(DateTime now,bool allowed) {
+            if(!allowed || now<nextCheckUtc)return false;
+            RecordCheck(now);return true;
+        }
+    }
     public sealed class UpdateRelease {
         public Version Version { get; private set; }
         public string Sha256 { get; private set; }
+        public string PackageSha256 { get; private set; }
+        public bool IsPackage { get { return PackageSha256!=null; } }
         public string VersionText { get { return Version.ToString(3); } }
         public string Filename { get { return "v" + VersionText + " - SkynettMiniMap.exe"; } }
 
@@ -24,14 +39,16 @@ namespace ScumMiniMap {
                 if(split < 1 || values.ContainsKey(line.Substring(0,split))) throw new FormatException("Invalid update manifest field.");
                 values.Add(line.Substring(0,split), line.Substring(split+1));
             }
-            string schema, version, hash;
+            string schema, version, hash, packageHash=null;
             Version parsed;
-            if(values.Count != 3 || !values.TryGetValue("schema",out schema) || schema != "1" ||
+            if(!values.TryGetValue("schema",out schema) || (schema!="1" && schema!="2") ||
+               values.Count!=(schema=="2"?4:3) ||
+               (schema=="2" && (!values.TryGetValue("package-sha256",out packageHash) || !Regex.IsMatch(packageHash,@"\A[0-9a-fA-F]{64}\z"))) ||
                !values.TryGetValue("version",out version) || !Regex.IsMatch(version,@"\A(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\z") ||
                !System.Version.TryParse(version + ".0",out parsed) ||
                !values.TryGetValue("sha256",out hash) || !Regex.IsMatch(hash,@"\A[0-9a-fA-F]{64}\z"))
                 throw new FormatException("The update manifest does not describe a valid stable release.");
-            return new UpdateRelease { Version=parsed, Sha256=hash.ToLowerInvariant() };
+            return new UpdateRelease { Version=parsed, Sha256=hash.ToLowerInvariant(),PackageSha256=packageHash==null?null:packageHash.ToLowerInvariant() };
         }
         public void VerifyFile(string path) {
             string actual;
@@ -56,7 +73,7 @@ namespace ScumMiniMap {
         }
         public Uri ManifestUri { get { return new Uri("https://github.com/"+repository+"/releases/latest/download/update.txt"); } }
         public Uri DownloadUri(UpdateRelease release) {
-            return new Uri("https://github.com/"+repository+"/releases/download/v"+release.VersionText+"/SkynettMiniMap.exe");
+            return new Uri("https://github.com/"+repository+"/releases/download/v"+release.VersionText+"/"+(release.IsPackage?"SkynettMiniMap.zip":"SkynettMiniMap.exe"));
         }
         public UpdateRelease Check(bool manual) {
             // Cache is scoped to this repository; never use another repository's manifest.
@@ -89,6 +106,16 @@ namespace ScumMiniMap {
                 throw;
             }
         }
+        public UpdateRelease CheckVersion(string version) {
+            // A downloaded older release remains verifiable after a newer one becomes latest.
+            Version parsed;
+            if(!Regex.IsMatch(version??"",@"\A(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\z") ||
+                !Version.TryParse(version+".0",out parsed))throw new FormatException("Invalid pinned update version.");
+            var uri=new Uri("https://github.com/"+repository+"/releases/download/v"+version+"/update.txt");
+            var release=UpdateRelease.Parse(Encoding.UTF8.GetString(fetch(uri,4096)));
+            if(release.Version!=parsed)throw new InvalidDataException("The pinned update manifest describes a different version.");
+            return release;
+        }
         public static DateTime RetryAfter(string value, DateTime now) {
             double seconds;
             DateTime date;
@@ -99,6 +126,15 @@ namespace ScumMiniMap {
             return now.AddMinutes(5);
         }
         public void Download(UpdateRelease release, string destination) {
+            // Local cache is a notification hint, never authority for executable bytes.
+            var authoritative=CheckVersion(release.VersionText);
+            if(authoritative.Sha256!=release.Sha256 || authoritative.PackageSha256!=release.PackageSha256)
+                throw new InvalidDataException("The release identity changed. Check for updates again.");
+            if(release.IsPackage) {
+                byte[] package=fetch(DownloadUri(release),128*1024*1024);
+                using(var stream=new MemoryStream(package,false))if(InstallationAssets.Digest(stream)!=release.PackageSha256)throw new InvalidDataException("Update package checksum mismatch.");
+                UpdatePackage.Extract(package,destination,release);return;
+            }
             // The caller chooses a new file. Never overwrite a running installation or existing file.
             string staging=destination+"."+Guid.NewGuid().ToString("N")+".partial";
             try {
@@ -113,15 +149,29 @@ namespace ScumMiniMap {
             try { Directory.CreateDirectory(Path.GetDirectoryName(path)); File.WriteAllText(path,text); }
             catch(IOException) {} catch(UnauthorizedAccessException) {}
         }
-        static byte[] Fetch(Uri uri,int limit) {
+        internal static bool AllowedDownloadUri(Uri uri,bool steam) {
+            if(uri==null || !uri.IsAbsoluteUri || uri.Scheme!=Uri.UriSchemeHttps || !uri.IsDefaultPort || uri.UserInfo!="")return false;
+            string host=uri.DnsSafeHost.ToLowerInvariant();
+            return steam?host=="steamcommunity.com":host=="github.com" || host=="release-assets.githubusercontent.com" || host=="objects.githubusercontent.com" || host=="github-releases.githubusercontent.com";
+        }
+        static byte[] Fetch(Uri uri,int limit) { return FetchBounded(uri,limit,false); }
+        internal static byte[] FetchBounded(Uri uri,int limit,bool steam) {
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+            for(int redirect=0;redirect<=5;redirect++) {
+            if(!AllowedDownloadUri(uri,steam))throw new InvalidDataException("Unapproved download endpoint.");
             var request=(HttpWebRequest)WebRequest.Create(uri);
             request.UserAgent="SCUM-MiniMap/"+MapWindow.VersionString;
             request.Timeout=15000;
             request.ReadWriteTimeout=30000;
-            request.MaximumAutomaticRedirections=5;
+            request.AllowAutoRedirect=false;
             using(var response=(HttpWebResponse)request.GetResponse()) {
-                if(response.ResponseUri.Scheme!=Uri.UriSchemeHttps) throw new InvalidDataException("Update downloads require HTTPS.");
+                int status=(int)response.StatusCode;
+                if(status==301 || status==302 || status==303 || status==307 || status==308) {
+                    string location=response.Headers["Location"];
+                    if(redirect==5 || string.IsNullOrWhiteSpace(location))throw new InvalidDataException("Invalid download redirect.");
+                    uri=new Uri(uri,location);continue;
+                }
+                if(status!=200)throw new InvalidDataException("Unexpected download response.");
                 if(response.ContentLength>limit) throw new InvalidDataException("Update response exceeds the size limit.");
                 using(var input=response.GetResponseStream()) using(var output=new MemoryStream()) {
                     byte[] buffer=new byte[32768];
@@ -133,32 +183,153 @@ namespace ScumMiniMap {
                     return output.ToArray();
                 }
             }
+            }
+            throw new InvalidDataException("Too many download redirects.");
         }
     }
+    internal sealed class UpdateProcessIdentity {
+        internal readonly int ProcessId;
+        internal readonly long StartTimeUtcTicks;
+        internal readonly string ExecutablePath;
+        internal UpdateProcessIdentity(int processId,long startTimeUtcTicks,string executablePath) {
+            if(processId<=0 || startTimeUtcTicks<=0)throw new ArgumentException("Invalid update process identity.");
+            ProcessId=processId;StartTimeUtcTicks=startTimeUtcTicks;ExecutablePath=Path.GetFullPath(executablePath);
+        }
+    }
+    internal interface IUpdateProcess:IDisposable {
+        int Id { get; }
+        long StartTimeUtcTicks { get; }
+        string ExecutablePath { get; }
+        bool HasExited { get; }
+        bool CloseMainWindow();
+        bool WaitForExit(int milliseconds);
+        void Kill();
+    }
     public static class UpdateInstaller {
+        internal static DirectorySecurity HelperDirectorySecurity(bool elevated,SecurityIdentifier user) {
+            var security=new DirectorySecurity();security.SetAccessRuleProtection(true,false);
+            var administrators=new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid,null);
+            security.SetOwner(elevated?administrators:user);
+            foreach(var sid in elevated?new[]{administrators,new SecurityIdentifier(WellKnownSidType.LocalSystemSid,null)}:
+                new[]{user,administrators,new SecurityIdentifier(WellKnownSidType.LocalSystemSid,null)})
+                security.AddAccessRule(new FileSystemAccessRule(sid,FileSystemRights.FullControl,InheritanceFlags.ContainerInherit|InheritanceFlags.ObjectInherit,PropagationFlags.None,AccessControlType.Allow));
+            return security;
+        }
+        sealed class OwnedProcess:IUpdateProcess {
+            readonly Process process;
+            internal OwnedProcess(int id) {
+                process=Process.GetProcessById(id);
+                try {
+                    // Pin the OS process handle. PID reuse cannot redirect a later close/kill
+                    // after the identity check while this exact handle remains owned.
+                    if(process.Handle==IntPtr.Zero)throw new IOException("Unable to acquire the approved MiniMap process handle.");
+                }catch { process.Dispose();throw; }
+            }
+            public int Id { get { return process.Id; } }
+            public long StartTimeUtcTicks { get { return process.StartTime.ToUniversalTime().Ticks; } }
+            public string ExecutablePath { get { return process.MainModule.FileName; } }
+            public bool HasExited { get { return process.HasExited; } }
+            public bool CloseMainWindow() { return process.CloseMainWindow(); }
+            public bool WaitForExit(int milliseconds) { return process.WaitForExit(milliseconds); }
+            public void Kill() { process.Kill(); }
+            public void Dispose() { process.Dispose(); }
+        }
+        internal static void CloseApprovedProcess(UpdateProcessIdentity approved,Func<int,IUpdateProcess> acquire,int graceMilliseconds,int forceWaitMilliseconds) {
+            if(approved==null)throw new ArgumentNullException("approved");
+            if(acquire==null)throw new ArgumentNullException("acquire");
+            if(graceMilliseconds<0 || forceWaitMilliseconds<1)throw new ArgumentOutOfRangeException("graceMilliseconds");
+            IUpdateProcess process;
+            try { process=acquire(approved.ProcessId); }catch(ArgumentException) { return; }
+            using(process) {
+                if(process.HasExited)return;
+                ValidateProcess(approved,process);
+                // Leave time for at least one graceful close request even with a short budget.
+                int first=Math.Min(500,Math.Max(0,graceMilliseconds-1));
+                if(first>0 && process.WaitForExit(first))return;
+                int remaining=graceMilliseconds-first;
+                while(remaining>0) {
+                    if(process.HasExited)return;
+                    ValidateProcess(approved,process);process.CloseMainWindow();
+                    int wait=Math.Min(250,remaining);remaining-=wait;
+                    if(process.WaitForExit(wait))return;
+                }
+                if(process.HasExited)return;
+                ValidateProcess(approved,process);
+                process.Kill();
+                if(!process.WaitForExit(forceWaitMilliseconds))throw new IOException("The approved MiniMap process did not exit; update cancelled.");
+            }
+        }
+        static void ValidateProcess(UpdateProcessIdentity approved,IUpdateProcess actual) {
+            if(actual.Id!=approved.ProcessId || actual.StartTimeUtcTicks!=approved.StartTimeUtcTicks ||
+                !string.Equals(Path.GetFullPath(actual.ExecutablePath),approved.ExecutablePath,StringComparison.OrdinalIgnoreCase))
+                throw new IOException("The running MiniMap process identity changed; update cancelled.");
+        }
+        internal static bool IsElevated() {
+            using(var identity=WindowsIdentity.GetCurrent())return new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator);
+        }
+        internal static ProcessStartInfo CreateHelperStartInfo(string helper,string config,bool elevated) {
+            return new ProcessStartInfo {
+                FileName=helper,Arguments="-ApplyVerifiedUpdate "+Convert.ToBase64String(Encoding.UTF8.GetBytes(config)),
+                UseShellExecute=!elevated,Verb=elevated?"":"runas",CreateNoWindow=elevated,WindowStyle=ProcessWindowStyle.Hidden,
+                WorkingDirectory=Path.GetDirectoryName(helper)
+            };
+        }
         // The helper is a private copy of this executable. Paths are binary data, never shell code.
         public static void Start(string staged,string installed,string statusPath) {
+            UpdateProcessIdentity parent;
+            using(var current=Process.GetCurrentProcess())parent=new UpdateProcessIdentity(current.Id,current.StartTime.ToUniversalTime().Ticks,current.MainModule.FileName);
+            StartForTarget(staged,installed,statusPath,parent);
+        }
+        internal static void StartForTarget(string staged,string installed,string statusPath,UpdateProcessIdentity parent) {
+            StartForTarget(staged,installed,statusPath,parent,IsElevated(),Process.Start);
+        }
+        internal static void StartForTarget(string staged,string installed,string statusPath,UpdateProcessIdentity parent,bool elevated,Func<ProcessStartInfo,Process> launch) {
+            StartForTarget(staged,installed,statusPath,parent,elevated,launch,UpdateBootstrap.ReadStableVersion,
+                System.Reflection.Assembly.GetExecutingAssembly().Location);
+        }
+        internal static void StartForTarget(string staged,string installed,string statusPath,UpdateProcessIdentity parent,bool elevated,Func<ProcessStartInfo,Process> launch,Func<string,Version> readVersion,string helperSource) {
+            staged=Path.GetFullPath(staged);installed=Path.GetFullPath(installed);statusPath=Path.GetFullPath(statusPath);
+            if(string.Equals(staged,installed,StringComparison.OrdinalIgnoreCase))throw new InvalidDataException("The staged update must be a separate file.");
+            if(launch==null || readVersion==null)throw new ArgumentNullException("launch");
+            if(readVersion(staged)<=readVersion(installed))throw new InvalidDataException("The replacement must be a newer stable MiniMap release.");
+            if(parent!=null && !string.Equals(parent.ExecutablePath,installed,StringComparison.OrdinalIgnoreCase))
+                throw new IOException("The approved MiniMap path does not match the installation.");
+            using(var requiredAssets=typeof(InstallationAssets).Assembly.GetManifestResourceStream("installation-assets.txt"))
+                if(requiredAssets!=null && UpdatePackage.AssetIdentity(staged)=="")throw new InvalidDataException("The update is missing its installation assets. Use the complete ZIP package.");
+            string stagedHash=Hash(staged),installedHash=Hash(installed);
             string directory=Path.Combine(Path.GetTempPath(),"ScumMiniMap-update-"+Guid.NewGuid().ToString("N"));
-            Directory.CreateDirectory(directory);
+            using(var identity=WindowsIdentity.GetCurrent())
+                Directory.CreateDirectory(directory,HelperDirectorySecurity(IsElevated(),identity.User));
             string helper=Path.Combine(directory,"Updater.exe"), config=Path.Combine(directory,"request.bin");
-            File.Copy(System.Reflection.Assembly.GetExecutingAssembly().Location,helper);
-            File.WriteAllText(statusPath+".helper",helper);
-            using(var writer=new BinaryWriter(File.Create(config))) {
-                writer.Write(System.Diagnostics.Process.GetCurrentProcess().Id);
-                writer.Write(System.Diagnostics.Process.GetCurrentProcess().StartTime.ToUniversalTime().Ticks);
-                writer.Write(Path.GetFullPath(staged)); writer.Write(Path.GetFullPath(installed));
-                writer.Write(Path.GetFullPath(statusPath)); writer.Write(Hash(staged));
-            }
-            var process=System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo {
-                FileName=helper, Arguments="-ApplyVerifiedUpdate "+Convert.ToBase64String(Encoding.UTF8.GetBytes(config)),
-                UseShellExecute=false,CreateNoWindow=true,WorkingDirectory=directory
-            });
-            if(process==null) throw new IOException("Unable to start the update helper.");
-            using(process) {
-                DateTime deadline=DateTime.UtcNow.AddSeconds(10);
-                while(!File.Exists(config+".ready")) {
-                    if(process.WaitForExit(25) || DateTime.UtcNow>=deadline)
-                        throw new IOException("The update helper did not become ready; the current application will stay open.");
+            bool committed=false;
+            try {
+                File.Copy(helperSource,helper);
+                Directory.CreateDirectory(Path.GetDirectoryName(statusPath));File.WriteAllText(statusPath+".helper",helper);
+                using(var writer=new BinaryWriter(File.Create(config))) {
+                    writer.Write("SCUM-MiniMap-update-v3");
+                    writer.Write(parent==null?0:parent.ProcessId);writer.Write(parent==null?0:parent.StartTimeUtcTicks);
+                    writer.Write(staged);writer.Write(installed);writer.Write(statusPath);writer.Write(stagedHash);writer.Write(installedHash);
+                    writer.Write(Hash(helper));
+                    writer.Write(UpdatePackage.AssetIdentity(staged));
+                }
+                var process=launch(CreateHelperStartInfo(helper,config,elevated));
+                if(process==null)throw new IOException("Unable to start the update helper.");
+                using(process) {
+                    DateTime deadline=DateTime.UtcNow.AddSeconds(10);
+                    while(!File.Exists(config+".ready")) {
+                        if(process.WaitForExit(25) || DateTime.UtcNow>=deadline)
+                            throw new IOException("The update helper did not become ready; the current application will stay open.");
+                    }
+                    // A helper must not close the app unless the caller has observed readiness.
+                    File.WriteAllText(config+".commit","approved");committed=true;
+                }
+            }catch(Win32Exception ex) {
+                if(ex.NativeErrorCode==1223)throw new IOException("Administrator permission was cancelled; the current MiniMap stays open.",ex);
+                throw;
+            }finally {
+                if(!committed) {
+                    try { File.WriteAllText(config+".cancel","cancelled"); }catch(IOException){}
+                    CleanupHelper(statusPath);
                 }
             }
         }
@@ -179,6 +350,8 @@ namespace ScumMiniMap {
                 File.Delete(helper);
                 File.Delete(Path.Combine(directory,"request.bin"));
                 File.Delete(Path.Combine(directory,"request.bin.ready"));
+                File.Delete(Path.Combine(directory,"request.bin.commit"));
+                File.Delete(Path.Combine(directory,"request.bin.cancel"));
                 if(Directory.Exists(directory)) Directory.Delete(directory,false);
                 File.Delete(marker);
                 return true;
@@ -200,31 +373,52 @@ namespace ScumMiniMap {
             try { if(File.Exists(backup)) File.Delete(backup); } catch(IOException) {} catch(UnauthorizedAccessException) {}
         }
         public static void Run(string encodedConfig) {
-            string status=null, installed=null, config=null; bool parentExited=false;
+            string status=null, installed=null, config=null,oldHash=null;bool parentExited=false,installedLaunched=false;
             try {
                 config=Encoding.UTF8.GetString(Convert.FromBase64String(encodedConfig));
-                int pid; long ticks; string staged,hash;
+                string executing=Path.GetFullPath(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                string directory=Path.GetDirectoryName(executing),temp=Path.GetFullPath(Path.GetTempPath()).TrimEnd(Path.DirectorySeparatorChar);
+                if(Path.GetFileName(executing)!="Updater.exe" ||
+                    !string.Equals(Path.GetDirectoryName(directory),temp,StringComparison.OrdinalIgnoreCase) ||
+                    !Regex.IsMatch(Path.GetFileName(directory),@"\AScumMiniMap-update-[0-9a-f]{32}\z") ||
+                    !string.Equals(Path.GetFullPath(config),Path.Combine(directory,"request.bin"),StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidDataException("Invalid update-helper location.");
+                int pid;long ticks;string staged,hash,helperHash,assetIdentity;
+                if(new FileInfo(config).Length>16384)throw new InvalidDataException("The update-helper request is too large.");
                 using(var reader=new BinaryReader(File.OpenRead(config))) {
+                    if(reader.ReadString()!="SCUM-MiniMap-update-v3")throw new InvalidDataException("Invalid update-helper request.");
                     pid=reader.ReadInt32(); ticks=reader.ReadInt64(); staged=reader.ReadString();
-                    installed=reader.ReadString(); status=reader.ReadString(); hash=reader.ReadString();
+                    installed=reader.ReadString();status=reader.ReadString();hash=reader.ReadString();oldHash=reader.ReadString();helperHash=reader.ReadString();assetIdentity=reader.ReadString();
+                    if(reader.BaseStream.Position!=reader.BaseStream.Length)throw new InvalidDataException("Unexpected update-helper request data.");
                 }
-                File.WriteAllText(status,"Update pending: waiting for the application to close.");
+                if(pid<0 || (pid==0? ticks!=0:ticks<=0))throw new InvalidDataException("Invalid update parent identity.");
+                if(Hash(executing)!=helperHash || Hash(staged)!=hash || Hash(installed)!=oldHash)
+                    throw new InvalidDataException("Update files changed before installation.");
+                if(UpdatePackage.AssetIdentity(staged)!=assetIdentity)throw new InvalidDataException("Update assets changed before installation.");
+                if(UpdateBootstrap.ReadStableVersion(staged)<=UpdateBootstrap.ReadStableVersion(installed))
+                    throw new InvalidDataException("The replacement must be a newer stable MiniMap release.");
+                File.WriteAllText(status,"Update pending: preparing to close MiniMap.");
                 File.WriteAllText(config+".ready","ready");
-                try {
-                    using(var parent=System.Diagnostics.Process.GetProcessById(pid)) {
-                        if(parent.StartTime.ToUniversalTime().Ticks==ticks && !parent.WaitForExit(120000)) throw new IOException("The application did not close; update cancelled.");
-                    }
-                } catch(ArgumentException) { /* Parent already exited. */ }
+                DateTime deadline=DateTime.UtcNow.AddSeconds(15);
+                while(!File.Exists(config+".commit")) {
+                    if(File.Exists(config+".cancel") || DateTime.UtcNow>=deadline)throw new IOException("The update was not approved; MiniMap stays open.");
+                    System.Threading.Thread.Sleep(25);
+                }
+                if(pid!=0)CloseApprovedProcess(new UpdateProcessIdentity(pid,ticks,installed),id=>new OwnedProcess(id),10000,5000);
                 parentExited=true;
-                ReplaceAndLaunch(staged,installed,hash,path=> {
-                    File.WriteAllText(status,"Update installed successfully.");
-                    Launch(path);
+                if(Hash(installed)!=oldHash)throw new InvalidDataException("The installed MiniMap changed while closing.");
+                UpdatePackage.ReplaceAndLaunch(staged,installed,hash,assetIdentity,path=> {
+                    Launch(path);installedLaunched=true;
                 });
+                // Reporting cannot roll back or launch again after a successful restart.
+                try { File.WriteAllText(status,"Update installed successfully."); }catch(IOException){}catch(UnauthorizedAccessException){}
             } catch(Exception ex) {
                 if(status!=null) try { File.WriteAllText(status,"Update failed. Check the installation and any .previous backup before retrying. "+ex.Message); } catch {}
-                if(parentExited && installed!=null && File.Exists(installed)) try { Launch(installed); } catch {}
+                if(parentExited && !installedLaunched && installed!=null && oldHash!=null && File.Exists(installed))try {
+                    if(Hash(installed)==oldHash) { UpdateBootstrap.ReadStableVersion(installed);Launch(installed); }
+                }catch{}
             } finally {
-                if(config!=null) try { File.Delete(config); File.Delete(config+".ready"); } catch {}
+                if(config!=null) try { File.Delete(config);File.Delete(config+".ready");File.Delete(config+".commit");File.Delete(config+".cancel"); }catch{}
             }
         }
         static void Launch(string path) {

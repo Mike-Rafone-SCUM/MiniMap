@@ -11,6 +11,17 @@ using System.Windows.Forms;
 namespace ScumMiniMap {
     internal static class VoicePacks {
         internal const string DefaultName="Lyan (Female US)";
+        internal const string RussianName="Mira (Russian)";
+        internal const string GermanName="Mila (German)";
+        internal const string SpanishName="Isabel (Spanish Argentine)";
+        internal static readonly string[] BundledNames={DefaultName,RussianName,GermanName,SpanishName};
+        static bool DistanceOnly(string name) { return name==RussianName || name==GermanName; }
+        internal static string[] RequiredClips(string name) { return Clips.Where(clip=>clip!="11_in.mp3" || !DistanceOnly(name)).ToArray(); }
+        internal static string[] Compose(string voiceName,IEnumerable<string> clips) {
+            // Russian «В» and German north-specific examples are not reusable
+            // distance prefixes. Those voices say the distance followed by action.
+            return clips.Where(clip=>!DistanceOnly(voiceName) || clip!="11_in.mp3").ToArray();
+        }
         internal const string RecalculatingClip="13_recalculating.mp3";
         internal static bool IsClip(string name) { return Clips.Contains(name) || name==RecalculatingClip; }
         internal static readonly string[] Clips={"01_500_meters.mp3","02_250_meters.mp3","03_100_meters.mp3","04_50_meters.mp3",
@@ -18,7 +29,7 @@ namespace ScumMiniMap {
             "10_make_a_u_turn.mp3","11_in.mp3","12_you_have_arrived.mp3"};
         internal static string[] Discover(string root) {
             if(!Directory.Exists(root)) return new string[0];
-            return Directory.GetDirectories(root).Where(dir=>Clips.All(file=>File.Exists(Path.Combine(dir,file))))
+            return Directory.GetDirectories(root).Where(dir=>RequiredClips(Path.GetFileName(dir)).All(file=>File.Exists(Path.Combine(dir,file))))
                 .Select(Path.GetFileName).OrderBy(name=>name,StringComparer.CurrentCultureIgnoreCase).ToArray();
         }
         internal static void InstallBundled(string root) {
@@ -63,7 +74,7 @@ namespace ScumMiniMap {
         }
         bool Cancelled(int version) { lock(gate) return disposed || generation!=version; }
         internal void Speak(string directory,IEnumerable<string> clips) {
-            string[] names=clips.ToArray();
+            string[] names=VoicePacks.Compose(Path.GetFileName(directory),clips);
             if(names.Any(name=>!VoicePacks.IsClip(name))) return;
             string[] paths=names.Select(name=>Path.Combine(directory,name)).ToArray();
             lock(gate) {

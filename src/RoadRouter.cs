@@ -139,7 +139,7 @@ namespace ScumMiniMap {
             if (IsLoaded) return;
             try {
                 Assembly asm = Assembly.GetExecutingAssembly();
-                using (Stream raw = asm.GetManifestResourceStream("roads.bin")) {
+                using (Stream raw = InstallationAssets.Open("roads.bin")) {
                     if (raw != null) {
                         using (GZipStream gz = new GZipStream(raw, CompressionMode.Decompress))
                         using (BinaryReader br = new BinaryReader(gz)) {

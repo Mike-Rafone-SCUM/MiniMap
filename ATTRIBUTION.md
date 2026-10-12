@@ -42,6 +42,13 @@ We gratefully acknowledge the creators and community contributors whose publicly
 
 ## 3. Open-Source Libraries & Software
 
+### SCUM Database item catalogue
+
+* **Website:** [SCUM Database](https://scum-db.com/)
+* **Data:** Exact item spawn IDs, item names, category metadata and explicit weapon compatibility from its public structured APIs. The executable embeds an offline snapshot of records identified as visible, spawnable items and their source-listed ammunition, magazines, attachments and adapters. Game assets and item names remain the property of their respective rights holders.
+* **Provenance and refresh:** See `docs/SPAWN-ITEM-CATALOG.md` in the development project. The item selector also links to SCUM Database directly.
+
+
 ### OpenCV (Open Source Computer Vision Library)
 * **Repository / Website:** [https://opencv.org](https://opencv.org) | [GitHub: opencv/opencv](https://github.com/opencv/opencv)
 * **License:** [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
@@ -69,6 +76,13 @@ We gratefully acknowledge the creators and community contributors whose publicly
 ---
 
 ## 4. Project Repository & Community
+
+### Navigation voice recordings
+* **Lyan (Female US)**, **Mira (Russian)**, **Mila (German)** and **Isabel (Spanish Argentine)**: ElevenLabs recordings supplied by the project owner for inclusion in SCUM MiniMap.
+* The individual navigation prompts were extracted from the supplied recordings. No new speech or voice clone was generated.
+
+### Steam profile icon
+* Steam logo PNG supplied by the project owner, displayed at 22 × 22 pixels for Steam Community profile links. Steam and the Steam logo are trademarks of Valve Corporation.
 
 * **Official Repository:** [Mike-Rafone-SCUM/MiniMap](https://github.com/Mike-Rafone-SCUM/MiniMap)
 * **Skynett Gaming Community:** [Discord: discord.gg/MYzcGaFDMn](https://discord.gg/MYzcGaFDMn) | Dedicated server hosting, bot development, and player community.

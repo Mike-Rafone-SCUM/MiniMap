@@ -10,11 +10,40 @@ static class MapRenderingTests {
     [System.Runtime.InteropServices.DllImport("user32.dll")]
     static extern int GetWindowLong(IntPtr window,int index);
     static void CheckOverlayMouseInteraction() {
-        using(var overlay=new OverlayWindow(()=>{},()=>{},z=>{},()=>{})) {
+        Check(Native.IsObsProcessName("obs64") && Native.IsObsProcessName("OBS32") && !Native.IsObsProcessName("obs64-helper") && !Native.IsObsProcessName("SCUM") && !Native.IsObsProcessName(null),"Only exact OBS process identities retain the overlay; they do not identify SCUM input targets");
+        int calls=0,movement=0;
+        using(var batch=new BatchedWheel(steps=> { calls++;movement+=steps; })) {
+            for(int i=0;i<100;i++)batch.Add(120);
+            Check(calls==0,"Wheel burst queues no synchronous map rendering");
+            batch.Flush();Check(calls==1 && movement==100,"One wheel batch combines a hundred notches");
+            batch.Flush();Check(calls==1,"Settled wheel leaves no replay backlog");
+            batch.Add(60);batch.Flush();Check(calls==1,"Partial wheel notch waits for remaining movement");
+            batch.Add(60);batch.Flush();Check(calls==2 && movement==101,"High-resolution wheel remainder is preserved");
+            batch.Add(120);batch.Add(-120);batch.Flush();Check(calls==2,"Opposite wheel movements cancel before expensive work");
+            batch.Add(120);batch.Cancel();batch.Flush();Check(calls==2,"Closing or hiding cancels pending wheel movement");
+            batch.Add(int.MaxValue);batch.Flush();Check(movement==357,"Extreme wheel burst stays bounded");
+        }
+        int zoomCalls=0;float zoomFactor=0;
+        using(var overlay=new OverlayWindow(()=>{},()=>{},z=> { zoomCalls++;zoomFactor=z; },()=>{})) {
             IntPtr handle=overlay.Handle;
+            Check((GetWindowLong(handle,-20)&0x80)==0,"OBS Window Capture can enumerate the overlay: tool-window flag is absent");
+            Check((GetWindowLong(handle,-20)&0x80000)!=0 && !overlay.ShowInTaskbar,"Capture-compatible overlay retains layered transparency and no extra taskbar button");
             Check((GetWindowLong(handle,-20)&0x20)!=0,"New overlay passes gameplay clicks through");
             overlay.SetGameFocus(false);
             Check((GetWindowLong(handle,-20)&0x20)==0,"Desktop compact map receives clicks for dragging and resizing");
+            var wheel=typeof(System.Windows.Forms.Control).GetMethod("OnMouseWheel",BindingFlags.Instance|BindingFlags.NonPublic);
+            var overlayBatch=(BatchedWheel)typeof(OverlayWindow).GetField("mouseWheel",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(overlay);
+            var wheelEvent=new System.Windows.Forms.HandledMouseEventArgs(System.Windows.Forms.MouseButtons.None,0,30,40,120);
+            wheel.Invoke(overlay,new object[]{wheelEvent});wheel.Invoke(overlay,new object[]{new System.Windows.Forms.HandledMouseEventArgs(System.Windows.Forms.MouseButtons.None,0,30,40,120)});
+            Check(wheelEvent.Handled && zoomCalls==0,"Overlay consumes wheel input without synchronous zoom or parent propagation");
+            overlayBatch.Flush();Check(zoomCalls==1 && Math.Abs(zoomFactor-2.25f)<.001,"Compact map applies combined zoom once");
+            int fullDelta=0;Point fullAnchor=Point.Empty;
+            overlay.FullMapMode=true;overlay.OnFullMapWheel=(delta,point)=> { fullDelta=delta;fullAnchor=point; };
+            for(int i=0;i<12;i++)wheel.Invoke(overlay,new object[]{new System.Windows.Forms.HandledMouseEventArgs(System.Windows.Forms.MouseButtons.None,0,30,40,120)});
+            Check(fullDelta==0,"Full map burst does not render every intermediate wheel event");
+            overlayBatch.Flush();Check(fullDelta==1440 && fullAnchor==new Point(30,40),"Full map receives combined delta at the event's map position");
+            wheel.Invoke(overlay,new object[]{new System.Windows.Forms.HandledMouseEventArgs(System.Windows.Forms.MouseButtons.None,0,30,40,120)});
+            overlay.FullMapMode=false;overlayBatch.Flush();Check(zoomCalls==1,"Changing map mode cancels stale wheel input");
             Point location=new Point(100,120);
             overlay.Location=location;
             Action<string,int,int> mouse=(name,x,y)=>typeof(System.Windows.Forms.Control).GetMethod(name,BindingFlags.Instance|BindingFlags.NonPublic).Invoke(overlay,
@@ -46,10 +75,119 @@ static class MapRenderingTests {
         }
     }
     const BindingFlags Hidden=BindingFlags.NonPublic|BindingFlags.Instance;
+    static IEnumerable<System.Windows.Forms.Control> Descendants(System.Windows.Forms.Control parent) {
+        foreach(System.Windows.Forms.Control child in parent.Controls) {
+            yield return child;
+            foreach(var nested in Descendants(child))yield return nested;
+        }
+    }
+    static void CheckQuickStartTutorial() {
+        AppLanguage original=Localization.Current;
+        try {
+            var bindings=new AppControlBindings();
+            bindings.Set(AppControlAction.Settings,0x77,0);
+            bindings.Set(AppControlAction.Search,0x78,0);
+            foreach(AppLanguage language in Enum.GetValues(typeof(AppLanguage))) {
+                Localization.Current=language;
+                using(var guide=new StartupGuideDialog(0x4D,0x54,Program.DefaultCopyModifierKey,Program.DefaultCopyKey,null,appControls:bindings)) {
+                    var labels=Descendants(guide).OfType<System.Windows.Forms.Label>().ToList();
+                    Check(labels.Any(label=>label.Text==Localization.T("TutorialSettings","F8"))
+                        && labels.Any(label=>label.Text==Localization.T("TutorialSearch","F9"))
+                        && labels.Any(label=>label.Text==Localization.T("TutorialMap","M")),
+                        "Quick start uses current settings, search and map bindings in "+language);
+                    foreach(var label in labels.Where(label=>label.Text==Localization.T("TutorialMap","M") || label.Text==Localization.T("TutorialSearch","F9"))) {
+                        int required=System.Windows.Forms.TextRenderer.MeasureText(label.Text,label.Font,new Size(label.Width,int.MaxValue),System.Windows.Forms.TextFormatFlags.WordBreak).Height;
+                        Check(label.Height>=required && label.Bottom<=label.Parent.Height,"Quick start instructions fit their cards in "+language);
+                    }
+                }
+            }
+            Localization.Current=AppLanguage.English;
+            bindings.Set(AppControlAction.Search,0,0);
+            using(var guide=new StartupGuideDialog(0x4D,0x54,Program.DefaultCopyModifierKey,Program.DefaultCopyKey,null,appControls:bindings))
+                Check(Descendants(guide).OfType<System.Windows.Forms.Label>().Any(label=>label.Text==Localization.Get("TutorialUnbound")),
+                    "Quick start explains how to assign an unbound shortcut");
+        } finally { Localization.Current=original; }
+    }
+    static System.Windows.Forms.ComboBox FindLanguageCombo(System.Windows.Forms.Control parent) {
+        foreach(System.Windows.Forms.Control child in parent.Controls) {
+            var combo=child as System.Windows.Forms.ComboBox;
+            if(combo!=null && combo.Items.Count==Localization.LanguageDisplayNames.Length && (string)combo.Items[0]=="English") return combo;
+            var nested=FindLanguageCombo(child);
+            if(nested!=null) return nested;
+        }
+        return null;
+    }
     static void Set(object obj,string name,object value) { obj.GetType().GetField(name,Hidden).SetValue(obj,value); }
     static void Check(bool ok,string message) { if(!ok) throw new Exception(message); Console.WriteLine("PASS: "+message); }
+    static void CheckManualZoneEditor(string folder,string resources) {
+        using(var map=new Bitmap(512,512))
+        using(var editor=new ZoneEditor(map,new List<MapZone>{new MapZone { Name="Existing town",Argb=Color.Red.ToArgb(),Layer="Towns",Category=ZoneCategory.Town,Points=new[]{new PointF(.1f,.1f),new PointF(.3f,.1f),new PointF(.3f,.3f),new PointF(.1f,.3f)} }},Path.Combine(folder,"manual-zones.tsv"),value=>{})) {
+            OverlayTheme.Frame(editor,Localization.Get("HeaderMapZones"),()=>{});editor.CreateControl();editor.PerformLayout();
+            Func<string,object> field=name=>typeof(ZoneEditor).GetField(name,Hidden).GetValue(editor);
+            Action<string,object[]> invoke=(name,args)=>typeof(ZoneEditor).GetMethod(name,Hidden).Invoke(editor,args);
+            var target=(System.Windows.Forms.Control)field("target");target.Size=new Size(500,500);
+            var tool=(System.Windows.Forms.ComboBox)field("drawingTool");var label=(System.Windows.Forms.TextBox)field("name");var zones=(List<MapZone>)field("zones");
+            Func<RectangleF> rect=()=> (RectangleF)typeof(ZoneEditor).GetMethod("Fit",Hidden).Invoke(editor,new object[]{target,map});
+            Func<float,float,Point> screen=(x,y)=> { var r=rect();return new Point((int)Math.Round(r.Left+x*r.Width),(int)Math.Round(r.Top+y*r.Height)); };
+            tool.SelectedIndex=1;label.Text="Manual town";
+            foreach(var point in new[]{screen(.15f,.15f),screen(.25f,.15f),screen(.25f,.25f)})invoke("ClickImage",new object[]{false,point});
+            invoke("AddZone",new object[0]);
+            Check(zones.Count==2 && zones[1].Name=="Manual town" && zones[1].Points.Length==3 && zones[0].Name=="Existing town",
+                "Direct manual drawing works inside existing zones without a screenshot or calibration");
+            Point anchor=screen(.6f,.55f);var before=new object[]{target,false,anchor,PointF.Empty};
+            typeof(ZoneEditor).GetMethod("ImagePoint",Hidden).Invoke(editor,before);
+            invoke("ZoomEditor",new object[]{target,false,120,anchor});var after=new object[]{target,false,anchor,PointF.Empty};
+            typeof(ZoneEditor).GetMethod("ImagePoint",Hidden).Invoke(editor,after);
+            var a=(PointF)before[3];var b=(PointF)after[3];
+            Check(Math.Abs(a.X-b.X)<.0001 && Math.Abs(a.Y-b.Y)<.0001,"Import zoom preserves the map point under the mouse");
+            Check((float)field("sourceView").GetType().GetField("Zoom",Hidden).GetValue(field("sourceView"))==1,
+                "Destination zoom does not change the screenshot viewport");
+            tool.SelectedIndex=2;label.Text="Rectangle town";invoke("SetRectangleDraft",new object[]{new PointF(.55f,.55f),new PointF(.8f,.8f)});invoke("AddZone",new object[0]);
+            Check(zones.Count==3 && zones[2].Points.Length==4 && zones[2].Points[2]==new PointF(.8f,.8f),"Manual rectangle drawing retains map coordinates while zoomed");
+            tool.SelectedIndex=4;invoke("SetRectangleDraft",new object[]{new PointF(.5f,.5f),new PointF(.7f,.5f)});
+            var circle=(System.Collections.Generic.List<PointF>)typeof(ZoneEditor).GetField("manualDraft",Hidden).GetValue(editor);
+            Check(circle.Count==256 && circle.All(p=>Math.Abs(Math.Sqrt(Math.Pow(p.X-.5,2)+Math.Pow(p.Y-.5,2))-.2)<.00001),"Circle tool generates equal radii at every angle while zoomed");
+            invoke("ClearDraft",new object[0]);
+            Action<string,System.Windows.Forms.MouseButtons,Point> mouse=(eventName,button,point)=>typeof(System.Windows.Forms.Control).GetMethod(eventName,Hidden).Invoke(target,new object[]{new System.Windows.Forms.MouseEventArgs(button,1,point.X,point.Y,0)});
+            invoke("SetSelectedZoneIndex",new object[]{2});var beforeShape=(PointF[])zones[2].Points.Clone();
+            invoke("ChangeZoneShape",new object[]{2});Check(zones[2].Points.Length==256,"Selected zone converts to a circle without adding another zone");
+            invoke("ChangeZoneShape",new object[]{1});Check(zones[2].Points.Length==4 && Math.Abs((zones[2].Points[1].X-zones[2].Points[0].X)-(zones[2].Points[2].Y-zones[2].Points[1].Y))<.0001,"Selected zone converts to a square");
+            invoke("UndoEditorPoint",new object[0]);invoke("UndoEditorPoint",new object[0]);Check(zones[2].Points.SequenceEqual(beforeShape),"Undo restores geometry after shape conversions");
+            tool.SelectedIndex=5;mouse("OnMouseDown",System.Windows.Forms.MouseButtons.Left,screen(.675f,.675f));mouse("OnMouseMove",System.Windows.Forms.MouseButtons.Left,screen(.725f,.725f));mouse("OnMouseUp",System.Windows.Forms.MouseButtons.Left,screen(.725f,.725f));
+            Check(Math.Abs(zones[2].Points[0].X-.6)<.005 && Math.Abs(zones[2].Points[0].Y-.6)<.005,"Whole-zone drag moves the outline without changing its shape");invoke("UndoEditorPoint",new object[0]);Check(zones[2].Points.SequenceEqual(beforeShape),"Undo restores a moved zone");
+            tool.SelectedIndex=3;invoke("SetSelectedZoneIndex",new object[]{2});var rectangle=zones[2];
+            int inserted=(int)typeof(ZoneEditor).GetMethod("InsertOutlineVertex",Hidden).Invoke(editor,new object[]{rectangle,rect(),screen(.675f,.55f)});
+            Check(inserted==1 && rectangle.Points.Length==5,"Outline editing inserts a vertex on the selected edge");
+
+            mouse("OnMouseDown",System.Windows.Forms.MouseButtons.Left,screen(.55f,.55f));mouse("OnMouseMove",System.Windows.Forms.MouseButtons.Left,screen(.5f,.5f));mouse("OnMouseUp",System.Windows.Forms.MouseButtons.Left,screen(.5f,.5f));
+            Check(Math.Abs(rectangle.Points[0].X-.5)<.005 && Math.Abs(rectangle.Points[0].Y-.5)<.005,"Dragging a vertex updates the selected outline in map coordinates");
+            // Consume the click corresponding to the drag, then remove the inserted vertex.
+            mouse("OnMouseClick",System.Windows.Forms.MouseButtons.Left,screen(.5f,.5f));mouse("OnMouseClick",System.Windows.Forms.MouseButtons.Right,screen(rectangle.Points[1].X,rectangle.Points[1].Y));
+            Check(rectangle.Points.Length==4,"Right-click removes an outline vertex without deleting its zone");
+            invoke("UndoEditorPoint",new object[0]);Check(rectangle.Points.Length==5,"Outline undo restores a removed vertex");
+            invoke("UndoEditorPoint",new object[0]);invoke("UndoEditorPoint",new object[0]);
+            Check(rectangle.Points.Length==4 && rectangle.Points[0]==new PointF(.55f,.55f),"Outline undo restores dragged and inserted vertices without affecting other zones");
+            mouse("OnMouseDown",System.Windows.Forms.MouseButtons.Left,screen(.55f,.55f));target.Capture=false;
+            mouse("OnMouseMove",System.Windows.Forms.MouseButtons.None,screen(.6f,.6f));
+            Check(rectangle.Points[0]==new PointF(.55f,.55f),"Losing mouse capture cancels vertex dragging instead of editing on later hover");
+            var sourceZones=(List<MapZone>)field("sourceZones");var pairs=(Dictionary<MapZone,MapZone>)field("importedSources");var origin=zones[1].Clone();sourceZones.Add(origin);pairs[zones[1]]=origin;
+            invoke("SetSelectedZoneIndex",new object[]{1});label.Text="Correct town";invoke("Rename",new object[]{false});invoke("MoveZone",new object[]{1});
+            Check(origin.Name=="Correct town" && zones[0].Name=="Existing town" && Object.ReferenceEquals(pairs[zones[2]],origin),
+                "Imported names remain paired to their correct outline after manual additions and reordering");
+            invoke("RememberOutline",new object[]{zones[2]});pairs.Remove(zones[2]);sourceZones.Remove(origin);
+            label.Text="Reviewed town";invoke("Rename",new object[]{false});invoke("UndoEditorPoint",new object[0]);
+            Check(origin.Name=="Reviewed town" && Object.ReferenceEquals(pairs[zones[2]],origin),"Undoing an outline edit keeps a later corrected name paired with its source preview");
+            ZoneStore.Save(Path.Combine(folder,"manual-zones.tsv"),zones);var loaded=ZoneStore.Load(Path.Combine(folder,"manual-zones.tsv"));
+            Check(loaded.Count==3 && loaded[1].Points.Length==4 && loaded[2].Name=="Reviewed town","Manual geometry and corrected names survive save and reload");
+            using(var image=Image.FromFile(Path.Combine(resources,"map.png")))using(var graphics=Graphics.FromImage(map))graphics.DrawImage(image,0,0,map.Width,map.Height);
+            Set(editor,"screenshot",new Bitmap(map));Set(editor,"automatic",true);
+            editor.PerformLayout();
+            using(var preview=new Bitmap(editor.Width,editor.Height)) { editor.DrawToBitmap(preview,new Rectangle(0,0,preview.Width,preview.Height));preview.Save(Path.GetFullPath(Path.Combine(resources,"..","release","checks","zone-editor-manual-preview.png"))); }
+        }
+    }
     static void CheckDeathScreens(string resources) {
         CheckDeathRecording(resources);
+        CheckManualDeathRemoval();
         string path=Path.GetFullPath(Path.Combine(resources,"..","tests","fixtures","scum-death-screen.jpg"));
         using(var original=new Bitmap(path)) {
             Check(DeathBannerDetector.Matches(original),"Supplied full death-screen screenshot is recognised without calibration");
@@ -185,6 +323,134 @@ static class MapRenderingTests {
             }
         } finally { Directory.Delete(root,true); }
     }
+    static void CheckManualDeathRemoval() {
+        string root=Path.Combine(Path.GetTempPath(),"MiniMap-death-clear-"+Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        try {
+            File.WriteAllText(Path.Combine(root,"settings.ini"),"Welcomed=True");
+            using(var map=new Bitmap(32,32))map.Save(Path.Combine(root,"map.png"));
+            string otherMap=Path.Combine(root,"alternate.png");
+            using(var map=new Bitmap(32,32)) { using(var graphics=Graphics.FromImage(map))graphics.Clear(Color.White);map.Save(otherMap); }
+            var otherPaths=MapSidecarPaths.ForMap(root,otherMap);
+            var otherDeath=new MapZone { Name="Other map death",Category=ZoneCategory.Custom,Layer=MapZone.DeathMarkerLayer,Points=new[]{new PointF(.2f,.2f)} };
+            MapSidecarStore.Save(otherPaths,new List<MapZone>{otherDeath});
+            byte[] otherSaved=File.ReadAllBytes(otherPaths.WaypointsPath);
+            using(var window=new MapWindow(root,true)) {
+                var paths=(MapSidecarPaths)typeof(MapWindow).GetField("mapSidecarPaths",Hidden).GetValue(window);
+                var normal=new MapZone { Name="Death location personal waypoint",Category=ZoneCategory.Custom,Layer="Personal",Points=new[]{new PointF(.3f,.3f)} };
+                var area=new MapZone { Name="Keep custom area",Category=ZoneCategory.Custom,Layer="Personal",Points=new[]{new PointF(.1f,.1f),new PointF(.2f,.1f),new PointF(.2f,.2f)} };
+                var dated=new MapZone { Name="Death location 2026-10-07 12:00:00",Category=ZoneCategory.Custom,Layer=MapZone.DeathMarkerLayer,Points=new[]{new PointF(.4f,.4f)} };
+                var timestamped=new MapZone { Name="Death",Category=ZoneCategory.Custom,Layer=MapZone.DeathMarkerLayer,DeathCreatedUtc=DateTime.UtcNow.AddMinutes(-4),Points=new[]{new PointF(.6f,.6f)} };
+                var candidate=new List<MapZone>{normal,area,dated,timestamped};
+                Check((bool)typeof(MapWindow).GetMethod("TryCommitZonesCore",Hidden).Invoke(window,new object[]{candidate,null,true}),
+                    "Death removal fixture persists ordinary annotations and both dated and timestamped marker styles");
+                Set(window,"position",new Position { X=100,Y=200,Z=300,Yaw=0 });
+                Check(window.ApplyDeathScreenSample(true,window.CaptureDeathMarkerPosition(),DateTime.UtcNow)==DeathMarkerOutcome.Saved,
+                    "Death removal fixture includes a marker from the automatic detector");
+                var route=new RoadRoute { Success=true,Polyline=new[]{new PointF(.5f,.5f),dated.Centroid},JunctionIndices=new int[0] };
+                var pinned=new Position { X=777,Y=888,Z=999 };
+                Set(window,"searchTarget",dated);Set(window,"lastRouteTarget",dated);Set(window,"activeRoute",route);Set(window,"voiceTarget",dated);Set(window,"pin",pinned);
+                window.ClearReachedDeathMarkers(new PointF(.8f,.8f));
+                int generation=(int)typeof(MapWindow).GetField("deathProbeGeneration",Hidden).GetValue(window);
+                Set(window,"zonesLoadFailed",true);
+                Check(!window.ClearDeathMarkers() && MapSidecarStore.Reload(paths).Count(marker=>marker.IsDeathMarker)==3
+                    && Object.ReferenceEquals(typeof(MapWindow).GetField("searchTarget",Hidden).GetValue(window),dated)
+                    && Object.ReferenceEquals(typeof(MapWindow).GetField("activeRoute",Hidden).GetValue(window),route)
+                    && (int)typeof(MapWindow).GetField("deathProbeGeneration",Hidden).GetValue(window)==generation,
+                    "Failed death-marker saves retain all saved markers, their active destination and detector state");
+                Set(window,"zonesLoadFailed",false);
+                Set(window,"scumMap",null);Set(window,"adminPanelDismissedForFullMap",true);
+                typeof(MapWindow).GetMethod("SetFullMap",Hidden).Invoke(window,new object[]{true});
+                var overlay=(OverlayWindow)typeof(MapWindow).GetField("overlay",Hidden).GetValue(window);
+                overlay.TopMost=false;overlay.Location=new Point(-32000,-32000);overlay.Show();
+                typeof(MapWindow).GetMethod("RenderOverlay",Hidden).Invoke(window,null);
+                var clickables=(System.Collections.IEnumerable)typeof(MapWindow).GetField("sidebarClickables",Hidden).GetValue(window);
+                var remove=clickables.Cast<object>().Select(item=>(Action)item.GetType().GetField("OnClick").GetValue(item))
+                    .Single(action=>action.Method.Name=="RemoveDeathMarkersFromSidebar");
+                int presented=(int)typeof(MapWindow).GetField("PresentedFrames",Hidden).GetValue(window);
+                remove();
+                List<MapZone> saved=MapSidecarStore.Reload(paths);
+                Check(saved.Count==2 && saved.Any(marker=>marker.Name==normal.Name && marker.Layer==normal.Layer)
+                    && saved.Any(marker=>marker.Name==area.Name && marker.Points.Length==3) && !saved.Any(marker=>marker.IsDeathMarker),
+                    "The actual sidebar button removes every death-marker style durably while preserving ordinary waypoints and polygons");
+                Check(typeof(MapWindow).GetField("searchTarget",Hidden).GetValue(window)==null
+                    && typeof(MapWindow).GetField("activeRoute",Hidden).GetValue(window)==null
+                    && typeof(MapWindow).GetField("lastRouteTarget",Hidden).GetValue(window)==null
+                    && typeof(MapWindow).GetField("voiceTarget",Hidden).GetValue(window)==null
+                    && Object.ReferenceEquals(typeof(MapWindow).GetField("pin",Hidden).GetValue(window),pinned),
+                    "Removing the selected death destination clears its route and voice guidance while preserving the separate pin");
+                Check((int)typeof(MapWindow).GetField("PresentedFrames",Hidden).GetValue(window)>presented
+                    && (int)typeof(MapWindow).GetField("renderedFullMapSidebarRevision",Hidden).GetValue(window)==(int)typeof(MapWindow).GetField("fullMapSidebarRevision",Hidden).GetValue(window)
+                    && (string)typeof(MapWindow).GetField("note",Hidden).GetValue(window)==Localization.T("NoteDeathMarkersRemoved",3),
+                    "Sidebar removal immediately presents the updated map and refreshes cached sidebar state with its removed count");
+                Check(File.ReadAllBytes(otherPaths.WaypointsPath).SequenceEqual(otherSaved)
+                    && (int)typeof(MapWindow).GetField("deathProbeGeneration",Hidden).GetValue(window)==generation+1,
+                    "Death removal leaves another map's annotations unchanged and invalidates pending detector captures");
+                clickables=(System.Collections.IEnumerable)typeof(MapWindow).GetField("sidebarClickables",Hidden).GetValue(window);
+                Check(!clickables.Cast<object>().Select(item=>(Action)item.GetType().GetField("OnClick").GetValue(item)).Any(action=>action.Method.Name=="RemoveDeathMarkersFromSidebar")
+                    && !window.ClearDeathMarkers(),
+                    "The empty Remove death markers button has no active click action and repeated removal is a no-op");
+                Check(window.ApplyDeathScreenSample(true,window.CaptureDeathMarkerPosition(),DateTime.UtcNow)==DeathMarkerOutcome.None
+                    && !MapSidecarStore.Reload(paths).Any(marker=>marker.IsDeathMarker),
+                    "A still-visible death screen cannot recreate explicitly removed markers");
+                for(int miss=0;miss<13;miss++)window.ApplyDeathScreenSample(false,null,DateTime.UtcNow);
+                Check(window.ApplyDeathScreenSample(true,window.CaptureDeathMarkerPosition(),DateTime.UtcNow)==DeathMarkerOutcome.None,
+                    "A brief death-screen detection dropout cannot resurrect removed markers");
+                for(int miss=0;miss<14;miss++)window.ApplyDeathScreenSample(false,null,DateTime.UtcNow);
+                Check(window.ApplyDeathScreenSample(true,window.CaptureDeathMarkerPosition(),DateTime.UtcNow)==DeathMarkerOutcome.Saved
+                    && MapSidecarStore.Reload(paths).Count(marker=>marker.IsDeathMarker)==1,
+                    "Sustained clear gameplay rearms automatic detection and a later real death still saves normally");
+                Set(window,"searchTarget",normal);Set(window,"lastRouteTarget",normal);Set(window,"activeRoute",route);
+                Check(window.ClearDeathMarkers() && Object.ReferenceEquals(typeof(MapWindow).GetField("searchTarget",Hidden).GetValue(window),normal)
+                    && Object.ReferenceEquals(typeof(MapWindow).GetField("activeRoute",Hidden).GetValue(window),route),
+                    "Clearing other death markers preserves navigation to an ordinary waypoint");
+                Check((bool)typeof(MapWindow).GetMethod("TryCommitZonesCore",Hidden).Invoke(window,new object[]{candidate,null,true}),
+                    "Individual death-marker fixture saves two markers and ordinary annotations");
+                Set(window,"showCustomWaypoints",true);Set(window,"fullMapZoom",2f);Set(window,"fullMapPan",new PointF(.6f,.6f));
+                Set(window,"searchTarget",dated);Set(window,"activeRoute",route);Set(window,"voiceTarget",dated);
+                Point markerPoint=new Point(overlay.Height/2,overlay.Height/2);
+                Action<Point> rightClick=point=>typeof(MapWindow).GetMethod("HandleFullMapMouseDown",Hidden).Invoke(window,new object[]{point,System.Windows.Forms.MouseButtons.Right});
+                Set(window,"zonesLoadFailed",true);
+                rightClick(markerPoint);
+                Check(MapSidecarStore.Reload(paths).Count(marker=>marker.IsDeathMarker)==2
+                    && (float)typeof(MapWindow).GetField("fullMapZoom",Hidden).GetValue(window)==2f,
+                    "Failed right-click removal retains saved markers and does not reset zoom");
+                Set(window,"zonesLoadFailed",false);
+                rightClick(markerPoint);
+                Check(MapSidecarStore.Reload(paths).Count(marker=>marker.IsDeathMarker)==1
+                    && Object.ReferenceEquals(typeof(MapWindow).GetField("searchTarget",Hidden).GetValue(window),dated)
+                    && Object.ReferenceEquals(typeof(MapWindow).GetField("activeRoute",Hidden).GetValue(window),route)
+                    && (float)typeof(MapWindow).GetField("fullMapZoom",Hidden).GetValue(window)==2f,
+                    "Right-click at a zoomed death marker removes only that marker and preserves unrelated navigation and zoom");
+                Point datedPoint=new Point((int)Math.Round(overlay.Height*.1),(int)Math.Round(overlay.Height*.1));
+                rightClick(datedPoint);
+                Check(!MapSidecarStore.Reload(paths).Any(marker=>marker.IsDeathMarker)
+                    && MapSidecarStore.Reload(paths).Count==2
+                    && typeof(MapWindow).GetField("searchTarget",Hidden).GetValue(window)==null
+                    && typeof(MapWindow).GetField("voiceTarget",Hidden).GetValue(window)==null,
+                    "Right-clicking the selected death destination removes it durably and clears its navigation while retaining ordinary annotations");
+                Check(!window.RemoveDeathMarker(normal) && !window.RemoveDeathMarker(timestamped),
+                    "Individual removal rejects ordinary annotations and stale marker references");
+                Set(window,"adminToolsEnabled",true);Set(window,"fullMapZoom",2f);Set(window,"fullMapPan",new PointF(.6f,.6f));
+                Set(window,"searchTarget",normal);Set(window,"activeRoute",route);
+                Point contextPoint=new Point(overlay.Height/2,overlay.Height/2);
+                var pointArgs=new object[]{contextPoint,PointF.Empty};
+                Check((bool)typeof(MapWindow).GetMethod("TryGetFullMapPoint",Hidden).Invoke(window,pointArgs),"Zoomed teleport fixture has a valid map point");
+                rightClick(contextPoint);
+                var captured=(PointF?)typeof(MapWindow).GetField("pendingFullMapWaypointMapPoint",Hidden).GetValue(window);
+                Check(captured.HasValue && captured.Value==(PointF)pointArgs[1]
+                    && (float)typeof(MapWindow).GetField("fullMapZoom",Hidden).GetValue(window)==2f
+                    && (PointF)typeof(MapWindow).GetField("fullMapPan",Hidden).GetValue(window)==new PointF(.6f,.6f)
+                    && Object.ReferenceEquals(typeof(MapWindow).GetField("searchTarget",Hidden).GetValue(window),normal)
+                    && Object.ReferenceEquals(typeof(MapWindow).GetField("activeRoute",Hidden).GetValue(window),route),
+                    "Opening the zoomed admin context menu preserves view, navigation and exact teleport coordinates");
+                overlay.Hide();
+            }
+            using(var reopened=new MapWindow(root,true))
+                Check(!((List<MapZone>)typeof(MapWindow).GetField("zones",Hidden).GetValue(reopened)).Any(marker=>marker.IsDeathMarker),
+                    "Removed death markers stay removed after application restart");
+        } finally { Directory.Delete(root,true); }
+    }
     static void CheckMapSidecars(string root) {
         string folder=Path.Combine(root,"sidecars");
         Directory.CreateDirectory(folder);
@@ -268,6 +534,7 @@ static class MapRenderingTests {
         stream.Position=0; return stream;
     }
     [STAThread] static void Main(string[] args) {
+        CheckQuickStartTutorial();
         CheckDeathScreens(args.Length>0?args[0]:Path.Combine(Environment.CurrentDirectory,"resources"));
         CheckOverlayMouseInteraction();
         Check(Program.DataFolderName==(Program.IsTestBuild?"ScumMiniMap-ResponsivenessTest":"ScumMiniMap"),"Build uses the appropriate data folder");
@@ -317,9 +584,12 @@ static class MapRenderingTests {
             using(var graphics=Graphics.FromImage(tileFrame)) tiles.Draw(graphics,new RectangleF(0,0,600,600),0,0,600);
             Check(overview.Width>=768 && overview.Width<=1024 && tileFrame.GetPixel(300,300).A>0,"Tile pyramid renders the bundled map without decoding the full image");
         }
-        string testFolder=Path.Combine(Path.GetTempPath(),"MiniMap-tile-render-"+Guid.NewGuid().ToString("N"));
+        // Imports add a map hash, staging ID and atomic-save suffix beneath this fixture.
+        // Keep its temporary prefix short enough for .NET Framework's MAX_PATH limit.
+        string testFolder=Path.Combine(Path.GetTempPath(),"mmr-"+Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(testFolder);
         CheckMapSidecars(testFolder);
+        CheckManualZoneEditor(testFolder,args[0]);
         string customMap=Path.Combine(testFolder,"map.png");
         File.WriteAllText(customMap,"invalid image");
         using(var recovery=new MapWindow(testFolder,true))
@@ -332,7 +602,19 @@ static class MapRenderingTests {
             Point click=new Point(adminOverlay.Left+50,adminOverlay.Top+50);
             Check(!adminWindow.ObserveAdminMapMouse(0x201,click) && !adminWindow.ObserveAdminMapMouse(0x202,click),
                 "Normal MiniMap clicks do not trigger admin cleanup");
+            Set(adminWindow,"fullMapOpacity",35);Set(adminWindow,"fullMapZoomOpacityOverride",true);
+            Check(adminWindow.EffectiveFullMapOpacity==100,"Zoom opacity fixture starts fully visible");
             adminOverlay.UpdateFullMapClickThrough(true,true);
+            Check(adminWindow.EffectiveFullMapOpacity==0 && (int)typeof(MapWindow).GetField("fullMapOpacity",Hidden).GetValue(adminWindow)==35,
+                "Ctrl passthrough overrides zoom opacity with zero without changing the configured value");
+            adminOverlay.UpdateFullMapClickThrough(false,true);
+            Check(adminWindow.EffectiveFullMapOpacity==35 && !adminOverlay.FullMapClickThrough,
+                "Releasing Ctrl restores configured opacity instead of the previous zoom override");
+            Set(adminWindow,"fullMapZoomOpacityOverride",true);adminOverlay.UpdateFullMapClickThrough(true,true);
+            adminOverlay.UpdateFullMapClickThrough(true,false);
+            Check(adminWindow.EffectiveFullMapOpacity==35 && !adminOverlay.FullMapClickThrough,
+                "Focus loss clears temporary transparency without leaving the zoom override active");
+            Set(adminWindow,"fullMapZoomOpacityOverride",true);adminOverlay.UpdateFullMapClickThrough(true,true);
             Point outside=new Point(adminOverlay.Right+50,adminOverlay.Top+50);
             adminWindow.ObserveAdminMapMouse(0x201,outside);
             Check(!adminWindow.ObserveAdminMapMouse(0x202,outside),"Ctrl-click outside the exposed map does not trigger cleanup");
@@ -346,8 +628,13 @@ static class MapRenderingTests {
             Set(adminWindow,"pending",true);
             Set(adminWindow,"resumeAfter",DateTime.UtcNow.AddMinutes(1));
             adminWindow.CompleteAdminMapClick();
+            Check(adminWindow.EffectiveFullMapOpacity==35 && (int)typeof(MapWindow).GetField("fullMapOpacity",Hidden).GetValue(adminWindow)==35,
+                "Completing a passed-through player click restores configured opacity without changing it");
             Check(!(bool)typeof(MapWindow).GetField("fullMapActive",Hidden).GetValue(adminWindow) && !adminOverlay.FullMapMode && !adminOverlay.FullMapClickThrough,
                 "Admin click cleanup collapses the expanded map and clears Ctrl reveal mode");
+            Console.WriteLine("Admin cleanup state: chat="+adminChat.Paused+", observed="+typeof(MapWindow).GetField("observedChatPaused",Hidden).GetValue(adminWindow)+
+                ", inventory="+typeof(MapWindow).GetField("inventoryInputLocked",Hidden).GetValue(adminWindow)+", pending="+typeof(MapWindow).GetField("pending",Hidden).GetValue(adminWindow)+
+                ", resume="+((DateTime)typeof(MapWindow).GetField("resumeAfter",Hidden).GetValue(adminWindow)).ToString("O")+", now="+DateTime.UtcNow.ToString("O"));
             Check(!adminChat.Paused && !(bool)typeof(MapWindow).GetField("observedChatPaused",Hidden).GetValue(adminWindow) &&
                 !(bool)typeof(MapWindow).GetField("inventoryInputLocked",Hidden).GetValue(adminWindow) &&
                 !(bool)typeof(MapWindow).GetField("pending",Hidden).GetValue(adminWindow) &&
@@ -358,6 +645,17 @@ static class MapRenderingTests {
             Check(adminChat.Paused,"Cleanup cannot clear a newly opened chat after the map is closed");
         }
         using(var window=new MapWindow(testFolder,true)) {
+            IntPtr settingsHandle=window.Handle;
+            var settingsBar=(System.Windows.Forms.Control)typeof(MapWindow).GetField("bar",Hidden).GetValue(window);
+            foreach(int languageIndex in new[]{10,5,8,12,0}) {
+                var combo=FindLanguageCombo(settingsBar);
+                Check(combo!=null,"Settings language selector exists");
+                IntPtr comboHandle=combo.Handle;
+                combo.SelectedIndex=languageIndex;
+                Check(!combo.IsDisposed && combo.Handle==comboHandle,"Language selection retains native dropdown until notification returns: "+languageIndex);
+                System.Windows.Forms.Application.DoEvents();
+                Check(combo.IsDisposed && (int)Localization.Current==languageIndex,"Queued settings rebuild applies selected language: "+languageIndex);
+            }
             Check(typeof(MapWindow).GetField("mapTiles",Hidden).GetValue(window)!=null,"Bundled map uses tiles in the application renderer");
             Set(window,"locationHistory",true);
             Set(window,"locationHistoryTimestamps",true);

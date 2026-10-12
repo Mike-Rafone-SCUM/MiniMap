@@ -14,13 +14,16 @@ if (Test-Path -LiteralPath $tilePack) {
 }
 if ($tileFormat -ne 'MTL2') { throw 'Missing or outdated map tiles. Run scripts/Build-MapTiles.py before building.' }
 $pack = Join-Path $buildRoot 'packaging'
+$executionManifest = Join-Path $pack 'MiniMap.manifest'
+$packagedCheck = Join-Path $PSScriptRoot 'Test-PackagedMiniMap.ps1'
 $sourcePath = Join-Path $buildRoot 'src\MiniMap.cs'
 $source = [IO.File]::ReadAllText($sourcePath)
 if ($source -notmatch 'public const string VersionString\s*=\s*"((?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*))";') { throw 'Invalid VersionString in src\MiniMap.cs.' }
 $version = $matches[1]
 $compiler = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 $sources = @(& (Join-Path $PSScriptRoot 'Get-MiniMapSources.ps1'))
-$required = @($compiler,$tilePack) + $sources + @('map.png','zones.tsv','roads.bin','water-mask.bin','scummap.bin','App-Icon.ico' | ForEach-Object { Join-Path $res $_ })
+$localizedResources = @(& (Join-Path $PSScriptRoot 'Get-LocalizationResources.ps1'))
+$required = @($compiler,$tilePack,$executionManifest,$packagedCheck) + $sources + @('map.png','zones.tsv','roads.bin','water-mask.bin','scummap.bin','spawn-items.tsv','spawn-compatibility.tsv','spawn-item-names-pl.tsv','App-Icon.ico' | ForEach-Object { Join-Path $res $_ })
 foreach ($file in $required) { if (-not (Test-Path -LiteralPath $file -PathType Leaf)) { throw "Missing build input: $file" } }
 $changelog = [IO.File]::ReadAllText((Join-Path $buildRoot 'CHANGELOG.md'))
 $section = [regex]::Match($changelog, '(?ms)^## \[' + [regex]::Escape($version) + '\][^\r\n]*\r?\n(.*?)(?=^## \[|\z)')
@@ -41,7 +44,7 @@ try {
     $defines = @()
     if ($Configuration -eq 'Test') { $defines = @('/define:MINIMAP_TEST') }
     $renderTest = Join-Path $stage 'RenderingChecks.exe'
-    & $compiler /nologo /optimize+ /target:exe /platform:x64 @defines /main:MapRenderingTests "/out:$renderTest" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll "/resource:$tilePack,map-tiles.bin" @sources (Join-Path $buildRoot 'tests\MapRenderingTests.cs')
+    & $compiler /nologo /optimize+ /target:exe /platform:x64 @defines /main:MapRenderingTests "/out:$renderTest" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.IO.Compression.dll "/resource:$tilePack,map-tiles.bin" @sources (Join-Path $buildRoot 'tests\MapRenderingTests.cs')
     if ($LASTEXITCODE -ne 0) { throw 'Rendering check compilation failed.' }
     & $renderTest $res
     if ($LASTEXITCODE -ne 0) { throw 'Rendering checks failed.' }
@@ -59,15 +62,28 @@ try {
     [IO.File]::WriteAllText($stampedPath, $stamped, [Text.UTF8Encoding]::new($false))
     $sources = @($sources | ForEach-Object { if ([IO.Path]::GetFullPath($_) -eq $sourcePath) { $stampedPath } else { $_ } })
     if (@($sources | Where-Object { $_ -eq $stampedPath }).Count -ne 1) { throw 'Expected exactly one main source file.' }
-    $embedded = @('zones.tsv','roads.bin','water-mask.bin','scummap.bin','keyboard-setup.png' | ForEach-Object { '/resource:' + (Join-Path $res $_) + ',' + $_ })
-    $embedded += '/resource:' + $tilePack + ',map-tiles.bin'
+    $assetDirectory=Join-Path $stage 'assets'
+    New-Item -ItemType Directory -Path $assetDirectory | Out-Null
+    $assetManifest=Join-Path $stage 'installation-assets.txt'
+    $assetLines=@('map-tiles.bin','roads.bin' | ForEach-Object {
+        Copy-Item -LiteralPath (Join-Path $res $_) -Destination $assetDirectory
+        $_+'='+(Get-FileHash -LiteralPath (Join-Path $assetDirectory $_) -Algorithm SHA256).Hash.ToLowerInvariant()
+    })
+    [IO.File]::WriteAllText($assetManifest,($assetLines -join "`n")+"`n",[Text.UTF8Encoding]::new($false))
+    $embedded = @('zones.tsv','water-mask.bin','scummap.bin','spawn-items.tsv','spawn-compatibility.tsv','spawn-item-names-pl.tsv','keyboard-setup.png','steam-logo.png' | ForEach-Object { '/resource:' + (Join-Path $res $_) + ',' + $_ })
+    $embedded += '/resource:' + $assetManifest + ',installation-assets.txt'
+    $embedded += $localizedResources
     $embedded += '/resource:' + (Join-Path $pack 'detect_zones.py') + ',detect_zones.py'
     $embedded += @(& (Join-Path $PSScriptRoot 'Get-VoiceResources.ps1'))
     $exe = Join-Path $stage $exeName
-    & $compiler /nologo /optimize+ /target:winexe /platform:x64 @defines @embedded "/out:$exe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll "/win32icon:$res\App-Icon.ico" @sources
+    & $compiler /nologo /optimize+ /target:winexe /platform:x64 @defines @embedded "/out:$exe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.IO.Compression.dll "/win32icon:$res\App-Icon.ico" "/win32manifest:$executionManifest" @sources
     if ($LASTEXITCODE -ne 0) { throw 'Application compilation failed.' }
     Remove-Item -LiteralPath $stampedPath
-    $process = Start-Process -FilePath $exe -ArgumentList '-Check' -WindowStyle Hidden -PassThru
+    Remove-Item -LiteralPath $assetManifest
+    # Verify the same packaged entry point in a fresh STA host. Launching the EXE
+    # itself would request UAC elevation because both configurations require admin.
+    $checkArguments = @('-NoProfile','-STA','-ExecutionPolicy','Bypass','-File',('"' + $packagedCheck + '"'),'-AssemblyPath',('"' + $exe + '"'))
+    $process = Start-Process -FilePath 'powershell.exe' -ArgumentList $checkArguments -WindowStyle Hidden -PassThru
     try {
         if (-not $process.WaitForExit(30000)) { $process.Kill(); throw 'Packaged self-test timed out.' }
         if ($process.ExitCode -ne 0) { throw 'Packaged self-test failed.' }
@@ -75,21 +91,36 @@ try {
     if ((Get-Item -LiteralPath $exe).VersionInfo.ProductVersion -ne $productVersion) { throw 'Packaged version mismatch.' }
     Copy-Item -LiteralPath (Join-Path $buildRoot 'ATTRIBUTION.md') -Destination $stage
     if ($Configuration -eq 'Release') {
-        & (Join-Path $PSScriptRoot 'New-UpdateManifest.ps1') -Executable $exe -OutputPath (Join-Path $stage 'update.txt')
+        $packageManifest="version=$version`nSkynettMiniMap.exe="+(Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash.ToLowerInvariant()+"`n"+($assetLines | ForEach-Object {'assets/'+$_} | Out-String).Trim()+"`n"
+        [IO.File]::WriteAllText((Join-Path $stage 'package.txt'),$packageManifest,[Text.UTF8Encoding]::new($false))
         foreach ($doc in @('README.md','CHANGELOG.md')) { Copy-Item -LiteralPath (Join-Path $buildRoot $doc) -Destination $stage }
         Copy-Item -LiteralPath (Join-Path $res 'keyboard-setup.png') -Destination $stage
-        foreach ($asset in @('detect_zones.py','requirements.txt','Start-MiniMap.cmd')) { Copy-Item -LiteralPath (Join-Path $pack $asset) -Destination $stage }
-        $packageNames = @($exeName,'README.md','CHANGELOG.md','ATTRIBUTION.md','detect_zones.py','requirements.txt','Start-MiniMap.cmd','keyboard-setup.png')
+        foreach ($asset in @('detect_zones.py','requirements.txt','Start-MiniMap.cmd','Update-MiniMap.cmd')) { Copy-Item -LiteralPath (Join-Path $pack $asset) -Destination $stage }
+        $packageNames = @($exeName,'README.md','CHANGELOG.md','ATTRIBUTION.md','detect_zones.py','requirements.txt','Start-MiniMap.cmd','Update-MiniMap.cmd','package.txt','keyboard-setup.png','assets')
         $zipName = 'SkynettMiniMap.zip'
-        $notes = "SCUM MiniMap, made for the Skynett community.`n`n" + $section.Groups[1].Value.Trim() + "`n`nDownload SkynettMiniMap.exe or SkynettMiniMap.zip. Exit the previous app before replacing it. Saved settings and zones are retained.`n"
+        $notes = "SCUM MiniMap, made for the Skynett community.`n`n" + $section.Groups[1].Value.Trim() + "`n`nDownload and extract the complete SkynettMiniMap.zip. Keep assets beside SkynettMiniMap.exe. For the first upgrade from an EXE-only release, run Update-MiniMap.cmd from the extracted folder. Later updates verify and install the complete package. Saved settings, zones and kits are retained. The EXE alone is not a complete installation.`n"
         [IO.File]::WriteAllText((Join-Path $stage 'release-notes.md'), $notes, [Text.UTF8Encoding]::new($false))
     } else {
         Copy-Item -LiteralPath (Join-Path $buildRoot 'TESTING-RESPONSIVENESS.md') -Destination (Join-Path $stage 'TESTING.md')
-        $packageNames = @($exeName,'TESTING.md','ATTRIBUTION.md')
+        $packageNames = @($exeName,'TESTING.md','ATTRIBUTION.md','assets')
         $zipName = 'SCUM-MiniMap-Test.zip'
     }
     $packageFiles = @($packageNames | ForEach-Object { Join-Path $stage $_ })
-    Compress-Archive -LiteralPath $packageFiles -DestinationPath (Join-Path $stage $zipName)
+    # Use canonical forward-slash ZIP paths on every PowerShell version.
+    Add-Type -AssemblyName System.IO.Compression,System.IO.Compression.FileSystem
+    $packageArchive=[IO.Compression.ZipFile]::Open((Join-Path $stage $zipName),[IO.Compression.ZipArchiveMode]::Create)
+    try {
+        foreach($packagePath in $packageFiles) {
+            $entryFiles=if(Test-Path -LiteralPath $packagePath -PathType Leaf){@(Get-Item -LiteralPath $packagePath)}else{@(Get-ChildItem -LiteralPath $packagePath -File)}
+            foreach($entryFile in $entryFiles) {
+                $entryName=$entryFile.FullName.Substring($stage.Length+1).Replace('\','/')
+                [void][IO.Compression.ZipFileExtensions]::CreateEntryFromFile($packageArchive,$entryFile.FullName,$entryName,[IO.Compression.CompressionLevel]::Optimal)
+            }
+        }
+    }finally{$packageArchive.Dispose()}
+    if($Configuration -eq 'Release') {
+        & (Join-Path $PSScriptRoot 'New-UpdateManifest.ps1') -Executable $exe -Package (Join-Path $stage $zipName) -OutputPath (Join-Path $stage 'update.txt')
+    }
     & powershell.exe -NoProfile -STA -ExecutionPolicy Bypass -File (Join-Path $buildRoot 'tests\Test-BuildArtifacts.ps1') -PackageDirectory $stage -Configuration $Configuration
     if ($LASTEXITCODE -ne 0) { throw 'Package integrity checks failed.' }
     New-Item -ItemType Directory -Path (Split-Path $output -Parent) -Force | Out-Null

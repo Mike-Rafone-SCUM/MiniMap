@@ -1,0 +1,137 @@
+# Offline translation draft; native terminology review pending. Canonical identities retained.
+weapons	Silahlar
+clothing	Giyim ve zırh
+survival	Gıda, sağlık ve hayatta kalma
+crafting	Ekipman ve üretim
+vehicles	Araç parçaları
+other	Diğer öğeler
+weapon_ranged	Menzilli silahlar
+weapon_melee	Yakın dövüş silahları
+melee_weapon	Yakın dövüş silahları
+ammunition	Mühimmat
+armor	Zırh
+attachment	Silah eklentileri
+book	Kitaplar
+buildable	Temel genişletme öğeleri
+consumable	Yiyecek, içecek ve ilaç
+equipment	Ekipman
+farming	Tarım
+fishing	Balık tutma
+fishing_attachment	Balıkçılık ataşmanları
+fortification	Tahkimat öğeleri
+hunting	Avcılık
+magazine	Şarjörler
+material	Malzemeler
+player_modification	Oyuncu değişiklikleri
+seasonal_event	Sezonluk ürünler
+throwable	Fırlatılan silahlar ve tuzaklar
+vehicle_part	Araç parçaları
+weapon_part	Silah parçaları
+general	Genel
+Arrow	Ok
+Crossbow Bolt	Arbalet okları
+Flare	parlama
+12 Gauge	12 kalibre
+accessories	Aksesuarlar
+adhesive	Yapıştırıcı
+alcoholic	Alkollü içecekler
+animal_part	Hayvan parçaları
+assault_rifle	Saldırı tüfekleri
+axe	Eksenler
+backpack	Sırt çantaları
+base_upgrades	Temel yükseltmeler
+bayonet	Süngüler
+beverage	İçecekler
+blunt	Darbe silahları
+body	Araç gövdeleri
+body_armor	Zırh
+bow	Yaylar
+bumper	Tampon
+clip	Fişek klipsleri
+cookbook	Yemek kitabı
+cosmetic	Kozmetik
+craft_station	Üretim istasyonları
+crafting_material	İşçilik malzemesi
+door	Kapı
+earmuffs	Kulaklıklar
+engine	Motor
+enhancement	Geliştirme
+event	Etkinlik
+eyewear	Gözlük
+fender	Çamurluk
+fire_starter	Yangın başlatıcılar
+fishing_catch	Yakalanan balıklar
+flash_hider	Flaş gizleyiciler
+flashlight	El fenerleri
+food	Gıda
+footwear	Ayakkabı
+fuel	Yakıt
+ghillie	Ghillie sarar
+ghillie_jacket	Ghillie ceketi
+gloves	Eldivenler
+hazmat_suit	Tehlikeli madde kıyafeti
+headwear	Şapkalar
+heavy	Ağır silahlar
+holster	Kılıf
+jacket	Ceket
+knife	Bıçaklar
+leggings	Tayt
+light	Hafif
+lmg	Hafif makineli tüfekler
+lockpick	Kilitli
+mask	Maske
+medical	Tıp
+miscellaneous	Çeşitli
+organic	Organik
+paint	Boya
+pants	Pantolon
+pistol	Tabancalar
+pistol_parts	Tabanca parçaları
+quiver	Sadak
+rail	Montaj rayları
+raincoat	Yağmurluk
+ranged_parts	Aralıklı parçalar
+repair_kit	Tamir takımları
+repair_material	Onarım malzemesi
+results	Sonuçlar
+revolver	Tabancalar
+rifle_parts	Tüfek parçaları
+scarf	Eşarp
+scope	Dürbünler
+seasonal_craft	Mevsimsel zanaat
+seat	Koltuk
+security	Güvenlik
+seed	Tohumlar
+shirt	Gömlek
+shotgun	Av tüfeği
+shotgun_parts	Av tüfeği parçaları
+sight	Nişangâhlar
+single_shot	Tek atışlı tüfekler
+skirt	Etek
+smg	Hafif makineli tüfekler
+smg_parts	Smg parçaları
+sniper	Keskin nişancı tüfekleri
+socks	Çorap
+soft_drink	Alkolsüz içecekler
+spear	Mızraklar
+stabilizer	stabilizatörler
+storage	Depolama
+suppressor	Susturucular
+sweater	Kazak
+sword	Kılıçlar
+tool	Araçlar
+undershirt	Fanila
+underwear	İç çamaşırı
+unknown_parts	Bilinmeyen parçalar
+utility	Yardımcı Program
+vehicle_attachment	Araç ataşmanı
+water	Su
+wheel	Tekerlek
+Health	Durum
+Uses	Kalan kullanımlar
+Dirtiness	kirlilik
+Location	Pozisyon
+KeyCardSector	Anahtar kart sektörü
+StackCount	Yığın sayısı
+Radiation	Radyasyon
+Weight	Ağırlık (kg)

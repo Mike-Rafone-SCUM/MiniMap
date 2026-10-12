@@ -1,0 +1,137 @@
+# Offline localized catalogue; model IDs and technical identifiers retained.
+weapons	Зброя
+clothing	Одяг і обладунки
+survival	Їжа, здоров'я та виживання
+crafting	Обладнання та крафтінг
+vehicles	Автозапчастини
+other	Інші предмети
+weapon_ranged	Зброя дальнього бою
+weapon_melee	Зброя ближнього бою
+melee_weapon	Зброя ближнього бою
+ammunition	Боєприпаси
+armor	Броня
+attachment	Модулі зброї
+book	Книги
+buildable	Предмети розширення бази
+consumable	Їжа, напої та ліки
+equipment	Спорядження
+farming	Сільське господарство
+fishing	Риболовля
+fishing_attachment	Насадки для риболовлі
+fortification	Фортифікаційні предмети
+hunting	полювання
+magazine	Магазини
+material	Матеріали
+player_modification	Модифікації гравця
+seasonal_event	Сезонні речі
+throwable	Метки та пастки
+vehicle_part	Автозапчастини
+weapon_part	Частини зброї
+general	Загальний
+Arrow	Стрілка
+Crossbow Bolt	Арбалетний болт
+Flare	Відблиск
+12 Gauge	Датчик 12
+accessories	Аксесуари
+adhesive	Клей
+alcoholic	Алкогольні напої
+animal_part	Частини тварин
+assault_rifle	Штурмові гвинтівки
+axe	Сокири
+backpack	Рюкзаки
+base_upgrades	Базові оновлення
+bayonet	Багнети
+beverage	Напої
+blunt	Дробильна зброя
+body	Тіло
+body_armor	Броня
+bow	Луки
+bumper	Бампер
+clip	Кліп
+cookbook	Кулінарна книга
+cosmetic	Косметичний
+craft_station	Крафтові станції
+crafting_material	Матеріал для виготовлення
+door	двері
+earmuffs	Амбушури
+engine	Двигун
+enhancement	Покращення
+event	Подія
+eyewear	Окуляри
+fender	Крило
+fire_starter	Розпалювачі вогню
+fishing_catch	Рибальський улов
+flash_hider	Пламегасники
+flashlight	Ліхтарики
+food	харчування
+footwear	Взуття
+fuel	паливо
+ghillie	Обгортання Ghillie
+ghillie_jacket	Куртка Ghillie
+gloves	Рукавички
+hazmat_suit	Захисний костюм
+headwear	Головні убори
+heavy	Важка зброя
+holster	Кобура
+jacket	Піджак
+knife	Ножі
+leggings	Легінси
+light	світло
+lmg	Легкі кулемети
+lockpick	Відмичка
+mask	Маска
+medical	Медицина
+miscellaneous	Різне
+organic	Органічний
+paint	Фарба
+pants	Штани
+pistol	пістолети
+pistol_parts	Частини пістолета
+quiver	Сагайдак
+rail	Планки
+raincoat	Дощовик
+ranged_parts	Частини дальнього бою
+repair_kit	Ремонтні комплекти
+repair_material	Ремонтний матеріал
+results	Результати
+revolver	револьвери
+rifle_parts	Частини рушниці
+scarf	Шарф
+scope	Оптичні приціли
+seasonal_craft	Сезонне ремесло
+seat	Сидіння
+security	Безпека
+seed	Насіння
+shirt	Сорочка
+shotgun	Рушниці
+shotgun_parts	Частини рушниці
+sight	Прицільні пристрої
+single_shot	Однозарядні гвинтівки
+skirt	Спідниця
+smg	Пістолети-кулемети
+smg_parts	Запчастини SMG
+sniper	Снайперські гвинтівки
+socks	Шкарпетки
+soft_drink	Безалкогольні напої
+spear	Списи
+stabilizer	Стабілізатори
+storage	Зберігання
+suppressor	Супресори
+sweater	светр
+sword	мечі
+tool	Інструменти
+undershirt	Нижня сорочка
+underwear	Нижня білизна
+unknown_parts	Невідомі частини
+utility	Утиліта
+vehicle_attachment	Кріплення до автомобіля
+water	вода
+wheel	Колесо
+Health	Стан
+Uses	Решта використання
+Dirtiness	Бруд
+Location	Позиція
+KeyCardSector	Сектор ключ-карти
+StackCount	Кількість стеків
+Radiation	випромінювання
+Weight	Вага (кг)

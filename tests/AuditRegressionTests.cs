@@ -43,11 +43,6 @@ static class AuditRegressionTests {
     }
     [STAThread] public static int Main(string[] args) {
         if(args.Length==2 && args[0]=="-ApplyVerifiedUpdate") { UpdateInstaller.Run(args[1]); return 0; }
-        if(args.Length==2 && args[0]=="-StartUpdate") {
-            using(var reader=new BinaryReader(File.OpenRead(Encoding.UTF8.GetString(Convert.FromBase64String(args[1])))))
-                UpdateInstaller.Start(reader.ReadString(),reader.ReadString(),reader.ReadString());
-            return 0;
-        }
         string root=Path.Combine(Path.GetTempPath(),"MiniMap-audit-"+Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(root);
         try {
@@ -198,19 +193,51 @@ static class AuditRegressionTests {
             UpdateInstaller.ReplaceAndLaunch(staged,installed,Hash(staged),path=> { launched=path==installed; });
             Check(launched && File.ReadAllText(installed)=="new","Unicode and percent paths replace successfully without shell expansion");
 
-            // Real helper process and real executable restart, isolated from the installed app.
-            File.Copy(args[0],staged); string status=Path.Combine(root,"result.txt");
-            string config=Path.Combine(root,"request.bin");
-            using(var writer=new BinaryWriter(File.Create(config))) {
-                writer.Write(staged); writer.Write(installed); writer.Write(status);
-            }
-            using(var helper=System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo {
-                FileName=Assembly.GetExecutingAssembly().Location,Arguments="-StartUpdate "+Convert.ToBase64String(Encoding.UTF8.GetBytes(config)),UseShellExecute=false,CreateNoWindow=true
-            })) { if(!helper.WaitForExit(15000)) { helper.Kill(); throw new Exception("Helper timed out"); } Check(helper.ExitCode==0,"Dedicated updater helper exits normally"); }
-            PumpUntil(()=>File.Exists(Path.Combine(installDir,"started.txt")));
-            Check(File.ReadAllText(status).StartsWith("Update installed"),"Helper records success and starts replacement executable");
+            // These two owned executables only write a version marker and exit. The actual
+            // helper exercises secure v3 readiness/commit, stable metadata and package replacement.
+            // Parent=null describes a closed installation, so no running process can be targeted.
+            File.Copy(args[0],installed,true);File.Copy(args[1],staged);
+            Directory.CreateDirectory(UpdatePackage.AssetDirectory(staged));
+            File.WriteAllText(Path.Combine(UpdatePackage.AssetDirectory(staged),"map-tiles.bin"),"owned map fixture");
+            File.WriteAllText(Path.Combine(UpdatePackage.AssetDirectory(staged),"roads.bin"),"owned road fixture");
+            string assetIdentity=UpdatePackage.AssetIdentity(staged);
+            string replacementHash=Hash(staged),status=Path.Combine(root,"result.txt"),helperDirectory=null;
+            Check(UpdateBootstrap.ReadStableVersion(installed)==new Version(1,2,4,0)
+                && UpdateBootstrap.ReadStableVersion(staged)==new Version(1,2,10,0),
+                "Owned updater fixtures contain authentic stable older/newer MiniMap metadata without interactive app code");
+            UpdateInstaller.StartForTarget(staged,installed,status,null,true,start=> {
+                Check(!start.UseShellExecute && start.Verb=="" && start.CreateNoWindow,
+                    "Owned helper roundtrip never requests UAC or opens an interactive window");
+                helperDirectory=start.WorkingDirectory;
+                string prefix="-ApplyVerifiedUpdate ";
+                Check(start.Arguments.StartsWith(prefix,StringComparison.Ordinal),"Real helper uses the verified-update entry point");
+                string request=Encoding.UTF8.GetString(Convert.FromBase64String(start.Arguments.Substring(prefix.Length)));
+                Check(Path.GetFullPath(request)==Path.Combine(helperDirectory,"request.bin") && Path.GetFileName(start.FileName)=="Updater.exe",
+                    "Real helper reads its binary request from the private update directory");
+                using(var reader=new BinaryReader(File.OpenRead(request))) {
+                    Check(reader.ReadString()=="SCUM-MiniMap-update-v3" && reader.ReadInt32()==0 && reader.ReadInt64()==0,
+                        "Secure helper handoff identifies a closed owned fixture rather than any running application");
+                    Check(reader.ReadString()==staged && reader.ReadString()==installed && reader.ReadString()==status,
+                        "Unicode and percent paths round-trip unchanged through the secure binary request");
+                    Check(reader.ReadString()==replacementHash && reader.ReadString()==Hash(installed) && reader.ReadString()==Hash(start.FileName)
+                        && reader.ReadString()==assetIdentity && reader.BaseStream.Position==reader.BaseStream.Length,
+                        "Secure helper handoff pins replacement, original, helper and asset identity with no trailing request data");
+                }
+                Check(!File.Exists(request+".commit"),"Caller has not approved installation before helper readiness");
+                return System.Diagnostics.Process.Start(start);
+            });
+            string launchMarker=Path.Combine(installDir,"started.txt");
+            PumpUntil(()=> { try { return File.Exists(launchMarker) && File.ReadAllText(launchMarker).Contains("1.2.10"); }catch(IOException) { return false; } });
+            Check(File.ReadAllText(Path.Combine(installDir,"assets","map-tiles.bin"))=="owned map fixture"
+                && File.ReadAllText(Path.Combine(installDir,"assets","roads.bin"))=="owned road fixture",
+                "Real helper installs both verified package assets before restarting the owned fixture");
+            PumpUntil(()=> { try { return File.Exists(status) && File.ReadAllText(status).StartsWith("Update installed"); }catch(IOException) { return false; } });
+            Check(Hash(installed)==replacementHash,"Real helper commits the exact verified replacement executable bytes");
+            Check(File.ReadAllText(status).StartsWith("Update installed"),"Helper records success after starting the replacement executable");
             PumpUntil(()=>UpdateInstaller.CleanupHelper(status));
-            Check(!File.Exists(status+".helper"),"Completed helper files are safely removed");
+            Check(!File.Exists(status+".helper") && !Directory.Exists(helperDirectory),"Completed v2 helper and request files are safely removed");
+            string[] launchRecords=File.ReadAllLines(launchMarker);
+            Check(launchRecords.Length==1 && launchRecords[0]=="1.2.10","Real helper starts the new owned fixture exactly once and never launches the old fixture");
             foreach(AppLanguage language in Enum.GetValues(typeof(AppLanguage))) {
                 Localization.Current=language;
                 Check(Localization.T("PoiSectionSummary","A",2,3)!="PoiSectionSummary","POI section translated: "+language);

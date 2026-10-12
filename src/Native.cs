@@ -9,22 +9,34 @@ namespace ScumMiniMap {
 
     enum CopyResult { Sent, Cancelled, Failed }
 
+    internal sealed class AdminClipboardResult {
+        internal bool Ready;
+        internal uint Sequence;
+        internal int NativeError;
+        internal string StopReason;
+    }
+
 
 
     static partial class Native {
         // Opt-in, bounded input diagnostics. Never record general typing or clipboard data.
         internal static readonly bool InputTraceEnabled=Environment.GetEnvironmentVariable("SCUM_MINIMAP_INPUT_TRACE")=="1";
-        internal static readonly UIntPtr CopyInputTag=new UIntPtr(0x53434D4Du);
+        internal static readonly UIntPtr CopyInputTag=CopyInputDeliveryGate.TagFamily;
+        internal static readonly UIntPtr AdminInputTag=new UIntPtr(0x53434D4Du);
         static readonly System.Collections.Concurrent.ConcurrentQueue<string> inputTrace=new System.Collections.Concurrent.ConcurrentQueue<string>();
         static readonly DateTime inputTraceEnd=DateTime.UtcNow.AddMinutes(2);
-        static int traceWriting;
+        const int InputTraceLineLimit=4096;
+        static int traceWriting,inputTraceCount;
         static readonly System.Threading.Timer inputTraceTimer=InputTraceEnabled?
             new System.Threading.Timer(_=>FlushInputTrace(),null,1000,1000):null;
+        internal static bool InputTraceActive {
+            get { return InputTraceEnabled && DateTime.UtcNow<=inputTraceEnd && Interlocked.CompareExchange(ref inputTraceCount,0,0)<InputTraceLineLimit; }
+        }
         internal static void TraceInput(string text) {
-            if(!InputTraceEnabled || DateTime.UtcNow>inputTraceEnd || inputTrace.Count>=2048) return;
+            if(!InputTraceActive || Interlocked.Increment(ref inputTraceCount)>InputTraceLineLimit) return;
             inputTrace.Enqueue(DateTime.UtcNow.ToString("o")+" "+text);
         }
-        static void FlushInputTrace() {
+        internal static void FlushInputTrace() {
             if(System.Threading.Interlocked.Exchange(ref traceWriting,1)!=0) return;
             try {
                 var lines=new System.Collections.Generic.List<string>();
@@ -37,6 +49,93 @@ namespace ScumMiniMap {
                 }
             } catch(System.IO.IOException) {} catch(UnauthorizedAccessException) {}
             finally { System.Threading.Interlocked.Exchange(ref traceWriting,0); }
+        }
+
+        // Read-only token queries run only when the opt-in trace observes a focus
+        // change. Failure remains unknown; it must never look like an unelevated token.
+        [DllImport("kernel32.dll",SetLastError=true)] static extern IntPtr OpenProcess(uint access,bool inherit,uint pid);
+        [DllImport("kernel32.dll",SetLastError=true)] static extern bool CloseHandle(IntPtr handle);
+        [DllImport("advapi32.dll",SetLastError=true)] static extern bool OpenProcessToken(IntPtr process,uint access,out IntPtr token);
+        [DllImport("advapi32.dll",SetLastError=true)] static extern bool GetTokenInformation(IntPtr token,int informationClass,IntPtr buffer,uint length,out uint required);
+        [DllImport("advapi32.dll",EntryPoint="GetTokenInformation",SetLastError=true)] static extern bool GetTokenElevation(IntPtr token,int informationClass,out uint elevated,uint length,out uint required);
+        [DllImport("advapi32.dll")] static extern bool IsValidSid(IntPtr sid);
+        [DllImport("advapi32.dll")] static extern IntPtr GetSidSubAuthorityCount(IntPtr sid);
+        [DllImport("advapi32.dll")] static extern IntPtr GetSidSubAuthority(IntPtr sid,uint index);
+        [StructLayout(LayoutKind.Sequential)] struct TokenMandatoryLabel { public IntPtr Sid; public uint Attributes; }
+
+        internal static void TraceFocusSecurity(bool gameFocused) {
+            if(!InputTraceActive) return;
+            TraceInput("security self "+ProcessSecurityTrace(currentProcessId));
+            if(!gameFocused || !InputTraceActive) return;
+            IntPtr foreground=GetForegroundWindow();
+            uint pid;
+            GetWindowThreadProcessId(foreground,out pid);
+            if(foreground==IntPtr.Zero || pid==0 || !IsGameWindow(foreground)) {
+                TraceInput("security scum=unknown reason=foreground-changed");
+                return;
+            }
+            TraceInput("security scum "+ProcessSecurityTrace(pid));
+        }
+
+        static string ProcessSecurityTrace(uint pid) {
+            IntPtr process=OpenProcess(0x1000,false,pid); // PROCESS_QUERY_LIMITED_INFORMATION
+            int processError=process==IntPtr.Zero?Marshal.GetLastWin32Error():0;
+            if(process==IntPtr.Zero) return "pid="+pid+" integrity=unknown elevated=unknown OpenProcess_error="+processError;
+            IntPtr token=IntPtr.Zero;
+            try {
+                bool opened=OpenProcessToken(process,0x0008,out token); // TOKEN_QUERY
+                int tokenError=opened?0:Marshal.GetLastWin32Error();
+                if(!opened) return "pid="+pid+" integrity=unknown elevated=unknown OpenProcessToken_error="+tokenError;
+                string integrity=TokenIntegrityTrace(token);
+                uint elevated,required;
+                bool elevationKnown=GetTokenElevation(token,20,out elevated,4,out required); // TokenElevation
+                int elevationError=elevationKnown?0:Marshal.GetLastWin32Error();
+                string elevation=elevationKnown && required==4?(elevated!=0).ToString():"unknown";
+                return "pid="+pid+" "+integrity+" elevated="+elevation+
+                    (elevationKnown?(required==4?"":" elevation_size="+required):" elevation_error="+elevationError);
+            } catch(Exception ex) {
+                return "pid="+pid+" integrity=unknown elevated=unknown query_error="+ex.GetType().Name;
+            } finally {
+                if(token!=IntPtr.Zero) CloseHandle(token);
+                CloseHandle(process);
+            }
+        }
+
+        static string TokenIntegrityTrace(IntPtr token) {
+            uint required;
+            bool sized=GetTokenInformation(token,25,IntPtr.Zero,0,out required); // TokenIntegrityLevel
+            int sizeError=sized?0:Marshal.GetLastWin32Error();
+            int labelSize=Marshal.SizeOf(typeof(TokenMandatoryLabel));
+            if((!sized && sizeError!=122) || required<labelSize || required>65536)
+                return "integrity=unknown integrity_size_error="+sizeError+" required="+required;
+            IntPtr buffer=Marshal.AllocHGlobal((int)required);
+            try {
+                uint returned;
+                bool read=GetTokenInformation(token,25,buffer,required,out returned);
+                int readError=read?0:Marshal.GetLastWin32Error();
+                if(!read || returned<labelSize || returned>required) return "integrity=unknown integrity_error="+readError;
+                TokenMandatoryLabel label=(TokenMandatoryLabel)Marshal.PtrToStructure(buffer,typeof(TokenMandatoryLabel));
+                if(label.Sid==IntPtr.Zero || !IsValidSid(label.Sid)) return "integrity=unknown integrity_reason=invalid-sid";
+                IntPtr countPointer=GetSidSubAuthorityCount(label.Sid);
+                if(countPointer==IntPtr.Zero) return "integrity=unknown integrity_reason=no-sid-count";
+                byte count=Marshal.ReadByte(countPointer);
+                if(count==0) return "integrity=unknown integrity_reason=empty-sid";
+                IntPtr ridPointer=GetSidSubAuthority(label.Sid,(uint)(count-1));
+                if(ridPointer==IntPtr.Zero) return "integrity=unknown integrity_reason=no-sid-rid";
+                uint rid=unchecked((uint)Marshal.ReadInt32(ridPointer));
+                string name;
+                switch(rid) {
+                    case 0x0000: name="untrusted"; break;
+                    case 0x1000: name="low"; break;
+                    case 0x2000: name="medium"; break;
+                    case 0x2100: name="medium-plus"; break;
+                    case 0x3000: name="high"; break;
+                    case 0x4000: name="system"; break;
+                    case 0x5000: name="protected"; break;
+                    default: name="other"; break;
+                }
+                return "integrity="+name+" integrity_rid=0x"+rid.ToString("X");
+            } finally { Marshal.FreeHGlobal(buffer); }
         }
 
 
@@ -106,14 +205,112 @@ namespace ScumMiniMap {
 
 
         [DllImport("user32.dll")] internal static extern uint GetClipboardSequenceNumber();
-        [DllImport("user32.dll")] static extern bool OpenClipboard(IntPtr owner);
-        [DllImport("user32.dll")] static extern bool CloseClipboard();
-        [DllImport("user32.dll")] static extern bool EmptyClipboard();
-        [DllImport("user32.dll")] static extern IntPtr GetClipboardData(uint format);
+        [DllImport("user32.dll",SetLastError=true)] static extern bool OpenClipboard(IntPtr owner);
+        [DllImport("user32.dll",SetLastError=true)] static extern bool CloseClipboard();
+        [DllImport("user32.dll",SetLastError=true)] static extern bool EmptyClipboard();
+        [DllImport("user32.dll",SetLastError=true)] static extern IntPtr GetClipboardData(uint format);
+        [DllImport("user32.dll",SetLastError=true)] static extern IntPtr SetClipboardData(uint format,IntPtr data);
+        [DllImport("user32.dll")] static extern IntPtr GetClipboardOwner();
         [DllImport("user32.dll")] static extern bool IsClipboardFormatAvailable(uint format);
-        [DllImport("kernel32.dll")] static extern IntPtr GlobalLock(IntPtr data);
+        [DllImport("kernel32.dll",SetLastError=true)] static extern IntPtr GlobalLock(IntPtr data);
         [DllImport("kernel32.dll")] static extern bool GlobalUnlock(IntPtr data);
         [DllImport("kernel32.dll")] static extern UIntPtr GlobalSize(IntPtr data);
+        [DllImport("kernel32.dll",SetLastError=true)] static extern IntPtr GlobalAlloc(uint flags,UIntPtr bytes);
+        [DllImport("kernel32.dll")] static extern IntPtr GlobalFree(IntPtr data);
+        internal static bool AdminClipboardOwned(IntPtr owner,uint sequence) {
+            return owner!=IntPtr.Zero && sequence!=0 && GetClipboardSequenceNumber()==sequence && GetClipboardOwner()==owner;
+        }
+        // Capture the exclusive write, including partial failure. Text formats may
+        // be synthesized when this lock closes; finalization verifies that later
+        // sequence before any command uses it or restores the original clipboard.
+        internal static AdminClipboardResult AdminClipboardPublication(uint expectedSequence,Func<bool> open,Func<bool> close,
+            Func<uint> sequence,Func<bool> empty,Func<bool> write,Func<bool> verify,Func<bool> owned,bool requireOwnership=false) {
+            var result=new AdminClipboardResult { StopReason="clipboard-busy" };
+            if(!open())return result;
+            bool changed=false;
+            try {
+                result.StopReason="clipboard-changed";
+                if(expectedSequence==0 || sequence()!=expectedSequence)return result;
+                result.StopReason="clipboard-owner";
+                if(requireOwnership && !owned())return result;
+                result.StopReason="clipboard-publication";
+                if(!empty())return result;
+                changed=true;
+                if(!write())return result;
+                result.StopReason="clipboard-verification";
+                if(!verify())return result;
+                result.StopReason="clipboard-owner";
+                if(!owned())return result;
+                result.Ready=true;result.StopReason=null;
+                return result;
+            } catch(Exception ex) {
+                result.Ready=false;result.NativeError=ex.HResult;return result;
+            } finally {
+                try {
+                    if(changed && owned())result.Sequence=sequence();
+                    if(result.Ready && result.Sequence==0) { result.Ready=false;result.StopReason="clipboard-verification"; }
+                } finally {
+                    if(!close()) { result.Ready=false;result.StopReason="clipboard-publication"; }
+                }
+            }
+        }
+        internal static bool AdminClipboardTextSupported(string text) {
+            if(string.IsNullOrEmpty(text) || text.Length>512)return false;
+            foreach(char character in text)if(character==0 || character>127)return false;
+            return true;
+        }
+        static bool AdminClipboardTextMatches(uint format,string text,bool unicode,ref int nativeError) {
+            IntPtr data=GetClipboardData(format);
+            if(data==IntPtr.Zero) { if(nativeError==0)nativeError=Marshal.GetLastWin32Error();return false; }
+            int required=(text.Length+1)*(unicode?2:1);
+            if(GlobalSize(data).ToUInt64()<(ulong)required)return false;
+            IntPtr address=GlobalLock(data);
+            if(address==IntPtr.Zero) { if(nativeError==0)nativeError=Marshal.GetLastWin32Error();return false; }
+            try {
+                if(unicode)return Marshal.PtrToStringUni(address,text.Length)==text && Marshal.ReadInt16(address,text.Length*2)==0;
+                for(int index=0;index<text.Length;index++)if(Marshal.ReadByte(address,index)!=(byte)text[index])return false;
+                return Marshal.ReadByte(address,text.Length)==0;
+            } finally { GlobalUnlock(data); }
+        }
+        internal static async Task<AdminClipboardResult> FinalizeAdminClipboard(IntPtr owner,string text,
+            AdminClipboardResult publication,Func<string> blockingGate) {
+            int nativeError=0;
+            var result=await AdminClipboardFinalization(publication,
+                ()=> { bool ok=OpenClipboard(owner);nativeError=ok?0:Marshal.GetLastWin32Error();return ok; },
+                ()=> { bool ok=CloseClipboard();if(!ok)nativeError=Marshal.GetLastWin32Error();return ok; },
+                GetClipboardSequenceNumber,()=>owner!=IntPtr.Zero && GetClipboardOwner()==owner,
+                ()=>AdminClipboardTextSupported(text) && AdminClipboardTextMatches(13,text,true,ref nativeError) &&
+                    AdminClipboardTextMatches(1,text,false,ref nativeError) && AdminClipboardTextMatches(7,text,false,ref nativeError),
+                blockingGate,Task.Delay);
+            if(result.NativeError==0 && nativeError!=0)result.NativeError=nativeError;
+            return result;
+        }
+        internal static AdminClipboardResult PublishAdminClipboard(IntPtr owner,string text,uint expectedSequence,bool requireOwnership=false) {
+            if(owner==IntPtr.Zero || !IsOurWindow(owner))return new AdminClipboardResult { StopReason="clipboard-owner" };
+            if(!AdminClipboardTextSupported(text))
+                return new AdminClipboardResult { StopReason="clipboard-publication" };
+            char[] characters=(text+'\0').ToCharArray();
+            IntPtr memory=GlobalAlloc(0x42,new UIntPtr((uint)(characters.Length*2)));
+            if(memory==IntPtr.Zero)return new AdminClipboardResult { StopReason="clipboard-publication",NativeError=Marshal.GetLastWin32Error() };
+            bool transferred=false;int nativeError=0;
+            try {
+                IntPtr address=GlobalLock(memory);
+                if(address==IntPtr.Zero)return new AdminClipboardResult { StopReason="clipboard-publication",NativeError=Marshal.GetLastWin32Error() };
+                try { Marshal.Copy(characters,0,address,characters.Length); }
+                finally { GlobalUnlock(memory); }
+                var result=AdminClipboardPublication(expectedSequence,
+                    ()=> { bool ok=OpenClipboard(owner);if(!ok)nativeError=Marshal.GetLastWin32Error();return ok; },
+                    ()=> { bool ok=CloseClipboard();if(!ok)nativeError=Marshal.GetLastWin32Error();return ok; },
+                    GetClipboardSequenceNumber,
+                    ()=> { bool ok=EmptyClipboard();if(!ok)nativeError=Marshal.GetLastWin32Error();return ok; },
+                    ()=> {
+                        transferred=SetClipboardData(13,memory)!=IntPtr.Zero;
+                        if(!transferred)nativeError=Marshal.GetLastWin32Error();return transferred;
+                    },
+                    ()=>AdminClipboardTextMatches(13,text,true,ref nativeError),()=>GetClipboardOwner()==owner,requireOwnership);
+                if(nativeError!=0)result.NativeError=nativeError;return result;
+            } finally { if(!transferred)GlobalFree(memory); }
+        }
         internal static bool TryReadCoordinateClipboard(out string text) {
             text=null;
             if(!OpenClipboard(IntPtr.Zero)) return false;
@@ -247,6 +444,21 @@ namespace ScumMiniMap {
             return (GetAsyncKeyState(0x02)&0x8000)!=0;
         }
 
+        static uint cachedObsPid;
+        static IntPtr cachedObsWindow;
+        static bool cachedObsFocused;
+        internal static bool ObsFocused() {
+            IntPtr window=GetForegroundWindow();uint pid;
+            if(window==IntPtr.Zero || GetWindowThreadProcessId(window,out pid)==0 || pid==0)return false;
+            if(window==cachedObsWindow && pid==cachedObsPid)return cachedObsFocused;
+            cachedObsWindow=window;cachedObsPid=pid;cachedObsFocused=false;
+            try { using(var process=Process.GetProcessById((int)pid))cachedObsFocused=IsObsProcessName(process.ProcessName); }
+            catch(ArgumentException){}catch(InvalidOperationException){}catch(System.ComponentModel.Win32Exception){}
+            return cachedObsFocused;
+        }
+        internal static bool IsObsProcessName(string name) {
+            return string.Equals(name,"obs64",StringComparison.OrdinalIgnoreCase) || string.Equals(name,"obs32",StringComparison.OrdinalIgnoreCase);
+        }
         internal static bool GameFocused() {
             IntPtr fg=GetForegroundWindow();
             if(fg==IntPtr.Zero) return false;
@@ -361,8 +573,21 @@ namespace ScumMiniMap {
 
         internal static bool CopyInProgress;
         static CopyInputLease activeCopy;
+        static CopyInputDeliveryGate activeCopyDelivery;
         internal static void CancelActiveCopy() {
+            if(activeCopyDelivery!=null)activeCopyDelivery.Cancel();
             if(activeCopy!=null) activeCopy.Cancel();
+        }
+        internal static bool IsCoordinateCopyInput(UIntPtr tag){return CopyInputDeliveryGate.OwnsTag(tag);}
+        internal static bool ShouldSuppressCoordinateInput(bool injected,bool down,UIntPtr tag) {
+            // Key-ups always reach Windows, including cleanup after focus/chat loss.
+            // Admin sends and other applications' injected input have separate tags.
+            if(!injected || !down || !IsCoordinateCopyInput(tag))return false;
+            var delivery=activeCopyDelivery;
+            if(delivery==null || delivery.Tag!=tag)return true;
+            if(CopyInProgress && delivery.AllowsDown(tag))return false;
+            CancelActiveCopy();
+            return true;
         }
 
 
@@ -493,7 +718,7 @@ namespace ScumMiniMap {
 
 
 
-        static bool Key(uint vk,bool up,int capturedScan=0,IntPtr layout=default(IntPtr)) {
+        static bool Key(uint vk,bool up,int capturedScan=0,IntPtr layout=default(IntPtr),UIntPtr inputTag=default(UIntPtr)) {
 
 
 
@@ -502,7 +727,7 @@ namespace ScumMiniMap {
 
 
             input.data.keyboard.vk=0;
-            input.data.keyboard.extra=CopyInputTag;
+            input.data.keyboard.extra=inputTag==UIntPtr.Zero?AdminInputTag:inputTag;
 
 
 
@@ -519,7 +744,7 @@ namespace ScumMiniMap {
 
             bool ok=SendInput(1,new INPUT[]{input},Marshal.SizeOf(typeof(INPUT)))==1;
             int inputError=ok?0:Marshal.GetLastWin32Error();
-            if(InputTraceEnabled) TraceInput("copy vk="+vk+" scan="+input.data.keyboard.scan+" flags="+input.data.keyboard.flags+" sent="+ok+
+            if(InputTraceActive) TraceInput("copy vk="+vk+" scan="+input.data.keyboard.scan+" flags="+input.data.keyboard.flags+" sent="+ok+" Windows_error="+inputError+
                 " W="+((GetAsyncKeyState(0x57)&0x8000)!=0)+" Shift="+((GetAsyncKeyState(0x10)&0x8000)!=0));
 
 
@@ -556,7 +781,12 @@ namespace ScumMiniMap {
 
 
             CopyInProgress=true;
-            activeCopy=new CopyInputLease((vk,up)=>Key(vk,up,(int)vk==effectiveCopyKey?copyScanCode:0,layout));
+            CopyInputDeliveryGate delivery=null;
+            var lease=new CopyInputLease((vk,up)=>Key(vk,up,(int)vk==effectiveCopyKey?copyScanCode:0,layout,delivery.Tag));
+            delivery=new CopyInputDeliveryGate(()=>!lease.Cancelled && allowed() && GetForegroundWindow()==game && GameFocused()
+                && !UserTypingOrActive() && !CursorBlocksCopy(IsCursorVisible(),fullMapActive!=null && fullMapActive()) && !IsRightMouseDown() && !IsAltOrTabOrWinDown());
+            activeCopy=lease;
+            activeCopyDelivery=delivery;
 
 
 
@@ -564,11 +794,10 @@ namespace ScumMiniMap {
 
 
 
-                bool sent=await CopyChord(activeCopy.Send,Task.Delay,()=>!activeCopy.Cancelled && allowed() && GetForegroundWindow()==game && GameFocused()
-                    && !UserTypingOrActive() && !CursorBlocksCopy(IsCursorVisible(),fullMapActive!=null && fullMapActive()) && !IsRightMouseDown() && !IsAltOrTabOrWinDown(),
+                bool sent=await CopyChord(lease.Send,Task.Delay,()=>delivery.AllowsDown(delivery.Tag),
                     copyModifierKey,effectiveCopyKey);
-                return ClassifyCopy(sent && !activeCopy.Cancelled,CopyError);
-            } finally { CancelActiveCopy(); activeCopy=null; CopyInProgress=false; }
+                return ClassifyCopy(sent && !lease.Cancelled,CopyError);
+            } finally { CancelActiveCopy(); activeCopy=null; activeCopyDelivery=null; CopyInProgress=false; }
         }
 
         internal static CopyResult ClassifyCopy(bool sent,string error) {

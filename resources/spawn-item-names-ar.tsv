@@ -1,0 +1,2329 @@
+# Offline translation draft; native terminology review pending. Canonical identities retained.
+Cal_22	ذخيرة — .22
+Cal_22_Ammobox	.22 صندوق الذخيرة
+Cal_22_Crafted	ذخيرة مصنّعة يدويًا — .22
+Cal_22_TR	ذخيرة خطاطة — .22
+Cal_22_Ammobox_TR	.22 صندوق ذخيرة التتبع
+Cal_30-06	ذخيرة — .30-06
+Cal_30-06_Ammobox	.30-06 صندوق الذخيرة
+Cal_30-06_AP	ذخيرة خارقة للدروع — .30-06 (AP)
+Cal_30-06_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — .30-06 (AP)
+Cal_30-06_Ammobox_AP	.30-06 صندوق ذخيرة خارق للدروع
+Cal_30-06_Crafted	ذخيرة مصنّعة يدويًا — .30-06
+Cal_30-06_TR	ذخيرة خطاطة — .30-06
+Cal_30-06_Ammobox_TR	.30-06 صندوق ذخيرة التتبع
+Cal_308	ذخيرة — .308
+Cal_308_Ammobox	.308 صندوق الذخيرة
+Cal_308_AP	ذخيرة خارقة للدروع — .308 (AP)
+Cal_308_Ammobox_AP	.308 AP صندوق الذخيرة
+Cal_308_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — .308 (AP)
+Cal_308_Crafted	ذخيرة مصنّعة يدويًا — .308
+WeaponSuppressor_308_Black	كاتم صوت — .308
+Cal_308_TR	ذخيرة خطاطة — .308 (TR)
+Cal_308_Ammobox_TR	.308 TR صندوق الذخيرة
+Cal_338	ذخيرة — .338
+Cal_338_Ammobox	.338 صندوق الذخيرة
+Cal_338_AP	ذخيرة خارقة للدروع — .338 (AP)
+Cal_338_Ammobox_AP	.338 AP صندوق الذخيرة
+Cal_338_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — .338 (AP)
+Cal_338_Crafted	ذخيرة مصنّعة يدويًا — .338
+WeaponSuppressor_338_Black	كاتم صوت — .338
+WeaponSuppressor_338_Green	.338 القامع الأخضر
+WeaponSuppressor_338_Tan	.338 القامع تان
+Cal_338_TR	ذخيرة خطاطة — .338 (TR)
+Cal_338_Ammobox_TR	.338 صندوق ذخيرة التتبع
+Cal_357_Viper	ذخيرة — .357
+Cal_357_Ammobox	.357 صندوق الذخيرة
+Cal_357_Viper_AP	ذخيرة خارقة للدروع — .357 (AP)
+Cal_357_Viper_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — .357 (AP)
+Cal_357_Ammobox_AP	.357 صندوق ذخيرة خارق للدروع
+Cal_357_Viper_Crafted	ذخيرة مصنّعة يدويًا — .357
+Cal_357_Viper_TR	ذخيرة خطاطة — .357
+Cal_357_Ammobox_TR	.357 صندوق ذخيرة التتبع
+Cal_38	ذخيرة — .38
+Cal_38_Ammobox	.38 صندوق الذخيرة
+Cal_38_Ammobox_AP	.38 طلقات خارقة للدروع لصندوق الذخيرة
+Cal_38_Ammobox_TR	.38 طلقات تتبع صندوق الذخيرة
+Cal_38_AP	ذخيرة خارقة للدروع — .38 (AP)
+Cal_38_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — .38 (AP)
+Cal_38_Crafted	ذخيرة مصنّعة يدويًا — .38
+Cal_38_TR	ذخيرة خطاطة — .38 (TR)
+Cal_44_Viper	ذخيرة — .44
+Cal_44_Viper_Ammobox	.44 صندوق الذخيرة
+Cal_44_Viper_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — .44 (AP)
+Cal_44_Viper_Ammobox_AP	.44 صندوق ذخيرة خارق للدروع
+Cal_44_Viper_AP	ذخيرة خارقة للدروع — .44
+Cal_44_Viper_Crafted	ذخيرة مصنّعة يدويًا — .44
+Cal_44_Viper_TR	ذخيرة خطاطة — .44
+Cal_44_Viper_Ammobox_TR	.44 صندوق ذخيرة التتبع
+Cal_45	ذخيرة — .45 ACP
+Cal_45_Ammobox	.45 ACP صندوق الذخيرة
+Cal_45_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — .45 ACP (AP)
+Cal_45_AP	ذخيرة خارقة للدروع — .45 ACP
+Cal_45_AP_Ammobox	.45 ACP صندوق ذخيرة خارق للدروع
+Cal_45_Crafted	ذخيرة مصنّعة يدويًا — .45 ACP
+WeaponSuppressor_45ACP	كاتم صوت — .45 ACP
+Cal_45_TR	ذخيرة خطاطة — .45 ACP
+Cal_45_Ammobox_TR	.45 ACP صندوق ذخيرة الراسم
+Cal_50_AE	ذخيرة — .50 AE
+Cal_50_AE_Ammobox	.50 AE صندوق الذخيرة
+Cal_50_AE_AP	ذخيرة خارقة للدروع — .50 AE (AP)
+Cal_50_AE_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — .50 AE (AP)
+Cal_50_AE_AP_Ammobox	.50 AE صندوق ذخيرة خارق للدروع
+Cal_50_AE_Crafted	ذخيرة مصنّعة يدويًا — .50 AE
+Cal_50_AE_TR	ذخيرة خطاطة — .50 AE
+Cal_50_AE_Ammobox_TR	.50 AE صندوق ذخيرة الراسم
+Cal_50BMG	ذخيرة — .50 BMG
+Cal_50BMG_Ammobox	.50 BMG صندوق الذخيرة
+Cal_50BMG_AP	ذخيرة خارقة للدروع — .50 BMG (AP)
+Cal_50BMG_AP_Ammobox	.50 BMG صندوق ذخيرة خارق للدروع
+Cal_50BMG_Crafted	ذخيرة مصنّعة يدويًا — .50 BMG
+Cal_50BMG_TR	ذخيرة خطاطة — .50 BMG
+Cal_50BMG_Ammobox_TR	.50 BMG صندوق ذخيرة الراسم
+Weapon_DT11B_Sawed_Off	"The Mule" DT11B قصير
+12_Gauge_Birdshot	12 خرطوشة طلقة الطيور بقياس 0⟧
+12_Gauge_Buckshot	12 خرطوشة رصاص قياس
+12_Gauge_Buckshot_Crafted	12 خرطوشة قياس الرصاص المرتجلة
+12_Gauge_Slug	12 خرطوشة طلقة سبيكة قياس
+WeaponSuppressor_12_Gauge	12  قياس المكثف
+Cal_40x46	40x46 قنبلة يدوية
+Cal_5_45x39mm	ذخيرة — 5.45x39mm
+Cal_5_45x39mm_Ammobox	5.45x39mm صندوق الذخيرة
+Cal_5_45x39mm_AP	ذخيرة خارقة للدروع — 5.45x39mm (AP)
+Cal_5_45x39mm_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — 5.45x39mm (AP)
+Cal_5_45x39mm_AP_Ammobox	5.45x39mm صندوق ذخيرة خارقة للدروع
+Cal_5_45x39mm_Crafted	ذخيرة مصنّعة يدويًا — 5.45x39mm
+WeaponSuppressor_5_45x39	كاتم صوت — 5.45x39mm
+Cal_5_45x39mm_TR	ذخيرة خطاطة — 5.45x39mm
+Cal_5_45x39mm_Ammobox_TR	5.45x39mm صندوق ذخيرة التتبع
+Cal_5_56x45mm	ذخيرة — 5.56x45mm
+Cal_5_56x45mm_Ammobox	5.56x45mm صندوق الذخيرة
+Cal_5_56x45mm_AP	ذخيرة خارقة للدروع — 5.56x45mm (AP)
+Cal_5_56x45mm_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — 5.56x45mm (AP)
+Cal_5_56x45mm_AP_Ammobox	5.56x45mm صندوق ذخيرة خارقة للدروع
+Cal_5_56x45mm_Crafted	ذخيرة مصنّعة يدويًا — 5.56x45mm
+Cal_5_56x45mm_TR	ذخيرة خطاطة — 5.56x45mm
+Cal_5_56x45mm_Ammobox_TR	5.56x45mm صندوق ذخيرة التتبع
+Cal_7_62x39mm	ذخيرة — 7.62x39mm
+Cal_7_62x39mm_Ammobox	7.62x39mm صندوق الذخيرة
+Cal_7_62x39mm_AP	ذخيرة خارقة للدروع — 7.62x39mm (AP)
+Cal_7_62x39mm_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — 7.62x39mm (AP)
+Cal_7_62x39mm_AP_Ammobox	7.62x39mm صندوق ذخيرة خارقة للدروع
+Cal_7_62x39mm_Crafted	ذخيرة مصنّعة يدويًا — 7.62x39mm
+Cal_7_62x39mm_TR	ذخيرة خطاطة — 7.62x39mm
+Cal_7_62x39mm_Ammobox_TR	7.62x39mm صندوق ذخيرة التتبع
+Cal_7_62x54mmR	ذخيرة — 7.62x54mmR
+Cal_7_62x54mmR_Ammobox	7.62x54mmR صندوق الذخيرة
+Cal_7_62x54mmR_AP	ذخيرة خارقة للدروع — 7.62x54mmR (AP)
+Cal_7_62x54mmR_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — 7.62x54mmR (AP)
+Cal_7_62x54mmR_AP_Ammobox	7.62x54mmR صندوق ذخيرة خارقة للدروع
+Cal_7_62x54mmR_Crafted	ذخيرة مصنّعة يدويًا — 7.62x54mmR
+Cal_7_62x54mmR_TR	ذخيرة خطاطة — 7.62x54mmR
+Cal_7_62x54mmR_Ammobox_TR	7.62x54mmR صندوق ذخيرة التتبع
+Cal_7_92x57mm	ذخيرة — 7.92x57mm
+Cal_7_92x57mm_Ammobox	7.92x57mm صندوق الذخيرة
+Cal_7_92x57mm_AP	ذخيرة خارقة للدروع — 7.92x57mm (AP)
+Cal_7_92x57mm_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — 7.92x57mm (AP)
+Cal_7_92x57mm_AP_Ammobox	7.92x57mm صندوق ذخيرة خارقة للدروع
+Cal_7_92x57mm_Crafted	ذخيرة مصنّعة يدويًا — 7.92x57mm
+Cal_7_92x57mm_TR	ذخيرة خطاطة — 7.92x57mm
+Cal_7_92x57mm_Ammobox_TR	7.92x57mm صندوق ذخيرة التتبع
+Cal_9mm	ذخيرة — 9mm
+Cal_9mm_Ammobox	9mm صندوق الذخيرة
+Cal_9mm_AP	ذخيرة خارقة للدروع — 9mm (AP)
+Cal_9mm_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — 9mm (AP)
+Cal_9mm_AP_Ammobox	9mm صندوق ذخيرة خارق للدروع
+Cal_9mm_Crafted	ذخيرة مصنّعة يدويًا — 9mm
+Cal_9mm_TR	ذخيرة خطاطة — 9mm
+Cal_9mm_Ammobox_TR	9mm صندوق ذخيرة الراسم
+Cal_9x39mm	ذخيرة — 9x39mm
+Cal_9x39mm_Ammobox	9x39mm صندوق الذخيرة
+Cal_9x39mm_AP	ذخيرة خارقة للدروع — 9x39mm (AP)
+Cal_9x39mm_AP_CR	ذخيرة خارقة للدروع مصنّعة يدويًا — 9x39mm (AP)
+Cal_9x39mm_AP_Ammobox	9x39mm صندوق ذخيرة خارق للدروع
+Cal_9x39mm_Crafted	ذخيرة مصنّعة يدويًا — 9x39mm
+Cal_9x39mm_TR	ذخيرة خطاطة — 9x39mm
+Cal_9x39mm_Ammobox_TR	9x39mm صندوق ذخيرة الراسم
+Absinthe	Absinthe Father
+WeaponScope_ACOG_01	ACOG
+ActivatedCharcoal_01	الفحم المنشط - نفطة
+ActivatedCharcoal_02	الفحم المنشط - علبة
+ActivatedCharcoal_03	الفحم المنشط - جرة
+Compass_Advanced	بوصلة متقدمة
+Lock_Security_Lvl3	حماية القفل المتقدمة
+Lockpick_Advanced_Item	قفل متقدم
+Aeroplane_Repair_Kit	طقم إصلاح الطائرة
+African_Biltong	بيلتونج الأفريقية
+Agaricus_Augustus	Agaricus Augustus
+Agaricus_Campestris	Agaricus Campestris
+Aloe_Vera	نبات الصبار
+WeaponSights_AimPRO	منظار النقطة الحمراء — AimPRO
+Air_Pump	مضخة هواء
+Weapon_AK15	AK-15
+Weapon_AK47	AK-47
+Magazine_AK15	مخزن ذخيرة — AK15
+WeaponSuppressor_AK15	كاتم صوت — AK15
+Weapon_Parts_AK15	AK15 أجزاء السلاح
+Weapon_AK47_Engraved	AK47 محفورة
+Magazine_AK47	مخزن ذخيرة — AK47
+Weapon_Parts_AK47	AK47 أجزاء السلاح
+Weapon_AKM	AKM
+Weapon_Parts_AKM	AKM أجزاء السلاح
+Weapon_Parts_AKS_74U	AKS أجزاء سلاح 74U
+Weapon_AKS_74U	AKS-74U
+Magazine_AKS_74U	مخزن ذخيرة — AKS-74U
+Bag_of_Almonds	اللوز
+Amanita_Muscaria	Amanita Muscaria
+Amanita_Pantherina	Amanita Pantherina
+Amanita_Phalloides	Amanita Phalloides
+Amanita_Virosa	Amanita Virosa
+ColorCan_AmberYellow	علبة طلاء أصفر كهرماني
+Fish_Amur	مبروك الحشائش
+Amur_Fillet	امور فيليه
+WeaponCharm_Anchor	سحر سلاح المرساة
+Suite_Pants_01	سروال طيران الملاك
+Monkfish_Fillet	فيليه الصياد
+WeaponCharm_Angry_Emoji	سحر سلاح الرموز التعبيرية الغاضبة
+Small_Animal_Fat	الدهون الحيوانية
+Animal_skin	جلد الحيوان
+Bear_Improvised_Jacket	سترة جلد الحيوان
+Bear_Improvised_Pants	سروال جلد الحيوان
+Improvised_Quiver_01	جعبة جلد الحيوان
+HH_Shoes_01_01	أحذية الكاحل
+HH_Shoes_01_02	أحذية الكاحل
+HH_Shoes_01_03	أحذية الكاحل
+HH_Shoes_01_04	أحذية الكاحل
+Anode_Plate	لوحة الأنود
+Mine_01	الألغام المضادة للأفراد
+Antibiotic_Pill_Single	المضادات الحيوية - 1000mg
+Antibiotics_01	المضادات الحيوية - نفطة - 1000mg
+Antibiotics_02	مضادات حيوية - علبة - 1000mg
+Antibiotics_03	مضاد حيوي - برطمان - 1000mg
+Apple	أبل
+Apple_2	أبل
+Crab_Apple	أبل
+Apple_Seed_Bag	كيس بذور التفاح
+Apple_Seeds	بذور التفاح
+RH_Arm_Guard	حارس الذراع
+Armband_01	شارة
+Armillaria_Mellea	Armillaria Mellea
+Armor_Tactical_Vest_01_01	سترة تكتيكية مدرعة
+Armor_Tactical_Vest_01_02	سترة تكتيكية مدرعة
+Armor_Tactical_Vest_01_03	سترة تكتيكية مدرعة
+Armor_Tactical_Vest_01_04	سترة تكتيكية مدرعة
+Armor_Tactical_Vest_01_05	سترة تكتيكية مدرعة
+Weapon_AS_Val	AS فال
+Weapon_Parts_AS_Val	AS أجزاء سلاح فال
+WeaponFlashlight_AS_Val	AS فال/VSS مصباح يدوي
+Magazine_AS_Val	AS فال/VSS مجلة
+Aspirin	الأسبرين
+Military_Backpack_01_01	حقيبة الظهر الاعتداء
+Military_Backpack_01_02	حقيبة الظهر الاعتداء
+Military_Backpack_01_03	حقيبة الظهر الاعتداء
+Military_Backpack_01_04	حقيبة الظهر الاعتداء
+Military_Backpack_01_05	حقيبة الظهر الاعتداء
+Military_Backpack_01_06	حقيبة الظهر الاعتداء
+Military_Backpack_01_07	حقيبة الظهر الاعتداء
+Military_Backpack_01_08	حقيبة الظهر الاعتداء
+Military_Backpack_01_09	حقيبة الظهر الاعتداء
+Weapon_AT4_HEAT	AT4 HEAT
+AtropineInjection	حقن الأتروبين
+Weapon_AWM	AWM
+Weapon_AWM_Desert	AWM الصحراء
+Weapon_AWM_Green	AWM أخضر
+Magazine_AWM	مخزن ذخيرة — AWM
+Weapon_AWM_Snake	AWM ثعبان
+Weapon_Parts_AWM	AWM أجزاء السلاح
+Weapon_AWP	AWP
+Weapon_AWP_Desert	AWP الصحراء
+Weapon_AWP_Green	AWP أخضر
+Magazine_AWP	مخزن ذخيرة — AWP
+Weapon_AWP_Snake	AWP ثعبان
+Weapon_Parts_AWP	AWP أجزاء السلاح
+2H_Axe	الفأس
+WeaponCharm_Axe	سحر سلاح الفأس
+BabyFood	أغذية الأطفال
+Backpack_02_01	حقيبة الظهر
+Backpack_02_02	حقيبة الظهر
+Backpack_02_03	حقيبة الظهر
+Backpack_02_04	حقيبة الظهر
+Backpack_02_05	حقيبة الظهر
+Military_Backpack_03_01	حقيبة الظهر
+Military_Backpack_03_02	حقيبة الظهر
+Military_Backpack_03_03	حقيبة الظهر
+Military_Backpack_03_04	حقيبة الظهر
+Military_Backpack_03_05	حقيبة الظهر
+Military_Backpack_03_06	حقيبة الظهر
+Military_Backpack_03_07	حقيبة الظهر
+Military_Backpack_03_08	حقيبة الظهر
+AnimalBaitFeederItem	مغذي الطعم
+BakedBeans	الفاصوليا المطبوخة
+BakingSoda	صودا الخبز
+Military_Mask_01	بالاكلافا
+Military_Mask_02	بالاكلافا
+Military_Mask_03	بالاكلافا
+Military_Mask_04	بالاكلافا
+Military_Mask_05	بالاكلافا
+Military_Mask_06	بالاكلافا
+Military_Mask_07	بالاكلافا
+Military_Mask_08	بالاكلافا
+Police_Mask_01	بالاكلافا
+Recurve_Bow_100	Ballista 100#
+Bamboo_Hat_01	قبعة الخيزران
+Bamboo_Hat_02	قبعة الخيزران
+Banana	الموز
+Banjo	البانجو
+Barbed_Wire	الأسلاك الشائكة
+Barberry	البرباريس
+ColorCan_BaronBrown	علبة طلاء بارون براون
+BaseExpansionKit_Lvl1	مجموعة توسيع القاعدة المستوى 1
+BaseExpansionKit_Lvl2	مجموعة توسيع القاعدة المستوى 2
+2H_Baseball_Bat	مضرب البيسبول
+2H_Baseball_Bat_with_spikes	مضرب البيسبول مع المسامير
+Baseball_Cap_01	قبعة بيسبول
+Baseball_Cap_02	قبعة بيسبول
+Baseball_Cap_03	قبعة بيسبول
+Baseball_Cap_04	قبعة بيسبول
+Baseball_Cap_05	قبعة بيسبول
+Baseball_Cap_06	قبعة بيسبول
+Baseball_Cap_07	قبعة بيسبول
+Baseball_Cap_08	قبعة بيسبول
+Baseball_Cap_09	قبعة بيسبول
+Baseball_Cap_10	قبعة بيسبول
+Compass_Basic	البوصلة الأساسية
+Lock_Security	حماية القفل الأساسية
+Fish_Bass	القاروص
+Bass_Fillet	باس فيليه
+1H_Police_Baton	باتون
+Batteries	البطاريات
+Weapon_BayRifferBlock21	Bay Riffer Block21
+Book_Cooking_BBQ	BBQ كتاب الطبخ
+BCU_Chip	BCU رقاقة
+BCULock_Item	BCU قفل
+WeaponCharm_BCU	BCU سحر السلاح
+1H_Beam_Dildo	Beamasaurus دسار
+Dish_Sandwich_Beans	ساندويتش الفول
+Beenie_01	قبعة صغيرة
+Beenie_02	قبعة صغيرة
+Beenie_03	قبعة صغيرة
+Beenie_04	قبعة صغيرة
+Beenie_05	قبعة صغيرة
+Beenie_06	قبعة صغيرة
+Beenie_07	قبعة صغيرة
+Beenie_08	قبعة صغيرة
+Beenie_09	قبعة صغيرة
+Military_Beanie_01	قبعة صغيرة
+Military_Beanie_02	قبعة صغيرة
+Military_Beanie_03	قبعة صغيرة
+Military_Beanie_04	قبعة صغيرة
+Military_Beanie_05	قبعة صغيرة
+Military_Beanie_06	قبعة صغيرة
+Military_Beanie_07	قبعة صغيرة
+Military_Beanie_08	قبعة صغيرة
+Bear_Head	رأس الدب
+Bear_Head_Hat_01	قبعة رأس الدب
+Bear_Left_Back_Leg	ساق الدب
+Bear_Left_Front_Leg	ساق الدب
+Bear_Right_Back_Leg	ساق الدب
+Bear_Right_Front_Leg	ساق الدب
+Bear_Back_Paws	الدب الكفوف
+Bear_Front_Paws	الدب الكفوف
+Bear_Steak	بير ستيك
+Bear_Torso	الدب الجذع
+Bear_Left_Torso_Half	نصف جذع الدب
+Bear_Right_Torso_Half	نصف جذع الدب
+Bedroll	سرير
+BeefRavioli	رافيولي لحم البقر
+BeefStew	يخنة لحم البقر
+MRE_Stew	يخنة لحم البقر MRE
+Beer	بيرة
+Beet	البنجر
+Beijing_Shoes_01	أحذية بكين
+Beijing_Shoes_02	أحذية بكين
+Beijing_Shoes_03	أحذية بكين
+Beijing_Shoes_04	أحذية بكين
+Bell_Pepper	بيل بيبر
+2H_Pitchfork_Bent	بنت بيتشفورك
+Beret_01	قبعة
+Beret_02	قبعة
+Beret_03	قبعة
+Beret_04	قبعة
+Beret_05	قبعة
+Beret_06	قبعة
+Big_Animal_Fat	الدهون الحيوانية الكبيرة
+Big_Animal_guts	أحشاء الحيوانات الكبيرة
+Christmas_Present_03	هدية عيد الميلاد الكبيرة
+Christmas_Present_AK15	هدية عيد الميلاد الكبيرة
+Christmas_Present_AK15_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_AK15_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_AKS_74U	هدية عيد الميلاد الكبيرة
+Christmas_Present_AKS_74U_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_AKS_74U_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_AS_Val	هدية عيد الميلاد الكبيرة
+Christmas_Present_AS_Val_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_AS_Val_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_Ghillie	هدية عيد الميلاد الكبيرة
+Christmas_Present_Ghillie_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_Ghillie_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_Kar98	هدية عيد الميلاد الكبيرة
+Christmas_Present_Kar98_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_Kar98_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_Laika_Alternator	هدية عيد الميلاد الكبيرة
+Christmas_Present_M1	هدية عيد الميلاد الكبيرة
+Christmas_Present_M1_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_M1_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_M16A4	هدية عيد الميلاد الكبيرة
+Christmas_Present_M16A4_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_M16A4_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_M1887	هدية عيد الميلاد الكبيرة
+Christmas_Present_M249	هدية عيد الميلاد الكبيرة
+Christmas_Present_M82A1	هدية عيد الميلاد الكبيرة
+Christmas_Present_M82A1_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_M82A1_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_MAC10	هدية عيد الميلاد الكبيرة
+Christmas_Present_MAC10_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_MAC10_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_MK18	هدية عيد الميلاد الكبيرة
+Christmas_Present_MK18_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_MK18_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_MP5	هدية عيد الميلاد الكبيرة
+Christmas_Present_MP5_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_MP5_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_Rager_Alternator	هدية عيد الميلاد الكبيرة
+Christmas_Present_RPK	هدية عيد الميلاد الكبيرة
+Christmas_Present_RPK_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_RPK_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_SCAR_DMR	هدية عيد الميلاد الكبيرة
+Christmas_Present_SCAR_L	هدية عيد الميلاد الكبيرة
+Christmas_Present_SCAR_L_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_SCAR_L_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_SVD	هدية عيد الميلاد الكبيرة
+Christmas_Present_SVD_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_SVD_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_UMP	هدية عيد الميلاد الكبيرة
+Christmas_Present_UMP_01	هدية عيد الميلاد الكبيرة
+Christmas_Present_UMP_02	هدية عيد الميلاد الكبيرة
+Christmas_Present_WW_Alternator	هدية عيد الميلاد الكبيرة
+2H_Stone_Axe	الفأس الحجري الكبير
+2H_Stone_Axe_Head	رأس الفأس الحجري الكبير
+Big_Vehicle_StorageRack	رف تخزين كبير للمركبات
+Leather_Jacket	سترة جلدية لراكبي الدراجات النارية
+Negan_Jacket	سترة جلدية لراكبي الدراجات النارية
+Binoculars	مناظير
+12_Gauge_BirdShot_Ammobox	صندوق ذخيرة بندقية صيد الطيور
+Birthday_Cap_01	قبعة عيد الميلاد
+Ghillie_Suit_Pants_02	بدلة غيلي سوداء أسفل
+Ghillie_Suit_Jacket_02	بدلة غيلي سوداء أعلى
+BlackOlives	زيتون اسود
+ColorCan_Black	علبة الطلاء الأسود
+BlackPepper	فلفل اسود
+Blackberry	بلاك بيري
+Recurve_Bow_90	بلاك هوك 90#
+Weapon_BlackHawk_Crossbow	Blackhawk القوس والنشاب
+BlankSign	علامة فارغة
+Blast_Cap	كاب الانفجار
+2H_Baseball_Bat_Blaze	Blaze بات
+Fish_Bleak	السمك القاتم
+Bleak_Fillet	فيليه قاتمة
+FishingBait_Bleak	طعم السمك القاتمة
+Weapon_Block21	Block 21
+Magazine_Block21	مخزن ذخيرة — Block 21
+Weapon_Parts_Block21	أجزاء الأسلحة Block 21
+MemoryModule_Level2	وحدة الذاكرة الزرقاء
+Blueberries	التوت
+Boar_Head	رأس الخنزير
+Boar_Head_Hat_01	قبعة رأس الخنزير
+Boar_Hooves_Back	حوافر الخنزير
+Boar_Hooves_front	حوافر الخنزير
+Boar_Back_Leg	ساق الخنزير
+Boar_Front_Leg	ساق الخنزير
+Boar_Torso	جذع الخنزير
+Bobby_pin	بوبي بين
+Bobby_Pin_Package	بوبي دبوس بوكس
+FishingBait_BoiliesPrm1	طعم السمك المسلوق
+Boletus_Edulis	Boletus Edulis
+Bolts	البراغي
+Bone	عظم
+Bone_Needle	عظم - إبرة
+BoomBox_01	صندوق بوم
+WeaponCharm_Bottle_Opener	سحر سلاح فتاحة الزجاجات
+BowSilencer	كاتم الصوت القوس
+Bow_MicroStabilizer	مثبت القوس
+Bolts_Package_Box	صندوق البراغي
+Nails_Package_Box	علبة الأظافر
+Boxer_Briefs_01	ملخصات الملاكم
+F_Undershirt_Bra_01	حمالة صدر
+F_Undershirt_Bra_02	حمالة صدر
+F_Undershirt_Bra_03	حمالة صدر
+F_Undershirt_Bra_04	حمالة صدر
+F_Undershirt_Bra_05	حمالة صدر
+Brake_Oil	زيت الفرامل
+Improvised_Plant_rope	حبل الفرع
+1H_Brass_knuckles	المفاصل النحاسية
+FishingBait_Bread	طعم سمك الخبز
+Breathing_Tube_01	أنبوب التنفس
+Brick	لبنة
+Carbon_BroadHead_Arrow	سهم الكربون عريض الرأس
+Metal_BroadHead_Arrow	سهم معدني عريض الرأس
+Broccoli	القرنبيط
+Broccoli_Seed_Bag	كيس بذور البروكلي - كيس بذور البروكلي
+Broccoli_Seeds	بذور البروكلي
+Kilt_Brogue_Shoe_01	حذاء بروغ
+Can03	Bubbles
+Buck_Head	باك هيد
+Buck_Left_Back_Leg	باك الساق
+Buck_Left_Front_Leg	باك الساق
+Buck_Right_Back_Leg	باك الساق
+Buck_Right_Front_Leg	باك الساق
+Buck_Torso	باك الجذع
+12_Gauge_Buckshot_Ammobox	صندوق ذخيرة البندقية
+WeaponCharm_Bullet	سحر سلاح الرصاصة
+Bulletproof_Vest_01	سترة مضادة للرصاص
+Bulletproof_Vest_01_02	سترة مضادة للرصاص
+Bulletproof_Vest_01_03	سترة مضادة للرصاص
+Bulletproof_Vest_01_04	سترة مضادة للرصاص
+Bulletproof_Vest_01_05	سترة مضادة للرصاص
+Bundle_Of_Bobby_Pins	مجموعة من دبابيس بوبي
+Bundle_Of_Bricks	حزمة من الطوب
+Bundle_Of_Improvised_Lockpicks	مجموعة من Lockpicks المرتجلة
+Bundle_Of_Lockpicks	مجموعة من Lockpicks
+Bundle_Rag_Stripes	مجموعة من شرائط خرقة
+Bundle_Of_Rags	حزمة من الخرق
+Bundle_Of_Safety_Pins	مجموعة من دبابيس الأمان
+Bundle_Wooden_Plank	مجموعة من الألواح الخشبية
+Wooden_Sticks_Bundle_Large	مجموعة من العصي الخشبية
+Bunny_Slippers	النعال الأرنب - النعال الأرنب
+Cereal_BunnyStars	حبوب باني ستارز
+AntiburnGel	جل الحروق
+1H_Bushman	بوشمان
+Butter	زبدة
+RH_Bycoket_01	بايكوكيت
+C4	C4 قنبلة
+C4_Detonator	مفجر C4
+C4_Keypad	لوحة دوائر لوحة المفاتيح C4
+C4_CircuitBoard	لوحة دائرة الموقت C4
+Cabbage	الملفوف
+Cabbage_Seed_Bag	كيس بذور الملفوف - كيس بذور الملفوف
+Cabbage_Seeds	بذور الكرنب
+Book_Cooking_Cake	كتاب طبخ الكيك
+WeaponSuppressor_30_06	كاتم صوت — .30-06
+Camera_Lens	عدسة الكاميرا
+Military_Backpack_02_01	حقيبة ظهر كامو للمشي لمسافات طويلة
+Military_Backpack_02_02	حقيبة ظهر كامو للمشي لمسافات طويلة
+Military_Backpack_02_03	حقيبة ظهر كامو للمشي لمسافات طويلة
+Military_Backpack_02_04	حقيبة ظهر كامو للمشي لمسافات طويلة
+Military_Backpack_02_05	حقيبة ظهر كامو للمشي لمسافات طويلة
+Military_Backpack_02_06	حقيبة ظهر كامو للمشي لمسافات طويلة
+Military_Backpack_02_07	حقيبة ظهر كامو للمشي لمسافات طويلة
+Military_Backpack_02_08	حقيبة ظهر كامو للمشي لمسافات طويلة
+Camouflage_Jacket_01	سترة التمويه
+Camouflage_Jacket_02	سترة التمويه
+Camouflage_Jacket_03	سترة التمويه
+CanOpener	فتاحة العلب
+Candle_01	شمعة
+Candy_Bob	Candy Bob
+WeaponCharm_Candy_Cane	سحر سلاح قصب الحلوى
+CandyCorn_01	حلوى الذرة
+Cannabis_Bud	برعم القنب
+Cannabis_Seed_Bag	كيس بذور القنب
+Cannabis_Seeds	بذور القنب
+CannedGoulash	لحوم البقر المعلبة جولاش
+CannedSeafoodMix	مزيج المأكولات البحرية المعلبة
+Canned_Tuna	التونة المعلبة
+CantaloupeMelon	الشمام البطيخ
+CantaloupeMelon_Slice	الشمام البطيخ
+CantaloupeMelon_Seeds	بذور الشمام
+Canteen	مقصف
+Cantharellus_Cibarius	Cantharellus Cibarius
+Car_Battery	بطارية السيارة
+Car_Battery_Cables	كابلات بطارية السيارة
+Car_Jack	جاك السيارة
+Car_Radio_Item	راديو السيارة
+Car_Repair_Kit	طقم إصلاح السيارة
+PETBottle01	صودا الكراميل
+PETBottle02	صودا الكراميل
+Carbon_Arrow	سهم الكربون
+Ammo_Crossbow_Bolt_Carbon	الترباس القوس والنشاب الكربون
+Weapon_CarbonHunter	هنتر الكربون
+Weapon_CarbonBear	صائد الكربون Ironpaw
+Magazine_CarbonHunter	مجلة الكربون هنتر
+Weapon_Parts_Carbon_Hunter	أجزاء سلاح كاربون هنتر
+Fish_Carp	الكارب
+Carp_Fillet	فيليه الكارب
+Carp_Head	رأس الكارب
+Carrot	جزرة
+GlassBottle01	عصير الجزر
+Carrot_Seed_Bag	كيس بذور الجزرة - كيس بذور الجزرة
+Carrot_Seeds	بذور الجزر
+CartridgeTrap	مصيدة الخرطوشة
+Cash	نقدا
+Book_Cooking_Casseroles	كتاب الطبخ طاجن
+CannedCatfood	طعام القطط
+Fish_Catfish	سمك السلور
+Catfish_Fillet	فيليه سمك السلور
+Catfish_Head	رأس سمك السلور
+Cauliflower	القرنبيط
+CD_Player	CD لاعب
+Celery	الكرفس
+CementBag	كيس الاسمنت
+Chainsaw	المنشار
+Charcoal	فحم
+Cheese	جبن
+FishingBait_Cheese	طعم السمك بالجبن
+Dish_Sandwich_Cheese	ساندوتش جبن
+CheesePacked	شرائح الجبن
+MRE_Cheeseburger	تشيز برجر MRE
+ColorCan_CherryRed	علبة طلاء باللون الأحمر الكرزي
+Cherry_Seed_Bag	كيس بذور الكرز - كيس بذور الكرز
+Cherry_Seeds	بذور الكرز
+ChickenDrumstick	مضرب الدجاج
+ChickenMeat	لحم دجاج
+Chili_Pepper	الفلفل الحار
+ChilliPeppers_Seeds	بذور الفلفل الحار
+Chillipepper_Seed_Bag	كيس بذور الفلفل الحار
+Chips	شيبس كلاسيك
+ChocolateCandy_10	ChocCandy
+ChocolateCandy_11	ChocoBar
+ChocolateCandy_04	الشوكولاته
+ChocolateCandy_05	الشوكولاته
+ChocolateCandy_06	الشوكولاته
+ChocolateCandy_07	الشوكولاته
+ChocolateCandy_08	بار الشوكولاتة
+ChocolateCandy_09	بار الشوكولاتة
+ChocolateCandy_03	حلوى كعكة الشوكولاتة
+ChocolateCandy_01	شريط حلوى الشوكولاتة
+Chow_Mein	تشاو مين
+Christmas_Beanie_02	قبعة عيد الميلاد
+Christmas_Decoration	زينة عيد الميلاد
+Christmas_Present_02	هدية عيد الميلاد
+Christmas_Ball_01	زخرفة عيد الميلاد
+Christmas_Ball_02	زخرفة عيد الميلاد
+Christmas_Ball_03	زخرفة عيد الميلاد
+Christmas_Ball_04	زخرفة عيد الميلاد
+Christmas_Ball_05	زخرفة عيد الميلاد
+Christmas_Ball_06	زخرفة عيد الميلاد
+Christmas_Pants_01	سراويل عيد الميلاد
+Christmas_Pants_02	سراويل عيد الميلاد
+Christmas_Slippers	نعال عيد الميلاد
+Christmas_Vest_01	سترة عيد الميلاد
+Fish_Chub	الشوب
+Chub_Fillet	تشوب فيليه
+Credit_Card_Classic	البطاقة المصرفية الكلاسيكية
+Classic_Shirt_01	قميص كلاسيكي
+Classic_Shirt_02	قميص كلاسيكي
+Cigarette	السجائر الكلاسيكية
+Cigarettes	علبة السجائر الكلاسيكية
+Claymore	كلايمور
+1H_Cleaver	الساطور
+Coal_01	الفحم
+CoalBag	كيس الفحم
+Recurve_Bow_50	Cobra 50#
+Cocoa_Powder	مسحوق الكاكاو
+Coconut	جوز الهند
+Coffee	قهوة
+Coffee_Cup	فنجان قهوة
+Can04	الكولا
+ColorCan_ColdCyan	علبة طلاء سماوي بارد
+ColorCan_ColdGrey	علبة الطلاء الرمادي البارد
+CombatBoots	الأحذية القتالية
+Combat_Helmet_01	خوذة القتال
+Combat_Helmet_02	خوذة القتال
+Combat_Helmet_03	خوذة القتال
+Combat_Helmet_04	خوذة القتال
+M1_Vietnam_Helmet	خوذة القتال
+RH_Jacket	سترة مجتمعة
+Compound_Bow	القوس المركب
+Compound_Bow_Desert	القوس المركب
+Compound_Bow_Digital	القوس المركب
+Compound_Bow_Snow	القوس المركب
+Compound_Bow_US_Scorpion	القوس المركب
+Compound_Bow_Woodland	القوس المركب
+CompoundBowSight_3_Pin	مجمع القوس البصر
+CompoundBowSight_5_Pin	مجمع القوس البصر
+Boots_06_01	أحذية البناء
+Boots_06_02	أحذية البناء
+Construction_Gloves_01_01	قفازات البناء
+Construction_Gloves_01_02	قفازات البناء
+Construction_Gloves_01_03	قفازات البناء
+Construction_Pants_01	سروال البناء
+Construction_Pants_02	سروال البناء
+Construction_Pants_03	سروال البناء
+Boots_07_01	أحذية مطاطية البناء
+Boots_07_02	أحذية مطاطية البناء
+Boots_07_03	أحذية مطاطية البناء
+Pot1	وعاء الطبخ
+Copper_Coins	عملات نحاسية
+Coprinus_Comatus	Coprinus Comatus
+Corn	الذرة
+Corn_flakes	رقائق الذرة
+FishingBait_Corn	طعم أسماك الذرة
+Corn_Seed_Bag	كيس بذور الذرة - كيس بذور الذرة
+Corn_Seeds	بذور الذرة
+ColorCan_CottonCandy	علبة طلاء حلوى القطن
+Hoodie_01	هوديي قطن
+Hoodie_02	هوديي قطن
+Hoodie_03	هوديي قطن
+Hoodie_04	هوديي قطن
+Hoodie_05	هوديي قطن
+Inmate_Hoodie_01	هوديي قطن
+Inmate_Shirt_01_Snow_DigitalDeluxe	هوديي قطن
+Shirt_01	قميص قطن
+Shirt_02	قميص قطن
+Shirt_03	قميص قطن
+Shirt_04	قميص قطن
+Backpack_DigitalDeluxe	حقيبة ظهر ساعي
+Cowboys_Boots_01	أحذية رعاة البقر
+Crackers	المفرقعات
+Cream	كريم
+Cricket	لعبة الكريكيت
+FishingBait_Cricket	طعم سمكة الكريكيت
+1H_Crowbar	المخل
+Fish_CrucianCarp	الكارب الصليبي
+Cruiser_Brakelight_Item	ضوء الفرامل كروزر
+Cruiser_Fender_Front_Item	كروزر الجبهة درابزين
+Cruiser_Seat_Front_Item	كروزر المقعد الأمامي
+Cruiser_Headlight_Item	المصباح كروزر
+Cruiser_Fender_Rear_Item	كروزر الحاجز الخلفي
+Cruiser_Seat_Rear_Item	كروزر المقعد الخلفي
+Cruiser_Wind_Deflector_Item	عاكس الرياح كروزر
+Crutch	عكاز
+Cuban_Cigar	السيجار الكوبي
+Cucumber	خيار
+Cucumber_Seed_Bag	كيس بذور الخيار - كيس بذور الخيار
+Cucumber_Seeds	بذور الخيار
+Currant	الكشمش
+Zombie_Impersonator_Suit	بدلة الدمية الملعونة
+WeaponCharm_Ear	قطع سحر سلاح الأذن
+WeaponCharm_Finger	قطع سحر سلاح الإصبع
+Dentex_Fillet	دانتكس فيليه
+ColorCan_DarkBrown	علبة طلاء بني غامق
+ColorCan_DarkGreen	علبة الطلاء باللون الأخضر الداكن
+ColorCan_DarkGrey	علبة طلاء باللون الرمادي الداكن
+ColorCan_DarkUrban	علبة الطلاء الحضري الداكن
+Date	التاريخ
+Weapon_Deagle_357	DEagle .357
+Magazine_DEagle_357	مخزن ذخيرة — DEagle .357
+Magazine_DEagle_50	مخزن ذخيرة — DEagle .50
+Weapon_Parts_Deagle_357	DEagle 357 أجزاء الأسلحة
+Weapon_DEagle_50	DEagle 50
+Weapon_DEagle_50Gold	DEagle 50
+Weapon_Parts_DEagle_50	DEagle 50 أجزاء الأسلحة
+Christmas_Paper_01	ورق الديكور
+Christmas_Paper_02	ورق الديكور
+Christmas_Paper_03	ورق الديكور
+ColorCan_DeepOrange	علبة طلاء برتقالية عميقة
+Buck_Antlers	قرون الغزلان
+Deer_Steak	شريحة لحم الغزلان
+Fish_Dentex	الدنيس ذو الأسنان
+Dentex_Head	رأس دينتكس
+Depleted_Uranium	اليورانيوم المنضب
+Depleted_Uranium_Container	اليورانيوم المنضب - حاوية
+WeaponFlashlight_DesertEagle	مصباح يدوي نسر الصحراء
+WeaponSights_Deagle_RedDot	منظار النقطة الحمراء — Desert Eagle
+Ghillie_Suit_Pants_03	بدلة غيلي الصحراوية السفلية
+Ghillie_Suit_Jacket_03	بدلة ديزرت غيلي الأعلى
+DialLock_Item	قفل الطلب
+Diary	يوميات
+1H_Dildo	دسار
+Dildo_Spear	دسار الرمح
+Dildo_Arrow	دسار سهم خشبي
+Ammo_Crossbow_Bolt_Dildo	دسار القوس والنشاب الخشبي الترباس
+Dinghy_Item	حقيبة زورق
+Dirtbike_Body_Item	هيئة ديرتبيكي
+Dirtbike_Brakelight_Item	ضوء الفرامل ديرتبيكي
+Dirtbike_Fender_Item	درابزين ديرتبايك
+Dirtbike_Front_Shield_Item	الدرع الأمامي للدراجة الترابية
+Dirtbike_Front_Wheel_Cover_Item	غطاء العجلة الأمامية للدراجة الترابية
+Dirtbike_Headlight_Item	المصابيح الأمامية ديرتبايك
+Dirtbike_Body_Hellrider_Item	ديرتبيكي Hellrider الجسم
+Dirtbike_Hellrider_Skull_Item	ديرتبيكي Hellrider جمجمة
+Disposable_Mask	قناع يمكن التخلص منه
+Diving_Mask	قناع الغوص
+Diving_Mask_With_Breathing_Tube	قناع الغوص مع أنبوب التنفس
+Doe_Head	رأس ظبية
+Doe_Left_Back_Leg	ظبية الساق
+Doe_Left_Front_Leg	ظبية الساق
+Doe_Right_Back_Leg	ظبية الساق
+Doe_Right_Front_Leg	ظبية الساق
+Doe_01_Steak	دو ستيك
+Doe_Torso	ظبية الجذع
+CannedDogFood	طعام الكلاب
+Donkey_Head	رأس الحمار
+Donkey_Back_Leg	ساق الحمار
+Donkey_Front_Leg	ساق الحمار
+Donkey_Steak	شريحة لحم الحمار
+Donkey_Torso	جذع الحمار
+FishingHook2	خطاف صيد مزدوج
+FishingHookPack3	حزمة خطاف صيد مزدوج
+Double_Bang_Firecracker	مفرقعة نارية مزدوجة الانفجار
+Christmas_tree	دوغلاس التنوب
+Baseball_Cap_11	Dreamreaper كاب
+Drill	حفر
+Book_Cooking_Drinks	كتاب طبخ المشروبات
+Driving_Gloves_01_01	قفازات القيادة
+Driving_Gloves_01_02	قفازات القيادة
+Driving_Gloves_01_03	قفازات القيادة
+Driving_Gloves_01_04	قفازات القيادة
+Weapon_DT11B	DT11B
+Weapon_Parts_DT11B	DT11B أجزاء السلاح
+Duct_Tape	شريط لاصق
+2_pieces_Ear_Necklace	قلادة الأذن
+4_pieces_Ear_Necklace	قلادة الأذن
+6_pieces_Ear_Necklace	قلادة الأذن
+Ear_Plugs	سدادات الأذن
+Construction_Earmuffs_01	غطاء للأذنين
+Construction_Earmuffs_02	غطاء للأذنين
+Construction_Earmuffs_03	غطاء للأذنين
+Construction_Earmuffs_04	غطاء للأذنين
+ColorCan_EarthGreen	علبة الطلاء الأخضر الأرضي
+ColorCan_EarthGrey	علبة طلاء باللون الرمادي الأرضي
+ColorCan_EarthRed	علبة الطلاء الأحمر الأرضي
+ColorCan_EarthYellow	علبة الطلاء الأصفر الأرضي
+Earthworm	دودة الأرض
+Egg	بيضة
+Electrical_Repair_Kit	طقم إصلاح كهربائي
+Electrician_Tools	أدوات كهربائي
+WeaponCharm_Elephant	سحر سلاح الفيل
+Emergency_bandage	ضمادة الطوارئ
+Emergency_bandage_Deluxe	ضمادة الطوارئ
+Emergency_bandage_Big	حزمة ضمادة الطوارئ
+Emergency_bandage_Big_Deluxe	حزمة ضمادة الطوارئ
+EMP_Grenade	EMP قنبلة يدوية
+1H_EMpossible_Knife	EMpossible سكين
+EmptyBag	حقيبة فارغة
+Christmas_Box	صندوق فارغ
+Lock_Item_Advanced	القفل القسري
+EuropeanBass_Fillet	فيليه باس الأوروبي
+WeaponCharm_EvilEye	سحر سلاح العين الشريرة
+Explosive_Arrow_Carbon	سهم الكربون المتفجر
+Explosive_Arrow_Metal	سهم معدني متفجر
+Explosive_Arrow	سهم خشبي متفجر
+Ammo_Crossbow_Bolt_Explosive	الترباس القوس والنشاب الخشبي المتفجر
+Extreme_Helmet_01	خوذة المتطرفة
+Faceroll_Smasher	Facerolls Face Smasher
+Fascinator_Hat_01	قبعة فاسيناتور
+Fascinator_Hat_02	قبعة فاسيناتور
+Fascinator_Hat_03	قبعة فاسيناتور
+Fascinator_Hat_04	قبعة فاسيناتور
+Fascinator_Hat_05	قبعة فاسيناتور
+Zombie_Fat	الدهون
+Feather	ريشة
+Medieval_Helmet_01	خوذة الإقطاع المصقولة
+Fig	الشكل
+Fig_Seed_Bag	كيس بذور التين - كيس بذور التين
+Fig_Seeds	بذور التين
+Fire_deflector_shield	درع عاكس الحريق
+Fire_Hand_Drill_new	حفر النار
+ColorCan_FireEngineRed	علبة الطلاء الأحمر لمحرك الإطفاء
+Fireman_Helmet_01	خوذة النار
+Fireman_Helmet_02	خوذة النار
+Fireman_Helmet_03	خوذة النار
+Work_Jacket_01	سترة رجال الاطفاء
+Work_Jacket_02	سترة رجال الاطفاء
+Work_Jacket_03	سترة رجال الاطفاء
+Working_pants_01_01	سروال رجال الاطفاء
+Working_pants_01_02	سروال رجال الاطفاء
+Working_pants_01_03	سروال رجال الاطفاء
+Fireworks_Small	الألعاب النارية الصغيرة
+Fireworks_Big	الألعاب النارية الصغيرة - الألعاب النارية الكبيرة
+Fish	السمك
+FishingHook	خطاف السمك
+FishItem	عنصر السمك
+Dish_Salad_Fish	سلطة السمك
+WeaponCharm_Fish_Bowl	سحر سلاح حوض السمك
+FishingFloater	عوامة الصيد
+FishingFloater1	عوامة الصيد
+FishingFloaterPack1	حزمة عوامات الصيد
+FishingFloaterPack2	حزمة عوامات الصيد
+Boonie_Hat_01	قبعة الصيد
+Boonie_Hat_02	قبعة الصيد
+Boonie_Hat_03	قبعة الصيد
+Boonie_Hat_04	قبعة الصيد
+Boonie_Hat_05	قبعة الصيد
+Boonie_Hat_06	قبعة الصيد
+Military_Boonie_Hat_01	قبعة الصيد
+Military_Boonie_Hat_02	قبعة الصيد
+Military_Boonie_Hat_03	قبعة الصيد
+Military_Boonie_Hat_04	قبعة الصيد
+Military_Boonie_Hat_05	قبعة الصيد
+Military_Boonie_Hat_06	قبعة الصيد
+Military_Boonie_Hat_07	قبعة الصيد
+Military_Boonie_Hat_08	قبعة الصيد
+Redneck_Hat_07	قبعة الصيد
+Fishing_hook	هوك الصيد
+FishingReel	بكرة الصيد
+ImprovisedFishingReel	بكرة الصيد
+FishingReelPro	بكرة الصيد برو
+FishingRod	قصبة الصيد
+FishingRod_A	قصبة الصيد
+FishingRod_B	قصبة الصيد
+Fistula_Hepatica	الناسور الكبدي
+FlareItem	مضيئة
+FlareItem_Blue	مضيئة
+FlareItem_Green	مضيئة
+FlareCartridge	خرطوشة مضيئة
+Weapon_FlareGun	بندقية مضيئة
+Weapon_Parts_FlareGun	أجزاء سلاح بندقية مضيئة
+FlareTrap	فخ مضيئة
+ColorCan_FlatBrown	علبة طلاء بني مسطحة
+ColorCan_FlatGrey	علبة طلاء رمادية مسطحة
+ColorCan_FlatWhite	علبة طلاء بيضاء مسطحة
+Wooden_ArrowFeathers	سهم خشبي مفلطح
+Flint_And_Steel	الصوان والصلب
+Christmas_tree_Folded	مطوية دوغلاس التنوب
+ColorCan_ForestGreen	علبة طلاء الغابة الخضراء
+Steel_Fork	شوكة
+CannedFruitCocktail	كوكتيل فواكه
+Dish_Salad_Fruit	سلطة فواكه
+Fungicide	فطريات
+Fuse_1000A	الصمامات 1000A
+Fuse_200A	الصمامات 200A
+Fuse_400A	الصمامات 400A
+Fuse_600A	الصمامات 600A
+Fuse_800A	الصمامات 800A
+ColorCan_GalaxyBlue	علبة الطلاء الأزرق جالاكسي
+ColorCan_GalaxyGrey	علبة طلاء جالاكسي جراي
+Garlic	الثوم
+Garlic_Seed_Bag	كيس بذور الثوم - كيس بذور الثوم
+Garlic_Seeds	بذور الثوم
+Garrison_Cap_01	حامية كاب
+Garrison_Cap_02	حامية كاب
+Garrison_Cap_03	حامية كاب
+Garrison_Cap_04	حامية كاب
+Garrison_Cap_05	حامية كاب
+Gas_Mask_01	قناع الغاز
+Gas_Mask_02	قناع الغاز
+Gas_Mask_03	قناع الغاز
+Gas_Mask_04	قناع الغاز
+GasTank	خزان الغاز
+Gasoline_Canister	علبة بنزين
+Gear	جير
+Ghillie_Suit_Pants_01	الجزء السفلي من بدلة غيلي
+Ghillie_Suit_Jacket_01	موقع قراء البدلة الأعلى
+Glass	زجاج
+Glue	الغراء
+Goat_Head	رأس الماعز
+Goat_Horns	قرون الماعز
+Goat_Back_Limb	ساق الماعز
+Goat_Front_Limb	ساق الماعز
+Goat_Skull_Hat_01	قبعة جمجمة الماعز
+Goat_Steak	شريحة لحم الماعز
+Goat_Torso	جذع الماعز
+Credit_Card_Gold	بطاقة البنك الذهبي
+MemoryModule_Level4	وحدة الذاكرة الذهبية
+GrapeFruit	الجريب فروت
+GlassBottle02	عصير الجريب فروت
+Graphite	الجرافيت
+Grasshopper	جندب
+FishingBait_Grasshopper	طعم سمكة الجندب
+GravelBag	حقيبة الحصى
+MemoryModule_Level1	وحدة الذاكرة الرمادية
+CannedPeas	البازلاء الخضراء
+Frag_Grenade	قنبلة يدوية
+Grinding_Stone_02	حجر الطحن
+GuavaHalves	الجوافة
+Guitar	جيتار
+Gun_Powder	مسحوق البندقية
+Zombie_guts	الشجاعة
+Halloween_Anonymous_Mask_01	Guy Fawkes قناع
+Halloween_Mask_BabyDoll_02	قناع الهالوين
+Halloween_Mask_Clown_03	قناع الهالوين
+Halloween_Mask_Greek	قناع الهالوين
+Halloween_Mask_Hockey_04	قناع الهالوين
+Halloween_Mask_JohnDoe_05	قناع الهالوين
+Halloween_Mask_Knife	قناع الهالوين
+Halloween_Mask_Lecter_06	قناع الهالوين
+Halloween_Mask_Plague_07	قناع الهالوين
+Halloween_Mask_Smiley_08	قناع الهالوين
+Halloween_Mask_Wooden_09	قناع الهالوين
+Hand_Drill	مثقاب يدوي
+Hand_Fan_01	مروحة يدوية
+WeaponSuppressor_Handgun	القامع مسدس
+WeaponCharm_Happy_Emoji	سحر سلاح الرموز التعبيرية السعيدة
+Harmonica	هارمونيكا
+Hazelnuts	عسلي
+ColorCan_HazyPurple	علبة الطلاء الأرجواني الضبابي
+Head_Bags_01	كيس الرأس
+Hemostatic_Dressing	خلع الملابس مرقئ
+HH_Shoes_03_01	أحذية عالية الكعب في الكاحل
+HH_Shoes_03_02	أحذية عالية الكعب في الكاحل
+HH_Shoes_03_03	أحذية عالية الكعب في الكاحل
+HH_Shoes_03_04	أحذية عالية الكعب في الكاحل
+HH_Shoes_03_05	أحذية عالية الكعب في الكاحل
+HH_Shoes_03_06	أحذية عالية الكعب في الكاحل
+HH_Shoes_03_07	أحذية عالية الكعب في الكاحل
+HH_Shoes_04_01	مضخات الكعب العالي
+HH_Shoes_04_02	مضخات الكعب العالي
+HH_Shoes_04_03	مضخات الكعب العالي
+HH_Shoes_04_04	مضخات الكعب العالي
+HH_Shoes_02_01	صنادل الكعب العالي
+HH_Shoes_02_02	صنادل الكعب العالي
+HH_Shoes_02_03	صنادل الكعب العالي
+RH_Shoe_01	أحذية عالية الأعلى
+Sneakers_02_01	أحذية عالية الأعلى
+Sneakers_02_02	أحذية عالية الأعلى
+Sneakers_02_03	أحذية عالية الأعلى
+Sneakers_02_04	أحذية عالية الأعلى
+Hiking_Backpack_01_01	حقيبة ظهر للمشي لمسافات طويلة
+Hiking_Backpack_01_02	حقيبة ظهر للمشي لمسافات طويلة
+Hiking_Backpack_01_03	حقيبة ظهر للمشي لمسافات طويلة
+Hiking_Backpack_01_04	حقيبة ظهر للمشي لمسافات طويلة
+Hiking_Backpack_01_05	حقيبة ظهر للمشي لمسافات طويلة
+Hiking_Boots_01	أحذية المشي لمسافات طويلة
+Hiking_Boots_02	أحذية المشي لمسافات طويلة
+Hiking_Boots_03	أحذية المشي لمسافات طويلة
+Hiking_Boots_04	أحذية المشي لمسافات طويلة
+Hip_Flask	قارورة الورك
+Hippie_Pants_01	السراويل الهبي
+Hippie_Pants_02	السراويل الهبي
+Hippie_Pants_03	السراويل الهبي
+Hippie_Pants_04	السراويل الهبي
+Hippie_Pants_05	السراويل الهبي
+Hippie_Pants_06	السراويل الهبي
+Hippie_Pants_07	السراويل الهبي
+Hippie_Pants_08	السراويل الهبي
+Hippie_Shirt_01	قميص الهبي
+Hippie_Shirt_02	قميص الهبي
+Horse_Head	رأس الحصان
+Horse_Mask	قناع رأس الحصان
+Horse_Back_Limb	ساق الحصان
+Horse_Front_Limb	ساق الحصان
+Horse_Steak	شريحة لحم الحصان
+Horse_Torso	جذع الحصان
+Horse_Torso_Half	جذع الحصان - نصف
+WeaponCharm_Horseshoe	سحر سلاح حدوة الحصان
+Hose	خرطوم
+Hospital_Pants	سروال المستشفى
+Hospital_Shirt_01	قميص المستشفى
+Weapon_SF19	HS SF19
+Magazine_SF19	مخزن ذخيرة — HS SF19
+Weapon_Parts_SF19	HS SF19 أجزاء السلاح
+Weapon_HS9	HS-9
+Weapon_Parts_HS9	HS-9 أجزاء السلاح
+Magazine_HS9	مخزن ذخيرة — HS9
+Prisoner_Left_Arm	ذراع الإنسان
+Prisoner_Right_Arm	ذراع الإنسان
+Human_Ears	آذان الإنسان
+Prisoner_Left_Foot	قدم الإنسان
+Prisoner_Right_Foot	قدم الإنسان
+Human_guts	الشجاعة البشرية
+Prisoner_Head	رأس الإنسان
+Prisoner_Head_No_Teeth	رأس الإنسان
+Prisoner_Left_Leg	الساق البشرية
+Prisoner_Right_Leg	الساق البشرية
+Human_Skin	جلد الإنسان
+Human_Steak	شريحة لحم بشرية
+Human_Teeth	أسنان الإنسان
+Prisoner_Torso	الجذع البشري
+1H_Hunter	هنتر
+Weapon_Hunter85_V2	Hunter 85
+Magazine_Hunter85_V2	مخزن ذخيرة — Hunter 85
+Weapon_Parts_Hunter85	أجزاء الأسلحة Hunter 85
+WeaponSuppressor_Hunter	كاتم صوت — Hunter
+WeaponScope_HuntingScope	منظار تصويب — صيد
+Icing_Sugar	سكر مثلج
+ImprovisedCal50Turret	مرتجلة .50 Cal برج
+Improvised_Backpack_Big	حقيبة ظهر مرتجلة
+ImprovisedBasicTurret	برج أساسي مرتجل
+Improvised_Shelter	سرير مرتجل
+Improvised_Shoes_01	أحذية مرتجلة
+WeaponSuppressor_ImprovisedBottle_Grey	مثبط الزجاجة المرتجل
+WeaponSuppressor_ImprovisedBottle_White	مثبط الزجاجة المرتجل
+Improvised_Bow	القوس المرتجل 20#
+Improvised_Bow_25	القوس المرتجل 25#
+Improvised_Bow_30	القوس المرتجل 30#
+Improvised_Bow_35	القوس المرتجل 35#
+Bow_ImprovisedStabilizer	مثبت القوس المرتجل
+Improvised_Bulletproof_Armor	درع مضاد للرصاص مرتجل
+AntiburnGel_Improvised	جل الحروق المرتجل
+WeaponSuppressor_ImprovisedCan_Grey	مرتجلة يمكن القامع
+WeaponSuppressor_ImprovisedCan_Red	مرتجلة يمكن القامع
+Improvised_Chandelier_Light	الثريا المرتجلة
+ImprovisedClaymore	كلايمور المرتجلة
+Improvised_compass	بوصلة مرتجلة
+Improvised_Bag_Small_01	حقيبة ظهر ساعي مرتجلة
+Weapon_Improvised_Crossbow	القوس والنشاب المرتجلة
+Improvised_Electric_Lamp_Ceiling	مصباح كهربائي مرتجل
+ImprovisedFishingHook	خطاف صيد السمك المرتجل
+ImprovisedFishingFloater	عوامة الصيد المرتجلة
+Improvised_FishingLine	خط الصيد المرتجل
+ImprovisedFishingRod	صنارة صيد السمك المرتجلة
+Weapon_Improvised_Flamethrower	قاذف اللهب المرتجل
+ImprovisedFlamethrowerTurret	برج قاذف اللهب المرتجل
+ImprovisedFlashlight	مصباح يدوي مرتجل
+2H_Improvised_Gardening_Hoe	مجرفة البستنة المرتجلة
+Geiger_Counter_Improvised	عداد جيجر المرتجل
+Improvised_Ghillie_Jacket	سترة غيلي مرتجلة
+Improvised_Ghillie_Pants	سراويل غيلي المرتجلة
+1H_Improvised_Glass_Shiv	مرتجلة زجاج شيف
+Weapon_ImprovisedGrenadeLauncher	قاذفة قنابل يدوية مرتجلة
+Weapon_Parts_ImprovisedGrenadeLauncher	أجزاء سلاح قاذفة القنابل اليدوية
+1H_Improvised_Hammer	المطرقة المرتجلة
+Weapon_Improvised_Handgun	مسدس مرتجل
+1H_Hatchet	الأحقاد المرتجلة
+Improvised_Lockpick	مرتجلة Lockpick
+Magnifying_Glass	عدسة مكبرة مرتجلة
+Scary_Mask_01	قناع مرتجل
+ImprovisedMetalDetector	كاشف المعادن المرتجل
+2H_Improvised_metal_shovel	مجرفة معدنية مرتجلة
+Improvised_Metal_Spear	الرمح المعدني المرتجل
+ImprovisedMine	منجم مرتجل
+ImprovisedMinigunTurret	برج Minigun المرتجل
+Improvised_Motorcycle_Wheel	عجلة دراجة نارية مرتجلة
+WeaponSuppressor_ImprovisedOilCan_01	علبة الزيت المرتجلة القامع
+PaintSprayer	بخاخ الطلاء المرتجل
+Dish_Pasta_Improvised	طبق المعكرونة المرتجلة
+Weapon_Parts_Impro_Pistol	أجزاء سلاح المسدس المرتجلة
+Improvised_Quiver_02_Rags	جعبة مرتجلة
+Raincoat_Improvised	معطف واق من المطر مرتجل
+Dish_Rice_Improvised	طبق الأرز المرتجل
+Weapon_Improvised_Rifle	بندقية مرتجلة
+ImprovisedRail_Side	السكك الحديدية المرتجلة
+Weapon_Parts_Impro_rifle	أجزاء سلاح البندقية المرتجلة
+ImprovisedRocketTurret	برج صاروخي مرتجل
+Improvised_rope	حبل مرتجل
+Dish_Salad_Improvised	سلطة مرتجلة
+Dish_Sandwich_Improvised	ساندويتش مرتجل
+WeaponSights_ImprovisedScope	منظار تصويب — صناعة مرتجلة
+Improvised_Sewing_kit	عدة الخياطة المرتجلة
+ImprovisedSmallPaddle	مجداف قصير مرتجل
+2H_Improvised_shovel	مجرفة مرتجلة
+Dish_Soup_Improvised	حساء مرتجل
+Improvised_Stabproof	سترة مرتجلة مضادة للطعن
+Dish_Stew_Improvised	الحساء المرتجل
+Improvised_Stone_Spear	الرمح الحجري المرتجل
+Improvised_Tire_Repair_Kit	طقم إصلاح الإطارات المرتجل
+1H_Improvised_Tomahawk	مرتجلة توماهوك
+Improvised_Tool_Box	صندوق الأدوات المرتجل
+Improvised_Water_container	حاوية المياه المرتجلة
+Improvised_Wheel	عجلة مرتجلة
+Improvised_Wooden_Spear	الرمح الخشبي المرتجل
+Improvised_Workbench	منضدة مرتجلة
+Industrial_Fertilizer	الأسمدة الصناعية
+2H_Industrial_Gardening_Hoe	مجرفة البستنة الصناعية
+Inonotus_Obliquus	Inonotus Obliquus
+Instant_OatMeal	دقيق الشوفان الفوري
+Electrician_Glove_01_01	قفاز مطاطي عازل
+Electrician_Glove_01_02	قفاز مطاطي عازل
+Electrician_Glove_01_03	قفاز مطاطي عازل
+IntEA_Level1	مستوى أمبولة تعزيز الذكاء 1
+IntEA_Level2	مستوى أمبولة تعزيز الذكاء 2
+IntEA_Level3	مستوى أمبولة تعزيز الذكاء 3
+Lock_Item_Basic	قفل حديد
+Isopropyl_alcohol	كحول الأيزوبروبيل
+Jack_o_Lantern_01	جاك فانوس
+Jack_o_Lantern_02	جاك فانوس
+Jack_o_Lantern_03	جاك فانوس
+Jeans_01_01	جينز
+Jeans_01_02	جينز
+Jeans_01_03	جينز
+Jeans_01_04	جينز
+Jeans_02_01_V2	جينز
+Jeans_02_02	جينز
+Jeans_02_03	جينز
+Jeans_02_04	جينز
+Jeans_02_05	جينز
+Jeans_02_06	جينز
+Jeans_02_07	جينز
+Jeans_02_08	جينز
+Jeans_02_09	جينز
+Jersey_01	قميص جيرسي
+Jersey_02	قميص جيرسي
+Jersey_03	قميص جيرسي
+Jersey_04	قميص جيرسي
+Jersey_05	قميص جيرسي
+Jersey_06	قميص جيرسي
+Jersey_07	قميص جيرسي
+Jersey_08	قميص جيرسي
+Jersey_09	قميص جيرسي
+Jock_Jacket_01	سترة جوك
+Jock_Jacket_02	سترة جوك
+Jock_Jacket_03	سترة جوك
+Jock_Jacket_04	سترة جوك
+Joint01	مشترك
+Weapon_Judge44	القاضي 44
+Weapon_Parts_Judge44	القاضي 44  أجزاء السلاح
+Baseball_Cap_12	JW كاب
+K6-3_Helmet	K6-3 خوذة
+Weapon_98k_Karabiner	Kar98
+Kar98_Bayonet	حربة Kar98
+WeaponSuppressor_Kar98k	كاتم صوت — Kar98k
+Weapon_Parts_Kar98k	قطع غيار الأسلحة Kar98k
+2H_Katana	كاتانا
+Ketchup	كاتشب
+KeyCard	بطاقة المفتاح
+KeyCardBunker_Level01	بطاقة المفتاح
+KeyCardBunker_Level02	بطاقة المفتاح
+Keyhole_Shirt_01	قميص ثقب المفتاح
+Keyhole_Shirt_02	قميص ثقب المفتاح
+Keyhole_Shirt_03	قميص ثقب المفتاح
+Keyhole_Shirt_04	قميص ثقب المفتاح
+Keyhole_Shirt_05	قميص ثقب المفتاح
+Keyhole_Shirt_06	قميص ثقب المفتاح
+Keyhole_Shirt_07	قميص ثقب المفتاح
+Keyhole_Shirt_08	قميص ثقب المفتاح
+Kicmovaca	Kicmovaca
+Kilt_01	النقبة
+Kilt_02	النقبة
+Kilt_03	النقبة
+Kilt_04	النقبة
+Kilt_05	النقبة
+Kilt_06	النقبة
+Kitchen_Board_01	مجلس المطبخ
+Kitchen_Board_02	مجلس المطبخ
+1H_KitchenKnife	سكين المطبخ
+1H_KitchenKnife_02	سكين المطبخ
+1H_KitchenKnife_02_Deluxe	سكين المطبخ
+1H_KitchenKnife_03	سكين المطبخ
+1H_KitchenKnife_04	سكين المطبخ
+1H_KitchenKnife_DigitalDeluxe	سكين المطبخ
+Kiwi	الكيوي
+Socks_02	جوارب تصل إلى الركبة
+Recurve_Bow_60	Kodiak 60#
+Slippers_01	Kroks
+Weapon_Krueger	Krueger
+Magazine_Krueger	مخزن ذخيرة — Krueger
+Weapon_Parts_Krueger	Krueger أجزاء السلاح
+1H_Kunai	كوناي
+Laika_Engine_Alternator_Item	Laika المولد
+Laika_Body_ArmorHeavy_Left	Laika درع للجسم ثقيل على اليسار
+Laika_Body_ArmorHeavy_Right	Laika درع للجسم ثقيل اليمين
+Laika_Body_ArmorLight_Left	Laika درع الجسم خفيف على اليسار
+Laika_Body_ArmorLight_Right	Laika درع الجسم خفيف على اليمين
+Laika_Body_ArmorLight_Top	Laika درع علوي خفيف للجسم
+Laika_Body_Front	Laika واجهة الجسم
+Laika_Body_Left	Laika الجسم الأيسر
+Laika_Body_Right	Laika حق الجسم
+Laika_Body_Top	Laika قمة الجسم
+Laika_Bumper_Armor_Back_Item	Laika درع خلفي ممتص للصدمات
+Laika_Bumper_Back_Item	Laika المصد الخلفي
+Laika_Bumper_Front_Item	Laika المصد الأمامي
+Laika_Door_ArmorHeavy_FrontLeft_Item	Laika باب درع ثقيل أمامي يسار
+Laika_Door_ArmorHeavy_FrontRight_Item	Laika باب درع ثقيل أمامي يمين
+Laika_Door_Left_Item	Laika الباب الأيسر
+Laika_Door_ArmorLight_FrontLeft_Item	Laika درع نور للباب أمامي يسار
+Laika_Door_ArmorLight_FrontRight_Item	Laika درع نور للباب أمامي يمين
+Laika_Door_Right_Item	Laika الباب الأيمن
+Laika_Body_ArmorHeavy_Top_Item	Laika قمة الدرع الثقيل
+Laika_DoorHood_Item	Laika غطاء محرك السيارة
+Laika_Lights_FrontLeft	Laika أضواء أمامية يسار
+Laika_Lights_FrontRight	Laika أضواء أمامية يمين
+Laika_Lights_RearLeft	Laika اضواء خلفي يسار
+Laika_Lights_RearRight	Laika اضواء خلفي يمين
+Laika_Seat_FrontLeft_Item	Laika المقعد الأمامي الأيسر
+Laika_Seat_FrontRight_Item	Laika المقعد الأمامي الأيمن
+Laika_DoorTrunk_ArmorHeavy_Item	Laika درع الجذع ثقيل
+Laika_DoorTrunk_ArmorLight_Item	Laika ضوء درع الجذع
+Laika_DoorTrunk_Item	Laika باب صندوق السيارة
+Battery_Charger_Large	شاحن بطارية كبير
+LogShed_1	سقيفة خشبية كبيرة
+Stone_Large	حجر كبير
+Larve	يرقة
+Laser_Detonator	جهاز تفجير الليزر
+Lead_Plate	لوحة الرصاص
+Leather_Backpack_01	حقيبة ظهر جلدية
+Leather_Backpack_02	حقيبة ظهر جلدية
+Leather_Backpack_03	حقيبة ظهر جلدية
+Belt_Pistol_Holster	حافظة مسدس حزام جلدي
+Leather_MiniSkirt_01	تنورة جلدية صغيرة
+Leather_MiniSkirt_02	تنورة جلدية صغيرة
+Leather_MiniSkirt_03	تنورة جلدية صغيرة
+Leather_Sheet	ورقة جلدية
+Leather_Shoes_02	حذاء جلدي
+Lemon	ليمون
+Lemon_Seed_Bag	كيس بذور الليمون - كيس بذور الليمون
+Lemon_Seeds	بذور الليمون
+Lepiota_Procera	Lepiota Procera
+Lettuce	خس
+Lettuce_Seed_Bag	كيس بذور الخس - كيس بذور الخس
+Lettuce_Seeds	بذور الخس
+ColorCan_LightBrown	علبة طلاء بني فاتح
+ColorCan_LightUrban	علبة الطلاء الحضري الخفيف
+Lighter	أخف وزنا
+Lime	الجير
+ColorCan_LimeGreen	علبة الطلاء باللون الأخضر الليموني
+GlassBottle03	عصير الليمون
+PETBottle03	صودا الليمون
+PETBottle04	صودا الليمون
+Ganoderma_Lucidum	فطر لينجزي
+WeaponCharm_Emoji	LMAO سحر سلاح الرموز التعبيرية
+Lockpick_Item	قفل
+LockpickingBoard	مجلس القفل
+ImprovisedRail_Long	السكك الحديدية المرتجلة الطويلة
+Long_Paddle	مجداف طويل
+Long_wooden_stick	عصا خشبية طويلة
+Vest_01	قميص طويل الأكمام
+Vest_02	قميص طويل الأكمام
+Vest_03	قميص طويل الأكمام
+Vest_04	قميص طويل الأكمام
+Vest_05	قميص طويل الأكمام
+Cigarettes1	Lucky Star علبة سجائر
+Cigarette1	سيجارة لاكي ستارز
+Lycoperdon_Gigantea	Lycoperdon Gigantea
+M1_Bayonet	حربة M1
+M1_Clip	مشبك ذخيرة — M1
+WeaponSights_M1_Experimental	مشاهد M1 التجريبية
+WeaponFlashHider	M1 فلاش المخفي
+M1_Medical_Helmet	خوذة طبية M1
+Weapon_M1_Garand	بندقية M1
+WeaponSights_M1_ScopeAndSights	منظار تصويب — M1
+WeaponSuppressor_M1	كاتم صوت — M1
+Weapon_Parts_M1_Garand	أجزاء سلاح M1
+Magazine_M16	مخزن ذخيرة — M16
+Weapon_M16A4	M16A4
+WeaponSights_M16A4_FoldingSights	مشاهد قابلة للطي M16A4
+Weapon_Parts_M16A4	أجزاء سلاح M16A4
+Weapon_M1887	M1887
+Weapon_M1887_Sawed_off	M1887 منشار
+Weapon_Parts_M1887	أجزاء سلاح M1887
+Weapon_MosinNagant	M1891
+Mosin_Bayonet	حربة M1891
+WeaponSuppressor_M1891	كاتم صوت — M1891
+Weapon_Parts_MosinNagant	أجزاء سلاح M1891
+Weapon_M1911	M1911
+Weapon_M1911_Engraved	M1911 محفورة
+Weapon_M1911_Gold	M1911 الذهب
+Weapon_M1911_JayW	M1911 JayW
+Magazine_M1911	مخزن ذخيرة — M1911
+M1911_Rail	قضيب تثبيت — M1911
+Weapon_Parts_M1911	أجزاء سلاح M1911
+Weapon_M249	M249
+Magazine_M249	M249 اموبوكس
+Weapon_Parts_M249	أجزاء سلاح M249
+M70_Bayonet	حربة M70
+WeaponSuppressor_M82A1	كاتم صوت — M82 QDL
+WeaponSuppressor_M82A1_Black	كاتم صوت — M82 QDL
+WeaponSuppressor_M82A1_Desert	كاتم صوت — M82 QDL
+WeaponSuppressor_M82A1_Snow	كاتم صوت — M82 QDL
+WeaponScope_M82A1	منظار تصويب — M82
+WeaponScope_M82A1_Black	منظار تصويب — M82
+WeaponScope_M82A1_Desert	منظار تصويب — M82
+WeaponScope_M82A1_Snow	منظار تصويب — M82
+Weapon_M82A1	M82A1
+Weapon_M82A1_Black	M82A1
+Weapon_M82A1_Desert	M82A1
+Weapon_M82A1_Snow	M82A1
+Magazine_M82A1	مخزن ذخيرة — M82A1
+Weapon_Parts_M82A1	أجزاء سلاح M82A1
+Flashbang	قنبلة صوتية M84
+WeaponFlashlight_M9	مصباح يدوي M9
+Magazine_M9	مخزن ذخيرة — M9
+Weapon_Parts_M9	أجزاء سلاح M9
+Weapon_MAC10	MAC-10
+Magazine_MAC10	مخزن ذخيرة — MAC-10
+WeaponSuppressor_MAC10	كاتم صوت — MAC-10
+Weapon_Parts_MAC10	MAC-10 أجزاء السلاح
+Magnifying_Glass1	عدسة مكبرة
+Vodka	Majestic Bear الفودكا
+Manchu_Bow_50	Manchu القوس
+Mango	مانجو
+Marine_Cap_01	كاب البحرية
+Marine_Cap_02	كاب البحرية
+Marine_Cap_03	كاب البحرية
+Marine_Cap_04	كاب البحرية
+Marine_Cap_05	كاب البحرية
+Marine_Cap_06	كاب البحرية
+Marine_Cap_07	كاب البحرية
+Marine_Cap_08	كاب البحرية
+Matches	مباريات
+Mayonnaise	مايونيز
+FishingBait_Meat	لحم السمك الطعم
+MeatSnack_01	وجبة خفيفة من اللحوم حار
+MeatSnack_02	وجبة خفيفة من اللحوم حار
+Medical_Glove_01	القفازات الطبية
+1H_Medieval_Sword	سيف القرون الوسطى
+Battery_Charger_Medium	شاحن بطارية متوسط
+FishingHookPack2	حزمة هوك متوسطة
+Lock_Security_Lvl2	حماية القفل المتوسط
+Medium_Vehicle_StorageRack	رف تخزين المركبات المتوسطة
+FishingHook1	خطاف صيد متوسط الحجم
+Knife_Sheath	حافظة الأسلحة المشاجرة
+Metal_Arrow	السهم المعدني
+2H_Metal_Axe	فأس معدني
+2H_Metal_Baseball_Bat	مضرب بيسبول معدني
+Ammo_Crossbow_Bolt_Metal	الترباس المعدني القوس والنشاب
+MetalDetector	كاشف المعادن
+1H_Improvised_metal_knife	سكين معدني
+1H_Metal_Pipe	الأنابيب المعدنية
+Saw	منشار معدني
+Metal_Scrap_01	خردة معدنية
+Metal_Scrap_02	خردة معدنية
+Metal_Scrap_03	خردة معدنية
+Metal_Scrap_04	خردة معدنية
+Metal_Scrap_05	خردة معدنية
+1H_Metal_Sword	سيف معدني
+Ammo_Crossbow_Bolt_WoodenMetalTip	طرف معدني للقوس والنشاب
+Wooden_ArrowMetalTip	سهم خشبي ذو طرف معدني
+Bundle_Of_Metal_Tips	نصائح معدنية
+HH_Shoes_05_01	صنادل بكعب متوسط
+HH_Shoes_05_02	صنادل بكعب متوسط
+HH_Shoes_05_03	صنادل بكعب متوسط
+MilitaryBoots_JNA	الأحذية العسكرية
+MilitaryBoots_Peace	الأحذية العسكرية
+Military_Cap_01	كاب عسكري
+Military_Cap_02	كاب عسكري
+Military_Cap_03	كاب عسكري
+Military_Cap_04	كاب عسكري
+Military_Cap_05	كاب عسكري
+Military_Cap_06	كاب عسكري
+Military_Cap_07	كاب عسكري
+Military_Cap_08	كاب عسكري
+Compass	البوصلة العسكرية
+Military_Goggles_01	نظارات عسكرية
+Tactical_Sunglasses_01	نظارات عسكرية
+Tactical_Sunglasses_02	نظارات عسكرية
+Military_Helmet_01_01	خوذة عسكرية
+Military_Helmet_01_02	خوذة عسكرية
+Military_Helmet_01_03	خوذة عسكرية
+Military_Helmet_01_04	خوذة عسكرية
+Military_Helmet_01_05	خوذة عسكرية
+Military_Helmet_01_06	خوذة عسكرية
+Military_Helmet_01_07	خوذة عسكرية
+Military_Helmet_01_08	خوذة عسكرية
+Military_Helmet_01_09	خوذة عسكرية
+Military_Quiver_01	جعبة عسكرية
+Military_Quiver_02	جعبة عسكرية
+Military_Quiver_03	جعبة عسكرية
+Military_Quiver_04	جعبة عسكرية
+Military_Quiver_05	جعبة عسكرية
+Military_Quiver_06	جعبة عسكرية
+Military_Quiver_07	جعبة عسكرية
+Military_Quiver_08	جعبة عسكرية
+Military_Shirt_01	القميص العسكري
+Military_Shirt_02	القميص العسكري
+Military_Shirt_03	القميص العسكري
+Military_Shirt_04	القميص العسكري
+Military_Shirt_05	القميص العسكري
+Military_Shirt_06	القميص العسكري
+Military_Shirt_07	القميص العسكري
+Military_Shirt_08	القميص العسكري
+1H_Military_Shovel	مجرفة عسكرية
+1H_Military_Survival_Knife	سكين البقاء العسكري
+1H_Military_Tomahawk	توماهوك العسكري
+Milk	الحليب
+Leather_Shoes	Mirdas أحذية
+Weapon_MK18	MK18
+WeaponSuppressor_MK18	كاتم صوت — MK18
+Weapon_Parts_MK18	MK18 أجزاء السلاح
+1H_MK5000_Black	MK5000
+1H_MK5000_Metal	MK5000
+MMA_Glove_01	MMA قفازات
+Mobile_Phone	الهاتف المحمول
+Hazmat_Suit_Modern	بدلة المواد الخطرة الحديثة
+Recurve_Bow_80	موهوك 80#
+Sensor_Detonator	جهاز استشعار الحركة المفجر
+Motorbike_Battery	بطارية دراجة نارية
+Motorcycle_Boots_01	أحذية دراجة نارية
+Motorcycle_Boots_02	أحذية دراجة نارية
+Motorcycle_Boots_03	أحذية دراجة نارية
+Motorcycle_Glasses_01	نظارات للدراجات النارية
+Motorcycle_Glasses_02	نظارات للدراجات النارية
+Motorcycle_Jacket_01	سترة دراجة نارية
+Motorcycle_Jacket_02	سترة دراجة نارية
+Motorcycle_Jacket_03	سترة دراجة نارية
+Motorcycle_Mask_01	قناع دراجة نارية
+Motorcycle_Mask_02	قناع دراجة نارية
+Motorcycle_Pants_01	سروال دراجة نارية
+Motorcycle_Pants_02	سروال دراجة نارية
+Motorcycle_Pants_03	سروال دراجة نارية
+Weapon_MP5	MP5
+Weapon_MP5_K	MP5 K
+Magazine_MP5	مخزن ذخيرة — MP5
+MP5_Rail_Short	MP5 السكك الحديدية
+Weapon_MP5_SD	MP5 SD
+WeaponSuppressor_MP5	كاتم صوت — MP5
+Weapon_Parts_MP5	MP5 أجزاء السلاح
+WeaponSights_MRO_Red_Dot	منظار النقطة الحمراء — MRO
+Mulberry	التوت
+Mustard	الخردل
+Mutant_Animal_Skin	جلد الحيوان المتحول - جلد الحيوان المتحول
+Bear_Head_Mutant	رأس الدب المتحول
+Mutant_Bear_Steak	شريحة لحم الدب المتحولة - شريحة لحم الدب المتحولة
+Boar_Head_Mutant	رأس خنزير متحول
+Buck_Head_Mutant	رأس باك متحولة
+Mutant_Buck_Steak	شريحة لحم الغزلان المتحولة
+Wolf_Head_Mutant	رأس الذئب المتحول
+Mutant_Wolf_Steak	شريحة لحم الذئب المتحولة - شريحة لحم الذئب المتحولة
+1H_N9_Black	حربة N9
+1H_N9_White	حربة N9
+Nails	الأظافر
+ColorCan_NavyBlue	علبة طلاء باللون الأزرق الداكن
+ColorCan_NavyGrey	علبة طلاء باللون الرمادي الداكن
+Needle	إبرة
+Night_Vision_Goggles_01	نظارات الرؤية الليلية
+FishingLine_2	خط نايلون متوسط 0.18 mm
+FishingLinePiece_2	خط نايلون متوسط 0.18 mm
+FishingLine_3	خط نايلون سميك 0.25 mm
+FishingLinePiece_3	خط نايلون سميك 0.25 mm
+FishingLine_4	خط نايلون سميك 0.5 mm
+FishingLinePiece_4	خط نايلون سميك 0.5 mm
+FishingLine_1	خط نايلون رفيع 0.12 mm
+FishingLinePiece_1	خط نايلون رفيع 0.12 mm
+Oak_Nuts	جوز البلوط
+Cal_40_OG-7V	OG-7V
+WeaponCharm_Ogre	سحر سلاح الغول
+Oil_Filter	فلتر الزيت
+WeaponSights_OKP-7_Holographic	منظار هولوغرافي — OKP
+Olives	زيتون
+Onion	بصل
+Chips3	حلقات البصل
+Open_Finger_Gloves_01	فتح قفازات الاصبع
+Open_Finger_Gloves_02	فتح قفازات الاصبع
+Open_Finger_Gloves_03	فتح قفازات الاصبع
+Open_Finger_Gloves_04	فتح قفازات الاصبع
+Open_Finger_Gloves_05	فتح قفازات الاصبع
+Open_Finger_Gloves_06	فتح قفازات الاصبع
+Opuntia_Fig	بونتيا الشكل
+Orange	برتقالي
+Can02	عصير برتقال
+GlassBottle04	عصير برتقال
+Orange_Seed_Bag	كيس بذور البرتقال - كيس بذور البرتقال
+Orange_Seeds	بذور البرتقال
+Fish_Orata	الدنيس
+Orata_Fillet	أوراتا فيليه
+Organic_Fertilizer	الأسمدة العضوية
+HH_Boots_01	فوق أحذية الركبة
+WeaponScope_Dragunov	منظار تصويب — P-223
+P17_Bayonet	حربة P17
+C4_Pack	معبأة C4
+Padlock	قفل
+Painkillers_01	مسكنات الألم - نفطة
+Painkillers_02	مسكنات الألم – علبة
+PainKillers_03	مسكنات الألم - برطمان
+Pajama_Pants	سروال بيجامة
+Pajama_Shirt_01	قميص بيجامة
+Pan	عموم
+Inmate_pants	السراويل
+Inmate_Pants_01_Forest_DigitalDeluxe	السراويل
+Inmate_Pants_01_Snow_DigitalDeluxe	السراويل
+Inmate_Pants_01_South_DigitalDeluxe	السراويل
+Pantyhose_01	جوارب طويلة
+Paper	ورق
+Parachute	المظلة
+Parking_Sensor	مستشعر وقوف السيارات
+Parsley	الجزر الأبيض
+Party_Glasses_01	نظارات الحفلات
+Party_Glasses_02	نظارات الحفلات
+Pasta	المعكرونة
+Book_Cooking_Pasta	كتاب طبخ المعكرونة
+Weapon_PeaceKeeper38	حارس السلام 38
+Weapon_Parts_PeaceKeeper38	حارس السلام 38 أجزاء
+Peach	خوخ
+CannedPeach	كومبوت الخوخ
+Peach_Seed_Bag	كيس بذور الخوخ - كيس بذور الخوخ
+Peach_Seeds	بذور الخوخ
+Pear	الكمثرى
+CannedPear	كومبوت الكمثرى
+Pear_Seed_Bag	كيس بذور الكمثرى - كيس بذور الكمثرى
+Pear_Seeds	بذور الكمثرى
+Pen	قلم
+Penicillin01	البنسلين
+Peppers_Seeds	بذور الفلفل
+Peppers_Seed_Bag	كيس بذور الفلفل - كيس بذور الفلفل
+Pesticide	المبيدات الحشرية
+Cal_40_PG-7M	PG-7M
+2H_Pickaxe	معول
+Rubber_sheet	قطعة من المطاط
+Pike_Fillet	بايك فيليه
+Fish_Pike	سمك بايك
+Pike_Head	رأس بايك
+Pilot_Glasses	نظارات الطيار
+Pilot_Hat_01	قبعة الطيار
+Pilot_Jacket	سترة الطيار
+Pine_Cone	مخروط الصنوبر
+Pineapple	الأناناس
+Ghillie_Suit_Pants_04	الجزء السفلي من بدلة Ghillie باللون الوردي
+Ghillie_Suit_Jacket_04	بدلة غيلي الوردية الأعلى
+PipeBomb	قنبلة الأنابيب
+1H_Pipe_Wrench	وجع الأنابيب
+WeaponCharm_PirateCat	سحر سلاح القراصنة القط
+Pirate_EyePatch	رقعة عين القراصنة
+Pirate_Hat_01	قبعة القراصنة
+Pirate_Hat_Sparrow_02	قبعة القراصنة
+2H_Pitchfork	مذراة
+Book_Cooking_Pizza	كتاب طبخ البيتزا
+Scissors_Plastic	مقص بلاستيك
+Hen_Torso	دجاج مقطّع
+Plum	البرقوق
+Plum_Seed_Bag	كيس بذور البرقوق - كيس بذور البرقوق
+Plum_Seeds	بذور البرقوق
+Police_Backpack_01	حقيبة ظهر للشرطة الاعتداء
+Police_Backpack_03	حقيبة ظهر الشرطة
+Police_Beanie_01	قبعة الشرطة
+ColorCan_PoliceBlue	علبة طلاء الشرطة الزرقاء
+Police_Bulletproof_Vest_01	سترة الشرطة المضادة للرصاص
+Police_Cap_01	كاب الشرطة
+Police_Boonie_Hat_01	قبعة صيد الشرطة
+Police_Gloves_01	قفازات الشرطة
+Police_Cap_02	قبعة الشرطة
+Police_Backpack_02	حقيبة ظهر للمشي لمسافات طويلة للشرطة
+Police_Jacket_01	سترة الشرطة
+Police_Open_Finger_Gloves_01	قفازات الشرطة المفتوحة
+Police_Shirt_01	قميص الشرطة
+pOLICE_Sweater_01	سترة الشرطة
+Armor_Police_Vest_01	سترة الشرطة التكتيكية
+Pork_Steak	شريحة لحم الخنزير
+Mutant_Pork_Steak	شريحة لحم الخنزير - شريحة لحم الخنزير المتحولة
+WeaponScope_POSP	POSP 4x24V
+PotassiumIodide_Pills_01	حبوب يوديد البوتاسيوم - نفطة
+PotassiumIodide_Pills_02	حبوب يوديد البوتاسيوم – علبة
+PotassiumIodide_Pills_03	حبوب يوديد البوتاسيوم - جرة
+Potato	البطاطس
+Chips4	رقائق البطاطس مالحة
+Potato_Seed_Bag	كيس بذور البطاطس - كيس بذور البطاطس
+Potatoes_Seeds	بذور البطاطس
+PracticeTrap	قنبلة الممارسة
+Recurve_Bow_70	Predator 70#
+BlankSign_Premium	علامة فارغة متميزة
+PremiumBoiliesPack	حزمة الطعم المغلي الفاخر
+Car_Lamp_Ceiling	مصباح كهربائي ممتاز
+PressureCookerBomb	قنبلة طنجرة الضغط
+Pressure_Dressing	تلبيس الضغط
+Compass_Primitive	البوصلة البدائية
+PromTrap	PROM-1 خاصتي
+Fish_PrussianCarp	المبروك الفضي
+Psilocybe_Cyanescens	Psilocybe Cyanescens
+WeaponScope_PU	منظار تصويب — PU
+Pumpkin	اليقطين
+Pumpkin_Seed_Bag	كيس بذور اليقطين - كيس بذور اليقطين
+Pumpkin_Seeds	بذور اليقطين
+Zombie_01_Left_Arm	ذراع الدمية
+Zombie_01_Right_Arm	ذراع الدمية
+Puppet_Eye	عين الدمية
+Zombie_01_Left_Foot	قدم الدمية
+Zombie_01_Right_Foot	قدم الدمية
+Zombie_01_Head	رأس الدمية
+Zombie_01_Head_No_teeth	رأس الدمية
+Zombie_01_Left_Leg	ساق الدمية
+Zombie_01_Right_Leg	ساق الدمية
+ZombieMeat	لحم الدمية
+Zombie_01_Torso	دمية الجذع
+MemoryModule_Level3	وحدة الذاكرة الأرجوانية
+Qipao_Dress_01	فستان تشيباو
+Qipao_Dress_02	فستان تشيباو
+Qipao_Dress_03	فستان تشيباو
+Qipao_Dress_04	فستان تشيباو
+Qipao_Dress_05	فستان تشيباو
+Qipao_Dress_06	فستان تشيباو
+HH_Wedge_Heels_01_01	أحذية تشيباو
+HH_Wedge_Heels_01_02	أحذية تشيباو
+HH_Wedge_Heels_01_03	أحذية تشيباو
+HH_Wedge_Heels_01_04	أحذية تشيباو
+HH_Wedge_Heels_01_05	أحذية تشيباو
+HH_Wedge_Heels_01_06	أحذية تشيباو
+Rabbit_Left_Front	أرنب الربع الأمامي الأيسر
+Rabbit_Left_Back	الأرنب الخلفي الأيسر
+RabbitLeg	ساق الأرنب
+RabbitMeat	لحم أرنب
+Rabbit_Right_Front	أرنب الربع الأمامي الأيمن
+Rabbit_Right_Back	الأرنب الخلفي الأيمن
+Racing_Helmet_01	خوذة السباق
+Radio	راديو
+Improvised_Gloves	قفازات خرقة
+Improvised_Shoes_02	أحذية خرقة
+Rag_Stripes	شرائط خرقة
+Rager_Engine_Alternator_Item	Rager المولد
+Rager_Body_ArmorHeavy_Back_Item	Rager درع للجسم ذو ظهر ثقيل
+Rager_Body_ArmorHeavy_Left_Item	Rager درع للجسم ثقيل على اليسار
+Rager_Body_ArmorHeavy_Right_Item	Rager درع للجسم ثقيل اليمين
+Rager_Body_ArmorHeavy_Top_Item	Rager درع للجسم ثقيل
+Rager_Body_ArmorLight_Back_Item	Rager درع للجسم ذو ظهر خفيف
+Rager_Body_ArmorLight_Left_Item	Rager درع الجسم خفيف على اليسار
+Rager_Body_ArmorLight_Right_Item	Rager درع الجسم خفيف على اليمين
+Rager_Body_ArmorLight_Top_Item	Rager درع علوي خفيف للجسم
+Rager_Body_Front	Rager واجهة الجسم
+Rager_Body_Left	Rager الجسم الأيسر
+Rager_Body_Right	Rager حق الجسم
+Rager_Body_Top	Rager قمة الجسم
+Rager_Bumper_Back_Item	Rager المصد الخلفي
+Rager_Bumper_Front_Item	Rager المصد الأمامي
+Rager_Door_ArmorHeavy_BackLeft_Item	Rager درع الباب خلفي ثقيل يسار
+Rager_Door_ArmorHeavy_BackRight_Item	Rager درع الباب ثقيل من الخلف يمين
+Rager_Door_ArmorHeavy_FrontLeft_Item	Rager درع الباب ثقيل امامي يسار
+Rager_Door_ArmorHeavy_FrontRight_Item	Rager درع الباب ثقيل امامي يمين
+Rager_Door_ArmorLight_BackLeft_Item	Rager ضوء دراع الباب خلفي يسار
+Rager_Door_ArmorLight_BackRight_Item	Rager ضوء دراع الباب خلفي يمين
+Rager_Door_ArmorLight_FrontLeft_Item	Rager ضوء درع الباب أمامي يسار
+Rager_Door_ArmorLight_FrontRight_Item	Rager ضوء دراع الباب أمامي يمين
+Rager_Door_BackLeft_Item	Rager الباب الخلفي يسار
+Rager_Door_BackRight_Item	Rager الباب الخلفي يمين
+Rager_Door_FrontLeft_Item	Rager الباب الأمامي الأيسر
+Rager_Door_FrontRight_Item	Rager باب أمامي يمين
+Rager_DoorHood_Item	Rager غطاء محرك السيارة
+Rager_Lights_FrontLeft	Rager أضواء أمامية يسار
+Rager_Lights_FrontRight	Rager أضواء أمامية يمين
+Rager_Lights_RearLeft	Rager اضواء خلفي يسار
+Rager_Lights_RearRight	Rager اضواء خلفي يمين
+Rager_Lights_RearTop	Rager أضواء خلفية علوية
+Rager_Seat_FrontLeft_Item	Rager المقعد الأمامي الأيسر
+Rager_Seat_FrontRight_Item	Rager المقعد الأمامي الأيمن
+Rager_DoorTrunk_ArmorHeavy_Item	Rager درع الجذع ثقيل
+Rager_DoorTrunk_ArmorLight_Item	Rager ضوء درع الجذع
+Rager_DoorTrunk_Item	Rager باب صندوق السيارة
+Rager_Wheel_ArmorHeavy_FrontLeft_Item	Rager درع العجلة ثقيل أمامي يسار
+Rager_Wheel_ArmorHeavy_FrontRight_Item	Rager درع العجلة ثقيل أمامي يمين
+Rager_Wheel_ArmorLight_FrontLeft_Item	Rager ضوء درع العجلة الأمامي الأيسر
+Rager_Wheel_ArmorLight_FrontRight_Item	Rager ضوء درع العجلة أمامي يمين
+Rags	الخرق
+Raincoat_01	معطف واق من المطر
+Raincoat_02	معطف واق من المطر
+Raincoat_03	معطف واق من المطر
+Raincoat_04	معطف واق من المطر
+Raincoat_05	معطف واق من المطر
+Raincoat_06	معطف واق من المطر
+Raisins	الزبيب
+Ramsons	رامسونز
+Grapes_Raw	العنب الخام
+RK_Beanie_01	قبعة رايكيت
+RK_Hoodie_01	رايكيت هوديي
+Razor_Blade	شفرة الحلاقة
+Rebar_Cutter	قاطع حديد التسليح
+ColorCan_RedChocolate	علبة طلاء الشوكولاتة الحمراء
+WeaponSights_RedDot_CA401B	ريد دوت البصر
+Energy_Drink_Red_Ghoul	مشروب الطاقة Red Ghoul
+RedOnion_Seed_Bag	كيس بذور البصل الأحمر
+RedOnion_Seeds	بذور البصل الأحمر
+FishingBait_RedWorm	طعم سمكة الدودة الحمراء
+Christmas_Headband_01	آذان الرنة
+Remote_Door_Key	مفتاح الباب البعيد
+Remote_Door_Sensor	مستشعر الباب عن بعد
+KeyCardApex	بطاقة مفاتيح مرفق الأبحاث
+Respirator_01	جهاز تنفس
+Retro_Helmet_01	خوذة الرجعية
+Book_Cooking_Rice	كتاب طبخ الأرز
+Richards_Cheese	جبن ريتشارد
+Rider_Helmet_01	خوذة رايدر
+Rider_Helmet_02	خوذة رايدر
+Rider_Helmet_03	خوذة رايدر
+Riot_Helmet_02	خوذة مكافحة الشغب
+ScopeRail_AK47	RIS محول
+RIS_Armor_Military_Front_Item	RIS الجبهة العسكرية المدرعة
+RIS_Body_Military_Item	RIS الجسم العسكري
+RIS_BrakeLight_Center_Item	RIS مركز ضوء الفرامل
+RIS_BrakeLight_Left_Item	RIS ضوء الفرامل يسار
+RIS_BrakeLight_Right_Item	RIS ضوء الفرامل يمين
+RIS_Headlight_Left_Item	RIS المصباح الأيسر
+RIS_Headlight_Right_Item	RIS المصباح الأيمن
+RIS_Plow_Civilian	RIS حرث مدني
+RIS_Spikes_Military	RIS مسامير عسكرية
+RIS_Wheel_Armor_Item	RIS درع العجلة
+Tobacco_Rolled	التبغ الملفوف
+WeaponCharm_Roller_Skate	سحر سلاح التزلج على الجليد
+Rope1	حبل 5 م
+Dog_Rose	روز الورك
+Weapon_Parts_RPG	RPG أجزاء السلاح
+Weapon_RPG7	RPG7
+Weapon_RPK-74	RPK
+Magazine_RPK	مخزن ذخيرة — RPK
+Weapon_Parts_RPK-74	RPK أجزاء السلاح
+Rubber_band	الفرقة المطاطية
+Fish_Ruffe	الروف
+Ruffe_Fillet	روف فيليه
+Skirt_02_01	تنورة كشكش
+Skirt_02_02	تنورة كشكش
+Skirt_02_03	تنورة كشكش
+Skirt_02_04	تنورة كشكش
+Skirt_02_05	تنورة كشكش
+Skirt_02_06	تنورة كشكش
+Skirt_02_07	تنورة كشكش
+Safety_Goggles	نظارات السلامة
+Safety_pin	دبوس الأمان
+Salsify_roots	سلسفي - جذور
+SaltBag	كيس الملح
+SaltGrain	حبوب الملح
+SandBag	كيس الرمل
+Santa_Hat_01	قبعة سانتا
+Santa_Jacket	سترة سانتا
+Santa_Pants	سروال سانتا
+CannedSardine	السردين
+CannedSardine_Deluxe	السردين
+Sardine_Fillet	فيليه السردين
+FishingBait_Sardine	طعم سمك السردين
+1H_Scalpel	مشرط
+Weapon_Parts_SCAR_L	SCAR L أجزاء السلاح
+Weapon_SCAR_DMR	SCAR-DMR
+Magazine_SCAR_DMR	مخزن ذخيرة — SCAR-DMR
+Weapon_Parts_SCAR_DMR	SCAR-DMR أجزاء السلاح
+Weapon_SCAR_L	SCAR-L
+Rabbit_Mask_01	قناع أرنب مخيف
+School_Backpack_01	حقيبة الظهر المدرسية
+School_Backpack_Boy_02	حقيبة الظهر المدرسية
+School_Backpack_Boy_03	حقيبة الظهر المدرسية
+School_Backpack_Girl_04	حقيبة الظهر المدرسية
+School_Backpack_Girl_05	حقيبة الظهر المدرسية
+School_Backpack_Girl_06	حقيبة الظهر المدرسية
+Scissors_01	مقص
+Recurve_Bow	العقرب 40#
+1H_Scout_Black	Scout
+1H_Scout_White	Scout
+Screwdriver	مفك البراغي
+Scum_Sunrise	SCUM Sunrise
+SCUMkin_Spice_Latte	SCUMkin Spice Latter
+Weapon_SDASS	SDASS 12M
+Weapon_Parts_SDASS	SDASS أجزاء السلاح
+SeaSalt_01	ملح البحر
+SeaSalt_02	ملح البحر
+WeaponSights_Sentry_RDRS	الحارس RDRS
+WeaponCharm_Sentry	سحر سلاح الحراسة
+Weapon_Serpent357	الثعبان 357
+Weapon_Parts_Serpent357	الثعبان 357 أجزاء السلاح
+Sewing_kit	عدة الخياطة
+Sexy_Jeans_Shorts_01	شورت جينز مثير
+Sexy_Jeans_Shorts_02	شورت جينز مثير
+Sexy_Jeans_Shorts_03	شورت جينز مثير
+Sexy_Jeans_Shorts_04	شورت جينز مثير
+Sexy_Jeans_Shorts_05	شورت جينز مثير
+Sexy_Jeans_Shorts_06	شورت جينز مثير
+Sexy_Jeans_Shorts_07	شورت جينز مثير
+WeaponSights_Shark	منظار عاكس — Shark
+Shemagh_Scarf_01	وشاح شماغ
+Shemagh_Scarf_02	وشاح شماغ
+Shemagh_Scarf_03	وشاح شماغ
+Shemagh_Scarf_04	وشاح شماغ
+Shemagh_Scarf_05	وشاح شماغ
+Shemagh_Scarf_06	وشاح شماغ
+Shemagh_Scarf_07	وشاح شماغ
+Shemagh_Scarf_08	وشاح شماغ
+Shimoro_Vest	Shimoro سترة
+Inmate_shirt_01	قميص
+Inmate_Shirt_01_Forest_DigitalDeluxe	قميص
+Inmate_Shirt_01_South_DigitalDeluxe	قميص
+ImprovisedRail_Short	السكك الحديدية المرتجلة القصيرة
+Short_Paddle_A	مجداف قصير
+Short_Paddle_B	مجداف قصير
+Shorts_Pants_01_01	السراويل القصيرة
+Shorts_Pants_01_02	السراويل القصيرة
+Shorts_Pants_01_03	السراويل القصيرة
+Shorts_Pants_01_04	السراويل القصيرة
+Shorts_Pants_01_05	السراويل القصيرة
+Shorts_Pants_01_06	السراويل القصيرة
+Shorts_Pants_01_07	السراويل القصيرة
+Shorts_Pants_01_08	السراويل القصيرة
+Shorts_Pants_01_09	السراويل القصيرة
+Shorts_Pants_01_10	السراويل القصيرة
+Short_Trousers_01_01	سراويل قصيرة
+Short_Trousers_01_02	سراويل قصيرة
+Short_Trousers_01_03	سراويل قصيرة
+Short_Trousers_01_04	سراويل قصيرة
+Short_Trousers_01_05	سراويل قصيرة
+2H_Shovel_02	مجرفة
+1H_Shuriken	شوريكين
+SidecarBike_Brakelight_Item	ضوء فرامل الدراجة الجانبية
+SidecarBike_Fender_Front_Item	درابزين أمامي للدراجة Sidecar
+SidecarBike_Fender_Rear_Item	حاجز خلفي للدراجة الجانبية
+SidecarBike_Fender_Sidecar_Item	Sidecar دراجة درابزين Sidecar
+SidecarBike_Headlight_Item	المصباح الأمامي للدراجة الجانبية
+SidecarBike_Seat_Back_Item	مقعد الدراجة الجانبي الخلفي
+SidecarBike_Seat_Front_Item	مقعد الدراجة الجانبي الأمامي
+SidecarBike_Sidecar_Brakelight_Item	ضوء فرامل السيارة الجانبية للدراجة الجانبية
+SidecarBike_Sidecar_Headlight_Item	ضوء رأس السيارة الجانبية للدراجة الجانبية
+SidecarBike_Sidecar_WeaponStation_Item	محطة الأسلحة Sidecar Bike Sidecar
+SidecarBike_Wheel_4x16_Item	عجلة الدراجة الجانبية
+SilentAlarm	إنذار صامت
+Lock_Item_Medium	قفل فضي
+Skewer	سيخ
+Skewer_02	سيخ
+Bear_Skinned	الدب ذو الجلد
+Boar_Skinned	خنزير مسلوق
+Buck_Skinned	باك الجلد
+Doe_Skinned	ظبية الجلد
+Donkey_skinned	الحمار المسلوق
+Goat_Skinned	الماعز المسلوق
+Horse_Skinned	حصان مسلوق
+Rabbit_Skinned	أرنب مسلوق
+Wolf_Skinned	الذئب ذو الجلد
+Skirt_01_01	تنورة
+Skirt_01_02	تنورة
+Skirt_01_03	تنورة
+Skirt_02_08	تنورة
+Weapon_SKS	SKS
+SKS_Bayonet	SKS حربة
+Magazine_Clip_SKS	مشبك ذخيرة — SKS
+Weapon_Parts_SKS	SKS أجزاء السلاح
+Halloween_Mask_Scream	قناع الجمجمة
+WeaponCharm_Skull	سحر سلاح الجمجمة
+Slav_Reviver	Slav Reviver
+Slavic_Gent	Slavic Gent
+Sledgehammer	مطرقة ثقيلة
+Sleeveless_Camo_Shirt_01	قميص كامو بلا أكمام
+Sleeveless_Camo_Shirt_02	قميص كامو بلا أكمام
+Sleeveless_Camo_Shirt_03	قميص كامو بلا أكمام
+Sleeveless_Camo_Shirt_04	قميص كامو بلا أكمام
+Sleeveless_Camo_Shirt_05	قميص كامو بلا أكمام
+Sleeveless_Camo_Shirt_06	قميص كامو بلا أكمام
+Sleeveless_Shirt_01	قميص بلا أكمام
+Sleeveless_Shirt_02	قميص بلا أكمام
+BowSilencer_SlipOn	الانزلاق على كاتم الصوت القوس
+Slippers_03	النعال
+Slouch_Camo_Hat_01	ترهل كامو قبعة
+Slouch_Camo_Hat_02	ترهل كامو قبعة
+Slouch_Camo_Hat_03	ترهل كامو قبعة
+Slouch_Camo_Hat_04	ترهل كامو قبعة
+Slouch_Camo_Hat_05	ترهل كامو قبعة
+Slouch_Camo_Hat_06	ترهل كامو قبعة
+Slouch_Hat_01	قبعة ترهل
+Slouch_Hat_02	قبعة ترهل
+12_Gauge_Slug_Ammobox	صندوق ذخيرة بندقية الرخويات
+Small_Animal_guts	أحشاء الحيوانات الصغيرة
+Mine_02	لغم صغير مضاد للأفراد
+1H_Small_Axe	فأس صغير
+Battery_Charger_Small	شاحن بطارية صغير
+WeaponCharm_SmallBullet	سحر سلاح رصاصة صغيرة
+Christmas_Present_01	هدية عيد الميلاد الصغيرة
+FishingHookPack1	حزمة خطاف السمك الصغيرة
+Gasoline_Canister_Small	علبة بنزين صغيرة
+Improvised_Bag_Small_02	حقيبة ظهر صغيرة مرتجلة
+LogShed_2	سقيفة خشبية صغيرة
+Screwdriver_Small	مفك براغي صغير
+1H_Little_Spade	بأسمائها الحقيقية الصغيرة
+Wooden_Sticks_Bundle_Meduim	حزمة العصي الصغيرة
+Stone_Small	حجر صغير
+1H_Stone_Axe_Head	رأس فأس حجري صغير
+Tool_Box_SMall	صندوق الأدوات الصغير
+Small_Vehicle_StorageRack	رف تخزين المركبات الصغيرة
+Wooden_Log_Small_01	سجل خشبي صغير
+Wooden_Log_Small_02	سجل خشبي صغير
+Wooden_Log_Small_03	سجل خشبي صغير
+Wooden_Stick	عصا خشبية صغيرة
+Smartphone_Battery	بطارية الهاتف الذكي
+Smoke_Grenade	قنبلة دخان
+Smoke_Grenade_Green	قنبلة دخان
+Smoke_Grenade_Red	قنبلة دخان
+Smoke_Grenade_Violet	قنبلة دخان
+Smoke_Grenade_Yellow	قنبلة دخان
+Dish_Smoked_Drumstick	طبل مدخن
+Dish_Smoked_Fish	سمك فيليه مدخن
+Dish_Smoked_RabbitLeg	ساق أرنب مدخن
+Dish_Smoked_Meat	اللحوم الحمراء المدخنة
+WeaponSights_Snake	منظار عاكس — Snake
+ColorCan_SnowWhite	علبة طلاء سنو وايت
+Snowballs_01	كرة الثلج
+Soap	صابون
+Kilt_Sock_01	الجوارب
+Kilt_Socks_02	الجوارب
+Kilt_Socks_03	الجوارب
+Kilt_Socks_04	الجوارب
+Kilt_Socks_05	الجوارب
+Kilt_Socks_06	الجوارب
+Sock_01	الجوارب
+Can01	الصودا
+Sodium_Hydroxide	هيدروكسيد الصوديوم
+Book_Cooking_Soup	كتاب طبخ الحساء
+SoySauce	صلصة الصويا
+2H_Shovel_01	مجرفة بأسمائها الحقيقية
+CannedSpaghetti	سباجيتي مع كرات اللحم
+Snake_Skin_Bow	Specialist Archer القوس
+WeaponScope_Spektral_DR	SpektralDR
+SpicesMix_01	خليط التوابل
+SpicesMix_02	خليط التوابل
+Chips2	رقائق الناتشو الحارة
+Spinach	السبانخ
+Spinach_Seed_Bag	كيس بذور السبانخ - كيس بذور السبانخ
+Spinach_Seeds	بذور السبانخ
+College_Jacket_01	سترة سبيتفاير
+College_Jacket_02	سترة سبيتفاير
+College_Jacket_03	سترة سبيتفاير
+College_Jacket_04	سترة سبيتفاير
+College_Jacket_05	سترة سبيتفاير
+College_Jacket_06	سترة سبيتفاير
+College_Jacket_07	سترة سبيتفاير
+College_Jacket_08	سترة سبيتفاير
+MA1_Spitfire_01	سترة سبيتفاير
+MA1_Spitfire_02	سترة سبيتفاير
+MA1_Spitfire_03	سترة سبيتفاير
+MA1_Spitfire_04	سترة سبيتفاير
+Spliff	سبليف
+Spon	SPON
+Dish_Sandwich_Spon	ساندويتش سبون
+Spoon	ملعقة
+Scottish_Sporran_Bag_01	حقيبة سبوران
+Sportbike_Seat_Brakelight_Item	ضوء الفرامل للدراجة الرياضية
+Sportbike_Fender_Item	سبورتبايك درابزين
+Sportbike_Wind_Deflector_Headlight_Item	المصباح الرياضي
+Sportbike_Seat_Item	مقعد رياضي
+Sportbike_Body_Street_Item	سبورتبايك ستريت بودي
+Sportbike_Fender_Street_Item	سبورتبايك ستريت فندر
+Sportbike_Wind_Deflector_Street_Headlight_Item	سبورتبايك ستريت المصباح
+Sportbike_Seat_Street_Item	مقعد شارع سبورتبايك
+Sportbike_Wind_Deflector_Street_Item	عاكس الرياح للشارع الرياضي
+Sportbike_Wind_Deflector_Item	عاكس الرياح للدراجة الرياضية
+Fish_Sardine	السردين المرقط
+Spring	الربيع
+Stabproof_Vest_01_01	سترة مضادة للطعن
+Stabproof_Vest_01_02	سترة مضادة للطعن
+Stabproof_Vest_01_03	سترة مضادة للطعن
+Stabproof_Vest_01_04	سترة مضادة للطعن
+Stabproof_Vest_01_05	سترة مضادة للطعن
+Stabproof_Vest_01_06	سترة مضادة للطعن
+Stabproof_Vest_01_07	سترة مضادة للطعن
+Stabproof_Vest_01_08	سترة مضادة للطعن
+Stabproof_Vest_01_09	سترة مضادة للطعن
+Credit_Card_Starter	بطاقة بنك البداية
+Book_Cooking_Stew	كتاب الطبخ الحساء
+Stinging_Nettle	نبات القراص لاذع
+Stockings_01	جوارب
+Stockings_02	جوارب
+Stockings_03	جوارب
+Stockings_04	جوارب
+Stockings_05	جوارب
+Stockings_06	جوارب
+Stockings_07	جوارب
+Stockings_08	جوارب
+Stone	حجر
+1H_Stone_Axe	الفأس الحجري
+1H_ImprovisedKnife	سكين الحجر
+Ammo_Crossbow_Bolt_WoodenStoneTip	مسمار القوس والنشاب ذو الرأس الحجري
+Wooden_ArrowStoneTip	سهم خشبي ذو طرف حجري
+Bundle_Of_Stone_Tips	نصائح الحجر
+Strait_Jacket	سترة
+Wild_Strawberry	الفراولة
+Sugar	سكر
+SugarBeet	بنجر السكر
+Round_Sunglasses	النظارات الشمسية
+WeaponCharm_Sunglasses_Emoji	النظارات الشمسية سحر سلاح تعبيري
+Super_Glue	سوبر الغراء
+Weapon_SVD_Dragunov	SVD
+Magazine_SVD_Dragunov	مخزن ذخيرة — SVD
+WeaponSuppressor_SVD	كاتم صوت — SVD
+Weapon_Parts_SVD	SVD أجزاء السلاح
+Sweater_01	سترة
+Sweater_02	سترة
+Sweater_03	سترة
+Sweater_04	سترة
+Sweater_05	سترة
+Tracksuit_Pants_01_01	بنطال رياضي
+Tracksuit_Pants_01_02	بنطال رياضي
+Tracksuit_Pants_01_03	بنطال رياضي
+Tracksuit_Pants_01_04	بنطال رياضي
+Tracksuit_Pants_01_05	بنطال رياضي
+Tracksuit_Pants_02_01	بنطال رياضي
+Tracksuit_Pants_02_02	بنطال رياضي
+Tracksuit_Pants_02_03	بنطال رياضي
+Tracksuit_Pants_02_04	بنطال رياضي
+Tracksuit_Pants_02_05	بنطال رياضي
+Shimoro_Pants	بنطال رياضي - Shimoro بنطال
+Canned_Corn	الذرة الحلوة
+CantaloupeMelon_Seed_Bag	كيس بذور البطيخ الحلو
+WeaponCharm_Sword	سحر سلاح السيف
+Syringe	حقنة
+TC_Backpack	T0pCL4SS حقيبة ظهر
+Baseball_Cap_13	T0pCL4SS كاب
+Tactical_Gloves_01_01	القفازات التكتيكية
+Tactical_Gloves_01_02	القفازات التكتيكية
+Tactical_Gloves_01_03	القفازات التكتيكية
+Tactical_Gloves_01_04	القفازات التكتيكية
+Tactical_Gloves_01_05	القفازات التكتيكية
+Tactical_Gloves_01_06	القفازات التكتيكية
+Tactical_Gloves_01_07	القفازات التكتيكية
+Tactical_Gloves_01_08	القفازات التكتيكية
+Police_Handgun_Holster	حافظة المسدس التكتيكي
+Tactical_Handgun_Holster_01	حافظة المسدس التكتيكي
+Tactical_Handgun_Holster_02	حافظة المسدس التكتيكي
+Tactical_Handgun_Holster_03	حافظة المسدس التكتيكي
+Tactical_Handgun_Holster_04	حافظة المسدس التكتيكي
+Tactical_Handgun_Holster_05	حافظة المسدس التكتيكي
+Tactical_Handgun_Holster_06	حافظة المسدس التكتيكي
+Tactical_Handgun_Holster_07	حافظة المسدس التكتيكي
+Tactical_Jacket_01_01	سترة تكتيكية
+Tactical_Jacket_01_02	سترة تكتيكية
+Tactical_Jacket_01_03	سترة تكتيكية
+Tactical_Jacket_01_04	سترة تكتيكية
+Tactical_Jacket_01_05	سترة تكتيكية
+Tactical_Jacket_01_06	سترة تكتيكية
+Tactical_Jacket_01_07	سترة تكتيكية
+Tactical_Jacket_01_09	سترة تكتيكية
+MilitaryPants_01	السراويل العسكرية التكتيكية
+MilitaryPants_02	السراويل العسكرية التكتيكية
+MilitaryPants_03	السراويل العسكرية التكتيكية
+MilitaryPants_04	السراويل العسكرية التكتيكية
+MilitaryPants_05	السراويل العسكرية التكتيكية
+MilitaryPants_06	السراويل العسكرية التكتيكية
+MilitaryPants_07	السراويل العسكرية التكتيكية
+MilitaryPants_08	السراويل العسكرية التكتيكية
+MilitaryPants_09	السراويل العسكرية التكتيكية
+MilitaryPants_10	السراويل العسكرية التكتيكية
+Tactical_Sweater_01	سترة تكتيكية
+Tactical_Sweater_02	سترة تكتيكية
+Tactical_Sweater_03	سترة تكتيكية
+Tactical_Sweater_04	سترة تكتيكية
+Tactical_Sweater_05	سترة تكتيكية
+Tactical_Sweater_06	سترة تكتيكية
+Tactical_Sweater_07	سترة تكتيكية
+Tactical_Vest_01	سترة تكتيكية
+Takedown_Bow	القوس انهاء الخدمة
+2H_Tang_Dao	Tang Dao
+2H_Tang_Dao_Black_Dragon	Tang Dao التنين الأسود
+2H_Tang_Dao_Damascus	Tang Dao دمشق
+Tang_pants_01	سروال تانغ
+Tang_pants_02	سروال تانغ
+Tang_pants_03	سروال تانغ
+Tang_pants_04	سروال تانغ
+Tang_pants_05	سروال تانغ
+Tang_shirt_01	قميص تانغ
+Tang_shirt_02	قميص تانغ
+Tang_shirt_03	قميص تانغ
+Tang_shirt_04	قميص تانغ
+Tang_shirt_05	قميص تانغ
+Tangerine	اليوسفي
+Tangerine_Seed_Bag	كيس بذور اليوسفي - كيس بذور اليوسفي
+Tangerine_Seeds	بذور اليوسفي
+Tea_Pack	حزمة الشاي
+TearGasGrenade	قنبلة الغاز المسيل للدموع
+Weapon_590A11	TEC01 490
+Weapon_Parts_590A11	TEC01 490 أجزاء الأسلحة
+Weapon_M9	TEC01 M9
+Weapon_M9_Silver	TEC01 M9
+WeaponCharm_TEC1	TEC1 سحر السلاح
+Tequila	تيكيلا
+The_Island_Special	الجزيرة الخاصة
+Thermometer	ميزان الحرارة
+Thread	الموضوع
+WeaponCharm_Tiger	سحر سلاح النمر
+RH_Tights	الجوارب
+Tinder	تيندر
+Tire_Repair_Kit	طقم إصلاح الإطارات
+TNT	TNT
+Toaster_Pastries	معجنات محمصة
+Toaster_Pastries2	معجنات محمصة
+Tobacco	التبغ
+Tobacco_Seed_Bag	كيس بذور التبغ - كيس بذور التبغ
+Tobacco_Seeds	بذور التبغ
+Tomato	طماطم
+TomatoPelate	بيلاتي الطماطم
+TomatoSauce	صلصة الطماطم
+Tomato_Seed_Bag	كيس بذور الطماطم - كيس بذور الطماطم
+Tomato_Seeds	بذور الطماطم
+Weapon_TommyGun	Tommy Gun
+Magazine_TommyGun	مخزن ذخيرة — Tommy Gun
+Weapon_Parts_TommyGun	أجزاء الأسلحة Tommy Gun
+Tool_Box	صندوق الأدوات
+05_Teeth_Necklace	قلادة الأسنان
+10_Teeth_Necklace	قلادة الأسنان
+15_Teeth_Necklace	قلادة الأسنان
+WeaponCharm_Tooth	سحر سلاح الأسنان
+Torch	الشعلة
+Tourniquet	عاصبة
+Tracksuit_Top_01	بدلة رياضية علوية
+Tracksuit_Top_02	بدلة رياضية علوية
+Tracksuit_Top_03	بدلة رياضية علوية
+Tracksuit_Top_04	بدلة رياضية علوية
+Tracksuit_Top_05	بدلة رياضية علوية
+Tractor_Engine_Alternator_Item	مولد جرار
+Tractor_Body_Left_ArmorHeavy_Item	درع جسم الجرار الثقيل الأيسر
+Tractor_Body_Right_ArmorHeavy_Item	الدروع الواقية للبدن للجرار الثقيلة
+Tractor_Body_Top_ArmorHeavy_Back_Item	درع جسم الجرار ثقيل من الخلف
+Tractor_Body_Top_ArmorHeavy_Front_Item	درع جسم الجرار ثقيل من الأعلى
+Tractor_Body_Top_ArmorHeavy_Left_Item	درع جسم الجرار ثقيل من أعلى اليسار
+Tractor_Body_Top_ArmorHeavy_Right_Item	درع جسم الجرار ثقيل من أعلى اليمين
+Tractor_Body_Left_Item	جسم الجرار الأيسر
+Tractor_Body_Right_Item	جسم الجرار صحيح
+Tractor_Body_Left_Brakelight_Item	ضوء فرامل الجرار الأيسر
+Tractor_Body_Right_Brakelight_Item	ضوء فرامل الجرار الأيمن
+Tractor_Door_Left_ArmorHeavy_Item	درع باب الجرار ثقيل يسار
+Tractor_Door_Right_ArmorHeavy_Item	درع باب الجرار ثقيل يمين
+Tractor_Body_Top_Door_Left_Item	باب الجرار الأيسر
+Tractor_Body_Top_Door_Right_Item	باب الجرار يمين
+Tractor_Seat_Driver_Item	مقعد سائق جرار
+Tractor_Door_Hood_Headlight_Left_Item	المصباح الأمامي للجرار يسار
+Tractor_Door_Hood_Headlight_Right_Item	المصباح الأمامي للجرار يمين
+Tractor_Door_Hood_Item	غطاء محرك السيارة
+Tractor_WheelArmorHeavy_Front_Item	جرار عجلة درع الجبهة الثقيلة
+HighTop_Shoes	أحذية المدرب
+1H_Traynors_Axe	فأس ترينور
+FishingHookPack4	حزمة خطاف السمك الثلاثي
+FishingHook3	خطاف صيد ثلاثي
+Tree_Bark	لحاء الشجرة
+Tree_Branches	فرع الشجرة
+Weapon_Trench_Gun	بندقية الخندق
+Weapon_Parts_Trench_Gun	أجزاء سلاح الخندق
+Fish_Carp_Trophy	الكأس الكارب
+Fish_Catfish_Trophy	الكأس السلور
+Fish_Dentex_Trophy	الكأس دينتكس
+Fish_Pike_Trophy	الكأس بايك
+Fish_Tuna_Trophy	تونة الكأس
+Jeans_Jersey_Jacket_01	سترة سائق الشاحنة
+Jeans_Jersey_Jacket_02	سترة سائق الشاحنة
+Trucker_Jacket_01	سترة سائق الشاحنة
+Trucker_Jacket_02	سترة سائق الشاحنة
+Trucker_Jacket_03	سترة سائق الشاحنة
+Trucker_Jacket_04	سترة سائق الشاحنة
+Fish_Tuna	تونة
+Tuna_Fillet	سمك التونة
+Tuna_Head	رأس التونة
+MRE_TunaSalad	سلطة التونة MRE
+Dish_Sandwich_Tuna	ساندويتش تونة
+Hiking_Backpack_Tyrone	Tyrone حقيبة ظهر للمشي لمسافات طويلة
+Tyrone_Shoelacez_Mask	Tyrone Shoelacez قناع
+Weapon_Parts_UMP	UMP أجزاء السلاح
+Weapon_UMP45	UMP-45
+Magazine_UMP45	مخزن ذخيرة — UMP-45
+Rice	Uncle Pong أرز
+Underpants_01	الملابس الداخلية
+Underpants_02	الملابس الداخلية
+Underpants_03	الملابس الداخلية
+Underpants_04	الملابس الداخلية
+Underpants_05	الملابس الداخلية
+F_Bra_Supporter_01	قميص داخلي
+Scum_Shirt_Supporter_Pack_Black_01	قميص داخلي
+Undershirt_01	قميص داخلي
+Cereal_UpNGo	UpNGo الحبوب
+Utility_Belt_01	حزام المرافق
+WeaponSights_V3_Holographic	منظار هولوغرافي — V3
+WeaponScope_Vampyr	منظار تصويب — Vampyr
+VegetableOil	زيت نباتي
+ColorCan_VelvetBrown	علبة طلاء بني مخملي
+2H_Katana1	كاتانا فينديا
+Weapon_VHS2_Rail	VHS 2
+Weapon_VHS2	VHS 2 CT
+Weapon_VHS_BG	VHS BG
+Weapon_Parts_VHSBG	VHS BG أجزاء السلاح
+Magazine_VHS2	مخزن ذخيرة — VHS
+Weapon_Parts_VHS	VHS2 أجزاء سلاح
+Vinegar	الخل
+Hazmat_Suit_Vintage	بدلة المواد الخطرة خمر
+Vintage_Jail_Cap_01	قبعة السجن خمر
+Vintage_Jail_Pants_01	سروال السجن خمر
+Vintage_Jail_Shirt_01	قميص السجن خمر
+Weapon_Viper_M357	فايبر M357
+DW715_Rail	فايبر M357 السكك الحديدية
+Weapon_Parts_Viper_M357	قطع غيار سلاح فايبر M357
+Geek_Goggels	نظارات الرؤية
+Vitamins_01	حبوب فيتامين - نفطة
+Vitamins_02	حبوب فيتامين - علبة
+Vitamins_03	حبوب فيتامين - برطمان
+Weapon_VSS_VZ	VSS VZ
+Weapon_Parts_VSS_VZ	VSS VZ أجزاء السلاح
+Waist_Bag_Small_01	حقيبة الخصر
+Waist_Bag_Small_02	حقيبة الخصر
+Waist_Bag_Small_03	حقيبة الخصر
+Dish_Salad_Waldorf	Waldorf سلطة
+Walnut	الجوز
+ColorCan_WarmGrey	علبة الطلاء الرمادي الدافئ
+WeaponSights_Wasp	منظار عاكس — Wasp
+Water_05l	زجاجة ماء
+Water_Bucket	دلو الماء
+Watering_Can	دلو ماء - علبة سقي
+Watermelon	البطيخ
+Watermelon_Seed_Bag	كيس بذور البطيخ - كيس بذور البطيخ
+Watermelon_Seeds	بذور البطيخ
+Watermelon_slice	شريحة بطيخ
+WeaponGhillie_Desert	سلاح غيلي
+WeaponGhillie_Winter	سلاح غيلي
+WeaponGhillie_Woodland	سلاح غيلي
+Herbicide	طارد الحشائش
+WhiteFlour	دقيق القمح
+Sportbike_Wheel_100_90_R18_Item	العجلة 100 90 R18
+Dirtbike_Wheel_110_80_R19_Item	العجلة 110 80 R19
+Cruiser_Wheel_155_66_R17	العجلة 155 66 R17
+Cruiser_Wheel_188_53_R17	العجلة 188 53 R17
+Wheel_155_R65_Item	العجلة 205 55 R16
+Wheel_205_80_R12_Item	عجلة 205 80 R12
+Wheel_255_55_R16_Item	العجلة 215 65 R16
+Wheel_265_60_R18_Item	العجلة 265 60 R18
+Bicycle_Wheel_54_622_Item	العجلة 54 622
+Wheel_6x16_Item	العجلة 6 16
+Bicycle_Wheel_60_622_Item	العجلة 60 622
+Sportbike_Wheel_90_90_R18_Item	العجلة 90 90 R18
+Dirtbike_Wheel_90_90_R21_Item	العجلة 90 90 R21
+Whiskey	ويسكي
+Wild_Cherry	الكرز البري
+PenisWarmer_01	ويلي دفئا
+PenisWarmer_02	ويلي دفئا
+PenisWarmer_03	ويلي دفئا
+Wine	النبيذ
+WineCork	كورك النبيذ
+Ghillie_Suit_Pants_05	الجزء السفلي من بدلة غيلي الشتوية
+Ghillie_Suit_Jacket_05	قمة بدلة قراء الشتاء
+Wire	سلك 10 م
+2H_Baseball_Bat_with_wire	مضرب بيسبول سلكي
+Wire_Cutters_01	قواطع الأسلاك
+1H_Wooden_club_with_wire	نادي الأسلاك الخشبية
+Wolf_Head	رأس الذئب
+Wolf_Hat_01	قناع رأس الذئب
+Wolf_Left_Back_Leg	ساق الذئب
+Wolf_Left_Front_Leg	ساق الذئب
+Wolf_Right_Back_Leg	ساق الذئب
+Wolf_Right_Front_Leg	ساق الذئب
+Wolf_Steak	وولف ستيك
+Wolf_Torso	وولف تورسو
+Woodcuters_Shirt_01	قميص الحطاب
+Woodcuters_Shirt_02	قميص الحطاب
+Woodcuters_Shirt_03	قميص الحطاب
+Wooden_Arrow	سهم خشبي
+Wooden_Arrows_6pc	سهم خشبي
+1H_Wooden_club	نادي خشبي
+1H_Wooden_club_with_spikes	نادي خشبي بالمسامير
+Ammo_Crossbow_Bolt_Wooden	الترباس القوس والنشاب الخشبي
+Wooden_Fork	شوكة خشبية
+Wooden_Log_01	سجل خشبي
+Wooden_Log_02	سجل خشبي
+Wooden_Plank	لوح خشبي
+Wooden_Spoon	ملعقة خشبية
+2H_Wooden_Sword	سيف خشبي
+Penobscot_Bow_40	Woodland Hunter القوس
+Wool_Gloves_01_01	قفازات صوف
+Wool_Gloves_01_02	قفازات صوف
+Wool_Gloves_01_03	قفازات صوف
+Wool_Gloves_01_04	قفازات صوف
+Wool_Gloves_01_05	قفازات صوف
+Wool_Gloves_01_06	قفازات صوف
+Wool_Gloves_01_07	قفازات صوف
+Working_Helmet_01	خوذة العمل
+Working_Helmet_02	خوذة العمل
+Working_Helmet_03	خوذة العمل
+Working_Helmet_04	خوذة العمل
+FishingBait_Worm	طعم السمك الدودي
+Wushu_Spear_Metal	الووشو الرمح المعدني
+Wushu_Spear_Wooden	الووشو الرمح المعدني - الووشو الرمح الخشبي
+WW_Engine_Alternator_Item	WW المولد
+WW_Bumper_Back_Item	WW المصد الخلفي
+WW_Body_Back	WW ظهر الجسم
+WW_Body_Front	WW واجهة الجسم
+WW_Body_Left	WW الجسم الأيسر
+WW_Body_Right	WW حق الجسم
+WW_Body_Top	WW قمة الجسم
+WW_Bumper_Armor_Back_Item	WW درع خلفي ممتص للصدمات
+WW_Door_ArmorHeavy_BackLeft_Item	WW درع الباب خلفي ثقيل يسار
+WW_Door_ArmorHeavy_BackRight_Item	WW درع الباب ثقيل من الخلف يمين
+WW_Door_ArmorHeavy_FrontLeft_Item	WW درع الباب ثقيل امامي يسار
+WW_Door_ArmorHeavy_FrontRight_Item	WW درع الباب ثقيل امامي يمين
+WW_Door_ArmorLight_BackLeft_Item	WW ضوء دراع الباب خلفي يسار
+WW_Door_ArmorLight_BackRight_Item	WW ضوء دراع الباب خلفي يمين
+WW_Door_ArmorLight_FrontLeft_Item	WW ضوء درع الباب أمامي يسار
+WW_Door_ArmorLight_FrontRight_Item	WW ضوء دراع الباب أمامي يمين
+WW_Door_BackLeft_Item	WW الباب الخلفي يسار
+WW_Door_BackRight_Item	WW الباب الخلفي يمين
+WW_Door_FrontLeft_Item	WW الباب الأمامي الأيسر
+WW_Door_FrontRight_Item	WW باب أمامي يمين
+WW_Bumper_Front_Item	WW المصد الأمامي
+WW_Body_ArmorHeavy_Top_Item	WW قمة الدرع الثقيل
+WW_DoorHood_Item	WW غطاء محرك السيارة
+WW_Lights_FrontLeft	WW أضواء أمامية يسار
+WW_Lights_FrontRight	WW أضواء أمامية يمين
+WW_Lights_RearLeft	WW اضواء خلفي يسار
+WW_Lights_RearRight	WW اضواء خلفي يمين
+WW_Seat_BackLeft_Item	WW ظهر المقعد يسارًا
+WW_Seat_BackRight_Item	WW ظهر المقعد الأيمن
+WW_Seat_FrontLeft_Item	WW المقعد الأمامي الأيسر
+WW_Seat_FrontRight_Item	WW المقعد الأمامي الأيمن
+WW_DoorTrunk_Item	WW الجذع
+WW_DoorTrunk_ArmorHeavy_Item	WW درع الجذع ثقيل
+WW_DoorTrunk_ArmorLight_Item	WW ضوء درع الجذع
+WW_Wheel_ArmorLight_FrontLeft_Item	WW درع العجلة الأمامية اليسرى
+WW_Wheel_ArmorLight_FrontRight_Item	WW درع العجلة الأمامية اليمنى
+WW2_German_Helmet_01	WW2 خوذة ألمانية
+WeaponSights_XPS300_Holographic	منظار هولوغرافي — XPS
+Yeast	الخميرة
+Snowballs_02	كرة الثلج الصفراء
+WeaponCharm_Yingyang	سحر سلاح يين يانغ
+Tights_01_01	طماق اليوغا
+Tights_01_02	طماق اليوغا
+Tights_01_03	طماق اليوغا
+Tights_01_04	طماق اليوغا
+Tights_01_05	طماق اليوغا
+Tights_01_06	طماق اليوغا
+WeaponScope_ZF39	ZF39
+2H_ZhanMaDao_Sword	Zhan Ma Dao
+Zucchini	كوسة
+Zucchini_Seed_Bag	كيس بذور الكوسة - كيس بذور الكوسة
+Zucchini_Seeds	بذور الكوسة

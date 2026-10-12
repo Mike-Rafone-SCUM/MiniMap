@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -50,7 +50,7 @@ namespace ScumMiniMap {
         }
         public string DisplayName { get { return DisplayNameAt(DateTime.UtcNow); } }
         internal string DisplayNameAt(DateTime now) {
-            if(!IsDeathMarker)return Localization.GetZoneName(Name);
+            if(!IsDeathMarker)return IsMapObject ? Localization.GetMapObjectName(Name) : Localization.GetZoneName(Name);
             DateTime? created=DeathTimeUtc;
             if(!created.HasValue)return Localization.Get("DeathName");
             TimeSpan age=now-created.Value;
@@ -60,6 +60,7 @@ namespace ScumMiniMap {
             return Localization.Get("DeathName")+" "+elapsed;
         }
         public string Name;
+        public bool IsMapObject;
         public string Subtitle;
         public int Argb;
         public PointF[] Points;
@@ -494,7 +495,8 @@ namespace ScumMiniMap {
     }
 
     public sealed class ZoneEditor:Form {
-        readonly MapCanvas source=new MapCanvas(),target=new MapCanvas();
+        sealed class EditorCanvas:Panel { internal EditorCanvas() { DoubleBuffered=true;ResizeRedraw=true;TabStop=true;SetStyle(ControlStyles.Selectable|ControlStyles.StandardClick|ControlStyles.StandardDoubleClick,true); } }
+        readonly EditorCanvas source=new EditorCanvas(),target=new EditorCanvas();
         readonly Image map;
         Image editorPreview;
         Image screenshot;
@@ -520,6 +522,46 @@ namespace ScumMiniMap {
         Timer busyTimer;
         float spinAngle=0f;
         List<MapZone> sourceZones=new List<MapZone>();
+        readonly Dictionary<MapZone,MapZone> importedSources=new Dictionary<MapZone,MapZone>();
+        readonly List<PointF> manualDraft=new List<PointF>();
+        readonly ComboBox drawingTool=new ComboBox { Name="ZoneDrawingTool",DropDownStyle=ComboBoxStyle.DropDownList,Width=220,DropDownWidth=320 };
+        sealed class EditorView { internal float Zoom=1;internal PointF Pan=new PointF(.5f,.5f); }
+        readonly EditorView sourceView=new EditorView(),targetView=new EditorView();
+        Control panningPanel;
+        Point panStart;
+        PointF viewPanStart;
+        bool suppressClick;
+        int draggedVertex=-1;
+        MapZone draggedZone;
+        PointF? rectangleStart;
+        PointF moveStart;
+        PointF[] moveOriginal;
+        void ChangeZoneShape(int shape) {
+            int selected=GetSelectedZoneIndex();if(busy || selected<0)return;var zone=zones[selected];RememberOutline(zone);
+            float left=zone.Points.Min(p=>p.X)*map.Width,right=zone.Points.Max(p=>p.X)*map.Width,top=zone.Points.Min(p=>p.Y)*map.Height,bottom=zone.Points.Max(p=>p.Y)*map.Height;
+            float cx=(left+right)/2,cy=(top+bottom)/2,w=right-left,h=bottom-top;
+            if(shape==1)w=h=Math.Min(w,h);
+            if(shape==2) { float radius=Math.Min(w,h)/2;zone.Points=Enumerable.Range(0,256).Select(i=>new PointF((cx+(float)Math.Cos(i*2*Math.PI/256)*radius)/map.Width,(cy+(float)Math.Sin(i*2*Math.PI/256)*radius)/map.Height)).ToArray(); }
+            else zone.Points=new[]{new PointF((cx-w/2)/map.Width,(cy-h/2)/map.Height),new PointF((cx+w/2)/map.Width,(cy-h/2)/map.Height),new PointF((cx+w/2)/map.Width,(cy+h/2)/map.Height),new PointF((cx-w/2)/map.Width,(cy+h/2)/map.Height)};
+            DetachEditedSource(zone);drawingTool.SelectedIndex=5;RefreshViews();SetSelectedZoneIndex(selected);
+        }
+        void DetachEditedSource(MapZone zone) { zone.boundsReady=false;var origin=SourceFor(zone);if(origin!=null) { sourceZones.Remove(origin);importedSources.Remove(zone); } }
+        void MoveZoneTo(PointF point) {
+            if(draggedZone==null || moveOriginal==null)return;
+            float dx=Math.Max(-moveOriginal.Min(p=>p.X),Math.Min(1-moveOriginal.Max(p=>p.X),point.X-moveStart.X));
+            float dy=Math.Max(-moveOriginal.Min(p=>p.Y),Math.Min(1-moveOriginal.Max(p=>p.Y),point.Y-moveStart.Y));
+            draggedZone.Points=moveOriginal.Select(p=>new PointF(p.X+dx,p.Y+dy)).ToArray();DetachEditedSource(draggedZone);
+        }
+        sealed class OutlineEdit { internal MapZone Zone,Source;internal PointF[] Points; }
+        readonly List<OutlineEdit> outlineHistory=new List<OutlineEdit>();
+        void RememberOutline(MapZone zone) { if(outlineHistory.Count==100)outlineHistory.RemoveAt(0);outlineHistory.Add(new OutlineEdit { Zone=zone,Source=SourceFor(zone),Points=(PointF[])zone.Points.Clone() }); }
+        void UndoEditorPoint() {
+            if(busy)return;
+            if((drawingTool.SelectedIndex==3 || drawingTool.SelectedIndex==5) && outlineHistory.Count>0) { var edit=outlineHistory.Last();outlineHistory.RemoveAt(outlineHistory.Count-1);if(zones.Contains(edit.Zone)) { edit.Zone.Points=edit.Points;edit.Zone.boundsReady=false;if(edit.Source!=null) { edit.Source.Name=edit.Zone.Name;edit.Source.Argb=edit.Zone.Argb;edit.Source.Layer=edit.Zone.Layer;edit.Source.Category=edit.Zone.Category;importedSources[edit.Zone]=edit.Source;if(!sourceZones.Contains(edit.Source))sourceZones.Add(edit.Source); }SetSelectedZoneIndex(zones.IndexOf(edit.Zone));UpdateDetails(); } }
+            else { var points=drawingTool.SelectedIndex>0?manualDraft:draft;if(points.Count>0)points.RemoveAt(points.Count-1); }
+            source.Invalidate();target.Invalidate();
+        }
+        MapZone SourceFor(MapZone zone) { MapZone result;return importedSources.TryGetValue(zone,out result)?result:null; }
 
         string GetSelectedLayer() {
             if(cboLayer.SelectedIndex<=0) return null;
@@ -590,6 +632,7 @@ namespace ScumMiniMap {
         }
 
         void RefreshViews() {
+            foreach(var zone in importedSources.Keys.Where(zone=>!zones.Contains(zone)).ToArray()) { sourceZones.Remove(importedSources[zone]);importedSources.Remove(zone); }
             int prevSelectedZone = GetSelectedZoneIndex();
             list.BeginUpdate();
             list.Items.Clear();
@@ -758,7 +801,7 @@ namespace ScumMiniMap {
             Text=Localization.Get("ZoneEditorTitle");ClientSize=new Size(1150,740);MinimumSize=new Size(920,620);StartPosition=FormStartPosition.CenterScreen;
             BackColor=OverlayTheme.Background;ForeColor=OverlayTheme.Ink;Font=new Font("Segoe UI",9);
 
-            FlowLayoutPanel bar=new FlowLayoutPanel { Dock=DockStyle.Top,Height=76,Padding=new Padding(8) };
+            FlowLayoutPanel bar=new FlowLayoutPanel { Dock=DockStyle.Top,AutoSize=true,AutoSizeMode=AutoSizeMode.GrowAndShrink,Padding=new Padding(8) };
             Button open=new Button { Text=Localization.Get("ZeOpenScreenshot"),Width=125 };
             open.Click+=(s,e)=>OpenScreenshot();
             Button importFile=new Button { Text=Localization.Get("ZeImportFile"),Width=90 };
@@ -789,15 +832,15 @@ namespace ScumMiniMap {
                 RefreshViews();
             };
             Button reset=new Button { Text=Localization.Get("ZeManualFallback"),Width=115 };
-            reset.Click+=(s,e)=> { if(busy)return;automatic=false;step=0;draft.Clear();foreach(Control control in bar.Controls)if((string)control.Tag=="manual")control.Visible=true;UpdateInstruction(); };
-            name.KeyDown+=(s,e)=> { if(e.KeyCode==Keys.Enter) { e.SuppressKeyPress=true;Rename(false); } };
+            reset.Click+=(s,e)=> { if(busy)return;automatic=false;step=0;draft.Clear();manualDraft.Clear();drawingTool.SelectedIndex=0;UpdateInstruction(); };
+            name.KeyDown+=(s,e)=> { if(e.KeyCode==Keys.Enter) { e.SuppressKeyPress=true;if(manualDraft.Count>=3)AddZone();else Rename(false); } };
             Button choose=new Button { Text=Localization.Get("ZeZoneColour"),Width=95 };
             choose.Click+=(s,e)=> { using(ColorDialog dialog=new ColorDialog { Color=color })if(dialog.ShowDialog(this)==DialogResult.OK)color=dialog.Color; };
-            Button undo=new Button { Text=Localization.Get("ZeUndoPoint"),Width=90,Tag="manual",Visible=false };
-            undo.Click+=(s,e)=> { if(draft.Count>0)draft.RemoveAt(draft.Count-1);RefreshViews(); };
-            Button clearDraft=new Button { Text=Localization.Get("ZeClearDraft"),Width=85,Tag="manual",Visible=false };
+            Button undo=new Button { Text=Localization.Get("ZeUndoPoint"),Width=90 };
+            undo.Click+=(s,e)=>UndoEditorPoint();
+            Button clearDraft=new Button { Text=Localization.Get("ZeClearDraft"),Width=85 };
             clearDraft.Click+=(s,e)=>ClearDraft();
-            Button add=new Button { Text=Localization.Get("ZeAddZone"),Width=85,Tag="manual",Visible=false };
+            Button add=new Button { Name="CommitManualZone",Text=Localization.Get("ZeAddZone"),Width=85 };
             add.Click+=(s,e)=>AddZone();
             chkFill.Text=Localization.Get("ZeFillZones");
             chkFill.Checked=true;chkFill.AutoSize=true;chkFill.ForeColor=Color.FromArgb(190,205,220);chkFill.Margin=new Padding(6,8,6,3);
@@ -805,7 +848,7 @@ namespace ScumMiniMap {
             Button save=new Button { Text=Localization.Get("ZeSaveZones"),Width=105,BackColor=Color.FromArgb(20,70,40),ForeColor=Color.White };
             save.Click+=(s,e)=> {
                 if(busy)return;
-                if(draft.Count>0) { MessageBox.Show(this,Localization.Get("ZeDraftWarning"));return; }
+                if(draft.Count>0 || manualDraft.Count>0) { MessageBox.Show(this,Localization.Get("ZeDraftWarning"));return; }
                 try {
                     string waypointPath=Path.Combine(Path.GetDirectoryName(path),"customwaypoints.tsv");
                     MapSidecarStore.SaveFiles(path,waypointPath,zones.Concat(preservedWaypoints).ToList());
@@ -823,6 +866,16 @@ namespace ScumMiniMap {
             bar.Controls.Add(btnNewLayer);
             bar.Controls.Add(btnDeleteLayer);
             bar.Controls.Add(reset);
+            drawingTool.Items.AddRange(new object[]{Localization.Get("ZeSelectZone"),Localization.Get("ZeDrawPolygon"),Localization.Get("ZeDrawRectangle"),Localization.Get("ZeEditOutline"),Localization.Get("ZeDrawCircle"),Localization.Get("ZeMoveZone")});drawingTool.SelectedIndex=0;
+            drawingTool.SelectedIndexChanged+=(s,e)=> { draggedVertex=-1;rectangleStart=null;if(drawingTool.SelectedIndex==1 || drawingTool.SelectedIndex==2 || drawingTool.SelectedIndex==4)DeselectSelection();UpdateInstruction(); };
+            bar.Controls.Add(drawingTool);
+            var shapeChoice=new ComboBox { Name="ZoneShape",DropDownStyle=ComboBoxStyle.DropDownList,Width=150 };
+            shapeChoice.Items.AddRange(new object[]{Localization.Get("ZeRectangle"),Localization.Get("ZeSquare"),Localization.Get("ZeCircle")});shapeChoice.SelectedIndex=0;
+            var applyShape=new Button { Name="ApplyZoneShape",Text=Localization.Get("ZeChangeShape"),AutoSize=true };
+            applyShape.Click+=(s,e)=>ChangeZoneShape(shapeChoice.SelectedIndex);bar.Controls.Add(shapeChoice);bar.Controls.Add(applyShape);
+            var fitView=new Button { Name="ResetImportZoom",Text=Localization.Get("ControlResetZoom"),AutoSize=true };
+            fitView.Click+=(s,e)=> { sourceView.Zoom=targetView.Zoom=1;sourceView.Pan=targetView.Pan=new PointF(.5f,.5f);source.Invalidate();target.Invalidate(); };
+            bar.Controls.Add(fitView);
             bar.Controls.Add(name);
             bar.Controls.Add(choose);
             bar.Controls.Add(add);
@@ -831,7 +884,9 @@ namespace ScumMiniMap {
             bar.Controls.Add(chkFill);
             bar.Controls.Add(save);
 
-            instruction.Dock=DockStyle.Top;instruction.Height=44;instruction.Padding=new Padding(8);
+            instruction.Dock=DockStyle.Top;instruction.Height=78;instruction.Padding=new Padding(8);
+            Action fitInstruction=()=>instruction.Height=Math.Max(78,TextRenderer.MeasureText(instruction.Text,instruction.Font,new Size(Math.Max(100,ClientSize.Width-16),int.MaxValue),TextFormatFlags.WordBreak).Height+16);
+            instruction.TextChanged+=(s,e)=>fitInstruction();ClientSizeChanged+=(s,e)=>fitInstruction();
             SplitContainer split=new SplitContainer { Dock=DockStyle.Fill,Size=new Size(1130,500),SplitterDistance=565 };
             source.Dock=DockStyle.Fill;target.Dock=DockStyle.Fill;source.BackColor=target.BackColor=Color.FromArgb(12,17,22);
             split.Panel1.Controls.Add(source);split.Panel2.Controls.Add(target);
@@ -873,7 +928,9 @@ namespace ScumMiniMap {
             Controls.Add(split);Controls.Add(instruction);Controls.Add(bar);Controls.Add(bottom);
 
             source.Paint+=(s,e)=>DrawSource(e.Graphics);target.Paint+=(s,e)=>DrawTarget(e.Graphics);
-            source.MouseClick+=(s,e)=>ClickImage(true,e.Location);target.MouseClick+=(s,e)=>ClickImage(false,e.Location);
+            WireEditorCanvas(source,true);WireEditorCanvas(target,false);
+            KeyPreview=true;
+            KeyDown+=(s,e)=> { if(e.KeyCode==Keys.Escape && (manualDraft.Count>0 || draft.Count>0)) { ClearDraft();e.Handled=true;e.SuppressKeyPress=true; } };
             list.SelectedIndexChanged+=(s,e)=> {
                 int selIdx=GetSelectedZoneIndex();
                 if(selIdx>=0 && selIdx<zones.Count) {
@@ -919,7 +976,93 @@ namespace ScumMiniMap {
         }
         RectangleF Fit(Control panel,Image image) {
             float scale=Math.Min((float)panel.Width/image.Width,(float)panel.Height/image.Height);
-            return new RectangleF((panel.Width-image.Width*scale)/2,(panel.Height-image.Height*scale)/2,image.Width*scale,image.Height*scale);
+            var view=panel==source?sourceView:targetView;float width=image.Width*scale*view.Zoom,height=image.Height*scale*view.Zoom;
+            return new RectangleF(panel.Width/2f-view.Pan.X*width,panel.Height/2f-view.Pan.Y*height,width,height);
+        }
+        bool ImagePoint(Control panel,bool isSource,Point point,out PointF normalized) {
+            normalized=PointF.Empty;var image=isSource?screenshot:map;if(image==null || !panel.ClientRectangle.Contains(point))return false;
+            var rect=Fit(panel,image);if(!rect.Contains(point) || rect.Width<=0 || rect.Height<=0)return false;
+            normalized=new PointF((point.X-rect.Left)/rect.Width,(point.Y-rect.Top)/rect.Height);return true;
+        }
+        void ZoomEditor(Control panel,bool isSource,int delta,Point point) {
+            if(busy || delta==0)return;var image=isSource?screenshot:map;if(image==null)return;
+            var view=isSource?sourceView:targetView;var before=Fit(panel,image);
+            float x=(point.X-before.Left)/before.Width,y=(point.Y-before.Top)/before.Height;
+            view.Zoom=Math.Max(1,Math.Min(16,view.Zoom*(delta>0?1.25f:.8f)));
+            if(view.Zoom==1)view.Pan=new PointF(.5f,.5f);
+            else { var after=Fit(panel,image);view.Pan=new PointF(Math.Max(0,Math.Min(1,x-(point.X-panel.Width/2f)/after.Width)),Math.Max(0,Math.Min(1,y-(point.Y-panel.Height/2f)/after.Height))); }
+            panel.Invalidate();
+        }
+        void WireEditorCanvas(Control panel,bool isSource) {
+            panel.MouseCaptureChanged+=(s,e)=> { if(!panel.Capture) { if(panningPanel==panel)panningPanel=null;if(!isSource) { draggedVertex=-1;draggedZone=null;rectangleStart=null; } } };
+            panel.MouseWheel+=(s,e)=>ZoomEditor(panel,isSource,e.Delta,e.Location);
+            panel.MouseEnter+=(s,e)=>panel.Focus();
+            panel.MouseDown+=(s,e)=> {
+                if(busy)return;
+                if(e.Button==MouseButtons.Middle) { panningPanel=panel;panStart=e.Location;viewPanStart=(isSource?sourceView:targetView).Pan;panel.Capture=true;return; }
+                if(isSource || e.Button!=MouseButtons.Left)return;
+                PointF point;if(!ImagePoint(panel,false,e.Location,out point))return;
+                if(drawingTool.SelectedIndex==2 || drawingTool.SelectedIndex==4) { rectangleStart=point;manualDraft.Clear();panel.Capture=true; }
+                if(drawingTool.SelectedIndex==5) {
+                    int selected=GetSelectedZoneIndex();if(selected>=0 && zones[selected].Contains(point)) { draggedZone=zones[selected];moveStart=point;moveOriginal=(PointF[])draggedZone.Points.Clone();RememberOutline(draggedZone);panel.Capture=true; }
+                }
+                if(drawingTool.SelectedIndex==3) {
+                    int selected=GetSelectedZoneIndex();if(selected<0)return;var zone=zones[selected];var rect=Fit(target,map);
+                    draggedVertex=(ModifierKeys&Keys.Shift)!=0?InsertOutlineVertex(zone,rect,e.Location):NearestVertex(zone,rect,e.Location);
+                    draggedZone=draggedVertex>=0?zone:null;
+                    if(draggedVertex>=0 && (ModifierKeys&Keys.Shift)==0)RememberOutline(zone);
+                    if(draggedVertex>=0)panel.Capture=true;
+                }
+            };
+            panel.MouseMove+=(s,e)=> {
+                if(busy)return;
+                if(panningPanel==panel) { var image=isSource?screenshot:map;if(image==null)return;var rect=Fit(panel,image);var view=isSource?sourceView:targetView;
+                    view.Pan=new PointF(Math.Max(0,Math.Min(1,viewPanStart.X-(e.X-panStart.X)/rect.Width)),Math.Max(0,Math.Min(1,viewPanStart.Y-(e.Y-panStart.Y)/rect.Height)));panel.Invalidate();return; }
+                if(isSource)return;PointF point;if(!ImagePoint(panel,false,e.Location,out point))return;
+                if(drawingTool.SelectedIndex==5 && draggedZone!=null)MoveZoneTo(point);
+                if(rectangleStart.HasValue)SetRectangleDraft(rectangleStart.Value,point);
+                if(draggedVertex>=0 && draggedZone!=null && zones.Contains(draggedZone) && draggedVertex<draggedZone.Points.Length) { draggedZone.Points[draggedVertex]=point;draggedZone.boundsReady=false;var origin=SourceFor(draggedZone);if(origin!=null) { sourceZones.Remove(origin);importedSources.Remove(draggedZone); } }
+                target.Invalidate();
+            };
+            panel.MouseUp+=(s,e)=> {
+                if(e.Button==MouseButtons.Middle) { panningPanel=null;panel.Capture=false;return; }
+                if(isSource || e.Button!=MouseButtons.Left)return;
+                if(rectangleStart.HasValue) { PointF point;if(ImagePoint(panel,false,e.Location,out point))SetRectangleDraft(rectangleStart.Value,point);rectangleStart=null;suppressClick=panel.ClientRectangle.Contains(e.Location); }
+                if(draggedVertex>=0 || (drawingTool.SelectedIndex==5 && draggedZone!=null)) { draggedVertex=-1;draggedZone=null;suppressClick=panel.ClientRectangle.Contains(e.Location);UpdateDetails();source.Invalidate(); }
+                panel.Capture=false;
+            };
+            panel.MouseClick+=(s,e)=> {
+                if(suppressClick) { suppressClick=false;return; }
+                if(e.Button==MouseButtons.Right && !isSource && drawingTool.SelectedIndex==3) { int selected=GetSelectedZoneIndex();if(selected>=0 && zones[selected].Points.Length>3) { int vertex=NearestVertex(zones[selected],Fit(target,map),e.Location);if(vertex>=0) { RememberOutline(zones[selected]);zones[selected].Points=zones[selected].Points.Where((p,i)=>i!=vertex).ToArray();zones[selected].boundsReady=false;var origin=SourceFor(zones[selected]);if(origin!=null) { sourceZones.Remove(origin);importedSources.Remove(zones[selected]); }RefreshViews(); } }return; }
+                if(e.Button==MouseButtons.Right && !isSource && manualDraft.Count>0) { manualDraft.RemoveAt(manualDraft.Count-1);target.Invalidate();return; }
+                if(e.Button==MouseButtons.Left)ClickImage(isSource,e.Location);
+            };
+            panel.MouseDoubleClick+=(s,e)=> { if(!isSource && e.Button==MouseButtons.Left && drawingTool.SelectedIndex==1 && manualDraft.Count>=3)AddZone(); };
+        }
+        static int NearestVertex(MapZone zone,RectangleF rect,Point point) {
+            int best=-1;double distance=100;for(int i=0;i<zone.Points.Length;i++) { double x=rect.Left+zone.Points[i].X*rect.Width-point.X,y=rect.Top+zone.Points[i].Y*rect.Height-point.Y,d=x*x+y*y;if(d<distance) { best=i;distance=d; } }return best;
+        }
+        int InsertOutlineVertex(MapZone zone,RectangleF rect,Point point) {
+            int edge=-1;double best=100;PointF inserted=PointF.Empty;
+            for(int i=0;i<zone.Points.Length;i++) { var a=zone.Points[i];var b=zone.Points[(i+1)%zone.Points.Length];double x=rect.Left+a.X*rect.Width,y=rect.Top+a.Y*rect.Height,dx=(b.X-a.X)*rect.Width,dy=(b.Y-a.Y)*rect.Height,length=dx*dx+dy*dy;if(length==0)continue;
+                double t=Math.Max(0,Math.Min(1,((point.X-x)*dx+(point.Y-y)*dy)/length)),px=x+t*dx-point.X,py=y+t*dy-point.Y,d=px*px+py*py;
+                if(d<best) { best=d;edge=i;inserted=new PointF(a.X+(b.X-a.X)*(float)t,a.Y+(b.Y-a.Y)*(float)t); }
+            }
+            if(edge<0 || zone.Points.Length>=512)return -1;RememberOutline(zone);var points=zone.Points.ToList();points.Insert(edge+1,inserted);zone.Points=points.ToArray();zone.boundsReady=false;
+            var origin=SourceFor(zone);if(origin!=null) { sourceZones.Remove(origin);importedSources.Remove(zone); }target.Invalidate();return edge+1;
+        }
+        void SetRectangleDraft(PointF a,PointF b) {
+            if(drawingTool.SelectedIndex==4) {
+                manualDraft.Clear();
+                double dx=(b.X-a.X)*map.Width,dy=(b.Y-a.Y)*map.Height;
+                double radius=Math.Sqrt(dx*dx+dy*dy);
+                radius=Math.Min(radius,Math.Min(Math.Min(a.X,1-a.X)*map.Width,Math.Min(a.Y,1-a.Y)*map.Height));
+                if(radius<.01)return;
+                for(int i=0;i<256;i++) { double angle=2*Math.PI*i/256;manualDraft.Add(new PointF(a.X+(float)(Math.Cos(angle)*radius/map.Width),a.Y+(float)(Math.Sin(angle)*radius/map.Height))); }
+                target.Invalidate();return;
+            }
+            manualDraft.Clear();if(Math.Abs(a.X-b.X)<.0001 || Math.Abs(a.Y-b.Y)<.0001)return;
+            manualDraft.AddRange(new[]{new PointF(Math.Min(a.X,b.X),Math.Min(a.Y,b.Y)),new PointF(Math.Max(a.X,b.X),Math.Min(a.Y,b.Y)),new PointF(Math.Max(a.X,b.X),Math.Max(a.Y,b.Y)),new PointF(Math.Min(a.X,b.X),Math.Max(a.Y,b.Y))});target.Invalidate();
         }
         async void OpenScreenshot() {
             if(busy)return;
@@ -1100,7 +1243,12 @@ namespace ScumMiniMap {
                 }
 
                 int insertIdx = zones.Count;
-                zones.AddRange(imported);sourceZones.AddRange(sourceImported);draft.Clear();automatic=true;step=4;
+                sourceZones.Clear();importedSources.Clear();
+                outlineHistory.Clear();
+                zones.AddRange(imported);sourceZones.AddRange(sourceImported);
+                for(int i=0;i<imported.Count;i++)importedSources[imported[i]]=sourceImported[i];
+                draft.Clear();manualDraft.Clear();automatic=true;step=4;
+                sourceView.Zoom=targetView.Zoom=1;sourceView.Pan=targetView.Pan=new PointF(.5f,.5f);
                 PopulateLayerCombo(targetLayerName);
                 RefreshViews();if(zones.Count>0)SetSelectedZoneIndex(insertIdx);UpdateInstruction();
                 try { File.WriteAllText(Path.Combine(folder,"last-detection.json"),report); }catch(IOException) {}catch(UnauthorizedAccessException) {}
@@ -1129,7 +1277,7 @@ namespace ScumMiniMap {
         public void PreviewAutomatic(string output) {
             if(!automatic || zones.Count==0)throw new Exception("Automatic screenshot import returned no zones.");
             list.SelectedIndex=0;name.Text="Naming check";Rename(false);
-            if(zones[0].Name!="Naming check" || sourceZones[0].Name!="Naming check")throw new Exception("Automatic zone rename failed.");
+            if(zones[0].Name!="Naming check" || SourceFor(zones[0])==null || SourceFor(zones[0]).Name!="Naming check")throw new Exception("Automatic zone rename failed.");
             Application.DoEvents();
             using(Bitmap bitmap=new Bitmap(Width,Height)) { DrawToBitmap(bitmap,new Rectangle(0,0,Width,Height));bitmap.Save(output); }
         }
@@ -1141,7 +1289,7 @@ namespace ScumMiniMap {
             int original=zones[index].Argb;
             for(int i=0;i<zones.Count;i++)if(i==index || (sameColour && zones[i].Argb==original)) {
                 zones[i].Name=name.Text.Trim();zones[i].Argb=color.ToArgb();
-                if(automatic && i<sourceZones.Count) { sourceZones[i].Name=zones[i].Name;sourceZones[i].Argb=zones[i].Argb; }
+                var origin=SourceFor(zones[i]);if(origin!=null) { origin.Name=zones[i].Name;origin.Argb=zones[i].Argb; }
             }
             RefreshViews();SetSelectedZoneIndex(index);
         }
@@ -1153,7 +1301,7 @@ namespace ScumMiniMap {
             int newArgb=color.ToArgb();
             for(int i=0;i<zones.Count;i++)if(zones[i].Argb==originalArgb) {
                 zones[i].Argb=newArgb;
-                if(automatic && i<sourceZones.Count)sourceZones[i].Argb=newArgb;
+                var origin=SourceFor(zones[i]);if(origin!=null)origin.Argb=newArgb;
             }
             RefreshViews();SetSelectedZoneIndex(index);
         }
@@ -1163,9 +1311,6 @@ namespace ScumMiniMap {
             int targetIdx=idx+direction;
             if(idx<0 || targetIdx<0 || targetIdx>=zones.Count)return;
             MapZone temp=zones[idx];zones[idx]=zones[targetIdx];zones[targetIdx]=temp;
-            if(automatic && idx<sourceZones.Count && targetIdx<sourceZones.Count) {
-                MapZone stemp=sourceZones[idx];sourceZones[idx]=sourceZones[targetIdx];sourceZones[targetIdx]=stemp;
-            }
             RefreshViews();SetSelectedZoneIndex(targetIdx);
         }
         void DuplicateSelected() {
@@ -1175,9 +1320,7 @@ namespace ScumMiniMap {
             MapZone copy=zones[idx].Clone();
             copy.Name=zones[idx].Name+" (Copy)";
             zones.Insert(idx+1,copy);
-            if(automatic && idx<sourceZones.Count) {
-                sourceZones.Insert(idx+1,sourceZones[idx].Clone());
-            }
+            var origin=SourceFor(zones[idx]);if(origin!=null) { var clone=origin.Clone();sourceZones.Add(clone);importedSources[copy]=clone; }
             RefreshViews();SetSelectedZoneIndex(idx+1);
         }
         void DeselectSelection() {
@@ -1185,14 +1328,13 @@ namespace ScumMiniMap {
             UpdateDetails();source.Invalidate();target.Invalidate();
         }
         void ClearDraft() {
-            draft.Clear();RefreshViews();UpdateInstruction();
+            draft.Clear();manualDraft.Clear();rectangleStart=null;RefreshViews();UpdateInstruction();
         }
         void DeleteSelected() {
             if(busy)return;
             int index=GetSelectedZoneIndex();
             if(index>=0 && index<zones.Count) {
-                zones.RemoveAt(index);
-                if(automatic && index<sourceZones.Count)sourceZones.RemoveAt(index);
+                var origin=SourceFor(zones[index]);if(origin!=null)sourceZones.Remove(origin);importedSources.Remove(zones[index]);zones.RemoveAt(index);
                 RefreshViews();
                 if(zones.Count>0) {
                     int nextIdx=Math.Min(index,zones.Count-1);
@@ -1206,7 +1348,7 @@ namespace ScumMiniMap {
         void DeleteAll() {
             if(busy || zones.Count==0)return;
             if(MessageBox.Show(this,Localization.Get("ZeDeleteAllConfirm"),Localization.Get("ZeDeleteAllTitle"),MessageBoxButtons.YesNo,MessageBoxIcon.Warning)==DialogResult.Yes) {
-                zones.Clear();sourceZones.Clear();draft.Clear();
+                zones.Clear();sourceZones.Clear();importedSources.Clear();draft.Clear();manualDraft.Clear();
                 PopulateLayerCombo();
                 RefreshViews();name.Text=Localization.Get("ZeNewZone");
                 UpdateInstruction();
@@ -1291,6 +1433,8 @@ namespace ScumMiniMap {
             if(isSource && screenshot==null)return;
             RectangleF rect=Fit(isSource?source:target,isSource?screenshot:map);if(!rect.Contains(point))return;
             PointF p=new PointF((point.X-rect.X)/rect.Width,(point.Y-rect.Y)/rect.Height);
+            if(!isSource && drawingTool.SelectedIndex==1) { if(manualDraft.Count<512 && (manualDraft.Count==0 || Math.Abs(manualDraft.Last().X-p.X)+Math.Abs(manualDraft.Last().Y-p.Y)>.0001f))manualDraft.Add(p);target.Invalidate();return; }
+            if(!isSource && (drawingTool.SelectedIndex==2 || drawingTool.SelectedIndex==4))return;
             if(automatic || zones.Count>0) {
                 string selectedLayer = GetSelectedLayer();
                 List<MapZone> items=(automatic && isSource)?sourceZones:zones;
@@ -1300,9 +1444,9 @@ namespace ScumMiniMap {
                         if(!string.Equals(lay, selectedLayer, StringComparison.OrdinalIgnoreCase)) continue;
                     }
                     if(items[i].Contains(p)) {
-                        SetSelectedZoneIndex(i);
-                        name.Focus();
-                        name.SelectAll();
+                        int zoneIndex=(automatic && isSource)?zones.FindIndex(zone=>Object.ReferenceEquals(SourceFor(zone),items[i])):i;
+                        SetSelectedZoneIndex(zoneIndex);
+                        if(drawingTool.SelectedIndex!=3) { name.Focus();name.SelectAll(); }
                         return;
                     }
                 }
@@ -1322,8 +1466,9 @@ namespace ScumMiniMap {
             UpdateInstruction();
         }
         void UpdateInstruction() {
+            if(drawingTool.SelectedIndex>0) { instruction.Text=drawingTool.SelectedIndex==5?Localization.Get("ZeMoveHelp"):drawingTool.SelectedIndex==4?Localization.Get("ZeCircleHelp"):Localization.Get("ZeDrawingHelp");source.Invalidate();target.Invalidate();return; }
             if(automatic) {
-                instruction.Text=Localization.T("ZeDetectedOutlinesPrompt",zones.Count);
+                instruction.Text=Localization.T("ZeDetectedOutlinesPrompt",zones.Count)+"\n"+Localization.Get("ZeDrawingHelp");
                 source.Invalidate();target.Invalidate();return;
             }
             string[] steps={
@@ -1333,10 +1478,18 @@ namespace ScumMiniMap {
                 Localization.Get("ZeManualStep3"),
                 Localization.Get("ZeManualStep4")
             };
-            instruction.Text=screenshot==null?Localization.Get("ZeInitialPrompt"):steps[step];
+            instruction.Text=(screenshot==null?Localization.Get("ZeInitialPrompt"):steps[step])+"\n"+Localization.Get("ZeDrawingHelp");
             source.Invalidate();target.Invalidate();
         }
         void AddZone() {
+            if(busy)return;
+            if(drawingTool.SelectedIndex==1 || drawingTool.SelectedIndex==2 || drawingTool.SelectedIndex==4) {
+                if(manualDraft.Count<3) { MessageBox.Show(this,Localization.Get("ZePointsRequirementWarning"));return; }
+                if(string.IsNullOrWhiteSpace(name.Text) || name.Text.Length>80 || zones.Count>=500) { MessageBox.Show(this,Localization.Get("ZeZonesMaxWarning"));return; }
+                string layer=GetSelectedLayer()??"Default";
+                var zone=new MapZone { Name=name.Text.Trim(),Argb=color.ToArgb(),Points=manualDraft.ToArray(),Category=ZoneCategory.Custom,Layer=layer };
+                zones.Add(zone);manualDraft.Clear();PopulateLayerCombo(layer);RefreshViews();SetSelectedZoneIndex(zones.Count-1);UpdateInstruction();return;
+            }
             if(automatic || busy)return;
             if(step!=4 || draft.Count<3) { MessageBox.Show(this,Localization.Get("ZePointsRequirementWarning"));return; }
             if(string.IsNullOrWhiteSpace(name.Text) || name.Text.Length>80 || zones.Count>=500) { MessageBox.Show(this,Localization.Get("ZeZonesMaxWarning"));return; }
@@ -1424,7 +1577,7 @@ namespace ScumMiniMap {
                 RectangleF rect=Fit(source,screenshot);g.DrawImage(screenshot,rect);
                 string selectedLayer = GetSelectedLayer();
                 List<MapZone> activeSource = (selectedLayer == null) ? sourceZones : sourceZones.Where(z => string.Equals(string.IsNullOrWhiteSpace(z.Layer) ? "Default" : z.Layer, selectedLayer, StringComparison.OrdinalIgnoreCase)).ToList();
-                if(automatic) { DrawDetected(g,activeSource,rect); }
+                if(automatic) { DrawDetected(g,activeSource,rect,true); }
                 else {
                     if(step>=1)Cross(g,rect,s1,"1");if(step>=3)Cross(g,rect,s2,"2");
                     PointF[] points=draft.Select(p=>new PointF(rect.X+p.X*rect.Width,rect.Y+p.Y*rect.Height)).ToArray();
@@ -1467,10 +1620,16 @@ namespace ScumMiniMap {
                     if(step>=2)Cross(g,rect,m1,"1");if(step>=4)Cross(g,rect,m2,"2");
                     if(step==4 && draft.Count>=3)ZoneStore.Draw(g,new[]{new MapZone { Name=name.Text,Argb=color.ToArgb(),Points=draft.Select(p=>ZoneStore.Align(p,s1,s2,m1,m2)).ToArray(),Layer=selectedLayer??"Default" }},rect,true);
                 }
+                if(manualDraft.Count>0) {
+                    var points=manualDraft.Select(p=>new PointF(rect.Left+p.X*rect.Width,rect.Top+p.Y*rect.Height)).ToArray();
+                    if(points.Length>1)using(var pen=new Pen(color,2)) { if(points.Length>2)g.DrawPolygon(pen,points);else g.DrawLines(pen,points); }
+                    foreach(var point in points)g.FillEllipse(Brushes.White,point.X-4,point.Y-4,8,8);
+                }
+                if(drawingTool.SelectedIndex==3) { int selected=GetSelectedZoneIndex();if(selected>=0)foreach(var vertex in zones[selected].Points)g.FillRectangle(Brushes.White,rect.Left+vertex.X*rect.Width-4,rect.Top+vertex.Y*rect.Height-4,8,8); }
             }
             if(busy)DrawSpinner(g,target.ClientRectangle,Localization.Get("ZeAligningLocally"));
         }
-        void DrawDetected(Graphics g,List<MapZone> items,RectangleF rect) {
+        void DrawDetected(Graphics g,List<MapZone> items,RectangleF rect,bool isSource=false) {
             if(fillZones) ZoneStore.Draw(g,items,rect,true,9f,false,null,false);
             else {
                 foreach(MapZone item in items) {
@@ -1484,9 +1643,10 @@ namespace ScumMiniMap {
             }
             int selIdx=GetSelectedZoneIndex();
             MapZone selectedZone = (selIdx >= 0 && selIdx < zones.Count) ? zones[selIdx] : null;
+            if(isSource && selectedZone!=null)selectedZone=SourceFor(selectedZone);
             for(int i=0;i<items.Count;i++) {
                 PointF[] points=items[i].Points.Select(p=>new PointF(rect.X+p.X*rect.Width,rect.Y+p.Y*rect.Height)).ToArray();
-                if(items[i] == selectedZone || (selIdx == i && items.Count == zones.Count)) {
+                if(items[i] == selectedZone) {
                     if(points.Length>=3) {
                         using(Pen bgPen=new Pen(Color.FromArgb(200,0,0,0),4.5f))g.DrawPolygon(bgPen,points);
                         using(Pen pen=new Pen(OverlayTheme.Accent,2.5f))g.DrawPolygon(pen,points);
@@ -1496,7 +1656,7 @@ namespace ScumMiniMap {
                     }
                 }
                 float x=points.Average(p=>p.X),y=points.Average(p=>p.Y);
-                int num = zones.IndexOf(items[i]) + 1;
+                int num = (isSource?zones.FindIndex(zone=>Object.ReferenceEquals(SourceFor(zone),items[i])):zones.IndexOf(items[i])) + 1;
                 if(num <= 0) num = i + 1;
                 g.DrawString(num.ToString(),Font,Brushes.Black,x+1,y+1);
                 g.DrawString(num.ToString(),Font,Brushes.White,x,y);

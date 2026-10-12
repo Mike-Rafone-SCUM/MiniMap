@@ -8,6 +8,55 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.22] - 2026-10-12
+
+### Fixed
+
+- Recheck queued coordinate-copy key-downs at Windows input delivery. Opening chat, cancelling tracking, losing focus or ending the copy request invalidates pending Num / input before it can reach the game.
+- Give every coordinate-copy request its own input identity so a delayed packet cannot reuse a newer copy's permission. Preserve cleanup key-ups and keep admin-command input independent.
+- Add a regression that reproduces the old hook accepting a queued copy key after chat opens, plus checks for configured chat keys, stale requests, focus loss, safe key release and unaffected physical/admin input.
+
+## [1.7.21] - 2026-10-12
+
+### Added
+
+- Add Thai, Traditional Chinese, Japanese, Czech, Italian and Ukrainian to Setup and Settings, bringing application text coverage to 19 languages. Include the interface, admin/player/spawn tools, map sections, categories, built-in marker names, all 2,328 item names and spawn-category/modifier labels.
+- Recognize the new system cultures and preserve their saved language choices. Traditional Chinese cultures select their own catalogue; existing Simplified Chinese preferences retain their language.
+
+### Improved
+
+- Use one native-language list in both language selectors and validate all 19 UI catalogues, formatting placeholders, map names and bundled item tables. Keep English names and technical item identifiers searchable and preserve custom waypoint names.
+- Ship translations locally without runtime translation requests. Catalogue coverage is complete; native-speaker terminology review remains pending.
+
+## [1.7.20] - 2026-10-12
+
+- Defer opening the player directory from the admin palette until the Players button click has finished. Avoid hiding the active palette during its input event, suppress duplicate pending opens and log opening failures.
+
+## [1.7.19] - 2026-10-12
+
+- Keep the live map overlay visible when OBS Studio has focus, so it can be selected in Window Capture after switching away from SCUM. Continue pausing coordinate capture and game input outside SCUM, and restore ordinary overlay hiding when leaving OBS for another application.
+
+## [1.7.18] - 2026-10-12
+
+- Make the live map overlay discoverable by OBS Window Capture by clearing the tool-window flag. Retain layered rendering, click-through gameplay, non-activating behaviour and no separate overlay taskbar button.
+
+## [1.7.17] - 2026-10-11
+
+- Combine rapid mouse-wheel input into one pending batch for map zoom, map sidebar scrolling and player-card paging. Preserve high-resolution wheel movement, suppress handled wheel propagation and dispose pending work with its window.
+
+## [1.7.16] - 2026-10-11
+
+- Bound actual decompressed package-manifest and Steam-profile response sizes. Validate every network redirect before connecting, limiting downloads to HTTPS GitHub release hosts or Steam Community as appropriate.
+- Create updater-helper directories with explicit inherited file permissions; elevated helpers are owned by Administrators and accessible only to Administrators and SYSTEM.
+- Recheck the official version-specific manifest before downloading; a modified local notification cache cannot authorize replacement executable checksums.
+
+## [1.7.15] - 2026-10-11
+
+- Move the large map tile and road network binaries out of the executable into the packaged assets folder. Validate asset SHA-256 checksums before use; keep the application launched through SkynettMiniMap.exe without separate startup asset downloads.
+- Download and verify complete ZIP packages for automatic updates, with bounded extraction, an explicit file allowlist and rollback of both executable and assets on installation/restart failure.
+- Require a complete ZIP installation for the first upgrade from EXE-only releases. Older updaters reject the new package manifest safely; use Update-MiniMap.cmd from the extracted ZIP to upgrade while retaining AppData settings, zones and kits.
+- These packaging changes address the large embedded resources identified by the antivirus review. They do not establish that antivirus vendors have cleared their detections.
+
 ## [1.7.14] - 2026-10-10
 
 - Simplify custom commands with a command-type selector: run once with free-text arguments, a true/false pill toggle, a 1/0 pill toggle, or a numeric value. Show both toggle commands in the preview and retain compatibility with existing saved commands.

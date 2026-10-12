@@ -1,0 +1,137 @@
+# Offline translation draft; native terminology review pending. Canonical identities retained.
+weapons	Armes
+clothing	Vêtements et armures
+survival	Alimentation, santé et survie
+crafting	Équipement et fabrication
+vehicles	Pièces de véhicules
+other	Autres articles
+weapon_ranged	Armes à distance
+weapon_melee	Armes de mêlée
+melee_weapon	Armes de mêlée
+ammunition	Munitions
+armor	Armure
+attachment	Accessoires d'armes
+book	Livres
+buildable	Éléments d'extension de base
+consumable	Nourriture, boissons et médicaments
+equipment	Équipement
+farming	Agriculture
+fishing	Pêche
+fishing_attachment	Accessoires de pêche
+fortification	Objets de fortification
+hunting	Chasse
+magazine	Chargeurs
+material	Matériaux
+player_modification	Modifications du joueur
+seasonal_event	Articles saisonniers
+throwable	Armes de jet et pièges
+vehicle_part	Pièces de véhicules
+weapon_part	Pièces d'armes
+general	Général
+Arrow	Flèche
+Crossbow Bolt	Carreaux d’arbalète
+Flare	Flamme
+12 Gauge	Calibre 12
+accessories	Accessoires
+adhesive	Adhésif
+alcoholic	Boissons alcoolisées
+animal_part	Parties d'animaux
+assault_rifle	Fusils d'assaut
+axe	Haches
+backpack	Sacs à dos
+base_upgrades	Mises à niveau de base
+bayonet	Baïonnettes
+beverage	Boissons
+blunt	Armes contondantes
+body	Carrosseries
+body_armor	Armure
+bow	Arcs
+bumper	Pare-chocs
+clip	Lames-chargeurs
+cookbook	Livre de recettes
+cosmetic	Cosmétique
+craft_station	Postes de fabrication
+crafting_material	Matériel de fabrication
+door	Porte
+earmuffs	Cache-oreilles
+engine	Moteur
+enhancement	Amélioration
+event	Événement
+eyewear	Lunettes
+fender	Aile
+fire_starter	Allume-feu
+fishing_catch	Poissons pêchés
+flash_hider	Cache-flash
+flashlight	Lampes de poche
+food	Nourriture
+footwear	Chaussures
+fuel	Carburant
+ghillie	Ghillie enveloppe
+ghillie_jacket	Veste Ghillie
+gloves	Gants
+hazmat_suit	Combinaison de protection contre les matières dangereuses
+headwear	Chapeaux
+heavy	Armes lourdes
+holster	Étui
+jacket	Veste
+knife	Couteaux
+leggings	Jambières
+light	Légers
+lmg	Mitrailleuses légères
+lockpick	Crochetage
+mask	Masque
+medical	Médecine
+miscellaneous	Divers
+organic	Biologique
+paint	Peinture
+pants	Pantalon
+pistol	Pistolets
+pistol_parts	Pièces de pistolet
+quiver	Carquois
+rail	Rails de montage
+raincoat	Imperméable
+ranged_parts	Pièces à distance
+repair_kit	Kits de réparation
+repair_material	Matériel de réparation
+results	Résultats
+revolver	Revolvers
+rifle_parts	Pièces de fusil
+scarf	Écharpe
+scope	Lunettes de visée
+seasonal_craft	Artisanat saisonnier
+seat	Siège
+security	Sécurité
+seed	Graines
+shirt	Chemise
+shotgun	Fusils de chasse
+shotgun_parts	Pièces de fusil de chasse
+sight	Organes de visée
+single_shot	Carabines à un coup
+skirt	Jupe
+smg	Mitraillettes
+smg_parts	Pièces détachées SMG
+sniper	Fusils de précision
+socks	Chaussettes
+soft_drink	Boissons gazeuses
+spear	Lances
+stabilizer	Stabilisateurs
+storage	Stockage
+suppressor	Silencieux
+sweater	Pull
+sword	Épées
+tool	Outils
+undershirt	Maillot de corps
+underwear	Sous-vêtements
+unknown_parts	Pièces inconnues
+utility	Utilitaire
+vehicle_attachment	Fixation du véhicule
+water	Eau
+wheel	Roue
+Health	État
+Uses	Utilisations restantes
+Dirtiness	Saleté
+Location	Poste
+KeyCardSector	Secteur des cartes-clés
+StackCount	Nombre de piles
+Radiation	Rayonnement
+Weight	Poids (kg)

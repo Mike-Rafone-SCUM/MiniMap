@@ -1,0 +1,16 @@
+ 1. Driver 0
+Platform Name: Account 0
+Platform ID: 76561198010000002
+Fame: 50
+Account balance: 100
+Gold balance: 2
+Location: X=0 Y=200 Z=300
+
+ 2. Driver 1
+Platform Name: Account 1
+Platform ID: 76561198010000001
+Fame: 50
+Account balance: 100
+Gold balance: 2
+Location: X=100 Y=200 Z=300
+

@@ -1,14 +1,95 @@
 using System;
 using System.Drawing;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using ScumMiniMap;
 
 static class ChatCopyRegressionTests {
+    [StructLayout(LayoutKind.Sequential)]
+    struct QueuedKeyboardEvent { public uint key,scan,flags,time; public UIntPtr extra; }
+    static void QueuedSlashMustNotEnterChat() {
+        var chat=new ChatState();chat.Key(0x54);
+        using(var hooks=new GameKeys((key,scan)=>{},(key,scan)=>false,chat)) {
+            var expiredCopy=new CopyInputDeliveryGate(()=>!chat.Paused);
+            var packet=new QueuedKeyboardEvent {key=0x6F,scan=0x35,flags=0x11,extra=expiredCopy.Tag};
+            IntPtr data=Marshal.AllocHGlobal(Marshal.SizeOf(typeof(QueuedKeyboardEvent)));
+            try {
+                Marshal.StructureToPtr(packet,data,false);
+                var method=typeof(GameKeys).GetMethod("OnKey",BindingFlags.Instance|BindingFlags.NonPublic);
+                IntPtr result=(IntPtr)method.Invoke(hooks,new object[]{0,new IntPtr(0x100),data});
+                Check(result==new IntPtr(1),"A queued coordinate-copy Num / key-down is blocked after chat opens and its copy lease ends");
+            }finally{Marshal.FreeHGlobal(data);}
+        }
+    }
+    static void VerifyDeliveryOwnership() {
+        var fields=typeof(Native);
+        const BindingFlags flags=BindingFlags.Static|BindingFlags.NonPublic;
+        var deliveryField=fields.GetField("activeCopyDelivery",flags);
+        var leaseField=fields.GetField("activeCopy",flags);
+        object previousDelivery=deliveryField.GetValue(null),previousLease=leaseField.GetValue(null);
+        bool previousProgress=Native.CopyInProgress;
+        try {
+            foreach(int chatKey in new[]{0x54,0x59}) {
+                var chat=new ChatState();bool focused=true;
+                var delivery=new CopyInputDeliveryGate(()=>!chat.Paused&&focused);
+                var lease=new CopyInputLease((key,up)=>true);
+                deliveryField.SetValue(null,delivery);leaseField.SetValue(null,lease);Native.CopyInProgress=true;
+                Check(!Native.ShouldSuppressCoordinateInput(true,true,delivery.Tag),"Current coordinate copy is allowed in gameplay");
+                // The request has already passed the sender's check. Opening chat
+                // before Windows delivers that packet must still stop the key-down.
+                chat.Key(chatKey,chatKey);
+                Check(Native.ShouldSuppressCoordinateInput(true,true,delivery.Tag)&&lease.Cancelled,"Chat opening after enqueue blocks Num / and cancels its owned input lease");
+                chat.Key(0x1B);
+                Check(Native.ShouldSuppressCoordinateInput(true,true,delivery.Tag),"Closing chat cannot revive the cancelled copy's pending key-down");
+                Check(!Native.ShouldSuppressCoordinateInput(true,false,delivery.Tag),"Cancelled copy key-ups remain available for modifier/key cleanup");
+                var newer=new CopyInputDeliveryGate(()=>true);
+                deliveryField.SetValue(null,newer);leaseField.SetValue(null,new CopyInputLease((key,up)=>true));
+                Check(newer.Tag!=delivery.Tag && Native.ShouldSuppressCoordinateInput(true,true,delivery.Tag)
+                    && !Native.ShouldSuppressCoordinateInput(true,true,newer.Tag),"An old copy packet cannot borrow a newer request's permission or cancel it");
+                focused=false;
+                var focusDelivery=new CopyInputDeliveryGate(()=>focused);
+                deliveryField.SetValue(null,focusDelivery);
+                Check(Native.ShouldSuppressCoordinateInput(true,true,focusDelivery.Tag),"Focus loss after enqueue blocks copy delivery");
+            }
+            Check(!Native.ShouldSuppressCoordinateInput(true,true,Native.AdminInputTag),"Admin chat sequences retain their independent input ownership");
+            Check(!Native.ShouldSuppressCoordinateInput(true,true,new UIntPtr(123)),"Other applications' injected input is not swallowed");
+            Check(!Native.ShouldSuppressCoordinateInput(false,true,Native.CopyInputTag),"Physical keyboard input is not swallowed by coordinate-copy ownership");
+            var invalidContext=new CopyInputDeliveryGate(()=>{throw new InvalidOperationException("Disposed context");});
+            Check(!invalidContext.AllowsDown(invalidContext.Tag),"An unavailable copy context fails closed at delivery");
+            deliveryField.SetValue(null,null);Native.CopyInProgress=false;
+            Check(Native.ShouldSuppressCoordinateInput(true,true,Native.CopyInputTag)
+                && !Native.ShouldSuppressCoordinateInput(true,false,Native.CopyInputTag),"Ended requests reject late key-downs while permitting late cleanup releases");
+        } finally {deliveryField.SetValue(null,previousDelivery);leaseField.SetValue(null,previousLease);Native.CopyInProgress=previousProgress;}
+    }
     static void Check(bool condition,string message) {
         if(!condition) throw new Exception(message);
         Console.WriteLine("PASS: "+message);
     }
     static void Main() {
+        QueuedSlashMustNotEnterChat();
+        VerifyDeliveryOwnership();
+        foreach(int openVirtualKey in new[]{0x54,0x45}) {
+            var typingChat=new ChatState();var typingMonitor=new ChatKeyMonitor();
+            typingMonitor.Observe(openVirtualKey,true,true,typingChat,0x54,0x6F,0x14,0x14);
+            typingMonitor.Observe(openVirtualKey,false,true,typingChat,0x54,0x6F,0x14,0x14);
+            Check(typingChat.Paused,"Physical chat-opening key is recognized across virtual-key layout mappings");
+            long beforeTyping=typingChat.Revision;int copies=0;
+            for(int repeat=0;repeat<100;repeat++) {
+                foreach(int mapVirtualKey in new[]{0x4D,0x42}) {
+                    bool before=typingChat.Paused;
+                    typingMonitor.Observe(mapVirtualKey,true,true,typingChat,0x54,0x6F,0x32,0x14);
+                    if(!GameKeys.ChatOwnsShortcut(before,typingChat.Paused))
+                        throw new Exception("Physical M/ь escaped chat ownership during rapid typing or a layout change");
+                    typingMonitor.Observe(mapVirtualKey,false,true,typingChat,0x54,0x6F,0x32,0x14);
+                }
+                Native.CopyChord((key,up)=> { copies++;return true; },ms=>Task.FromResult(0),()=>!typingChat.Paused,0,0x6F).GetAwaiter().GetResult();
+            }
+            Check(typingChat.Paused,"Physical M/ь stays owned by chat through 200 rapid presses and layout changes");
+            Check(copies==0 && typingChat.Revision==beforeTyping,"Typing cannot inject coordinate-copy characters or release the chat gate");
+            typingMonitor.Observe(0x1B,true,true,typingChat,0x54,0x6F,1,0x14);
+            Check(!typingChat.Paused && !typingChat.AllowsQueuedShortcut(beforeTyping),"Closing chat cannot replay a map shortcut queued before typing");
+        }
         bool probed=false;
         Check(!Native.InventoryInputActive(false,()=>{ probed=true; return true; }) && !probed,
             "Hidden gameplay cursor prevents bright scenery from locking tracking and M, without screen probing");

@@ -1,0 +1,3 @@
+# Preserve source/resource bytes in the source archive and fresh checkouts.
+# Build resource checksums must not depend on Git's local newline settings.
+* -text

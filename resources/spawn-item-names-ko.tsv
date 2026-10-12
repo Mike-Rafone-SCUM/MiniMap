@@ -1,0 +1,2329 @@
+# Offline translation draft; native terminology review pending. Canonical identities retained.
+Cal_22	탄약 — .22
+Cal_22_Ammobox	.22 탄약 상자
+Cal_22_Crafted	수제 탄약 — .22
+Cal_22_TR	예광탄 — .22
+Cal_22_Ammobox_TR	.22 추적자 탄약 상자
+Cal_30-06	탄약 — .30-06
+Cal_30-06_Ammobox	.30-06 탄약 상자
+Cal_30-06_AP	철갑탄 — .30-06 (AP)
+Cal_30-06_AP_CR	수제 철갑탄 — .30-06 (AP)
+Cal_30-06_Ammobox_AP	.30-06 갑옷 관통 탄약 상자
+Cal_30-06_Crafted	수제 탄약 — .30-06
+Cal_30-06_TR	예광탄 — .30-06
+Cal_30-06_Ammobox_TR	.30-06 추적자 탄약 상자
+Cal_308	탄약 — .308
+Cal_308_Ammobox	.308 탄약 상자
+Cal_308_AP	철갑탄 — .308 (AP)
+Cal_308_Ammobox_AP	.308 AP 탄약 상자
+Cal_308_AP_CR	수제 철갑탄 — .308 (AP)
+Cal_308_Crafted	수제 탄약 — .308
+WeaponSuppressor_308_Black	소음기 — .308
+Cal_308_TR	예광탄 — .308 (TR)
+Cal_308_Ammobox_TR	.308 TR 탄약 상자
+Cal_338	탄약 — .338
+Cal_338_Ammobox	.338 탄약 상자
+Cal_338_AP	철갑탄 — .338 (AP)
+Cal_338_Ammobox_AP	.338 AP 탄약 상자
+Cal_338_AP_CR	수제 철갑탄 — .338 (AP)
+Cal_338_Crafted	수제 탄약 — .338
+WeaponSuppressor_338_Black	소음기 — .338
+WeaponSuppressor_338_Green	.338 억제기 녹색
+WeaponSuppressor_338_Tan	.338 억압기 탄
+Cal_338_TR	예광탄 — .338 (TR)
+Cal_338_Ammobox_TR	.338 추적자 탄약 상자
+Cal_357_Viper	탄약 — .357
+Cal_357_Ammobox	.357 탄약 상자
+Cal_357_Viper_AP	철갑탄 — .357 (AP)
+Cal_357_Viper_AP_CR	수제 철갑탄 — .357 (AP)
+Cal_357_Ammobox_AP	.357 갑옷 관통 탄약 상자
+Cal_357_Viper_Crafted	수제 탄약 — .357
+Cal_357_Viper_TR	예광탄 — .357
+Cal_357_Ammobox_TR	.357 추적자 탄약 상자
+Cal_38	탄약 — .38
+Cal_38_Ammobox	.38 탄약 상자
+Cal_38_Ammobox_AP	.38 탄약 상자 방어구 관통탄
+Cal_38_Ammobox_TR	.38 탄약 상자 추적탄
+Cal_38_AP	철갑탄 — .38 (AP)
+Cal_38_AP_CR	수제 철갑탄 — .38 (AP)
+Cal_38_Crafted	수제 탄약 — .38
+Cal_38_TR	예광탄 — .38 (TR)
+Cal_44_Viper	탄약 — .44
+Cal_44_Viper_Ammobox	.44 탄약 상자
+Cal_44_Viper_AP_CR	수제 철갑탄 — .44 (AP)
+Cal_44_Viper_Ammobox_AP	.44 갑옷 관통 탄약 상자
+Cal_44_Viper_AP	철갑탄 — .44
+Cal_44_Viper_Crafted	수제 탄약 — .44
+Cal_44_Viper_TR	예광탄 — .44
+Cal_44_Viper_Ammobox_TR	.44 추적자 탄약 상자
+Cal_45	탄약 — .45 ACP
+Cal_45_Ammobox	.45 ACP 탄약 상자
+Cal_45_AP_CR	수제 철갑탄 — .45 ACP (AP)
+Cal_45_AP	철갑탄 — .45 ACP
+Cal_45_AP_Ammobox	.45 ACP 방어구 관통 탄약 상자
+Cal_45_Crafted	수제 탄약 — .45 ACP
+WeaponSuppressor_45ACP	소음기 — .45 ACP
+Cal_45_TR	예광탄 — .45 ACP
+Cal_45_Ammobox_TR	.45 ACP 추적자 탄약 상자
+Cal_50_AE	탄약 — .50 AE
+Cal_50_AE_Ammobox	.50 AE 탄약 상자
+Cal_50_AE_AP	철갑탄 — .50 AE (AP)
+Cal_50_AE_AP_CR	수제 철갑탄 — .50 AE (AP)
+Cal_50_AE_AP_Ammobox	.50 AE 방어구 관통 탄약 상자
+Cal_50_AE_Crafted	수제 탄약 — .50 AE
+Cal_50_AE_TR	예광탄 — .50 AE
+Cal_50_AE_Ammobox_TR	.50 AE 추적자 탄약 상자
+Cal_50BMG	탄약 — .50 BMG
+Cal_50BMG_Ammobox	.50 BMG 탄약 상자
+Cal_50BMG_AP	철갑탄 — .50 BMG (AP)
+Cal_50BMG_AP_Ammobox	.50 BMG 방어구 관통 탄약 상자
+Cal_50BMG_Crafted	수제 탄약 — .50 BMG
+Cal_50BMG_TR	예광탄 — .50 BMG
+Cal_50BMG_Ammobox_TR	.50 BMG 추적자 탄약 상자
+Weapon_DT11B_Sawed_Off	"The Mule" DT11B 짧음
+12_Gauge_Birdshot	12 게이지 버드샷 카트리지
+12_Gauge_Buckshot	12 게이지 벅샷 카트리지
+12_Gauge_Buckshot_Crafted	12 게이지 벅샷 급조 카트리지
+12_Gauge_Slug	12 게이지 슬러그 샷 카트리지
+WeaponSuppressor_12_Gauge	12 게이지 억제기
+Cal_40x46	40x46 수류탄
+Cal_5_45x39mm	탄약 — 5.45x39mm
+Cal_5_45x39mm_Ammobox	5.45x39mm 탄약 상자
+Cal_5_45x39mm_AP	철갑탄 — 5.45x39mm (AP)
+Cal_5_45x39mm_AP_CR	수제 철갑탄 — 5.45x39mm (AP)
+Cal_5_45x39mm_AP_Ammobox	5.45x39mm 갑옷 관통 탄약 상자
+Cal_5_45x39mm_Crafted	수제 탄약 — 5.45x39mm
+WeaponSuppressor_5_45x39	소음기 — 5.45x39mm
+Cal_5_45x39mm_TR	예광탄 — 5.45x39mm
+Cal_5_45x39mm_Ammobox_TR	5.45x39mm 예광탄 탄약 상자
+Cal_5_56x45mm	탄약 — 5.56x45mm
+Cal_5_56x45mm_Ammobox	5.56x45mm 탄약 상자
+Cal_5_56x45mm_AP	철갑탄 — 5.56x45mm (AP)
+Cal_5_56x45mm_AP_CR	수제 철갑탄 — 5.56x45mm (AP)
+Cal_5_56x45mm_AP_Ammobox	5.56x45mm 갑옷 관통 탄약 상자
+Cal_5_56x45mm_Crafted	수제 탄약 — 5.56x45mm
+Cal_5_56x45mm_TR	예광탄 — 5.56x45mm
+Cal_5_56x45mm_Ammobox_TR	5.56x45mm 예광탄 탄약 상자
+Cal_7_62x39mm	탄약 — 7.62x39mm
+Cal_7_62x39mm_Ammobox	7.62x39mm 탄약 상자
+Cal_7_62x39mm_AP	철갑탄 — 7.62x39mm (AP)
+Cal_7_62x39mm_AP_CR	수제 철갑탄 — 7.62x39mm (AP)
+Cal_7_62x39mm_AP_Ammobox	7.62x39mm 갑옷 관통 탄약 상자
+Cal_7_62x39mm_Crafted	수제 탄약 — 7.62x39mm
+Cal_7_62x39mm_TR	예광탄 — 7.62x39mm
+Cal_7_62x39mm_Ammobox_TR	7.62x39mm 예광탄 탄약 상자
+Cal_7_62x54mmR	탄약 — 7.62x54mmR
+Cal_7_62x54mmR_Ammobox	7.62x54mmR 탄약 상자
+Cal_7_62x54mmR_AP	철갑탄 — 7.62x54mmR (AP)
+Cal_7_62x54mmR_AP_CR	수제 철갑탄 — 7.62x54mmR (AP)
+Cal_7_62x54mmR_AP_Ammobox	7.62x54mmR 갑옷 관통 탄약 상자
+Cal_7_62x54mmR_Crafted	수제 탄약 — 7.62x54mmR
+Cal_7_62x54mmR_TR	예광탄 — 7.62x54mmR
+Cal_7_62x54mmR_Ammobox_TR	7.62x54mmR 예광탄 탄약 상자
+Cal_7_92x57mm	탄약 — 7.92x57mm
+Cal_7_92x57mm_Ammobox	7.92x57mm 탄약 상자
+Cal_7_92x57mm_AP	철갑탄 — 7.92x57mm (AP)
+Cal_7_92x57mm_AP_CR	수제 철갑탄 — 7.92x57mm (AP)
+Cal_7_92x57mm_AP_Ammobox	7.92x57mm 갑옷 관통 탄약 상자
+Cal_7_92x57mm_Crafted	수제 탄약 — 7.92x57mm
+Cal_7_92x57mm_TR	예광탄 — 7.92x57mm
+Cal_7_92x57mm_Ammobox_TR	7.92x57mm 예광탄 탄약 상자
+Cal_9mm	탄약 — 9mm
+Cal_9mm_Ammobox	9mm 탄약 상자
+Cal_9mm_AP	철갑탄 — 9mm (AP)
+Cal_9mm_AP_CR	수제 철갑탄 — 9mm (AP)
+Cal_9mm_AP_Ammobox	9mm 갑옷 관통 탄약 상자
+Cal_9mm_Crafted	수제 탄약 — 9mm
+Cal_9mm_TR	예광탄 — 9mm
+Cal_9mm_Ammobox_TR	9mm 추적자 탄약 상자
+Cal_9x39mm	탄약 — 9x39mm
+Cal_9x39mm_Ammobox	9x39mm 탄약 상자
+Cal_9x39mm_AP	철갑탄 — 9x39mm (AP)
+Cal_9x39mm_AP_CR	수제 철갑탄 — 9x39mm (AP)
+Cal_9x39mm_AP_Ammobox	9x39mm 갑옷 피어싱 탄약 상자
+Cal_9x39mm_Crafted	수제 탄약 — 9x39mm
+Cal_9x39mm_TR	예광탄 — 9x39mm
+Cal_9x39mm_Ammobox_TR	9x39mm 트레이서 탄약 상자
+Absinthe	Absinthe Father
+WeaponScope_ACOG_01	ACOG
+ActivatedCharcoal_01	활성탄 - 물집
+ActivatedCharcoal_02	활성탄 - 상자
+ActivatedCharcoal_03	활성탄 - 항아리
+Compass_Advanced	고급 나침반
+Lock_Security_Lvl3	고급 잠금 보호
+Lockpick_Advanced_Item	고급 자물쇠 따기
+Aeroplane_Repair_Kit	비행기 수리 키트
+African_Biltong	아프리카 빌통
+Agaricus_Augustus	Agaricus Augustus
+Agaricus_Campestris	Agaricus Campestris
+Aloe_Vera	용설란 잎
+WeaponSights_AimPRO	도트 조준기 — AimPRO
+Air_Pump	에어펌프
+Weapon_AK15	AK-15
+Weapon_AK47	AK-47
+Magazine_AK15	탄창 — AK15
+WeaponSuppressor_AK15	소음기 — AK15
+Weapon_Parts_AK15	AK15 무기 부품
+Weapon_AK47_Engraved	AK47 각인
+Magazine_AK47	탄창 — AK47
+Weapon_Parts_AK47	AK47 무기 부품
+Weapon_AKM	AKM
+Weapon_Parts_AKM	AKM 무기 부품
+Weapon_Parts_AKS_74U	AKS 74U 무기 부품
+Weapon_AKS_74U	AKS-74U
+Magazine_AKS_74U	탄창 — AKS-74U
+Bag_of_Almonds	아몬드
+Amanita_Muscaria	Amanita Muscaria
+Amanita_Pantherina	Amanita Pantherina
+Amanita_Phalloides	Amanita Phalloides
+Amanita_Virosa	Amanita Virosa
+ColorCan_AmberYellow	호박색 페인트 캔
+Fish_Amur	초어
+Amur_Fillet	아무르 필렛
+WeaponCharm_Anchor	앵커 무기 부적
+Suite_Pants_01	엔젤스 플라이트 팬츠
+Monkfish_Fillet	낚시꾼 필레
+WeaponCharm_Angry_Emoji	화난 이모티콘 무기 부적
+Small_Animal_Fat	동물성 지방
+Animal_skin	동물의 피부
+Bear_Improvised_Jacket	동물 가죽 자켓
+Bear_Improvised_Pants	동물 가죽 바지
+Improvised_Quiver_01	동물 가죽 화살통
+HH_Shoes_01_01	발목 부츠
+HH_Shoes_01_02	발목 부츠
+HH_Shoes_01_03	발목 부츠
+HH_Shoes_01_04	발목 부츠
+Anode_Plate	양극판
+Mine_01	대인 지뢰
+Antibiotic_Pill_Single	항생제 - 1000mg
+Antibiotics_01	항생제 - 물집 - 1000mg
+Antibiotics_02	항생제 - 상자 - 1000mg
+Antibiotics_03	항생제 - 병 - 1000mg
+Apple	사과
+Apple_2	사과
+Crab_Apple	사과
+Apple_Seed_Bag	사과 씨앗 가방
+Apple_Seeds	사과 씨앗
+RH_Arm_Guard	팔 보호대
+Armband_01	완장
+Armillaria_Mellea	Armillaria Mellea
+Armor_Tactical_Vest_01_01	갑옷 전술 조끼
+Armor_Tactical_Vest_01_02	갑옷 전술 조끼
+Armor_Tactical_Vest_01_03	갑옷 전술 조끼
+Armor_Tactical_Vest_01_04	갑옷 전술 조끼
+Armor_Tactical_Vest_01_05	갑옷 전술 조끼
+Weapon_AS_Val	AS 발
+Weapon_Parts_AS_Val	AS 발 무기 부품
+WeaponFlashlight_AS_Val	AS 발/VSS 손전등
+Magazine_AS_Val	AS 발/VSS 매거진
+Aspirin	아스피린
+Military_Backpack_01_01	폭행 배낭
+Military_Backpack_01_02	폭행 배낭
+Military_Backpack_01_03	폭행 배낭
+Military_Backpack_01_04	폭행 배낭
+Military_Backpack_01_05	폭행 배낭
+Military_Backpack_01_06	폭행 배낭
+Military_Backpack_01_07	폭행 배낭
+Military_Backpack_01_08	폭행 배낭
+Military_Backpack_01_09	폭행 배낭
+Weapon_AT4_HEAT	AT4 HEAT
+AtropineInjection	아트로핀 주사
+Weapon_AWM	AWM
+Weapon_AWM_Desert	AWM 사막
+Weapon_AWM_Green	AWM 녹색
+Magazine_AWM	탄창 — AWM
+Weapon_AWM_Snake	AWM 뱀
+Weapon_Parts_AWM	AWM 무기 부품
+Weapon_AWP	AWP
+Weapon_AWP_Desert	AWP 사막
+Weapon_AWP_Green	AWP 녹색
+Magazine_AWP	탄창 — AWP
+Weapon_AWP_Snake	AWP 뱀
+Weapon_Parts_AWP	AWP 무기 부품
+2H_Axe	도끼
+WeaponCharm_Axe	도끼 무기 부적
+BabyFood	이유식
+Backpack_02_01	배낭
+Backpack_02_02	배낭
+Backpack_02_03	배낭
+Backpack_02_04	배낭
+Backpack_02_05	배낭
+Military_Backpack_03_01	배낭
+Military_Backpack_03_02	배낭
+Military_Backpack_03_03	배낭
+Military_Backpack_03_04	배낭
+Military_Backpack_03_05	배낭
+Military_Backpack_03_06	배낭
+Military_Backpack_03_07	배낭
+Military_Backpack_03_08	배낭
+AnimalBaitFeederItem	미끼 공급기
+BakedBeans	구운 콩
+BakingSoda	베이킹소다
+Military_Mask_01	바라클라바
+Military_Mask_02	바라클라바
+Military_Mask_03	바라클라바
+Military_Mask_04	바라클라바
+Military_Mask_05	바라클라바
+Military_Mask_06	바라클라바
+Military_Mask_07	바라클라바
+Military_Mask_08	바라클라바
+Police_Mask_01	바라클라바
+Recurve_Bow_100	Ballista 100#
+Bamboo_Hat_01	대나무 모자
+Bamboo_Hat_02	대나무 모자
+Banana	바나나
+Banjo	밴조
+Barbed_Wire	철조망
+Barberry	매자나무
+ColorCan_BaronBrown	배런 브라운 페인트 캔
+BaseExpansionKit_Lvl1	베이스 확장 키트 Lvl 1
+BaseExpansionKit_Lvl2	베이스 확장 키트 Lvl 2
+2H_Baseball_Bat	야구배트
+2H_Baseball_Bat_with_spikes	못이 달린 야구 방망이
+Baseball_Cap_01	야구 모자
+Baseball_Cap_02	야구 모자
+Baseball_Cap_03	야구 모자
+Baseball_Cap_04	야구 모자
+Baseball_Cap_05	야구 모자
+Baseball_Cap_06	야구 모자
+Baseball_Cap_07	야구 모자
+Baseball_Cap_08	야구 모자
+Baseball_Cap_09	야구 모자
+Baseball_Cap_10	야구 모자
+Compass_Basic	기본 나침반
+Lock_Security	기본 잠금 보호
+Fish_Bass	농어
+Bass_Fillet	베이스 필레
+1H_Police_Baton	배턴
+Batteries	배터리
+Weapon_BayRifferBlock21	Bay Riffer Block21
+Book_Cooking_BBQ	BBQ 요리책
+BCU_Chip	BCU 칩
+BCULock_Item	BCU 잠금
+WeaponCharm_BCU	BCU 무기 부적
+1H_Beam_Dildo	Beamasaurus 딜도
+Dish_Sandwich_Beans	콩샌드위치
+Beenie_01	비니
+Beenie_02	비니
+Beenie_03	비니
+Beenie_04	비니
+Beenie_05	비니
+Beenie_06	비니
+Beenie_07	비니
+Beenie_08	비니
+Beenie_09	비니
+Military_Beanie_01	비니
+Military_Beanie_02	비니
+Military_Beanie_03	비니
+Military_Beanie_04	비니
+Military_Beanie_05	비니
+Military_Beanie_06	비니
+Military_Beanie_07	비니
+Military_Beanie_08	비니
+Bear_Head	곰 머리
+Bear_Head_Hat_01	곰 머리 모자
+Bear_Left_Back_Leg	곰 다리
+Bear_Left_Front_Leg	곰 다리
+Bear_Right_Back_Leg	곰 다리
+Bear_Right_Front_Leg	곰 다리
+Bear_Back_Paws	곰 발
+Bear_Front_Paws	곰 발
+Bear_Steak	베어 스테이크
+Bear_Torso	곰 몸통
+Bear_Left_Torso_Half	곰 몸통 절반
+Bear_Right_Torso_Half	곰 몸통 절반
+Bedroll	침낭
+BeefRavioli	쇠고기 라비올리
+BeefStew	쇠고기 스튜
+MRE_Stew	쇠고기 스튜 MRE
+Beer	맥주
+Beet	비트
+Beijing_Shoes_01	베이징 신발
+Beijing_Shoes_02	베이징 신발
+Beijing_Shoes_03	베이징 신발
+Beijing_Shoes_04	베이징 신발
+Bell_Pepper	피망
+2H_Pitchfork_Bent	구부러진 갈퀴
+Beret_01	베레모
+Beret_02	베레모
+Beret_03	베레모
+Beret_04	베레모
+Beret_05	베레모
+Beret_06	베레모
+Big_Animal_Fat	큰 동물성 지방
+Big_Animal_guts	큰 동물 내장
+Christmas_Present_03	큰 크리스마스 선물
+Christmas_Present_AK15	큰 크리스마스 선물
+Christmas_Present_AK15_01	큰 크리스마스 선물
+Christmas_Present_AK15_02	큰 크리스마스 선물
+Christmas_Present_AKS_74U	큰 크리스마스 선물
+Christmas_Present_AKS_74U_01	큰 크리스마스 선물
+Christmas_Present_AKS_74U_02	큰 크리스마스 선물
+Christmas_Present_AS_Val	큰 크리스마스 선물
+Christmas_Present_AS_Val_01	큰 크리스마스 선물
+Christmas_Present_AS_Val_02	큰 크리스마스 선물
+Christmas_Present_Ghillie	큰 크리스마스 선물
+Christmas_Present_Ghillie_01	큰 크리스마스 선물
+Christmas_Present_Ghillie_02	큰 크리스마스 선물
+Christmas_Present_Kar98	큰 크리스마스 선물
+Christmas_Present_Kar98_01	큰 크리스마스 선물
+Christmas_Present_Kar98_02	큰 크리스마스 선물
+Christmas_Present_Laika_Alternator	큰 크리스마스 선물
+Christmas_Present_M1	큰 크리스마스 선물
+Christmas_Present_M1_01	큰 크리스마스 선물
+Christmas_Present_M1_02	큰 크리스마스 선물
+Christmas_Present_M16A4	큰 크리스마스 선물
+Christmas_Present_M16A4_01	큰 크리스마스 선물
+Christmas_Present_M16A4_02	큰 크리스마스 선물
+Christmas_Present_M1887	큰 크리스마스 선물
+Christmas_Present_M249	큰 크리스마스 선물
+Christmas_Present_M82A1	큰 크리스마스 선물
+Christmas_Present_M82A1_01	큰 크리스마스 선물
+Christmas_Present_M82A1_02	큰 크리스마스 선물
+Christmas_Present_MAC10	큰 크리스마스 선물
+Christmas_Present_MAC10_01	큰 크리스마스 선물
+Christmas_Present_MAC10_02	큰 크리스마스 선물
+Christmas_Present_MK18	큰 크리스마스 선물
+Christmas_Present_MK18_01	큰 크리스마스 선물
+Christmas_Present_MK18_02	큰 크리스마스 선물
+Christmas_Present_MP5	큰 크리스마스 선물
+Christmas_Present_MP5_01	큰 크리스마스 선물
+Christmas_Present_MP5_02	큰 크리스마스 선물
+Christmas_Present_Rager_Alternator	큰 크리스마스 선물
+Christmas_Present_RPK	큰 크리스마스 선물
+Christmas_Present_RPK_01	큰 크리스마스 선물
+Christmas_Present_RPK_02	큰 크리스마스 선물
+Christmas_Present_SCAR_DMR	큰 크리스마스 선물
+Christmas_Present_SCAR_L	큰 크리스마스 선물
+Christmas_Present_SCAR_L_01	큰 크리스마스 선물
+Christmas_Present_SCAR_L_02	큰 크리스마스 선물
+Christmas_Present_SVD	큰 크리스마스 선물
+Christmas_Present_SVD_01	큰 크리스마스 선물
+Christmas_Present_SVD_02	큰 크리스마스 선물
+Christmas_Present_UMP	큰 크리스마스 선물
+Christmas_Present_UMP_01	큰 크리스마스 선물
+Christmas_Present_UMP_02	큰 크리스마스 선물
+Christmas_Present_WW_Alternator	큰 크리스마스 선물
+2H_Stone_Axe	큰 돌도끼
+2H_Stone_Axe_Head	큰 돌 도끼 머리
+Big_Vehicle_StorageRack	대형 차량 보관함
+Leather_Jacket	바이커 가죽 재킷
+Negan_Jacket	바이커 가죽 재킷
+Binoculars	쌍안경
+12_Gauge_BirdShot_Ammobox	버드샷 산탄총 탄약 상자
+Birthday_Cap_01	생일 모자
+Ghillie_Suit_Pants_02	블랙 길리 수트 하의
+Ghillie_Suit_Jacket_02	블랙 길리 수트 탑
+BlackOlives	블랙 올리브
+ColorCan_Black	검정색 페인트 캔
+BlackPepper	흑후추
+Blackberry	블랙베리
+Recurve_Bow_90	블랙호크 90#
+Weapon_BlackHawk_Crossbow	Blackhawk 석궁
+BlankSign	공백 표시
+Blast_Cap	블래스트 캡
+2H_Baseball_Bat_Blaze	Blaze 박쥐
+Fish_Bleak	블리크
+Bleak_Fillet	황폐한 등심
+FishingBait_Bleak	황량한 물고기 미끼
+Weapon_Block21	Block 21
+Magazine_Block21	탄창 — Block 21
+Weapon_Parts_Block21	Block 21 무기 부품
+MemoryModule_Level2	블루 메모리 모듈
+Blueberries	블루베리
+Boar_Head	멧돼지 머리
+Boar_Head_Hat_01	멧돼지 머리 모자
+Boar_Hooves_Back	멧돼지 발굽
+Boar_Hooves_front	멧돼지 발굽
+Boar_Back_Leg	멧돼지 다리
+Boar_Front_Leg	멧돼지 다리
+Boar_Torso	멧돼지 몸통
+Bobby_pin	바비 핀
+Bobby_Pin_Package	바비 핀 박스
+FishingBait_BoiliesPrm1	Boilies 물고기 미끼
+Boletus_Edulis	Boletus Edulis
+Bolts	볼트
+Bone	뼈
+Bone_Needle	뼈 - 바늘
+BoomBox_01	붐박스
+WeaponCharm_Bottle_Opener	병따개 무기 부적
+BowSilencer	활 소음기
+Bow_MicroStabilizer	활 안정 장치
+Bolts_Package_Box	볼트 상자
+Nails_Package_Box	못 상자
+Boxer_Briefs_01	복서 브리프
+F_Undershirt_Bra_01	브라
+F_Undershirt_Bra_02	브라
+F_Undershirt_Bra_03	브라
+F_Undershirt_Bra_04	브라
+F_Undershirt_Bra_05	브라
+Brake_Oil	브레이크 오일
+Improvised_Plant_rope	가지 로프
+1H_Brass_knuckles	황동 너클
+FishingBait_Bread	빵 물고기 미끼
+Breathing_Tube_01	호흡관
+Brick	벽돌
+Carbon_BroadHead_Arrow	브로드헤드 카본 애로우
+Metal_BroadHead_Arrow	브로드헤드 메탈 애로우
+Broccoli	브로콜리
+Broccoli_Seed_Bag	브로콜리 씨앗 가방 - 브로콜리 씨앗 가방
+Broccoli_Seeds	브로콜리 씨앗
+Kilt_Brogue_Shoe_01	브로그 슈즈
+Can03	Bubbles
+Buck_Head	벅 헤드
+Buck_Left_Back_Leg	벅 레그
+Buck_Left_Front_Leg	벅 레그
+Buck_Right_Back_Leg	벅 레그
+Buck_Right_Front_Leg	벅 레그
+Buck_Torso	벅 토르소
+12_Gauge_Buckshot_Ammobox	Buckshot 산탄총 탄약 상자
+WeaponCharm_Bullet	총알 무기 부적
+Bulletproof_Vest_01	방탄조끼
+Bulletproof_Vest_01_02	방탄조끼
+Bulletproof_Vest_01_03	방탄조끼
+Bulletproof_Vest_01_04	방탄조끼
+Bulletproof_Vest_01_05	방탄조끼
+Bundle_Of_Bobby_Pins	바비 핀 묶음
+Bundle_Of_Bricks	벽돌 묶음
+Bundle_Of_Improvised_Lockpicks	즉석 자물쇠 따기 묶음
+Bundle_Of_Lockpicks	자물쇠 따기 묶음
+Bundle_Rag_Stripes	걸레 조각 묶음
+Bundle_Of_Rags	누더기 묶음
+Bundle_Of_Safety_Pins	안전핀 묶음
+Bundle_Wooden_Plank	나무 판자 묶음
+Wooden_Sticks_Bundle_Large	나무 막대기 묶음
+Bunny_Slippers	토끼 슬리퍼 - 토끼 슬리퍼
+Cereal_BunnyStars	버니 스타즈 시리얼
+AntiburnGel	화상 젤
+1H_Bushman	부시먼
+Butter	버터
+RH_Bycoket_01	바이코켓
+C4	C4 폭탄
+C4_Detonator	C4 기폭 장치
+C4_Keypad	C4 키패드 회로 기판
+C4_CircuitBoard	C4 타이머 회로 기판
+Cabbage	양배추
+Cabbage_Seed_Bag	양배추 씨앗 가방 - 양배추 씨앗 가방
+Cabbage_Seeds	양배추 씨앗
+Book_Cooking_Cake	케이크 요리책
+WeaponSuppressor_30_06	소음기 — .30-06
+Camera_Lens	카메라 렌즈
+Military_Backpack_02_01	카모 하이킹 백팩
+Military_Backpack_02_02	카모 하이킹 백팩
+Military_Backpack_02_03	카모 하이킹 백팩
+Military_Backpack_02_04	카모 하이킹 백팩
+Military_Backpack_02_05	카모 하이킹 백팩
+Military_Backpack_02_06	카모 하이킹 백팩
+Military_Backpack_02_07	카모 하이킹 백팩
+Military_Backpack_02_08	카모 하이킹 백팩
+Camouflage_Jacket_01	위장 재킷
+Camouflage_Jacket_02	위장 재킷
+Camouflage_Jacket_03	위장 재킷
+CanOpener	캔따개
+Candle_01	양초
+Candy_Bob	Candy Bob
+WeaponCharm_Candy_Cane	지팡이 사탕 무기 부적
+CandyCorn_01	캔디콘
+Cannabis_Bud	대마초 버드
+Cannabis_Seed_Bag	대마초 씨앗 가방
+Cannabis_Seeds	대마초 씨앗
+CannedGoulash	통조림 쇠고기 굴라시
+CannedSeafoodMix	통조림 해산물 믹스
+Canned_Tuna	참치 통조림
+CantaloupeMelon	멜론 멜론
+CantaloupeMelon_Slice	멜론 멜론
+CantaloupeMelon_Seeds	멜론 씨앗
+Canteen	매점
+Cantharellus_Cibarius	Cantharellus Cibarius
+Car_Battery	자동차 배터리
+Car_Battery_Cables	자동차 배터리 케이블
+Car_Jack	자동차 잭
+Car_Radio_Item	자동차 라디오
+Car_Repair_Kit	자동차 수리 키트
+PETBottle01	카라멜 소다
+PETBottle02	카라멜 소다
+Carbon_Arrow	탄소 화살
+Ammo_Crossbow_Bolt_Carbon	탄소 석궁 볼트
+Weapon_CarbonHunter	카본헌터
+Weapon_CarbonBear	카본헌터 Ironpaw
+Magazine_CarbonHunter	카본 헌터 매거진
+Weapon_Parts_Carbon_Hunter	카본 헌터 무기 부품
+Fish_Carp	잉어
+Carp_Fillet	잉어 필레
+Carp_Head	잉어 머리
+Carrot	당근
+GlassBottle01	당근 주스
+Carrot_Seed_Bag	당근 씨앗 가방 - 당근 씨앗 가방
+Carrot_Seeds	당근 씨앗
+CartridgeTrap	카트리지 트랩
+Cash	현금
+Book_Cooking_Casseroles	캐서롤 요리책
+CannedCatfood	고양이 먹이
+Fish_Catfish	메기
+Catfish_Fillet	메기 필레
+Catfish_Head	메기 머리
+Cauliflower	콜리플라워
+CD_Player	CD 플레이어
+Celery	셀러리
+CementBag	시멘트 가방
+Chainsaw	전기톱
+Charcoal	숯
+Cheese	치즈
+FishingBait_Cheese	치즈 생선 미끼
+Dish_Sandwich_Cheese	치즈샌드위치
+CheesePacked	치즈 조각
+MRE_Cheeseburger	치즈버거 MRE
+ColorCan_CherryRed	체리 레드 페인트 캔
+Cherry_Seed_Bag	체리 씨앗 가방 - 체리 씨앗 가방
+Cherry_Seeds	체리 씨앗
+ChickenDrumstick	치킨 드럼스틱
+ChickenMeat	닭고기
+Chili_Pepper	칠리페퍼
+ChilliPeppers_Seeds	고추 고추 씨앗
+Chillipepper_Seed_Bag	고추 씨앗 가방
+Chips	칩스 클래식
+ChocolateCandy_10	ChocCandy
+ChocolateCandy_11	ChocoBar
+ChocolateCandy_04	초콜릿
+ChocolateCandy_05	초콜릿
+ChocolateCandy_06	초콜릿
+ChocolateCandy_07	초콜릿
+ChocolateCandy_08	초콜릿 바
+ChocolateCandy_09	초콜릿 바
+ChocolateCandy_03	초콜릿 케이크 캔디
+ChocolateCandy_01	초콜릿 캔디바
+Chow_Mein	차우멘
+Christmas_Beanie_02	크리스마스 비니
+Christmas_Decoration	크리스마스 장식
+Christmas_Present_02	크리스마스 선물
+Christmas_Ball_01	크리스마스 장식
+Christmas_Ball_02	크리스마스 장식
+Christmas_Ball_03	크리스마스 장식
+Christmas_Ball_04	크리스마스 장식
+Christmas_Ball_05	크리스마스 장식
+Christmas_Ball_06	크리스마스 장식
+Christmas_Pants_01	크리스마스 바지
+Christmas_Pants_02	크리스마스 바지
+Christmas_Slippers	크리스마스 슬리퍼
+Christmas_Vest_01	크리스마스 스웨터
+Fish_Chub	유럽 피라미
+Chub_Fillet	처브 필렛
+Credit_Card_Classic	클래식 은행 카드
+Classic_Shirt_01	클래식 셔츠
+Classic_Shirt_02	클래식 셔츠
+Cigarette	클래식 담배
+Cigarettes	클래식 담배 팩
+Claymore	클레이모어
+1H_Cleaver	식칼
+Coal_01	석탄
+CoalBag	석탄 가방
+Recurve_Bow_50	Cobra 50#
+Cocoa_Powder	코코아 가루
+Coconut	코코넛
+Coffee	커피
+Coffee_Cup	커피잔
+Can04	콜라
+ColorCan_ColdCyan	차가운 청록색 페인트 캔
+ColorCan_ColdGrey	차가운 회색 페인트 캔
+CombatBoots	전투화
+Combat_Helmet_01	전투 헬멧
+Combat_Helmet_02	전투 헬멧
+Combat_Helmet_03	전투 헬멧
+Combat_Helmet_04	전투 헬멧
+M1_Vietnam_Helmet	전투 헬멧
+RH_Jacket	결합된 재킷
+Compound_Bow	컴파운드 보우
+Compound_Bow_Desert	컴파운드 보우
+Compound_Bow_Digital	컴파운드 보우
+Compound_Bow_Snow	컴파운드 보우
+Compound_Bow_US_Scorpion	컴파운드 보우
+Compound_Bow_Woodland	컴파운드 보우
+CompoundBowSight_3_Pin	복합 활 조준경
+CompoundBowSight_5_Pin	복합 활 조준경
+Boots_06_01	건설 부츠
+Boots_06_02	건설 부츠
+Construction_Gloves_01_01	건설 장갑
+Construction_Gloves_01_02	건설 장갑
+Construction_Gloves_01_03	건설 장갑
+Construction_Pants_01	건설 바지
+Construction_Pants_02	건설 바지
+Construction_Pants_03	건설 바지
+Boots_07_01	건설 고무 장화
+Boots_07_02	건설 고무 장화
+Boots_07_03	건설 고무 장화
+Pot1	요리 냄비
+Copper_Coins	구리 동전
+Coprinus_Comatus	Coprinus Comatus
+Corn	옥수수
+Corn_flakes	콘플레이크
+FishingBait_Corn	옥수수 물고기 미끼
+Corn_Seed_Bag	옥수수 씨앗 가방 - 옥수수 씨앗 가방
+Corn_Seeds	옥수수 씨앗
+ColorCan_CottonCandy	솜사탕 페인트 캔
+Hoodie_01	코튼 후디
+Hoodie_02	코튼 후디
+Hoodie_03	코튼 후디
+Hoodie_04	코튼 후디
+Hoodie_05	코튼 후디
+Inmate_Hoodie_01	코튼 후디
+Inmate_Shirt_01_Snow_DigitalDeluxe	코튼 후디
+Shirt_01	면 셔츠
+Shirt_02	면 셔츠
+Shirt_03	면 셔츠
+Shirt_04	면 셔츠
+Backpack_DigitalDeluxe	택배 배낭
+Cowboys_Boots_01	카우보이 부츠
+Crackers	크래커
+Cream	크림
+Cricket	크리켓
+FishingBait_Cricket	크리켓 물고기 미끼
+1H_Crowbar	크로우바
+Fish_CrucianCarp	붕어
+Cruiser_Brakelight_Item	크루저 브레이크 라이트
+Cruiser_Fender_Front_Item	크루저 프론트 펜더
+Cruiser_Seat_Front_Item	크루저 앞 좌석
+Cruiser_Headlight_Item	크루저 헤드라이트
+Cruiser_Fender_Rear_Item	크루저 리어 펜더
+Cruiser_Seat_Rear_Item	크루저 뒷좌석
+Cruiser_Wind_Deflector_Item	크루저 윈드 디플렉터
+Crutch	목발
+Cuban_Cigar	쿠바 시가
+Cucumber	오이
+Cucumber_Seed_Bag	오이 씨앗 가방 - 오이 씨앗 가방
+Cucumber_Seeds	오이 씨앗
+Currant	건포도
+Zombie_Impersonator_Suit	저주받은 인형옷
+WeaponCharm_Ear	절단된 귀 무기 부적
+WeaponCharm_Finger	컷오프 핑거 무기 부적
+Dentex_Fillet	단텍스 필렛
+ColorCan_DarkBrown	진한 갈색 페인트 캔
+ColorCan_DarkGreen	진한 녹색 페인트 캔
+ColorCan_DarkGrey	진한 회색 페인트 캔
+ColorCan_DarkUrban	어두운 도시 페인트 캔
+Date	날짜
+Weapon_Deagle_357	DEagle .357
+Magazine_DEagle_357	탄창 — DEagle .357
+Magazine_DEagle_50	탄창 — DEagle .50
+Weapon_Parts_Deagle_357	DEagle 357 무기 부품
+Weapon_DEagle_50	DEagle 50
+Weapon_DEagle_50Gold	DEagle 50
+Weapon_Parts_DEagle_50	DEagle 50 무기 부품
+Christmas_Paper_01	장식 종이
+Christmas_Paper_02	장식 종이
+Christmas_Paper_03	장식 종이
+ColorCan_DeepOrange	딥 오렌지 페인트 캔
+Buck_Antlers	사슴뿔
+Deer_Steak	사슴 스테이크
+Fish_Dentex	덴텍스
+Dentex_Head	덴텍스 헤드
+Depleted_Uranium	열화우라늄
+Depleted_Uranium_Container	열화우라늄 - 컨테이너
+WeaponFlashlight_DesertEagle	데저트 이글 손전등
+WeaponSights_Deagle_RedDot	도트 조준기 — Desert Eagle
+Ghillie_Suit_Pants_03	데저트 길리 수트 하의
+Ghillie_Suit_Jacket_03	데저트 길리 수트 탑
+DialLock_Item	다이얼 잠금
+Diary	일기
+1H_Dildo	딜도
+Dildo_Spear	딜도 스피어
+Dildo_Arrow	딜도 나무 화살
+Ammo_Crossbow_Bolt_Dildo	딜도 나무 석궁 볼트
+Dinghy_Item	작은 배 가방
+Dirtbike_Body_Item	더트바이크 바디
+Dirtbike_Brakelight_Item	더트바이크 브레이크 라이트
+Dirtbike_Fender_Item	더트바이크 펜더
+Dirtbike_Front_Shield_Item	더트바이크 전면 쉴드
+Dirtbike_Front_Wheel_Cover_Item	Dirtbike 앞바퀴 커버
+Dirtbike_Headlight_Item	더트바이크 헤드라이트
+Dirtbike_Body_Hellrider_Item	더트바이크 Hellrider 본체
+Dirtbike_Hellrider_Skull_Item	더트바이크 Hellrider 해골
+Disposable_Mask	일회용 마스크
+Diving_Mask	다이빙 마스크
+Diving_Mask_With_Breathing_Tube	호흡관이 있는 다이빙 마스크
+Doe_Head	미상 머리
+Doe_Left_Back_Leg	미상 다리
+Doe_Left_Front_Leg	미상 다리
+Doe_Right_Back_Leg	미상 다리
+Doe_Right_Front_Leg	미상 다리
+Doe_01_Steak	미상 스테이크
+Doe_Torso	미상 몸통
+CannedDogFood	개밥
+Donkey_Head	당나귀 머리
+Donkey_Back_Leg	당나귀 다리
+Donkey_Front_Leg	당나귀 다리
+Donkey_Steak	당나귀 스테이크
+Donkey_Torso	당나귀 몸통
+FishingHook2	더블 피시훅
+FishingHookPack3	더블 피시훅 팩
+Double_Bang_Firecracker	더블뱅 폭죽
+Christmas_tree	더글러스 전나무
+Baseball_Cap_11	Dreamreaper 모자
+Drill	드릴
+Book_Cooking_Drinks	음료 요리책
+Driving_Gloves_01_01	운전 장갑
+Driving_Gloves_01_02	운전 장갑
+Driving_Gloves_01_03	운전 장갑
+Driving_Gloves_01_04	운전 장갑
+Weapon_DT11B	DT11B
+Weapon_Parts_DT11B	DT11B 무기 부품
+Duct_Tape	덕트 테이프
+2_pieces_Ear_Necklace	귀 목걸이
+4_pieces_Ear_Necklace	귀 목걸이
+6_pieces_Ear_Necklace	귀 목걸이
+Ear_Plugs	귀마개
+Construction_Earmuffs_01	귀마개
+Construction_Earmuffs_02	귀마개
+Construction_Earmuffs_03	귀마개
+Construction_Earmuffs_04	귀마개
+ColorCan_EarthGreen	지구 녹색 페인트 캔
+ColorCan_EarthGrey	어스 그레이 페인트 캔
+ColorCan_EarthRed	지구 빨간색 페인트 캔
+ColorCan_EarthYellow	지구 노란색 페인트 캔
+Earthworm	지렁이
+Egg	계란
+Electrical_Repair_Kit	전기 수리 키트
+Electrician_Tools	전기기사 도구
+WeaponCharm_Elephant	코끼리 무기 부적
+Emergency_bandage	응급 붕대
+Emergency_bandage_Deluxe	응급 붕대
+Emergency_bandage_Big	응급 붕대 팩
+Emergency_bandage_Big_Deluxe	응급 붕대 팩
+EMP_Grenade	EMP 수류탄
+1H_EMpossible_Knife	EMpossible 칼
+EmptyBag	빈 가방
+Christmas_Box	빈 상자
+Lock_Item_Advanced	강제 잠금
+EuropeanBass_Fillet	유럽산 베이스 필레
+WeaponCharm_EvilEye	악마의 눈 무기 부적
+Explosive_Arrow_Carbon	폭발성 탄소 화살
+Explosive_Arrow_Metal	폭발성 금속 화살
+Explosive_Arrow	폭발성 나무 화살
+Ammo_Crossbow_Bolt_Explosive	폭발성 나무 석궁 볼트
+Extreme_Helmet_01	익스트림 헬멧
+Faceroll_Smasher	Facerolls Face Smasher
+Fascinator_Hat_01	매혹적인 모자
+Fascinator_Hat_02	매혹적인 모자
+Fascinator_Hat_03	매혹적인 모자
+Fascinator_Hat_04	매혹적인 모자
+Fascinator_Hat_05	매혹적인 모자
+Zombie_Fat	지방
+Feather	깃털
+Medieval_Helmet_01	봉건의 광택나는 투구
+Fig	무화과
+Fig_Seed_Bag	무화과 씨앗 가방 - 무화과 씨앗 가방
+Fig_Seeds	무화과 씨앗
+Fire_deflector_shield	화재 디플렉터 쉴드
+Fire_Hand_Drill_new	소방 훈련
+ColorCan_FireEngineRed	소방차 빨간색 페인트 캔
+Fireman_Helmet_01	소방 헬멧
+Fireman_Helmet_02	소방 헬멧
+Fireman_Helmet_03	소방 헬멧
+Work_Jacket_01	소방관 재킷
+Work_Jacket_02	소방관 재킷
+Work_Jacket_03	소방관 재킷
+Working_pants_01_01	소방관 바지
+Working_pants_01_02	소방관 바지
+Working_pants_01_03	소방관 바지
+Fireworks_Small	작은 불꽃놀이
+Fireworks_Big	작은 불꽃놀이 - 큰 불꽃놀이
+Fish	물고기
+FishingHook	낚시 바늘
+FishItem	생선 아이템
+Dish_Salad_Fish	생선 샐러드
+WeaponCharm_Fish_Bowl	어항 무기 부적
+FishingFloater	낚시 플로터
+FishingFloater1	낚시 플로터
+FishingFloaterPack1	낚시 플로터 팩
+FishingFloaterPack2	낚시 플로터 팩
+Boonie_Hat_01	낚시 모자
+Boonie_Hat_02	낚시 모자
+Boonie_Hat_03	낚시 모자
+Boonie_Hat_04	낚시 모자
+Boonie_Hat_05	낚시 모자
+Boonie_Hat_06	낚시 모자
+Military_Boonie_Hat_01	낚시 모자
+Military_Boonie_Hat_02	낚시 모자
+Military_Boonie_Hat_03	낚시 모자
+Military_Boonie_Hat_04	낚시 모자
+Military_Boonie_Hat_05	낚시 모자
+Military_Boonie_Hat_06	낚시 모자
+Military_Boonie_Hat_07	낚시 모자
+Military_Boonie_Hat_08	낚시 모자
+Redneck_Hat_07	낚시 모자
+Fishing_hook	낚시바늘
+FishingReel	낚시 릴
+ImprovisedFishingReel	낚시 릴
+FishingReelPro	낚시 릴 프로
+FishingRod	낚싯대
+FishingRod_A	낚싯대
+FishingRod_B	낚싯대
+Fistula_Hepatica	누관 간질
+FlareItem	플레어
+FlareItem_Blue	플레어
+FlareItem_Green	플레어
+FlareCartridge	플레어 카트리지
+Weapon_FlareGun	플레어건
+Weapon_Parts_FlareGun	플레어 건 무기 부품
+FlareTrap	플레어 트랩
+ColorCan_FlatBrown	평평한 갈색 페인트 캔
+ColorCan_FlatGrey	평평한 회색 페인트 캔
+ColorCan_FlatWhite	평평한 흰색 페인트 캔
+Wooden_ArrowFeathers	날개 달린 나무 화살
+Flint_And_Steel	부싯돌과 강철
+Christmas_tree_Folded	접힌 더글라스 전나무
+ColorCan_ForestGreen	포레스트 그린 페인트 캔
+Steel_Fork	포크
+CannedFruitCocktail	과일 칵테일
+Dish_Salad_Fruit	과일 샐러드
+Fungicide	살균제
+Fuse_1000A	퓨즈 1000A
+Fuse_200A	퓨즈 200A
+Fuse_400A	퓨즈 400A
+Fuse_600A	퓨즈 600A
+Fuse_800A	퓨즈 800A
+ColorCan_GalaxyBlue	갤럭시 블루 페인트 캔
+ColorCan_GalaxyGrey	갤럭시 그레이 페인트 캔
+Garlic	마늘
+Garlic_Seed_Bag	마늘 씨앗 가방 - 마늘 씨앗 가방
+Garlic_Seeds	마늘 씨앗
+Garrison_Cap_01	수비대 모자
+Garrison_Cap_02	수비대 모자
+Garrison_Cap_03	수비대 모자
+Garrison_Cap_04	수비대 모자
+Garrison_Cap_05	수비대 모자
+Gas_Mask_01	방독면
+Gas_Mask_02	방독면
+Gas_Mask_03	방독면
+Gas_Mask_04	방독면
+GasTank	가스 탱크
+Gasoline_Canister	가솔린 용기
+Gear	기어
+Ghillie_Suit_Pants_01	길리 수트 하의
+Ghillie_Suit_Jacket_01	길리 수트 탑
+Glass	유리
+Glue	접착제
+Goat_Head	염소 머리
+Goat_Horns	염소 뿔
+Goat_Back_Limb	염소 다리
+Goat_Front_Limb	염소 다리
+Goat_Skull_Hat_01	염소 해골 모자
+Goat_Steak	염소 스테이크
+Goat_Torso	염소 몸통
+Credit_Card_Gold	골드 뱅크 카드
+MemoryModule_Level4	골드 메모리 모듈
+GrapeFruit	자몽
+GlassBottle02	자몽 주스
+Graphite	흑연
+Grasshopper	메뚜기
+FishingBait_Grasshopper	메뚜기 물고기 미끼
+GravelBag	자갈 가방
+MemoryModule_Level1	회색 메모리 모듈
+CannedPeas	녹색 완두콩
+Frag_Grenade	수류탄
+Grinding_Stone_02	그라인딩 스톤
+GuavaHalves	구아바
+Guitar	기타
+Gun_Powder	총 가루
+Zombie_guts	용기
+Halloween_Anonymous_Mask_01	Guy Fawkes 마스크
+Halloween_Mask_BabyDoll_02	할로윈 마스크
+Halloween_Mask_Clown_03	할로윈 마스크
+Halloween_Mask_Greek	할로윈 마스크
+Halloween_Mask_Hockey_04	할로윈 마스크
+Halloween_Mask_JohnDoe_05	할로윈 마스크
+Halloween_Mask_Knife	할로윈 마스크
+Halloween_Mask_Lecter_06	할로윈 마스크
+Halloween_Mask_Plague_07	할로윈 마스크
+Halloween_Mask_Smiley_08	할로윈 마스크
+Halloween_Mask_Wooden_09	할로윈 마스크
+Hand_Drill	핸드 드릴
+Hand_Fan_01	손 부채
+WeaponSuppressor_Handgun	권총 억 제기
+WeaponCharm_Happy_Emoji	해피 이모지 무기 부적
+Harmonica	하모니카
+Hazelnuts	헤이즐
+ColorCan_HazyPurple	흐릿한 보라색 페인트 캔
+Head_Bags_01	머리 자루
+Hemostatic_Dressing	지혈드레싱
+HH_Shoes_03_01	하이힐 앵클부츠
+HH_Shoes_03_02	하이힐 앵클부츠
+HH_Shoes_03_03	하이힐 앵클부츠
+HH_Shoes_03_04	하이힐 앵클부츠
+HH_Shoes_03_05	하이힐 앵클부츠
+HH_Shoes_03_06	하이힐 앵클부츠
+HH_Shoes_03_07	하이힐 앵클부츠
+HH_Shoes_04_01	하이힐 펌프스
+HH_Shoes_04_02	하이힐 펌프스
+HH_Shoes_04_03	하이힐 펌프스
+HH_Shoes_04_04	하이힐 펌프스
+HH_Shoes_02_01	하이힐 샌들
+HH_Shoes_02_02	하이힐 샌들
+HH_Shoes_02_03	하이힐 샌들
+RH_Shoe_01	하이탑 슈즈
+Sneakers_02_01	하이탑 슈즈
+Sneakers_02_02	하이탑 슈즈
+Sneakers_02_03	하이탑 슈즈
+Sneakers_02_04	하이탑 슈즈
+Hiking_Backpack_01_01	하이킹 배낭
+Hiking_Backpack_01_02	하이킹 배낭
+Hiking_Backpack_01_03	하이킹 배낭
+Hiking_Backpack_01_04	하이킹 배낭
+Hiking_Backpack_01_05	하이킹 배낭
+Hiking_Boots_01	하이킹 부츠
+Hiking_Boots_02	하이킹 부츠
+Hiking_Boots_03	하이킹 부츠
+Hiking_Boots_04	하이킹 부츠
+Hip_Flask	힙합 플라스크
+Hippie_Pants_01	히피 팬츠
+Hippie_Pants_02	히피 팬츠
+Hippie_Pants_03	히피 팬츠
+Hippie_Pants_04	히피 팬츠
+Hippie_Pants_05	히피 팬츠
+Hippie_Pants_06	히피 팬츠
+Hippie_Pants_07	히피 팬츠
+Hippie_Pants_08	히피 팬츠
+Hippie_Shirt_01	히피 셔츠
+Hippie_Shirt_02	히피 셔츠
+Horse_Head	말 머리
+Horse_Mask	말 머리 가면
+Horse_Back_Limb	말 다리
+Horse_Front_Limb	말 다리
+Horse_Steak	말고기 스테이크
+Horse_Torso	말 몸통
+Horse_Torso_Half	말 몸통 - 절반
+WeaponCharm_Horseshoe	말굽 무기 부적
+Hose	호스
+Hospital_Pants	병원 바지
+Hospital_Shirt_01	병원 셔츠
+Weapon_SF19	HS SF19
+Magazine_SF19	탄창 — HS SF19
+Weapon_Parts_SF19	HS SF19 무기 부품
+Weapon_HS9	HS-9
+Weapon_Parts_HS9	HS-9 무기 부품
+Magazine_HS9	탄창 — HS9
+Prisoner_Left_Arm	인간의 팔
+Prisoner_Right_Arm	인간의 팔
+Human_Ears	인간의 귀
+Prisoner_Left_Foot	인간의 발
+Prisoner_Right_Foot	인간의 발
+Human_guts	인간의 내장
+Prisoner_Head	인간의 머리
+Prisoner_Head_No_Teeth	인간의 머리
+Prisoner_Left_Leg	인간의 다리
+Prisoner_Right_Leg	인간의 다리
+Human_Skin	인간의 피부
+Human_Steak	휴먼 스테이크
+Human_Teeth	인간의 치아
+Prisoner_Torso	인간 몸통
+1H_Hunter	헌터
+Weapon_Hunter85_V2	Hunter 85
+Magazine_Hunter85_V2	탄창 — Hunter 85
+Weapon_Parts_Hunter85	Hunter 85 무기 부품
+WeaponSuppressor_Hunter	소음기 — Hunter
+WeaponScope_HuntingScope	조준경 — 사냥
+Icing_Sugar	착빙 설탕
+ImprovisedCal50Turret	즉흥적으로 .50 칼 포탑
+Improvised_Backpack_Big	즉석 배낭
+ImprovisedBasicTurret	즉석 기본 포탑
+Improvised_Shelter	즉석 침대
+Improvised_Shoes_01	즉석 부츠
+WeaponSuppressor_ImprovisedBottle_Grey	즉석 병 억제 장치
+WeaponSuppressor_ImprovisedBottle_White	즉석 병 억제 장치
+Improvised_Bow	즉석활 20#
+Improvised_Bow_25	즉석활 25#
+Improvised_Bow_30	즉석활 30#
+Improvised_Bow_35	즉석활 35#
+Bow_ImprovisedStabilizer	즉석 활 안정 장치
+Improvised_Bulletproof_Armor	즉석 방탄 갑옷
+AntiburnGel_Improvised	즉석 화상 젤
+WeaponSuppressor_ImprovisedCan_Grey	즉석 캔 억제 장치
+WeaponSuppressor_ImprovisedCan_Red	즉석 캔 억제 장치
+Improvised_Chandelier_Light	즉석 샹들리에
+ImprovisedClaymore	즉흥적으로 만든 클레이모어
+Improvised_compass	즉석 나침반
+Improvised_Bag_Small_01	즉석 택배 배낭
+Weapon_Improvised_Crossbow	즉석 석궁
+Improvised_Electric_Lamp_Ceiling	즉석 전기 램프
+ImprovisedFishingHook	즉석 낚시 바늘
+ImprovisedFishingFloater	즉석 낚시 플로터
+Improvised_FishingLine	즉석 낚싯줄
+ImprovisedFishingRod	즉석 낚싯대
+Weapon_Improvised_Flamethrower	즉석 화염방사기
+ImprovisedFlamethrowerTurret	즉석 화염방사기 포탑
+ImprovisedFlashlight	즉석 손전등
+2H_Improvised_Gardening_Hoe	즉석 정원 가꾸기 괭이
+Geiger_Counter_Improvised	즉석 가이거 계수기
+Improvised_Ghillie_Jacket	즉석 길리 재킷
+Improvised_Ghillie_Pants	즉석 길리 팬츠
+1H_Improvised_Glass_Shiv	즉석 유리칼
+Weapon_ImprovisedGrenadeLauncher	즉석 수류탄 발사기
+Weapon_Parts_ImprovisedGrenadeLauncher	즉석 수류탄 발사기 무기 부품
+1H_Improvised_Hammer	즉석 망치
+Weapon_Improvised_Handgun	즉석 권총
+1H_Hatchet	즉석 손도끼
+Improvised_Lockpick	즉석 자물쇠 따기
+Magnifying_Glass	즉석 돋보기
+Scary_Mask_01	즉석 가면
+ImprovisedMetalDetector	즉석 금속 탐지기
+2H_Improvised_metal_shovel	즉석 금속 삽
+Improvised_Metal_Spear	즉석 금속 창
+ImprovisedMine	즉석 광산
+ImprovisedMinigunTurret	즉석 미니건 포탑
+Improvised_Motorcycle_Wheel	즉석 오토바이 바퀴
+WeaponSuppressor_ImprovisedOilCan_01	즉석에서 만든 기름통 억제기
+PaintSprayer	즉석 페인트 분무기
+Dish_Pasta_Improvised	즉석 파스타 요리
+Weapon_Parts_Impro_Pistol	즉석 권총 무기 부품
+Improvised_Quiver_02_Rags	즉석 화살통
+Raincoat_Improvised	즉석 비옷
+Dish_Rice_Improvised	즉석 쌀 요리
+Weapon_Improvised_Rifle	즉석 소총
+ImprovisedRail_Side	즉석 라이플 레일
+Weapon_Parts_Impro_rifle	즉석 소총 무기 부품
+ImprovisedRocketTurret	즉석 로켓 포탑
+Improvised_rope	즉석에서 만든 밧줄
+Dish_Salad_Improvised	즉석 샐러드
+Dish_Sandwich_Improvised	즉석 샌드위치
+WeaponSights_ImprovisedScope	조준경 — 간이 제작
+Improvised_Sewing_kit	즉석 재봉 키트
+ImprovisedSmallPaddle	즉석 짧은 패들
+2H_Improvised_shovel	즉석 삽
+Dish_Soup_Improvised	즉석 수프
+Improvised_Stabproof	급조된 찌르기 방지 조끼
+Dish_Stew_Improvised	즉석 스튜
+Improvised_Stone_Spear	즉석 돌창
+Improvised_Tire_Repair_Kit	즉석 타이어 수리 키트
+1H_Improvised_Tomahawk	즉석 토마호크
+Improvised_Tool_Box	즉석 도구 상자
+Improvised_Water_container	즉석 물통
+Improvised_Wheel	즉석 휠
+Improvised_Wooden_Spear	즉석에서 만든 나무 창
+Improvised_Workbench	즉석 작업대
+Industrial_Fertilizer	산업용 비료
+2H_Industrial_Gardening_Hoe	산업 원예 괭이
+Inonotus_Obliquus	Inonotus Obliquus
+Instant_OatMeal	인스턴트 오트밀
+Electrician_Glove_01_01	절연고무장갑
+Electrician_Glove_01_02	절연고무장갑
+Electrician_Glove_01_03	절연고무장갑
+IntEA_Level1	지능 강화 앰플 레벨 1
+IntEA_Level2	지능 강화 앰플 레벨 2
+IntEA_Level3	지능 강화 앰플 레벨 3
+Lock_Item_Basic	철제 자물쇠
+Isopropyl_alcohol	이소프로필알코올
+Jack_o_Lantern_01	잭오랜턴
+Jack_o_Lantern_02	잭오랜턴
+Jack_o_Lantern_03	잭오랜턴
+Jeans_01_01	청바지
+Jeans_01_02	청바지
+Jeans_01_03	청바지
+Jeans_01_04	청바지
+Jeans_02_01_V2	청바지
+Jeans_02_02	청바지
+Jeans_02_03	청바지
+Jeans_02_04	청바지
+Jeans_02_05	청바지
+Jeans_02_06	청바지
+Jeans_02_07	청바지
+Jeans_02_08	청바지
+Jeans_02_09	청바지
+Jersey_01	저지 셔츠
+Jersey_02	저지 셔츠
+Jersey_03	저지 셔츠
+Jersey_04	저지 셔츠
+Jersey_05	저지 셔츠
+Jersey_06	저지 셔츠
+Jersey_07	저지 셔츠
+Jersey_08	저지 셔츠
+Jersey_09	저지 셔츠
+Jock_Jacket_01	조크 재킷
+Jock_Jacket_02	조크 재킷
+Jock_Jacket_03	조크 재킷
+Jock_Jacket_04	조크 재킷
+Joint01	조인트
+Weapon_Judge44	판사 44
+Weapon_Parts_Judge44	심사위원 44 무기 부품
+Baseball_Cap_12	JW 모자
+K6-3_Helmet	K6-3 헬멧
+Weapon_98k_Karabiner	Kar98
+Kar98_Bayonet	Kar98 총검
+WeaponSuppressor_Kar98k	소음기 — Kar98k
+Weapon_Parts_Kar98k	Kar98k 무기 부품
+2H_Katana	카타나
+Ketchup	케첩
+KeyCard	키 카드
+KeyCardBunker_Level01	키 카드
+KeyCardBunker_Level02	키 카드
+Keyhole_Shirt_01	키홀 셔츠
+Keyhole_Shirt_02	키홀 셔츠
+Keyhole_Shirt_03	키홀 셔츠
+Keyhole_Shirt_04	키홀 셔츠
+Keyhole_Shirt_05	키홀 셔츠
+Keyhole_Shirt_06	키홀 셔츠
+Keyhole_Shirt_07	키홀 셔츠
+Keyhole_Shirt_08	키홀 셔츠
+Kicmovaca	Kicmovaca
+Kilt_01	킬트
+Kilt_02	킬트
+Kilt_03	킬트
+Kilt_04	킬트
+Kilt_05	킬트
+Kilt_06	킬트
+Kitchen_Board_01	주방 보드
+Kitchen_Board_02	주방 보드
+1H_KitchenKnife	부엌칼
+1H_KitchenKnife_02	부엌칼
+1H_KitchenKnife_02_Deluxe	부엌칼
+1H_KitchenKnife_03	부엌칼
+1H_KitchenKnife_04	부엌칼
+1H_KitchenKnife_DigitalDeluxe	부엌칼
+Kiwi	키위
+Socks_02	무릎 높이 양말
+Recurve_Bow_60	Kodiak 60#
+Slippers_01	Kroks
+Weapon_Krueger	Krueger
+Magazine_Krueger	탄창 — Krueger
+Weapon_Parts_Krueger	Krueger 무기 부품
+1H_Kunai	쿠나이
+Laika_Engine_Alternator_Item	Laika 발전기
+Laika_Body_ArmorHeavy_Left	Laika 방탄복 중장비 왼쪽
+Laika_Body_ArmorHeavy_Right	Laika 방탄복 헤비 오른쪽
+Laika_Body_ArmorLight_Left	Laika 방탄복 조명 왼쪽
+Laika_Body_ArmorLight_Right	Laika 방탄복 라이트 오른쪽
+Laika_Body_ArmorLight_Top	Laika 방탄복 라이트 탑
+Laika_Body_Front	Laika 몸 앞
+Laika_Body_Left	Laika 본체 왼쪽
+Laika_Body_Right	Laika 몸 오른쪽
+Laika_Body_Top	Laika 바디탑
+Laika_Bumper_Armor_Back_Item	Laika 범퍼 갑옷 등
+Laika_Bumper_Back_Item	Laika 범퍼백
+Laika_Bumper_Front_Item	Laika 범퍼 앞
+Laika_Door_ArmorHeavy_FrontLeft_Item	Laika 문 중갑 앞 좌측
+Laika_Door_ArmorHeavy_FrontRight_Item	Laika 문 중갑 앞 우측
+Laika_Door_Left_Item	Laika 문 왼쪽
+Laika_Door_ArmorLight_FrontLeft_Item	Laika 도어 라이트 아머 전면 좌측
+Laika_Door_ArmorLight_FrontRight_Item	Laika 도어 라이트 아머 앞 우측
+Laika_Door_Right_Item	Laika 문 오른쪽
+Laika_Body_ArmorHeavy_Top_Item	Laika 중갑 상의
+Laika_DoorHood_Item	Laika 후드
+Laika_Lights_FrontLeft	Laika 조명 전면 왼쪽
+Laika_Lights_FrontRight	Laika 조명 앞 오른쪽
+Laika_Lights_RearLeft	Laika 조명 후방 좌측
+Laika_Lights_RearRight	Laika 조명 뒤 오른쪽
+Laika_Seat_FrontLeft_Item	Laika 좌석 앞 좌측
+Laika_Seat_FrontRight_Item	Laika 좌석 앞 우측
+Laika_DoorTrunk_ArmorHeavy_Item	Laika 트렁크 아머 헤비
+Laika_DoorTrunk_ArmorLight_Item	Laika 트렁크 아머 라이트
+Laika_DoorTrunk_Item	Laika 트렁크 도어
+Battery_Charger_Large	대형 배터리 충전기
+LogShed_1	대형 통나무 창고
+Stone_Large	큰 돌
+Larve	유충
+Laser_Detonator	레이저 기폭 장치
+Lead_Plate	리드 플레이트
+Leather_Backpack_01	가죽 백팩
+Leather_Backpack_02	가죽 백팩
+Leather_Backpack_03	가죽 백팩
+Belt_Pistol_Holster	가죽 벨트 권총집
+Leather_MiniSkirt_01	가죽 미니 스커트
+Leather_MiniSkirt_02	가죽 미니 스커트
+Leather_MiniSkirt_03	가죽 미니 스커트
+Leather_Sheet	가죽 시트
+Leather_Shoes_02	가죽 신발
+Lemon	레몬
+Lemon_Seed_Bag	레몬 씨앗 가방 - 레몬 씨앗 가방
+Lemon_Seeds	레몬 씨앗
+Lepiota_Procera	Lepiota Procera
+Lettuce	양상추
+Lettuce_Seed_Bag	상추 씨앗 가방 - 상추 씨앗 가방
+Lettuce_Seeds	상추 씨앗
+ColorCan_LightBrown	연한 갈색 페인트 캔
+ColorCan_LightUrban	가벼운 도시 페인트 캔
+Lighter	라이터
+Lime	라임
+ColorCan_LimeGreen	라임 그린 페인트 캔
+GlassBottle03	라임 주스
+PETBottle03	라임소다
+PETBottle04	라임소다
+Ganoderma_Lucidum	영지버섯
+WeaponCharm_Emoji	LMAO 이모티콘 무기 부적
+Lockpick_Item	자물쇠 따기
+LockpickingBoard	자물쇠 따기 보드
+ImprovisedRail_Long	긴 즉석 레일
+Long_Paddle	롱 패들
+Long_wooden_stick	긴 나무 막대기
+Vest_01	긴소매 셔츠
+Vest_02	긴소매 셔츠
+Vest_03	긴소매 셔츠
+Vest_04	긴소매 셔츠
+Vest_05	긴소매 셔츠
+Cigarettes1	Lucky Star 담배 팩
+Cigarette1	럭키스타즈 담배
+Lycoperdon_Gigantea	Lycoperdon Gigantea
+M1_Bayonet	M1 총검
+M1_Clip	장전 클립 — M1
+WeaponSights_M1_Experimental	M1 실험 조준경
+WeaponFlashHider	M1 플래시 하이더
+M1_Medical_Helmet	M1 의료용 헬멧
+Weapon_M1_Garand	M1 소총
+WeaponSights_M1_ScopeAndSights	조준경 — M1
+WeaponSuppressor_M1	소음기 — M1
+Weapon_Parts_M1_Garand	M1 무기 부품
+Magazine_M16	탄창 — M16
+Weapon_M16A4	M16A4
+WeaponSights_M16A4_FoldingSights	M16A4 접이식 조준경
+Weapon_Parts_M16A4	M16A4 무기 부품
+Weapon_M1887	M1887
+Weapon_M1887_Sawed_off	M1887 톱질됨
+Weapon_Parts_M1887	M1887 무기 부품
+Weapon_MosinNagant	M1891
+Mosin_Bayonet	M1891 총검
+WeaponSuppressor_M1891	소음기 — M1891
+Weapon_Parts_MosinNagant	M1891 무기 부품
+Weapon_M1911	M1911
+Weapon_M1911_Engraved	M1911 각인
+Weapon_M1911_Gold	M1911 골드
+Weapon_M1911_JayW	M1911 JayW
+Magazine_M1911	탄창 — M1911
+M1911_Rail	장착 레일 — M1911
+Weapon_Parts_M1911	M1911 무기 부품
+Weapon_M249	M249
+Magazine_M249	M249 탄약통
+Weapon_Parts_M249	M249 무기 부품
+M70_Bayonet	M70 총검
+WeaponSuppressor_M82A1	소음기 — M82 QDL
+WeaponSuppressor_M82A1_Black	소음기 — M82 QDL
+WeaponSuppressor_M82A1_Desert	소음기 — M82 QDL
+WeaponSuppressor_M82A1_Snow	소음기 — M82 QDL
+WeaponScope_M82A1	조준경 — M82
+WeaponScope_M82A1_Black	조준경 — M82
+WeaponScope_M82A1_Desert	조준경 — M82
+WeaponScope_M82A1_Snow	조준경 — M82
+Weapon_M82A1	M82A1
+Weapon_M82A1_Black	M82A1
+Weapon_M82A1_Desert	M82A1
+Weapon_M82A1_Snow	M82A1
+Magazine_M82A1	탄창 — M82A1
+Weapon_Parts_M82A1	M82A1 무기 부품
+Flashbang	M84 기절 수류탄
+WeaponFlashlight_M9	M9 손전등
+Magazine_M9	탄창 — M9
+Weapon_Parts_M9	M9 무기 부품
+Weapon_MAC10	MAC-10
+Magazine_MAC10	탄창 — MAC-10
+WeaponSuppressor_MAC10	소음기 — MAC-10
+Weapon_Parts_MAC10	MAC-10 무기 부품
+Magnifying_Glass1	돋보기
+Vodka	Majestic Bear 보드카
+Manchu_Bow_50	Manchu 활
+Mango	망고
+Marine_Cap_01	마린 캡
+Marine_Cap_02	마린 캡
+Marine_Cap_03	마린 캡
+Marine_Cap_04	마린 캡
+Marine_Cap_05	마린 캡
+Marine_Cap_06	마린 캡
+Marine_Cap_07	마린 캡
+Marine_Cap_08	마린 캡
+Matches	경기
+Mayonnaise	마요네즈
+FishingBait_Meat	고기 생선 미끼
+MeatSnack_01	고기 스낵 매운
+MeatSnack_02	고기 스낵 매운
+Medical_Glove_01	의료용 장갑
+1H_Medieval_Sword	중세 검
+Battery_Charger_Medium	중형 배터리 충전기
+FishingHookPack2	중간 후크 팩
+Lock_Security_Lvl2	중간 잠금 보호
+Medium_Vehicle_StorageRack	중형 차량 보관함
+FishingHook1	중형 낚시바늘
+Knife_Sheath	근접 무기 홀스터
+Metal_Arrow	금속 화살
+2H_Metal_Axe	금속 도끼
+2H_Metal_Baseball_Bat	금속 야구 배트
+Ammo_Crossbow_Bolt_Metal	금속 석궁 볼트
+MetalDetector	금속 탐지기
+1H_Improvised_metal_knife	금속 칼
+1H_Metal_Pipe	금속 파이프
+Saw	금속 톱
+Metal_Scrap_01	금속 스크랩
+Metal_Scrap_02	금속 스크랩
+Metal_Scrap_03	금속 스크랩
+Metal_Scrap_04	금속 스크랩
+Metal_Scrap_05	금속 스크랩
+1H_Metal_Sword	금속검
+Ammo_Crossbow_Bolt_WoodenMetalTip	금속 팁 석궁 볼트
+Wooden_ArrowMetalTip	금속 팁 나무 화살
+Bundle_Of_Metal_Tips	금속 팁
+HH_Shoes_05_01	미드 힐 샌들
+HH_Shoes_05_02	미드 힐 샌들
+HH_Shoes_05_03	미드 힐 샌들
+MilitaryBoots_JNA	군용 부츠
+MilitaryBoots_Peace	군용 부츠
+Military_Cap_01	군용 모자
+Military_Cap_02	군용 모자
+Military_Cap_03	군용 모자
+Military_Cap_04	군용 모자
+Military_Cap_05	군용 모자
+Military_Cap_06	군용 모자
+Military_Cap_07	군용 모자
+Military_Cap_08	군용 모자
+Compass	군사 나침반
+Military_Goggles_01	군용 고글
+Tactical_Sunglasses_01	군용 고글
+Tactical_Sunglasses_02	군용 고글
+Military_Helmet_01_01	군용 헬멧
+Military_Helmet_01_02	군용 헬멧
+Military_Helmet_01_03	군용 헬멧
+Military_Helmet_01_04	군용 헬멧
+Military_Helmet_01_05	군용 헬멧
+Military_Helmet_01_06	군용 헬멧
+Military_Helmet_01_07	군용 헬멧
+Military_Helmet_01_08	군용 헬멧
+Military_Helmet_01_09	군용 헬멧
+Military_Quiver_01	군용 화살통
+Military_Quiver_02	군용 화살통
+Military_Quiver_03	군용 화살통
+Military_Quiver_04	군용 화살통
+Military_Quiver_05	군용 화살통
+Military_Quiver_06	군용 화살통
+Military_Quiver_07	군용 화살통
+Military_Quiver_08	군용 화살통
+Military_Shirt_01	밀리터리 셔츠
+Military_Shirt_02	밀리터리 셔츠
+Military_Shirt_03	밀리터리 셔츠
+Military_Shirt_04	밀리터리 셔츠
+Military_Shirt_05	밀리터리 셔츠
+Military_Shirt_06	밀리터리 셔츠
+Military_Shirt_07	밀리터리 셔츠
+Military_Shirt_08	밀리터리 셔츠
+1H_Military_Shovel	군용 삽
+1H_Military_Survival_Knife	군사 생존 칼
+1H_Military_Tomahawk	군용 토마호크
+Milk	우유
+Leather_Shoes	Mirdas 신발
+Weapon_MK18	MK18
+WeaponSuppressor_MK18	소음기 — MK18
+Weapon_Parts_MK18	MK18 무기 부품
+1H_MK5000_Black	MK5000
+1H_MK5000_Metal	MK5000
+MMA_Glove_01	MMA 장갑
+Mobile_Phone	휴대전화
+Hazmat_Suit_Modern	현대 방호복
+Recurve_Bow_80	모히칸 80#
+Sensor_Detonator	모션 센서 기폭 장치
+Motorbike_Battery	오토바이 배터리
+Motorcycle_Boots_01	오토바이 부츠
+Motorcycle_Boots_02	오토바이 부츠
+Motorcycle_Boots_03	오토바이 부츠
+Motorcycle_Glasses_01	오토바이 안경
+Motorcycle_Glasses_02	오토바이 안경
+Motorcycle_Jacket_01	오토바이 재킷
+Motorcycle_Jacket_02	오토바이 재킷
+Motorcycle_Jacket_03	오토바이 재킷
+Motorcycle_Mask_01	오토바이 마스크
+Motorcycle_Mask_02	오토바이 마스크
+Motorcycle_Pants_01	오토바이 바지
+Motorcycle_Pants_02	오토바이 바지
+Motorcycle_Pants_03	오토바이 바지
+Weapon_MP5	MP5
+Weapon_MP5_K	MP5 K
+Magazine_MP5	탄창 — MP5
+MP5_Rail_Short	MP5 레일
+Weapon_MP5_SD	MP5 SD
+WeaponSuppressor_MP5	소음기 — MP5
+Weapon_Parts_MP5	MP5 무기 부품
+WeaponSights_MRO_Red_Dot	도트 조준기 — MRO
+Mulberry	멀베리
+Mustard	머스타드
+Mutant_Animal_Skin	돌연변이 동물 가죽 - 돌연변이 동물 가죽
+Bear_Head_Mutant	돌연변이 곰 머리
+Mutant_Bear_Steak	돌연변이 곰 스테이크 - 돌연변이 곰 스테이크
+Boar_Head_Mutant	돌연변이 멧돼지 머리
+Buck_Head_Mutant	돌연변이 벅 헤드
+Mutant_Buck_Steak	돌연변이 사슴 스테이크
+Wolf_Head_Mutant	돌연변이 늑대 머리
+Mutant_Wolf_Steak	돌연변이 늑대 스테이크 - 돌연변이 늑대 스테이크
+1H_N9_Black	N9 총검
+1H_N9_White	N9 총검
+Nails	손톱
+ColorCan_NavyBlue	네이비 블루 페인트 캔
+ColorCan_NavyGrey	네이비 그레이 페인트 캔
+Needle	바늘
+Night_Vision_Goggles_01	야간투시경 고글
+FishingLine_2	나일론 라인, 미디엄, 0.18 mm
+FishingLinePiece_2	나일론 라인, 미디엄, 0.18 mm
+FishingLine_3	나일론 라인, 굵은, 0.25 mm
+FishingLinePiece_3	나일론 라인, 굵은, 0.25 mm
+FishingLine_4	나일론 라인, 굵은, 0.5 mm
+FishingLinePiece_4	나일론 라인, 굵은, 0.5 mm
+FishingLine_1	나일론 라인, 얇은, 0.12 mm
+FishingLinePiece_1	나일론 라인, 얇은, 0.12 mm
+Oak_Nuts	오크넛
+Cal_40_OG-7V	OG-7V
+WeaponCharm_Ogre	오우거 무기 부적
+Oil_Filter	오일 필터
+WeaponSights_OKP-7_Holographic	홀로그램 조준기 — OKP
+Olives	올리브
+Onion	양파
+Chips3	양파링
+Open_Finger_Gloves_01	오픈 핑거 장갑
+Open_Finger_Gloves_02	오픈 핑거 장갑
+Open_Finger_Gloves_03	오픈 핑거 장갑
+Open_Finger_Gloves_04	오픈 핑거 장갑
+Open_Finger_Gloves_05	오픈 핑거 장갑
+Open_Finger_Gloves_06	오픈 핑거 장갑
+Opuntia_Fig	부채 무화과
+Orange	오렌지
+Can02	오렌지 주스
+GlassBottle04	오렌지 주스
+Orange_Seed_Bag	오렌지 씨앗 가방 - 오렌지 씨앗 가방
+Orange_Seeds	오렌지 씨앗
+Fish_Orata	금줄도미
+Orata_Fillet	오라타 필렛
+Organic_Fertilizer	유기 비료
+HH_Boots_01	오버 니 부츠
+WeaponScope_Dragunov	조준경 — P-223
+P17_Bayonet	P17 총검
+C4_Pack	포장된 C4
+Padlock	자물쇠
+Painkillers_01	진통제 - 물집
+Painkillers_02	진통제 - 상자
+PainKillers_03	진통제 - 항아리
+Pajama_Pants	파자마 바지
+Pajama_Shirt_01	파자마 셔츠
+Pan	팬
+Inmate_pants	바지
+Inmate_Pants_01_Forest_DigitalDeluxe	바지
+Inmate_Pants_01_Snow_DigitalDeluxe	바지
+Inmate_Pants_01_South_DigitalDeluxe	바지
+Pantyhose_01	팬티스타킹
+Paper	종이
+Parachute	낙하산
+Parking_Sensor	주차 센서
+Parsley	파스닙
+Party_Glasses_01	파티 안경
+Party_Glasses_02	파티 안경
+Pasta	파스타
+Book_Cooking_Pasta	파스타 요리책
+Weapon_PeaceKeeper38	평화유지군 38
+Weapon_Parts_PeaceKeeper38	피스키퍼 38 부품
+Peach	복숭아
+CannedPeach	복숭아 설탕에 절인 과일
+Peach_Seed_Bag	복숭아씨주머니 - 복숭아씨주머니
+Peach_Seeds	복숭아 씨앗
+Pear	배
+CannedPear	배 설탕에 절인 과일
+Pear_Seed_Bag	배씨 주머니 - 배씨 주머니
+Pear_Seeds	배 씨앗
+Pen	펜
+Penicillin01	페니실린
+Peppers_Seeds	고추 씨앗
+Peppers_Seed_Bag	고추 씨앗 가방 - 고추 씨앗 가방
+Pesticide	농약
+Cal_40_PG-7M	PG-7M
+2H_Pickaxe	곡괭이
+Rubber_sheet	고무 조각
+Pike_Fillet	파이크 필렛
+Fish_Pike	파이크 피쉬
+Pike_Head	파이크 헤드
+Pilot_Glasses	파일럿 안경
+Pilot_Hat_01	파일럿 모자
+Pilot_Jacket	파일럿 재킷
+Pine_Cone	솔방울
+Pineapple	파인애플
+Ghillie_Suit_Pants_04	핑크 길리 수트 하의
+Ghillie_Suit_Jacket_04	핑크 길리 수트 탑
+PipeBomb	파이프 폭탄
+1H_Pipe_Wrench	파이프 렌치
+WeaponCharm_PirateCat	해적 고양이 무기 부적
+Pirate_EyePatch	해적의 안대
+Pirate_Hat_01	해적의 모자
+Pirate_Hat_Sparrow_02	해적의 모자
+2H_Pitchfork	갈퀴
+Book_Cooking_Pizza	피자 요리책
+Scissors_Plastic	플라스틱 가위
+Hen_Torso	뽑은 닭
+Plum	매화
+Plum_Seed_Bag	자두씨주머니 - 자두씨주머니
+Plum_Seeds	자두 씨앗
+Police_Backpack_01	경찰 폭행 배낭
+Police_Backpack_03	경찰 배낭
+Police_Beanie_01	경찰 비니
+ColorCan_PoliceBlue	경찰 파란색 페인트 캔
+Police_Bulletproof_Vest_01	경찰 방탄 조끼
+Police_Cap_01	경찰 모자
+Police_Boonie_Hat_01	경찰 낚시 모자
+Police_Gloves_01	경찰 장갑
+Police_Cap_02	경찰 모자
+Police_Backpack_02	경찰 하이킹 배낭
+Police_Jacket_01	경찰 재킷
+Police_Open_Finger_Gloves_01	경찰 오픈 핑거 장갑
+Police_Shirt_01	경찰 셔츠
+pOLICE_Sweater_01	경찰 스웨터
+Armor_Police_Vest_01	경찰 전술 조끼
+Pork_Steak	돼지고기 스테이크
+Mutant_Pork_Steak	돼지고기 스테이크 - 돌연변이 돼지고기 스테이크
+WeaponScope_POSP	POSP 4x24V
+PotassiumIodide_Pills_01	요오드화 칼륨 알약 - 물집
+PotassiumIodide_Pills_02	요오드화 칼륨 알약 - 상자
+PotassiumIodide_Pills_03	요오드화 칼륨 알약 - 항아리
+Potato	감자
+Chips4	감자칩 짠맛
+Potato_Seed_Bag	감자씨주머니 - 감자씨주머니
+Potatoes_Seeds	감자 씨앗
+PracticeTrap	연습폭탄
+Recurve_Bow_70	Predator 70#
+BlankSign_Premium	프리미엄 공백 표시
+PremiumBoiliesPack	프리미엄 보일리스 미끼 팩
+Car_Lamp_Ceiling	프리미엄 전기램프
+PressureCookerBomb	압력솥 폭탄
+Pressure_Dressing	압력드레싱
+Compass_Primitive	원시 나침반
+PromTrap	PROM-1 내꺼야
+Fish_PrussianCarp	은붕어
+Psilocybe_Cyanescens	Psilocybe Cyanescens
+WeaponScope_PU	조준경 — PU
+Pumpkin	호박
+Pumpkin_Seed_Bag	호박씨 가방 - 호박씨 가방
+Pumpkin_Seeds	호박씨
+Zombie_01_Left_Arm	꼭두각시 팔
+Zombie_01_Right_Arm	꼭두각시 팔
+Puppet_Eye	꼭두각시 눈
+Zombie_01_Left_Foot	꼭두각시 발
+Zombie_01_Right_Foot	꼭두각시 발
+Zombie_01_Head	꼭두각시 머리
+Zombie_01_Head_No_teeth	꼭두각시 머리
+Zombie_01_Left_Leg	꼭두각시 다리
+Zombie_01_Right_Leg	꼭두각시 다리
+ZombieMeat	꼭두각시 고기
+Zombie_01_Torso	꼭두각시 몸통
+MemoryModule_Level3	보라색 메모리 모듈
+Qipao_Dress_01	치파오 드레스
+Qipao_Dress_02	치파오 드레스
+Qipao_Dress_03	치파오 드레스
+Qipao_Dress_04	치파오 드레스
+Qipao_Dress_05	치파오 드레스
+Qipao_Dress_06	치파오 드레스
+HH_Wedge_Heels_01_01	치파오 신발
+HH_Wedge_Heels_01_02	치파오 신발
+HH_Wedge_Heels_01_03	치파오 신발
+HH_Wedge_Heels_01_04	치파오 신발
+HH_Wedge_Heels_01_05	치파오 신발
+HH_Wedge_Heels_01_06	치파오 신발
+Rabbit_Left_Front	토끼 왼쪽 앞부분
+Rabbit_Left_Back	토끼 왼쪽 뒷부분
+RabbitLeg	토끼 다리
+RabbitMeat	토끼고기
+Rabbit_Right_Front	토끼 오른쪽 앞부분
+Rabbit_Right_Back	토끼 오른쪽 뒷부분
+Racing_Helmet_01	레이싱 헬멧
+Radio	라디오
+Improvised_Gloves	걸레 장갑
+Improvised_Shoes_02	헝겊 신발
+Rag_Stripes	걸레 조각
+Rager_Engine_Alternator_Item	Rager 발전기
+Rager_Body_ArmorHeavy_Back_Item	Rager 방탄복 중갑 등
+Rager_Body_ArmorHeavy_Left_Item	Rager 방탄복 중장비 왼쪽
+Rager_Body_ArmorHeavy_Right_Item	Rager 방탄복 헤비 오른쪽
+Rager_Body_ArmorHeavy_Top_Item	Rager 방탄복 헤비 탑
+Rager_Body_ArmorLight_Back_Item	Rager 방탄복 라이트백
+Rager_Body_ArmorLight_Left_Item	Rager 방탄복 조명 왼쪽
+Rager_Body_ArmorLight_Right_Item	Rager 방탄복 라이트 오른쪽
+Rager_Body_ArmorLight_Top_Item	Rager 방탄복 라이트 탑
+Rager_Body_Front	Rager 몸 앞
+Rager_Body_Left	Rager 본체 왼쪽
+Rager_Body_Right	Rager 몸 오른쪽
+Rager_Body_Top	Rager 바디탑
+Rager_Bumper_Back_Item	Rager 범퍼백
+Rager_Bumper_Front_Item	Rager 범퍼 앞
+Rager_Door_ArmorHeavy_BackLeft_Item	Rager 도어 아머 헤비 등 왼쪽
+Rager_Door_ArmorHeavy_BackRight_Item	Rager 도어 아머 헤비 등 오른쪽
+Rager_Door_ArmorHeavy_FrontLeft_Item	Rager 도어 아머 헤비 전면 왼쪽
+Rager_Door_ArmorHeavy_FrontRight_Item	Rager 도어 아머 헤비 전면 오른쪽
+Rager_Door_ArmorLight_BackLeft_Item	Rager 도어 아머 라이트 뒤 왼쪽
+Rager_Door_ArmorLight_BackRight_Item	Rager 도어 아머 라이트 뒤 오른쪽
+Rager_Door_ArmorLight_FrontLeft_Item	Rager 도어 아머 라이트 전면 좌측
+Rager_Door_ArmorLight_FrontRight_Item	Rager 도어 아머 라이트 앞 우측
+Rager_Door_BackLeft_Item	Rager 문 뒤 왼쪽
+Rager_Door_BackRight_Item	Rager 문 뒤 오른쪽
+Rager_Door_FrontLeft_Item	Rager 문 앞 좌측
+Rager_Door_FrontRight_Item	Rager 문 앞 오른쪽
+Rager_DoorHood_Item	Rager 후드
+Rager_Lights_FrontLeft	Rager 조명 전면 왼쪽
+Rager_Lights_FrontRight	Rager 조명 앞 오른쪽
+Rager_Lights_RearLeft	Rager 조명 후방 좌측
+Rager_Lights_RearRight	Rager 조명 뒤 오른쪽
+Rager_Lights_RearTop	Rager 조명 후면 상단
+Rager_Seat_FrontLeft_Item	Rager 좌석 앞 좌측
+Rager_Seat_FrontRight_Item	Rager 좌석 앞 우측
+Rager_DoorTrunk_ArmorHeavy_Item	Rager 트렁크 아머 헤비
+Rager_DoorTrunk_ArmorLight_Item	Rager 트렁크 아머 라이트
+Rager_DoorTrunk_Item	Rager 트렁크 도어
+Rager_Wheel_ArmorHeavy_FrontLeft_Item	Rager 휠 아머 헤비 프론트 좌측
+Rager_Wheel_ArmorHeavy_FrontRight_Item	Rager 휠 아머 헤비 앞 우측
+Rager_Wheel_ArmorLight_FrontLeft_Item	Rager 휠 아머 라이트 전면 좌측
+Rager_Wheel_ArmorLight_FrontRight_Item	Rager 휠 아머 라이트 앞 우측
+Rags	넝마
+Raincoat_01	비옷
+Raincoat_02	비옷
+Raincoat_03	비옷
+Raincoat_04	비옷
+Raincoat_05	비옷
+Raincoat_06	비옷
+Raisins	건포도
+Ramsons	램슨스
+Grapes_Raw	생포도
+RK_Beanie_01	레이킷 비니
+RK_Hoodie_01	레이킷 후디
+Razor_Blade	면도날
+Rebar_Cutter	철근 절단기
+ColorCan_RedChocolate	레드 초콜릿 페인트 캔
+WeaponSights_RedDot_CA401B	레드 닷 사이트
+Energy_Drink_Red_Ghoul	Red Ghoul 에너지 드링크
+RedOnion_Seed_Bag	붉은 양파 종자 주머니
+RedOnion_Seeds	붉은 양파 씨앗
+FishingBait_RedWorm	붉은 벌레 물고기 미끼
+Christmas_Headband_01	순록 귀
+Remote_Door_Key	원격 도어 키
+Remote_Door_Sensor	원격 도어 센서
+KeyCardApex	연구시설 키카드
+Respirator_01	인공호흡기
+Retro_Helmet_01	복고풍 헬멧
+Book_Cooking_Rice	쌀요리책
+Richards_Cheese	리차드 치즈
+Rider_Helmet_01	라이더 헬멧
+Rider_Helmet_02	라이더 헬멧
+Rider_Helmet_03	라이더 헬멧
+Riot_Helmet_02	폭동 헬멧
+ScopeRail_AK47	RIS 어댑터
+RIS_Armor_Military_Front_Item	RIS 갑옷 군사 전선
+RIS_Body_Military_Item	RIS 신체군
+RIS_BrakeLight_Center_Item	RIS 브레이크등 센터
+RIS_BrakeLight_Left_Item	RIS 브레이크등 좌측
+RIS_BrakeLight_Right_Item	RIS 브레이크등 오른쪽
+RIS_Headlight_Left_Item	RIS 헤드라이트 왼쪽
+RIS_Headlight_Right_Item	RIS 헤드라이트 오른쪽
+RIS_Plow_Civilian	RIS 쟁기 민간인
+RIS_Spikes_Military	RIS 스파이크 밀리터리
+RIS_Wheel_Armor_Item	RIS 바퀴 갑옷
+Tobacco_Rolled	압연 담배
+WeaponCharm_Roller_Skate	롤러 스케이트 무기 부적
+Rope1	로프 5m
+Dog_Rose	로즈힙
+Weapon_Parts_RPG	RPG 무기 부품
+Weapon_RPG7	RPG7
+Weapon_RPK-74	RPK
+Magazine_RPK	탄창 — RPK
+Weapon_Parts_RPK-74	RPK 무기 부품
+Rubber_band	고무줄
+Fish_Ruffe	러프
+Ruffe_Fillet	러프 필렛
+Skirt_02_01	러플 스커트
+Skirt_02_02	러플 스커트
+Skirt_02_03	러플 스커트
+Skirt_02_04	러플 스커트
+Skirt_02_05	러플 스커트
+Skirt_02_06	러플 스커트
+Skirt_02_07	러플 스커트
+Safety_Goggles	안전 고글
+Safety_pin	안전핀
+Salsify_roots	Salsify - 뿌리
+SaltBag	소금주머니
+SaltGrain	소금알갱이
+SandBag	모래주머니
+Santa_Hat_01	산타 모자
+Santa_Jacket	산타 재킷
+Santa_Pants	산타바지
+CannedSardine	정어리
+CannedSardine_Deluxe	정어리
+Sardine_Fillet	정어리 필레
+FishingBait_Sardine	정어리 물고기 미끼
+1H_Scalpel	메스
+Weapon_Parts_SCAR_L	SCAR L 무기 부품
+Weapon_SCAR_DMR	SCAR-DMR
+Magazine_SCAR_DMR	탄창 — SCAR-DMR
+Weapon_Parts_SCAR_DMR	SCAR-DMR 무기 부품
+Weapon_SCAR_L	SCAR-L
+Rabbit_Mask_01	무서운 토끼 가면
+School_Backpack_01	학교 배낭
+School_Backpack_Boy_02	학교 배낭
+School_Backpack_Boy_03	학교 배낭
+School_Backpack_Girl_04	학교 배낭
+School_Backpack_Girl_05	학교 배낭
+School_Backpack_Girl_06	학교 배낭
+Scissors_01	가위
+Recurve_Bow	전갈 40#
+1H_Scout_Black	Scout
+1H_Scout_White	Scout
+Screwdriver	드라이버
+Scum_Sunrise	SCUM Sunrise
+SCUMkin_Spice_Latte	SCUMkin Spice Latter
+Weapon_SDASS	SDASS 12M
+Weapon_Parts_SDASS	SDASS 무기 부품
+SeaSalt_01	바다 소금
+SeaSalt_02	바다 소금
+WeaponSights_Sentry_RDRS	보초 RDRS
+WeaponCharm_Sentry	센트리 무기 부적
+Weapon_Serpent357	뱀 357
+Weapon_Parts_Serpent357	뱀 357 무기 부품
+Sewing_kit	재봉 키트
+Sexy_Jeans_Shorts_01	섹시한 데님 반바지
+Sexy_Jeans_Shorts_02	섹시한 데님 반바지
+Sexy_Jeans_Shorts_03	섹시한 데님 반바지
+Sexy_Jeans_Shorts_04	섹시한 데님 반바지
+Sexy_Jeans_Shorts_05	섹시한 데님 반바지
+Sexy_Jeans_Shorts_06	섹시한 데님 반바지
+Sexy_Jeans_Shorts_07	섹시한 데님 반바지
+WeaponSights_Shark	반사식 조준기 — Shark
+Shemagh_Scarf_01	쉐마 스카프
+Shemagh_Scarf_02	쉐마 스카프
+Shemagh_Scarf_03	쉐마 스카프
+Shemagh_Scarf_04	쉐마 스카프
+Shemagh_Scarf_05	쉐마 스카프
+Shemagh_Scarf_06	쉐마 스카프
+Shemagh_Scarf_07	쉐마 스카프
+Shemagh_Scarf_08	쉐마 스카프
+Shimoro_Vest	Shimoro 조끼
+Inmate_shirt_01	셔츠
+Inmate_Shirt_01_Forest_DigitalDeluxe	셔츠
+Inmate_Shirt_01_South_DigitalDeluxe	셔츠
+ImprovisedRail_Short	짧은 즉석 레일
+Short_Paddle_A	짧은 패들
+Short_Paddle_B	짧은 패들
+Shorts_Pants_01_01	짧은 바지
+Shorts_Pants_01_02	짧은 바지
+Shorts_Pants_01_03	짧은 바지
+Shorts_Pants_01_04	짧은 바지
+Shorts_Pants_01_05	짧은 바지
+Shorts_Pants_01_06	짧은 바지
+Shorts_Pants_01_07	짧은 바지
+Shorts_Pants_01_08	짧은 바지
+Shorts_Pants_01_09	짧은 바지
+Shorts_Pants_01_10	짧은 바지
+Short_Trousers_01_01	짧은 바지
+Short_Trousers_01_02	짧은 바지
+Short_Trousers_01_03	짧은 바지
+Short_Trousers_01_04	짧은 바지
+Short_Trousers_01_05	짧은 바지
+2H_Shovel_02	삽
+1H_Shuriken	수리검
+SidecarBike_Brakelight_Item	사이드카 자전거 브레이크 라이트
+SidecarBike_Fender_Front_Item	사이드카 자전거 펜더 전면
+SidecarBike_Fender_Rear_Item	사이드카 자전거 펜더 후면
+SidecarBike_Fender_Sidecar_Item	사이드카 자전거 펜더 사이드카
+SidecarBike_Headlight_Item	사이드카 자전거 헤드라이트
+SidecarBike_Seat_Back_Item	사이드카 자전거 시트백
+SidecarBike_Seat_Front_Item	사이드카 자전거 좌석 앞
+SidecarBike_Sidecar_Brakelight_Item	사이드카 자전거 사이드카 브레이크 라이트
+SidecarBike_Sidecar_Headlight_Item	사이드카 자전거 사이드카 헤드라이트
+SidecarBike_Sidecar_WeaponStation_Item	사이드카 바이크 사이드카 무기 스테이션
+SidecarBike_Wheel_4x16_Item	사이드카 자전거 바퀴
+SilentAlarm	무음 알람
+Lock_Item_Medium	실버 자물쇠
+Skewer	꼬치
+Skewer_02	꼬치
+Bear_Skinned	껍질 벗긴 곰
+Boar_Skinned	껍질 벗긴 멧돼지
+Buck_Skinned	껍질 벗긴 벅
+Doe_Skinned	껍질 벗긴 사슴
+Donkey_skinned	껍질 벗긴 당나귀
+Goat_Skinned	껍질 벗긴 염소
+Horse_Skinned	가죽이 벗겨진 말
+Rabbit_Skinned	껍질 벗긴 토끼
+Wolf_Skinned	껍질 벗긴 늑대
+Skirt_01_01	스커트
+Skirt_01_02	스커트
+Skirt_01_03	스커트
+Skirt_02_08	스커트
+Weapon_SKS	SKS
+SKS_Bayonet	SKS 총검
+Magazine_Clip_SKS	장전 클립 — SKS
+Weapon_Parts_SKS	SKS 무기 부품
+Halloween_Mask_Scream	해골 가면
+WeaponCharm_Skull	해골 무기 부적
+Slav_Reviver	Slav Reviver
+Slavic_Gent	Slavic Gent
+Sledgehammer	큰 망치
+Sleeveless_Camo_Shirt_01	민소매 카모 셔츠
+Sleeveless_Camo_Shirt_02	민소매 카모 셔츠
+Sleeveless_Camo_Shirt_03	민소매 카모 셔츠
+Sleeveless_Camo_Shirt_04	민소매 카모 셔츠
+Sleeveless_Camo_Shirt_05	민소매 카모 셔츠
+Sleeveless_Camo_Shirt_06	민소매 카모 셔츠
+Sleeveless_Shirt_01	민소매 셔츠
+Sleeveless_Shirt_02	민소매 셔츠
+BowSilencer_SlipOn	슬립온 활 소음기
+Slippers_03	슬리퍼
+Slouch_Camo_Hat_01	슬라우치 카모 모자
+Slouch_Camo_Hat_02	슬라우치 카모 모자
+Slouch_Camo_Hat_03	슬라우치 카모 모자
+Slouch_Camo_Hat_04	슬라우치 카모 모자
+Slouch_Camo_Hat_05	슬라우치 카모 모자
+Slouch_Camo_Hat_06	슬라우치 카모 모자
+Slouch_Hat_01	슬라우치 모자
+Slouch_Hat_02	슬라우치 모자
+12_Gauge_Slug_Ammobox	슬러그 산탄총 탄약 상자
+Small_Animal_guts	작은 동물의 내장
+Mine_02	소형 대인 지뢰
+1H_Small_Axe	작은 도끼
+Battery_Charger_Small	소형 배터리 충전기
+WeaponCharm_SmallBullet	소형 총알 무기 부적
+Christmas_Present_01	작은 크리스마스 선물
+FishingHookPack1	작은 낚시 바늘 팩
+Gasoline_Canister_Small	소형 가솔린 용기
+Improvised_Bag_Small_02	작은 즉석 배낭
+LogShed_2	작은 통나무 창고
+Screwdriver_Small	소형 드라이버
+1H_Little_Spade	작은 스페이드
+Wooden_Sticks_Bundle_Meduim	작은 막대기 묶음
+Stone_Small	작은 돌
+1H_Stone_Axe_Head	작은 돌도끼 머리
+Tool_Box_SMall	작은 도구 상자
+Small_Vehicle_StorageRack	소형 차량 보관함
+Wooden_Log_Small_01	작은 나무 통나무
+Wooden_Log_Small_02	작은 나무 통나무
+Wooden_Log_Small_03	작은 나무 통나무
+Wooden_Stick	작은 나무 막대기
+Smartphone_Battery	스마트폰 배터리
+Smoke_Grenade	연막탄
+Smoke_Grenade_Green	연막탄
+Smoke_Grenade_Red	연막탄
+Smoke_Grenade_Violet	연막탄
+Smoke_Grenade_Yellow	연막탄
+Dish_Smoked_Drumstick	훈제 드럼스틱
+Dish_Smoked_Fish	훈제 생선 필레
+Dish_Smoked_RabbitLeg	훈제 토끼 다리
+Dish_Smoked_Meat	훈제 붉은 고기
+WeaponSights_Snake	반사식 조준기 — Snake
+ColorCan_SnowWhite	백설 공주 페인트 캔
+Snowballs_01	눈덩이
+Soap	비누
+Kilt_Sock_01	양말
+Kilt_Socks_02	양말
+Kilt_Socks_03	양말
+Kilt_Socks_04	양말
+Kilt_Socks_05	양말
+Kilt_Socks_06	양말
+Sock_01	양말
+Can01	소다
+Sodium_Hydroxide	수산화나트륨
+Book_Cooking_Soup	수프 요리책
+SoySauce	간장
+2H_Shovel_01	스페이드 삽
+CannedSpaghetti	미트볼 스파게티
+Snake_Skin_Bow	Specialist Archer 활
+WeaponScope_Spektral_DR	SpektralDR
+SpicesMix_01	향신료 믹스
+SpicesMix_02	향신료 믹스
+Chips2	매콤한 나초칩
+Spinach	시금치
+Spinach_Seed_Bag	시금치 씨앗 가방 - 시금치 씨앗 가방
+Spinach_Seeds	시금치 씨앗
+College_Jacket_01	스핏파이어 재킷
+College_Jacket_02	스핏파이어 재킷
+College_Jacket_03	스핏파이어 재킷
+College_Jacket_04	스핏파이어 재킷
+College_Jacket_05	스핏파이어 재킷
+College_Jacket_06	스핏파이어 재킷
+College_Jacket_07	스핏파이어 재킷
+College_Jacket_08	스핏파이어 재킷
+MA1_Spitfire_01	스핏파이어 재킷
+MA1_Spitfire_02	스핏파이어 재킷
+MA1_Spitfire_03	스핏파이어 재킷
+MA1_Spitfire_04	스핏파이어 재킷
+Spliff	스플리프
+Spon	SPON
+Dish_Sandwich_Spon	스폰샌드위치
+Spoon	숟가락
+Scottish_Sporran_Bag_01	스포란 가방
+Sportbike_Seat_Brakelight_Item	스포츠바이크 브레이크 라이트
+Sportbike_Fender_Item	스포츠바이크 펜더
+Sportbike_Wind_Deflector_Headlight_Item	스포츠바이크 헤드라이트
+Sportbike_Seat_Item	스포츠바이크 시트
+Sportbike_Body_Street_Item	스포츠바이크 스트리트 바디
+Sportbike_Fender_Street_Item	스포츠바이크 스트리트 펜더
+Sportbike_Wind_Deflector_Street_Headlight_Item	스포츠바이크 거리 헤드라이트
+Sportbike_Seat_Street_Item	스포츠바이크 스트리트 시트
+Sportbike_Wind_Deflector_Street_Item	스포츠바이크 스트리트 윈드 디플렉터
+Sportbike_Wind_Deflector_Item	스포츠바이크 윈드 디플렉터
+Fish_Sardine	점박이 정어리
+Spring	봄
+Stabproof_Vest_01_01	찌르기 방지 조끼
+Stabproof_Vest_01_02	찌르기 방지 조끼
+Stabproof_Vest_01_03	찌르기 방지 조끼
+Stabproof_Vest_01_04	찌르기 방지 조끼
+Stabproof_Vest_01_05	찌르기 방지 조끼
+Stabproof_Vest_01_06	찌르기 방지 조끼
+Stabproof_Vest_01_07	찌르기 방지 조끼
+Stabproof_Vest_01_08	찌르기 방지 조끼
+Stabproof_Vest_01_09	찌르기 방지 조끼
+Credit_Card_Starter	스타터 은행 카드
+Book_Cooking_Stew	스튜 요리책
+Stinging_Nettle	쏘는 쐐기풀
+Stockings_01	스타킹
+Stockings_02	스타킹
+Stockings_03	스타킹
+Stockings_04	스타킹
+Stockings_05	스타킹
+Stockings_06	스타킹
+Stockings_07	스타킹
+Stockings_08	스타킹
+Stone	스톤
+1H_Stone_Axe	돌도끼
+1H_ImprovisedKnife	스톤 나이프
+Ammo_Crossbow_Bolt_WoodenStoneTip	스톤 팁 석궁 볼트
+Wooden_ArrowStoneTip	스톤 팁 나무 화살
+Bundle_Of_Stone_Tips	스톤 팁
+Strait_Jacket	구속복
+Wild_Strawberry	딸기
+Sugar	설탕
+SugarBeet	사탕무
+Round_Sunglasses	선글라스
+WeaponCharm_Sunglasses_Emoji	선글라스 이모티콘 무기 부적
+Super_Glue	슈퍼 접착제
+Weapon_SVD_Dragunov	SVD
+Magazine_SVD_Dragunov	탄창 — SVD
+WeaponSuppressor_SVD	소음기 — SVD
+Weapon_Parts_SVD	SVD 무기 부품
+Sweater_01	스웨터
+Sweater_02	스웨터
+Sweater_03	스웨터
+Sweater_04	스웨터
+Sweater_05	스웨터
+Tracksuit_Pants_01_01	스웨트팬츠
+Tracksuit_Pants_01_02	스웨트팬츠
+Tracksuit_Pants_01_03	스웨트팬츠
+Tracksuit_Pants_01_04	스웨트팬츠
+Tracksuit_Pants_01_05	스웨트팬츠
+Tracksuit_Pants_02_01	스웨트팬츠
+Tracksuit_Pants_02_02	스웨트팬츠
+Tracksuit_Pants_02_03	스웨트팬츠
+Tracksuit_Pants_02_04	스웨트팬츠
+Tracksuit_Pants_02_05	스웨트팬츠
+Shimoro_Pants	스웨트팬츠 - Shimoro 바지
+Canned_Corn	달콤한 옥수수
+CantaloupeMelon_Seed_Bag	스위트 멜론 씨앗 가방
+WeaponCharm_Sword	검 무기 부적
+Syringe	주사기
+TC_Backpack	T0pCL4SS 배낭
+Baseball_Cap_13	T0pCL4SS 모자
+Tactical_Gloves_01_01	전술 장갑
+Tactical_Gloves_01_02	전술 장갑
+Tactical_Gloves_01_03	전술 장갑
+Tactical_Gloves_01_04	전술 장갑
+Tactical_Gloves_01_05	전술 장갑
+Tactical_Gloves_01_06	전술 장갑
+Tactical_Gloves_01_07	전술 장갑
+Tactical_Gloves_01_08	전술 장갑
+Police_Handgun_Holster	전술 권총 홀스터
+Tactical_Handgun_Holster_01	전술 권총 홀스터
+Tactical_Handgun_Holster_02	전술 권총 홀스터
+Tactical_Handgun_Holster_03	전술 권총 홀스터
+Tactical_Handgun_Holster_04	전술 권총 홀스터
+Tactical_Handgun_Holster_05	전술 권총 홀스터
+Tactical_Handgun_Holster_06	전술 권총 홀스터
+Tactical_Handgun_Holster_07	전술 권총 홀스터
+Tactical_Jacket_01_01	전술 재킷
+Tactical_Jacket_01_02	전술 재킷
+Tactical_Jacket_01_03	전술 재킷
+Tactical_Jacket_01_04	전술 재킷
+Tactical_Jacket_01_05	전술 재킷
+Tactical_Jacket_01_06	전술 재킷
+Tactical_Jacket_01_07	전술 재킷
+Tactical_Jacket_01_09	전술 재킷
+MilitaryPants_01	전술상 군용 바지
+MilitaryPants_02	전술상 군용 바지
+MilitaryPants_03	전술상 군용 바지
+MilitaryPants_04	전술상 군용 바지
+MilitaryPants_05	전술상 군용 바지
+MilitaryPants_06	전술상 군용 바지
+MilitaryPants_07	전술상 군용 바지
+MilitaryPants_08	전술상 군용 바지
+MilitaryPants_09	전술상 군용 바지
+MilitaryPants_10	전술상 군용 바지
+Tactical_Sweater_01	전술 스웨터
+Tactical_Sweater_02	전술 스웨터
+Tactical_Sweater_03	전술 스웨터
+Tactical_Sweater_04	전술 스웨터
+Tactical_Sweater_05	전술 스웨터
+Tactical_Sweater_06	전술 스웨터
+Tactical_Sweater_07	전술 스웨터
+Tactical_Vest_01	전술 조끼
+Takedown_Bow	테이크다운 활
+2H_Tang_Dao	Tang Dao
+2H_Tang_Dao_Black_Dragon	Tang Dao 블랙 드래곤
+2H_Tang_Dao_Damascus	Tang Dao 다마스커스
+Tang_pants_01	탱팬츠
+Tang_pants_02	탱팬츠
+Tang_pants_03	탱팬츠
+Tang_pants_04	탱팬츠
+Tang_pants_05	탱팬츠
+Tang_shirt_01	탱 셔츠
+Tang_shirt_02	탱 셔츠
+Tang_shirt_03	탱 셔츠
+Tang_shirt_04	탱 셔츠
+Tang_shirt_05	탱 셔츠
+Tangerine	귤
+Tangerine_Seed_Bag	감귤씨주머니 - 감귤씨주머니
+Tangerine_Seeds	귤 씨앗
+Tea_Pack	티팩
+TearGasGrenade	최루가스 수류탄
+Weapon_590A11	TEC01 490
+Weapon_Parts_590A11	TEC01 490 무기 부품
+Weapon_M9	TEC01 M9
+Weapon_M9_Silver	TEC01 M9
+WeaponCharm_TEC1	TEC1 무기 부적
+Tequila	데킬라
+The_Island_Special	아일랜드 스페셜
+Thermometer	온도계
+Thread	스레드
+WeaponCharm_Tiger	호랑이 무기 부적
+RH_Tights	스타킹
+Tinder	틴더
+Tire_Repair_Kit	타이어 수리 키트
+TNT	TNT
+Toaster_Pastries	토스터 페이스트리
+Toaster_Pastries2	토스터 페이스트리
+Tobacco	담배
+Tobacco_Seed_Bag	담배 씨앗 가방 - 담배 씨앗 가방
+Tobacco_Seeds	담배 씨앗
+Tomato	토마토
+TomatoPelate	토마토 펠라티
+TomatoSauce	토마토 소스
+Tomato_Seed_Bag	토마토 씨앗 가방 - 토마토 씨앗 가방
+Tomato_Seeds	토마토 씨앗
+Weapon_TommyGun	Tommy Gun
+Magazine_TommyGun	탄창 — Tommy Gun
+Weapon_Parts_TommyGun	Tommy Gun 무기 부품
+Tool_Box	도구 상자
+05_Teeth_Necklace	치아 목걸이
+10_Teeth_Necklace	치아 목걸이
+15_Teeth_Necklace	치아 목걸이
+WeaponCharm_Tooth	이빨 무기 부적
+Torch	토치
+Tourniquet	지혈대
+Tracksuit_Top_01	트랙수트 탑
+Tracksuit_Top_02	트랙수트 탑
+Tracksuit_Top_03	트랙수트 탑
+Tracksuit_Top_04	트랙수트 탑
+Tracksuit_Top_05	트랙수트 탑
+Tractor_Engine_Alternator_Item	트랙터 발전기
+Tractor_Body_Left_ArmorHeavy_Item	트랙터 방탄복 무거운 왼쪽
+Tractor_Body_Right_ArmorHeavy_Item	트랙터 방탄복 헤비 오른쪽
+Tractor_Body_Top_ArmorHeavy_Back_Item	트랙터 방탄복 헤비 탑 백
+Tractor_Body_Top_ArmorHeavy_Front_Item	트랙터 방탄복 헤비 탑 프론트
+Tractor_Body_Top_ArmorHeavy_Left_Item	트랙터 방탄복 헤비 상단 왼쪽
+Tractor_Body_Top_ArmorHeavy_Right_Item	트랙터 방탄복 헤비 상단 오른쪽
+Tractor_Body_Left_Item	트랙터 본체 좌측
+Tractor_Body_Right_Item	트랙터 본체 오른쪽
+Tractor_Body_Left_Brakelight_Item	트랙터 브레이크 라이트 왼쪽
+Tractor_Body_Right_Brakelight_Item	트랙터 브레이크 라이트 오른쪽
+Tractor_Door_Left_ArmorHeavy_Item	트랙터 도어 아머 헤비 왼쪽
+Tractor_Door_Right_ArmorHeavy_Item	트랙터 도어 아머 헤비 오른쪽
+Tractor_Body_Top_Door_Left_Item	트랙터 도어 왼쪽
+Tractor_Body_Top_Door_Right_Item	트랙터 도어 오른쪽
+Tractor_Seat_Driver_Item	트랙터 운전석
+Tractor_Door_Hood_Headlight_Left_Item	트랙터 헤드라이트(왼쪽)
+Tractor_Door_Hood_Headlight_Right_Item	트랙터 헤드라이트 오른쪽
+Tractor_Door_Hood_Item	트랙터 후드
+Tractor_WheelArmorHeavy_Front_Item	트랙터 휠 아머 헤비 프론트
+HighTop_Shoes	트레이너 신발
+1H_Traynors_Axe	트레이너의 도끼
+FishingHookPack4	트레블 피시훅 팩
+FishingHook3	트레블 낚시 바늘
+Tree_Bark	나무껍질
+Tree_Branches	나뭇가지
+Weapon_Trench_Gun	트렌치건
+Weapon_Parts_Trench_Gun	트렌치 건 무기 부품
+Fish_Carp_Trophy	트로피 잉어
+Fish_Catfish_Trophy	트로피 메기
+Fish_Dentex_Trophy	트로피 덴텍스
+Fish_Pike_Trophy	트로피 파이크
+Fish_Tuna_Trophy	트로피 참치
+Jeans_Jersey_Jacket_01	트러커 재킷
+Jeans_Jersey_Jacket_02	트러커 재킷
+Trucker_Jacket_01	트러커 재킷
+Trucker_Jacket_02	트러커 재킷
+Trucker_Jacket_03	트러커 재킷
+Trucker_Jacket_04	트러커 재킷
+Fish_Tuna	참치
+Tuna_Fillet	참치 필레
+Tuna_Head	참치 머리
+MRE_TunaSalad	참치샐러드 MRE
+Dish_Sandwich_Tuna	참치샌드위치
+Hiking_Backpack_Tyrone	Tyrone 하이킹 배낭
+Tyrone_Shoelacez_Mask	Tyrone Shoelacez 마스크
+Weapon_Parts_UMP	UMP 무기 부품
+Weapon_UMP45	UMP-45
+Magazine_UMP45	탄창 — UMP-45
+Rice	Uncle Pong 쌀
+Underpants_01	팬티
+Underpants_02	팬티
+Underpants_03	팬티
+Underpants_04	팬티
+Underpants_05	팬티
+F_Bra_Supporter_01	언더셔츠
+Scum_Shirt_Supporter_Pack_Black_01	언더셔츠
+Undershirt_01	언더셔츠
+Cereal_UpNGo	UpNGo 시리얼
+Utility_Belt_01	유틸리티 벨트
+WeaponSights_V3_Holographic	홀로그램 조준기 — V3
+WeaponScope_Vampyr	조준경 — Vampyr
+VegetableOil	식물성 기름
+ColorCan_VelvetBrown	벨벳 브라운 페인트 캔
+2H_Katana1	벤디아의 카타나
+Weapon_VHS2_Rail	VHS 2
+Weapon_VHS2	VHS 2 CT
+Weapon_VHS_BG	VHS BG
+Weapon_Parts_VHSBG	VHS BG 무기 부품
+Magazine_VHS2	탄창 — VHS
+Weapon_Parts_VHS	VHS2 무기 부품
+Vinegar	식초
+Hazmat_Suit_Vintage	빈티지 방호복
+Vintage_Jail_Cap_01	빈티지 감옥 모자
+Vintage_Jail_Pants_01	빈티지 감옥 바지
+Vintage_Jail_Shirt_01	빈티지 감옥 셔츠
+Weapon_Viper_M357	바이퍼 M357
+DW715_Rail	바이퍼 M357 레일
+Weapon_Parts_Viper_M357	바이퍼 M357 무기 부품
+Geek_Goggels	비전 안경
+Vitamins_01	비타민 알약 - 물집
+Vitamins_02	비타민 알약 - 상자
+Vitamins_03	비타민 알약 - 항아리
+Weapon_VSS_VZ	VSS VZ
+Weapon_Parts_VSS_VZ	VSS VZ 무기 부품
+Waist_Bag_Small_01	허리 가방
+Waist_Bag_Small_02	허리 가방
+Waist_Bag_Small_03	허리 가방
+Dish_Salad_Waldorf	Waldorf 샐러드
+Walnut	호두
+ColorCan_WarmGrey	따뜻한 회색 페인트 캔
+WeaponSights_Wasp	반사식 조준기 — Wasp
+Water_05l	물병
+Water_Bucket	물통
+Watering_Can	물통 - 물뿌리개
+Watermelon	수박
+Watermelon_Seed_Bag	수박씨주머니 - 수박씨주머니
+Watermelon_Seeds	수박씨
+Watermelon_slice	수박 조각
+WeaponGhillie_Desert	무기 길리
+WeaponGhillie_Winter	무기 길리
+WeaponGhillie_Woodland	무기 길리
+Herbicide	잡초 구충제
+WhiteFlour	밀가루
+Sportbike_Wheel_100_90_R18_Item	바퀴 100 90 R18
+Dirtbike_Wheel_110_80_R19_Item	바퀴 110 80 R19
+Cruiser_Wheel_155_66_R17	바퀴 155 66 R17
+Cruiser_Wheel_188_53_R17	바퀴 188 53 R17
+Wheel_155_R65_Item	바퀴 205 55 R16
+Wheel_205_80_R12_Item	바퀴 205 80 R12
+Wheel_255_55_R16_Item	바퀴 215 65 R16
+Wheel_265_60_R18_Item	바퀴 265 60 R18
+Bicycle_Wheel_54_622_Item	바퀴 54 622
+Wheel_6x16_Item	바퀴 6 16
+Bicycle_Wheel_60_622_Item	바퀴 60 622
+Sportbike_Wheel_90_90_R18_Item	바퀴 90 90 R18
+Dirtbike_Wheel_90_90_R21_Item	바퀴 90 90 R21
+Whiskey	위스키
+Wild_Cherry	야생 체리
+PenisWarmer_01	윌리 워머
+PenisWarmer_02	윌리 워머
+PenisWarmer_03	윌리 워머
+Wine	와인
+WineCork	와인 코르크
+Ghillie_Suit_Pants_05	겨울 길리 수트 하의
+Ghillie_Suit_Jacket_05	윈터 길리 수트 탑
+Wire	와이어 10m
+2H_Baseball_Bat_with_wire	와이어 야구배트
+Wire_Cutters_01	와이어 커터
+1H_Wooden_club_with_wire	와이어 나무 클럽
+Wolf_Head	늑대 머리
+Wolf_Hat_01	늑대 머리 가면
+Wolf_Left_Back_Leg	늑대 다리
+Wolf_Left_Front_Leg	늑대 다리
+Wolf_Right_Back_Leg	늑대 다리
+Wolf_Right_Front_Leg	늑대 다리
+Wolf_Steak	늑대 스테이크
+Wolf_Torso	늑대 몸통
+Woodcuters_Shirt_01	나무꾼의 셔츠
+Woodcuters_Shirt_02	나무꾼의 셔츠
+Woodcuters_Shirt_03	나무꾼의 셔츠
+Wooden_Arrow	나무 화살
+Wooden_Arrows_6pc	나무 화살
+1H_Wooden_club	나무 클럽
+1H_Wooden_club_with_spikes	손톱이 달린 나무 클럽
+Ammo_Crossbow_Bolt_Wooden	나무 석궁 볼트
+Wooden_Fork	나무 포크
+Wooden_Log_01	나무 통나무
+Wooden_Log_02	나무 통나무
+Wooden_Plank	나무 판자
+Wooden_Spoon	나무 숟가락
+2H_Wooden_Sword	나무검
+Penobscot_Bow_40	Woodland Hunter 활
+Wool_Gloves_01_01	양모 장갑
+Wool_Gloves_01_02	양모 장갑
+Wool_Gloves_01_03	양모 장갑
+Wool_Gloves_01_04	양모 장갑
+Wool_Gloves_01_05	양모 장갑
+Wool_Gloves_01_06	양모 장갑
+Wool_Gloves_01_07	양모 장갑
+Working_Helmet_01	작업용 헬멧
+Working_Helmet_02	작업용 헬멧
+Working_Helmet_03	작업용 헬멧
+Working_Helmet_04	작업용 헬멧
+FishingBait_Worm	벌레 물고기 미끼
+Wushu_Spear_Metal	우슈 스피어 메탈
+Wushu_Spear_Wooden	무술 창 금속 - 무술 창 나무
+WW_Engine_Alternator_Item	WW 발전기
+WW_Bumper_Back_Item	WW 뒷범퍼
+WW_Body_Back	WW 몸 뒤로
+WW_Body_Front	WW 몸 앞
+WW_Body_Left	WW 본체 왼쪽
+WW_Body_Right	WW 몸 오른쪽
+WW_Body_Top	WW 바디탑
+WW_Bumper_Armor_Back_Item	WW 범퍼 갑옷 등
+WW_Door_ArmorHeavy_BackLeft_Item	WW 도어 아머 헤비 등 왼쪽
+WW_Door_ArmorHeavy_BackRight_Item	WW 도어 아머 헤비 등 오른쪽
+WW_Door_ArmorHeavy_FrontLeft_Item	WW 도어 아머 헤비 전면 왼쪽
+WW_Door_ArmorHeavy_FrontRight_Item	WW 도어 아머 헤비 전면 오른쪽
+WW_Door_ArmorLight_BackLeft_Item	WW 도어 아머 라이트 뒤 왼쪽
+WW_Door_ArmorLight_BackRight_Item	WW 도어 아머 라이트 뒤 오른쪽
+WW_Door_ArmorLight_FrontLeft_Item	WW 도어 아머 라이트 전면 좌측
+WW_Door_ArmorLight_FrontRight_Item	WW 도어 아머 라이트 앞 우측
+WW_Door_BackLeft_Item	WW 문 뒤 왼쪽
+WW_Door_BackRight_Item	WW 문 뒤 오른쪽
+WW_Door_FrontLeft_Item	WW 문 앞 좌측
+WW_Door_FrontRight_Item	WW 문 앞 오른쪽
+WW_Bumper_Front_Item	WW 앞범퍼
+WW_Body_ArmorHeavy_Top_Item	WW 중갑 상의
+WW_DoorHood_Item	WW 후드
+WW_Lights_FrontLeft	WW 조명 전면 왼쪽
+WW_Lights_FrontRight	WW 조명 앞 오른쪽
+WW_Lights_RearLeft	WW 조명 후방 좌측
+WW_Lights_RearRight	WW 조명 뒤 오른쪽
+WW_Seat_BackLeft_Item	WW 좌석 등받이 왼쪽
+WW_Seat_BackRight_Item	WW 좌석 등받이 오른쪽
+WW_Seat_FrontLeft_Item	WW 좌석 앞 좌측
+WW_Seat_FrontRight_Item	WW 좌석 앞 우측
+WW_DoorTrunk_Item	WW 트렁크
+WW_DoorTrunk_ArmorHeavy_Item	WW 트렁크 아머 헤비
+WW_DoorTrunk_ArmorLight_Item	WW 트렁크 아머 라이트
+WW_Wheel_ArmorLight_FrontLeft_Item	WW 휠 아머 앞 좌측
+WW_Wheel_ArmorLight_FrontRight_Item	WW 휠 아머 앞 우측
+WW2_German_Helmet_01	WW2 독일 헬멧
+WeaponSights_XPS300_Holographic	홀로그램 조준기 — XPS
+Yeast	효모
+Snowballs_02	노란 눈덩이
+WeaponCharm_Yingyang	음양 무기 부적
+Tights_01_01	요가 레깅스
+Tights_01_02	요가 레깅스
+Tights_01_03	요가 레깅스
+Tights_01_04	요가 레깅스
+Tights_01_05	요가 레깅스
+Tights_01_06	요가 레깅스
+WeaponScope_ZF39	ZF39
+2H_ZhanMaDao_Sword	Zhan Ma Dao
+Zucchini	호박
+Zucchini_Seed_Bag	애호박 씨앗 가방 - 애호박 씨앗 가방
+Zucchini_Seeds	호박 씨앗

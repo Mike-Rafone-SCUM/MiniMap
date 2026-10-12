@@ -98,9 +98,10 @@ def register(screenshot, reference):
 
 
 def trace_outline(contour):
-    """Preserve measured geometry; only smooth a confidently circular boundary."""
+    """Fit imported boundaries to a circle or a minimum-area rectangle."""
     perimeter = cv2.arcLength(contour, True)
     polygon = cv2.approxPolyDP(contour, max(1.0, perimeter * .008), True)[:, 0].astype(np.float32)
+    rectangle = cv2.boxPoints(cv2.minAreaRect(contour.astype(np.float32)))
     # Fit using uniformly sampled boundary pixels, rather than the unevenly
     # spaced corners returned by CHAIN_APPROX_SIMPLE or an enclosing circle.
     boundary = contour[:, 0].astype(np.float64)
@@ -122,13 +123,13 @@ def trace_outline(contour):
     inliers = residual <= max(1.5, radius * .04)
     angles = np.sort(np.arctan2(boundary[inliers, 1] - center[1], boundary[inliers, 0] - center[0]))
     if len(angles) < 3:
-        return polygon
+        return rectangle
     gap = np.max(np.diff(np.r_[angles, angles[0] + 2 * np.pi]))
     if (len(polygon) > 6 and radius >= 5 and gap < .6
             and inliers.mean() >= .70):
         angles = np.arange(64) * (2 * np.pi / 64)
         return (center + radius * np.column_stack((np.cos(angles), np.sin(angles)))).astype(np.float32)
-    return polygon
+    return rectangle
 
 
 def extract(screenshot, reference, matrix):
@@ -154,7 +155,7 @@ def extract(screenshot, reference, matrix):
 
     p1 = cv2.perspectiveTransform(np.array([[[0.0, 0.0], [100.0, 0.0]]], dtype=np.float32), matrix)[0]
     px_to_ref = max(1e-3, np.linalg.norm(p1[1] - p1[0]) / 100.0)
-    base_r = max(5, int(round(176.75 / px_to_ref)))
+    base_r = max(5, int(round((176.75 * reference.shape[1] / 14481.0) / px_to_ref)))
     circle_scales = sorted(set([max(5, int(round(base_r * s))) for s in (0.8, 0.9, 1.0, 1.1, 1.2)]))
 
     found = []
@@ -166,8 +167,10 @@ def extract(screenshot, reference, matrix):
             for rad in circle_scales:
                 y_g, x_g = np.ogrid[-rad:rad+1, -rad:rad+1]
                 kernel = (x_g**2 + y_g**2 <= rad**2).astype(np.float32)
-                res = cv2.matchTemplate(mask_float, kernel, cv2.TM_CCORR_NORMED)
-                res_pad = np.pad(res, rad, mode='constant', constant_values=0)
+                # Reflect partial edge circles instead of discarding all centres
+                # within one radius of the image border.
+                padded = cv2.copyMakeBorder(mask_float, rad, rad, rad, rad, cv2.BORDER_REFLECT_101)
+                res_pad = cv2.matchTemplate(padded, kernel, cv2.TM_CCORR_NORMED)
                 better = res_pad > best_res
                 best_res[better] = res_pad[better]
                 best_rad[better] = rad
@@ -239,6 +242,45 @@ def extract(screenshot, reference, matrix):
     found = retained
     found.sort(key=lambda item: (round(item['center'][1]/80), item['center'][0]))
     return found
+
+
+def normalized_outline(zone, matrix, ref_shape):
+    points = zone['points'].astype(np.float32)
+    if matrix is not None:
+        points = cv2.perspectiveTransform(points[:, None], matrix)[:, 0]
+    return np.clip(points / np.array(ref_shape[1::-1]), 0, 1).astype(np.float32)
+
+
+def outline_center(points):
+    moments = cv2.moments(points)
+    if abs(moments['m00']) > 1e-12:
+        return moments['m10'] / moments['m00'], moments['m01'] / moments['m00']
+    return tuple(points.mean(axis=0))
+
+
+def is_area_marker(marker):
+    return marker['cat'] in ('Villages', 'Outposts') or marker['sec'] == 'Points of interest'
+
+
+def area_marker_owners(outlines, markers):
+    """A settlement marker belongs to one outline, not every nearby zone."""
+    owners = {}
+    scale = np.array([15216.18, 15236.18], dtype=np.float32)
+    for marker_index, marker in enumerate(markers):
+        if not is_area_marker(marker):
+            continue
+        location = (marker['x'] * scale[0], marker['y'] * scale[1])
+        candidates = []
+        for zone_index, points in enumerate(outlines):
+            signed = cv2.pointPolygonTest(points * scale, tuple(map(float, location)), True)
+            if signed < -500:
+                continue
+            center = outline_center(points)
+            distance = math.hypot((center[0] - marker['x']) * scale[0], (center[1] - marker['y']) * scale[1])
+            candidates.append(((signed < 0, max(0, -signed), distance), zone_index))
+        if candidates:
+            owners[marker_index] = min(candidates)[1]
+    return owners
 
 
 def assign_scum_names(zones, matrix, ref_shape, scummap_path):
@@ -389,14 +431,11 @@ def assign_scum_names(zones, matrix, ref_shape, scummap_path):
 
     used_names = {}
     used_canonical = set()
-    for zone in zones:
-        pts = zone['points']
-        if matrix is not None:
-            pts_ref = cv2.perspectiveTransform(pts[:, None], matrix)[:, 0]
-        else:
-            pts_ref = pts
-        norm_pts = np.clip(pts_ref / np.array(ref_shape[1::-1]), 0, 1)
-        cx, cy = float(np.mean(norm_pts[:, 0])), float(np.mean(norm_pts[:, 1]))
+    outlines = [normalized_outline(zone, matrix, ref_shape) for zone in zones]
+    owners = area_marker_owners(outlines, markers)
+    for zone_index, zone in enumerate(zones):
+        norm_pts = outlines[zone_index]
+        cx, cy = outline_center(norm_pts)
         sec = sector_of(cx, cy)
 
         # First check canonical faction zones for White circular zones
@@ -416,24 +455,27 @@ def assign_scum_names(zones, matrix, ref_shape, scummap_path):
 
         if not assigned_name:
             candidates = []
-            for m in markers:
+            for marker_index, m in enumerate(markers):
+                if is_area_marker(m) and owners.get(marker_index) != zone_index:
+                    continue
                 dx = (m['x'] - cx) * 15216.18
                 dy = (m['y'] - cy) * 15236.18
                 dist = math.hypot(dx, dy)
-                if dist > 500:
+                inside = cv2.pointPolygonTest(norm_pts, (float(m['x']), float(m['y'])), False) >= 0
+                if dist > 500 and not inside:
                     continue
                 prio = get_priority(m)
                 if prio <= 10:
-                    candidates.append((dist, prio, m))
+                    candidates.append((dist, prio, m, inside))
 
-            candidates.sort(key=lambda c: c[0] * (1.0 + 0.25 * (c[1] - 1)))
+            candidates.sort(key=lambda c: (not c[3], not is_area_marker(c[2]), c[0] * (1.0 + 0.25 * (c[1] - 1))))
             if candidates:
                 best_m = candidates[0][2]
                 cat_name = best_m['cat']
                 clean_fn = clean_names.get(cat_name, lambda t, c: t if t else c)
                 area_name = clean_fn(best_m['title'], cat_name)
             else:
-                area_name = 'Outpost'
+                area_name = 'Zone'
             assigned_name = f"{sec} {area_name}"
 
         if assigned_name in used_names:
@@ -451,6 +493,24 @@ def write_zones(path, zones, shape, matrix=None):
         points = zone['points']
         if matrix is not None:
             points = cv2.perspectiveTransform(points[:, None], matrix)[:, 0]
+        # Registration can skew source shapes. Refit in destination pixels,
+        # then shrink uniformly at boundaries instead of clipping vertices.
+        if len(points) == 4:
+            points = cv2.boxPoints(cv2.minAreaRect(points.astype(np.float32)))
+        else:
+            center = points.mean(axis=0)
+            radius = np.linalg.norm(points-center, axis=1).mean()
+            angles = np.arange(64)*2*np.pi/64
+            points = (center+radius*np.column_stack((np.cos(angles),np.sin(angles)))).astype(np.float32)
+        center = points.mean(axis=0)
+        center = np.clip(center, [0,0], [shape[1]-1,shape[0]-1])
+        offsets = points-points.mean(axis=0)
+        factor = 1.0
+        for axis, limit in enumerate((shape[1]-1,shape[0]-1)):
+            low, high = offsets[:,axis].min(), offsets[:,axis].max()
+            if low<0: factor=min(factor,center[axis]/-low)
+            if high>0: factor=min(factor,(limit-center[axis])/high)
+        points = center+offsets*factor
         points = np.clip(points / np.array(shape[1::-1]), 0, 1)
         r, g, b = zone['rgb']
         argb = (255 << 24 | r << 16 | g << 8 | b) - 2**32

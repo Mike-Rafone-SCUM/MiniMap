@@ -1,0 +1,2329 @@
+# Offline translation draft; native terminology review pending. Canonical identities retained.
+Cal_22	Munitie — .22
+Cal_22_Ammobox	.22 Munitiekist
+Cal_22_Crafted	Zelfgemaakte munitie — .22
+Cal_22_TR	Lichtspoormunitie — .22
+Cal_22_Ammobox_TR	.22 Tracer-munitiekist
+Cal_30-06	Munitie — .30-06
+Cal_30-06_Ammobox	.30-06 Munitiekist
+Cal_30-06_AP	Pantserdoorborende munitie — .30-06 (AP)
+Cal_30-06_AP_CR	Zelfgemaakte pantserdoorborende munitie — .30-06 (AP)
+Cal_30-06_Ammobox_AP	.30-06 Pantserdoorborende munitiekist
+Cal_30-06_Crafted	Zelfgemaakte munitie — .30-06
+Cal_30-06_TR	Lichtspoormunitie — .30-06
+Cal_30-06_Ammobox_TR	.30-06 Tracer-munitiekist
+Cal_308	Munitie — .308
+Cal_308_Ammobox	.308 Munitiekist
+Cal_308_AP	Pantserdoorborende munitie — .308 (AP)
+Cal_308_Ammobox_AP	.308 AP Munitiekist
+Cal_308_AP_CR	Zelfgemaakte pantserdoorborende munitie — .308 (AP)
+Cal_308_Crafted	Zelfgemaakte munitie — .308
+WeaponSuppressor_308_Black	Geluiddemper — .308
+Cal_308_TR	Lichtspoormunitie — .308 (TR)
+Cal_308_Ammobox_TR	.308 TR Munitiekist
+Cal_338	Munitie — .338
+Cal_338_Ammobox	.338 Munitiekist
+Cal_338_AP	Pantserdoorborende munitie — .338 (AP)
+Cal_338_Ammobox_AP	.338 AP Munitiekist
+Cal_338_AP_CR	Zelfgemaakte pantserdoorborende munitie — .338 (AP)
+Cal_338_Crafted	Zelfgemaakte munitie — .338
+WeaponSuppressor_338_Black	Geluiddemper — .338
+WeaponSuppressor_338_Green	.338 Onderdrukker groen
+WeaponSuppressor_338_Tan	.338 Onderdrukker bruin
+Cal_338_TR	Lichtspoormunitie — .338 (TR)
+Cal_338_Ammobox_TR	.338 Tracer-munitiekist
+Cal_357_Viper	Munitie — .357
+Cal_357_Ammobox	.357 Munitiekist
+Cal_357_Viper_AP	Pantserdoorborende munitie — .357 (AP)
+Cal_357_Viper_AP_CR	Zelfgemaakte pantserdoorborende munitie — .357 (AP)
+Cal_357_Ammobox_AP	.357 Pantserdoorborende munitiekist
+Cal_357_Viper_Crafted	Zelfgemaakte munitie — .357
+Cal_357_Viper_TR	Lichtspoormunitie — .357
+Cal_357_Ammobox_TR	.357 Tracer-munitiekist
+Cal_38	Munitie — .38
+Cal_38_Ammobox	.38 Munitiekist
+Cal_38_Ammobox_AP	.38 Munitiedoos pantserdoorborende rondes
+Cal_38_Ammobox_TR	.38 Traceerrondes munitiekist
+Cal_38_AP	Pantserdoorborende munitie — .38 (AP)
+Cal_38_AP_CR	Zelfgemaakte pantserdoorborende munitie — .38 (AP)
+Cal_38_Crafted	Zelfgemaakte munitie — .38
+Cal_38_TR	Lichtspoormunitie — .38 (TR)
+Cal_44_Viper	Munitie — .44
+Cal_44_Viper_Ammobox	.44 Munitiekist
+Cal_44_Viper_AP_CR	Zelfgemaakte pantserdoorborende munitie — .44 (AP)
+Cal_44_Viper_Ammobox_AP	.44 Pantserdoorborende munitiekist
+Cal_44_Viper_AP	Pantserdoorborende munitie — .44
+Cal_44_Viper_Crafted	Zelfgemaakte munitie — .44
+Cal_44_Viper_TR	Lichtspoormunitie — .44
+Cal_44_Viper_Ammobox_TR	.44 Tracer-munitiekist
+Cal_45	Munitie — .45 ACP
+Cal_45_Ammobox	.45 ACP Munitiekist
+Cal_45_AP_CR	Zelfgemaakte pantserdoorborende munitie — .45 ACP (AP)
+Cal_45_AP	Pantserdoorborende munitie — .45 ACP
+Cal_45_AP_Ammobox	.45 ACP Armor-doordringende munitiekist
+Cal_45_Crafted	Zelfgemaakte munitie — .45 ACP
+WeaponSuppressor_45ACP	Geluiddemper — .45 ACP
+Cal_45_TR	Lichtspoormunitie — .45 ACP
+Cal_45_Ammobox_TR	.45 ACP Tracer-munitiekist
+Cal_50_AE	Munitie — .50 AE
+Cal_50_AE_Ammobox	.50 AE Munitiekist
+Cal_50_AE_AP	Pantserdoorborende munitie — .50 AE (AP)
+Cal_50_AE_AP_CR	Zelfgemaakte pantserdoorborende munitie — .50 AE (AP)
+Cal_50_AE_AP_Ammobox	.50 AE Armor-doordringende munitiekist
+Cal_50_AE_Crafted	Zelfgemaakte munitie — .50 AE
+Cal_50_AE_TR	Lichtspoormunitie — .50 AE
+Cal_50_AE_Ammobox_TR	.50 AE Tracer-munitiekist
+Cal_50BMG	Munitie — .50 BMG
+Cal_50BMG_Ammobox	.50 BMG Munitiekist
+Cal_50BMG_AP	Pantserdoorborende munitie — .50 BMG (AP)
+Cal_50BMG_AP_Ammobox	.50 BMG Armor-doordringende munitiekist
+Cal_50BMG_Crafted	Zelfgemaakte munitie — .50 BMG
+Cal_50BMG_TR	Lichtspoormunitie — .50 BMG
+Cal_50BMG_Ammobox_TR	.50 BMG Tracer-munitiekist
+Weapon_DT11B_Sawed_Off	"The Mule" DT11B kort
+12_Gauge_Birdshot	12 Vogel Birdshot-cartridge
+12_Gauge_Buckshot	12 Gauge Buckshot-cartridge
+12_Gauge_Buckshot_Crafted	12 Gauge Buckshot geïmproviseerde cartridge
+12_Gauge_Slug	12 Gauge Slug Shot-cartridge
+WeaponSuppressor_12_Gauge	12 Gauge-onderdrukker
+Cal_40x46	40x46 Granaat
+Cal_5_45x39mm	Munitie — 5.45x39mm
+Cal_5_45x39mm_Ammobox	5.45x39mm munitiekist
+Cal_5_45x39mm_AP	Pantserdoorborende munitie — 5.45x39mm (AP)
+Cal_5_45x39mm_AP_CR	Zelfgemaakte pantserdoorborende munitie — 5.45x39mm (AP)
+Cal_5_45x39mm_AP_Ammobox	5.45x39mm pantserdoordringende munitiedoos
+Cal_5_45x39mm_Crafted	Zelfgemaakte munitie — 5.45x39mm
+WeaponSuppressor_5_45x39	Geluiddemper — 5.45x39mm
+Cal_5_45x39mm_TR	Lichtspoormunitie — 5.45x39mm
+Cal_5_45x39mm_Ammobox_TR	5.45x39mm Tracer-munitiedoos
+Cal_5_56x45mm	Munitie — 5.56x45mm
+Cal_5_56x45mm_Ammobox	5.56x45mm munitiekist
+Cal_5_56x45mm_AP	Pantserdoorborende munitie — 5.56x45mm (AP)
+Cal_5_56x45mm_AP_CR	Zelfgemaakte pantserdoorborende munitie — 5.56x45mm (AP)
+Cal_5_56x45mm_AP_Ammobox	5.56x45mm pantserdoordringende munitiedoos
+Cal_5_56x45mm_Crafted	Zelfgemaakte munitie — 5.56x45mm
+Cal_5_56x45mm_TR	Lichtspoormunitie — 5.56x45mm
+Cal_5_56x45mm_Ammobox_TR	5.56x45mm Tracer-munitiedoos
+Cal_7_62x39mm	Munitie — 7.62x39mm
+Cal_7_62x39mm_Ammobox	7.62x39mm munitiekist
+Cal_7_62x39mm_AP	Pantserdoorborende munitie — 7.62x39mm (AP)
+Cal_7_62x39mm_AP_CR	Zelfgemaakte pantserdoorborende munitie — 7.62x39mm (AP)
+Cal_7_62x39mm_AP_Ammobox	7.62x39mm pantserdoordringende munitiedoos
+Cal_7_62x39mm_Crafted	Zelfgemaakte munitie — 7.62x39mm
+Cal_7_62x39mm_TR	Lichtspoormunitie — 7.62x39mm
+Cal_7_62x39mm_Ammobox_TR	7.62x39mm Tracer-munitiedoos
+Cal_7_62x54mmR	Munitie — 7.62x54mmR
+Cal_7_62x54mmR_Ammobox	7.62x54mmR munitiekist
+Cal_7_62x54mmR_AP	Pantserdoorborende munitie — 7.62x54mmR (AP)
+Cal_7_62x54mmR_AP_CR	Zelfgemaakte pantserdoorborende munitie — 7.62x54mmR (AP)
+Cal_7_62x54mmR_AP_Ammobox	7.62x54mmR pantserdoorborende munitiedoos
+Cal_7_62x54mmR_Crafted	Zelfgemaakte munitie — 7.62x54mmR
+Cal_7_62x54mmR_TR	Lichtspoormunitie — 7.62x54mmR
+Cal_7_62x54mmR_Ammobox_TR	7.62x54mmR Tracer-munitiedoos
+Cal_7_92x57mm	Munitie — 7.92x57mm
+Cal_7_92x57mm_Ammobox	7.92x57mm munitiekist
+Cal_7_92x57mm_AP	Pantserdoorborende munitie — 7.92x57mm (AP)
+Cal_7_92x57mm_AP_CR	Zelfgemaakte pantserdoorborende munitie — 7.92x57mm (AP)
+Cal_7_92x57mm_AP_Ammobox	7.92x57mm pantserdoordringende munitiedoos
+Cal_7_92x57mm_Crafted	Zelfgemaakte munitie — 7.92x57mm
+Cal_7_92x57mm_TR	Lichtspoormunitie — 7.92x57mm
+Cal_7_92x57mm_Ammobox_TR	7.92x57mm Tracer-munitiedoos
+Cal_9mm	Munitie — 9mm
+Cal_9mm_Ammobox	9mm Munitiekist
+Cal_9mm_AP	Pantserdoorborende munitie — 9mm (AP)
+Cal_9mm_AP_CR	Zelfgemaakte pantserdoorborende munitie — 9mm (AP)
+Cal_9mm_AP_Ammobox	9mm Armor-doordringende munitiekist
+Cal_9mm_Crafted	Zelfgemaakte munitie — 9mm
+Cal_9mm_TR	Lichtspoormunitie — 9mm
+Cal_9mm_Ammobox_TR	9mm Tracer-munitiekist
+Cal_9x39mm	Munitie — 9x39mm
+Cal_9x39mm_Ammobox	9x39mm Munitiekist
+Cal_9x39mm_AP	Pantserdoorborende munitie — 9x39mm (AP)
+Cal_9x39mm_AP_CR	Zelfgemaakte pantserdoorborende munitie — 9x39mm (AP)
+Cal_9x39mm_AP_Ammobox	9x39mm Armor-doordringende munitiekist
+Cal_9x39mm_Crafted	Zelfgemaakte munitie — 9x39mm
+Cal_9x39mm_TR	Lichtspoormunitie — 9x39mm
+Cal_9x39mm_Ammobox_TR	9x39mm Tracer-munitiekist
+Absinthe	Absinthe Father
+WeaponScope_ACOG_01	ACOG
+ActivatedCharcoal_01	Actieve kool - Blister
+ActivatedCharcoal_02	Actieve kool - Doos
+ActivatedCharcoal_03	Actieve kool - Pot
+Compass_Advanced	Geavanceerd kompas
+Lock_Security_Lvl3	Geavanceerde slotbeveiliging
+Lockpick_Advanced_Item	Geavanceerde lockpick
+Aeroplane_Repair_Kit	Vliegtuigreparatieset
+African_Biltong	Afrikaanse Biltong
+Agaricus_Augustus	Agaricus Augustus
+Agaricus_Campestris	Agaricus Campestris
+Aloe_Vera	Agaveblad
+WeaponSights_AimPRO	Rodepuntvizier — AimPRO
+Air_Pump	Luchtpomp
+Weapon_AK15	AK-15
+Weapon_AK47	AK-47
+Magazine_AK15	Magazijn — AK15
+WeaponSuppressor_AK15	Geluiddemper — AK15
+Weapon_Parts_AK15	AK15 Wapenonderdelen
+Weapon_AK47_Engraved	AK47 Gegraveerd
+Magazine_AK47	Magazijn — AK47
+Weapon_Parts_AK47	AK47 Wapenonderdelen
+Weapon_AKM	AKM
+Weapon_Parts_AKM	AKM Wapenonderdelen
+Weapon_Parts_AKS_74U	AKS 74U wapenonderdelen
+Weapon_AKS_74U	AKS-74U
+Magazine_AKS_74U	Magazijn — AKS-74U
+Bag_of_Almonds	Amandelen
+Amanita_Muscaria	Amanita Muscaria
+Amanita_Pantherina	Amanita Pantherina
+Amanita_Phalloides	Amanita Phalloides
+Amanita_Virosa	Amanita Virosa
+ColorCan_AmberYellow	Ambergeel verfblik
+Fish_Amur	Graskarper
+Amur_Fillet	Amoerfilet
+WeaponCharm_Anchor	Anker wapen charme
+Suite_Pants_01	Angel's vluchtbroek
+Monkfish_Fillet	Vissersfilet
+WeaponCharm_Angry_Emoji	Boze Emoji-wapenbedel
+Small_Animal_Fat	Dierlijk vet
+Animal_skin	Dierenhuid
+Bear_Improvised_Jacket	Jas van dierenhuid
+Bear_Improvised_Pants	Broek van dierenhuid
+Improvised_Quiver_01	Dierenhuid trillen
+HH_Shoes_01_01	Enkellaarzen
+HH_Shoes_01_02	Enkellaarzen
+HH_Shoes_01_03	Enkellaarzen
+HH_Shoes_01_04	Enkellaarzen
+Anode_Plate	Anodeplaat
+Mine_01	Antipersoneelsmijn
+Antibiotic_Pill_Single	Antibiotica - 1000mg
+Antibiotics_01	Antibiotica - Blaar - 1000mg
+Antibiotics_02	Antibiotica - Doos - 1000mg
+Antibiotics_03	Antibiotica - Pot - 1000mg
+Apple	Appel
+Apple_2	Appel
+Crab_Apple	Appel
+Apple_Seed_Bag	Appelzaadzak
+Apple_Seeds	Appel Zaden
+RH_Arm_Guard	Armbeschermer
+Armband_01	Armband
+Armillaria_Mellea	Armillaria Mellea
+Armor_Tactical_Vest_01_01	Armor tactisch vest
+Armor_Tactical_Vest_01_02	Armor tactisch vest
+Armor_Tactical_Vest_01_03	Armor tactisch vest
+Armor_Tactical_Vest_01_04	Armor tactisch vest
+Armor_Tactical_Vest_01_05	Armor tactisch vest
+Weapon_AS_Val	AS Val
+Weapon_Parts_AS_Val	AS Val-wapenonderdelen
+WeaponFlashlight_AS_Val	AS Val/VSS Zaklamp
+Magazine_AS_Val	AS Val/VSS Tijdschrift
+Aspirin	Aspirine
+Military_Backpack_01_01	Aanvalsrugzak
+Military_Backpack_01_02	Aanvalsrugzak
+Military_Backpack_01_03	Aanvalsrugzak
+Military_Backpack_01_04	Aanvalsrugzak
+Military_Backpack_01_05	Aanvalsrugzak
+Military_Backpack_01_06	Aanvalsrugzak
+Military_Backpack_01_07	Aanvalsrugzak
+Military_Backpack_01_08	Aanvalsrugzak
+Military_Backpack_01_09	Aanvalsrugzak
+Weapon_AT4_HEAT	AT4 HEAT
+AtropineInjection	Atropine-injectie
+Weapon_AWM	AWM
+Weapon_AWM_Desert	AWM Woestijn
+Weapon_AWM_Green	AWM Groen
+Magazine_AWM	Magazijn — AWM
+Weapon_AWM_Snake	AWM Slang
+Weapon_Parts_AWM	AWM Wapenonderdelen
+Weapon_AWP	AWP
+Weapon_AWP_Desert	AWP Woestijn
+Weapon_AWP_Green	AWP Groen
+Magazine_AWP	Magazijn — AWP
+Weapon_AWP_Snake	AWP Slang
+Weapon_Parts_AWP	AWP Wapenonderdelen
+2H_Axe	Bijl
+WeaponCharm_Axe	Bijl wapen charme
+BabyFood	Babyvoeding
+Backpack_02_01	Rugzak
+Backpack_02_02	Rugzak
+Backpack_02_03	Rugzak
+Backpack_02_04	Rugzak
+Backpack_02_05	Rugzak
+Military_Backpack_03_01	Rugzak
+Military_Backpack_03_02	Rugzak
+Military_Backpack_03_03	Rugzak
+Military_Backpack_03_04	Rugzak
+Military_Backpack_03_05	Rugzak
+Military_Backpack_03_06	Rugzak
+Military_Backpack_03_07	Rugzak
+Military_Backpack_03_08	Rugzak
+AnimalBaitFeederItem	Aasvoeder
+BakedBeans	Gebakken Bonen
+BakingSoda	Zuiveringszout
+Military_Mask_01	Bivakmuts
+Military_Mask_02	Bivakmuts
+Military_Mask_03	Bivakmuts
+Military_Mask_04	Bivakmuts
+Military_Mask_05	Bivakmuts
+Military_Mask_06	Bivakmuts
+Military_Mask_07	Bivakmuts
+Military_Mask_08	Bivakmuts
+Police_Mask_01	Bivakmuts
+Recurve_Bow_100	Ballista 100#
+Bamboo_Hat_01	Bamboe hoed
+Bamboo_Hat_02	Bamboe hoed
+Banana	Banaan
+Banjo	Banjo
+Barbed_Wire	Prikkeldraad
+Barberry	Berberis
+ColorCan_BaronBrown	Baron bruine verfblik
+BaseExpansionKit_Lvl1	Basisuitbreidingskit niveau 1
+BaseExpansionKit_Lvl2	Basisuitbreidingskit niveau 2
+2H_Baseball_Bat	Honkbalknuppel
+2H_Baseball_Bat_with_spikes	Honkbalknuppel met spijkers
+Baseball_Cap_01	Honkbalpet
+Baseball_Cap_02	Honkbalpet
+Baseball_Cap_03	Honkbalpet
+Baseball_Cap_04	Honkbalpet
+Baseball_Cap_05	Honkbalpet
+Baseball_Cap_06	Honkbalpet
+Baseball_Cap_07	Honkbalpet
+Baseball_Cap_08	Honkbalpet
+Baseball_Cap_09	Honkbalpet
+Baseball_Cap_10	Honkbalpet
+Compass_Basic	Basis kompas
+Lock_Security	Basisslotbeveiliging
+Fish_Bass	Zeebaars
+Bass_Fillet	Basfilet
+1H_Police_Baton	Baton
+Batteries	Batterijen
+Weapon_BayRifferBlock21	Bay Riffer Block21
+Book_Cooking_BBQ	BBQ Kookboek
+BCU_Chip	BCU Chip
+BCULock_Item	BCU Vergrendelen
+WeaponCharm_BCU	BCU Wapentalisman
+1H_Beam_Dildo	BeamasaurusDildo
+Dish_Sandwich_Beans	Bonensandwich
+Beenie_01	Muts
+Beenie_02	Muts
+Beenie_03	Muts
+Beenie_04	Muts
+Beenie_05	Muts
+Beenie_06	Muts
+Beenie_07	Muts
+Beenie_08	Muts
+Beenie_09	Muts
+Military_Beanie_01	Muts
+Military_Beanie_02	Muts
+Military_Beanie_03	Muts
+Military_Beanie_04	Muts
+Military_Beanie_05	Muts
+Military_Beanie_06	Muts
+Military_Beanie_07	Muts
+Military_Beanie_08	Muts
+Bear_Head	Beer hoofd
+Bear_Head_Hat_01	Beer hoofd hoed
+Bear_Left_Back_Leg	Berenbeen
+Bear_Left_Front_Leg	Berenbeen
+Bear_Right_Back_Leg	Berenbeen
+Bear_Right_Front_Leg	Berenbeen
+Bear_Back_Paws	Berenpoten
+Bear_Front_Paws	Berenpoten
+Bear_Steak	Berenbiefstuk
+Bear_Torso	Beer torso
+Bear_Left_Torso_Half	Beer Torso helft
+Bear_Right_Torso_Half	Beer Torso helft
+Bedroll	Slaaprol
+BeefRavioli	Rundvleesravioli
+BeefStew	Rundvlees Stoofpot
+MRE_Stew	Runderstoofpot MRE
+Beer	Bier
+Beet	Biet
+Beijing_Shoes_01	Peking Schoenen
+Beijing_Shoes_02	Peking Schoenen
+Beijing_Shoes_03	Peking Schoenen
+Beijing_Shoes_04	Peking Schoenen
+Bell_Pepper	Paprika
+2H_Pitchfork_Bent	Gebogen Hooivork
+Beret_01	Baret
+Beret_02	Baret
+Beret_03	Baret
+Beret_04	Baret
+Beret_05	Baret
+Beret_06	Baret
+Big_Animal_Fat	Groot dierlijk vet
+Big_Animal_guts	Grote dierlijke ingewanden
+Christmas_Present_03	Groot kerstcadeau
+Christmas_Present_AK15	Groot kerstcadeau
+Christmas_Present_AK15_01	Groot kerstcadeau
+Christmas_Present_AK15_02	Groot kerstcadeau
+Christmas_Present_AKS_74U	Groot kerstcadeau
+Christmas_Present_AKS_74U_01	Groot kerstcadeau
+Christmas_Present_AKS_74U_02	Groot kerstcadeau
+Christmas_Present_AS_Val	Groot kerstcadeau
+Christmas_Present_AS_Val_01	Groot kerstcadeau
+Christmas_Present_AS_Val_02	Groot kerstcadeau
+Christmas_Present_Ghillie	Groot kerstcadeau
+Christmas_Present_Ghillie_01	Groot kerstcadeau
+Christmas_Present_Ghillie_02	Groot kerstcadeau
+Christmas_Present_Kar98	Groot kerstcadeau
+Christmas_Present_Kar98_01	Groot kerstcadeau
+Christmas_Present_Kar98_02	Groot kerstcadeau
+Christmas_Present_Laika_Alternator	Groot kerstcadeau
+Christmas_Present_M1	Groot kerstcadeau
+Christmas_Present_M1_01	Groot kerstcadeau
+Christmas_Present_M1_02	Groot kerstcadeau
+Christmas_Present_M16A4	Groot kerstcadeau
+Christmas_Present_M16A4_01	Groot kerstcadeau
+Christmas_Present_M16A4_02	Groot kerstcadeau
+Christmas_Present_M1887	Groot kerstcadeau
+Christmas_Present_M249	Groot kerstcadeau
+Christmas_Present_M82A1	Groot kerstcadeau
+Christmas_Present_M82A1_01	Groot kerstcadeau
+Christmas_Present_M82A1_02	Groot kerstcadeau
+Christmas_Present_MAC10	Groot kerstcadeau
+Christmas_Present_MAC10_01	Groot kerstcadeau
+Christmas_Present_MAC10_02	Groot kerstcadeau
+Christmas_Present_MK18	Groot kerstcadeau
+Christmas_Present_MK18_01	Groot kerstcadeau
+Christmas_Present_MK18_02	Groot kerstcadeau
+Christmas_Present_MP5	Groot kerstcadeau
+Christmas_Present_MP5_01	Groot kerstcadeau
+Christmas_Present_MP5_02	Groot kerstcadeau
+Christmas_Present_Rager_Alternator	Groot kerstcadeau
+Christmas_Present_RPK	Groot kerstcadeau
+Christmas_Present_RPK_01	Groot kerstcadeau
+Christmas_Present_RPK_02	Groot kerstcadeau
+Christmas_Present_SCAR_DMR	Groot kerstcadeau
+Christmas_Present_SCAR_L	Groot kerstcadeau
+Christmas_Present_SCAR_L_01	Groot kerstcadeau
+Christmas_Present_SCAR_L_02	Groot kerstcadeau
+Christmas_Present_SVD	Groot kerstcadeau
+Christmas_Present_SVD_01	Groot kerstcadeau
+Christmas_Present_SVD_02	Groot kerstcadeau
+Christmas_Present_UMP	Groot kerstcadeau
+Christmas_Present_UMP_01	Groot kerstcadeau
+Christmas_Present_UMP_02	Groot kerstcadeau
+Christmas_Present_WW_Alternator	Groot kerstcadeau
+2H_Stone_Axe	Grote stenen bijl
+2H_Stone_Axe_Head	Grote stenen bijlkop
+Big_Vehicle_StorageRack	Groot voertuigopbergrek
+Leather_Jacket	Leren motorjack
+Negan_Jacket	Leren motorjack
+Binoculars	Verrekijker
+12_Gauge_BirdShot_Ammobox	Birdshot Shotgun-munitiekist
+Birthday_Cap_01	Verjaardag hoed
+Ghillie_Suit_Pants_02	Zwarte ghilliekostuumbodem
+Ghillie_Suit_Jacket_02	Zwarte ghilliekostuumtop
+BlackOlives	Zwarte Olijven
+ColorCan_Black	Zwarte verfblik
+BlackPepper	Zwarte peper
+Blackberry	Braam
+Recurve_Bow_90	BlackHawk 90#
+Weapon_BlackHawk_Crossbow	Blackhawk Kruisboog
+BlankSign	Leeg teken
+Blast_Cap	Ontploffingskap
+2H_Baseball_Bat_Blaze	Blaze Bat
+Fish_Bleak	Alver
+Bleak_Fillet	Bleke filet
+FishingBait_Bleak	Bleek visaas
+Weapon_Block21	Block 21
+Magazine_Block21	Magazijn — Block 21
+Weapon_Parts_Block21	Block 21 Wapenonderdelen
+MemoryModule_Level2	Blauwe geheugenmodule
+Blueberries	Bosbessen
+Boar_Head	Zwijn hoofd
+Boar_Head_Hat_01	Zwijn hoofd hoed
+Boar_Hooves_Back	Zwijnenhoeven
+Boar_Hooves_front	Zwijnenhoeven
+Boar_Back_Leg	Zwijn been
+Boar_Front_Leg	Zwijn been
+Boar_Torso	Zwijnen torso
+Bobby_pin	Haarspeld
+Bobby_Pin_Package	Bobby Pin-doosje
+FishingBait_BoiliesPrm1	Boilies Visaas
+Boletus_Edulis	Boletus Edulis
+Bolts	Bouten
+Bone	Bot
+Bone_Needle	Bot - Naald
+BoomBox_01	Boem Box
+WeaponCharm_Bottle_Opener	Flesopener wapen charme
+BowSilencer	Boegdemper
+Bow_MicroStabilizer	Boogstabilisator
+Bolts_Package_Box	Doos met bouten
+Nails_Package_Box	Doos met spijkers
+Boxer_Briefs_01	Boxershorts
+F_Undershirt_Bra_01	Bh
+F_Undershirt_Bra_02	Bh
+F_Undershirt_Bra_03	Bh
+F_Undershirt_Bra_04	Bh
+F_Undershirt_Bra_05	Bh
+Brake_Oil	Remolie
+Improvised_Plant_rope	Tak touw
+1H_Brass_knuckles	Boksbeugels
+FishingBait_Bread	Brood Vis Aas
+Breathing_Tube_01	Ademhalingsbuis
+Brick	Baksteen
+Carbon_BroadHead_Arrow	Broadhead koolstofpijl
+Metal_BroadHead_Arrow	Broadhead metalen pijl
+Broccoli	Broccoli
+Broccoli_Seed_Bag	Broccoli Zaadzak - Broccoli Zaadzak
+Broccoli_Seeds	Broccolizaden
+Kilt_Brogue_Shoe_01	Brogue-schoen
+Can03	Bubbles
+Buck_Head	Buck hoofd
+Buck_Left_Back_Leg	Buck-been
+Buck_Left_Front_Leg	Buck-been
+Buck_Right_Back_Leg	Buck-been
+Buck_Right_Front_Leg	Buck-been
+Buck_Torso	Romp van een mannelijk hert
+12_Gauge_Buckshot_Ammobox	Buckshot Shotgun Munitiekist
+WeaponCharm_Bullet	Kogelwapen charme
+Bulletproof_Vest_01	Kogelvrij vest
+Bulletproof_Vest_01_02	Kogelvrij vest
+Bulletproof_Vest_01_03	Kogelvrij vest
+Bulletproof_Vest_01_04	Kogelvrij vest
+Bulletproof_Vest_01_05	Kogelvrij vest
+Bundle_Of_Bobby_Pins	Bundel Bobby Pins
+Bundle_Of_Bricks	Bundel Bakstenen
+Bundle_Of_Improvised_Lockpicks	Bundel geïmproviseerde lockpicks
+Bundle_Of_Lockpicks	Bundel slotenstokers
+Bundle_Rag_Stripes	Bundel voddenstroken
+Bundle_Of_Rags	Bundel vodden
+Bundle_Of_Safety_Pins	Bundel veiligheidsspelden
+Bundle_Wooden_Plank	Bundel houten planken
+Wooden_Sticks_Bundle_Large	Bundel houten stokken
+Bunny_Slippers	Konijntjespantoffels - Konijntjespantoffels
+Cereal_BunnyStars	Bunny Stars ontbijtgranen
+AntiburnGel	Brandgel
+1H_Bushman	Bosjesman
+Butter	Boter
+RH_Bycoket_01	Bijcoket
+C4	C4-bom
+C4_Detonator	C4-ontsteker
+C4_Keypad	C4 toetsenbordprintplaat
+C4_CircuitBoard	C4 Timer-printplaat
+Cabbage	Kool
+Cabbage_Seed_Bag	Koolzaadzak - Koolzaadzak
+Cabbage_Seeds	Koolzaden
+Book_Cooking_Cake	Taart kookboek
+WeaponSuppressor_30_06	Geluiddemper — .30-06
+Camera_Lens	Cameralens
+Military_Backpack_02_01	Camo-wandelrugzak
+Military_Backpack_02_02	Camo-wandelrugzak
+Military_Backpack_02_03	Camo-wandelrugzak
+Military_Backpack_02_04	Camo-wandelrugzak
+Military_Backpack_02_05	Camo-wandelrugzak
+Military_Backpack_02_06	Camo-wandelrugzak
+Military_Backpack_02_07	Camo-wandelrugzak
+Military_Backpack_02_08	Camo-wandelrugzak
+Camouflage_Jacket_01	Camouflagejack
+Camouflage_Jacket_02	Camouflagejack
+Camouflage_Jacket_03	Camouflagejack
+CanOpener	Blikopener
+Candle_01	Kaars
+Candy_Bob	Candy Bob
+WeaponCharm_Candy_Cane	Candy Cane wapen charme
+CandyCorn_01	Snoep maïs
+Cannabis_Bud	Cannabisknop
+Cannabis_Seed_Bag	Zakje cannabiszaad
+Cannabis_Seeds	Cannabiszaden
+CannedGoulash	Ingeblikte rundvleesgoulash
+CannedSeafoodMix	Ingeblikte Zeevruchtenmix
+Canned_Tuna	Ingeblikte tonijn
+CantaloupeMelon	Meloen Meloen
+CantaloupeMelon_Slice	Meloen Meloen
+CantaloupeMelon_Seeds	Meloenzaden
+Canteen	Kantine
+Cantharellus_Cibarius	Cantharellus Cibarius
+Car_Battery	Auto-accu
+Car_Battery_Cables	Auto-accukabels
+Car_Jack	Auto krik
+Car_Radio_Item	Autoradio
+Car_Repair_Kit	Autoreparatieset
+PETBottle01	Karamel frisdrank
+PETBottle02	Karamel frisdrank
+Carbon_Arrow	Koolstof pijl
+Ammo_Crossbow_Bolt_Carbon	Koolstof kruisboogbout
+Weapon_CarbonHunter	Koolstof jager
+Weapon_CarbonBear	Koolstofjager Ironpaw
+Magazine_CarbonHunter	Koolstofjager tijdschrift
+Weapon_Parts_Carbon_Hunter	Carbon Hunter-wapenonderdelen
+Fish_Carp	Karper
+Carp_Fillet	Karperfilet
+Carp_Head	Karper hoofd
+Carrot	Wortel
+GlassBottle01	Wortelsap
+Carrot_Seed_Bag	Wortelzaadzak - Wortelzaadzak
+Carrot_Seeds	Wortel Zaden
+CartridgeTrap	Patroonval
+Cash	Contant geld
+Book_Cooking_Casseroles	Kookboek voor ovenschotels
+CannedCatfood	Kattenvoer
+Fish_Catfish	Meerval
+Catfish_Fillet	Meervalfilet
+Catfish_Head	Meerval hoofd
+Cauliflower	Bloemkool
+CD_Player	CD Speler
+Celery	Selderij
+CementBag	Cement zak
+Chainsaw	Kettingzaag
+Charcoal	Houtskool
+Cheese	Kaas
+FishingBait_Cheese	Kaas Vis Aas
+Dish_Sandwich_Cheese	Broodje Kaas
+CheesePacked	Kaas plakjes
+MRE_Cheeseburger	Cheeseburger MRE
+ColorCan_CherryRed	Kersenrode verfblik
+Cherry_Seed_Bag	Kersenzaadzak - Kersenzaadzak
+Cherry_Seeds	Kersenzaden
+ChickenDrumstick	Kip drumstick
+ChickenMeat	Kippenvlees
+Chili_Pepper	Chilipeper
+ChilliPeppers_Seeds	Chilipeperzaden
+Chillipepper_Seed_Bag	Chili zaadzak
+Chips	Chips Klassiek
+ChocolateCandy_10	ChocCandy
+ChocolateCandy_11	ChocoBar
+ChocolateCandy_04	Chocolade
+ChocolateCandy_05	Chocolade
+ChocolateCandy_06	Chocolade
+ChocolateCandy_07	Chocolade
+ChocolateCandy_08	Chocoladereep
+ChocolateCandy_09	Chocoladereep
+ChocolateCandy_03	Chocoladetaart Snoep
+ChocolateCandy_01	Chocolade snoepreep
+Chow_Mein	Chow Mein
+Christmas_Beanie_02	Kerst muts
+Christmas_Decoration	Kerstversiering
+Christmas_Present_02	Kerstcadeau
+Christmas_Ball_01	Kerst ornament
+Christmas_Ball_02	Kerst ornament
+Christmas_Ball_03	Kerst ornament
+Christmas_Ball_04	Kerst ornament
+Christmas_Ball_05	Kerst ornament
+Christmas_Ball_06	Kerst ornament
+Christmas_Pants_01	Kerst broek
+Christmas_Pants_02	Kerst broek
+Christmas_Slippers	Kerstpantoffels
+Christmas_Vest_01	Kerst trui
+Fish_Chub	Kopvoorn
+Chub_Fillet	Kopvoorn Filet
+Credit_Card_Classic	Klassieke bankkaart
+Classic_Shirt_01	Klassiek overhemd
+Classic_Shirt_02	Klassiek overhemd
+Cigarette	Klassieke sigaret
+Cigarettes	Klassiek sigarettenpakje
+Claymore	Claymore
+1H_Cleaver	Hakmes
+Coal_01	Steenkool
+CoalBag	Kolenzak
+Recurve_Bow_50	Cobra 50#
+Cocoa_Powder	Cacaopoeder
+Coconut	Kokosnoot
+Coffee	Koffie
+Coffee_Cup	Koffie kopje
+Can04	Cola
+ColorCan_ColdCyan	Koude cyaan verfblik
+ColorCan_ColdGrey	Koud grijze verfblik
+CombatBoots	Gevechtslaarzen
+Combat_Helmet_01	Gevechtshelm
+Combat_Helmet_02	Gevechtshelm
+Combat_Helmet_03	Gevechtshelm
+Combat_Helmet_04	Gevechtshelm
+M1_Vietnam_Helmet	Gevechtshelm
+RH_Jacket	Gecombineerd jasje
+Compound_Bow	Samengestelde boog
+Compound_Bow_Desert	Samengestelde boog
+Compound_Bow_Digital	Samengestelde boog
+Compound_Bow_Snow	Samengestelde boog
+Compound_Bow_US_Scorpion	Samengestelde boog
+Compound_Bow_Woodland	Samengestelde boog
+CompoundBowSight_3_Pin	Samengesteld boogvizier
+CompoundBowSight_5_Pin	Samengesteld boogvizier
+Boots_06_01	Bouwlaarzen
+Boots_06_02	Bouwlaarzen
+Construction_Gloves_01_01	Bouwhandschoenen
+Construction_Gloves_01_02	Bouwhandschoenen
+Construction_Gloves_01_03	Bouwhandschoenen
+Construction_Pants_01	Constructie broek
+Construction_Pants_02	Constructie broek
+Construction_Pants_03	Constructie broek
+Boots_07_01	Constructie rubberen laarzen
+Boots_07_02	Constructie rubberen laarzen
+Boots_07_03	Constructie rubberen laarzen
+Pot1	Kookpot
+Copper_Coins	Koperen munten
+Coprinus_Comatus	Coprinus Comatus
+Corn	Maïs
+Corn_flakes	Cornflakes
+FishingBait_Corn	Maïs Vis Aas
+Corn_Seed_Bag	Maïszaadzak - Maïszaadzak
+Corn_Seeds	Maïs zaden
+ColorCan_CottonCandy	Suikerspin verfblik
+Hoodie_01	Katoenen capuchon
+Hoodie_02	Katoenen capuchon
+Hoodie_03	Katoenen capuchon
+Hoodie_04	Katoenen capuchon
+Hoodie_05	Katoenen capuchon
+Inmate_Hoodie_01	Katoenen capuchon
+Inmate_Shirt_01_Snow_DigitalDeluxe	Katoenen capuchon
+Shirt_01	Katoenen overhemd
+Shirt_02	Katoenen overhemd
+Shirt_03	Katoenen overhemd
+Shirt_04	Katoenen overhemd
+Backpack_DigitalDeluxe	Koerier rugzak
+Cowboys_Boots_01	Cowboylaarzen
+Crackers	Crackers
+Cream	Crème
+Cricket	Krekel
+FishingBait_Cricket	Krekel Vis Aas
+1H_Crowbar	Koevoet
+Fish_CrucianCarp	Kroeskarper
+Cruiser_Brakelight_Item	Cruiser-remlicht
+Cruiser_Fender_Front_Item	Cruiser-voorspatbord
+Cruiser_Seat_Front_Item	Cruiser-voorstoel
+Cruiser_Headlight_Item	Cruiser-koplamp
+Cruiser_Fender_Rear_Item	Cruiser-achterspatbord
+Cruiser_Seat_Rear_Item	Cruiser-achterbank
+Cruiser_Wind_Deflector_Item	Cruiser-winddeflector
+Crutch	Kruk
+Cuban_Cigar	Cubaanse sigaar
+Cucumber	Komkommer
+Cucumber_Seed_Bag	Komkommerzaadzak - Komkommerzaadzak
+Cucumber_Seeds	Komkommer zaden
+Currant	Bes
+Zombie_Impersonator_Suit	Vervloekt poppenpak
+WeaponCharm_Ear	Wapenbedel met afgesneden oor
+WeaponCharm_Finger	Afgesneden vingerwapenbedel
+Dentex_Fillet	Dantex-filet
+ColorCan_DarkBrown	Donkerbruine verfblik
+ColorCan_DarkGreen	Donkergroene verfblik
+ColorCan_DarkGrey	Donkergrijze verfblik
+ColorCan_DarkUrban	Donkere stedelijke verfblik
+Date	Datum
+Weapon_Deagle_357	DEagle .357
+Magazine_DEagle_357	Magazijn — DEagle .357
+Magazine_DEagle_50	Magazijn — DEagle .50
+Weapon_Parts_Deagle_357	DEagle 357 Wapenonderdelen
+Weapon_DEagle_50	DEagle 50
+Weapon_DEagle_50Gold	DEagle 50
+Weapon_Parts_DEagle_50	DEagle 50 Wapenonderdelen
+Christmas_Paper_01	Decoratiepapier
+Christmas_Paper_02	Decoratiepapier
+Christmas_Paper_03	Decoratiepapier
+ColorCan_DeepOrange	Diep oranje verfblik
+Buck_Antlers	Hertengeweien
+Deer_Steak	Hertenbiefstuk
+Fish_Dentex	Tandbrasem
+Dentex_Head	Dentex-hoofd
+Depleted_Uranium	Verarmd uranium
+Depleted_Uranium_Container	Verarmd uranium - container
+WeaponFlashlight_DesertEagle	Desert Eagle-zaklamp
+WeaponSights_Deagle_RedDot	Rodepuntvizier — Desert Eagle
+Ghillie_Suit_Pants_03	Woestijn Ghilliekostuum bodem
+Ghillie_Suit_Jacket_03	Desert Ghilliekostuum-top
+DialLock_Item	Kiesvergrendeling
+Diary	Dagboek
+1H_Dildo	Dildo
+Dildo_Spear	Dildo-speer
+Dildo_Arrow	Houten pijl met dildo
+Ammo_Crossbow_Bolt_Dildo	Dildo houten kruisboogbout
+Dinghy_Item	Bijboot tas
+Dirtbike_Body_Item	Dirtbike-lichaam
+Dirtbike_Brakelight_Item	Dirtbike remlicht
+Dirtbike_Fender_Item	Crossmotor spatbord
+Dirtbike_Front_Shield_Item	Voorschild crossmotor
+Dirtbike_Front_Wheel_Cover_Item	Voorwieldop voor crossmotor
+Dirtbike_Headlight_Item	Dirtbike-koplampen
+Dirtbike_Body_Hellrider_Item	Crossmotor Hellrider Carrosserie
+Dirtbike_Hellrider_Skull_Item	Crossmotor Hellrider Schedel
+Disposable_Mask	Wegwerpmasker
+Diving_Mask	Duikmasker
+Diving_Mask_With_Breathing_Tube	Duikmasker met beademingsslang
+Doe_Head	Doe Hoofd
+Doe_Left_Back_Leg	Doe-been
+Doe_Left_Front_Leg	Doe-been
+Doe_Right_Back_Leg	Doe-been
+Doe_Right_Front_Leg	Doe-been
+Doe_01_Steak	Doe biefstuk
+Doe_Torso	Romp van een hinde
+CannedDogFood	Hondenvoer
+Donkey_Head	Ezel hoofd
+Donkey_Back_Leg	Ezel been
+Donkey_Front_Leg	Ezel been
+Donkey_Steak	Ezelsteak
+Donkey_Torso	Ezel Torso
+FishingHook2	Dubbele vishaak
+FishingHookPack3	Dubbel vishaakpakket
+Double_Bang_Firecracker	Dubbelknal voetzoeker
+Christmas_tree	Douglas spar
+Baseball_Cap_11	Dreamreaper Cap
+Drill	Boor
+Book_Cooking_Drinks	Dranken kookboek
+Driving_Gloves_01_01	Handschoenen voor autorijden
+Driving_Gloves_01_02	Handschoenen voor autorijden
+Driving_Gloves_01_03	Handschoenen voor autorijden
+Driving_Gloves_01_04	Handschoenen voor autorijden
+Weapon_DT11B	DT11B
+Weapon_Parts_DT11B	DT11B Wapenonderdelen
+Duct_Tape	Ducttape
+2_pieces_Ear_Necklace	Oor ketting
+4_pieces_Ear_Necklace	Oor ketting
+6_pieces_Ear_Necklace	Oor ketting
+Ear_Plugs	Oordopjes
+Construction_Earmuffs_01	Oorkappen
+Construction_Earmuffs_02	Oorkappen
+Construction_Earmuffs_03	Oorkappen
+Construction_Earmuffs_04	Oorkappen
+ColorCan_EarthGreen	Aardegroene verfblik
+ColorCan_EarthGrey	Aarde grijze verfblik
+ColorCan_EarthRed	Aarde rode verfblik
+ColorCan_EarthYellow	Aarde gele verfblik
+Earthworm	Regenworm
+Egg	Ei
+Electrical_Repair_Kit	Elektrische reparatieset
+Electrician_Tools	Gereedschap voor elektriciens
+WeaponCharm_Elephant	Olifant wapen charme
+Emergency_bandage	Noodverband
+Emergency_bandage_Deluxe	Noodverband
+Emergency_bandage_Big	Noodverbandpakket
+Emergency_bandage_Big_Deluxe	Noodverbandpakket
+EMP_Grenade	EMP Granaat
+1H_EMpossible_Knife	EMpossible Mes
+EmptyBag	Lege zak
+Christmas_Box	Lege doos
+Lock_Item_Advanced	Gedwongen slot
+EuropeanBass_Fillet	Europese Zeebaarsfilet
+WeaponCharm_EvilEye	Boze oog wapenbedel
+Explosive_Arrow_Carbon	Explosieve koolstofpijl
+Explosive_Arrow_Metal	Explosieve metalen pijl
+Explosive_Arrow	Explosieve houten pijl
+Ammo_Crossbow_Bolt_Explosive	Explosieve houten kruisboogbout
+Extreme_Helmet_01	Extreme helm
+Faceroll_Smasher	Facerolls Face Smasher
+Fascinator_Hat_01	Fascinator hoed
+Fascinator_Hat_02	Fascinator hoed
+Fascinator_Hat_03	Fascinator hoed
+Fascinator_Hat_04	Fascinator hoed
+Fascinator_Hat_05	Fascinator hoed
+Zombie_Fat	Vet
+Feather	Veer
+Medieval_Helmet_01	Feodale gepolijste helm
+Fig	Afb
+Fig_Seed_Bag	Vijgenzaadzak - Vijgenzaadzak
+Fig_Seeds	Vijgenzaden
+Fire_deflector_shield	Branddeflectorschild
+Fire_Hand_Drill_new	Brandoefening
+ColorCan_FireEngineRed	Brandweerwagen rode verfblik
+Fireman_Helmet_01	Brandhelm
+Fireman_Helmet_02	Brandhelm
+Fireman_Helmet_03	Brandhelm
+Work_Jacket_01	Brandweerjas
+Work_Jacket_02	Brandweerjas
+Work_Jacket_03	Brandweerjas
+Working_pants_01_01	Brandweer broek
+Working_pants_01_02	Brandweer broek
+Working_pants_01_03	Brandweer broek
+Fireworks_Small	Vuurwerk Klein
+Fireworks_Big	Vuurwerk klein - Vuurwerk groot
+Fish	Vis
+FishingHook	Vis haak
+FishItem	Vis artikel
+Dish_Salad_Fish	Vissalade
+WeaponCharm_Fish_Bowl	Vissenkom wapen charme
+FishingFloater	Visserij drijver
+FishingFloater1	Visserij drijver
+FishingFloaterPack1	Visserijvlotterpakket
+FishingFloaterPack2	Visserijvlotterpakket
+Boonie_Hat_01	Visserij hoed
+Boonie_Hat_02	Visserij hoed
+Boonie_Hat_03	Visserij hoed
+Boonie_Hat_04	Visserij hoed
+Boonie_Hat_05	Visserij hoed
+Boonie_Hat_06	Visserij hoed
+Military_Boonie_Hat_01	Visserij hoed
+Military_Boonie_Hat_02	Visserij hoed
+Military_Boonie_Hat_03	Visserij hoed
+Military_Boonie_Hat_04	Visserij hoed
+Military_Boonie_Hat_05	Visserij hoed
+Military_Boonie_Hat_06	Visserij hoed
+Military_Boonie_Hat_07	Visserij hoed
+Military_Boonie_Hat_08	Visserij hoed
+Redneck_Hat_07	Visserij hoed
+Fishing_hook	Vishaak
+FishingReel	Visserijspoel
+ImprovisedFishingReel	Visserijspoel
+FishingReelPro	Vismolen Pro
+FishingRod	Hengel
+FishingRod_A	Hengel
+FishingRod_B	Hengel
+Fistula_Hepatica	Fistel Hepatica
+FlareItem	Gloed
+FlareItem_Blue	Gloed
+FlareItem_Green	Gloed
+FlareCartridge	Flare-cartridge
+Weapon_FlareGun	Lichtpistool
+Weapon_Parts_FlareGun	Flare Gun wapenonderdelen
+FlareTrap	Flare val
+ColorCan_FlatBrown	Plat bruin verfblik
+ColorCan_FlatGrey	Platte grijze verfblik
+ColorCan_FlatWhite	Platte witte verfblik
+Wooden_ArrowFeathers	Gevlekte houten pijl
+Flint_And_Steel	Vuursteen en staal
+Christmas_tree_Folded	Gevouwen Douglasspar
+ColorCan_ForestGreen	Bosgroene verfblik
+Steel_Fork	Vork
+CannedFruitCocktail	Fruitcocktail
+Dish_Salad_Fruit	Fruitsalade
+Fungicide	Fungicide
+Fuse_1000A	Zekering 1000A
+Fuse_200A	Zekering 200A
+Fuse_400A	Zekering 400A
+Fuse_600A	Zekering 600A
+Fuse_800A	Zekering 800A
+ColorCan_GalaxyBlue	Galaxy blauwe verfblik
+ColorCan_GalaxyGrey	Galaxy grijze verfblik
+Garlic	Knoflook
+Garlic_Seed_Bag	Knoflookzaadzak - Knoflookzaadzak
+Garlic_Seeds	Knoflookzaden
+Garrison_Cap_01	Garnizoen Kap
+Garrison_Cap_02	Garnizoen Kap
+Garrison_Cap_03	Garnizoen Kap
+Garrison_Cap_04	Garnizoen Kap
+Garrison_Cap_05	Garnizoen Kap
+Gas_Mask_01	Gasmasker
+Gas_Mask_02	Gasmasker
+Gas_Mask_03	Gasmasker
+Gas_Mask_04	Gasmasker
+GasTank	Gastank
+Gasoline_Canister	Benzine busje
+Gear	Uitrusting
+Ghillie_Suit_Pants_01	Ghilliekostuum onderkant
+Ghillie_Suit_Jacket_01	Ghilliekostuum top
+Glass	Glas
+Glue	Lijm
+Goat_Head	Geit hoofd
+Goat_Horns	Geitenhoorns
+Goat_Back_Limb	Geit been
+Goat_Front_Limb	Geit been
+Goat_Skull_Hat_01	Geit schedel hoed
+Goat_Steak	Geitenbiefstuk
+Goat_Torso	Geit Torso
+Credit_Card_Gold	Gouden bankkaart
+MemoryModule_Level4	Gouden geheugenmodule
+GrapeFruit	Grapefruit
+GlassBottle02	Grapefruitsap
+Graphite	Grafiet
+Grasshopper	Sprinkhaan
+FishingBait_Grasshopper	Sprinkhaan Vis Aas
+GravelBag	Grindzak
+MemoryModule_Level1	Grijze geheugenmodule
+CannedPeas	Groene Erwten
+Frag_Grenade	Granaat
+Grinding_Stone_02	Slijpsteen
+GuavaHalves	Guave
+Guitar	Gitaar
+Gun_Powder	Pistoolpoeder
+Zombie_guts	Lef
+Halloween_Anonymous_Mask_01	Guy Fawkes Masker
+Halloween_Mask_BabyDoll_02	Halloween-masker
+Halloween_Mask_Clown_03	Halloween-masker
+Halloween_Mask_Greek	Halloween-masker
+Halloween_Mask_Hockey_04	Halloween-masker
+Halloween_Mask_JohnDoe_05	Halloween-masker
+Halloween_Mask_Knife	Halloween-masker
+Halloween_Mask_Lecter_06	Halloween-masker
+Halloween_Mask_Plague_07	Halloween-masker
+Halloween_Mask_Smiley_08	Halloween-masker
+Halloween_Mask_Wooden_09	Halloween-masker
+Hand_Drill	Handboor
+Hand_Fan_01	Handventilator
+WeaponSuppressor_Handgun	Pistoolonderdrukker
+WeaponCharm_Happy_Emoji	Gelukkige Emoji-wapenbedel
+Harmonica	Mondharmonica
+Hazelnuts	Hazel
+ColorCan_HazyPurple	Wazig paars verfblik
+Head_Bags_01	Hoofdzak
+Hemostatic_Dressing	Hemostatisch verband
+HH_Shoes_03_01	Enkellaarzen met hoge hak
+HH_Shoes_03_02	Enkellaarzen met hoge hak
+HH_Shoes_03_03	Enkellaarzen met hoge hak
+HH_Shoes_03_04	Enkellaarzen met hoge hak
+HH_Shoes_03_05	Enkellaarzen met hoge hak
+HH_Shoes_03_06	Enkellaarzen met hoge hak
+HH_Shoes_03_07	Enkellaarzen met hoge hak
+HH_Shoes_04_01	Pumps met hoge hak
+HH_Shoes_04_02	Pumps met hoge hak
+HH_Shoes_04_03	Pumps met hoge hak
+HH_Shoes_04_04	Pumps met hoge hak
+HH_Shoes_02_01	Sandalen met hoge hak
+HH_Shoes_02_02	Sandalen met hoge hak
+HH_Shoes_02_03	Sandalen met hoge hak
+RH_Shoe_01	Hoge schoenen
+Sneakers_02_01	Hoge schoenen
+Sneakers_02_02	Hoge schoenen
+Sneakers_02_03	Hoge schoenen
+Sneakers_02_04	Hoge schoenen
+Hiking_Backpack_01_01	Wandelrugzak
+Hiking_Backpack_01_02	Wandelrugzak
+Hiking_Backpack_01_03	Wandelrugzak
+Hiking_Backpack_01_04	Wandelrugzak
+Hiking_Backpack_01_05	Wandelrugzak
+Hiking_Boots_01	Wandelschoenen
+Hiking_Boots_02	Wandelschoenen
+Hiking_Boots_03	Wandelschoenen
+Hiking_Boots_04	Wandelschoenen
+Hip_Flask	Heupfles
+Hippie_Pants_01	Hippie broek
+Hippie_Pants_02	Hippie broek
+Hippie_Pants_03	Hippie broek
+Hippie_Pants_04	Hippie broek
+Hippie_Pants_05	Hippie broek
+Hippie_Pants_06	Hippie broek
+Hippie_Pants_07	Hippie broek
+Hippie_Pants_08	Hippie broek
+Hippie_Shirt_01	Hippie-shirt
+Hippie_Shirt_02	Hippie-shirt
+Horse_Head	Paardenhoofd
+Horse_Mask	Paardenhoofdmasker
+Horse_Back_Limb	Paardenbeen
+Horse_Front_Limb	Paardenbeen
+Horse_Steak	Paardenbiefstuk
+Horse_Torso	Paarden torso
+Horse_Torso_Half	Paardentorso - helft
+WeaponCharm_Horseshoe	Hoefijzer wapen charme
+Hose	Slang
+Hospital_Pants	Ziekenhuis broek
+Hospital_Shirt_01	Ziekenhuis shirt
+Weapon_SF19	HS SF19
+Magazine_SF19	Magazijn — HS SF19
+Weapon_Parts_SF19	HS SF19 Wapenonderdelen
+Weapon_HS9	HS-9
+Weapon_Parts_HS9	HS-9 Wapenonderdelen
+Magazine_HS9	Magazijn — HS9
+Prisoner_Left_Arm	Menselijke arm
+Prisoner_Right_Arm	Menselijke arm
+Human_Ears	Menselijke oren
+Prisoner_Left_Foot	Menselijke voet
+Prisoner_Right_Foot	Menselijke voet
+Human_guts	Menselijke ingewanden
+Prisoner_Head	Menselijk hoofd
+Prisoner_Head_No_Teeth	Menselijk hoofd
+Prisoner_Left_Leg	Menselijk been
+Prisoner_Right_Leg	Menselijk been
+Human_Skin	Menselijke huid
+Human_Steak	Menselijke biefstuk
+Human_Teeth	Menselijke tanden
+Prisoner_Torso	Menselijk torso
+1H_Hunter	Jager
+Weapon_Hunter85_V2	Hunter 85
+Magazine_Hunter85_V2	Magazijn — Hunter 85
+Weapon_Parts_Hunter85	Hunter 85 Wapenonderdelen
+WeaponSuppressor_Hunter	Geluiddemper — Hunter
+WeaponScope_HuntingScope	Richtkijker — jacht
+Icing_Sugar	Poedersuiker
+ImprovisedCal50Turret	Geïmproviseerde .50 Cal-koepel
+Improvised_Backpack_Big	Geïmproviseerde rugzak
+ImprovisedBasicTurret	Geïmproviseerd basistorentje
+Improvised_Shelter	Geïmproviseerd bed
+Improvised_Shoes_01	Geïmproviseerde laarzen
+WeaponSuppressor_ImprovisedBottle_Grey	Geïmproviseerde flessenonderdrukker
+WeaponSuppressor_ImprovisedBottle_White	Geïmproviseerde flessenonderdrukker
+Improvised_Bow	Geïmproviseerde boog 20#
+Improvised_Bow_25	Geïmproviseerde boog 25#
+Improvised_Bow_30	Geïmproviseerde boog 30#
+Improvised_Bow_35	Geïmproviseerde boog 35#
+Bow_ImprovisedStabilizer	Geïmproviseerde boogstabilisator
+Improvised_Bulletproof_Armor	Geïmproviseerd kogelvrij pantser
+AntiburnGel_Improvised	Geïmproviseerde brandwondengel
+WeaponSuppressor_ImprovisedCan_Grey	Geïmproviseerde blikonderdrukker
+WeaponSuppressor_ImprovisedCan_Red	Geïmproviseerde blikonderdrukker
+Improvised_Chandelier_Light	Geïmproviseerde kroonluchter
+ImprovisedClaymore	Geïmproviseerde Claymore
+Improvised_compass	Geïmproviseerd kompas
+Improvised_Bag_Small_01	Geïmproviseerde koeriersrugzak
+Weapon_Improvised_Crossbow	Geïmproviseerde kruisboog
+Improvised_Electric_Lamp_Ceiling	Geïmproviseerde elektrische lamp
+ImprovisedFishingHook	Geïmproviseerde vishaak
+ImprovisedFishingFloater	Geïmproviseerde visdrijver
+Improvised_FishingLine	Geïmproviseerde vislijn
+ImprovisedFishingRod	Geïmproviseerde hengel
+Weapon_Improvised_Flamethrower	Geïmproviseerde vlammenwerper
+ImprovisedFlamethrowerTurret	Geïmproviseerde vlammenwerperkoepel
+ImprovisedFlashlight	Geïmproviseerde zaklamp
+2H_Improvised_Gardening_Hoe	Geïmproviseerde tuinschoffel
+Geiger_Counter_Improvised	Geïmproviseerde Geigerteller
+Improvised_Ghillie_Jacket	Geïmproviseerd Ghillie-jack
+Improvised_Ghillie_Pants	Geïmproviseerde Ghillie-broek
+1H_Improvised_Glass_Shiv	Geïmproviseerde Glazen Shiv
+Weapon_ImprovisedGrenadeLauncher	Geïmproviseerde granaatwerper
+Weapon_Parts_ImprovisedGrenadeLauncher	Geïmproviseerde wapenonderdelen voor granaatwerper
+1H_Improvised_Hammer	Geïmproviseerde hamer
+Weapon_Improvised_Handgun	Geïmproviseerd pistool
+1H_Hatchet	Geïmproviseerde Bijl
+Improvised_Lockpick	Geïmproviseerde Lockpick
+Magnifying_Glass	Geïmproviseerd vergrootglas
+Scary_Mask_01	Geïmproviseerd masker
+ImprovisedMetalDetector	Geïmproviseerde metaaldetector
+2H_Improvised_metal_shovel	Geïmproviseerde metalen schep
+Improvised_Metal_Spear	Geïmproviseerde metalen speer
+ImprovisedMine	Geïmproviseerde mijne
+ImprovisedMinigunTurret	Geïmproviseerde Minigun-koepel
+Improvised_Motorcycle_Wheel	Geïmproviseerd motorfietswiel
+WeaponSuppressor_ImprovisedOilCan_01	Geïmproviseerde olieblikjesonderdrukker
+PaintSprayer	Geïmproviseerde verfspuit
+Dish_Pasta_Improvised	Geïmproviseerde pastaschotel
+Weapon_Parts_Impro_Pistol	Geïmproviseerde pistoolwapenonderdelen
+Improvised_Quiver_02_Rags	Geïmproviseerde Quiver
+Raincoat_Improvised	Geïmproviseerde regenjas
+Dish_Rice_Improvised	Geïmproviseerde rijstschotel
+Weapon_Improvised_Rifle	Geïmproviseerd geweer
+ImprovisedRail_Side	Geïmproviseerde geweerrail
+Weapon_Parts_Impro_rifle	Geïmproviseerde geweerwapenonderdelen
+ImprovisedRocketTurret	Geïmproviseerde raketkoepel
+Improvised_rope	Geïmproviseerd touw
+Dish_Salad_Improvised	Geïmproviseerde salade
+Dish_Sandwich_Improvised	Geïmproviseerde sandwich
+WeaponSights_ImprovisedScope	Richtkijker — geïmproviseerde uitvoering
+Improvised_Sewing_kit	Geïmproviseerde naaiset
+ImprovisedSmallPaddle	Geïmproviseerde korte peddel
+2H_Improvised_shovel	Geïmproviseerde schop
+Dish_Soup_Improvised	Geïmproviseerde soep
+Improvised_Stabproof	Geïmproviseerd steekbestendig vest
+Dish_Stew_Improvised	Geïmproviseerde Stoofpot
+Improvised_Stone_Spear	Geïmproviseerde stenen speer
+Improvised_Tire_Repair_Kit	Geïmproviseerde bandenreparatieset
+1H_Improvised_Tomahawk	Geïmproviseerde Tomahawk
+Improvised_Tool_Box	Geïmproviseerde gereedschapskist
+Improvised_Water_container	Geïmproviseerde watercontainer
+Improvised_Wheel	Geïmproviseerd wiel
+Improvised_Wooden_Spear	Geïmproviseerde houten speer
+Improvised_Workbench	Geïmproviseerde werkbank
+Industrial_Fertilizer	Industriële meststof
+2H_Industrial_Gardening_Hoe	Industriële tuinschoffel
+Inonotus_Obliquus	Inonotus Obliquus
+Instant_OatMeal	Instant havermout
+Electrician_Glove_01_01	Isolerende rubberen handschoen
+Electrician_Glove_01_02	Isolerende rubberen handschoen
+Electrician_Glove_01_03	Isolerende rubberen handschoen
+IntEA_Level1	Intelligentieverbetering ampulniveau 1
+IntEA_Level2	Intelligentieverbetering ampulniveau 2
+IntEA_Level3	Intelligentieverbetering ampulniveau 3
+Lock_Item_Basic	IJzeren slot
+Isopropyl_alcohol	Isopropylalcohol
+Jack_o_Lantern_01	Jack-o'-lantaarn
+Jack_o_Lantern_02	Jack-o'-lantaarn
+Jack_o_Lantern_03	Jack-o'-lantaarn
+Jeans_01_01	Spijkerbroek
+Jeans_01_02	Spijkerbroek
+Jeans_01_03	Spijkerbroek
+Jeans_01_04	Spijkerbroek
+Jeans_02_01_V2	Spijkerbroek
+Jeans_02_02	Spijkerbroek
+Jeans_02_03	Spijkerbroek
+Jeans_02_04	Spijkerbroek
+Jeans_02_05	Spijkerbroek
+Jeans_02_06	Spijkerbroek
+Jeans_02_07	Spijkerbroek
+Jeans_02_08	Spijkerbroek
+Jeans_02_09	Spijkerbroek
+Jersey_01	Jersey-overhemd
+Jersey_02	Jersey-overhemd
+Jersey_03	Jersey-overhemd
+Jersey_04	Jersey-overhemd
+Jersey_05	Jersey-overhemd
+Jersey_06	Jersey-overhemd
+Jersey_07	Jersey-overhemd
+Jersey_08	Jersey-overhemd
+Jersey_09	Jersey-overhemd
+Jock_Jacket_01	Jock-jack
+Jock_Jacket_02	Jock-jack
+Jock_Jacket_03	Jock-jack
+Jock_Jacket_04	Jock-jack
+Joint01	Gezamenlijk
+Weapon_Judge44	Rechter 44
+Weapon_Parts_Judge44	Beoordeel 44 Wapenonderdelen
+Baseball_Cap_12	JW Cap
+K6-3_Helmet	K6-3 Helm
+Weapon_98k_Karabiner	Kar98
+Kar98_Bayonet	Kar98 Bajonet
+WeaponSuppressor_Kar98k	Geluiddemper — Kar98k
+Weapon_Parts_Kar98k	Kar98k-wapenonderdelen
+2H_Katana	Katana
+Ketchup	Ketchup
+KeyCard	Sleutelkaart
+KeyCardBunker_Level01	Sleutelkaart
+KeyCardBunker_Level02	Sleutelkaart
+Keyhole_Shirt_01	Sleutelgat overhemd
+Keyhole_Shirt_02	Sleutelgat overhemd
+Keyhole_Shirt_03	Sleutelgat overhemd
+Keyhole_Shirt_04	Sleutelgat overhemd
+Keyhole_Shirt_05	Sleutelgat overhemd
+Keyhole_Shirt_06	Sleutelgat overhemd
+Keyhole_Shirt_07	Sleutelgat overhemd
+Keyhole_Shirt_08	Sleutelgat overhemd
+Kicmovaca	Kicmovaca
+Kilt_01	Kilt
+Kilt_02	Kilt
+Kilt_03	Kilt
+Kilt_04	Kilt
+Kilt_05	Kilt
+Kilt_06	Kilt
+Kitchen_Board_01	Keukenbord
+Kitchen_Board_02	Keukenbord
+1H_KitchenKnife	Keukenmes
+1H_KitchenKnife_02	Keukenmes
+1H_KitchenKnife_02_Deluxe	Keukenmes
+1H_KitchenKnife_03	Keukenmes
+1H_KitchenKnife_04	Keukenmes
+1H_KitchenKnife_DigitalDeluxe	Keukenmes
+Kiwi	Kiwi
+Socks_02	Kniehoge sokken
+Recurve_Bow_60	Kodiak 60#
+Slippers_01	Kroks
+Weapon_Krueger	Krueger
+Magazine_Krueger	Magazijn — Krueger
+Weapon_Parts_Krueger	Krueger Wapenonderdelen
+1H_Kunai	Kunai
+Laika_Engine_Alternator_Item	Laika Dynamo
+Laika_Body_ArmorHeavy_Left	Laika Kogelvrije vesten zwaar links
+Laika_Body_ArmorHeavy_Right	Laika Kogelvrije vesten zwaar rechts
+Laika_Body_ArmorLight_Left	Laika Lichaamspantser licht links
+Laika_Body_ArmorLight_Right	Laika Kogelvrije vesten licht rechts
+Laika_Body_ArmorLight_Top	Laika Body Armor lichte top
+Laika_Body_Front	Laika Voorzijde carrosserie
+Laika_Body_Left	Laika Lichaam links
+Laika_Body_Right	Laika Lichaam rechts
+Laika_Body_Top	Laika Bodytop
+Laika_Bumper_Armor_Back_Item	Laika Bumperpantser achterkant
+Laika_Bumper_Back_Item	Laika Bumper achterkant
+Laika_Bumper_Front_Item	Laika Bumper voorkant
+Laika_Door_ArmorHeavy_FrontLeft_Item	Laika Deur zwaar pantser linksvoor
+Laika_Door_ArmorHeavy_FrontRight_Item	Laika Deur zwaar pantser rechtsvoor
+Laika_Door_Left_Item	Laika Deur links
+Laika_Door_ArmorLight_FrontLeft_Item	Laika Deurlichtpantser linksvoor
+Laika_Door_ArmorLight_FrontRight_Item	Laika Deurlichtpantser rechtsvoor
+Laika_Door_Right_Item	Laika Deur rechts
+Laika_Body_ArmorHeavy_Top_Item	Laika Zware pantsertop
+Laika_DoorHood_Item	Laika Kap
+Laika_Lights_FrontLeft	Laika Verlichting linksvoor
+Laika_Lights_FrontRight	Laika Verlichting rechtsvoor
+Laika_Lights_RearLeft	Laika Verlichting linksachter
+Laika_Lights_RearRight	Laika Verlichting rechtsachter
+Laika_Seat_FrontLeft_Item	Laika Stoel linksvoor
+Laika_Seat_FrontRight_Item	Laika Stoel rechtsvoor
+Laika_DoorTrunk_ArmorHeavy_Item	Laika Kofferbakpantser zwaar
+Laika_DoorTrunk_ArmorLight_Item	Laika Licht kofferbakpantser
+Laika_DoorTrunk_Item	Laika Kofferbakdeur
+Battery_Charger_Large	Grote batterijlader
+LogShed_1	Grote houtschuur
+Stone_Large	Grote steen
+Larve	Larve
+Laser_Detonator	Laser-ontsteker
+Lead_Plate	Loodplaat
+Leather_Backpack_01	Leren rugzak
+Leather_Backpack_02	Leren rugzak
+Leather_Backpack_03	Leren rugzak
+Belt_Pistol_Holster	Leren riem pistoolholster
+Leather_MiniSkirt_01	Leren minirok
+Leather_MiniSkirt_02	Leren minirok
+Leather_MiniSkirt_03	Leren minirok
+Leather_Sheet	Leren blad
+Leather_Shoes_02	Leren schoen
+Lemon	Citroen
+Lemon_Seed_Bag	Citroenzaadzak - Citroenzaadzak
+Lemon_Seeds	Citroenzaden
+Lepiota_Procera	Lepiota Procera
+Lettuce	Sla
+Lettuce_Seed_Bag	Slazaadzak - Slazaadzak
+Lettuce_Seeds	Sla zaden
+ColorCan_LightBrown	Lichtbruine verfblik
+ColorCan_LightUrban	Lichte stedelijke verfblik
+Lighter	Lichter
+Lime	Limoen
+ColorCan_LimeGreen	Limoengroene verfblik
+GlassBottle03	Limoensap
+PETBottle03	Limoen frisdrank
+PETBottle04	Limoen frisdrank
+Ganoderma_Lucidum	Lingzhi-paddestoel
+WeaponCharm_Emoji	LMAO Emoji-wapentalisman
+Lockpick_Item	Lockpick
+LockpickingBoard	Lockpicking-bord
+ImprovisedRail_Long	Lange geïmproviseerde spoorlijn
+Long_Paddle	Lange peddel
+Long_wooden_stick	Lange houten stok
+Vest_01	Shirt met lange mouwen
+Vest_02	Shirt met lange mouwen
+Vest_03	Shirt met lange mouwen
+Vest_04	Shirt met lange mouwen
+Vest_05	Shirt met lange mouwen
+Cigarettes1	Lucky Star Sigarettenpakje
+Cigarette1	Lucky Stars-sigaret
+Lycoperdon_Gigantea	Lycoperdon Gigantea
+M1_Bayonet	M1 Bajonet
+M1_Clip	Laadstrip — M1
+WeaponSights_M1_Experimental	M1 experimentele bezienswaardigheden
+WeaponFlashHider	M1 Flash-verberger
+M1_Medical_Helmet	M1 medische helm
+Weapon_M1_Garand	M1 geweer
+WeaponSights_M1_ScopeAndSights	Richtkijker — M1
+WeaponSuppressor_M1	Geluiddemper — M1
+Weapon_Parts_M1_Garand	M1 wapenonderdelen
+Magazine_M16	Magazijn — M16
+Weapon_M16A4	M16A4
+WeaponSights_M16A4_FoldingSights	M16A4 Opvouwbare vizieren
+Weapon_Parts_M16A4	M16A4 wapenonderdelen
+Weapon_M1887	M1887
+Weapon_M1887_Sawed_off	M1887 Afgezaagd
+Weapon_Parts_M1887	M1887 wapenonderdelen
+Weapon_MosinNagant	M1891
+Mosin_Bayonet	M1891 Bajonet
+WeaponSuppressor_M1891	Geluiddemper — M1891
+Weapon_Parts_MosinNagant	M1891 wapenonderdelen
+Weapon_M1911	M1911
+Weapon_M1911_Engraved	M1911 gegraveerd
+Weapon_M1911_Gold	M1911 Goud
+Weapon_M1911_JayW	M1911 JayW
+Magazine_M1911	Magazijn — M1911
+M1911_Rail	Montagerail — M1911
+Weapon_Parts_M1911	M1911 wapenonderdelen
+Weapon_M249	M249
+Magazine_M249	M249 munitiekist
+Weapon_Parts_M249	M249 wapenonderdelen
+M70_Bayonet	M70 Bajonet
+WeaponSuppressor_M82A1	Geluiddemper — M82 QDL
+WeaponSuppressor_M82A1_Black	Geluiddemper — M82 QDL
+WeaponSuppressor_M82A1_Desert	Geluiddemper — M82 QDL
+WeaponSuppressor_M82A1_Snow	Geluiddemper — M82 QDL
+WeaponScope_M82A1	Richtkijker — M82
+WeaponScope_M82A1_Black	Richtkijker — M82
+WeaponScope_M82A1_Desert	Richtkijker — M82
+WeaponScope_M82A1_Snow	Richtkijker — M82
+Weapon_M82A1	M82A1
+Weapon_M82A1_Black	M82A1
+Weapon_M82A1_Desert	M82A1
+Weapon_M82A1_Snow	M82A1
+Magazine_M82A1	Magazijn — M82A1
+Weapon_Parts_M82A1	M82A1 wapenonderdelen
+Flashbang	M84 Verdovingsgranaat
+WeaponFlashlight_M9	M9-zaklamp
+Magazine_M9	Magazijn — M9
+Weapon_Parts_M9	M9 wapenonderdelen
+Weapon_MAC10	MAC-10
+Magazine_MAC10	Magazijn — MAC-10
+WeaponSuppressor_MAC10	Geluiddemper — MAC-10
+Weapon_Parts_MAC10	MAC-10 Wapenonderdelen
+Magnifying_Glass1	Vergrootglas
+Vodka	Majestic Bear Wodka
+Manchu_Bow_50	Manchu Buigen
+Mango	Mango
+Marine_Cap_01	Mariene Kap
+Marine_Cap_02	Mariene Kap
+Marine_Cap_03	Mariene Kap
+Marine_Cap_04	Mariene Kap
+Marine_Cap_05	Mariene Kap
+Marine_Cap_06	Mariene Kap
+Marine_Cap_07	Mariene Kap
+Marine_Cap_08	Mariene Kap
+Matches	Wedstrijden
+Mayonnaise	Mayonaise
+FishingBait_Meat	Vlees Vis Aas
+MeatSnack_01	Vleessnack Pittig
+MeatSnack_02	Vleessnack Pittig
+Medical_Glove_01	Medische handschoenen
+1H_Medieval_Sword	Middeleeuws zwaard
+Battery_Charger_Medium	Middelgrote batterijlader
+FishingHookPack2	Medium haakpakket
+Lock_Security_Lvl2	Middelmatige slotbescherming
+Medium_Vehicle_StorageRack	Middelgroot voertuigopbergrek
+FishingHook1	Middelgrote vishaak
+Knife_Sheath	Holster voor slagwapens
+Metal_Arrow	Metalen pijl
+2H_Metal_Axe	Metalen bijl
+2H_Metal_Baseball_Bat	Metalen honkbalknuppel
+Ammo_Crossbow_Bolt_Metal	Metalen kruisboogbout
+MetalDetector	Metaaldetector
+1H_Improvised_metal_knife	Metalen mes
+1H_Metal_Pipe	Metalen pijp
+Saw	Metaalzaag
+Metal_Scrap_01	Metaalschroot
+Metal_Scrap_02	Metaalschroot
+Metal_Scrap_03	Metaalschroot
+Metal_Scrap_04	Metaalschroot
+Metal_Scrap_05	Metaalschroot
+1H_Metal_Sword	Metalen zwaard
+Ammo_Crossbow_Bolt_WoodenMetalTip	Kruisboogbout met metalen punt
+Wooden_ArrowMetalTip	Houten pijl met metalen punt
+Bundle_Of_Metal_Tips	Metalen tips
+HH_Shoes_05_01	Sandalen met middelhoge hak
+HH_Shoes_05_02	Sandalen met middelhoge hak
+HH_Shoes_05_03	Sandalen met middelhoge hak
+MilitaryBoots_JNA	Militaire laarzen
+MilitaryBoots_Peace	Militaire laarzen
+Military_Cap_01	Militaire kap
+Military_Cap_02	Militaire kap
+Military_Cap_03	Militaire kap
+Military_Cap_04	Militaire kap
+Military_Cap_05	Militaire kap
+Military_Cap_06	Militaire kap
+Military_Cap_07	Militaire kap
+Military_Cap_08	Militaire kap
+Compass	Militair kompas
+Military_Goggles_01	Militaire bril
+Tactical_Sunglasses_01	Militaire bril
+Tactical_Sunglasses_02	Militaire bril
+Military_Helmet_01_01	Militaire helm
+Military_Helmet_01_02	Militaire helm
+Military_Helmet_01_03	Militaire helm
+Military_Helmet_01_04	Militaire helm
+Military_Helmet_01_05	Militaire helm
+Military_Helmet_01_06	Militaire helm
+Military_Helmet_01_07	Militaire helm
+Military_Helmet_01_08	Militaire helm
+Military_Helmet_01_09	Militaire helm
+Military_Quiver_01	Militaire pijlkoker
+Military_Quiver_02	Militaire pijlkoker
+Military_Quiver_03	Militaire pijlkoker
+Military_Quiver_04	Militaire pijlkoker
+Military_Quiver_05	Militaire pijlkoker
+Military_Quiver_06	Militaire pijlkoker
+Military_Quiver_07	Militaire pijlkoker
+Military_Quiver_08	Militaire pijlkoker
+Military_Shirt_01	Militair overhemd
+Military_Shirt_02	Militair overhemd
+Military_Shirt_03	Militair overhemd
+Military_Shirt_04	Militair overhemd
+Military_Shirt_05	Militair overhemd
+Military_Shirt_06	Militair overhemd
+Military_Shirt_07	Militair overhemd
+Military_Shirt_08	Militair overhemd
+1H_Military_Shovel	Militaire schop
+1H_Military_Survival_Knife	Militair overlevingsmes
+1H_Military_Tomahawk	Militaire Tomahawk
+Milk	Melk
+Leather_Shoes	Mirdas Schoenen
+Weapon_MK18	MK18
+WeaponSuppressor_MK18	Geluiddemper — MK18
+Weapon_Parts_MK18	MK18 Wapenonderdelen
+1H_MK5000_Black	MK5000
+1H_MK5000_Metal	MK5000
+MMA_Glove_01	MMA Handschoenen
+Mobile_Phone	Mobiele telefoon
+Hazmat_Suit_Modern	Modern Hazmat-pak
+Recurve_Bow_80	Mohawk 80#
+Sensor_Detonator	Bewegingssensor-ontsteker
+Motorbike_Battery	Motor accu
+Motorcycle_Boots_01	Motorlaarzen
+Motorcycle_Boots_02	Motorlaarzen
+Motorcycle_Boots_03	Motorlaarzen
+Motorcycle_Glasses_01	Motorbril
+Motorcycle_Glasses_02	Motorbril
+Motorcycle_Jacket_01	Motorjas
+Motorcycle_Jacket_02	Motorjas
+Motorcycle_Jacket_03	Motorjas
+Motorcycle_Mask_01	Motormasker
+Motorcycle_Mask_02	Motormasker
+Motorcycle_Pants_01	Motorbroek
+Motorcycle_Pants_02	Motorbroek
+Motorcycle_Pants_03	Motorbroek
+Weapon_MP5	MP5
+Weapon_MP5_K	MP5 K
+Magazine_MP5	Magazijn — MP5
+MP5_Rail_Short	MP5 rail
+Weapon_MP5_SD	MP5 SD
+WeaponSuppressor_MP5	Geluiddemper — MP5
+Weapon_Parts_MP5	MP5 Wapenonderdelen
+WeaponSights_MRO_Red_Dot	Rodepuntvizier — MRO
+Mulberry	Moerbeiboom
+Mustard	Mosterd
+Mutant_Animal_Skin	Mutante dierenhuid - Mutante dierenhuid
+Bear_Head_Mutant	Mutante beer hoofd
+Mutant_Bear_Steak	Mutant Berenbiefstuk - Mutant Berenbiefstuk
+Boar_Head_Mutant	Mutant zwijnhoofd
+Buck_Head_Mutant	Mutant Buck-hoofd
+Mutant_Buck_Steak	Mutante hertenbiefstuk
+Wolf_Head_Mutant	Mutante Wolfskop
+Mutant_Wolf_Steak	Gemuteerde Wolfsteak - Mutante Wolfsteak
+1H_N9_Black	N9 Bajonet
+1H_N9_White	N9 Bajonet
+Nails	Nagels
+ColorCan_NavyBlue	Marineblauwe verfblik
+ColorCan_NavyGrey	Marinegrijze verfblik
+Needle	Naald
+Night_Vision_Goggles_01	Nachtzichtbril
+FishingLine_2	Nylonlijn, medium, 0.18 mm
+FishingLinePiece_2	Nylonlijn, medium, 0.18 mm
+FishingLine_3	Nylonlijn, dik, 0.25 mm
+FishingLinePiece_3	Nylonlijn, dik, 0.25 mm
+FishingLine_4	Nylonlijn, dik, 0.5 mm
+FishingLinePiece_4	Nylonlijn, dik, 0.5 mm
+FishingLine_1	Nylonlijn, dun, 0.12 mm
+FishingLinePiece_1	Nylonlijn, dun, 0.12 mm
+Oak_Nuts	Eiken Noten
+Cal_40_OG-7V	OG-7V
+WeaponCharm_Ogre	Ogre wapen charme
+Oil_Filter	Oliefilter
+WeaponSights_OKP-7_Holographic	Holografisch vizier — OKP
+Olives	Olijf
+Onion	Ui
+Chips3	Uienringen
+Open_Finger_Gloves_01	Open vingerhandschoenen
+Open_Finger_Gloves_02	Open vingerhandschoenen
+Open_Finger_Gloves_03	Open vingerhandschoenen
+Open_Finger_Gloves_04	Open vingerhandschoenen
+Open_Finger_Gloves_05	Open vingerhandschoenen
+Open_Finger_Gloves_06	Open vingerhandschoenen
+Opuntia_Fig	Opuntia Afb
+Orange	Oranje
+Can02	Sinaasappelsap
+GlassBottle04	Sinaasappelsap
+Orange_Seed_Bag	Oranje zaadzak - Oranje zaadzak
+Orange_Seeds	Oranje Zaden
+Fish_Orata	Goudbrasem
+Orata_Fillet	Orata-filet
+Organic_Fertilizer	Organische meststof
+HH_Boots_01	Over de knie laarzen
+WeaponScope_Dragunov	Richtkijker — P-223
+P17_Bayonet	P17 Bajonet
+C4_Pack	Verpakt C4
+Padlock	Hangslot
+Painkillers_01	Pijnstillers - Blaar
+Painkillers_02	Pijnstillers - Doos
+PainKillers_03	Pijnstillers - Pot
+Pajama_Pants	Pyjamabroek
+Pajama_Shirt_01	Pyjama-shirt
+Pan	Pan
+Inmate_pants	Broek
+Inmate_Pants_01_Forest_DigitalDeluxe	Broek
+Inmate_Pants_01_Snow_DigitalDeluxe	Broek
+Inmate_Pants_01_South_DigitalDeluxe	Broek
+Pantyhose_01	Panty
+Paper	Papier
+Parachute	Parachutespringen
+Parking_Sensor	Parkeersensor
+Parsley	Pastinaak
+Party_Glasses_01	Feestbril
+Party_Glasses_02	Feestbril
+Pasta	Pasta
+Book_Cooking_Pasta	Pasta-kookboek
+Weapon_PeaceKeeper38	Vredestichter 38
+Weapon_Parts_PeaceKeeper38	Vredestichter 38 Onderdelen
+Peach	Perzik
+CannedPeach	Perzik compote
+Peach_Seed_Bag	Perzikzaadzak - Perzikzaadzak
+Peach_Seeds	Perzik zaden
+Pear	Peer
+CannedPear	Perencompote
+Pear_Seed_Bag	Perenzaadzak - Perenzaadzak
+Pear_Seeds	Perenzaden
+Pen	Pen
+Penicillin01	Penicilline
+Peppers_Seeds	Peper Zaden
+Peppers_Seed_Bag	Paprika Zaadzak - Paprika Zaadzak
+Pesticide	Pesticiden
+Cal_40_PG-7M	PG-7M
+2H_Pickaxe	Houweel
+Rubber_sheet	Stuk rubber
+Pike_Fillet	Snoekfilet
+Fish_Pike	Snoek Vis
+Pike_Head	Snoek hoofd
+Pilot_Glasses	Pilotenbril
+Pilot_Hat_01	Pilotenhoed
+Pilot_Jacket	Pilotenjack
+Pine_Cone	Dennenappel
+Pineapple	Ananas
+Ghillie_Suit_Pants_04	Roze ghilliekostuumbroek
+Ghillie_Suit_Jacket_04	Roze ghilliekostuumtop
+PipeBomb	Pijp bom
+1H_Pipe_Wrench	Pijpsleutel
+WeaponCharm_PirateCat	Piratenkat wapenbedel
+Pirate_EyePatch	Piraten ooglapje
+Pirate_Hat_01	Piraten hoed
+Pirate_Hat_Sparrow_02	Piraten hoed
+2H_Pitchfork	Hooivork
+Book_Cooking_Pizza	Pizzakookboek
+Scissors_Plastic	Kunststof schaar
+Hen_Torso	Geplukte kip
+Plum	Pruim
+Plum_Seed_Bag	Pruimenzaadzak - Pruimenzaadzak
+Plum_Seeds	Pruimenzaden
+Police_Backpack_01	Politie-aanvalsrugzak
+Police_Backpack_03	Politie rugzak
+Police_Beanie_01	Politie muts
+ColorCan_PoliceBlue	Politie blauwe verfblik
+Police_Bulletproof_Vest_01	Kogelvrij vest van de politie
+Police_Cap_01	Politie Kap
+Police_Boonie_Hat_01	Politie vissershoed
+Police_Gloves_01	Handschoenen van de politie
+Police_Cap_02	Politie hoed
+Police_Backpack_02	Politie wandelrugzak
+Police_Jacket_01	Politie jas
+Police_Open_Finger_Gloves_01	Politiehandschoenen met open vingers
+Police_Shirt_01	Politie shirt
+pOLICE_Sweater_01	Politie trui
+Armor_Police_Vest_01	Tactisch vest van de politie
+Pork_Steak	Varkensvlees biefstuk
+Mutant_Pork_Steak	Varkensvleessteak - Mutante varkenssteak
+WeaponScope_POSP	POSP 4x24V
+PotassiumIodide_Pills_01	Kaliumjodidepillen - Blister
+PotassiumIodide_Pills_02	Kaliumjodidepillen - Doos
+PotassiumIodide_Pills_03	Kaliumjodidepillen - Pot
+Potato	Aardappel
+Chips4	Aardappelchips Zout
+Potato_Seed_Bag	Aardappelzaadzak - Aardappelzaadzak
+Potatoes_Seeds	Aardappel Zaden
+PracticeTrap	Oefen bom
+Recurve_Bow_70	Predator 70#
+BlankSign_Premium	Premium leeg teken
+PremiumBoiliesPack	Premium Boilies Aaspakket
+Car_Lamp_Ceiling	Premium elektrische lamp
+PressureCookerBomb	Snelkookpan bom
+Pressure_Dressing	Drukverband
+Compass_Primitive	Primitief kompas
+PromTrap	PROM-1 De mijne
+Fish_PrussianCarp	Giebel
+Psilocybe_Cyanescens	Psilocybe Cyanescens
+WeaponScope_PU	Richtkijker — PU
+Pumpkin	Pompoen
+Pumpkin_Seed_Bag	Pompoenzaadzak - Pompoenzaadzak
+Pumpkin_Seeds	Pompoenpitten
+Zombie_01_Left_Arm	Marionet arm
+Zombie_01_Right_Arm	Marionet arm
+Puppet_Eye	Marionet oog
+Zombie_01_Left_Foot	Marionet voet
+Zombie_01_Right_Foot	Marionet voet
+Zombie_01_Head	Marionet hoofd
+Zombie_01_Head_No_teeth	Marionet hoofd
+Zombie_01_Left_Leg	Marionet been
+Zombie_01_Right_Leg	Marionet been
+ZombieMeat	Marionet vlees
+Zombie_01_Torso	Marionet Torso
+MemoryModule_Level3	Paarse geheugenmodule
+Qipao_Dress_01	Qipao-jurk
+Qipao_Dress_02	Qipao-jurk
+Qipao_Dress_03	Qipao-jurk
+Qipao_Dress_04	Qipao-jurk
+Qipao_Dress_05	Qipao-jurk
+Qipao_Dress_06	Qipao-jurk
+HH_Wedge_Heels_01_01	Qipao-schoenen
+HH_Wedge_Heels_01_02	Qipao-schoenen
+HH_Wedge_Heels_01_03	Qipao-schoenen
+HH_Wedge_Heels_01_04	Qipao-schoenen
+HH_Wedge_Heels_01_05	Qipao-schoenen
+HH_Wedge_Heels_01_06	Qipao-schoenen
+Rabbit_Left_Front	Konijn linksvoor
+Rabbit_Left_Back	Konijn linksachter
+RabbitLeg	Konijnenpoot
+RabbitMeat	Konijnenvlees
+Rabbit_Right_Front	Konijn Rechtervoorhand
+Rabbit_Right_Back	Konijn Rechterachterhand
+Racing_Helmet_01	Racehelm
+Radio	Radio
+Improvised_Gloves	Lappenhandschoenen
+Improvised_Shoes_02	Lappenschoenen
+Rag_Stripes	Lappenstroken
+Rager_Engine_Alternator_Item	Rager Dynamo
+Rager_Body_ArmorHeavy_Back_Item	Rager Lichaamspantser zware rug
+Rager_Body_ArmorHeavy_Left_Item	Rager Kogelvrije vesten zwaar links
+Rager_Body_ArmorHeavy_Right_Item	Rager Kogelvrije vesten zwaar rechts
+Rager_Body_ArmorHeavy_Top_Item	Rager Lichaamspantser zware top
+Rager_Body_ArmorLight_Back_Item	Rager Lichaamspantser lichte rug
+Rager_Body_ArmorLight_Left_Item	Rager Lichaamspantser licht links
+Rager_Body_ArmorLight_Right_Item	Rager Kogelvrije vesten licht rechts
+Rager_Body_ArmorLight_Top_Item	Rager Body Armor lichte top
+Rager_Body_Front	Rager Voorzijde carrosserie
+Rager_Body_Left	Rager Lichaam links
+Rager_Body_Right	Rager Lichaam rechts
+Rager_Body_Top	Rager Bodytop
+Rager_Bumper_Back_Item	Rager Bumper achterkant
+Rager_Bumper_Front_Item	Rager Bumper voorkant
+Rager_Door_ArmorHeavy_BackLeft_Item	Rager Deurpantser zwaar linksachter
+Rager_Door_ArmorHeavy_BackRight_Item	Rager Deurpantser zwaar rechtsachter
+Rager_Door_ArmorHeavy_FrontLeft_Item	Rager Deurpantser zwaar linksvoor
+Rager_Door_ArmorHeavy_FrontRight_Item	Rager Deurpantser zwaar rechtsvoor
+Rager_Door_ArmorLight_BackLeft_Item	Rager Deurpantserlicht linksachter
+Rager_Door_ArmorLight_BackRight_Item	Rager Deurpantserlicht rechtsachter
+Rager_Door_ArmorLight_FrontLeft_Item	Rager Deurpantserlicht linksvoor
+Rager_Door_ArmorLight_FrontRight_Item	Rager Deurpantserlicht rechtsvoor
+Rager_Door_BackLeft_Item	Rager Deur linksachter
+Rager_Door_BackRight_Item	Rager Deur rechtsachter
+Rager_Door_FrontLeft_Item	Rager Deur linksvoor
+Rager_Door_FrontRight_Item	Rager Deur rechtsvoor
+Rager_DoorHood_Item	Rager Kap
+Rager_Lights_FrontLeft	Rager Verlichting linksvoor
+Rager_Lights_FrontRight	Rager Verlichting rechtsvoor
+Rager_Lights_RearLeft	Rager Verlichting linksachter
+Rager_Lights_RearRight	Rager Verlichting rechtsachter
+Rager_Lights_RearTop	Rager Verlichting achter boven
+Rager_Seat_FrontLeft_Item	Rager Stoel linksvoor
+Rager_Seat_FrontRight_Item	Rager Stoel rechtsvoor
+Rager_DoorTrunk_ArmorHeavy_Item	Rager Kofferbakpantser zwaar
+Rager_DoorTrunk_ArmorLight_Item	Rager Licht kofferbakpantser
+Rager_DoorTrunk_Item	Rager Kofferbakdeur
+Rager_Wheel_ArmorHeavy_FrontLeft_Item	Rager Wielpantser zwaar linksvoor
+Rager_Wheel_ArmorHeavy_FrontRight_Item	Rager Wielpantser zwaar rechtsvoor
+Rager_Wheel_ArmorLight_FrontLeft_Item	Rager Wielpantserlicht linksvoor
+Rager_Wheel_ArmorLight_FrontRight_Item	Rager Wielpantserlicht rechtsvoor
+Rags	Vodden
+Raincoat_01	Regenjas
+Raincoat_02	Regenjas
+Raincoat_03	Regenjas
+Raincoat_04	Regenjas
+Raincoat_05	Regenjas
+Raincoat_06	Regenjas
+Raisins	Rozijnen
+Ramsons	Ramsons
+Grapes_Raw	Rauwe Druiven
+RK_Beanie_01	Raykit-muts
+RK_Hoodie_01	Raykit-hoodie
+Razor_Blade	Scheermesje
+Rebar_Cutter	Wapening Snijder
+ColorCan_RedChocolate	Rode chocoladeverfblik
+WeaponSights_RedDot_CA401B	Red Dot-zicht
+Energy_Drink_Red_Ghoul	Red Ghoul-energiedrank
+RedOnion_Seed_Bag	Rode uienzaadzak
+RedOnion_Seeds	Rode Uienzaden
+FishingBait_RedWorm	Rode Worm Vis Aas
+Christmas_Headband_01	Rendieren oren
+Remote_Door_Key	Deursleutel op afstand
+Remote_Door_Sensor	Deursensor op afstand
+KeyCardApex	Keycard voor onderzoeksfaciliteit
+Respirator_01	Ademhalingstoestel
+Retro_Helmet_01	Retro-helm
+Book_Cooking_Rice	Rijst kookboek
+Richards_Cheese	Richard's Kaas
+Rider_Helmet_01	Ruiterhelm
+Rider_Helmet_02	Ruiterhelm
+Rider_Helmet_03	Ruiterhelm
+Riot_Helmet_02	Riot-helm
+ScopeRail_AK47	RIS Adapter
+RIS_Armor_Military_Front_Item	RIS Militair pantserfront
+RIS_Body_Military_Item	RIS Lichaamsmilitair
+RIS_BrakeLight_Center_Item	RIS Remlichtcentrum
+RIS_BrakeLight_Left_Item	RIS Remlicht links
+RIS_BrakeLight_Right_Item	RIS Remlicht rechts
+RIS_Headlight_Left_Item	RIS Koplamp links
+RIS_Headlight_Right_Item	RIS Koplamp rechts
+RIS_Plow_Civilian	RIS Ploeg burger
+RIS_Spikes_Military	RIS Spikes Militair
+RIS_Wheel_Armor_Item	RIS Wielpantser
+Tobacco_Rolled	Gerolde Tabak
+WeaponCharm_Roller_Skate	Rolschaats wapen charme
+Rope1	Touw 5m
+Dog_Rose	Rozenbottel
+Weapon_Parts_RPG	RPG Wapenonderdelen
+Weapon_RPG7	RPG7
+Weapon_RPK-74	RPK
+Magazine_RPK	Magazijn — RPK
+Weapon_Parts_RPK-74	RPK Wapenonderdelen
+Rubber_band	Elastiekje
+Fish_Ruffe	Pos
+Ruffe_Fillet	Ruff Filet
+Skirt_02_01	Rok met ruches
+Skirt_02_02	Rok met ruches
+Skirt_02_03	Rok met ruches
+Skirt_02_04	Rok met ruches
+Skirt_02_05	Rok met ruches
+Skirt_02_06	Rok met ruches
+Skirt_02_07	Rok met ruches
+Safety_Goggles	Veiligheidsbril
+Safety_pin	Veiligheidsspeld
+Salsify_roots	Schorseneer - wortels
+SaltBag	Zout zak
+SaltGrain	Zout Graan
+SandBag	Zandzak
+Santa_Hat_01	Kerstmuts
+Santa_Jacket	Kerstman jasje
+Santa_Pants	Kerstman broek
+CannedSardine	Sardine
+CannedSardine_Deluxe	Sardine
+Sardine_Fillet	Sardinefilet
+FishingBait_Sardine	Sardine Visaas
+1H_Scalpel	Scalpel
+Weapon_Parts_SCAR_L	SCAR L Wapenonderdelen
+Weapon_SCAR_DMR	SCAR-DMR
+Magazine_SCAR_DMR	Magazijn — SCAR-DMR
+Weapon_Parts_SCAR_DMR	SCAR-DMR Wapenonderdelen
+Weapon_SCAR_L	SCAR-L
+Rabbit_Mask_01	Eng konijnenmasker
+School_Backpack_01	Schoolrugzak
+School_Backpack_Boy_02	Schoolrugzak
+School_Backpack_Boy_03	Schoolrugzak
+School_Backpack_Girl_04	Schoolrugzak
+School_Backpack_Girl_05	Schoolrugzak
+School_Backpack_Girl_06	Schoolrugzak
+Scissors_01	Schaar
+Recurve_Bow	Schorpioen 40#
+1H_Scout_Black	Scout
+1H_Scout_White	Scout
+Screwdriver	Schroevendraaier
+Scum_Sunrise	SCUM Sunrise
+SCUMkin_Spice_Latte	SCUMkin Spice Latter
+Weapon_SDASS	SDASS 12M
+Weapon_Parts_SDASS	SDASS Wapenonderdelen
+SeaSalt_01	Zeezout
+SeaSalt_02	Zeezout
+WeaponSights_Sentry_RDRS	Schildwacht RDRS
+WeaponCharm_Sentry	Sentry wapen charme
+Weapon_Serpent357	Slang 357
+Weapon_Parts_Serpent357	Slang 357 Wapenonderdelen
+Sewing_kit	Naaisetje
+Sexy_Jeans_Shorts_01	Sexy spijkerbroek
+Sexy_Jeans_Shorts_02	Sexy spijkerbroek
+Sexy_Jeans_Shorts_03	Sexy spijkerbroek
+Sexy_Jeans_Shorts_04	Sexy spijkerbroek
+Sexy_Jeans_Shorts_05	Sexy spijkerbroek
+Sexy_Jeans_Shorts_06	Sexy spijkerbroek
+Sexy_Jeans_Shorts_07	Sexy spijkerbroek
+WeaponSights_Shark	Reflexvizier — Shark
+Shemagh_Scarf_01	Shemagh-sjaal
+Shemagh_Scarf_02	Shemagh-sjaal
+Shemagh_Scarf_03	Shemagh-sjaal
+Shemagh_Scarf_04	Shemagh-sjaal
+Shemagh_Scarf_05	Shemagh-sjaal
+Shemagh_Scarf_06	Shemagh-sjaal
+Shemagh_Scarf_07	Shemagh-sjaal
+Shemagh_Scarf_08	Shemagh-sjaal
+Shimoro_Vest	Shimoro Vest
+Inmate_shirt_01	Overhemd
+Inmate_Shirt_01_Forest_DigitalDeluxe	Overhemd
+Inmate_Shirt_01_South_DigitalDeluxe	Overhemd
+ImprovisedRail_Short	Korte geïmproviseerde spoorlijn
+Short_Paddle_A	Korte peddel
+Short_Paddle_B	Korte peddel
+Shorts_Pants_01_01	Korte broek
+Shorts_Pants_01_02	Korte broek
+Shorts_Pants_01_03	Korte broek
+Shorts_Pants_01_04	Korte broek
+Shorts_Pants_01_05	Korte broek
+Shorts_Pants_01_06	Korte broek
+Shorts_Pants_01_07	Korte broek
+Shorts_Pants_01_08	Korte broek
+Shorts_Pants_01_09	Korte broek
+Shorts_Pants_01_10	Korte broek
+Short_Trousers_01_01	Korte broek
+Short_Trousers_01_02	Korte broek
+Short_Trousers_01_03	Korte broek
+Short_Trousers_01_04	Korte broek
+Short_Trousers_01_05	Korte broek
+2H_Shovel_02	Schop
+1H_Shuriken	Shuriken
+SidecarBike_Brakelight_Item	Zijspanfiets remlicht
+SidecarBike_Fender_Front_Item	Zijspanfiets spatbord voorzijde
+SidecarBike_Fender_Rear_Item	Zijspanfiets spatbord achter
+SidecarBike_Fender_Sidecar_Item	Zijspanfiets spatbord zijspan
+SidecarBike_Headlight_Item	Zijspanfietskoplamp
+SidecarBike_Seat_Back_Item	Achterkant zijspanfietsstoeltje
+SidecarBike_Seat_Front_Item	Zijspanfietszadel voorzijde
+SidecarBike_Sidecar_Brakelight_Item	Zijspanfiets Zijspanremlicht
+SidecarBike_Sidecar_Headlight_Item	Zijspanfiets Zijspankoplamp
+SidecarBike_Sidecar_WeaponStation_Item	Zijspanfiets Zijspanwapenstation
+SidecarBike_Wheel_4x16_Item	Zijspanfietswiel
+SilentAlarm	Stil alarm
+Lock_Item_Medium	Zilveren slot
+Skewer	Spies
+Skewer_02	Spies
+Bear_Skinned	Gevilde beer
+Boar_Skinned	Gevild zwijn
+Buck_Skinned	Gevilde Bok
+Doe_Skinned	Gevilde Doe
+Donkey_skinned	Gevilde ezel
+Goat_Skinned	Gevilde geit
+Horse_Skinned	Gevild paard
+Rabbit_Skinned	Gevild konijn
+Wolf_Skinned	Gevilde Wolf
+Skirt_01_01	Rok
+Skirt_01_02	Rok
+Skirt_01_03	Rok
+Skirt_02_08	Rok
+Weapon_SKS	SKS
+SKS_Bayonet	SKS Bajonet
+Magazine_Clip_SKS	Laadstrip — SKS
+Weapon_Parts_SKS	SKS Wapenonderdelen
+Halloween_Mask_Scream	Schedel masker
+WeaponCharm_Skull	Schedel wapen charme
+Slav_Reviver	Slav Reviver
+Slavic_Gent	Slavic Gent
+Sledgehammer	Voorhamer
+Sleeveless_Camo_Shirt_01	Mouwloos camouflageshirt
+Sleeveless_Camo_Shirt_02	Mouwloos camouflageshirt
+Sleeveless_Camo_Shirt_03	Mouwloos camouflageshirt
+Sleeveless_Camo_Shirt_04	Mouwloos camouflageshirt
+Sleeveless_Camo_Shirt_05	Mouwloos camouflageshirt
+Sleeveless_Camo_Shirt_06	Mouwloos camouflageshirt
+Sleeveless_Shirt_01	Mouwloos overhemd
+Sleeveless_Shirt_02	Mouwloos overhemd
+BowSilencer_SlipOn	Slip-on boogdemper
+Slippers_03	Pantoffels
+Slouch_Camo_Hat_01	Slouch Camo-hoed
+Slouch_Camo_Hat_02	Slouch Camo-hoed
+Slouch_Camo_Hat_03	Slouch Camo-hoed
+Slouch_Camo_Hat_04	Slouch Camo-hoed
+Slouch_Camo_Hat_05	Slouch Camo-hoed
+Slouch_Camo_Hat_06	Slouch Camo-hoed
+Slouch_Hat_01	Slordige hoed
+Slouch_Hat_02	Slordige hoed
+12_Gauge_Slug_Ammobox	Slugs Shotgun-munitiekist
+Small_Animal_guts	Kleine dierlijke ingewanden
+Mine_02	Kleine antipersoonsmijn
+1H_Small_Axe	Kleine bijl
+Battery_Charger_Small	Kleine batterijlader
+WeaponCharm_SmallBullet	Kleine kogelwapenbedel
+Christmas_Present_01	Klein kerstcadeau
+FishingHookPack1	Klein vishaakpakket
+Gasoline_Canister_Small	Kleine benzinebus
+Improvised_Bag_Small_02	Kleine geïmproviseerde rugzak
+LogShed_2	Kleine houtschuur
+Screwdriver_Small	Kleine schroevendraaier
+1H_Little_Spade	Kleine Spade
+Wooden_Sticks_Bundle_Meduim	Kleine stokkenbundel
+Stone_Small	Kleine steen
+1H_Stone_Axe_Head	Kleine stenen bijlkop
+Tool_Box_SMall	Kleine gereedschapskist
+Small_Vehicle_StorageRack	Opbergrek voor kleine voertuigen
+Wooden_Log_Small_01	Klein houten blok
+Wooden_Log_Small_02	Klein houten blok
+Wooden_Log_Small_03	Klein houten blok
+Wooden_Stick	Kleine houten stok
+Smartphone_Battery	Smartphone-batterij
+Smoke_Grenade	Rookgranaat
+Smoke_Grenade_Green	Rookgranaat
+Smoke_Grenade_Red	Rookgranaat
+Smoke_Grenade_Violet	Rookgranaat
+Smoke_Grenade_Yellow	Rookgranaat
+Dish_Smoked_Drumstick	Gerookte Drumstick
+Dish_Smoked_Fish	Gerookte visfilet
+Dish_Smoked_RabbitLeg	Gerookte konijnenpoot
+Dish_Smoked_Meat	Gerookt Rood Vlees
+WeaponSights_Snake	Reflexvizier — Snake
+ColorCan_SnowWhite	Sneeuwwitje verfblik
+Snowballs_01	Sneeuwbal
+Soap	Zeep
+Kilt_Sock_01	Sokken
+Kilt_Socks_02	Sokken
+Kilt_Socks_03	Sokken
+Kilt_Socks_04	Sokken
+Kilt_Socks_05	Sokken
+Kilt_Socks_06	Sokken
+Sock_01	Sokken
+Can01	Frisdrank
+Sodium_Hydroxide	Natriumhydroxide
+Book_Cooking_Soup	Soep kookboek
+SoySauce	Sojasaus
+2H_Shovel_01	Spade Schop
+CannedSpaghetti	Spaghetti Met Gehaktballetjes
+Snake_Skin_Bow	Specialist Archer Buigen
+WeaponScope_Spektral_DR	SpektralDR
+SpicesMix_01	Kruidenmix
+SpicesMix_02	Kruidenmix
+Chips2	Pittige Nachochips
+Spinach	Spinazie
+Spinach_Seed_Bag	Spinaziezaadzak - Spinaziezaadzak
+Spinach_Seeds	Spinazie Zaden
+College_Jacket_01	Spitfire-jas
+College_Jacket_02	Spitfire-jas
+College_Jacket_03	Spitfire-jas
+College_Jacket_04	Spitfire-jas
+College_Jacket_05	Spitfire-jas
+College_Jacket_06	Spitfire-jas
+College_Jacket_07	Spitfire-jas
+College_Jacket_08	Spitfire-jas
+MA1_Spitfire_01	Spitfire-jas
+MA1_Spitfire_02	Spitfire-jas
+MA1_Spitfire_03	Spitfire-jas
+MA1_Spitfire_04	Spitfire-jas
+Spliff	Spliff
+Spon	SPON
+Dish_Sandwich_Spon	Spon-sandwich
+Spoon	Lepel
+Scottish_Sporran_Bag_01	Sporran-tas
+Sportbike_Seat_Brakelight_Item	Sportbike-remlicht
+Sportbike_Fender_Item	Sportbike spatbord
+Sportbike_Wind_Deflector_Headlight_Item	Sportbike-koplamp
+Sportbike_Seat_Item	Sportbike-zadel
+Sportbike_Body_Street_Item	Sportbike straatlichaam
+Sportbike_Fender_Street_Item	Sportbike straatspatbord
+Sportbike_Wind_Deflector_Street_Headlight_Item	Sportbike straatkoplamp
+Sportbike_Seat_Street_Item	Sportbike straatzadel
+Sportbike_Wind_Deflector_Street_Item	Sportbike straatwinddeflector
+Sportbike_Wind_Deflector_Item	Sportbike-winddeflector
+Fish_Sardine	Gevlekte Sardine
+Spring	Lente
+Stabproof_Vest_01_01	Steekwerend vest
+Stabproof_Vest_01_02	Steekwerend vest
+Stabproof_Vest_01_03	Steekwerend vest
+Stabproof_Vest_01_04	Steekwerend vest
+Stabproof_Vest_01_05	Steekwerend vest
+Stabproof_Vest_01_06	Steekwerend vest
+Stabproof_Vest_01_07	Steekwerend vest
+Stabproof_Vest_01_08	Steekwerend vest
+Stabproof_Vest_01_09	Steekwerend vest
+Credit_Card_Starter	Startersbankkaart
+Book_Cooking_Stew	Stoofpot kookboek
+Stinging_Nettle	Brandnetel
+Stockings_01	Kousen
+Stockings_02	Kousen
+Stockings_03	Kousen
+Stockings_04	Kousen
+Stockings_05	Kousen
+Stockings_06	Kousen
+Stockings_07	Kousen
+Stockings_08	Kousen
+Stone	Steen
+1H_Stone_Axe	Stenen bijl
+1H_ImprovisedKnife	Stenen mes
+Ammo_Crossbow_Bolt_WoodenStoneTip	Steenpunt kruisboogbout
+Wooden_ArrowStoneTip	Houten pijl met stenen punt
+Bundle_Of_Stone_Tips	Stenen tips
+Strait_Jacket	Keurslijf
+Wild_Strawberry	Aardbei
+Sugar	Suiker
+SugarBeet	Suikerbiet
+Round_Sunglasses	Zonnebril
+WeaponCharm_Sunglasses_Emoji	Zonnebril Emoji wapen charme
+Super_Glue	Superlijm
+Weapon_SVD_Dragunov	SVD
+Magazine_SVD_Dragunov	Magazijn — SVD
+WeaponSuppressor_SVD	Geluiddemper — SVD
+Weapon_Parts_SVD	SVD Wapenonderdelen
+Sweater_01	Trui
+Sweater_02	Trui
+Sweater_03	Trui
+Sweater_04	Trui
+Sweater_05	Trui
+Tracksuit_Pants_01_01	Joggingbroek
+Tracksuit_Pants_01_02	Joggingbroek
+Tracksuit_Pants_01_03	Joggingbroek
+Tracksuit_Pants_01_04	Joggingbroek
+Tracksuit_Pants_01_05	Joggingbroek
+Tracksuit_Pants_02_01	Joggingbroek
+Tracksuit_Pants_02_02	Joggingbroek
+Tracksuit_Pants_02_03	Joggingbroek
+Tracksuit_Pants_02_04	Joggingbroek
+Tracksuit_Pants_02_05	Joggingbroek
+Shimoro_Pants	Joggingbroek - Shimoro Broek
+Canned_Corn	Zoete maïs
+CantaloupeMelon_Seed_Bag	Zoete meloenzaadzak
+WeaponCharm_Sword	Zwaard wapen charme
+Syringe	Spuit
+TC_Backpack	T0pCL4SS Rugzak
+Baseball_Cap_13	T0pCL4SS Cap
+Tactical_Gloves_01_01	Tactische handschoenen
+Tactical_Gloves_01_02	Tactische handschoenen
+Tactical_Gloves_01_03	Tactische handschoenen
+Tactical_Gloves_01_04	Tactische handschoenen
+Tactical_Gloves_01_05	Tactische handschoenen
+Tactical_Gloves_01_06	Tactische handschoenen
+Tactical_Gloves_01_07	Tactische handschoenen
+Tactical_Gloves_01_08	Tactische handschoenen
+Police_Handgun_Holster	Tactische pistoolholster
+Tactical_Handgun_Holster_01	Tactische pistoolholster
+Tactical_Handgun_Holster_02	Tactische pistoolholster
+Tactical_Handgun_Holster_03	Tactische pistoolholster
+Tactical_Handgun_Holster_04	Tactische pistoolholster
+Tactical_Handgun_Holster_05	Tactische pistoolholster
+Tactical_Handgun_Holster_06	Tactische pistoolholster
+Tactical_Handgun_Holster_07	Tactische pistoolholster
+Tactical_Jacket_01_01	Tactische jas
+Tactical_Jacket_01_02	Tactische jas
+Tactical_Jacket_01_03	Tactische jas
+Tactical_Jacket_01_04	Tactische jas
+Tactical_Jacket_01_05	Tactische jas
+Tactical_Jacket_01_06	Tactische jas
+Tactical_Jacket_01_07	Tactische jas
+Tactical_Jacket_01_09	Tactische jas
+MilitaryPants_01	Tactische militaire broek
+MilitaryPants_02	Tactische militaire broek
+MilitaryPants_03	Tactische militaire broek
+MilitaryPants_04	Tactische militaire broek
+MilitaryPants_05	Tactische militaire broek
+MilitaryPants_06	Tactische militaire broek
+MilitaryPants_07	Tactische militaire broek
+MilitaryPants_08	Tactische militaire broek
+MilitaryPants_09	Tactische militaire broek
+MilitaryPants_10	Tactische militaire broek
+Tactical_Sweater_01	Tactische trui
+Tactical_Sweater_02	Tactische trui
+Tactical_Sweater_03	Tactische trui
+Tactical_Sweater_04	Tactische trui
+Tactical_Sweater_05	Tactische trui
+Tactical_Sweater_06	Tactische trui
+Tactical_Sweater_07	Tactische trui
+Tactical_Vest_01	Tactisch vest
+Takedown_Bow	Afhaalboog
+2H_Tang_Dao	Tang Dao
+2H_Tang_Dao_Black_Dragon	Tang Dao zwarte draak
+2H_Tang_Dao_Damascus	Tang Dao Damascus
+Tang_pants_01	Tang-broek
+Tang_pants_02	Tang-broek
+Tang_pants_03	Tang-broek
+Tang_pants_04	Tang-broek
+Tang_pants_05	Tang-broek
+Tang_shirt_01	Tang-shirt
+Tang_shirt_02	Tang-shirt
+Tang_shirt_03	Tang-shirt
+Tang_shirt_04	Tang-shirt
+Tang_shirt_05	Tang-shirt
+Tangerine	Mandarijn
+Tangerine_Seed_Bag	Mandarijnzaadzak - Mandarijnzaadzak
+Tangerine_Seeds	Mandarijn zaden
+Tea_Pack	Theepakket
+TearGasGrenade	Traangasgranaat
+Weapon_590A11	TEC01 490
+Weapon_Parts_590A11	TEC01 490 Wapenonderdelen
+Weapon_M9	TEC01 M9
+Weapon_M9_Silver	TEC01 M9
+WeaponCharm_TEC1	TEC1 Wapentalisman
+Tequila	Tequila
+The_Island_Special	De eilandspecial
+Thermometer	Thermometer
+Thread	Draad
+WeaponCharm_Tiger	Tijger wapen charme
+RH_Tights	Panty's
+Tinder	Tinder
+Tire_Repair_Kit	Bandenreparatieset
+TNT	TNT
+Toaster_Pastries	Broodrooster Gebak
+Toaster_Pastries2	Broodrooster Gebak
+Tobacco	Tabak
+Tobacco_Seed_Bag	Tabakszaadzak - Tabakszaadzak
+Tobacco_Seeds	Tabakszaden
+Tomato	Tomaat
+TomatoPelate	Tomaat Pelati
+TomatoSauce	Tomatensaus
+Tomato_Seed_Bag	Tomatenzaadzak - Tomatenzaadzak
+Tomato_Seeds	Tomatenzaden
+Weapon_TommyGun	Tommy Gun
+Magazine_TommyGun	Magazijn — Tommy Gun
+Weapon_Parts_TommyGun	Tommy Gun-wapenonderdelen
+Tool_Box	Gereedschapskist
+05_Teeth_Necklace	Tand ketting
+10_Teeth_Necklace	Tand ketting
+15_Teeth_Necklace	Tand ketting
+WeaponCharm_Tooth	Tand wapen charme
+Torch	Fakkel
+Tourniquet	Tourniquet
+Tracksuit_Top_01	Trainingspak top
+Tracksuit_Top_02	Trainingspak top
+Tracksuit_Top_03	Trainingspak top
+Tracksuit_Top_04	Trainingspak top
+Tracksuit_Top_05	Trainingspak top
+Tractor_Engine_Alternator_Item	Trekker Dynamo
+Tractor_Body_Left_ArmorHeavy_Item	Trekker Body Armor Heavy Links
+Tractor_Body_Right_ArmorHeavy_Item	Trekker Body Armor Zwaar Rechts
+Tractor_Body_Top_ArmorHeavy_Back_Item	Trekkerlichaamspantser Zware bovenrug
+Tractor_Body_Top_ArmorHeavy_Front_Item	Tractor Body Armor Zware bovenkant voorkant
+Tractor_Body_Top_ArmorHeavy_Left_Item	Tractor Body Armor Zwaar Linksboven
+Tractor_Body_Top_ArmorHeavy_Right_Item	Tractor Body Armor Zwaar Rechtsboven
+Tractor_Body_Left_Item	Trekkeropbouw links
+Tractor_Body_Right_Item	Trekkercarrosserie rechts
+Tractor_Body_Left_Brakelight_Item	Tractor Remlicht Links
+Tractor_Body_Right_Brakelight_Item	Tractor Remlicht Rechts
+Tractor_Door_Left_ArmorHeavy_Item	Tractordeur Armor Zwaar Links
+Tractor_Door_Right_ArmorHeavy_Item	Tractordeur Armor Zwaar Rechts
+Tractor_Body_Top_Door_Left_Item	Tractordeur links
+Tractor_Body_Top_Door_Right_Item	Tractordeur Rechts
+Tractor_Seat_Driver_Item	Tractorbestuurdersstoel
+Tractor_Door_Hood_Headlight_Left_Item	Tractorkoplamp Links
+Tractor_Door_Hood_Headlight_Right_Item	Tractor Koplamp Rechts
+Tractor_Door_Hood_Item	Trekker kap
+Tractor_WheelArmorHeavy_Front_Item	Tractorwielpantser Zwaar front
+HighTop_Shoes	Trainerschoenen
+1H_Traynors_Axe	Traynors bijl
+FishingHookPack4	Drievoudige vishaakpakket
+FishingHook3	Drievoudige vishaak
+Tree_Bark	Boomschors
+Tree_Branches	Boomtak
+Weapon_Trench_Gun	Loopgravenpistool
+Weapon_Parts_Trench_Gun	Wapenonderdelen voor loopgraafkanonnen
+Fish_Carp_Trophy	Trofee Karper
+Fish_Catfish_Trophy	Trofee Meerval
+Fish_Dentex_Trophy	Trofee Dentex
+Fish_Pike_Trophy	Trofee Snoek
+Fish_Tuna_Trophy	Trofee tonijn
+Jeans_Jersey_Jacket_01	Truckerjack
+Jeans_Jersey_Jacket_02	Truckerjack
+Trucker_Jacket_01	Truckerjack
+Trucker_Jacket_02	Truckerjack
+Trucker_Jacket_03	Truckerjack
+Trucker_Jacket_04	Truckerjack
+Fish_Tuna	Tonijn
+Tuna_Fillet	Tonijn Filet
+Tuna_Head	Tonijn hoofd
+MRE_TunaSalad	Tonijnsalade MRE
+Dish_Sandwich_Tuna	Broodje tonijn
+Hiking_Backpack_Tyrone	Tyrone Wandelrugzak
+Tyrone_Shoelacez_Mask	Tyrone Shoelacez Masker
+Weapon_Parts_UMP	UMP Wapenonderdelen
+Weapon_UMP45	UMP-45
+Magazine_UMP45	Magazijn — UMP-45
+Rice	Uncle Pong Rijst
+Underpants_01	Onderbroeken
+Underpants_02	Onderbroeken
+Underpants_03	Onderbroeken
+Underpants_04	Onderbroeken
+Underpants_05	Onderbroeken
+F_Bra_Supporter_01	Onderhemd
+Scum_Shirt_Supporter_Pack_Black_01	Onderhemd
+Undershirt_01	Onderhemd
+Cereal_UpNGo	UpNGo Ontbijtgranen
+Utility_Belt_01	Utility-riem
+WeaponSights_V3_Holographic	Holografisch vizier — V3
+WeaponScope_Vampyr	Richtkijker — Vampyr
+VegetableOil	Plantaardige olie
+ColorCan_VelvetBrown	Fluwelen bruine verfblik
+2H_Katana1	Katana van Vhendya
+Weapon_VHS2_Rail	VHS 2
+Weapon_VHS2	VHS 2 CT
+Weapon_VHS_BG	VHS BG
+Weapon_Parts_VHSBG	VHS BG Wapenonderdelen
+Magazine_VHS2	Magazijn — VHS
+Weapon_Parts_VHS	VHS2 Wapenonderdelen
+Vinegar	Azijn
+Hazmat_Suit_Vintage	Vintage Hazmat-pak
+Vintage_Jail_Cap_01	Vintage gevangenismuts
+Vintage_Jail_Pants_01	Vintage gevangenisbroek
+Vintage_Jail_Shirt_01	Vintage gevangenisshirt
+Weapon_Viper_M357	Adder M357
+DW715_Rail	Viper M357-rail
+Weapon_Parts_Viper_M357	Viper M357 wapenonderdelen
+Geek_Goggels	Visiebril
+Vitamins_01	Vitaminepillen - Blaar
+Vitamins_02	Vitaminepillen - Doos
+Vitamins_03	Vitaminepillen - Pot
+Weapon_VSS_VZ	VSS VZ
+Weapon_Parts_VSS_VZ	VSS VZ Wapenonderdelen
+Waist_Bag_Small_01	Heuptas
+Waist_Bag_Small_02	Heuptas
+Waist_Bag_Small_03	Heuptas
+Dish_Salad_Waldorf	Waldorf Salade
+Walnut	Walnoot
+ColorCan_WarmGrey	Warm grijze verfblik
+WeaponSights_Wasp	Reflexvizier — Wasp
+Water_05l	Waterfles
+Water_Bucket	Wateremmer
+Watering_Can	Wateremmer - Gieter
+Watermelon	Watermeloen
+Watermelon_Seed_Bag	Watermeloen zaadzak - Watermeloen zaadzak
+Watermelon_Seeds	Watermeloen zaden
+Watermelon_slice	Watermeloen plakje
+WeaponGhillie_Desert	Wapen Ghillie
+WeaponGhillie_Winter	Wapen Ghillie
+WeaponGhillie_Woodland	Wapen Ghillie
+Herbicide	Onkruidafstotend
+WhiteFlour	Tarwemeel
+Sportbike_Wheel_100_90_R18_Item	Wiel 100 90 R18
+Dirtbike_Wheel_110_80_R19_Item	Wiel 110 80 R19
+Cruiser_Wheel_155_66_R17	Wiel 155 66 R17
+Cruiser_Wheel_188_53_R17	Wiel 188 53 R17
+Wheel_155_R65_Item	Wiel 205 55 R16
+Wheel_205_80_R12_Item	Wiel 205 80 R12
+Wheel_255_55_R16_Item	Wiel 215 65 R16
+Wheel_265_60_R18_Item	Wiel 265 60 R18
+Bicycle_Wheel_54_622_Item	Wiel 54 622
+Wheel_6x16_Item	Wiel 6 16
+Bicycle_Wheel_60_622_Item	Wiel 60 622
+Sportbike_Wheel_90_90_R18_Item	Wiel 90 90 R18
+Dirtbike_Wheel_90_90_R21_Item	Wiel 90 90 R21
+Whiskey	Whisky
+Wild_Cherry	Wilde Kers
+PenisWarmer_01	Peniswarmer
+PenisWarmer_02	Peniswarmer
+PenisWarmer_03	Peniswarmer
+Wine	Wijn
+WineCork	Wijnkurk
+Ghillie_Suit_Pants_05	Winter Ghilliekostuum bodem
+Ghillie_Suit_Jacket_05	Winter ghilliekostuum top
+Wire	Draad 10m
+2H_Baseball_Bat_with_wire	Draad honkbalknuppel
+Wire_Cutters_01	Draadscharen
+1H_Wooden_club_with_wire	Draad houten club
+Wolf_Head	Wolfskop
+Wolf_Hat_01	Wolf hoofdmasker
+Wolf_Left_Back_Leg	Wolfsbeen
+Wolf_Left_Front_Leg	Wolfsbeen
+Wolf_Right_Back_Leg	Wolfsbeen
+Wolf_Right_Front_Leg	Wolfsbeen
+Wolf_Steak	Wolfsteak
+Wolf_Torso	Wolfstorso
+Woodcuters_Shirt_01	Het overhemd van de houthakker
+Woodcuters_Shirt_02	Het overhemd van de houthakker
+Woodcuters_Shirt_03	Het overhemd van de houthakker
+Wooden_Arrow	Houten Pijl
+Wooden_Arrows_6pc	Houten Pijl
+1H_Wooden_club	Houten club
+1H_Wooden_club_with_spikes	Houten Club Met Spijkers
+Ammo_Crossbow_Bolt_Wooden	Houten kruisboogbout
+Wooden_Fork	Houten vork
+Wooden_Log_01	Houten logboek
+Wooden_Log_02	Houten logboek
+Wooden_Plank	Houten Plank
+Wooden_Spoon	Houten lepel
+2H_Wooden_Sword	Houten zwaard
+Penobscot_Bow_40	Woodland Hunter Buigen
+Wool_Gloves_01_01	Wollen handschoenen
+Wool_Gloves_01_02	Wollen handschoenen
+Wool_Gloves_01_03	Wollen handschoenen
+Wool_Gloves_01_04	Wollen handschoenen
+Wool_Gloves_01_05	Wollen handschoenen
+Wool_Gloves_01_06	Wollen handschoenen
+Wool_Gloves_01_07	Wollen handschoenen
+Working_Helmet_01	Werkhelm
+Working_Helmet_02	Werkhelm
+Working_Helmet_03	Werkhelm
+Working_Helmet_04	Werkhelm
+FishingBait_Worm	Wormvis Aas
+Wushu_Spear_Metal	Wushu-speermetaal
+Wushu_Spear_Wooden	Wushu Speer Metaal - Wushu Speer Houten
+WW_Engine_Alternator_Item	WW Dynamo
+WW_Bumper_Back_Item	WW Achterbumper
+WW_Body_Back	WW Lichaam terug
+WW_Body_Front	WW Voorzijde carrosserie
+WW_Body_Left	WW Lichaam links
+WW_Body_Right	WW Lichaam rechts
+WW_Body_Top	WW Bodytop
+WW_Bumper_Armor_Back_Item	WW Bumperpantser achterkant
+WW_Door_ArmorHeavy_BackLeft_Item	WW Deurpantser zwaar linksachter
+WW_Door_ArmorHeavy_BackRight_Item	WW Deurpantser zwaar rechtsachter
+WW_Door_ArmorHeavy_FrontLeft_Item	WW Deurpantser zwaar linksvoor
+WW_Door_ArmorHeavy_FrontRight_Item	WW Deurpantser zwaar rechtsvoor
+WW_Door_ArmorLight_BackLeft_Item	WW Deurpantserlicht linksachter
+WW_Door_ArmorLight_BackRight_Item	WW Deurpantserlicht rechtsachter
+WW_Door_ArmorLight_FrontLeft_Item	WW Deurpantserlicht linksvoor
+WW_Door_ArmorLight_FrontRight_Item	WW Deurpantserlicht rechtsvoor
+WW_Door_BackLeft_Item	WW Deur linksachter
+WW_Door_BackRight_Item	WW Deur rechtsachter
+WW_Door_FrontLeft_Item	WW Deur linksvoor
+WW_Door_FrontRight_Item	WW Deur rechtsvoor
+WW_Bumper_Front_Item	WW Voorbumper
+WW_Body_ArmorHeavy_Top_Item	WW Zware pantsertop
+WW_DoorHood_Item	WW Kap
+WW_Lights_FrontLeft	WW Verlichting linksvoor
+WW_Lights_FrontRight	WW Verlichting rechtsvoor
+WW_Lights_RearLeft	WW Verlichting linksachter
+WW_Lights_RearRight	WW Verlichting rechtsachter
+WW_Seat_BackLeft_Item	WW Rugleuning links
+WW_Seat_BackRight_Item	WW Rugleuning rechts
+WW_Seat_FrontLeft_Item	WW Stoel linksvoor
+WW_Seat_FrontRight_Item	WW Stoel rechtsvoor
+WW_DoorTrunk_Item	WW Kofferbak
+WW_DoorTrunk_ArmorHeavy_Item	WW Kofferbakpantser zwaar
+WW_DoorTrunk_ArmorLight_Item	WW Licht kofferbakpantser
+WW_Wheel_ArmorLight_FrontLeft_Item	WW Wielpantser linksvoor
+WW_Wheel_ArmorLight_FrontRight_Item	WW Wielpantser rechtsvoor
+WW2_German_Helmet_01	WW2 Duitse helm
+WeaponSights_XPS300_Holographic	Holografisch vizier — XPS
+Yeast	Gist
+Snowballs_02	Gele sneeuwbal
+WeaponCharm_Yingyang	Yin Yang wapen charme
+Tights_01_01	Yoga-legging
+Tights_01_02	Yoga-legging
+Tights_01_03	Yoga-legging
+Tights_01_04	Yoga-legging
+Tights_01_05	Yoga-legging
+Tights_01_06	Yoga-legging
+WeaponScope_ZF39	ZF39
+2H_ZhanMaDao_Sword	Zhan Ma Dao
+Zucchini	Courgette
+Zucchini_Seed_Bag	Courgette Zaadzak - Courgette Zaadzak
+Zucchini_Seeds	Courgette Zaden

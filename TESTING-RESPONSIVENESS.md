@@ -1,6 +1,8 @@
 # SCUM MiniMap input and voice navigation test
 
-Build the current source with `Build.ps1 -Configuration Test`. Exit the current MiniMap and run the resulting `SkynettMiniMap-Test.exe`. Its product version follows the source version with a `-test` suffix. Updates are disabled in this build.
+Build the current source with `Build.ps1 -Configuration Test`. Exit the current MiniMap, run the resulting `SkynettMiniMap-Test.exe` and approve Windows' administrator prompt. The embedded Windows manifest requests elevation on every normal launch. Its product version follows the source version with a `-test` suffix. Updates are disabled in this build.
+
+Keep the packaged `assets` folder beside the test EXE. If moving the build to another PC, extract the entire test ZIP rather than copying only the executable. Map tiles and road data are loaded locally and verified before normal startup.
 
 Home now restores Settings from the taskbar and brings it to the foreground. Repeated presses keep Settings open. Use Escape, Done or the close button to minimize Settings and return to gameplay.
 

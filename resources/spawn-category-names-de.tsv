@@ -1,0 +1,137 @@
+# Offline translation draft; native terminology review pending. Canonical identities retained.
+weapons	Waffen
+clothing	Kleidung und Rüstung
+survival	Nahrung, Gesundheit und Überleben
+crafting	Ausrüstung und Herstellung
+vehicles	Fahrzeugteile
+other	Andere Artikel
+weapon_ranged	Fernkampfwaffen
+weapon_melee	Nahkampfwaffen
+melee_weapon	Nahkampfwaffen
+ammunition	Munition
+armor	Rüstung
+attachment	Waffenzubehör
+book	Bücher
+buildable	Basiserweiterungsgegenstände
+consumable	Lebensmittel, Getränke und Medikamente
+equipment	Ausrüstung
+farming	Landwirtschaft
+fishing	Angeln
+fishing_attachment	Angelzubehör
+fortification	Befestigungsgegenstände
+hunting	Jagd
+magazine	Magazine
+material	Materialien
+player_modification	Spielermodifikationen
+seasonal_event	Saisonartikel
+throwable	Wurfwaffen und Fallen
+vehicle_part	Fahrzeugteile
+weapon_part	Waffenteile
+general	Allgemein
+Arrow	Pfeil
+Crossbow Bolt	Armbrustbolzen
+Flare	Fackel
+12 Gauge	Kaliber 12
+accessories	Zubehör
+adhesive	Klebstoff
+alcoholic	Alkoholische Getränke
+animal_part	Tierteile
+assault_rifle	Sturmgewehre
+axe	Äxte
+backpack	Rucksäcke
+base_upgrades	Basis-Upgrades
+bayonet	Bajonette
+beverage	Getränke
+blunt	Schlagwaffen
+body	Karosserien
+body_armor	Rüstung
+bow	Bögen
+bumper	Stoßstange
+clip	Ladestreifen
+cookbook	Kochbuch
+cosmetic	Kosmetik
+craft_station	Bastelstationen
+crafting_material	Bastelmaterial
+door	Tür
+earmuffs	Ohrenschützer
+engine	Motor
+enhancement	Verbesserung
+event	Veranstaltung
+eyewear	Brillen
+fender	Kotflügel
+fire_starter	Feueranzünder
+fishing_catch	Gefangene Fische
+flash_hider	Flash-Hider
+flashlight	Taschenlampen
+food	Essen
+footwear	Schuhe
+fuel	Treibstoff
+ghillie	Ghillie-Wraps
+ghillie_jacket	Ghillie-Jacke
+gloves	Handschuhe
+hazmat_suit	Schutzanzug
+headwear	Kopfbedeckung
+heavy	Schwere Waffen
+holster	Holster
+jacket	Jacke
+knife	Messer
+leggings	Leggings
+light	Leicht
+lmg	Leichte Maschinengewehre
+lockpick	Dietrich
+mask	Maske
+medical	Medizin
+miscellaneous	Verschiedenes
+organic	Bio
+paint	Malen
+pants	Hosen
+pistol	Pistolen
+pistol_parts	Pistolenteile
+quiver	Köcher
+rail	Montageschienen
+raincoat	Regenmantel
+ranged_parts	Fernkampfteile
+repair_kit	Reparatursätze
+repair_material	Reparaturmaterial
+results	Ergebnisse
+revolver	Revolver
+rifle_parts	Gewehrteile
+scarf	Schal
+scope	Zielfernrohre
+seasonal_craft	Saisonales Handwerk
+seat	Sitz
+security	Sicherheit
+seed	Samen
+shirt	Hemd
+shotgun	Schrotflinten
+shotgun_parts	Schrotflintenteile
+sight	Visiere
+single_shot	Einzelschussgewehre
+skirt	Rock
+smg	Maschinenpistolen
+smg_parts	SMG-Teile
+sniper	Scharfschützengewehre
+socks	Socken
+soft_drink	Erfrischungsgetränke
+spear	Speere
+stabilizer	Stabilisatoren
+storage	Lagerung
+suppressor	Schalldämpfer
+sweater	Pullover
+sword	Schwerter
+tool	Werkzeuge
+undershirt	Unterhemd
+underwear	Unterwäsche
+unknown_parts	Unbekannte Teile
+utility	Dienstprogramm
+vehicle_attachment	Fahrzeugbefestigung
+water	Wasser
+wheel	Rad
+Health	Zustand
+Uses	Verbleibende Verwendungszwecke
+Dirtiness	Schmutzigkeit
+Location	Position
+KeyCardSector	Keycard-Sektor
+StackCount	Anzahl der Stapel
+Radiation	Strahlung
+Weight	Gewicht (kg)

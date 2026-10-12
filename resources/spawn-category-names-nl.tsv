@@ -1,0 +1,137 @@
+# Offline translation draft; native terminology review pending. Canonical identities retained.
+weapons	Wapens
+clothing	Kleding en pantser
+survival	Voedsel, gezondheid en overleven
+crafting	Uitrusting en vervaardiging
+vehicles	Voertuigonderdelen
+other	Andere artikelen
+weapon_ranged	Afstandswapens
+weapon_melee	Slagwapens
+melee_weapon	Slagwapens
+ammunition	Munitie
+armor	Harnas
+attachment	Wapen bijlagen
+book	Boeken
+buildable	Basisuitbreidingsitems
+consumable	Eten, drinken en medicijnen
+equipment	Uitrusting
+farming	Landbouw
+fishing	Vissen
+fishing_attachment	Visserij bijlagen
+fortification	Versterkingsartikelen
+hunting	Jagen
+magazine	Magazijnen
+material	Materialen
+player_modification	Spelermodificaties
+seasonal_event	Seizoensartikelen
+throwable	Werpwapens en vallen
+vehicle_part	Voertuigonderdelen
+weapon_part	Wapen onderdelen
+general	Algemeen
+Arrow	Pijl
+Crossbow Bolt	Kruisboogbouten
+Flare	Gloed
+12 Gauge	Kaliber 12
+accessories	Accessoires
+adhesive	Kleefmiddel
+alcoholic	Alcoholische dranken
+animal_part	Dierlijke delen
+assault_rifle	Aanvalsgeweren
+axe	Bijlen
+backpack	Rugzakken
+base_upgrades	Basis-upgrades
+bayonet	Bajonetten
+beverage	Drankjes
+blunt	Slagwapens
+body	Carrosserieën
+body_armor	Harnas
+bow	Bogen
+bumper	Bumper
+clip	Laadstrips
+cookbook	Kookboek
+cosmetic	Cosmetisch
+craft_station	Knutselstations
+crafting_material	Materiaal maken
+door	Deur
+earmuffs	Oorkappen
+engine	Motor
+enhancement	Verbetering
+event	Evenement
+eyewear	Brillen
+fender	Spatbord
+fire_starter	Vuurstarters
+fishing_catch	Gevangen vis
+flash_hider	Flash-hiders
+flashlight	Zaklampen
+food	Voedsel
+footwear	Schoeisel
+fuel	Brandstof
+ghillie	Ghillie-wikkels
+ghillie_jacket	Ghillie-jasje
+gloves	Handschoenen
+hazmat_suit	Hazmat-pak
+headwear	Hoofddeksels
+heavy	Zware wapens
+holster	Holster
+jacket	Jas
+knife	Messen
+leggings	Legging
+light	Lichtgewicht
+lmg	Lichte machinegeweren
+lockpick	Lockpick
+mask	Masker
+medical	Geneeskunde
+miscellaneous	Diversen
+organic	Biologisch
+paint	Verf
+pants	Broek
+pistol	Pistolen
+pistol_parts	Pistool onderdelen
+quiver	Pijlkoker
+rail	Montagerails
+raincoat	Regenjas
+ranged_parts	Ranged onderdelen
+repair_kit	Reparatiesets
+repair_material	Reparatiemateriaal
+results	Resultaten
+revolver	Revolvers
+rifle_parts	Geweer onderdelen
+scarf	Sjaal
+scope	Richtkijkers
+seasonal_craft	Seizoensgebonden ambacht
+seat	Zitplaats
+security	Beveiliging
+seed	Zaden
+shirt	Overhemd
+shotgun	Jachtgeweren
+shotgun_parts	Jachtgeweer onderdelen
+sight	Vizieren
+single_shot	Enkelschotsgeweren
+skirt	Rok
+smg	Machinepistolen
+smg_parts	Smg-onderdelen
+sniper	Sluipschuttersgeweren
+socks	Sokken
+soft_drink	Frisdranken
+spear	Speren
+stabilizer	Stabilisatoren
+storage	Opslag
+suppressor	Geluiddempers
+sweater	Trui
+sword	Zwaarden
+tool	Gereedschap
+undershirt	Onderhemd
+underwear	Ondergoed
+unknown_parts	Onbekende onderdelen
+utility	Nut
+vehicle_attachment	Voertuigbevestiging
+water	Water
+wheel	Wiel
+Health	Conditie
+Uses	Resterende toepassingen
+Dirtiness	Vuilheid
+Location	Positie
+KeyCardSector	Keycard-sector
+StackCount	Aantal stapels
+Radiation	Straling
+Weight	Gewicht (kg)

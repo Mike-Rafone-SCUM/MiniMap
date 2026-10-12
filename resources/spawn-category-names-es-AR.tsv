@@ -1,0 +1,137 @@
+# Offline translation draft; native terminology review pending. Canonical identities retained.
+weapons	Armas
+clothing	Ropa y armadura
+survival	Alimentación, salud y supervivencia
+crafting	Equipo y fabricación
+vehicles	Piezas de vehículos
+other	Otros artículos
+weapon_ranged	armas a distancia
+weapon_melee	Armas cuerpo a cuerpo
+melee_weapon	Armas cuerpo a cuerpo
+ammunition	Municiones
+armor	armadura
+attachment	Accesorios de armas
+book	Libros
+buildable	Artículos de expansión básicos
+consumable	Alimentos, bebidas y medicinas.
+equipment	Equipo
+farming	Agricultura
+fishing	pesca
+fishing_attachment	Accesorios de pesca
+fortification	Artículos de fortificación
+hunting	Caza
+magazine	Cargadores
+material	Materiales
+player_modification	Modificaciones del jugador
+seasonal_event	Artículos de temporada
+throwable	Armas arrojadizas y trampas
+vehicle_part	Piezas de vehículos
+weapon_part	Partes de armas
+general	generales
+Arrow	Flecha
+Crossbow Bolt	Virotes de ballesta
+Flare	llamarada
+12 Gauge	Calibre 12
+accessories	Accesorios
+adhesive	Adhesivo
+alcoholic	bebidas alcoholicas
+animal_part	Partes de animales
+assault_rifle	rifles de asalto
+axe	ejes
+backpack	Mochilas
+base_upgrades	Actualizaciones básicas
+bayonet	bayonetas
+beverage	Bebidas
+blunt	Armas contundentes
+body	Carrocerías
+body_armor	armadura
+bow	Arcos
+bumper	Parachoques
+clip	Peines de munición
+cookbook	libro de cocina
+cosmetic	Cosmético
+craft_station	Estaciones de elaboración
+crafting_material	Material de elaboración
+door	puerta
+earmuffs	Orejeras
+engine	motor
+enhancement	Mejora
+event	Evento
+eyewear	Gafas
+fender	guardabarros
+fire_starter	iniciadores de fuego
+fishing_catch	Peces capturados
+flash_hider	ocultadores de flash
+flashlight	Linternas
+food	comida
+footwear	calzado
+fuel	Combustible
+ghillie	envolturas ghillie
+ghillie_jacket	chaqueta ghillie
+gloves	guantes
+hazmat_suit	traje de materiales peligrosos
+headwear	Sombreros
+heavy	armas pesadas
+holster	Funda
+jacket	chaqueta
+knife	Cuchillos
+leggings	Polainas
+light	Ligeros
+lmg	ametralladoras ligeras
+lockpick	ganzúa
+mask	máscara
+medical	Medicina
+miscellaneous	Varios
+organic	Orgánico
+paint	pintar
+pants	Pantalones
+pistol	pistolas
+pistol_parts	Partes de pistola
+quiver	carcaj
+rail	Rieles de montaje
+raincoat	impermeable
+ranged_parts	Partes a distancia
+repair_kit	kits de reparación
+repair_material	Material de reparación
+results	Resultados
+revolver	revólveres
+rifle_parts	Partes de rifles
+scarf	Bufanda
+scope	Miras telescópicas
+seasonal_craft	artesanía estacional
+seat	Asiento
+security	Seguridad
+seed	Semillas
+shirt	camisa
+shotgun	Escopetas
+shotgun_parts	Partes de escopeta
+sight	Miras
+single_shot	Rifles de un solo tiro
+skirt	falda
+smg	metralletas
+smg_parts	piezas smg
+sniper	rifles de francotirador
+socks	Calcetines
+soft_drink	refrescos
+spear	lanzas
+stabilizer	Estabilizadores
+storage	Almacenamiento
+suppressor	Silenciadores
+sweater	suéter
+sword	espadas
+tool	Herramientas
+undershirt	Camiseta interior
+underwear	ropa interior
+unknown_parts	Partes desconocidas
+utility	Utilidad
+vehicle_attachment	Accesorio para vehículo
+water	agua
+wheel	rueda
+Health	Estado
+Uses	Usos restantes
+Dirtiness	suciedad
+Location	Posición
+KeyCardSector	Sector de tarjetas
+StackCount	Recuento de pilas
+Radiation	Radiación
+Weight	Peso (kg)

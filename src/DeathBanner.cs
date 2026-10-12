@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -164,6 +165,7 @@ namespace ScumMiniMap {
         internal bool IsLatched { get { return latched; } }
         internal bool HasCandidate { get { return matches>0 && !latched; } }
         internal void Interrupt() { matches=0; misses=0; }
+        internal void DismissCurrentScreen() { latched=true;matches=0;misses=0; }
         internal bool Observe(bool visible) {
             if(!visible) { matches=0; if(++misses>=14) latched=false; return false; }
             misses=0;
@@ -176,6 +178,55 @@ namespace ScumMiniMap {
     public sealed partial class MapWindow {
         readonly HashSet<MapZone> departedDeathMarkers=new HashSet<MapZone>();
         DateTime nextDeathLabelRefresh;
+        void RemoveDeathMarkersFromSidebar() { ClearDeathMarkers(); }
+        internal bool ClearDeathMarkers() {
+            var removed=zones.Where(marker=>marker.IsDeathMarker).ToList();
+            return RemoveDeathMarkers(removed);
+        }
+        internal bool RemoveDeathMarker(MapZone marker) {
+            if(marker==null || !marker.IsDeathMarker || !zones.Contains(marker))return false;
+            return RemoveDeathMarkers(new List<MapZone>{marker});
+        }
+        internal bool TryRemoveDeathMarkerAtScreenPoint(Point pt) {
+            PointF mapPoint;
+            if(!showCustomWaypoints || !TryGetFullMapPoint(pt,out mapPoint))return false;
+            float side=overlay.Height*fullMapZoom;
+            double closest=14*14;
+            MapZone hit=null;
+            foreach(var marker in zones) {
+                if(!marker.IsDeathMarker)continue;
+                PointF centre=marker.Centroid;
+                double dx=(centre.X-mapPoint.X)*side,dy=(centre.Y-mapPoint.Y)*side;
+                double distance=dx*dx+dy*dy;
+                if(distance<=closest) { closest=distance;hit=marker; }
+            }
+            if(hit==null)return false;
+            // Consume the click even if persistence fails, preserving navigation and zoom.
+            RemoveDeathMarker(hit);
+            return true;
+        }
+        bool RemoveDeathMarkers(List<MapZone> removed) {
+            if(removed.Count==0)return false;
+            var candidate=new List<MapZone>(zones);
+            candidate.RemoveAll(removed.Contains);
+            // Commit the active map's sidecars before changing navigation or detection.
+            if(!TryCommitZonesCore(candidate,null,false)) { RenderOverlay();return false; }
+            bool removedDestination=removed.Contains(searchTarget);
+            if(removedDestination) {
+                searchTarget=null;activeRoute=null;routeGeneration++;lastRouteTarget=null;
+            }
+            if(removedDestination || removed.Contains(voiceTarget)) {
+                StopVoice();voiceTarget=null;voiceNavigator.Reset();voiceStatusUntil=DateTime.MinValue;
+                lastVoicePosition=null;lastVoiceRoute=null;
+            }
+            foreach(var marker in removed)departedDeathMarkers.Remove(marker);
+            // A capture already in progress belongs to the state before removal.
+            // A still-visible death screen stays dismissed until clear gameplay samples rearm it.
+            deathProbeGeneration++;deathBannerState.DismissCurrentScreen();firstDeathBannerPosition=null;
+            note=Localization.T("NoteDeathMarkersRemoved",removed.Count);
+            SettingsChanged();RenderOverlay();
+            return true;
+        }
         internal void ClearReachedDeathMarkers(PointF currentPoint) {
             departedDeathMarkers.RemoveWhere(z=>!zones.Contains(z));
             var reached=new List<MapZone>();

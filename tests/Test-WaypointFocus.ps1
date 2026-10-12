@@ -1,8 +1,8 @@
-﻿$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Stop'
 $miniRoot = Split-Path $PSScriptRoot -Parent
 Add-Type -AssemblyName System.Windows.Forms,System.Drawing
 $miniSources = & (Join-Path (Split-Path $PSScriptRoot -Parent) 'scripts\Get-MiniMapSources.ps1')
-Add-Type -Path $miniSources -ReferencedAssemblies System.Windows.Forms,System.Drawing
+Add-Type -Path $miniSources -ReferencedAssemblies System.Windows.Forms,System.Drawing,System.Xml,System.IO.Compression
 
 # Native is intentionally internal to the MiniMap assembly. PowerShell cannot
 # resolve [ScumMiniMap.Native] directly, so invoke the two helpers by reflection.

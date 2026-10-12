@@ -1,0 +1,137 @@
+# Offline translation draft; native terminology review pending. Canonical identities retained.
+weapons	Armas
+clothing	Roupas e armaduras
+survival	Alimentação, saúde e sobrevivência
+crafting	Equipamento e fabrico
+vehicles	Peças de veículos
+other	Outros artigos
+weapon_ranged	Armas de longo alcance
+weapon_melee	Armas corpo a corpo
+melee_weapon	Armas corpo a corpo
+ammunition	Munição
+armor	Armadura
+attachment	Acessórios de armas
+book	Livros
+buildable	Itens de expansão base
+consumable	Alimentos, bebidas e medicamentos
+equipment	Equipamento
+farming	Agricultura
+fishing	Pesca
+fishing_attachment	Acessórios de pesca
+fortification	Itens de fortificação
+hunting	Caça
+magazine	Carregadores
+material	Materiais
+player_modification	Modificações do jogador
+seasonal_event	Itens sazonais
+throwable	Armas de arremesso e armadilhas
+vehicle_part	Peças de veículos
+weapon_part	Peças de armas
+general	Geral
+Arrow	Flecha
+Crossbow Bolt	Virotes de besta
+Flare	Sinalizador
+12 Gauge	Calibre 12
+accessories	Acessórios
+adhesive	Adesivo
+alcoholic	Bebidas alcoólicas
+animal_part	Partes de animais
+assault_rifle	Fuzis de assalto
+axe	Eixos
+backpack	Mochilas
+base_upgrades	Atualizações básicas
+bayonet	Baionetas
+beverage	Bebidas
+blunt	Armas contundentes
+body	Carroçarias
+body_armor	Armadura
+bow	Arcos
+bumper	Pára-choques
+clip	Pentes de munições
+cookbook	Livro de receitas
+cosmetic	Cosmético
+craft_station	Estações de artesanato
+crafting_material	Material de artesanato
+door	Porta
+earmuffs	Protetores de ouvido
+engine	Motor
+enhancement	Aprimoramento
+event	Evento
+eyewear	Óculos
+fender	Pára-choques
+fire_starter	Iniciadores de fogo
+fishing_catch	Peixes capturados
+flash_hider	Escondedores de flash
+flashlight	Lanternas
+food	Comida
+footwear	Calçado
+fuel	Combustível
+ghillie	Envoltórios de ghillie
+ghillie_jacket	Casaco Ghillie
+gloves	Luvas
+hazmat_suit	Fato anti-perigo
+headwear	Chapéus
+heavy	Armas pesadas
+holster	Coldre
+jacket	Casaco
+knife	Facas
+leggings	Legging
+light	Leves
+lmg	Metralhadoras ligeiras
+lockpick	Arrombamento
+mask	Máscara
+medical	Medicina
+miscellaneous	Diversos
+organic	Orgânico
+paint	Pintar
+pants	Calças
+pistol	Pistolas
+pistol_parts	Peças de pistola
+quiver	Aljava
+rail	Calhas de montagem
+raincoat	Capa de chuva
+ranged_parts	Peças de longo alcance
+repair_kit	Kits de reparação
+repair_material	Material de reparação
+results	Resultados
+revolver	Revólveres
+rifle_parts	Peças de espingarda
+scarf	Lenço
+scope	Miras telescópicas
+seasonal_craft	Artesanato sazonal
+seat	Assento
+security	Segurança
+seed	Sementes
+shirt	Camisola
+shotgun	Espingardas
+shotgun_parts	Peças de espingarda
+sight	Miras
+single_shot	Espingardas de tiro único
+skirt	Saia
+smg	Metralhadoras
+smg_parts	Peças pequenas
+sniper	Espingardas de precisão
+socks	Meias
+soft_drink	Refrigerantes
+spear	Lanças
+stabilizer	Estabilizadores
+storage	Armazenamento
+suppressor	Silenciadores
+sweater	Camisola
+sword	Espadas
+tool	Ferramentas
+undershirt	T-shirt
+underwear	Roupa interior
+unknown_parts	Partes desconhecidas
+utility	Utilitário
+vehicle_attachment	Fixação de veículo
+water	Água
+wheel	Roda
+Health	Estado
+Uses	Usos restantes
+Dirtiness	Sujeira
+Location	Posição
+KeyCardSector	Setor de cartão-chave
+StackCount	Contagem de pilhas
+Radiation	Radiação
+Weight	Peso (kg)

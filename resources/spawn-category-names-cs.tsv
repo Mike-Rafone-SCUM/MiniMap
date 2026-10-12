@@ -1,0 +1,137 @@
+# Offline localized catalogue; model IDs and technical identifiers retained.
+weapons	Zbraně
+clothing	Oblečení a brnění
+survival	Jídlo, zdraví a přežití
+crafting	Vybavení a řemesla
+vehicles	Díly vozidel
+other	Ostatní položky
+weapon_ranged	Zbraně na dálku
+weapon_melee	Zbraně na blízko
+melee_weapon	Zbraně na blízko
+ammunition	Munice
+armor	Brnění
+attachment	Doplňky ke zbraním
+book	knihy
+buildable	Základní položky rozšíření
+consumable	Jídlo, pití a léky
+equipment	Vybavení
+farming	Zemědělství
+fishing	Rybaření
+fishing_attachment	Rybářské nástavce
+fortification	Fortifikační předměty
+hunting	Lov
+magazine	Zásobníky
+material	Materiály
+player_modification	Úpravy hráčů
+seasonal_event	Sezónní zboží
+throwable	Vrhací předměty a pasti
+vehicle_part	Díly vozidel
+weapon_part	Části zbraní
+general	Generál
+Arrow	Šipka
+Crossbow Bolt	Šroub kuše
+Flare	Vzplanutí
+12 Gauge	Měřidlo 12
+accessories	Příslušenství
+adhesive	Lepidlo
+alcoholic	Alkoholické nápoje
+animal_part	Části zvířat
+assault_rifle	Útočné pušky
+axe	Sekery
+backpack	Batohy
+base_upgrades	Upgrady základny
+bayonet	Bodáky
+beverage	Nápoje
+blunt	Tupé zbraně
+body	Tělo
+body_armor	Brnění
+bow	Luky
+bumper	Nárazník
+clip	Klip
+cookbook	kuchařka
+cosmetic	Kosmetické
+craft_station	Craftingové stanice
+crafting_material	Řemeslný materiál
+door	Dveře
+earmuffs	Chrániče sluchu
+engine	Motor
+enhancement	Vylepšení
+event	Událost
+eyewear	Brýle
+fender	Fender
+fire_starter	Zapalovače ohně
+fishing_catch	Rybářský úlovek
+flash_hider	Flash skrývačky
+flashlight	Baterky
+food	Jídlo
+footwear	Obuv
+fuel	Palivo
+ghillie	Ghillie se zabalí
+ghillie_jacket	Ghillie bunda
+gloves	Rukavice
+hazmat_suit	Hazmat oblek
+headwear	Pokrývky hlavy
+heavy	Těžké zbraně
+holster	Pouzdro
+jacket	Bunda
+knife	Nože
+leggings	Legíny
+light	Světlo
+lmg	Lehké kulomety
+lockpick	Lockpick
+mask	Maska
+medical	Medicína
+miscellaneous	Různé
+organic	Organické
+paint	Malovat
+pants	Kalhoty
+pistol	Pistole
+pistol_parts	Části pistole
+quiver	toulec
+rail	Montážní lišty
+raincoat	Pláštěnka
+ranged_parts	Díly na dálku
+repair_kit	Opravárenské sady
+repair_material	Materiál na opravu
+results	Výsledky
+revolver	Revolvery
+rifle_parts	Části pušek
+scarf	Šátek
+scope	Puškohledy
+seasonal_craft	Sezónní řemeslo
+seat	Sedadlo
+security	Bezpečnost
+seed	Semena
+shirt	Košile
+shotgun	Brokovnice
+shotgun_parts	Součásti brokovnice
+sight	Zaměřovače
+single_shot	Jednoranné pušky
+skirt	Sukně
+smg	Samopaly
+smg_parts	Smg díly
+sniper	Odstřelovací pušky
+socks	Ponožky
+soft_drink	Nealkoholické nápoje
+spear	Kopí
+stabilizer	Stabilizátory
+storage	Skladování
+suppressor	Supresory
+sweater	Svetr
+sword	Meče
+tool	Nástroje
+undershirt	Nátělník
+underwear	Spodní prádlo
+unknown_parts	Neznámé díly
+utility	Utility
+vehicle_attachment	Upevnění vozidla
+water	Voda
+wheel	kolo
+Health	Podmínka
+Uses	Zbývající použití
+Dirtiness	Špinavost
+Location	Pozice
+KeyCardSector	Sektor karty
+StackCount	Počet stohů
+Radiation	Záření
+Weight	Hmotnost (kg)

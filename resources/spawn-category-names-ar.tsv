@@ -1,0 +1,137 @@
+# Offline translation draft; native terminology review pending. Canonical identities retained.
+weapons	الأسلحة
+clothing	الملابس والدروع
+survival	الغذاء والصحة والبقاء على قيد الحياة
+crafting	المعدات والتصنيع
+vehicles	أجزاء السيارة
+other	عناصر أخرى
+weapon_ranged	أسلحة بعيدة المدى
+weapon_melee	أسلحة المشاجرة
+melee_weapon	أسلحة المشاجرة
+ammunition	الذخيرة
+armor	درع
+attachment	مرفقات الأسلحة
+book	كتب
+buildable	عناصر التوسعة الأساسية
+consumable	المأكولات والمشروبات والأدوية
+equipment	المعدات
+farming	الزراعة
+fishing	صيد السمك
+fishing_attachment	ملحقات الصيد
+fortification	عناصر التحصين
+hunting	الصيد
+magazine	مخازن الذخيرة
+material	المواد
+player_modification	تعديلات على اللاعب
+seasonal_event	العناصر الموسمية
+throwable	أسلحة الرمي والفخاخ
+vehicle_part	أجزاء السيارة
+weapon_part	أجزاء السلاح
+general	عام
+Arrow	السهم
+Crossbow Bolt	سهام القوس النشاب
+Flare	مضيئة
+12 Gauge	عيار 12
+accessories	الملحقات
+adhesive	لاصق
+alcoholic	المشروبات الكحولية
+animal_part	أجزاء الحيوان
+assault_rifle	بنادق هجومية
+axe	محاور
+backpack	حقائب الظهر
+base_upgrades	ترقيات القاعدة
+bayonet	الحراب
+beverage	المشروبات
+blunt	أسلحة راضة
+body	هياكل المركبات
+body_armor	درع
+bow	الأقواس
+bumper	الوفير
+clip	مشابك الذخيرة
+cookbook	كتاب الطبخ
+cosmetic	مستحضرات التجميل
+craft_station	محطات صياغة
+crafting_material	صياغة المواد
+door	باب
+earmuffs	غطاء للأذنين
+engine	المحرك
+enhancement	تعزيز
+event	حدث
+eyewear	نظارات
+fender	درابزين
+fire_starter	مبتدئين النار
+fishing_catch	الأسماك المصطادة
+flash_hider	مخفيون فلاش
+flashlight	مشاعل
+food	طعام
+footwear	الأحذية
+fuel	الوقود
+ghillie	يلتف غيلي
+ghillie_jacket	سترة جيلي
+gloves	قفازات
+hazmat_suit	بدلة حازمة
+headwear	أغطية الرأس
+heavy	الأسلحة الثقيلة
+holster	الحافظة
+jacket	سترة
+knife	سكاكين
+leggings	طماق
+light	خفيفة
+lmg	رشاشات خفيفة
+lockpick	قفل
+mask	قناع
+medical	الطب
+miscellaneous	متنوعة
+organic	عضوي
+paint	الطلاء
+pants	السراويل
+pistol	المسدسات
+pistol_parts	أجزاء المسدس
+quiver	جعبة
+rail	قضبان التثبيت
+raincoat	معطف واق من المطر
+ranged_parts	أجزاء تتراوح
+repair_kit	مجموعات الإصلاح
+repair_material	مواد الإصلاح
+results	النتائج
+revolver	المسدسات
+rifle_parts	أجزاء البندقية
+scarf	وشاح
+scope	مناظير التصويب
+seasonal_craft	الحرفة الموسمية
+seat	مقعد
+security	الأمن
+seed	البذور
+shirt	قميص
+shotgun	البنادق
+shotgun_parts	أجزاء البندقية
+sight	أجهزة التصويب
+single_shot	بنادق طلقة واحدة
+skirt	تنورة
+smg	مدافع رشاشة
+smg_parts	أجزاء اس ام جي
+sniper	بنادق قنص
+socks	الجوارب
+soft_drink	المشروبات الغازية
+spear	سبيرز
+stabilizer	المثبتات
+storage	التخزين
+suppressor	كاتمات الصوت
+sweater	سترة
+sword	السيوف
+tool	أدوات
+undershirt	قميص داخلي
+underwear	ملابس داخلية
+unknown_parts	أجزاء غير معروفة
+utility	فائدة
+vehicle_attachment	ملحق السيارة
+water	الماء
+wheel	عجلة
+Health	الحالة
+Uses	الاستخدامات المتبقية
+Dirtiness	القذارة
+Location	الموقف
+KeyCardSector	قطاع بطاقات المفاتيح
+StackCount	عدد المكدس
+Radiation	الإشعاع
+Weight	الوزن (كجم)

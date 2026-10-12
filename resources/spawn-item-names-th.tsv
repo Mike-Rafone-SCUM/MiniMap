@@ -1,0 +1,2329 @@
+# Offline localized catalogue; model IDs and technical identifiers retained.
+Cal_22	กระสุน — .22
+Cal_22_Ammobox	กล่องกระสุน .22
+Cal_22_Crafted	กระสุนทำเอง — .22
+Cal_22_TR	กระสุนส่องวิถี — .22
+Cal_22_Ammobox_TR	กล่องกระสุน .22 Tracer
+Cal_30-06	กระสุน — .30-06
+Cal_30-06_Ammobox	กล่องกระสุน .30-06
+Cal_30-06_AP	กระสุนเจาะเกราะ — .30-06 (AP)
+Cal_30-06_AP_CR	กระสุนเจาะเกราะทำเอง — .30-06 (AP)
+Cal_30-06_Ammobox_AP	.30-06 กล่องกระสุนเจาะเกราะ
+Cal_30-06_Crafted	กระสุนทำเอง — .30-06
+Cal_30-06_TR	กระสุนส่องวิถี — .30-06
+Cal_30-06_Ammobox_TR	กล่องกระสุน Tracer .30-06
+Cal_308	กระสุน — .308
+Cal_308_Ammobox	กล่องกระสุน .308
+Cal_308_AP	กระสุนเจาะเกราะ — .308 (AP)
+Cal_308_Ammobox_AP	.308 AP กล่องกระสุน
+Cal_308_AP_CR	กระสุนเจาะเกราะทำเอง — .308 (AP)
+Cal_308_Crafted	กระสุนทำเอง — .308
+WeaponSuppressor_308_Black	ท่อเก็บเสียง — .308
+Cal_308_TR	กระสุนส่องวิถี — .308 (TR)
+Cal_308_Ammobox_TR	.308 TR กล่องกระสุน
+Cal_338	กระสุน — .338
+Cal_338_Ammobox	กล่องกระสุน .338
+Cal_338_AP	กระสุนเจาะเกราะ — .338 (AP)
+Cal_338_Ammobox_AP	.338 AP กล่องกระสุน
+Cal_338_AP_CR	กระสุนเจาะเกราะทำเอง — .338 (AP)
+Cal_338_Crafted	กระสุนทำเอง — .338
+WeaponSuppressor_338_Black	ท่อเก็บเสียง — .338
+WeaponSuppressor_338_Green	.338 ซับเพรสเซอร์สีเขียว
+WeaponSuppressor_338_Tan	.338 ซับเพรสเซอร์แทน
+Cal_338_TR	กระสุนส่องวิถี — .338 (TR)
+Cal_338_Ammobox_TR	กล่องกระสุน .338 Tracer
+Cal_357_Viper	กระสุน — .357
+Cal_357_Ammobox	กล่องกระสุน .357
+Cal_357_Viper_AP	กระสุนเจาะเกราะ — .357 (AP)
+Cal_357_Viper_AP_CR	กระสุนเจาะเกราะทำเอง — .357 (AP)
+Cal_357_Ammobox_AP	.357 กล่องกระสุนเจาะเกราะ
+Cal_357_Viper_Crafted	กระสุนทำเอง — .357
+Cal_357_Viper_TR	กระสุนส่องวิถี — .357
+Cal_357_Ammobox_TR	กล่องกระสุน .357 Tracer
+Cal_38	กระสุน — .38
+Cal_38_Ammobox	กล่องกระสุน .38
+Cal_38_Ammobox_AP	.38 กระสุนเจาะเกราะกล่องกระสุน
+Cal_38_Ammobox_TR	.38 กล่องกระสุน Tracer Rounds
+Cal_38_AP	กระสุนเจาะเกราะ — .38 (AP)
+Cal_38_AP_CR	กระสุนเจาะเกราะทำเอง — .38 (AP)
+Cal_38_Crafted	กระสุนทำเอง — .38
+Cal_38_TR	กระสุนส่องวิถี — .38 (TR)
+Cal_44_Viper	กระสุน — .44
+Cal_44_Viper_Ammobox	กล่องกระสุน .44
+Cal_44_Viper_AP_CR	กระสุนเจาะเกราะทำเอง — .44 (AP)
+Cal_44_Viper_Ammobox_AP	.44 กล่องกระสุนเจาะเกราะ
+Cal_44_Viper_AP	กระสุนเจาะเกราะ — .44
+Cal_44_Viper_Crafted	กระสุนทำเอง — .44
+Cal_44_Viper_TR	กระสุนส่องวิถี — .44
+Cal_44_Viper_Ammobox_TR	กล่องกระสุน .44 Tracer
+Cal_45	กระสุน — .45 ACP
+Cal_45_Ammobox	.45 ACP กล่องกระสุน
+Cal_45_AP_CR	กระสุนเจาะเกราะทำเอง — .45 ACP (AP)
+Cal_45_AP	กระสุนเจาะเกราะ — .45 ACP
+Cal_45_AP_Ammobox	.45 ACP กล่องกระสุนเจาะเกราะ
+Cal_45_Crafted	กระสุนทำเอง — .45 ACP
+WeaponSuppressor_45ACP	ท่อเก็บเสียง — .45 ACP
+Cal_45_TR	กระสุนส่องวิถี — .45 ACP
+Cal_45_Ammobox_TR	.45 ACP Tracer กล่องกระสุน
+Cal_50_AE	กระสุน — .50 AE
+Cal_50_AE_Ammobox	.50 AE กล่องกระสุน
+Cal_50_AE_AP	กระสุนเจาะเกราะ — .50 AE (AP)
+Cal_50_AE_AP_CR	กระสุนเจาะเกราะทำเอง — .50 AE (AP)
+Cal_50_AE_AP_Ammobox	.50 AE กล่องกระสุนเจาะเกราะ
+Cal_50_AE_Crafted	กระสุนทำเอง — .50 AE
+Cal_50_AE_TR	กระสุนส่องวิถี — .50 AE
+Cal_50_AE_Ammobox_TR	.50 AE Tracer กล่องกระสุน
+Cal_50BMG	กระสุน — .50 BMG
+Cal_50BMG_Ammobox	.50 BMG กล่องกระสุน
+Cal_50BMG_AP	กระสุนเจาะเกราะ — .50 BMG (AP)
+Cal_50BMG_AP_Ammobox	.50 BMG กล่องกระสุนเจาะเกราะ
+Cal_50BMG_Crafted	กระสุนทำเอง — .50 BMG
+Cal_50BMG_TR	กระสุนส่องวิถี — .50 BMG
+Cal_50BMG_Ammobox_TR	.50 BMG Tracer กล่องกระสุน
+Weapon_DT11B_Sawed_Off	"The Mule" DT11B สั้น
+12_Gauge_Birdshot	ตลับ Birdshot เกจ 12
+12_Gauge_Buckshot	ตลับเกจ Buckshot 12
+12_Gauge_Buckshot_Crafted	12 เกจ Buckshot คาร์ทริดจ์ชั่วคราว
+12_Gauge_Slug	คาร์ทริดจ์กระสุนเกจ 12
+WeaponSuppressor_12_Gauge	ตัวกันเกจ 12
+Cal_40x46	ระเบิดมือ 40x46
+Cal_5_45x39mm	กระสุน — 5.45x39mm
+Cal_5_45x39mm_Ammobox	กล่องกระสุน 5.45x39mm
+Cal_5_45x39mm_AP	กระสุนเจาะเกราะ — 5.45x39mm (AP)
+Cal_5_45x39mm_AP_CR	กระสุนเจาะเกราะทำเอง — 5.45x39mm (AP)
+Cal_5_45x39mm_AP_Ammobox	กล่องกระสุนเจาะเกราะ 5.45x39mm
+Cal_5_45x39mm_Crafted	กระสุนทำเอง — 5.45x39mm
+WeaponSuppressor_5_45x39	ท่อเก็บเสียง — 5.45x39mm
+Cal_5_45x39mm_TR	กระสุนส่องวิถี — 5.45x39mm
+Cal_5_45x39mm_Ammobox_TR	กล่องกระสุน Tracer 5.45x39mm
+Cal_5_56x45mm	กระสุน — 5.56x45mm
+Cal_5_56x45mm_Ammobox	กล่องกระสุน 5.56x45mm
+Cal_5_56x45mm_AP	กระสุนเจาะเกราะ — 5.56x45mm (AP)
+Cal_5_56x45mm_AP_CR	กระสุนเจาะเกราะทำเอง — 5.56x45mm (AP)
+Cal_5_56x45mm_AP_Ammobox	กล่องกระสุนเจาะเกราะ 5.56x45mm
+Cal_5_56x45mm_Crafted	กระสุนทำเอง — 5.56x45mm
+Cal_5_56x45mm_TR	กระสุนส่องวิถี — 5.56x45mm
+Cal_5_56x45mm_Ammobox_TR	กล่องกระสุน Tracer 5.56x45mm
+Cal_7_62x39mm	กระสุน — 7.62x39mm
+Cal_7_62x39mm_Ammobox	กล่องกระสุน 7.62x39mm
+Cal_7_62x39mm_AP	กระสุนเจาะเกราะ — 7.62x39mm (AP)
+Cal_7_62x39mm_AP_CR	กระสุนเจาะเกราะทำเอง — 7.62x39mm (AP)
+Cal_7_62x39mm_AP_Ammobox	กล่องกระสุนเจาะเกราะ 7.62x39mm
+Cal_7_62x39mm_Crafted	กระสุนทำเอง — 7.62x39mm
+Cal_7_62x39mm_TR	กระสุนส่องวิถี — 7.62x39mm
+Cal_7_62x39mm_Ammobox_TR	กล่องกระสุน Tracer 7.62x39mm
+Cal_7_62x54mmR	กระสุน — 7.62x54mmR
+Cal_7_62x54mmR_Ammobox	กล่องกระสุน 7.62x54mmR
+Cal_7_62x54mmR_AP	กระสุนเจาะเกราะ — 7.62x54mmR (AP)
+Cal_7_62x54mmR_AP_CR	กระสุนเจาะเกราะทำเอง — 7.62x54mmR (AP)
+Cal_7_62x54mmR_AP_Ammobox	กล่องกระสุนเจาะเกราะ 7.62x54mmR
+Cal_7_62x54mmR_Crafted	กระสุนทำเอง — 7.62x54mmR
+Cal_7_62x54mmR_TR	กระสุนส่องวิถี — 7.62x54mmR
+Cal_7_62x54mmR_Ammobox_TR	กล่องกระสุน Tracer 7.62x54mmR
+Cal_7_92x57mm	กระสุน — 7.92x57mm
+Cal_7_92x57mm_Ammobox	กล่องกระสุน 7.92x57mm
+Cal_7_92x57mm_AP	กระสุนเจาะเกราะ — 7.92x57mm (AP)
+Cal_7_92x57mm_AP_CR	กระสุนเจาะเกราะทำเอง — 7.92x57mm (AP)
+Cal_7_92x57mm_AP_Ammobox	กล่องกระสุนเจาะเกราะ 7.92x57mm
+Cal_7_92x57mm_Crafted	กระสุนทำเอง — 7.92x57mm
+Cal_7_92x57mm_TR	กระสุนส่องวิถี — 7.92x57mm
+Cal_7_92x57mm_Ammobox_TR	กล่องกระสุน Tracer 7.92x57mm
+Cal_9mm	กระสุน — 9mm
+Cal_9mm_Ammobox	กล่องกระสุน 9mm
+Cal_9mm_AP	กระสุนเจาะเกราะ — 9mm (AP)
+Cal_9mm_AP_CR	กระสุนเจาะเกราะทำเอง — 9mm (AP)
+Cal_9mm_AP_Ammobox	กล่องกระสุนเจาะเกราะ 9mm
+Cal_9mm_Crafted	กระสุนทำเอง — 9mm
+Cal_9mm_TR	กระสุนส่องวิถี — 9mm
+Cal_9mm_Ammobox_TR	กล่องกระสุน Tracer 9mm
+Cal_9x39mm	กระสุน — 9x39mm
+Cal_9x39mm_Ammobox	กล่องกระสุน 9x39mm
+Cal_9x39mm_AP	กระสุนเจาะเกราะ — 9x39mm (AP)
+Cal_9x39mm_AP_CR	กระสุนเจาะเกราะทำเอง — 9x39mm (AP)
+Cal_9x39mm_AP_Ammobox	กล่องกระสุนเจาะเกราะ 9x39mm
+Cal_9x39mm_Crafted	กระสุนทำเอง — 9x39mm
+Cal_9x39mm_TR	กระสุนส่องวิถี — 9x39mm
+Cal_9x39mm_Ammobox_TR	กล่องกระสุน Tracer 9x39mm
+Absinthe	Absinthe Father
+WeaponScope_ACOG_01	ACOG
+ActivatedCharcoal_01	ถ่านกัมมันต์ - ตุ่ม
+ActivatedCharcoal_02	ถ่านกัมมันต์ - กล่อง
+ActivatedCharcoal_03	ถ่านกัมมันต์ - โถ
+Compass_Advanced	เข็มทิศขั้นสูง
+Lock_Security_Lvl3	การป้องกันการล็อคขั้นสูง
+Lockpick_Advanced_Item	Lockpick ขั้นสูง
+Aeroplane_Repair_Kit	ชุดซ่อมเครื่องบิน
+African_Biltong	แอฟริกันบิลตอง
+Agaricus_Augustus	Agaricus Augustus
+Agaricus_Campestris	Agaricus Campestris
+Aloe_Vera	ใบอากาเว่
+WeaponSights_AimPRO	กล้องเล็งจุดแดง — AimPRO
+Air_Pump	ปั๊มลม
+Weapon_AK15	AK-15
+Weapon_AK47	AK-47
+Magazine_AK15	ซองกระสุน — AK15
+WeaponSuppressor_AK15	ท่อเก็บเสียง — AK15
+Weapon_Parts_AK15	ชิ้นส่วนอาวุธ AK15
+Weapon_AK47_Engraved	แกะสลัก AK47
+Magazine_AK47	ซองกระสุน — AK47
+Weapon_Parts_AK47	ชิ้นส่วนอาวุธ AK47
+Weapon_AKM	AKM
+Weapon_Parts_AKM	ชิ้นส่วนอาวุธ AKM
+Weapon_Parts_AKS_74U	ชิ้นส่วนอาวุธ AKS 74U
+Weapon_AKS_74U	AKS-74U
+Magazine_AKS_74U	ซองกระสุน — AKS-74U
+Bag_of_Almonds	อัลมอนด์
+Amanita_Muscaria	Amanita Muscaria
+Amanita_Pantherina	Amanita Pantherina
+Amanita_Phalloides	Amanita Phalloides
+Amanita_Virosa	Amanita Virosa
+ColorCan_AmberYellow	กระป๋องสีเหลืองอำพัน
+Fish_Amur	อามูร์
+Amur_Fillet	อามูร์ฟิเลต์
+WeaponCharm_Anchor	เสน่ห์อาวุธสมอ
+Suite_Pants_01	กางเกงเที่ยวบินของ Angel
+Monkfish_Fillet	เนื้อปลาแองเกลอร์
+WeaponCharm_Angry_Emoji	เครื่องรางอาวุธอีโมจิโกรธ
+Small_Animal_Fat	ไขมันสัตว์
+Animal_skin	หนังสัตว์
+Bear_Improvised_Jacket	เสื้อหนังสัตว์
+Bear_Improvised_Pants	กางเกงหนังสัตว์
+Improvised_Quiver_01	สั่นหนังสัตว์
+HH_Shoes_01_01	รองเท้าบูทหุ้มข้อ
+HH_Shoes_01_02	รองเท้าบูทหุ้มข้อ
+HH_Shoes_01_03	รองเท้าบูทหุ้มข้อ
+HH_Shoes_01_04	รองเท้าบูทหุ้มข้อ
+Anode_Plate	แผ่นขั้วบวก
+Mine_01	เหมืองต่อต้านบุคลากร
+Antibiotic_Pill_Single	ยาปฏิชีวนะ - 1000mg
+Antibiotics_01	ยาปฏิชีวนะ - ตุ่ม - 1000mg
+Antibiotics_02	ยาปฏิชีวนะ - กล่อง - 1000mg
+Antibiotics_03	ยาปฏิชีวนะ - ขวด - 1000mg
+Apple	แอปเปิ้ล
+Apple_2	แอปเปิ้ล
+Crab_Apple	แอปเปิ้ล
+Apple_Seed_Bag	ถุงเมล็ดแอปเปิ้ล
+Apple_Seeds	เมล็ดแอปเปิ้ล
+RH_Arm_Guard	ยามแขน
+Armband_01	ปลอกแขน
+Armillaria_Mellea	Armillaria Mellea
+Armor_Tactical_Vest_01_01	เสื้อเกราะยุทธวิธี
+Armor_Tactical_Vest_01_02	เสื้อเกราะยุทธวิธี
+Armor_Tactical_Vest_01_03	เสื้อเกราะยุทธวิธี
+Armor_Tactical_Vest_01_04	เสื้อเกราะยุทธวิธี
+Armor_Tactical_Vest_01_05	เสื้อเกราะยุทธวิธี
+Weapon_AS_Val	AS วาล
+Weapon_Parts_AS_Val	ชิ้นส่วนอาวุธ AS Val
+WeaponFlashlight_AS_Val	ไฟฉาย AS Val/VSS
+Magazine_AS_Val	นิตยสาร AS Val/VSS
+Aspirin	แอสไพริน
+Military_Backpack_01_01	กระเป๋าเป้จู่โจม
+Military_Backpack_01_02	กระเป๋าเป้จู่โจม
+Military_Backpack_01_03	กระเป๋าเป้จู่โจม
+Military_Backpack_01_04	กระเป๋าเป้จู่โจม
+Military_Backpack_01_05	กระเป๋าเป้จู่โจม
+Military_Backpack_01_06	กระเป๋าเป้จู่โจม
+Military_Backpack_01_07	กระเป๋าเป้จู่โจม
+Military_Backpack_01_08	กระเป๋าเป้จู่โจม
+Military_Backpack_01_09	กระเป๋าเป้จู่โจม
+Weapon_AT4_HEAT	AT4 HEAT
+AtropineInjection	การฉีดอะโทรปีน
+Weapon_AWM	AWM
+Weapon_AWM_Desert	ทะเลทราย AWM
+Weapon_AWM_Green	AWM สีเขียว
+Magazine_AWM	ซองกระสุน — AWM
+Weapon_AWM_Snake	งู AWM
+Weapon_Parts_AWM	ชิ้นส่วนอาวุธ AWM
+Weapon_AWP	AWP
+Weapon_AWP_Desert	ทะเลทราย AWP
+Weapon_AWP_Green	AWP สีเขียว
+Magazine_AWP	ซองกระสุน — AWP
+Weapon_AWP_Snake	งู AWP
+Weapon_Parts_AWP	ชิ้นส่วนอาวุธ AWP
+2H_Axe	ขวาน
+WeaponCharm_Axe	เครื่องรางอาวุธขวาน
+BabyFood	อาหารเด็ก
+Backpack_02_01	กระเป๋าเป้สะพายหลัง
+Backpack_02_02	กระเป๋าเป้สะพายหลัง
+Backpack_02_03	กระเป๋าเป้สะพายหลัง
+Backpack_02_04	กระเป๋าเป้สะพายหลัง
+Backpack_02_05	กระเป๋าเป้สะพายหลัง
+Military_Backpack_03_01	กระเป๋าเป้สะพายหลัง
+Military_Backpack_03_02	กระเป๋าเป้สะพายหลัง
+Military_Backpack_03_03	กระเป๋าเป้สะพายหลัง
+Military_Backpack_03_04	กระเป๋าเป้สะพายหลัง
+Military_Backpack_03_05	กระเป๋าเป้สะพายหลัง
+Military_Backpack_03_06	กระเป๋าเป้สะพายหลัง
+Military_Backpack_03_07	กระเป๋าเป้สะพายหลัง
+Military_Backpack_03_08	กระเป๋าเป้สะพายหลัง
+AnimalBaitFeederItem	เครื่องป้อนเหยื่อ
+BakedBeans	ถั่วอบ
+BakingSoda	เบกกิ้งโซดา
+Military_Mask_01	ไหมพรม
+Military_Mask_02	ไหมพรม
+Military_Mask_03	ไหมพรม
+Military_Mask_04	ไหมพรม
+Military_Mask_05	ไหมพรม
+Military_Mask_06	ไหมพรม
+Military_Mask_07	ไหมพรม
+Military_Mask_08	ไหมพรม
+Police_Mask_01	ไหมพรม
+Recurve_Bow_100	Ballista 100#
+Bamboo_Hat_01	หมวกไม้ไผ่
+Bamboo_Hat_02	หมวกไม้ไผ่
+Banana	กล้วย
+Banjo	แบนโจ
+Barbed_Wire	ลวดหนาม
+Barberry	บาร์เบอร์รี่
+ColorCan_BaronBrown	กระป๋องเพ้นท์บารอนบราวน์
+BaseExpansionKit_Lvl1	ชุดขยายฐาน Lvl 1
+BaseExpansionKit_Lvl2	ชุดขยายฐาน Lvl 2
+2H_Baseball_Bat	ไม้เบสบอล
+2H_Baseball_Bat_with_spikes	ไม้เบสบอลกับตะปู
+Baseball_Cap_01	หมวกเบสบอล
+Baseball_Cap_02	หมวกเบสบอล
+Baseball_Cap_03	หมวกเบสบอล
+Baseball_Cap_04	หมวกเบสบอล
+Baseball_Cap_05	หมวกเบสบอล
+Baseball_Cap_06	หมวกเบสบอล
+Baseball_Cap_07	หมวกเบสบอล
+Baseball_Cap_08	หมวกเบสบอล
+Baseball_Cap_09	หมวกเบสบอล
+Baseball_Cap_10	หมวกเบสบอล
+Compass_Basic	เข็มทิศพื้นฐาน
+Lock_Security	การป้องกันการล็อคขั้นพื้นฐาน
+Fish_Bass	เบส
+Bass_Fillet	เนื้อเบส
+1H_Police_Baton	บาตัน
+Batteries	แบตเตอรี่
+Weapon_BayRifferBlock21	Bay Riffer Block21
+Book_Cooking_BBQ	ตำราอาหาร BBQ
+BCU_Chip	ชิป BCU
+BCULock_Item	ล็อค BCU
+WeaponCharm_BCU	เครื่องรางอาวุธ BCU
+1H_Beam_Dildo	Beamasaurus ดิลโด้
+Dish_Sandwich_Beans	แซนด์วิชถั่ว
+Beenie_01	หมวกบีนนี่
+Beenie_02	หมวกบีนนี่
+Beenie_03	หมวกบีนนี่
+Beenie_04	หมวกบีนนี่
+Beenie_05	หมวกบีนนี่
+Beenie_06	หมวกบีนนี่
+Beenie_07	หมวกบีนนี่
+Beenie_08	หมวกบีนนี่
+Beenie_09	หมวกบีนนี่
+Military_Beanie_01	หมวกบีนนี่
+Military_Beanie_02	หมวกบีนนี่
+Military_Beanie_03	หมวกบีนนี่
+Military_Beanie_04	หมวกบีนนี่
+Military_Beanie_05	หมวกบีนนี่
+Military_Beanie_06	หมวกบีนนี่
+Military_Beanie_07	หมวกบีนนี่
+Military_Beanie_08	หมวกบีนนี่
+Bear_Head	หัวหมี
+Bear_Head_Hat_01	หมวกหัวหมี
+Bear_Left_Back_Leg	ขาหมี
+Bear_Left_Front_Leg	ขาหมี
+Bear_Right_Back_Leg	ขาหมี
+Bear_Right_Front_Leg	ขาหมี
+Bear_Back_Paws	อุ้งเท้าหมี
+Bear_Front_Paws	อุ้งเท้าหมี
+Bear_Steak	สเต็กหมี
+Bear_Torso	เนื้อตัวหมี
+Bear_Left_Torso_Half	หมีลำตัวครึ่งตัว
+Bear_Right_Torso_Half	หมีลำตัวครึ่งตัว
+Bedroll	เตียงนอน
+BeefRavioli	ราวีโอลี่เนื้อ
+BeefStew	สตูว์เนื้อ
+MRE_Stew	สตูว์เนื้อ MRE
+Beer	เบียร์
+Beet	บีท
+Beijing_Shoes_01	รองเท้าปักกิ่ง
+Beijing_Shoes_02	รองเท้าปักกิ่ง
+Beijing_Shoes_03	รองเท้าปักกิ่ง
+Beijing_Shoes_04	รองเท้าปักกิ่ง
+Bell_Pepper	พริกหยวก
+2H_Pitchfork_Bent	โกยงอ
+Beret_01	หมวกเบเรต์
+Beret_02	หมวกเบเรต์
+Beret_03	หมวกเบเรต์
+Beret_04	หมวกเบเรต์
+Beret_05	หมวกเบเรต์
+Beret_06	หมวกเบเรต์
+Big_Animal_Fat	ไขมันสัตว์ใหญ่
+Big_Animal_guts	ความกล้าของสัตว์ใหญ่
+Christmas_Present_03	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_AK15	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_AK15_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_AK15_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_AKS_74U	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_AKS_74U_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_AKS_74U_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_AS_Val	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_AS_Val_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_AS_Val_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_Ghillie	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_Ghillie_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_Ghillie_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_Kar98	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_Kar98_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_Kar98_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_Laika_Alternator	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_M1	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_M1_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_M1_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_M16A4	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_M16A4_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_M16A4_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_M1887	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_M249	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_M82A1	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_M82A1_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_M82A1_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_MAC10	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_MAC10_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_MAC10_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_MK18	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_MK18_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_MK18_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_MP5	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_MP5_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_MP5_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_Rager_Alternator	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_RPK	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_RPK_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_RPK_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_SCAR_DMR	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_SCAR_L	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_SCAR_L_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_SCAR_L_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_SVD	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_SVD_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_SVD_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_UMP	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_UMP_01	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_UMP_02	ของขวัญคริสต์มาสชิ้นใหญ่
+Christmas_Present_WW_Alternator	ของขวัญคริสต์มาสชิ้นใหญ่
+2H_Stone_Axe	ขวานหินใหญ่
+2H_Stone_Axe_Head	หัวขวานหินใหญ่
+Big_Vehicle_StorageRack	ที่วางของในรถขนาดใหญ่
+Leather_Jacket	แจ็คเก็ตหนังไบค์เกอร์
+Negan_Jacket	แจ็คเก็ตหนังไบค์เกอร์
+Binoculars	กล้องส่องทางไกล
+12_Gauge_BirdShot_Ammobox	กล่องกระสุนปืนลูกซอง Birdshot
+Birthday_Cap_01	หมวกวันเกิด
+Ghillie_Suit_Pants_02	กางเกงสูท Ghillie สีดำ
+Ghillie_Suit_Jacket_02	เสื้อสูท Ghillie สีดำ
+BlackOlives	มะกอกดำ
+ColorCan_Black	กระป๋องสีดำ
+BlackPepper	พริกไทยดำ
+Blackberry	แบล็คเบอร์รี่
+Recurve_Bow_90	แบล็คฮอว์ก 90#
+Weapon_BlackHawk_Crossbow	หน้าไม้ Blackhawk
+BlankSign	สัญญาณว่างเปล่า
+Blast_Cap	หมวกระเบิด
+2H_Baseball_Bat_Blaze	ค้างคาว Blaze
+Fish_Bleak	เยือกเย็น
+Bleak_Fillet	เนื้อเยือกแข็ง
+FishingBait_Bleak	เหยื่อปลาเยือกแข็ง
+Weapon_Block21	Block 21
+Magazine_Block21	ซองกระสุน — Block 21
+Weapon_Parts_Block21	ชิ้นส่วนอาวุธ Block 21
+MemoryModule_Level2	โมดูลหน่วยความจำสีน้ำเงิน
+Blueberries	บลูเบอร์รี่
+Boar_Head	หัวหมูป่า
+Boar_Head_Hat_01	หมวกหัวหมูป่า
+Boar_Hooves_Back	กีบหมูป่า
+Boar_Hooves_front	กีบหมูป่า
+Boar_Back_Leg	ขาหมูป่า
+Boar_Front_Leg	ขาหมูป่า
+Boar_Torso	เนื้อตัวหมูป่า
+Bobby_pin	บ๊อบบี้ พิน
+Bobby_Pin_Package	กล่องบ๊อบบี้พิน
+FishingBait_BoiliesPrm1	เหยื่อปลาต้ม
+Boletus_Edulis	Boletus Edulis
+Bolts	สลักเกลียว
+Bone	กระดูก
+Bone_Needle	กระดูก - เข็ม
+BoomBox_01	บูมบ็อกซ์
+WeaponCharm_Bottle_Opener	เครื่องรางอาวุธที่เปิดขวด
+BowSilencer	โบว์เก็บเสียง
+Bow_MicroStabilizer	คันธนูกันโคลง
+Bolts_Package_Box	กล่องน๊อต
+Nails_Package_Box	กล่องใส่ตะปู
+Boxer_Briefs_01	กางเกงบ็อกเซอร์
+F_Undershirt_Bra_01	บรา
+F_Undershirt_Bra_02	บรา
+F_Undershirt_Bra_03	บรา
+F_Undershirt_Bra_04	บรา
+F_Undershirt_Bra_05	บรา
+Brake_Oil	น้ำมันเบรก
+Improvised_Plant_rope	เชือกสาขา
+1H_Brass_knuckles	สนับมือทองเหลือง
+FishingBait_Bread	เหยื่อปลาขนมปัง
+Breathing_Tube_01	ท่อหายใจ
+Brick	อิฐ
+Carbon_BroadHead_Arrow	ลูกศรคาร์บอนบรอดเฮด
+Metal_BroadHead_Arrow	ลูกศรโลหะ Broadhead
+Broccoli	บรอกโคลี
+Broccoli_Seed_Bag	ถุงเมล็ดบรอกโคลี - ถุงเมล็ดบรอกโคลี
+Broccoli_Seeds	เมล็ดบรอกโคลี
+Kilt_Brogue_Shoe_01	รองเท้าโบรก
+Can03	Bubbles
+Buck_Head	บั๊กเฮด
+Buck_Left_Back_Leg	บั๊กขา
+Buck_Left_Front_Leg	บั๊กขา
+Buck_Right_Back_Leg	บั๊กขา
+Buck_Right_Front_Leg	บั๊กขา
+Buck_Torso	บั๊ก ตอร์โซ
+12_Gauge_Buckshot_Ammobox	กล่องกระสุนปืนลูกซอง Buckshot
+WeaponCharm_Bullet	เสน่ห์อาวุธกระสุน
+Bulletproof_Vest_01	เสื้อเกราะกันกระสุน
+Bulletproof_Vest_01_02	เสื้อเกราะกันกระสุน
+Bulletproof_Vest_01_03	เสื้อเกราะกันกระสุน
+Bulletproof_Vest_01_04	เสื้อเกราะกันกระสุน
+Bulletproof_Vest_01_05	เสื้อเกราะกันกระสุน
+Bundle_Of_Bobby_Pins	มัดของ Bobby Pins
+Bundle_Of_Bricks	กองอิฐ
+Bundle_Of_Improvised_Lockpicks	ชุด Lockpicks แบบชั่วคราว
+Bundle_Of_Lockpicks	ชุด Lockpicks
+Bundle_Rag_Stripes	มัดของ Rag Strips
+Bundle_Of_Rags	มัดผ้าขี้ริ้ว
+Bundle_Of_Safety_Pins	ชุดพินความปลอดภัย
+Bundle_Wooden_Plank	มัดแผ่นไม้
+Wooden_Sticks_Bundle_Large	มัดแท่งไม้
+Bunny_Slippers	รองเท้าแตะกระต่าย - รองเท้าแตะกระต่าย
+Cereal_BunnyStars	บันนี่สตาร์ธัญพืช
+AntiburnGel	เจลเบิร์น
+1H_Bushman	บุชแมน
+Butter	เนย
+RH_Bycoket_01	บายโคเก็ต
+C4	ระเบิด C4
+C4_Detonator	เครื่องจุดระเบิด C4
+C4_Keypad	แผงวงจรปุ่มกด C4
+C4_CircuitBoard	แผงวงจรจับเวลา C4
+Cabbage	กะหล่ำปลี
+Cabbage_Seed_Bag	ถุงเมล็ดกะหล่ำปลี - ถุงเมล็ดกะหล่ำปลี
+Cabbage_Seeds	เมล็ดกะหล่ำปลี
+Book_Cooking_Cake	ตำราเค้ก
+WeaponSuppressor_30_06	ตัวป้องกัน Cal .30-06
+Camera_Lens	เลนส์กล้อง
+Military_Backpack_02_01	กระเป๋าเป้สะพายหลังเดินป่า Camo
+Military_Backpack_02_02	กระเป๋าเป้สะพายหลังเดินป่า Camo
+Military_Backpack_02_03	กระเป๋าเป้สะพายหลังเดินป่า Camo
+Military_Backpack_02_04	กระเป๋าเป้สะพายหลังเดินป่า Camo
+Military_Backpack_02_05	กระเป๋าเป้สะพายหลังเดินป่า Camo
+Military_Backpack_02_06	กระเป๋าเป้สะพายหลังเดินป่า Camo
+Military_Backpack_02_07	กระเป๋าเป้สะพายหลังเดินป่า Camo
+Military_Backpack_02_08	กระเป๋าเป้สะพายหลังเดินป่า Camo
+Camouflage_Jacket_01	เสื้อลายพราง
+Camouflage_Jacket_02	เสื้อลายพราง
+Camouflage_Jacket_03	เสื้อลายพราง
+CanOpener	ที่เปิดกระป๋อง
+Candle_01	เทียน
+Candy_Bob	Candy Bob
+WeaponCharm_Candy_Cane	เครื่องรางอาวุธแคนดี้เคน
+CandyCorn_01	ข้าวโพดหวาน
+Cannabis_Bud	หน่อกัญชา
+Cannabis_Seed_Bag	ถุงเมล็ดกัญชา
+Cannabis_Seeds	เมล็ดกัญชา
+CannedGoulash	สตูว์เนื้อวัวกระป๋อง
+CannedSeafoodMix	ผสมอาหารทะเลกระป๋อง
+Canned_Tuna	ทูน่ากระป๋อง
+CantaloupeMelon	แคนตาลูปเมล่อน
+CantaloupeMelon_Slice	แคนตาลูปเมล่อน
+CantaloupeMelon_Seeds	เมล็ดแคนตาลูป
+Canteen	โรงอาหาร
+Cantharellus_Cibarius	Cantharellus Cibarius
+Car_Battery	แบตเตอรี่รถยนต์
+Car_Battery_Cables	สายแบตเตอรี่รถยนต์
+Car_Jack	แจ็ครถ
+Car_Radio_Item	วิทยุติดรถยนต์
+Car_Repair_Kit	ชุดซ่อมรถ
+PETBottle01	คาราเมลโซดา
+PETBottle02	คาราเมลโซดา
+Carbon_Arrow	ลูกศรคาร์บอน
+Ammo_Crossbow_Bolt_Carbon	น๊อตหน้าไม้คาร์บอน
+Weapon_CarbonHunter	นักล่าคาร์บอน
+Weapon_CarbonBear	คาร์บอนฮันเตอร์ Ironpaw
+Magazine_CarbonHunter	นิตยสารคาร์บอนฮันเตอร์
+Weapon_Parts_Carbon_Hunter	ชิ้นส่วนอาวุธคาร์บอนฮันเตอร์
+Fish_Carp	ปลาคาร์พ
+Carp_Fillet	เนื้อปลาคาร์พ
+Carp_Head	หัวปลาคาร์ป
+Carrot	แครอท
+GlassBottle01	น้ำแครอท
+Carrot_Seed_Bag	ถุงเมล็ดแครอท - ถุงเมล็ดแครอท
+Carrot_Seeds	เมล็ดแครอท
+CartridgeTrap	กับดักตลับ
+Cash	เงินสด
+Book_Cooking_Casseroles	ตำราหม้อปรุงอาหาร
+CannedCatfood	อาหารแมว
+Fish_Catfish	ปลาดุก
+Catfish_Fillet	เนื้อปลาดุก
+Catfish_Head	หัวปลาดุก
+Cauliflower	กะหล่ำดอก
+CD_Player	ผู้เล่น CD
+Celery	คื่นฉ่าย
+CementBag	ถุงปูน
+Chainsaw	เลื่อยไฟฟ้า
+Charcoal	ถ่าน
+Cheese	ชีส
+FishingBait_Cheese	เหยื่อปลาชีส
+Dish_Sandwich_Cheese	แซนด์วิชชีส
+CheesePacked	ชิ้นชีส
+MRE_Cheeseburger	ชีสเบอร์เกอร์ MRE
+ColorCan_CherryRed	กระป๋องสีเชอร์รี่เรด
+Cherry_Seed_Bag	ถุงเมล็ดเชอร์รี่ - ถุงเมล็ดเชอร์รี่
+Cherry_Seeds	เมล็ดเชอร์รี่
+ChickenDrumstick	น่องไก่
+ChickenMeat	เนื้อไก่
+Chili_Pepper	พริก
+ChilliPeppers_Seeds	เมล็ดพริก
+Chillipepper_Seed_Bag	ถุงเมล็ดพริก
+Chips	ชิปส์คลาสสิค
+ChocolateCandy_10	ChocCandy
+ChocolateCandy_11	ChocoBar
+ChocolateCandy_04	ช็อคโกแลต
+ChocolateCandy_05	ช็อคโกแลต
+ChocolateCandy_06	ช็อคโกแลต
+ChocolateCandy_07	ช็อคโกแลต
+ChocolateCandy_08	ช็อคโกแลตบาร์
+ChocolateCandy_09	ช็อคโกแลตบาร์
+ChocolateCandy_03	ลูกอมเค้กช็อคโกแลต
+ChocolateCandy_01	ช็อกโกแลตแคนดี้บาร์
+Chow_Mein	โจวเหมิน
+Christmas_Beanie_02	หมวกคริสต์มาส
+Christmas_Decoration	ของตกแต่งวันคริสต์มาส
+Christmas_Present_02	ของขวัญคริสต์มาส
+Christmas_Ball_01	เครื่องประดับคริสต์มาส
+Christmas_Ball_02	เครื่องประดับคริสต์มาส
+Christmas_Ball_03	เครื่องประดับคริสต์มาส
+Christmas_Ball_04	เครื่องประดับคริสต์มาส
+Christmas_Ball_05	เครื่องประดับคริสต์มาส
+Christmas_Ball_06	เครื่องประดับคริสต์มาส
+Christmas_Pants_01	กางเกงคริสต์มาส
+Christmas_Pants_02	กางเกงคริสต์มาส
+Christmas_Slippers	รองเท้าแตะคริสต์มาส
+Christmas_Vest_01	เสื้อกันหนาวคริสต์มาส
+Fish_Chub	ปลาน้ำจืด
+Chub_Fillet	เนื้อปลาน้ำจืด
+Credit_Card_Classic	บัตรธนาคารคลาสสิก
+Classic_Shirt_01	เสื้อคลาสสิค
+Classic_Shirt_02	เสื้อคลาสสิค
+Cigarette	บุหรี่คลาสสิค
+Cigarettes	ซองบุหรี่คลาสสิค
+Claymore	เคลย์มอร์
+1H_Cleaver	มีดปังตอ
+Coal_01	ถ่านหิน
+CoalBag	ถุงถ่านหิน
+Recurve_Bow_50	Cobra 50#
+Cocoa_Powder	ผงโกโก้
+Coconut	มะพร้าว
+Coffee	กาแฟ
+Coffee_Cup	ถ้วยกาแฟ
+Can04	โคล่า
+ColorCan_ColdCyan	กระป๋องเพ้นท์สีฟ้าเย็น
+ColorCan_ColdGrey	กระป๋องเพ้นท์สีเทาเย็น
+CombatBoots	รองเท้าคอมแบท
+Combat_Helmet_01	หมวกรบ
+Combat_Helmet_02	หมวกรบ
+Combat_Helmet_03	หมวกรบ
+Combat_Helmet_04	หมวกรบ
+M1_Vietnam_Helmet	หมวกรบ
+RH_Jacket	แจ็คเก็ตรวม
+Compound_Bow	ธนูทดกำลัง
+Compound_Bow_Desert	ธนูทดกำลัง
+Compound_Bow_Digital	ธนูทดกำลัง
+Compound_Bow_Snow	ธนูทดกำลัง
+Compound_Bow_US_Scorpion	ธนูทดกำลัง
+Compound_Bow_Woodland	ธนูทดกำลัง
+CompoundBowSight_3_Pin	สายตาธนูทดกำลัง
+CompoundBowSight_5_Pin	สายตาธนูทดกำลัง
+Boots_06_01	บู๊ทส์ก่อสร้าง
+Boots_06_02	บู๊ทส์ก่อสร้าง
+Construction_Gloves_01_01	ถุงมือก่อสร้าง
+Construction_Gloves_01_02	ถุงมือก่อสร้าง
+Construction_Gloves_01_03	ถุงมือก่อสร้าง
+Construction_Pants_01	กางเกงก่อสร้าง
+Construction_Pants_02	กางเกงก่อสร้าง
+Construction_Pants_03	กางเกงก่อสร้าง
+Boots_07_01	รองเท้าบูทยางก่อสร้าง
+Boots_07_02	รองเท้าบูทยางก่อสร้าง
+Boots_07_03	รองเท้าบูทยางก่อสร้าง
+Pot1	หม้อปรุงอาหาร
+Copper_Coins	เหรียญทองแดง
+Coprinus_Comatus	Coprinus Comatus
+Corn	ข้าวโพด
+Corn_flakes	ข้าวโพดเกล็ด
+FishingBait_Corn	เหยื่อปลาข้าวโพด
+Corn_Seed_Bag	ถุงเมล็ดข้าวโพด - ถุงเมล็ดข้าวโพด
+Corn_Seeds	เมล็ดข้าวโพด
+ColorCan_CottonCandy	กระป๋องสีขนมสายไหม
+Hoodie_01	เสื้อฮู้ดผ้าฝ้าย
+Hoodie_02	เสื้อฮู้ดผ้าฝ้าย
+Hoodie_03	เสื้อฮู้ดผ้าฝ้าย
+Hoodie_04	เสื้อฮู้ดผ้าฝ้าย
+Hoodie_05	เสื้อฮู้ดผ้าฝ้าย
+Inmate_Hoodie_01	เสื้อฮู้ดผ้าฝ้าย
+Inmate_Shirt_01_Snow_DigitalDeluxe	เสื้อฮู้ดผ้าฝ้าย
+Shirt_01	เสื้อผ้าฝ้าย
+Shirt_02	เสื้อผ้าฝ้าย
+Shirt_03	เสื้อผ้าฝ้าย
+Shirt_04	เสื้อผ้าฝ้าย
+Backpack_DigitalDeluxe	กระเป๋าเป้คูเรียร์
+Cowboys_Boots_01	รองเท้าบูทคาวบอย
+Crackers	แครกเกอร์
+Cream	ครีม
+Cricket	คริกเก็ต
+FishingBait_Cricket	เหยื่อปลาจิ้งหรีด
+1H_Crowbar	ชะแลง
+Fish_CrucianCarp	ปลาคาร์พ Crucian
+Cruiser_Brakelight_Item	ไฟเบรกครุยเซอร์
+Cruiser_Fender_Front_Item	ครุยเซอร์บังโคลนหน้า
+Cruiser_Seat_Front_Item	เบาะนั่งด้านหน้าครุยเซอร์
+Cruiser_Headlight_Item	ไฟหน้าครุยเซอร์
+Cruiser_Fender_Rear_Item	บังโคลนหลังครุยเซอร์
+Cruiser_Seat_Rear_Item	เบาะหลังครุยเซอร์
+Cruiser_Wind_Deflector_Item	ครุยเซอร์กันลม
+Crutch	ไม้ค้ำยัน
+Cuban_Cigar	ซิการ์คิวบา
+Cucumber	แตงกวา
+Cucumber_Seed_Bag	ถุงเมล็ดแตงกวา - ถุงเมล็ดแตงกวา
+Cucumber_Seeds	เมล็ดแตงกวา
+Currant	ลูกเกด
+Zombie_Impersonator_Suit	ชุดหุ่นต้องสาป
+WeaponCharm_Ear	เครื่องรางอาวุธหูตัด
+WeaponCharm_Finger	เครื่องรางอาวุธนิ้วตัดออก
+Dentex_Fillet	แดนเท็กซ์ ฟิเลต์
+ColorCan_DarkBrown	กระป๋องเพ้นท์สีน้ำตาลเข้ม
+ColorCan_DarkGreen	กระป๋องสีเขียวเข้ม
+ColorCan_DarkGrey	กระป๋องเพ้นท์สีเทาเข้ม
+ColorCan_DarkUrban	กระป๋องสีเมืองเข้ม
+Date	วันที่
+Weapon_Deagle_357	DEagle .357
+Magazine_DEagle_357	ซองกระสุน — DEagle .357
+Magazine_DEagle_50	ซองกระสุน — DEagle .50
+Weapon_Parts_Deagle_357	ชิ้นส่วนอาวุธ DEagle 357
+Weapon_DEagle_50	DEagle 50
+Weapon_DEagle_50Gold	DEagle 50
+Weapon_Parts_DEagle_50	ชิ้นส่วนอาวุธ DEagle 50
+Christmas_Paper_01	กระดาษตกแต่ง
+Christmas_Paper_02	กระดาษตกแต่ง
+Christmas_Paper_03	กระดาษตกแต่ง
+ColorCan_DeepOrange	กระป๋องสีส้มเข้ม
+Buck_Antlers	กวางเขากวาง
+Deer_Steak	สเต็กกวาง
+Fish_Dentex	เดนเท็กซ์
+Dentex_Head	หัวเดนเท็กซ์
+Depleted_Uranium	ยูเรเนียมหมดสภาพ
+Depleted_Uranium_Container	ยูเรเนียมหมดสภาพ - คอนเทนเนอร์
+WeaponFlashlight_DesertEagle	ไฟฉายอินทรีทะเลทราย
+WeaponSights_Deagle_RedDot	กล้องเล็งจุดแดง — Desert Eagle
+Ghillie_Suit_Pants_03	กางเกงสูท Desert Ghillie
+Ghillie_Suit_Jacket_03	เสื้อสูท Desert Ghillie
+DialLock_Item	ล็อคหน้าปัด
+Diary	ไดอารี่
+1H_Dildo	ดิลโด้
+Dildo_Spear	ดิลโด้ สเปียร์
+Dildo_Arrow	ลูกศรไม้ดิลโด้
+Ammo_Crossbow_Bolt_Dildo	กลอนหน้าไม้ดิลโด้
+Dinghy_Item	กระเป๋าเรือใบ
+Dirtbike_Body_Item	ตัวรถวิบาก
+Dirtbike_Brakelight_Item	ไฟเบรกวิบาก
+Dirtbike_Fender_Item	บังโคลนรถวิบาก
+Dirtbike_Front_Shield_Item	ชิลด์หน้ามอเตอร์ไซค์วิบาก
+Dirtbike_Front_Wheel_Cover_Item	ฝาครอบล้อหน้าวิบาก
+Dirtbike_Headlight_Item	ไฟหน้าวิบาก
+Dirtbike_Body_Hellrider_Item	มอเตอร์ไซค์วิบาก Hellrider Body
+Dirtbike_Hellrider_Skull_Item	รถวิบาก Hellrider Skull
+Disposable_Mask	หน้ากากแบบใช้แล้วทิ้ง
+Diving_Mask	หน้ากากดำน้ำ
+Diving_Mask_With_Breathing_Tube	หน้ากากดำน้ำพร้อมท่อช่วยหายใจ
+Doe_Head	โด้เฮด
+Doe_Left_Back_Leg	โด้ขา
+Doe_Left_Front_Leg	โด้ขา
+Doe_Right_Back_Leg	โด้ขา
+Doe_Right_Front_Leg	โด้ขา
+Doe_01_Steak	สเต็กหมู
+Doe_Torso	โด ตอร์โซ
+CannedDogFood	อาหารสุนัข
+Donkey_Head	หัวลา
+Donkey_Back_Leg	ขาลา
+Donkey_Front_Leg	ขาลา
+Donkey_Steak	สเต็กลา
+Donkey_Torso	เนื้อตัวลา
+FishingHook2	เบ็ดตกปลาคู่
+FishingHookPack3	แพ็คเบ็ดตกปลาคู่
+Double_Bang_Firecracker	ประทัดดับเบิ้ลแบง
+Christmas_tree	ดักลาส เฟอร์
+Baseball_Cap_11	หมวก Dreamreaper
+Drill	สว่าน
+Book_Cooking_Drinks	ตำราเครื่องดื่ม
+Driving_Gloves_01_01	ถุงมือขับรถ
+Driving_Gloves_01_02	ถุงมือขับรถ
+Driving_Gloves_01_03	ถุงมือขับรถ
+Driving_Gloves_01_04	ถุงมือขับรถ
+Weapon_DT11B	DT11B
+Weapon_Parts_DT11B	ชิ้นส่วนอาวุธ DT11B
+Duct_Tape	เทปพันท่อ
+2_pieces_Ear_Necklace	สร้อยคอหู
+4_pieces_Ear_Necklace	สร้อยคอหู
+6_pieces_Ear_Necklace	สร้อยคอหู
+Ear_Plugs	ที่อุดหู
+Construction_Earmuffs_01	ที่ปิดหูกันหนาว
+Construction_Earmuffs_02	ที่ปิดหูกันหนาว
+Construction_Earmuffs_03	ที่ปิดหูกันหนาว
+Construction_Earmuffs_04	ที่ปิดหูกันหนาว
+ColorCan_EarthGreen	กระป๋องเอิร์ธกรีน
+ColorCan_EarthGrey	กระป๋องเอิร์ธเกรย์
+ColorCan_EarthRed	กระป๋องเอิร์ธเรด
+ColorCan_EarthYellow	กระป๋องเอิร์ธเหลือง
+Earthworm	ไส้เดือน
+Egg	ไข่
+Electrical_Repair_Kit	ชุดซ่อมไฟฟ้า
+Electrician_Tools	เครื่องมือช่างไฟฟ้า
+WeaponCharm_Elephant	เครื่องรางอาวุธช้าง
+Emergency_bandage	ผ้าพันแผลฉุกเฉิน
+Emergency_bandage_Deluxe	ผ้าพันแผลฉุกเฉิน
+Emergency_bandage_Big	ชุดผ้าพันแผลฉุกเฉิน
+Emergency_bandage_Big_Deluxe	ชุดผ้าพันแผลฉุกเฉิน
+EMP_Grenade	ระเบิดมือ EMP
+1H_EMpossible_Knife	มีด EMpossible
+EmptyBag	ถุงเปล่า
+Christmas_Box	กล่องเปล่า
+Lock_Item_Advanced	ล็อคบังคับ
+EuropeanBass_Fillet	เนื้อปลาเบสยุโรป
+WeaponCharm_EvilEye	เครื่องรางอาวุธตาปีศาจ
+Explosive_Arrow_Carbon	ลูกศรคาร์บอนระเบิด
+Explosive_Arrow_Metal	ลูกศรโลหะระเบิด
+Explosive_Arrow	ลูกศรไม้ระเบิด
+Ammo_Crossbow_Bolt_Explosive	ธนูหน้าไม้ระเบิด
+Extreme_Helmet_01	หมวกกันน็อคเอ็กซ์ตรีม
+Faceroll_Smasher	Facerolls Face Smasher
+Fascinator_Hat_01	หมวกเฟซซิเนเตอร์
+Fascinator_Hat_02	หมวกเฟซซิเนเตอร์
+Fascinator_Hat_03	หมวกเฟซซิเนเตอร์
+Fascinator_Hat_04	หมวกเฟซซิเนเตอร์
+Fascinator_Hat_05	หมวกเฟซซิเนเตอร์
+Zombie_Fat	อ้วน
+Feather	ขนนก
+Medieval_Helmet_01	หมวกขัดเงาของระบบศักดินา
+Fig	มะเดื่อ
+Fig_Seed_Bag	ถุงเมล็ดมะเดื่อ - ถุงเมล็ดมะเดื่อ
+Fig_Seeds	เมล็ดมะเดื่อ
+Fire_deflector_shield	โล่กันไฟ
+Fire_Hand_Drill_new	สว่านไฟ
+ColorCan_FireEngineRed	กระป๋องพ่นสีแดงรถดับเพลิง
+Fireman_Helmet_01	หมวกดับเพลิง
+Fireman_Helmet_02	หมวกดับเพลิง
+Fireman_Helmet_03	หมวกดับเพลิง
+Work_Jacket_01	เสื้อนักผจญเพลิง
+Work_Jacket_02	เสื้อนักผจญเพลิง
+Work_Jacket_03	เสื้อนักผจญเพลิง
+Working_pants_01_01	กางเกงนักผจญเพลิง
+Working_pants_01_02	กางเกงนักผจญเพลิง
+Working_pants_01_03	กางเกงนักผจญเพลิง
+Fireworks_Small	ดอกไม้ไฟเล็ก
+Fireworks_Big	ดอกไม้ไฟเล็ก - ดอกไม้ไฟใหญ่
+Fish	ปลา
+FishingHook	เบ็ดตกปลา
+FishItem	รายการปลา
+Dish_Salad_Fish	สลัดปลา
+WeaponCharm_Fish_Bowl	เครื่องรางอาวุธตู้ปลา
+FishingFloater	รอกตกปลา
+FishingFloater1	รอกตกปลา
+FishingFloaterPack1	แพ็กทุ่นลอยน้ำตกปลา
+FishingFloaterPack2	แพ็กทุ่นลอยน้ำตกปลา
+Boonie_Hat_01	หมวกตกปลา
+Boonie_Hat_02	หมวกตกปลา
+Boonie_Hat_03	หมวกตกปลา
+Boonie_Hat_04	หมวกตกปลา
+Boonie_Hat_05	หมวกตกปลา
+Boonie_Hat_06	หมวกตกปลา
+Military_Boonie_Hat_01	หมวกตกปลา
+Military_Boonie_Hat_02	หมวกตกปลา
+Military_Boonie_Hat_03	หมวกตกปลา
+Military_Boonie_Hat_04	หมวกตกปลา
+Military_Boonie_Hat_05	หมวกตกปลา
+Military_Boonie_Hat_06	หมวกตกปลา
+Military_Boonie_Hat_07	หมวกตกปลา
+Military_Boonie_Hat_08	หมวกตกปลา
+Redneck_Hat_07	หมวกตกปลา
+Fishing_hook	เบ็ดตกปลา
+FishingReel	รอกตกปลา
+ImprovisedFishingReel	รอกตกปลา
+FishingReelPro	รอกตกปลาโปร
+FishingRod	คันเบ็ด
+FishingRod_A	คันเบ็ด
+FishingRod_B	คันเบ็ด
+Fistula_Hepatica	Fistula Hepatica
+FlareItem	แฟลร์
+FlareItem_Blue	แฟลร์
+FlareItem_Green	แฟลร์
+FlareCartridge	ตลับเปลวไฟ
+Weapon_FlareGun	ปืนแฟลร์
+Weapon_Parts_FlareGun	ชิ้นส่วนอาวุธปืนแฟลร์
+FlareTrap	กับดักเปลวไฟ
+ColorCan_FlatBrown	กระป๋องเพ้นท์สีน้ำตาลแบน
+ColorCan_FlatGrey	กระป๋องสีเทาแบน
+ColorCan_FlatWhite	กระป๋องสีขาวแบน
+Wooden_ArrowFeathers	ลูกศรไม้ที่สะบัด
+Flint_And_Steel	หินเหล็กไฟและเหล็กกล้า
+Christmas_tree_Folded	พับดักลาสเฟอร์
+ColorCan_ForestGreen	กระป๋องสีฟอเรสท์ กรีน
+Steel_Fork	ส้อม
+CannedFruitCocktail	ค็อกเทลผลไม้
+Dish_Salad_Fruit	สลัดผลไม้
+Fungicide	ยาฆ่าเชื้อรา
+Fuse_1000A	ฟิวส์ 1000A
+Fuse_200A	ฟิวส์ 200A
+Fuse_400A	ฟิวส์ 400A
+Fuse_600A	ฟิวส์ 600A
+Fuse_800A	ฟิวส์ 800A
+ColorCan_GalaxyBlue	กระป๋องเพ้นท์สีฟ้ากาแล็กซี่
+ColorCan_GalaxyGrey	กระป๋องสีกาแล็กซี่เกรย์
+Garlic	กระเทียม
+Garlic_Seed_Bag	ถุงเมล็ดกระเทียม - ถุงเมล็ดกระเทียม
+Garlic_Seeds	เมล็ดกระเทียม
+Garrison_Cap_01	กองทหารรักษาการณ์
+Garrison_Cap_02	กองทหารรักษาการณ์
+Garrison_Cap_03	กองทหารรักษาการณ์
+Garrison_Cap_04	กองทหารรักษาการณ์
+Garrison_Cap_05	กองทหารรักษาการณ์
+Gas_Mask_01	หน้ากากกันแก๊ส
+Gas_Mask_02	หน้ากากกันแก๊ส
+Gas_Mask_03	หน้ากากกันแก๊ส
+Gas_Mask_04	หน้ากากกันแก๊ส
+GasTank	ถังแก๊ส
+Gasoline_Canister	กระป๋องน้ำมันเบนซิน
+Gear	เกียร์
+Ghillie_Suit_Pants_01	กางเกง Ghillie Suit
+Ghillie_Suit_Jacket_01	เสื้อสูท Ghillie
+Glass	แก้ว
+Glue	กาว
+Goat_Head	หัวแพะ
+Goat_Horns	เขาแพะ
+Goat_Back_Limb	ขาแพะ
+Goat_Front_Limb	ขาแพะ
+Goat_Skull_Hat_01	หมวกกระโหลกแพะ
+Goat_Steak	สเต็กแพะ
+Goat_Torso	เนื้อแพะ
+Credit_Card_Gold	บัตรธนาคารทอง
+MemoryModule_Level4	โมดูลหน่วยความจำทองคำ
+GrapeFruit	ส้มโอ
+GlassBottle02	น้ำเกรพฟรุต
+Graphite	กราไฟท์
+Grasshopper	ตั๊กแตน
+FishingBait_Grasshopper	เหยื่อปลาตั๊กแตน
+GravelBag	ถุงกรวด
+MemoryModule_Level1	โมดูลหน่วยความจำสีเทา
+CannedPeas	ถั่วเขียว
+Frag_Grenade	ระเบิดมือ
+Grinding_Stone_02	หินเจียร
+GuavaHalves	ฝรั่ง
+Guitar	กีตาร์
+Gun_Powder	ผงปืน
+Zombie_guts	ความกล้า
+Halloween_Anonymous_Mask_01	หน้ากาก Guy Fawkes
+Halloween_Mask_BabyDoll_02	หน้ากากฮาโลวีน
+Halloween_Mask_Clown_03	หน้ากากฮาโลวีน
+Halloween_Mask_Greek	หน้ากากฮาโลวีน
+Halloween_Mask_Hockey_04	หน้ากากฮาโลวีน
+Halloween_Mask_JohnDoe_05	หน้ากากฮาโลวีน
+Halloween_Mask_Knife	หน้ากากฮาโลวีน
+Halloween_Mask_Lecter_06	หน้ากากฮาโลวีน
+Halloween_Mask_Plague_07	หน้ากากฮาโลวีน
+Halloween_Mask_Smiley_08	หน้ากากฮาโลวีน
+Halloween_Mask_Wooden_09	หน้ากากฮาโลวีน
+Hand_Drill	สว่านมือ
+Hand_Fan_01	พัดลมมือ
+WeaponSuppressor_Handgun	เครื่องปราบปรามปืนพก
+WeaponCharm_Happy_Emoji	เครื่องรางอาวุธอิโมจิแสนสุข
+Harmonica	ฮาร์โมนิก้า
+Hazelnuts	เฮเซล
+ColorCan_HazyPurple	กระป๋องสีม่วงหมอก
+Head_Bags_01	กระสอบหัว
+Hemostatic_Dressing	น้ำสลัดห้ามเลือด
+HH_Shoes_03_01	รองเท้าบูทหุ้มข้อส้นสูง
+HH_Shoes_03_02	รองเท้าบูทหุ้มข้อส้นสูง
+HH_Shoes_03_03	รองเท้าบูทหุ้มข้อส้นสูง
+HH_Shoes_03_04	รองเท้าบูทหุ้มข้อส้นสูง
+HH_Shoes_03_05	รองเท้าบูทหุ้มข้อส้นสูง
+HH_Shoes_03_06	รองเท้าบูทหุ้มข้อส้นสูง
+HH_Shoes_03_07	รองเท้าบูทหุ้มข้อส้นสูง
+HH_Shoes_04_01	รองเท้าส้นสูง
+HH_Shoes_04_02	รองเท้าส้นสูง
+HH_Shoes_04_03	รองเท้าส้นสูง
+HH_Shoes_04_04	รองเท้าส้นสูง
+HH_Shoes_02_01	รองเท้าแตะส้นสูง
+HH_Shoes_02_02	รองเท้าแตะส้นสูง
+HH_Shoes_02_03	รองเท้าแตะส้นสูง
+RH_Shoe_01	รองเท้าหุ้มข้อสูง
+Sneakers_02_01	รองเท้าหุ้มข้อสูง
+Sneakers_02_02	รองเท้าหุ้มข้อสูง
+Sneakers_02_03	รองเท้าหุ้มข้อสูง
+Sneakers_02_04	รองเท้าหุ้มข้อสูง
+Hiking_Backpack_01_01	กระเป๋าเป้เดินป่า
+Hiking_Backpack_01_02	กระเป๋าเป้เดินป่า
+Hiking_Backpack_01_03	กระเป๋าเป้เดินป่า
+Hiking_Backpack_01_04	กระเป๋าเป้เดินป่า
+Hiking_Backpack_01_05	กระเป๋าเป้เดินป่า
+Hiking_Boots_01	รองเท้าบูทเดินป่า
+Hiking_Boots_02	รองเท้าบูทเดินป่า
+Hiking_Boots_03	รองเท้าบูทเดินป่า
+Hiking_Boots_04	รองเท้าบูทเดินป่า
+Hip_Flask	ขวดสะโพก
+Hippie_Pants_01	กางเกงฮิปปี้
+Hippie_Pants_02	กางเกงฮิปปี้
+Hippie_Pants_03	กางเกงฮิปปี้
+Hippie_Pants_04	กางเกงฮิปปี้
+Hippie_Pants_05	กางเกงฮิปปี้
+Hippie_Pants_06	กางเกงฮิปปี้
+Hippie_Pants_07	กางเกงฮิปปี้
+Hippie_Pants_08	กางเกงฮิปปี้
+Hippie_Shirt_01	เสื้อฮิปปี้
+Hippie_Shirt_02	เสื้อฮิปปี้
+Horse_Head	หัวม้า
+Horse_Mask	หน้ากากหัวม้า
+Horse_Back_Limb	ขาม้า
+Horse_Front_Limb	ขาม้า
+Horse_Steak	สเต็กม้า
+Horse_Torso	เนื้อตัวม้า
+Horse_Torso_Half	ลำตัวม้า - ครึ่ง
+WeaponCharm_Horseshoe	เครื่องรางอาวุธเกือกม้า
+Hose	สายยาง
+Hospital_Pants	กางเกงโรงพยาบาล
+Hospital_Shirt_01	เสื้อโรงพยาบาล
+Weapon_SF19	HS SF19
+Magazine_SF19	ซองกระสุน — HS SF19
+Weapon_Parts_SF19	ชิ้นส่วนอาวุธ HS SF19
+Weapon_HS9	HS-9
+Weapon_Parts_HS9	ชิ้นส่วนอาวุธ HS-9
+Magazine_HS9	ซองกระสุน — HS9
+Prisoner_Left_Arm	แขนมนุษย์
+Prisoner_Right_Arm	แขนมนุษย์
+Human_Ears	หูมนุษย์
+Prisoner_Left_Foot	เท้ามนุษย์
+Prisoner_Right_Foot	เท้ามนุษย์
+Human_guts	ความกล้าของมนุษย์
+Prisoner_Head	ศีรษะมนุษย์
+Prisoner_Head_No_Teeth	ศีรษะมนุษย์
+Prisoner_Left_Leg	ขามนุษย์
+Prisoner_Right_Leg	ขามนุษย์
+Human_Skin	ผิวหนังมนุษย์
+Human_Steak	สเต็กเนื้อมนุษย์
+Human_Teeth	ฟันมนุษย์
+Prisoner_Torso	ลำตัวมนุษย์
+1H_Hunter	ฮันเตอร์
+Weapon_Hunter85_V2	Hunter 85
+Magazine_Hunter85_V2	ซองกระสุน — Hunter 85
+Weapon_Parts_Hunter85	ชิ้นส่วนอาวุธ Hunter 85
+WeaponSuppressor_Hunter	ท่อเก็บเสียง — ฮันเตอร์
+WeaponScope_HuntingScope	กล้องเล็ง — การล่าสัตว์
+Icing_Sugar	น้ำตาลไอซิ่ง
+ImprovisedCal50Turret	ป้อมปืน Cal ชั่วคราว .50
+Improvised_Backpack_Big	กระเป๋าเป้แบบชั่วคราว
+ImprovisedBasicTurret	ป้อมปืนพื้นฐานแบบชั่วคราว
+Improvised_Shelter	เตียงชั่วคราว
+Improvised_Shoes_01	รองเท้าบูทชั่วคราว
+WeaponSuppressor_ImprovisedBottle_Grey	เครื่องระงับขวดแบบชั่วคราว
+WeaponSuppressor_ImprovisedBottle_White	เครื่องระงับขวดแบบชั่วคราว
+Improvised_Bow	ธนูชั่วคราว 20#
+Improvised_Bow_25	ธนูชั่วคราว 25#
+Improvised_Bow_30	ธนูชั่วคราว 30#
+Improvised_Bow_35	ธนูชั่วคราว 35#
+Bow_ImprovisedStabilizer	ตัวปรับเสถียรภาพคันธนูแบบชั่วคราว
+Improvised_Bulletproof_Armor	เกราะกันกระสุนชั่วคราว
+AntiburnGel_Improvised	เจลเบิร์นแบบชั่วคราว
+WeaponSuppressor_ImprovisedCan_Grey	ปราบปรามกระป๋องชั่วคราว
+WeaponSuppressor_ImprovisedCan_Red	ปราบปรามกระป๋องชั่วคราว
+Improvised_Chandelier_Light	โคมระย้าชั่วคราว
+ImprovisedClaymore	Claymore ชั่วคราว
+Improvised_compass	เข็มทิศชั่วคราว
+Improvised_Bag_Small_01	กระเป๋าเป้ Courier แบบด้นสด
+Weapon_Improvised_Crossbow	หน้าไม้ชั่วคราว
+Improvised_Electric_Lamp_Ceiling	โคมไฟไฟฟ้าชั่วคราว
+ImprovisedFishingHook	เบ็ดตกปลาแบบชั่วคราว
+ImprovisedFishingFloater	ทุ่นลอยประมงชั่วคราว
+Improvised_FishingLine	สายการประมงชั่วคราว
+ImprovisedFishingRod	คันเบ็ดชั่วคราว
+Weapon_Improvised_Flamethrower	เครื่องพ่นไฟแบบชั่วคราว
+ImprovisedFlamethrowerTurret	ป้อมปืนพ่นไฟชั่วคราว
+ImprovisedFlashlight	ไฟฉายชั่วคราว
+2H_Improvised_Gardening_Hoe	จอบทำสวนแบบชั่วคราว
+Geiger_Counter_Improvised	เครื่องนับไกเกอร์แบบชั่วคราว
+Improvised_Ghillie_Jacket	เสื้อแจ็คเก็ต Ghillie แบบด้นสด
+Improvised_Ghillie_Pants	กางเกง Ghillie แบบด้นสด
+1H_Improvised_Glass_Shiv	กลอนสดแก้วชีฟ
+Weapon_ImprovisedGrenadeLauncher	เครื่องยิงลูกระเบิดชั่วคราว
+Weapon_Parts_ImprovisedGrenadeLauncher	ชิ้นส่วนอาวุธเครื่องยิงลูกระเบิดชั่วคราว
+1H_Improvised_Hammer	ค้อนชั่วคราว
+Weapon_Improvised_Handgun	ปืนพกชั่วคราว
+1H_Hatchet	ขวานชั่วคราว
+Improvised_Lockpick	Lockpick ชั่วคราว
+Magnifying_Glass	แว่นขยายชั่วคราว
+Scary_Mask_01	หน้ากากชั่วคราว
+ImprovisedMetalDetector	เครื่องตรวจจับโลหะแบบชั่วคราว
+2H_Improvised_metal_shovel	พลั่วโลหะชั่วคราว
+Improvised_Metal_Spear	หอกโลหะชั่วคราว
+ImprovisedMine	เหมืองชั่วคราว
+ImprovisedMinigunTurret	ป้อมปืน Minigun ชั่วคราว
+Improvised_Motorcycle_Wheel	ล้อรถจักรยานยนต์ชั่วคราว
+WeaponSuppressor_ImprovisedOilCan_01	ตัวป้องกันกระป๋องน้ำมันแบบชั่วคราว
+PaintSprayer	เครื่องพ่นสีแบบชั่วคราว
+Dish_Pasta_Improvised	จานพาสต้าแบบด้นสด
+Weapon_Parts_Impro_Pistol	ชิ้นส่วนอาวุธปืนพกชั่วคราว
+Improvised_Quiver_02_Rags	สั่นชั่วคราว
+Raincoat_Improvised	เสื้อกันฝนชั่วคราว
+Dish_Rice_Improvised	จานข้าวแบบด้นสด
+Weapon_Improvised_Rifle	ปืนไรเฟิลชั่วคราว
+ImprovisedRail_Side	รางปืนไรเฟิลชั่วคราว
+Weapon_Parts_Impro_rifle	ชิ้นส่วนอาวุธปืนไรเฟิลชั่วคราว
+ImprovisedRocketTurret	ป้อมปืนจรวดชั่วคราว
+Improvised_rope	เชือกกลอนสด
+Dish_Salad_Improvised	สลัดกลอนสด
+Dish_Sandwich_Improvised	แซนด์วิชชั่วคราว
+WeaponSights_ImprovisedScope	กล้องเล็ง — Improvised
+Improvised_Sewing_kit	ชุดเย็บผ้าแบบด้นสด
+ImprovisedSmallPaddle	พายสั้นแบบชั่วคราว
+2H_Improvised_shovel	พลั่วชั่วคราว
+Dish_Soup_Improvised	ซุปกลอนสด
+Improvised_Stabproof	เสื้อกั๊กป้องกันการแทงแบบชั่วคราว
+Dish_Stew_Improvised	สตูว์ชั่วคราว
+Improvised_Stone_Spear	หอกหินชั่วคราว
+Improvised_Tire_Repair_Kit	ชุดซ่อมยางแบบชั่วคราว
+1H_Improvised_Tomahawk	โทมาฮอว์กชั่วคราว
+Improvised_Tool_Box	กล่องเครื่องมือชั่วคราว
+Improvised_Water_container	ภาชนะบรรจุน้ำแบบชั่วคราว
+Improvised_Wheel	ล้อกลอนสด
+Improvised_Wooden_Spear	หอกไม้ชั่วคราว
+Improvised_Workbench	โต๊ะทำงานชั่วคราว
+Industrial_Fertilizer	ปุ๋ยอุตสาหกรรม
+2H_Industrial_Gardening_Hoe	จอบทำสวนอุตสาหกรรม
+Inonotus_Obliquus	Inonotus Obliquus
+Instant_OatMeal	ข้าวโอ๊ตทันที
+Electrician_Glove_01_01	ถุงมือยางหุ้มฉนวน
+Electrician_Glove_01_02	ถุงมือยางหุ้มฉนวน
+Electrician_Glove_01_03	ถุงมือยางหุ้มฉนวน
+IntEA_Level1	ระดับแอมเพิลเสริมสติปัญญา 1
+IntEA_Level2	ระดับแอมเพิลเสริมสติปัญญา 2
+IntEA_Level3	ระดับแอมเพิลเสริมสติปัญญา 3
+Lock_Item_Basic	ล็อคเหล็ก
+Isopropyl_alcohol	ไอโซโพรพิลแอลกอฮอล์
+Jack_o_Lantern_01	แจ็ค-โอ-แลนเทิร์น
+Jack_o_Lantern_02	แจ็ค-โอ-แลนเทิร์น
+Jack_o_Lantern_03	แจ็ค-โอ-แลนเทิร์น
+Jeans_01_01	ยีนส์
+Jeans_01_02	ยีนส์
+Jeans_01_03	ยีนส์
+Jeans_01_04	ยีนส์
+Jeans_02_01_V2	ยีนส์
+Jeans_02_02	ยีนส์
+Jeans_02_03	ยีนส์
+Jeans_02_04	ยีนส์
+Jeans_02_05	ยีนส์
+Jeans_02_06	ยีนส์
+Jeans_02_07	ยีนส์
+Jeans_02_08	ยีนส์
+Jeans_02_09	ยีนส์
+Jersey_01	เสื้อเจอร์ซี่
+Jersey_02	เสื้อเจอร์ซี่
+Jersey_03	เสื้อเจอร์ซี่
+Jersey_04	เสื้อเจอร์ซี่
+Jersey_05	เสื้อเจอร์ซี่
+Jersey_06	เสื้อเจอร์ซี่
+Jersey_07	เสื้อเจอร์ซี่
+Jersey_08	เสื้อเจอร์ซี่
+Jersey_09	เสื้อเจอร์ซี่
+Jock_Jacket_01	จ๊อกแจ๊กเก็ต
+Jock_Jacket_02	จ๊อกแจ๊กเก็ต
+Jock_Jacket_03	จ๊อกแจ๊กเก็ต
+Jock_Jacket_04	จ๊อกแจ๊กเก็ต
+Joint01	ข้อต่อ
+Weapon_Judge44	ผู้ตัดสิน 44
+Weapon_Parts_Judge44	ผู้พิพากษาชิ้นส่วนอาวุธ 44
+Baseball_Cap_12	หมวก JW
+K6-3_Helmet	หมวกกันน็อค K6-3
+Weapon_98k_Karabiner	Kar98
+Kar98_Bayonet	ดาบปลายปืน Kar98
+WeaponSuppressor_Kar98k	ท่อเก็บเสียง — Kar98k
+Weapon_Parts_Kar98k	ชิ้นส่วนอาวุธ Kar98k
+2H_Katana	คาทานา
+Ketchup	ซอสมะเขือเทศ
+KeyCard	คีย์การ์ด
+KeyCardBunker_Level01	คีย์การ์ด
+KeyCardBunker_Level02	คีย์การ์ด
+Keyhole_Shirt_01	เสื้อรูกุญแจ
+Keyhole_Shirt_02	เสื้อรูกุญแจ
+Keyhole_Shirt_03	เสื้อรูกุญแจ
+Keyhole_Shirt_04	เสื้อรูกุญแจ
+Keyhole_Shirt_05	เสื้อรูกุญแจ
+Keyhole_Shirt_06	เสื้อรูกุญแจ
+Keyhole_Shirt_07	เสื้อรูกุญแจ
+Keyhole_Shirt_08	เสื้อรูกุญแจ
+Kicmovaca	Kicmovaca
+Kilt_01	คิลต์
+Kilt_02	คิลต์
+Kilt_03	คิลต์
+Kilt_04	คิลต์
+Kilt_05	คิลต์
+Kilt_06	คิลต์
+Kitchen_Board_01	คณะกรรมการครัว
+Kitchen_Board_02	คณะกรรมการครัว
+1H_KitchenKnife	มีดทำครัว
+1H_KitchenKnife_02	มีดทำครัว
+1H_KitchenKnife_02_Deluxe	มีดทำครัว
+1H_KitchenKnife_03	มีดทำครัว
+1H_KitchenKnife_04	มีดทำครัว
+1H_KitchenKnife_DigitalDeluxe	มีดทำครัว
+Kiwi	กีวี
+Socks_02	ถุงเท้าสูงถึงเข่า
+Recurve_Bow_60	Kodiak 60#
+Slippers_01	Kroks
+Weapon_Krueger	Krueger
+Magazine_Krueger	ซองกระสุน — Krueger
+Weapon_Parts_Krueger	ชิ้นส่วนอาวุธ Krueger
+1H_Kunai	คุไน
+Laika_Engine_Alternator_Item	เครื่องกำเนิดไฟฟ้ากระแสสลับ Laika
+Laika_Body_ArmorHeavy_Left	Laika ชุดเกราะหนักซ้าย
+Laika_Body_ArmorHeavy_Right	Laika ชุดเกราะหนักขวา
+Laika_Body_ArmorLight_Left	ไฟเกราะ Laika ด้านซ้าย
+Laika_Body_ArmorLight_Right	ชุดเกราะ Laika ด้านขวา
+Laika_Body_ArmorLight_Top	เสื้อเกราะน้ำหนักเบา Laika
+Laika_Body_Front	ตัวถังหน้า Laika
+Laika_Body_Left	ตัวถัง Laika ด้านซ้าย
+Laika_Body_Right	ตัวถัง Laika ด้านขวา
+Laika_Body_Top	เสื้อตัวบน Laika
+Laika_Bumper_Armor_Back_Item	เกราะกันชนหลัง Laika
+Laika_Bumper_Back_Item	กันชนหลัง Laika
+Laika_Bumper_Front_Item	Laika กันชนหน้า
+Laika_Door_ArmorHeavy_FrontLeft_Item	Laika ประตูเกราะหนักหน้าซ้าย
+Laika_Door_ArmorHeavy_FrontRight_Item	Laika ประตูเกราะหนักหน้าขวา
+Laika_Door_Left_Item	ประตู Laika ซ้าย
+Laika_Door_ArmorLight_FrontLeft_Item	Laika เกราะไฟประตูหน้าซ้าย
+Laika_Door_ArmorLight_FrontRight_Item	Laika เกราะไฟประตูหน้าขวา
+Laika_Door_Right_Item	ประตู Laika ขวา
+Laika_Body_ArmorHeavy_Top_Item	เสื้อเกราะหนัก Laika
+Laika_DoorHood_Item	ฮู้ด Laika
+Laika_Lights_FrontLeft	Laika ไฟหน้าซ้าย
+Laika_Lights_FrontRight	Laika ไฟหน้าขวา
+Laika_Lights_RearLeft	Laika ไฟหน้าหลังซ้าย
+Laika_Lights_RearRight	Laika ไฟหน้าหลังขวา
+Laika_Seat_FrontLeft_Item	Laika เบาะนั่งหน้าซ้าย
+Laika_Seat_FrontRight_Item	Laika เบาะนั่งหน้าขวา
+Laika_DoorTrunk_ArmorHeavy_Item	Laika เกราะท้ายรถแบบหนัก
+Laika_DoorTrunk_ArmorLight_Item	ไฟเกราะท้ายรถ Laika
+Laika_DoorTrunk_Item	ประตูท้าย Laika
+Battery_Charger_Large	เครื่องชาร์จแบตเตอรี่ขนาดใหญ่
+LogShed_1	โรงเก็บไม้ซุงขนาดใหญ่
+Stone_Large	หินใหญ่
+Larve	ตัวอ่อน
+Laser_Detonator	เครื่องระเบิดเลเซอร์
+Lead_Plate	แผ่นตะกั่ว
+Leather_Backpack_01	กระเป๋าเป้หนัง
+Leather_Backpack_02	กระเป๋าเป้หนัง
+Leather_Backpack_03	กระเป๋าเป้หนัง
+Belt_Pistol_Holster	ซองปืนพกเข็มขัดหนัง
+Leather_MiniSkirt_01	กระโปรงหนังสั้น
+Leather_MiniSkirt_02	กระโปรงหนังสั้น
+Leather_MiniSkirt_03	กระโปรงหนังสั้น
+Leather_Sheet	แผ่นหนัง
+Leather_Shoes_02	รองเท้าหนัง
+Lemon	มะนาว
+Lemon_Seed_Bag	ถุงเมล็ดมะนาว - ถุงเมล็ดมะนาว
+Lemon_Seeds	เมล็ดมะนาว
+Lepiota_Procera	Lepiota Procera
+Lettuce	ผักกาดหอม
+Lettuce_Seed_Bag	ถุงเมล็ดผักกาดหอม - ถุงเมล็ดผักกาดหอม
+Lettuce_Seeds	เมล็ดผักกาดหอม
+ColorCan_LightBrown	กระป๋องเพ้นท์สีน้ำตาลอ่อน
+ColorCan_LightUrban	กระป๋องสีเมืองอ่อน
+Lighter	ไฟแช็ก
+Lime	มะนาว
+ColorCan_LimeGreen	กระป๋องสีเขียวมะนาว
+GlassBottle03	น้ำมะนาว
+PETBottle03	มะนาวโซดา
+PETBottle04	มะนาวโซดา
+Ganoderma_Lucidum	เห็ดหลินจือ
+WeaponCharm_Emoji	LMAO เครื่องรางอาวุธอิโมจิ
+Lockpick_Item	ล็อคปิ๊ก
+LockpickingBoard	คณะกรรมการล็อค
+ImprovisedRail_Long	รางติดอุปกรณ์ทำเองแบบยาว
+Long_Paddle	พายยาว
+Long_wooden_stick	แท่งไม้ยาว
+Vest_01	เสื้อแขนยาว
+Vest_02	เสื้อแขนยาว
+Vest_03	เสื้อแขนยาว
+Vest_04	เสื้อแขนยาว
+Vest_05	เสื้อแขนยาว
+Cigarettes1	ซองบุหรี่ Lucky Star
+Cigarette1	บุหรี่ลัคกี้สตาร์
+Lycoperdon_Gigantea	Lycoperdon Gigantea
+M1_Bayonet	ดาบปลายปืน M1
+M1_Clip	คลิปกระสุน — M1
+WeaponSights_M1_Experimental	สถานที่ทดลอง M1
+WeaponFlashHider	M1 แฟลชไฮเดอร์
+M1_Medical_Helmet	หมวกกันน็อคแพทย์ M1
+Weapon_M1_Garand	ปืนไรเฟิล M1
+WeaponSights_M1_ScopeAndSights	กล้องเล็ง — M1
+WeaponSuppressor_M1	ท่อเก็บเสียง — M1
+Weapon_Parts_M1_Garand	ชิ้นส่วนอาวุธ M1
+Magazine_M16	ซองกระสุน — M16
+Weapon_M16A4	M16A4
+WeaponSights_M16A4_FoldingSights	สถานที่ท่องเที่ยวแบบพับได้ M16A4
+Weapon_Parts_M16A4	ชิ้นส่วนอาวุธ M16A4
+Weapon_M1887	M1887
+Weapon_M1887_Sawed_off	M1887 ถูกเลื่อยออก
+Weapon_Parts_M1887	ชิ้นส่วนอาวุธ M1887
+Weapon_MosinNagant	M1891
+Mosin_Bayonet	ดาบปลายปืน M1891
+WeaponSuppressor_M1891	ท่อเก็บเสียง — M1891
+Weapon_Parts_MosinNagant	ชิ้นส่วนอาวุธ M1891
+Weapon_M1911	M1911
+Weapon_M1911_Engraved	แกะสลัก M1911
+Weapon_M1911_Gold	M1911 ทอง
+Weapon_M1911_JayW	M1911 JayW
+Magazine_M1911	ซองกระสุน — M1911
+M1911_Rail	รางติดอุปกรณ์ — M1911
+Weapon_Parts_M1911	ชิ้นส่วนอาวุธ M1911
+Weapon_M249	M249
+Magazine_M249	M249 แอมโมบ็อกซ์
+Weapon_Parts_M249	ชิ้นส่วนอาวุธ M249
+M70_Bayonet	ดาบปลายปืน M70
+WeaponSuppressor_M82A1	ท่อเก็บเสียง — M82 QDL
+WeaponSuppressor_M82A1_Black	ท่อเก็บเสียง — M82 QDL
+WeaponSuppressor_M82A1_Desert	ท่อเก็บเสียง — M82 QDL
+WeaponSuppressor_M82A1_Snow	ท่อเก็บเสียง — M82 QDL
+WeaponScope_M82A1	กล้องเล็ง — M82
+WeaponScope_M82A1_Black	กล้องเล็ง — M82
+WeaponScope_M82A1_Desert	กล้องเล็ง — M82
+WeaponScope_M82A1_Snow	กล้องเล็ง — M82
+Weapon_M82A1	M82A1
+Weapon_M82A1_Black	M82A1
+Weapon_M82A1_Desert	M82A1
+Weapon_M82A1_Snow	M82A1
+Magazine_M82A1	ซองกระสุน — M82A1
+Weapon_Parts_M82A1	ชิ้นส่วนอาวุธ M82A1
+Flashbang	M84 ระเบิดสตัน
+WeaponFlashlight_M9	ไฟฉาย M9
+Magazine_M9	ซองกระสุน — M9
+Weapon_Parts_M9	ชิ้นส่วนอาวุธ M9
+Weapon_MAC10	MAC-10
+Magazine_MAC10	ซองกระสุน — MAC-10
+WeaponSuppressor_MAC10	ท่อเก็บเสียง — MAC-10
+Weapon_Parts_MAC10	ชิ้นส่วนอาวุธ MAC-10
+Magnifying_Glass1	แว่นขยาย
+Vodka	วอดก้า Majestic Bear
+Manchu_Bow_50	Manchu โบว์
+Mango	มะม่วง
+Marine_Cap_01	มารีนแคป
+Marine_Cap_02	มารีนแคป
+Marine_Cap_03	มารีนแคป
+Marine_Cap_04	มารีนแคป
+Marine_Cap_05	มารีนแคป
+Marine_Cap_06	มารีนแคป
+Marine_Cap_07	มารีนแคป
+Marine_Cap_08	มารีนแคป
+Matches	ไม้ขีด
+Mayonnaise	มายองเนส
+FishingBait_Meat	เหยื่อปลาเนื้อ
+MeatSnack_01	เนื้อสแน็ครสเผ็ด
+MeatSnack_02	เนื้อสแน็ครสเผ็ด
+Medical_Glove_01	ถุงมือแพทย์
+1H_Medieval_Sword	ดาบยุคกลาง
+Battery_Charger_Medium	เครื่องชาร์จแบตเตอรี่ขนาดกลาง
+FishingHookPack2	ตะขอเกี่ยวขนาดกลาง
+Lock_Security_Lvl2	การป้องกันการล็อคระดับปานกลาง
+Medium_Vehicle_StorageRack	ที่วางของในรถขนาดกลาง
+FishingHook1	เบ็ดตกปลาขนาดกลาง
+Knife_Sheath	ซองใส่อาวุธระยะประชิด
+Metal_Arrow	ลูกศรโลหะ
+2H_Metal_Axe	ขวานโลหะ
+2H_Metal_Baseball_Bat	ไม้เบสบอลโลหะ
+Ammo_Crossbow_Bolt_Metal	กลอนหน้าไม้โลหะ
+MetalDetector	เครื่องตรวจจับโลหะ
+1H_Improvised_metal_knife	มีดโลหะ
+1H_Metal_Pipe	ท่อโลหะ
+Saw	เลื่อยโลหะ
+Metal_Scrap_01	เศษโลหะ
+Metal_Scrap_02	เศษโลหะ
+Metal_Scrap_03	เศษโลหะ
+Metal_Scrap_04	เศษโลหะ
+Metal_Scrap_05	เศษโลหะ
+1H_Metal_Sword	ดาบโลหะ
+Ammo_Crossbow_Bolt_WoodenMetalTip	กลอนหน้าไม้ปลายโลหะ
+Wooden_ArrowMetalTip	ลูกศรไม้ปลายโลหะ
+Bundle_Of_Metal_Tips	เคล็ดลับโลหะ
+HH_Shoes_05_01	รองเท้าแตะส้นกลาง
+HH_Shoes_05_02	รองเท้าแตะส้นกลาง
+HH_Shoes_05_03	รองเท้าแตะส้นกลาง
+MilitaryBoots_JNA	รองเท้าบูททหาร
+MilitaryBoots_Peace	รองเท้าบูททหาร
+Military_Cap_01	หมวกทหาร
+Military_Cap_02	หมวกทหาร
+Military_Cap_03	หมวกทหาร
+Military_Cap_04	หมวกทหาร
+Military_Cap_05	หมวกทหาร
+Military_Cap_06	หมวกทหาร
+Military_Cap_07	หมวกทหาร
+Military_Cap_08	หมวกทหาร
+Compass	เข็มทิศทหาร
+Military_Goggles_01	แว่นตาทหาร
+Tactical_Sunglasses_01	แว่นตาทหาร
+Tactical_Sunglasses_02	แว่นตาทหาร
+Military_Helmet_01_01	หมวกทหาร
+Military_Helmet_01_02	หมวกทหาร
+Military_Helmet_01_03	หมวกทหาร
+Military_Helmet_01_04	หมวกทหาร
+Military_Helmet_01_05	หมวกทหาร
+Military_Helmet_01_06	หมวกทหาร
+Military_Helmet_01_07	หมวกทหาร
+Military_Helmet_01_08	หมวกทหาร
+Military_Helmet_01_09	หมวกทหาร
+Military_Quiver_01	สั่นทหาร
+Military_Quiver_02	สั่นทหาร
+Military_Quiver_03	สั่นทหาร
+Military_Quiver_04	สั่นทหาร
+Military_Quiver_05	สั่นทหาร
+Military_Quiver_06	สั่นทหาร
+Military_Quiver_07	สั่นทหาร
+Military_Quiver_08	สั่นทหาร
+Military_Shirt_01	เสื้อทหาร
+Military_Shirt_02	เสื้อทหาร
+Military_Shirt_03	เสื้อทหาร
+Military_Shirt_04	เสื้อทหาร
+Military_Shirt_05	เสื้อทหาร
+Military_Shirt_06	เสื้อทหาร
+Military_Shirt_07	เสื้อทหาร
+Military_Shirt_08	เสื้อทหาร
+1H_Military_Shovel	พลั่วทหาร
+1H_Military_Survival_Knife	มีดเอาตัวรอดของทหาร
+1H_Military_Tomahawk	โทมาฮอว์กทหาร
+Milk	นม
+Leather_Shoes	รองเท้า Mirdas
+Weapon_MK18	MK18
+WeaponSuppressor_MK18	ท่อเก็บเสียง — MK18
+Weapon_Parts_MK18	ชิ้นส่วนอาวุธ MK18
+1H_MK5000_Black	MK5000
+1H_MK5000_Metal	MK5000
+MMA_Glove_01	ถุงมือ MMA
+Mobile_Phone	โทรศัพท์มือถือ
+Hazmat_Suit_Modern	ชุด Hazmat สมัยใหม่
+Recurve_Bow_80	โมฮอก 80#
+Sensor_Detonator	เครื่องจุดระเบิดเซนเซอร์ตรวจจับความเคลื่อนไหว
+Motorbike_Battery	แบตเตอรี่รถมอเตอร์ไซค์
+Motorcycle_Boots_01	รองเท้าบู๊ทมอเตอร์ไซค์
+Motorcycle_Boots_02	รองเท้าบู๊ทมอเตอร์ไซค์
+Motorcycle_Boots_03	รองเท้าบู๊ทมอเตอร์ไซค์
+Motorcycle_Glasses_01	แว่นตามอเตอร์ไซค์
+Motorcycle_Glasses_02	แว่นตามอเตอร์ไซค์
+Motorcycle_Jacket_01	เสื้อแจ็คเก็ตขี่มอเตอร์ไซค์
+Motorcycle_Jacket_02	เสื้อแจ็คเก็ตขี่มอเตอร์ไซค์
+Motorcycle_Jacket_03	เสื้อแจ็คเก็ตขี่มอเตอร์ไซค์
+Motorcycle_Mask_01	หน้ากากมอเตอร์ไซค์
+Motorcycle_Mask_02	หน้ากากมอเตอร์ไซค์
+Motorcycle_Pants_01	กางเกงขี่มอเตอร์ไซค์
+Motorcycle_Pants_02	กางเกงขี่มอเตอร์ไซค์
+Motorcycle_Pants_03	กางเกงขี่มอเตอร์ไซค์
+Weapon_MP5	MP5
+Weapon_MP5_K	MP5 K
+Magazine_MP5	ซองกระสุน — MP5
+MP5_Rail_Short	ราง MP5
+Weapon_MP5_SD	MP5 SD
+WeaponSuppressor_MP5	ท่อเก็บเสียง — MP5
+Weapon_Parts_MP5	ชิ้นส่วนอาวุธ MP5
+WeaponSights_MRO_Red_Dot	กล้องเล็งจุดแดง — MRO
+Mulberry	มัลเบอร์รี่
+Mustard	มัสตาร์ด
+Mutant_Animal_Skin	หนังสัตว์กลายพันธุ์ - หนังสัตว์กลายพันธุ์
+Bear_Head_Mutant	หัวหมีกลายพันธุ์
+Mutant_Bear_Steak	สเต็กหมีกลายพันธุ์ - สเต็กหมีกลายพันธุ์
+Boar_Head_Mutant	หัวหมูป่ากลายพันธุ์
+Buck_Head_Mutant	หัวบัคกลายพันธุ์
+Mutant_Buck_Steak	สเต็กกวางกลายพันธุ์
+Wolf_Head_Mutant	หัวหมาป่ากลายพันธุ์
+Mutant_Wolf_Steak	สเต็กหมาป่ากลายพันธุ์ - สเต็กหมาป่ากลายพันธุ์
+1H_N9_Black	ดาบปลายปืน N9
+1H_N9_White	ดาบปลายปืน N9
+Nails	เล็บ
+ColorCan_NavyBlue	กระป๋องสีกรมท่า
+ColorCan_NavyGrey	กระป๋องสีกรมท่าเทา
+Needle	เข็ม
+Night_Vision_Goggles_01	แว่นตามองกลางคืน
+FishingLine_2	สายไนลอนขนาดกลาง 0.18 mm
+FishingLinePiece_2	สายไนลอนขนาดกลาง 0.18 mm
+FishingLine_3	สายไนลอนหนา 0.25 mm
+FishingLinePiece_3	สายไนลอนหนา 0.25 mm
+FishingLine_4	สายไนลอนหนา 0.5 mm
+FishingLinePiece_4	สายไนลอนหนา 0.5 mm
+FishingLine_1	สายไนลอนแบบบาง 0.12 mm
+FishingLinePiece_1	สายไนลอนแบบบาง 0.12 mm
+Oak_Nuts	โอ๊คนัท
+Cal_40_OG-7V	OG-7V
+WeaponCharm_Ogre	เครื่องรางอาวุธโอเกอร์
+Oil_Filter	กรองน้ำมันเครื่อง
+WeaponSights_OKP-7_Holographic	กล้องเล็งโฮโลกราฟิก — OKP
+Olives	โอลีฟ
+Onion	หัวหอม
+Chips3	หัวหอม
+Open_Finger_Gloves_01	เปิดถุงมือนิ้ว
+Open_Finger_Gloves_02	เปิดถุงมือนิ้ว
+Open_Finger_Gloves_03	เปิดถุงมือนิ้ว
+Open_Finger_Gloves_04	เปิดถุงมือนิ้ว
+Open_Finger_Gloves_05	เปิดถุงมือนิ้ว
+Open_Finger_Gloves_06	เปิดถุงมือนิ้ว
+Opuntia_Fig	Opuntia รูปที่
+Orange	ส้ม
+Can02	น้ำส้ม
+GlassBottle04	น้ำส้ม
+Orange_Seed_Bag	ถุงเมล็ดส้ม - ถุงเมล็ดส้ม
+Orange_Seeds	เมล็ดส้ม
+Fish_Orata	โอราตะ
+Orata_Fillet	เนื้อออราต้า
+Organic_Fertilizer	ปุ๋ยอินทรีย์
+HH_Boots_01	รองเท้าบูทยาวเหนือเข่า
+WeaponScope_Dragunov	กล้องเล็ง — P-223
+P17_Bayonet	ดาบปลายปืน P17
+C4_Pack	บรรจุ C4 แล้ว
+Padlock	กุญแจ
+Painkillers_01	ยาแก้ปวด - ตุ่ม
+Painkillers_02	ยาแก้ปวด - กล่อง
+PainKillers_03	ยาแก้ปวด - โถ
+Pajama_Pants	กางเกงชุดนอน
+Pajama_Shirt_01	เสื้อชุดนอน
+Pan	แพน
+Inmate_pants	กางเกง
+Inmate_Pants_01_Forest_DigitalDeluxe	กางเกง
+Inmate_Pants_01_Snow_DigitalDeluxe	กางเกง
+Inmate_Pants_01_South_DigitalDeluxe	กางเกง
+Pantyhose_01	ถุงน่อง
+Paper	กระดาษ
+Parachute	ร่มชูชีพ
+Parking_Sensor	เซนเซอร์จอดรถ
+Parsley	หัวผักกาด
+Party_Glasses_01	แว่นตาปาร์ตี้
+Party_Glasses_02	แว่นตาปาร์ตี้
+Pasta	พาสต้า
+Book_Cooking_Pasta	ตำราพาสต้า
+Weapon_PeaceKeeper38	ผู้รักษาสันติภาพ 38
+Weapon_Parts_PeaceKeeper38	อะไหล่ผู้รักษาสันติภาพ 38
+Peach	พีช
+CannedPeach	พีชผลไม้แช่อิ่ม
+Peach_Seed_Bag	ถุงเมล็ดพีช - ถุงเมล็ดพีช
+Peach_Seeds	เมล็ดพีช
+Pear	ลูกแพร์
+CannedPear	ผลไม้แช่อิ่มลูกแพร์
+Pear_Seed_Bag	ถุงเมล็ดแพร์ - ถุงเมล็ดแพร์
+Pear_Seeds	เมล็ดแพร์
+Pen	ปากกา
+Penicillin01	เพนิซิลลิน
+Peppers_Seeds	เมล็ดพริกไทย
+Peppers_Seed_Bag	ถุงเมล็ดพริก - ถุงเมล็ดพริก
+Pesticide	ยาฆ่าแมลง
+Cal_40_PG-7M	PG-7M
+2H_Pickaxe	เสียม
+Rubber_sheet	ชิ้นส่วนของยาง
+Pike_Fillet	ไพค์ ฟิเลต์
+Fish_Pike	ปลาไพค์
+Pike_Head	ไพค์เฮด
+Pilot_Glasses	แว่นตานักบิน
+Pilot_Hat_01	หมวกนักบิน
+Pilot_Jacket	เสื้อนักบิน
+Pine_Cone	โคนต้นสน
+Pineapple	สับปะรด
+Ghillie_Suit_Pants_04	กางเกงสูท Ghillie สีชมพู
+Ghillie_Suit_Jacket_04	เสื้อสูท Ghillie สีชมพู
+PipeBomb	ท่อระเบิด
+1H_Pipe_Wrench	ประแจท่อ
+WeaponCharm_PirateCat	เครื่องรางอาวุธแมวโจรสลัด
+Pirate_EyePatch	ผ้าปิดตาของโจรสลัด
+Pirate_Hat_01	หมวกโจรสลัด
+Pirate_Hat_Sparrow_02	หมวกโจรสลัด
+2H_Pitchfork	โกย
+Book_Cooking_Pizza	ตำราพิซซ่า
+Scissors_Plastic	กรรไกรพลาสติก
+Hen_Torso	ไก่ดึง
+Plum	พลัม
+Plum_Seed_Bag	ถุงเมล็ดพลัม - ถุงเมล็ดพลัม
+Plum_Seeds	เมล็ดพลัม
+Police_Backpack_01	กระเป๋าเป้สะพายหลังโจมตีตำรวจ
+Police_Backpack_03	กระเป๋าเป้ตำรวจ
+Police_Beanie_01	หมวกตำรวจ
+ColorCan_PoliceBlue	กระป๋องเพ้นท์สีน้ำเงินตำรวจ
+Police_Bulletproof_Vest_01	เสื้อเกราะกันกระสุนตำรวจ
+Police_Cap_01	หมวกตำรวจ
+Police_Boonie_Hat_01	หมวกตกปลาตำรวจ
+Police_Gloves_01	ถุงมือตำรวจ
+Police_Cap_02	หมวกตำรวจ
+Police_Backpack_02	กระเป๋าเป้เดินป่าตำรวจ
+Police_Jacket_01	เสื้อตำรวจ
+Police_Open_Finger_Gloves_01	ถุงมือเปิดนิ้วตำรวจ
+Police_Shirt_01	เสื้อตำรวจ
+pOLICE_Sweater_01	เสื้อตำรวจ
+Armor_Police_Vest_01	เสื้อกั๊กยุทธวิธีตำรวจ
+Pork_Steak	สเต็กหมู
+Mutant_Pork_Steak	สเต็กหมู - สเต็กหมูกลายพันธุ์
+WeaponScope_POSP	POSP 4x24V
+PotassiumIodide_Pills_01	ยาเม็ดโพแทสเซียมไอโอไดด์ - ตุ่ม
+PotassiumIodide_Pills_02	ยาเม็ดโพแทสเซียมไอโอไดด์ - กล่อง
+PotassiumIodide_Pills_03	ยาเม็ดโพแทสเซียมไอโอไดด์ - กระปุก
+Potato	มันฝรั่ง
+Chips4	มันฝรั่งทอดรสเค็ม
+Potato_Seed_Bag	ถุงเมล็ดมันฝรั่ง - ถุงเมล็ดมันฝรั่ง
+Potatoes_Seeds	เมล็ดมันฝรั่ง
+PracticeTrap	ฝึกระเบิด
+Recurve_Bow_70	Predator 70#
+BlankSign_Premium	ป้ายว่างพรีเมี่ยม
+PremiumBoiliesPack	พรีเมี่ยม Boilies Bait Pack
+Car_Lamp_Ceiling	โคมไฟไฟฟ้าพรีเมี่ยม
+PressureCookerBomb	หม้ออัดแรงดันระเบิด
+Pressure_Dressing	น้ำสลัดความดัน
+Compass_Primitive	เข็มทิศดั้งเดิม
+PromTrap	เหมือง PROM-1
+Fish_PrussianCarp	ปลาคาร์ปปรัสเซียน
+Psilocybe_Cyanescens	Psilocybe Cyanescens
+WeaponScope_PU	กล้องเล็ง — PU
+Pumpkin	ฟักทอง
+Pumpkin_Seed_Bag	ถุงเมล็ดฟักทอง - ถุงเมล็ดฟักทอง
+Pumpkin_Seeds	เมล็ดฟักทอง
+Zombie_01_Left_Arm	แขนหุ่น
+Zombie_01_Right_Arm	แขนหุ่น
+Puppet_Eye	ตาตุ๊กตา
+Zombie_01_Left_Foot	หุ่นเท้า
+Zombie_01_Right_Foot	หุ่นเท้า
+Zombie_01_Head	หัวหุ่น
+Zombie_01_Head_No_teeth	หัวหุ่น
+Zombie_01_Left_Leg	ขาหุ่น
+Zombie_01_Right_Leg	ขาหุ่น
+ZombieMeat	เนื้อหุ่น
+Zombie_01_Torso	หุ่นกระบอก
+MemoryModule_Level3	โมดูลหน่วยความจำสีม่วง
+Qipao_Dress_01	ชุดกี่เพ้า
+Qipao_Dress_02	ชุดกี่เพ้า
+Qipao_Dress_03	ชุดกี่เพ้า
+Qipao_Dress_04	ชุดกี่เพ้า
+Qipao_Dress_05	ชุดกี่เพ้า
+Qipao_Dress_06	ชุดกี่เพ้า
+HH_Wedge_Heels_01_01	รองเท้ากี่เพ้า
+HH_Wedge_Heels_01_02	รองเท้ากี่เพ้า
+HH_Wedge_Heels_01_03	รองเท้ากี่เพ้า
+HH_Wedge_Heels_01_04	รองเท้ากี่เพ้า
+HH_Wedge_Heels_01_05	รองเท้ากี่เพ้า
+HH_Wedge_Heels_01_06	รองเท้ากี่เพ้า
+Rabbit_Left_Front	กระต่ายซ้ายส่วนหน้า
+Rabbit_Left_Back	กระต่ายซ้ายส่วนหลัง
+RabbitLeg	ขากระต่าย
+RabbitMeat	เนื้อกระต่าย
+Rabbit_Right_Front	กระต่ายขวาส่วนหน้า
+Rabbit_Right_Back	กระต่ายส่วนหลังขวา
+Racing_Helmet_01	หมวกกันน็อคแข่ง
+Radio	วิทยุ
+Improvised_Gloves	ถุงมือผ้าขี้ริ้ว
+Improvised_Shoes_02	รองเท้าผ้าขี้ริ้ว
+Rag_Stripes	แถบผ้าขี้ริ้ว
+Rager_Engine_Alternator_Item	เครื่องกำเนิดไฟฟ้ากระแสสลับ Rager
+Rager_Body_ArmorHeavy_Back_Item	Rager ชุดเกราะหนักหลัง
+Rager_Body_ArmorHeavy_Left_Item	Rager ชุดเกราะหนักซ้าย
+Rager_Body_ArmorHeavy_Right_Item	Rager ชุดเกราะหนักขวา
+Rager_Body_ArmorHeavy_Top_Item	เสื้อเกราะหนัก Rager
+Rager_Body_ArmorLight_Back_Item	Rager Body Armor Light Back
+Rager_Body_ArmorLight_Left_Item	ไฟเกราะ Rager ด้านซ้าย
+Rager_Body_ArmorLight_Right_Item	ชุดเกราะ Rager ด้านขวา
+Rager_Body_ArmorLight_Top_Item	เสื้อเกราะน้ำหนักเบา Rager
+Rager_Body_Front	ตัวถังหน้า Rager
+Rager_Body_Left	ตัวถัง Rager ด้านซ้าย
+Rager_Body_Right	ตัวถัง Rager ด้านขวา
+Rager_Body_Top	เสื้อตัวบน Rager
+Rager_Bumper_Back_Item	กันชนหลัง Rager
+Rager_Bumper_Front_Item	Rager กันชนหน้า
+Rager_Door_ArmorHeavy_BackLeft_Item	Rager เกราะประตูหลังหนักซ้าย
+Rager_Door_ArmorHeavy_BackRight_Item	Rager เกราะประตูหลังหนาขวา
+Rager_Door_ArmorHeavy_FrontLeft_Item	Rager เกราะประตูหนาหน้าซ้าย
+Rager_Door_ArmorHeavy_FrontRight_Item	Rager เกราะประตูหนาหน้าขวา
+Rager_Door_ArmorLight_BackLeft_Item	Rager ไฟเกราะประตูหลังซ้าย
+Rager_Door_ArmorLight_BackRight_Item	Rager ไฟเกราะประตูหลังขวา
+Rager_Door_ArmorLight_FrontLeft_Item	Rager ไฟเกราะประตูหน้าซ้าย
+Rager_Door_ArmorLight_FrontRight_Item	Rager ไฟเกราะประตูหน้าขวา
+Rager_Door_BackLeft_Item	Rager ประตูหลังซ้าย
+Rager_Door_BackRight_Item	ประตู Rager ด้านหลังขวา
+Rager_Door_FrontLeft_Item	Rager ประตูหน้าซ้าย
+Rager_Door_FrontRight_Item	Rager ประตูหน้าขวา
+Rager_DoorHood_Item	ฮู้ด Rager
+Rager_Lights_FrontLeft	Rager ไฟหน้าซ้าย
+Rager_Lights_FrontRight	Rager ไฟหน้าขวา
+Rager_Lights_RearLeft	Rager ไฟหน้าหลังซ้าย
+Rager_Lights_RearRight	Rager ไฟหน้าหลังขวา
+Rager_Lights_RearTop	ไฟท้าย Rager ด้านบน
+Rager_Seat_FrontLeft_Item	Rager เบาะนั่งหน้าซ้าย
+Rager_Seat_FrontRight_Item	Rager เบาะนั่งหน้าขวา
+Rager_DoorTrunk_ArmorHeavy_Item	Rager เกราะท้ายรถแบบหนัก
+Rager_DoorTrunk_ArmorLight_Item	ไฟเกราะท้ายรถ Rager
+Rager_DoorTrunk_Item	ประตูท้าย Rager
+Rager_Wheel_ArmorHeavy_FrontLeft_Item	Rager เกราะล้อหน้าหนาซ้าย
+Rager_Wheel_ArmorHeavy_FrontRight_Item	Rager เกราะล้อหน้าหนาขวา
+Rager_Wheel_ArmorLight_FrontLeft_Item	Rager ไฟเกราะล้อหน้าซ้าย
+Rager_Wheel_ArmorLight_FrontRight_Item	Rager เกราะล้อหน้าขวา
+Rags	ยาจก
+Raincoat_01	เสื้อกันฝน
+Raincoat_02	เสื้อกันฝน
+Raincoat_03	เสื้อกันฝน
+Raincoat_04	เสื้อกันฝน
+Raincoat_05	เสื้อกันฝน
+Raincoat_06	เสื้อกันฝน
+Raisins	ลูกเกด
+Ramsons	แรมสันส์
+Grapes_Raw	องุ่นดิบ
+RK_Beanie_01	เรย์กิต บีนี่
+RK_Hoodie_01	เสื้อฮู้ด Raykit
+Razor_Blade	ใบมีดโกน
+Rebar_Cutter	เครื่องตัดเหล็กเส้น
+ColorCan_RedChocolate	กระป๋องสีช็อคโกแลตสีแดง
+WeaponSights_RedDot_CA401B	สายตาจุดแดง
+Energy_Drink_Red_Ghoul	เครื่องดื่มชูกำลัง Red Ghoul
+RedOnion_Seed_Bag	ถุงเมล็ดหอมแดง
+RedOnion_Seeds	เมล็ดหอมแดง
+FishingBait_RedWorm	เหยื่อปลาหนอนแดง
+Christmas_Headband_01	หูกวางเรนเดียร์
+Remote_Door_Key	กุญแจประตูรีโมท
+Remote_Door_Sensor	เซ็นเซอร์ประตูระยะไกล
+KeyCardApex	คีย์การ์ดศูนย์วิจัย
+Respirator_01	เครื่องช่วยหายใจ
+Retro_Helmet_01	หมวกกันน็อคเรโทร
+Book_Cooking_Rice	ตำราข้าว
+Richards_Cheese	ริชาร์ดชีส
+Rider_Helmet_01	หมวกกันน็อคไรเดอร์
+Rider_Helmet_02	หมวกกันน็อคไรเดอร์
+Rider_Helmet_03	หมวกกันน็อคไรเดอร์
+Riot_Helmet_02	หมวกจลาจล
+ScopeRail_AK47	อแดปเตอร์ RIS
+RIS_Armor_Military_Front_Item	แนวหน้าทหารเกราะ RIS
+RIS_Body_Military_Item	RIS ร่างกายทหาร
+RIS_BrakeLight_Center_Item	RIS ไฟเบรคกลาง
+RIS_BrakeLight_Left_Item	RIS ไฟเบรคซ้าย
+RIS_BrakeLight_Right_Item	RIS ไฟเบรค ขวา
+RIS_Headlight_Left_Item	ไฟหน้า RIS ซ้าย
+RIS_Headlight_Right_Item	RIS ไฟหน้า ขวา
+RIS_Plow_Civilian	RIS ไถพลเรือน
+RIS_Spikes_Military	RIS Spikes Military
+RIS_Wheel_Armor_Item	เกราะล้อ RIS
+Tobacco_Rolled	ยาสูบม้วน
+WeaponCharm_Roller_Skate	เครื่องรางอาวุธโรลเลอร์สเก็ต
+Rope1	เชือก 5ม
+Dog_Rose	โรสฮิป
+Weapon_Parts_RPG	ชิ้นส่วนอาวุธ RPG
+Weapon_RPG7	RPG7
+Weapon_RPK-74	RPK
+Magazine_RPK	ซองกระสุน — RPK
+Weapon_Parts_RPK-74	ชิ้นส่วนอาวุธ RPK
+Rubber_band	ยางรัด
+Fish_Ruffe	รัฟเฟ่
+Ruffe_Fillet	รัฟฟ์ ฟิเลต์
+Skirt_02_01	กระโปรงระบาย
+Skirt_02_02	กระโปรงระบาย
+Skirt_02_03	กระโปรงระบาย
+Skirt_02_04	กระโปรงระบาย
+Skirt_02_05	กระโปรงระบาย
+Skirt_02_06	กระโปรงระบาย
+Skirt_02_07	กระโปรงระบาย
+Safety_Goggles	แว่นตานิรภัย
+Safety_pin	พินความปลอดภัย
+Salsify_roots	Salsify - ราก
+SaltBag	ถุงเกลือ
+SaltGrain	เม็ดเกลือ
+SandBag	กระสอบทราย
+Santa_Hat_01	หมวกซานต้า
+Santa_Jacket	แจ็คเก็ตซานต้า
+Santa_Pants	กางเกงซานต้า
+CannedSardine	ปลาซาร์ดีน
+CannedSardine_Deluxe	ปลาซาร์ดีน
+Sardine_Fillet	เนื้อปลาซาร์ดีน
+FishingBait_Sardine	ปลาซาร์ดีนเหยื่อ
+1H_Scalpel	มีดผ่าตัด
+Weapon_Parts_SCAR_L	ชิ้นส่วนอาวุธ SCAR L
+Weapon_SCAR_DMR	SCAR-DMR
+Magazine_SCAR_DMR	ซองกระสุน — SCAR-DMR
+Weapon_Parts_SCAR_DMR	ชิ้นส่วนอาวุธ SCAR-DMR
+Weapon_SCAR_L	SCAR-L
+Rabbit_Mask_01	หน้ากากกระต่ายน่ากลัว
+School_Backpack_01	กระเป๋าเป้โรงเรียน
+School_Backpack_Boy_02	กระเป๋าเป้โรงเรียน
+School_Backpack_Boy_03	กระเป๋าเป้โรงเรียน
+School_Backpack_Girl_04	กระเป๋าเป้โรงเรียน
+School_Backpack_Girl_05	กระเป๋าเป้โรงเรียน
+School_Backpack_Girl_06	กระเป๋าเป้โรงเรียน
+Scissors_01	กรรไกร
+Recurve_Bow	แมงป่อง 40#
+1H_Scout_Black	Scout
+1H_Scout_White	Scout
+Screwdriver	ไขควง
+Scum_Sunrise	SCUM Sunrise
+SCUMkin_Spice_Latte	SCUMkin Spice Latter
+Weapon_SDASS	SDASS 12M
+Weapon_Parts_SDASS	ชิ้นส่วนอาวุธ SDASS
+SeaSalt_01	เกลือทะเล
+SeaSalt_02	เกลือทะเล
+WeaponSights_Sentry_RDRS	เซนทรี่ RDRS
+WeaponCharm_Sentry	เสน่ห์อาวุธยาม
+Weapon_Serpent357	งู 357
+Weapon_Parts_Serpent357	ชิ้นส่วนอาวุธงู 357
+Sewing_kit	ชุดเย็บผ้า
+Sexy_Jeans_Shorts_01	กางเกงขาสั้นเดนิมเซ็กซี่
+Sexy_Jeans_Shorts_02	กางเกงขาสั้นเดนิมเซ็กซี่
+Sexy_Jeans_Shorts_03	กางเกงขาสั้นเดนิมเซ็กซี่
+Sexy_Jeans_Shorts_04	กางเกงขาสั้นเดนิมเซ็กซี่
+Sexy_Jeans_Shorts_05	กางเกงขาสั้นเดนิมเซ็กซี่
+Sexy_Jeans_Shorts_06	กางเกงขาสั้นเดนิมเซ็กซี่
+Sexy_Jeans_Shorts_07	กางเกงขาสั้นเดนิมเซ็กซี่
+WeaponSights_Shark	กล้องเล็งรีเฟล็กซ์ — Shark
+Shemagh_Scarf_01	ผ้าพันคอชีมัค
+Shemagh_Scarf_02	ผ้าพันคอชีมัค
+Shemagh_Scarf_03	ผ้าพันคอชีมัค
+Shemagh_Scarf_04	ผ้าพันคอชีมัค
+Shemagh_Scarf_05	ผ้าพันคอชีมัค
+Shemagh_Scarf_06	ผ้าพันคอชีมัค
+Shemagh_Scarf_07	ผ้าพันคอชีมัค
+Shemagh_Scarf_08	ผ้าพันคอชีมัค
+Shimoro_Vest	เสื้อกั๊ก Shimoro
+Inmate_shirt_01	เสื้อ
+Inmate_Shirt_01_Forest_DigitalDeluxe	เสื้อ
+Inmate_Shirt_01_South_DigitalDeluxe	เสื้อ
+ImprovisedRail_Short	รางติดอุปกรณ์ทำเองแบบสั้น
+Short_Paddle_A	ไม้พายสั้น
+Short_Paddle_B	ไม้พายสั้น
+Shorts_Pants_01_01	กางเกงขาสั้น
+Shorts_Pants_01_02	กางเกงขาสั้น
+Shorts_Pants_01_03	กางเกงขาสั้น
+Shorts_Pants_01_04	กางเกงขาสั้น
+Shorts_Pants_01_05	กางเกงขาสั้น
+Shorts_Pants_01_06	กางเกงขาสั้น
+Shorts_Pants_01_07	กางเกงขาสั้น
+Shorts_Pants_01_08	กางเกงขาสั้น
+Shorts_Pants_01_09	กางเกงขาสั้น
+Shorts_Pants_01_10	กางเกงขาสั้น
+Short_Trousers_01_01	กางเกงขาสั้น
+Short_Trousers_01_02	กางเกงขาสั้น
+Short_Trousers_01_03	กางเกงขาสั้น
+Short_Trousers_01_04	กางเกงขาสั้น
+Short_Trousers_01_05	กางเกงขาสั้น
+2H_Shovel_02	พลั่ว
+1H_Shuriken	ชูริเคน
+SidecarBike_Brakelight_Item	ไฟเบรกจักรยานยนต์ไซด์คาร์
+SidecarBike_Fender_Front_Item	บังโคลนหน้าจักรยาน Sidecar
+SidecarBike_Fender_Rear_Item	บังโคลนจักรยาน Sidecar ด้านหลัง
+SidecarBike_Fender_Sidecar_Item	ไซด์คาร์ บังโคลนจักรยาน ไซด์คาร์
+SidecarBike_Headlight_Item	ไฟหน้าจักรยานยนต์ไซด์คาร์
+SidecarBike_Seat_Back_Item	เบาะหลังจักรยาน Sidecar
+SidecarBike_Seat_Front_Item	เบาะนั่งจักรยานยนต์ไซด์คาร์ด้านหน้า
+SidecarBike_Sidecar_Brakelight_Item	ไฟเบรกรถจักรยานยนต์ Sidecar
+SidecarBike_Sidecar_Headlight_Item	ไฟหน้ารถจักรยานยนต์ Sidecar
+SidecarBike_Sidecar_WeaponStation_Item	สถานีอาวุธไซด์คาร์จักรยานไซด์คาร์
+SidecarBike_Wheel_4x16_Item	ล้อจักรยานไซด์คาร์
+SilentAlarm	ปลุกเงียบ
+Lock_Item_Medium	ซิลเวอร์ล็อค
+Skewer	ไม้เสียบ
+Skewer_02	ไม้เสียบ
+Bear_Skinned	หมีถลกหนัง
+Boar_Skinned	หมูป่าถลกหนัง
+Buck_Skinned	บั๊กถลกหนัง
+Doe_Skinned	โด้ถลกหนัง
+Donkey_skinned	ลาถลกหนัง
+Goat_Skinned	แพะถลกหนัง
+Horse_Skinned	ม้าถลกหนัง
+Rabbit_Skinned	กระต่ายถลกหนัง
+Wolf_Skinned	หมาป่าถลกหนัง
+Skirt_01_01	กระโปรง
+Skirt_01_02	กระโปรง
+Skirt_01_03	กระโปรง
+Skirt_02_08	กระโปรง
+Weapon_SKS	SKS
+SKS_Bayonet	ดาบปลายปืน SKS
+Magazine_Clip_SKS	คลิปกระสุน — SKS
+Weapon_Parts_SKS	ชิ้นส่วนอาวุธ SKS
+Halloween_Mask_Scream	หน้ากากกระโหลก
+WeaponCharm_Skull	เสน่ห์อาวุธกะโหลกศีรษะ
+Slav_Reviver	Slav Reviver
+Slavic_Gent	Slavic Gent
+Sledgehammer	ค้อนขนาดใหญ่
+Sleeveless_Camo_Shirt_01	เสื้อลายพรางแขนกุด
+Sleeveless_Camo_Shirt_02	เสื้อลายพรางแขนกุด
+Sleeveless_Camo_Shirt_03	เสื้อลายพรางแขนกุด
+Sleeveless_Camo_Shirt_04	เสื้อลายพรางแขนกุด
+Sleeveless_Camo_Shirt_05	เสื้อลายพรางแขนกุด
+Sleeveless_Camo_Shirt_06	เสื้อลายพรางแขนกุด
+Sleeveless_Shirt_01	เสื้อแขนกุด
+Sleeveless_Shirt_02	เสื้อแขนกุด
+BowSilencer_SlipOn	ท่อเก็บเสียงแบบสลิปออน
+Slippers_03	รองเท้าแตะ
+Slouch_Camo_Hat_01	หมวก Camo เหลวไหล
+Slouch_Camo_Hat_02	หมวก Camo เหลวไหล
+Slouch_Camo_Hat_03	หมวก Camo เหลวไหล
+Slouch_Camo_Hat_04	หมวก Camo เหลวไหล
+Slouch_Camo_Hat_05	หมวก Camo เหลวไหล
+Slouch_Camo_Hat_06	หมวก Camo เหลวไหล
+Slouch_Hat_01	หมวกสลาช
+Slouch_Hat_02	หมวกสลาช
+12_Gauge_Slug_Ammobox	กล่องกระสุนปืนลูกซองทาก
+Small_Animal_guts	ความกล้าของสัตว์เล็ก
+Mine_02	ทุ่นระเบิดต่อต้านบุคลากรขนาดเล็ก
+1H_Small_Axe	ขวานเล็ก
+Battery_Charger_Small	เครื่องชาร์จแบตเตอรี่ขนาดเล็ก
+WeaponCharm_SmallBullet	เครื่องรางอาวุธกระสุนเล็ก
+Christmas_Present_01	ของขวัญคริสต์มาสขนาดเล็ก
+FishingHookPack1	เบ็ดตกปลาแพ็คเล็ก
+Gasoline_Canister_Small	ถังน้ำมันเบนซินขนาดเล็ก
+Improvised_Bag_Small_02	กระเป๋าเป้กลอนสดขนาดเล็ก
+LogShed_2	โรงเก็บไม้ซุงขนาดเล็ก
+Screwdriver_Small	ไขควงเล็ก
+1H_Little_Spade	จอบขนาดเล็ก
+Wooden_Sticks_Bundle_Meduim	มัดแท่งเล็ก
+Stone_Small	หินเล็ก
+1H_Stone_Axe_Head	หัวขวานหินเล็ก
+Tool_Box_SMall	กล่องเครื่องมือขนาดเล็ก
+Small_Vehicle_StorageRack	ชั้นวางของในรถยนต์ขนาดเล็ก
+Wooden_Log_Small_01	ท่อนไม้ขนาดเล็ก
+Wooden_Log_Small_02	ท่อนไม้ขนาดเล็ก
+Wooden_Log_Small_03	ท่อนไม้ขนาดเล็ก
+Wooden_Stick	แท่งไม้เล็ก
+Smartphone_Battery	แบตเตอรี่สมาร์ทโฟน
+Smoke_Grenade	ระเบิดควัน
+Smoke_Grenade_Green	ระเบิดควัน
+Smoke_Grenade_Red	ระเบิดควัน
+Smoke_Grenade_Violet	ระเบิดควัน
+Smoke_Grenade_Yellow	ระเบิดควัน
+Dish_Smoked_Drumstick	น่องรมควัน
+Dish_Smoked_Fish	เนื้อปลารมควัน
+Dish_Smoked_RabbitLeg	ขากระต่ายรมควัน
+Dish_Smoked_Meat	เนื้อแดงรมควัน
+WeaponSights_Snake	กล้องเล็งรีเฟล็กซ์ — Snake
+ColorCan_SnowWhite	กระป๋องสีสโนว์ไวท์
+Snowballs_01	สโนว์บอล
+Soap	สบู่
+Kilt_Sock_01	ถุงเท้า
+Kilt_Socks_02	ถุงเท้า
+Kilt_Socks_03	ถุงเท้า
+Kilt_Socks_04	ถุงเท้า
+Kilt_Socks_05	ถุงเท้า
+Kilt_Socks_06	ถุงเท้า
+Sock_01	ถุงเท้า
+Can01	โซดา
+Sodium_Hydroxide	โซเดียมไฮดรอกไซด์
+Book_Cooking_Soup	ตำราซุป
+SoySauce	ซีอิ๊ว
+2H_Shovel_01	จอบพลั่ว
+CannedSpaghetti	สปาเก็ตตี้มีทบอล
+Snake_Skin_Bow	Specialist Archer โบว์
+WeaponScope_Spektral_DR	SpektralDR
+SpicesMix_01	เครื่องเทศผสม
+SpicesMix_02	เครื่องเทศผสม
+Chips2	นาโช่ชิปรสเผ็ด
+Spinach	ผักโขม
+Spinach_Seed_Bag	ถุงเมล็ดผักโขม - ถุงเมล็ดผักโขม
+Spinach_Seeds	เมล็ดผักโขม
+College_Jacket_01	แจ็คเก็ตสปิตไฟร์
+College_Jacket_02	แจ็คเก็ตสปิตไฟร์
+College_Jacket_03	แจ็คเก็ตสปิตไฟร์
+College_Jacket_04	แจ็คเก็ตสปิตไฟร์
+College_Jacket_05	แจ็คเก็ตสปิตไฟร์
+College_Jacket_06	แจ็คเก็ตสปิตไฟร์
+College_Jacket_07	แจ็คเก็ตสปิตไฟร์
+College_Jacket_08	แจ็คเก็ตสปิตไฟร์
+MA1_Spitfire_01	แจ็คเก็ตสปิตไฟร์
+MA1_Spitfire_02	แจ็คเก็ตสปิตไฟร์
+MA1_Spitfire_03	แจ็คเก็ตสปิตไฟร์
+MA1_Spitfire_04	แจ็คเก็ตสปิตไฟร์
+Spliff	สปลิฟ
+Spon	SPON
+Dish_Sandwich_Spon	สปอนแซนด์วิช
+Spoon	ช้อน
+Scottish_Sporran_Bag_01	กระเป๋าสปอร์รัน
+Sportbike_Seat_Brakelight_Item	ไฟเบรกสปอร์ตไบค์
+Sportbike_Fender_Item	บังโคลนสปอร์ตไบค์
+Sportbike_Wind_Deflector_Headlight_Item	ไฟหน้าสปอร์ตไบค์
+Sportbike_Seat_Item	เบาะนั่งสปอร์ตไบค์
+Sportbike_Body_Street_Item	สปอร์ตไบค์ สตรีท บอดี้
+Sportbike_Fender_Street_Item	บังโคลนสปอร์ตไบค์สตรีท
+Sportbike_Wind_Deflector_Street_Headlight_Item	ไฟหน้าสปอร์ตไบค์สตรีท
+Sportbike_Seat_Street_Item	เบาะนั่งสปอร์ตไบค์สตรีท
+Sportbike_Wind_Deflector_Street_Item	แผงบังลม Sportbike Street
+Sportbike_Wind_Deflector_Item	บังลมสปอร์ตไบค์
+Fish_Sardine	ปลาซาร์ดีนด่าง
+Spring	ฤดูใบไม้ผลิ
+Stabproof_Vest_01_01	เสื้อกั๊กป้องกันการแทง
+Stabproof_Vest_01_02	เสื้อกั๊กป้องกันการแทง
+Stabproof_Vest_01_03	เสื้อกั๊กป้องกันการแทง
+Stabproof_Vest_01_04	เสื้อกั๊กป้องกันการแทง
+Stabproof_Vest_01_05	เสื้อกั๊กป้องกันการแทง
+Stabproof_Vest_01_06	เสื้อกั๊กป้องกันการแทง
+Stabproof_Vest_01_07	เสื้อกั๊กป้องกันการแทง
+Stabproof_Vest_01_08	เสื้อกั๊กป้องกันการแทง
+Stabproof_Vest_01_09	เสื้อกั๊กป้องกันการแทง
+Credit_Card_Starter	บัตรธนาคารเริ่มต้น
+Book_Cooking_Stew	ตำราสตูว์
+Stinging_Nettle	ตำแยที่กัด
+Stockings_01	ถุงน่อง
+Stockings_02	ถุงน่อง
+Stockings_03	ถุงน่อง
+Stockings_04	ถุงน่อง
+Stockings_05	ถุงน่อง
+Stockings_06	ถุงน่อง
+Stockings_07	ถุงน่อง
+Stockings_08	ถุงน่อง
+Stone	หิน
+1H_Stone_Axe	ขวานหิน
+1H_ImprovisedKnife	มีดหิน
+Ammo_Crossbow_Bolt_WoodenStoneTip	สลักเกลียวหน้าไม้ปลายหิน
+Wooden_ArrowStoneTip	ลูกศรไม้ปลายหิน
+Bundle_Of_Stone_Tips	เคล็ดลับหิน
+Strait_Jacket	เสื้อเกราะ
+Wild_Strawberry	สตรอเบอร์รี่
+Sugar	น้ำตาล
+SugarBeet	ชูการ์บีท
+Round_Sunglasses	แว่นกันแดด
+WeaponCharm_Sunglasses_Emoji	แว่นกันแดด เครื่องรางอาวุธอิโมจิ
+Super_Glue	ซุปเปอร์กลู
+Weapon_SVD_Dragunov	SVD
+Magazine_SVD_Dragunov	ซองกระสุน — SVD
+WeaponSuppressor_SVD	ท่อเก็บเสียง — SVD
+Weapon_Parts_SVD	ชิ้นส่วนอาวุธ SVD
+Sweater_01	เสื้อกันหนาว
+Sweater_02	เสื้อกันหนาว
+Sweater_03	เสื้อกันหนาว
+Sweater_04	เสื้อกันหนาว
+Sweater_05	เสื้อกันหนาว
+Tracksuit_Pants_01_01	กางเกงวอร์ม
+Tracksuit_Pants_01_02	กางเกงวอร์ม
+Tracksuit_Pants_01_03	กางเกงวอร์ม
+Tracksuit_Pants_01_04	กางเกงวอร์ม
+Tracksuit_Pants_01_05	กางเกงวอร์ม
+Tracksuit_Pants_02_01	กางเกงวอร์ม
+Tracksuit_Pants_02_02	กางเกงวอร์ม
+Tracksuit_Pants_02_03	กางเกงวอร์ม
+Tracksuit_Pants_02_04	กางเกงวอร์ม
+Tracksuit_Pants_02_05	กางเกงวอร์ม
+Shimoro_Pants	กางเกงวอร์ม-กางเกงShimoro
+Canned_Corn	ข้าวโพดหวาน
+CantaloupeMelon_Seed_Bag	ถุงเมล็ดแตงโมหวาน
+WeaponCharm_Sword	เสน่ห์อาวุธดาบ
+Syringe	เข็มฉีดยา
+TC_Backpack	กระเป๋าเป้สะพายหลัง T0pCL4SS
+Baseball_Cap_13	หมวก T0pCL4SS
+Tactical_Gloves_01_01	ถุงมือยุทธวิธี
+Tactical_Gloves_01_02	ถุงมือยุทธวิธี
+Tactical_Gloves_01_03	ถุงมือยุทธวิธี
+Tactical_Gloves_01_04	ถุงมือยุทธวิธี
+Tactical_Gloves_01_05	ถุงมือยุทธวิธี
+Tactical_Gloves_01_06	ถุงมือยุทธวิธี
+Tactical_Gloves_01_07	ถุงมือยุทธวิธี
+Tactical_Gloves_01_08	ถุงมือยุทธวิธี
+Police_Handgun_Holster	ซองปืนพกยุทธวิธี
+Tactical_Handgun_Holster_01	ซองปืนพกยุทธวิธี
+Tactical_Handgun_Holster_02	ซองปืนพกยุทธวิธี
+Tactical_Handgun_Holster_03	ซองปืนพกยุทธวิธี
+Tactical_Handgun_Holster_04	ซองปืนพกยุทธวิธี
+Tactical_Handgun_Holster_05	ซองปืนพกยุทธวิธี
+Tactical_Handgun_Holster_06	ซองปืนพกยุทธวิธี
+Tactical_Handgun_Holster_07	ซองปืนพกยุทธวิธี
+Tactical_Jacket_01_01	แจ็คเก็ตยุทธวิธี
+Tactical_Jacket_01_02	แจ็คเก็ตยุทธวิธี
+Tactical_Jacket_01_03	แจ็คเก็ตยุทธวิธี
+Tactical_Jacket_01_04	แจ็คเก็ตยุทธวิธี
+Tactical_Jacket_01_05	แจ็คเก็ตยุทธวิธี
+Tactical_Jacket_01_06	แจ็คเก็ตยุทธวิธี
+Tactical_Jacket_01_07	แจ็คเก็ตยุทธวิธี
+Tactical_Jacket_01_09	แจ็คเก็ตยุทธวิธี
+MilitaryPants_01	กางเกงทหารยุทธวิธี
+MilitaryPants_02	กางเกงทหารยุทธวิธี
+MilitaryPants_03	กางเกงทหารยุทธวิธี
+MilitaryPants_04	กางเกงทหารยุทธวิธี
+MilitaryPants_05	กางเกงทหารยุทธวิธี
+MilitaryPants_06	กางเกงทหารยุทธวิธี
+MilitaryPants_07	กางเกงทหารยุทธวิธี
+MilitaryPants_08	กางเกงทหารยุทธวิธี
+MilitaryPants_09	กางเกงทหารยุทธวิธี
+MilitaryPants_10	กางเกงทหารยุทธวิธี
+Tactical_Sweater_01	เสื้อกันหนาวยุทธวิธี
+Tactical_Sweater_02	เสื้อกันหนาวยุทธวิธี
+Tactical_Sweater_03	เสื้อกันหนาวยุทธวิธี
+Tactical_Sweater_04	เสื้อกันหนาวยุทธวิธี
+Tactical_Sweater_05	เสื้อกันหนาวยุทธวิธี
+Tactical_Sweater_06	เสื้อกันหนาวยุทธวิธี
+Tactical_Sweater_07	เสื้อกันหนาวยุทธวิธี
+Tactical_Vest_01	เสื้อกั๊กยุทธวิธี
+Takedown_Bow	ธนูจับกุม
+2H_Tang_Dao	Tang Dao
+2H_Tang_Dao_Black_Dragon	Tang Dao มังกรดำ
+2H_Tang_Dao_Damascus	Tang Dao ดามัสกัส
+Tang_pants_01	กางเกงถัง
+Tang_pants_02	กางเกงถัง
+Tang_pants_03	กางเกงถัง
+Tang_pants_04	กางเกงถัง
+Tang_pants_05	กางเกงถัง
+Tang_shirt_01	เสื้อถัง
+Tang_shirt_02	เสื้อถัง
+Tang_shirt_03	เสื้อถัง
+Tang_shirt_04	เสื้อถัง
+Tang_shirt_05	เสื้อถัง
+Tangerine	ส้มเขียวหวาน
+Tangerine_Seed_Bag	ถุงเมล็ดส้มเขียวหวาน - ถุงเมล็ดส้มเขียวหวาน
+Tangerine_Seeds	เมล็ดส้มเขียวหวาน
+Tea_Pack	ชาแพ็ค
+TearGasGrenade	ระเบิดแก๊สน้ำตา
+Weapon_590A11	TEC01 490
+Weapon_Parts_590A11	ชิ้นส่วนอาวุธ TEC01 490
+Weapon_M9	TEC01 M9
+Weapon_M9_Silver	TEC01 M9
+WeaponCharm_TEC1	เครื่องรางอาวุธ TEC1
+Tequila	เตกีล่า
+The_Island_Special	ตอนพิเศษของเกาะ
+Thermometer	เทอร์โมมิเตอร์
+Thread	ด้าย
+WeaponCharm_Tiger	เสน่ห์อาวุธเสือ
+RH_Tights	กางเกงรัดรูป
+Tinder	เชื้อจุดไฟ
+Tire_Repair_Kit	ชุดซ่อมยาง
+TNT	TNT
+Toaster_Pastries	ขนมอบเครื่องปิ้งขนมปัง
+Toaster_Pastries2	ขนมอบเครื่องปิ้งขนมปัง
+Tobacco	ยาสูบ
+Tobacco_Seed_Bag	ถุงเมล็ดยาสูบ - ถุงเมล็ดยาสูบ
+Tobacco_Seeds	เมล็ดยาสูบ
+Tomato	มะเขือเทศ
+TomatoPelate	มะเขือเทศ Pelati
+TomatoSauce	ซอสมะเขือเทศ
+Tomato_Seed_Bag	ถุงเมล็ดมะเขือเทศ - ถุงเมล็ดมะเขือเทศ
+Tomato_Seeds	เมล็ดมะเขือเทศ
+Weapon_TommyGun	Tommy Gun
+Magazine_TommyGun	ซองกระสุน — Tommy Gun
+Weapon_Parts_TommyGun	ชิ้นส่วนอาวุธ Tommy Gun
+Tool_Box	กล่องเครื่องมือ
+05_Teeth_Necklace	สร้อยคอฟัน
+10_Teeth_Necklace	สร้อยคอฟัน
+15_Teeth_Necklace	สร้อยคอฟัน
+WeaponCharm_Tooth	เสน่ห์อาวุธฟัน
+Torch	คบเพลิง
+Tourniquet	สายรัด
+Tracksuit_Top_01	เสื้อวอร์ม
+Tracksuit_Top_02	เสื้อวอร์ม
+Tracksuit_Top_03	เสื้อวอร์ม
+Tracksuit_Top_04	เสื้อวอร์ม
+Tracksuit_Top_05	เสื้อวอร์ม
+Tractor_Engine_Alternator_Item	เครื่องปั่นไฟรถแทรกเตอร์
+Tractor_Body_Left_ArmorHeavy_Item	รถแทรคเตอร์เกราะหนักซ้าย
+Tractor_Body_Right_ArmorHeavy_Item	ชุดเกราะรถแทรกเตอร์หนักขวา
+Tractor_Body_Top_ArmorHeavy_Back_Item	รถแทรคเตอร์เกราะหนักหลังส่วนบน
+Tractor_Body_Top_ArmorHeavy_Front_Item	รถแทรคเตอร์เกราะหนักด้านหน้า
+Tractor_Body_Top_ArmorHeavy_Left_Item	ชุดเกราะรถแทรกเตอร์หนักบนซ้าย
+Tractor_Body_Top_ArmorHeavy_Right_Item	ชุดเกราะรถแทรกเตอร์หนักบนขวา
+Tractor_Body_Left_Item	ตัวถังรถแทรกเตอร์ด้านซ้าย
+Tractor_Body_Right_Item	ตัวถังรถแทรกเตอร์ด้านขวา
+Tractor_Body_Left_Brakelight_Item	ไฟเบรกรถแทรกเตอร์ด้านซ้าย
+Tractor_Body_Right_Brakelight_Item	ไฟเบรกรถแทรกเตอร์ด้านขวา
+Tractor_Door_Left_ArmorHeavy_Item	เกราะประตูรถแทรกเตอร์หนักซ้าย
+Tractor_Door_Right_ArmorHeavy_Item	เกราะประตูรถแทรกเตอร์หนักขวา
+Tractor_Body_Top_Door_Left_Item	ประตูรถแทรกเตอร์ด้านซ้าย
+Tractor_Body_Top_Door_Right_Item	ประตูรถแทรกเตอร์ด้านขวา
+Tractor_Seat_Driver_Item	ที่นั่งคนขับรถแทรกเตอร์
+Tractor_Door_Hood_Headlight_Left_Item	ไฟหน้ารถแทรกเตอร์ด้านซ้าย
+Tractor_Door_Hood_Headlight_Right_Item	ไฟหน้ารถแทรกเตอร์ ขวา
+Tractor_Door_Hood_Item	เครื่องดูดควันรถแทรกเตอร์
+Tractor_WheelArmorHeavy_Front_Item	เกราะล้อรถแทรกเตอร์หนักหน้า
+HighTop_Shoes	รองเท้าเทรนเนอร์
+1H_Traynors_Axe	ขวานของ Traynor
+FishingHookPack4	แพ็คเบ็ดตกปลาแหลม
+FishingHook3	ตะขอตกปลาแหลม
+Tree_Bark	เปลือกไม้
+Tree_Branches	กิ่งไม้
+Weapon_Trench_Gun	ปืนสนามเพลาะ
+Weapon_Parts_Trench_Gun	ชิ้นส่วนอาวุธปืนสนามเพลาะ
+Fish_Carp_Trophy	ถ้วยรางวัลปลาคาร์พ
+Fish_Catfish_Trophy	ถ้วยรางวัลปลาดุก
+Fish_Dentex_Trophy	ถ้วยรางวัลเดนเท็กซ์
+Fish_Pike_Trophy	โทรฟี่ ไพค์
+Fish_Tuna_Trophy	ถ้วยรางวัลปลาทูน่า
+Jeans_Jersey_Jacket_01	เสื้อแจ็คเก็ตรถบรรทุก
+Jeans_Jersey_Jacket_02	เสื้อแจ็คเก็ตรถบรรทุก
+Trucker_Jacket_01	เสื้อแจ็คเก็ตรถบรรทุก
+Trucker_Jacket_02	เสื้อแจ็คเก็ตรถบรรทุก
+Trucker_Jacket_03	เสื้อแจ็คเก็ตรถบรรทุก
+Trucker_Jacket_04	เสื้อแจ็คเก็ตรถบรรทุก
+Fish_Tuna	ปลาทูน่า
+Tuna_Fillet	เนื้อปลาทูน่า
+Tuna_Head	หัวทูน่า
+MRE_TunaSalad	สลัดทูน่า MRE
+Dish_Sandwich_Tuna	แซนด์วิชทูน่า
+Hiking_Backpack_Tyrone	กระเป๋าเป้เดินป่า Tyrone
+Tyrone_Shoelacez_Mask	หน้ากาก Tyrone Shoelacez
+Weapon_Parts_UMP	ชิ้นส่วนอาวุธ UMP
+Weapon_UMP45	UMP-45
+Magazine_UMP45	ซองกระสุน — UMP-45
+Rice	ข้าว Uncle Pong
+Underpants_01	กางเกงใน
+Underpants_02	กางเกงใน
+Underpants_03	กางเกงใน
+Underpants_04	กางเกงใน
+Underpants_05	กางเกงใน
+F_Bra_Supporter_01	เสื้อชั้นใน
+Scum_Shirt_Supporter_Pack_Black_01	เสื้อชั้นใน
+Undershirt_01	เสื้อชั้นใน
+Cereal_UpNGo	ธัญพืช UpNGo
+Utility_Belt_01	เข็มขัดเอนกประสงค์
+WeaponSights_V3_Holographic	กล้องเล็งโฮโลกราฟิก — V3
+WeaponScope_Vampyr	กล้องเล็ง — Vampyr
+VegetableOil	น้ำมันพืช
+ColorCan_VelvetBrown	กระป๋องเพ้นท์สีน้ำตาลกำมะหยี่
+2H_Katana1	Katana ของ Vhendya
+Weapon_VHS2_Rail	VHS 2
+Weapon_VHS2	VHS 2 CT
+Weapon_VHS_BG	VHS BG
+Weapon_Parts_VHSBG	ชิ้นส่วนอาวุธ VHS BG
+Magazine_VHS2	ซองกระสุน — VHS
+Weapon_Parts_VHS	ชิ้นส่วนอาวุธ VHS2
+Vinegar	น้ำส้มสายชู
+Hazmat_Suit_Vintage	ชุด Hazmat วินเทจ
+Vintage_Jail_Cap_01	วินเทจคุกแคป
+Vintage_Jail_Pants_01	กางเกงวินเทจคุก
+Vintage_Jail_Shirt_01	เสื้อคุกวินเทจ
+Weapon_Viper_M357	ไวเปอร์ M357
+DW715_Rail	ราง Viper M357
+Weapon_Parts_Viper_M357	ชิ้นส่วนอาวุธ Viper M357
+Geek_Goggels	แว่นสายตา
+Vitamins_01	วิตามินเม็ด-ตุ่ม
+Vitamins_02	วิตามินเม็ด - กล่อง
+Vitamins_03	วิตามินเม็ด-กระปุก
+Weapon_VSS_VZ	VSS VZ
+Weapon_Parts_VSS_VZ	ชิ้นส่วนอาวุธ VSS VZ
+Waist_Bag_Small_01	กระเป๋าคาดเอว
+Waist_Bag_Small_02	กระเป๋าคาดเอว
+Waist_Bag_Small_03	กระเป๋าคาดเอว
+Dish_Salad_Waldorf	สลัด Waldorf
+Walnut	วอลนัท
+ColorCan_WarmGrey	กระป๋องเพ้นท์สีเทาอุ่น
+WeaponSights_Wasp	กล้องเล็งรีเฟล็กซ์ — Wasp
+Water_05l	ขวดน้ำ
+Water_Bucket	ถังน้ำ
+Watering_Can	ถังน้ำ-บัวรดน้ำ
+Watermelon	แตงโม
+Watermelon_Seed_Bag	ถุงเมล็ดแตงโม - ถุงเมล็ดแตงโม
+Watermelon_Seeds	เมล็ดแตงโม
+Watermelon_slice	ชิ้นแตงโม
+WeaponGhillie_Desert	อาวุธกิลลี่
+WeaponGhillie_Winter	อาวุธกิลลี่
+WeaponGhillie_Woodland	อาวุธกิลลี่
+Herbicide	สารกำจัดวัชพืช
+WhiteFlour	แป้งสาลี
+Sportbike_Wheel_100_90_R18_Item	ล้อ 100 90 R18
+Dirtbike_Wheel_110_80_R19_Item	ล้อ 110 80 R19
+Cruiser_Wheel_155_66_R17	ล้อ 155 66 R17
+Cruiser_Wheel_188_53_R17	ล้อ 188 53 R17
+Wheel_155_R65_Item	ล้อ 205 55 R16
+Wheel_205_80_R12_Item	ล้อ 205 80 R12
+Wheel_255_55_R16_Item	ล้อ 215 65 R16
+Wheel_265_60_R18_Item	ล้อ 265 60 R18
+Bicycle_Wheel_54_622_Item	ล้อ 54 622
+Wheel_6x16_Item	ล้อ 6 16
+Bicycle_Wheel_60_622_Item	ล้อ 60 622
+Sportbike_Wheel_90_90_R18_Item	ล้อ 90 90 R18
+Dirtbike_Wheel_90_90_R21_Item	ล้อ 90 90 R21
+Whiskey	วิสกี้
+Wild_Cherry	เชอร์รี่ป่า
+PenisWarmer_01	วิลลี่ วอร์มเมอร์
+PenisWarmer_02	วิลลี่ วอร์มเมอร์
+PenisWarmer_03	วิลลี่ วอร์มเมอร์
+Wine	ไวน์
+WineCork	จุกไวน์
+Ghillie_Suit_Pants_05	กางเกงสูท Winter Ghillie
+Ghillie_Suit_Jacket_05	เสื้อสูท Winter Ghillie
+Wire	ลวด 10ม
+2H_Baseball_Bat_with_wire	ไม้เบสบอลลวด
+Wire_Cutters_01	เครื่องตัดลวด
+1H_Wooden_club_with_wire	ลวดไม้คลับ
+Wolf_Head	หัวหมาป่า
+Wolf_Hat_01	หน้ากากหัวหมาป่า
+Wolf_Left_Back_Leg	ขาหมาป่า
+Wolf_Left_Front_Leg	ขาหมาป่า
+Wolf_Right_Back_Leg	ขาหมาป่า
+Wolf_Right_Front_Leg	ขาหมาป่า
+Wolf_Steak	สเต็กหมาป่า
+Wolf_Torso	เนื้อตัวหมาป่า
+Woodcuters_Shirt_01	เสื้อของคนตัดฟืน
+Woodcuters_Shirt_02	เสื้อของคนตัดฟืน
+Woodcuters_Shirt_03	เสื้อของคนตัดฟืน
+Wooden_Arrow	ลูกศรไม้
+Wooden_Arrows_6pc	ลูกศรไม้
+1H_Wooden_club	สโมสรไม้
+1H_Wooden_club_with_spikes	ชมรมไม้พร้อมตะปู
+Ammo_Crossbow_Bolt_Wooden	กลอนหน้าไม้
+Wooden_Fork	ส้อมไม้
+Wooden_Log_01	ท่อนไม้
+Wooden_Log_02	ท่อนไม้
+Wooden_Plank	ไม้กระดาน
+Wooden_Spoon	ช้อนไม้
+2H_Wooden_Sword	ดาบไม้
+Penobscot_Bow_40	Woodland Hunter โบว์
+Wool_Gloves_01_01	ถุงมือขนสัตว์
+Wool_Gloves_01_02	ถุงมือขนสัตว์
+Wool_Gloves_01_03	ถุงมือขนสัตว์
+Wool_Gloves_01_04	ถุงมือขนสัตว์
+Wool_Gloves_01_05	ถุงมือขนสัตว์
+Wool_Gloves_01_06	ถุงมือขนสัตว์
+Wool_Gloves_01_07	ถุงมือขนสัตว์
+Working_Helmet_01	หมวกกันน็อคทำงาน
+Working_Helmet_02	หมวกกันน็อคทำงาน
+Working_Helmet_03	หมวกกันน็อคทำงาน
+Working_Helmet_04	หมวกกันน็อคทำงาน
+FishingBait_Worm	เหยื่อปลาหนอน
+Wushu_Spear_Metal	โลหะหอกวูซู
+Wushu_Spear_Wooden	โลหะหอกวูซู - ไม้หอกวูซู
+WW_Engine_Alternator_Item	เครื่องกำเนิดไฟฟ้ากระแสสลับ WW
+WW_Bumper_Back_Item	กันชนหลัง WW
+WW_Body_Back	บอดี้หลัง WW
+WW_Body_Front	ตัวถังหน้า WW
+WW_Body_Left	ตัวถัง WW ด้านซ้าย
+WW_Body_Right	ตัวถัง WW ด้านขวา
+WW_Body_Top	เสื้อตัวบน WW
+WW_Bumper_Armor_Back_Item	เกราะกันชนหลัง WW
+WW_Door_ArmorHeavy_BackLeft_Item	WW เกราะประตูหลังหนักซ้าย
+WW_Door_ArmorHeavy_BackRight_Item	WW เกราะประตูหลังหนาขวา
+WW_Door_ArmorHeavy_FrontLeft_Item	WW เกราะประตูหนาหน้าซ้าย
+WW_Door_ArmorHeavy_FrontRight_Item	WW เกราะประตูหนาหน้าขวา
+WW_Door_ArmorLight_BackLeft_Item	WW ไฟเกราะประตูหลังซ้าย
+WW_Door_ArmorLight_BackRight_Item	WW ไฟเกราะประตูหลังขวา
+WW_Door_ArmorLight_FrontLeft_Item	WW ไฟเกราะประตูหน้าซ้าย
+WW_Door_ArmorLight_FrontRight_Item	WW ไฟเกราะประตูหน้าขวา
+WW_Door_BackLeft_Item	WW ประตูหลังซ้าย
+WW_Door_BackRight_Item	ประตู WW ด้านหลังขวา
+WW_Door_FrontLeft_Item	WW ประตูหน้าซ้าย
+WW_Door_FrontRight_Item	WW ประตูหน้าขวา
+WW_Bumper_Front_Item	กันชนหน้า WW
+WW_Body_ArmorHeavy_Top_Item	เสื้อเกราะหนัก WW
+WW_DoorHood_Item	ฮู้ด WW
+WW_Lights_FrontLeft	WW ไฟหน้าซ้าย
+WW_Lights_FrontRight	WW ไฟหน้าขวา
+WW_Lights_RearLeft	WW ไฟหน้าหลังซ้าย
+WW_Lights_RearRight	WW ไฟหน้าหลังขวา
+WW_Seat_BackLeft_Item	WW เบาะหลังซ้าย
+WW_Seat_BackRight_Item	WW เบาะหลังขวา
+WW_Seat_FrontLeft_Item	WW เบาะนั่งหน้าซ้าย
+WW_Seat_FrontRight_Item	WW เบาะนั่งหน้าขวา
+WW_DoorTrunk_Item	ท้ายรถ WW
+WW_DoorTrunk_ArmorHeavy_Item	WW เกราะท้ายรถแบบหนัก
+WW_DoorTrunk_ArmorLight_Item	ไฟเกราะท้ายรถ WW
+WW_Wheel_ArmorLight_FrontLeft_Item	WW เกราะล้อหน้าซ้าย
+WW_Wheel_ArmorLight_FrontRight_Item	WW เกราะล้อหน้าขวา
+WW2_German_Helmet_01	หมวกกันน็อค WW2 เยอรมัน
+WeaponSights_XPS300_Holographic	กล้องเล็งโฮโลกราฟิก — XPS
+Yeast	ยีสต์
+Snowballs_02	สโนว์บอลสีเหลือง
+WeaponCharm_Yingyang	เสน่ห์อาวุธหยินหยาง
+Tights_01_01	เลกกิ้งโยคะ
+Tights_01_02	เลกกิ้งโยคะ
+Tights_01_03	เลกกิ้งโยคะ
+Tights_01_04	เลกกิ้งโยคะ
+Tights_01_05	เลกกิ้งโยคะ
+Tights_01_06	เลกกิ้งโยคะ
+WeaponScope_ZF39	ZF39
+2H_ZhanMaDao_Sword	Zhan Ma Dao
+Zucchini	บวบ
+Zucchini_Seed_Bag	ถุงเมล็ดบวบ - ถุงเมล็ดบวบ
+Zucchini_Seeds	เมล็ดบวบ

@@ -13,7 +13,13 @@ using ScumMiniMap;
 static class InputVoiceTests {
     [DllImport("user32.dll",EntryPoint="GetWindowLongW")] static extern int WindowStyle(IntPtr window,int index);
     [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr window);
+    [DllImport("user32.dll")] static extern IntPtr GetWindow(IntPtr window,uint command);
+    [DllImport("user32.dll")] static extern bool SetWindowPos(IntPtr window,IntPtr after,int x,int y,int width,int height,uint flags);
     static int count;
+    static bool Above(IntPtr upper,IntPtr lower) {
+        for(int i=0;i<200 && lower!=IntPtr.Zero;i++) { lower=GetWindow(lower,3);if(lower==upper)return true; }
+        return false;
+    }
     const BindingFlags Hidden=BindingFlags.NonPublic|BindingFlags.Instance;
     static void Check(bool ok,string message) { if(!ok) throw new Exception(message); count++; Console.WriteLine("PASS: "+message); }
     static PointF P(double x,double y) { return new PointF((float)(.5+x/15216.18),(float)(.5+y/15236.18)); }
@@ -24,17 +30,607 @@ static class InputVoiceTests {
     static object Invoke(object instance,string name,params object[] arguments) { return instance.GetType().GetMethod(name,Hidden).Invoke(instance,arguments); }
     static AppControlBindings WindowControls(MapWindow window) { return (AppControlBindings)Invoke(window,"CurrentAppControls"); }
 
+    static void TestRelativeTeleportCommands() {
+        var example=Position.Parse("{X=315989.281 Y=-229276.188 Z=16060.481|P=-22.862701 Y=-178.932495 R=0.000000}");
+        Check(RelativeTeleport.BuildCommand(example,TeleportDirection.Up,20)=="#Teleport 315989.281 -229276.188 18060.481",
+            "Relative teleport raises the player's example by exactly 20 metres with clean coordinate arguments");
+        Check(example.X==315989.281 && example.Y==-229276.188 && example.Z==16060.481 && example.Yaw==-178.932495,
+            "Building a relative teleport does not change the tracked source position or heading");
+
+        var origin=new Position { X=100,Y=200,Z=300,Yaw=0 };
+        var directions=new[]{TeleportDirection.Up,TeleportDirection.Down,TeleportDirection.Left,
+            TeleportDirection.Right,TeleportDirection.Forward,TeleportDirection.Back};
+        string[] expected={"#Teleport 100 200 400","#Teleport 100 200 200","#Teleport 100 100 300",
+            "#Teleport 100 300 300","#Teleport 200 200 300","#Teleport 0 200 300"};
+        for(int i=0;i<directions.Length;i++)
+            Check(RelativeTeleport.BuildCommand(origin,directions[i],1)==expected[i],
+                "Relative "+directions[i]+" uses the correct Unreal axis at yaw zero");
+        double[] headings={90,180,-90};
+        string[][] cardinalExpected={
+            new[]{"#Teleport 100 200 400","#Teleport 100 200 200","#Teleport 200 200 300",
+                "#Teleport 0 200 300","#Teleport 100 300 300","#Teleport 100 100 300"},
+            new[]{"#Teleport 100 200 400","#Teleport 100 200 200","#Teleport 100 300 300",
+                "#Teleport 100 100 300","#Teleport 0 200 300","#Teleport 200 200 300"},
+            new[]{"#Teleport 100 200 400","#Teleport 100 200 200","#Teleport 0 200 300",
+                "#Teleport 200 200 300","#Teleport 100 100 300","#Teleport 100 300 300"}
+        };
+        for(int heading=0;heading<headings.Length;heading++) {
+            var cardinal=new Position { X=100,Y=200,Z=300,Yaw=headings[heading] };
+            for(int direction=0;direction<directions.Length;direction++)
+                Check(RelativeTeleport.BuildCommand(cardinal,directions[direction],1)==cardinalExpected[heading][direction],
+                    "Relative "+directions[direction]+" follows cardinal yaw "+headings[heading]);
+        }
+        Check(RelativeTeleport.BuildCommand(new Position { Yaw=360 },TeleportDirection.Back,1)=="#Teleport -100 0 0"
+            && RelativeTeleport.BuildCommand(new Position { Yaw=-360 },TeleportDirection.Forward,1)=="#Teleport 100 0 0",
+            "Full-turn yaw boundaries produce the same horizontal direction as yaw zero");
+        Check(RelativeTeleport.BuildCommand(new Position { Z=123.456,Yaw=45 },TeleportDirection.Forward,.125)=="#Teleport 8.839 8.839 123.456",
+            "Fractional diagonal movement converts metres to centimetres and keeps the same elevation");
+        var pitched=Position.Parse("{X=100 Y=200 Z=300|P=89 Y=0 R=0}");
+        Check(RelativeTeleport.BuildCommand(pitched,TeleportDirection.Forward,1)=="#Teleport 200 200 300",
+            "Looking steeply up does not tilt relative horizontal teleports");
+        Check(RelativeTeleport.BuildCommand(new Position(),TeleportDirection.Up,RelativeTeleport.MinimumDistanceMeters)=="#Teleport 0 0 10"
+            && RelativeTeleport.BuildCommand(new Position(),TeleportDirection.Down,RelativeTeleport.MaximumDistanceMeters)=="#Teleport 0 0 -100000",
+            "Both supported distance boundaries are accepted");
+        Check(RelativeTeleport.BuildCommand(new Position { X=1999990,Y=-2000000,Z=2000000 },TeleportDirection.Forward,.1)=="#Teleport 2000000 -2000000 2000000",
+            "A destination exactly on the supported coordinate boundary is accepted");
+
+        var previousCulture=Thread.CurrentThread.CurrentCulture;
+        try {
+            Thread.CurrentThread.CurrentCulture=new System.Globalization.CultureInfo("fr-FR");
+            Check(RelativeTeleport.BuildCommand(example,TeleportDirection.Up,.125)=="#Teleport 315989.281 -229276.188 16072.981",
+                "Relative teleport formatting uses decimal points under a comma-decimal locale");
+        } finally { Thread.CurrentThread.CurrentCulture=previousCulture; }
+
+        Check(RelativeTeleport.BuildCommand(null,TeleportDirection.Up,1)==null,
+            "Relative teleport rejects a missing source position");
+        foreach(double meters in new[]{double.NaN,double.PositiveInfinity,double.NegativeInfinity,-1,0,.0999,1000.001})
+            Check(RelativeTeleport.BuildCommand(origin,TeleportDirection.Up,meters)==null,
+                "Relative teleport rejects an invalid distance: "+meters);
+        foreach(int value in new[]{-1,6,int.MaxValue})
+            Check(RelativeTeleport.BuildCommand(origin,(TeleportDirection)value,1)==null,
+                "Relative teleport rejects an unknown direction: "+value);
+        foreach(double value in new[]{double.NaN,double.PositiveInfinity,double.NegativeInfinity,2000000.001,-2000000.001}) {
+            Check(RelativeTeleport.BuildCommand(new Position { X=value },TeleportDirection.Up,1)==null
+                && RelativeTeleport.BuildCommand(new Position { Y=value },TeleportDirection.Up,1)==null
+                && RelativeTeleport.BuildCommand(new Position { Z=value },TeleportDirection.Up,1)==null,
+                "Relative teleport rejects an invalid value on every source coordinate axis: "+value);
+        }
+        foreach(double yaw in new[]{double.NaN,double.PositiveInfinity,double.NegativeInfinity,360.001,-360.001})
+            Check(RelativeTeleport.BuildCommand(new Position { Yaw=yaw },TeleportDirection.Up,1)==null,
+                "Relative teleport rejects an invalid source yaw: "+yaw);
+        var positiveEdge=new Position { X=2000000,Y=2000000,Z=2000000 };
+        var negativeEdge=new Position { X=-2000000,Y=-2000000,Z=-2000000 };
+        Check(RelativeTeleport.BuildCommand(positiveEdge,TeleportDirection.Up,.1)==null
+            && RelativeTeleport.BuildCommand(negativeEdge,TeleportDirection.Down,.1)==null
+            && RelativeTeleport.BuildCommand(positiveEdge,TeleportDirection.Forward,.1)==null
+            && RelativeTeleport.BuildCommand(negativeEdge,TeleportDirection.Back,.1)==null
+            && RelativeTeleport.BuildCommand(positiveEdge,TeleportDirection.Right,.1)==null
+            && RelativeTeleport.BuildCommand(negativeEdge,TeleportDirection.Left,.1)==null,
+            "Relative teleport rejects destinations beyond either boundary of every axis");
+        Check(origin.X==100 && origin.Y==200 && origin.Z==300 && origin.Yaw==0
+            && positiveEdge.X==2000000 && positiveEdge.Y==2000000 && positiveEdge.Z==2000000,
+            "Successful and rejected relative teleports preserve their source coordinate objects");
+    }
+
+    static bool CompleteTeleportSubmission(Task<bool> submission) {
+        DateTime deadline=DateTime.UtcNow.AddSeconds(5);
+        while(!submission.IsCompleted && DateTime.UtcNow<deadline) { Application.DoEvents();Thread.Sleep(10); }
+        if(!submission.IsCompleted)throw new Exception("Relative teleport submission did not complete.");
+        return submission.GetAwaiter().GetResult();
+    }
+
+    static void TestRelativeTeleportSubmission(string testRoot) {
+        string profile=Path.Combine(testRoot,"relative-teleport");Directory.CreateDirectory(profile);
+        File.WriteAllText(Path.Combine(profile,"settings.ini"),"Welcomed=True");
+        using(var bitmap=new Bitmap(32,32))bitmap.Save(Path.Combine(profile,"map.png"));
+        using(var window=new MapWindow(profile,true)) {
+            SetField(window,"adminToolsEnabled",true);
+            SetField(window,"position",null);int calls=0;string sent=null;
+            Func<string,Task<bool>> success=text=>{calls++;sent=text;return Task.FromResult(true);};
+            Check(window.BuildRelativeTeleportCommand(TeleportDirection.Up,20)==null
+                && !CompleteTeleportSubmission(window.SubmitRelativeTeleport(TeleportDirection.Up,20,success)) && calls==0,
+                "Relative teleport cannot build or send a command before receiving coordinates");
+            var first=new Position { X=100,Y=200,Z=300,Yaw=0 };
+            SetField(window,"position",first);SetField(window,"updated",DateTime.UtcNow);
+            Check(window.BuildRelativeTeleportCommand(TeleportDirection.Forward,2)=="#Teleport 300 200 300",
+                "Relative teleport preview derives its target from the current tracked position");
+            var latest=new Position { X=500,Y=-700,Z=900,Yaw=90 };
+            DateTime sampleTime=DateTime.UtcNow;SetField(window,"position",latest);SetField(window,"updated",sampleTime);
+            Func<string,Task<bool>> cancel=text=>{calls++;sent=text;return Task.FromResult(false);};
+            Check(!CompleteTeleportSubmission(window.SubmitRelativeTeleport(TeleportDirection.Forward,2,cancel))
+                && calls==1 && sent=="#Teleport 500 -500 900" && Object.ReferenceEquals(Field<Position>(window,"position"),latest)
+                && Field<DateTime>(window,"updated")==sampleTime,
+                "Sending uses the latest coordinates and cancellation preserves the tracked sample");
+            Check(CompleteTeleportSubmission(window.SubmitRelativeTeleport(TeleportDirection.Forward,2,success))
+                && calls==2 && sent=="#Teleport 500 -500 900" && Object.ReferenceEquals(Field<Position>(window,"position"),latest)
+                && latest.X==500 && latest.Y==-700 && latest.Z==900 && Field<DateTime>(window,"updated")==sampleTime,
+                "A cancelled relative teleport can be retried without optimistically updating coordinates after submission");
+            Check(window.BuildRelativeTeleportCommand(TeleportDirection.Up,1)==null
+                && !CompleteTeleportSubmission(window.SubmitRelativeTeleport(TeleportDirection.Up,1,success)) && calls==2,
+                "A submitted relative teleport blocks another command until a new coordinate sample arrives");
+            window.Accept("{X=500 Y=-700 Z=900|P=0 Y=90 R=0}");
+            var accepted=Field<Position>(window,"position");
+            Check(!Object.ReferenceEquals(accepted,latest)
+                && window.BuildRelativeTeleportCommand(TeleportDirection.Right,1)=="#Teleport 400 -700 900"
+                && CompleteTeleportSubmission(window.SubmitRelativeTeleport(TeleportDirection.Right,1,success)) && calls==3
+                && Object.ReferenceEquals(Field<Position>(window,"position"),accepted) && accepted.X==500 && accepted.Y==-700 && accepted.Z==900,
+                "A newly accepted sample restores eligibility even when coordinates match the previous sample");
+
+            window.Accept("{X=500 Y=-700 Z=1000|P=0 Y=0 R=0}");
+            var deferred=new TaskCompletionSource<bool>();
+            Task<bool> pending=window.SubmitRelativeTeleport(TeleportDirection.Up,1,text=>{calls++;sent=text;return deferred.Task;});
+            Check(!pending.IsCompleted && calls==4 && sent=="#Teleport 500 -700 1100"
+                && !CompleteTeleportSubmission(window.SubmitRelativeTeleport(TeleportDirection.Down,1,success)) && calls==4,
+                "Concurrent relative teleport requests cannot send a second command while the first is pending");
+            deferred.SetResult(false);
+            Check(!CompleteTeleportSubmission(pending)
+                && CompleteTeleportSubmission(window.SubmitRelativeTeleport(TeleportDirection.Down,1,success)) && calls==5
+                && sent=="#Teleport 500 -700 900",
+                "A cancelled pending request releases the submission guard for a retry");
+
+            window.Accept("{X=100 Y=200 Z=300|P=0 Y=0 R=0}");
+            foreach(string guard in new[]{"adminCommandBusy","closing"}) {
+                SetField(window,guard,true);
+                Check(window.BuildRelativeTeleportCommand(TeleportDirection.Up,1)==null
+                    && !CompleteTeleportSubmission(window.SubmitRelativeTeleport(TeleportDirection.Up,1,success)) && calls==5,
+                    "Relative teleport cannot send while "+guard+" is active");
+                SetField(window,guard,false);
+            }
+            Check(!CompleteTeleportSubmission(window.SubmitRelativeTeleport((TeleportDirection)99,1,success))
+                && !CompleteTeleportSubmission(window.SubmitRelativeTeleport(TeleportDirection.Up,0,success)) && calls==5,
+                "Invalid relative teleport requests are rejected before invoking the chat sender");
+        }
+    }
+
+    static void TestFullMapAdminGeometry() {
+        var areas=new[]{new Rectangle(0,0,1920,1080),new Rectangle(0,0,2560,1440),
+            new Rectangle(0,0,1280,720),new Rectangle(0,0,800,600),new Rectangle(0,0,640,480),
+            new Rectangle(-2560,180,2560,1400)};
+        foreach(Rectangle area in areas) {
+            Rectangle baseline=OverlayWindow.FullMapBounds(area);
+            int square=area.Height,centeredX=area.Left+(area.Width-square)/2;
+            Check(baseline==new Rectangle(centeredX,area.Top,square+Math.Min(260,area.Right-centeredX-square),square),
+                "The full map retains its original square, position and map sidebar: "+area);
+            var workingArea=new Rectangle(area.Left,area.Top,area.Width,area.Height-40);
+            bool collapsedSide,expandedSide;
+            Rectangle collapsed=OverlayWindow.AdminPanelBounds(workingArea,baseline,MapWindow.AdminControlsCollapsedWidth,132,out collapsedSide);
+            Rectangle expanded=OverlayWindow.AdminPanelBounds(workingArea,baseline,MapWindow.AdminControlsExpandedWidth,660,out expandedSide);
+            Check(collapsed.Width==28 && collapsed.Height==132 && workingArea.Contains(collapsed)
+                && collapsed.Right==baseline.Left-MapWindow.AdminControlsGap && !collapsed.IntersectsWith(baseline),
+                "The slim admin tab fits beside the unchanged full map: "+area);
+            Check(collapsedSide && expandedSide && expanded.Width<=326 && workingArea.Contains(expanded)
+                && expanded.Right==collapsed.Right && !expanded.IntersectsWith(baseline)
+                && OverlayWindow.FullMapBounds(area)==baseline,
+                "Expanding retains the attached edge without changing the full map: "+area);
+        }
+        var area2=new Rectangle(-1920,0,1920,1080);
+        foreach(Rectangle map in new[]{new Rectangle(-1910,10,320,320),new Rectangle(-330,20,320,320),new Rectangle(-1100,200,500,400)}) {
+            bool side,expandedSide;
+            Rectangle tab=OverlayWindow.AdminPanelBounds(area2,map,28,132,out side);
+            Rectangle panel=OverlayWindow.AdminPanelBounds(area2,map,326,660,out expandedSide);
+            Check(side==expandedSide && area2.Contains(tab) && area2.Contains(panel) && !tab.IntersectsWith(map)
+                && !panel.IntersectsWith(map) && (side?tab.Right==map.Left-4:tab.Left==map.Right+4),
+                "Compact maps choose a stable adjacent edge including negative monitor coordinates: "+map);
+        }
+        bool insetSide;
+        Rectangle inset=OverlayWindow.AdminPanelBounds(new Rectangle(0,0,320,320),new Rectangle(0,0,320,320),28,132,out insetSide);
+        Check(inset.Width==28 && new Rectangle(0,0,320,320).Contains(inset),
+            "A map filling the entire working area keeps an accessible tab at its edge");
+    }
+
+    static void TestFullMapAdminControls(string testRoot) {
+        string profile=Path.Combine(testRoot,"full-map-admin-controls");Directory.CreateDirectory(profile);
+        File.WriteAllText(Path.Combine(profile,"settings.ini"),"Welcomed=True");
+        using(var bitmap=new Bitmap(32,32))bitmap.Save(Path.Combine(profile,"map.png"));
+        using(var window=new MapWindow(profile,true)) {
+            SetField(window,"adminToolsEnabled",true);
+            var overlay=Field<OverlayWindow>(window,"overlay");
+            Rectangle minimapBounds=overlay.Bounds;
+            window.Accept("{X=100 Y=200 Z=300|P=75 Y=0 R=0}");
+            Invoke(window,"SetFullMap",true);overlay.Show();window.SyncFullMapAdminControls(true,false);Application.DoEvents();
+            Rectangle fullMapBounds=OverlayWindow.FullMapBounds(Screen.FromControl(overlay).Bounds);
+            Rectangle workingArea=Screen.FromControl(overlay).WorkingArea;
+            bool dockLeft;
+            Rectangle collapsedBounds=OverlayWindow.AdminPanelBounds(workingArea,fullMapBounds,28,132,out dockLeft);
+            Rectangle expandedBounds=OverlayWindow.AdminPanelBounds(workingArea,fullMapBounds,326,660,out dockLeft);
+            int collapsedWidth=collapsedBounds.Width,expandedWidth=expandedBounds.Width;
+            var panel=Field<Form>(window,"adminCommandsPanel");
+            var uiModal=typeof(MapWindow).GetMethod("RunUiModal",Hidden).MakeGenericMethod(typeof(DialogResult));
+            Func<DialogResult> childModal=()=> {
+                Check(!overlay.Visible && !panel.Visible,"An editor hides both map and attached admin controls");
+                window.SyncFullMapAdminControls(true,false);
+                Check(!panel.Visible,"Palette synchronization cannot cover an open editor");
+                Func<DialogResult> nested=()=>DialogResult.Cancel;
+                uiModal.Invoke(window,new object[]{nested});
+                Check(Field<bool>(window,"panelOpening") && Field<bool>(window,"shortcutCaptureOpen") && !overlay.Visible,
+                    "Closing a nested editor keeps its parent's modal input protection");
+                return DialogResult.Yes;
+            };
+            Check((DialogResult)uiModal.Invoke(window,new object[]{childModal})==DialogResult.Yes && overlay.Visible,
+                "Editor confirms its choice and restores a previously visible map");
+            window.SyncFullMapAdminControls(true,false);
+            bool sidebarResponded=false;
+            using(var popup=new AdminControlsWindow { SuppressActivation=true,TopMost=true,Bounds=panel.Bounds,ShowInTaskbar=false }) {
+                popup.Show();
+                SetWindowPos(popup.Handle,new IntPtr(-1),0,0,0,0,0x13);
+                Check(Above(popup.Handle,panel.Handle),"A topmost popup is stacked above its admin panel");
+                window.SyncFullMapAdminControls(true,false);
+                Check(Above(popup.Handle,panel.Handle),"Timer synchronization leaves the popup above its parent panel");
+            }
+            int sidebarTestY=overlay.Height/2;
+            Invoke(window,"RegisterClickable",new Rectangle(overlay.Height+5,sidebarTestY,100,25),new Rectangle(overlay.Height,0,200,overlay.Height),(Action)(()=>sidebarResponded=true));
+            bool oldCopy=Native.CopyInProgress;
+            try {
+                Native.CopyInProgress=true;SetField(window,"diagnosticMode",false);
+                Invoke(window,"HandleFullMapMouseDown",new Point(overlay.Height+10,sidebarTestY+5),MouseButtons.Left);
+                Check(sidebarResponded,"Sidebar buttons respond while coordinate-copy cleanup is in progress");
+            } finally { Native.CopyInProgress=oldCopy;SetField(window,"diagnosticMode",true); }
+            Check(panel!=null && panel.Visible && ((AdminControlsWindow)panel).FullMapPalette
+                && Field<bool>(window,"adminPanelFitsBesideMap")
+                && panel.FormBorderStyle==FormBorderStyle.None && panel.TopMost && !panel.ShowInTaskbar
+                && (WindowStyle(panel.Handle,-20)&8)!=0 && overlay.Bounds==fullMapBounds,
+                "Opening the expanded map displays a borderless topmost admin palette without a taskbar entry");
+            var header=Descendants(panel).Single(control=>control.Name=="AdminControlsHeader");
+            var close=Descendants(panel).OfType<Button>().Single(button=>button.Name=="CloseAdminControls");
+            Check(header.Dock==DockStyle.Top && !close.Visible
+                && Descendants(header).OfType<Label>().Any(label=>label.ForeColor==OverlayTheme.Accent),
+                "The slim tab has the shared styled header and keeps its collapse control inside the expanded view");
+            var noActivation=panel.GetType().GetProperty("ShowWithoutActivation",Hidden);
+            Check(noActivation!=null && (bool)noActivation.GetValue(panel,null),
+                "Automatic admin palette display preserves the expanded map's keyboard focus");
+
+            var body=Descendants(panel).OfType<SidebarScrollPanel>().Single(control=>control.Name=="AdminControlsBody");
+            var expand=Descendants(panel).OfType<Button>().Single(control=>control.Name=="ExpandAdminControls");
+            var commandSection=Descendants(panel).OfType<GroupBox>().Single(control=>control.Name=="AdminCommandsSection");
+            var teleportSection=Descendants(panel).OfType<GroupBox>().Single(control=>control.Name=="RelativeTeleport");
+            var add=Descendants(panel).OfType<Button>().Single(control=>control.Name=="AddAdminCommand");
+            var cards=Descendants(panel).Single(control=>control.Name=="AdminCommandCards");
+            var commandToggle=Descendants(panel).OfType<Button>().Single(control=>control.Name=="AdminCommandSectionToggle");
+            var teleportToggle=Descendants(panel).OfType<Button>().Single(control=>control.Name=="AdminTeleportSectionToggle");
+            var distance=Descendants(panel).OfType<NumericUpDown>().Single(control=>control.Name=="RelativeTeleportDistance");
+            var preview=Descendants(panel).OfType<TextBox>().Single(control=>control.Name=="RelativeTeleportPreview");
+            var send=Descendants(panel).OfType<Button>().Single(control=>control.Name=="SendRelativeTeleport");
+            var directions=Descendants(panel).OfType<RadioButton>().Where(control=>control.Name.StartsWith("RelativeTeleport",StringComparison.Ordinal)).ToArray();
+            Check(panel.BackColor==FullMapSidebarStyle.Background && body.BackColor==FullMapSidebarStyle.Background
+                && Descendants(panel).OfType<Label>().Any(label=>label.Name=="AdminControlsTitle"
+                    && label.Font.Name=="Segoe UI" && label.Font.Bold && Math.Abs(label.Font.SizeInPoints-9.5f)<.01f),
+                "The admin palette reuses the full-map sidebar background and compact title typography");
+            Check(add is SidebarButton && send is SidebarButton && close is SidebarButton && expand is SidebarButton
+                && commandSection is SidebarSection && teleportSection is SidebarSection
+                && directions.All(control=>control is SidebarRadioButton) && distance is SidebarDistanceInput,
+                "Sidebar styling preserves button, radio, section and numeric-input control compatibility");
+            Check(!Field<bool>(window,"adminPanelExpanded") && panel.ClientSize.Width==collapsedWidth && panel.ClientSize.Height==132
+                && panel.Right==overlay.Left-MapWindow.AdminControlsGap && !panel.Bounds.IntersectsWith(overlay.Bounds)
+                && overlay.Bounds==fullMapBounds
+                && expand.Visible && !commandToggle.Visible && !teleportToggle.Visible
+                && !body.Visible && !distance.Visible && !send.Visible && !add.Visible,
+                "The untouched automatic admin rail starts collapsed beside the full map without overlap");
+            window.SyncFullMapAdminControls(false,false);
+            Check(!panel.Visible,"Losing map focus hides the untouched automatic admin palette");
+            window.SyncFullMapAdminControls(true,false);
+            Check(panel.Visible,"Returning map focus restores the untouched automatic admin palette");
+            window.SyncFullMapAdminControls(true,true);
+            Check(!panel.Visible,"Chat or inventory input suppression hides the untouched automatic admin palette");
+            window.SyncFullMapAdminControls(true,false);
+            Check(panel.Visible,"Clearing input suppression restores the untouched automatic admin palette");
+            overlay.Hide();window.SyncFullMapAdminControls(true,false);
+            Check(!panel.Visible,"A hidden expanded map cannot leave its untouched automatic rail visible");
+            overlay.Show();window.SyncFullMapAdminControls(true,false);
+            typeof(Button).GetMethod("OnClick",Hidden).Invoke(expand,new object[]{EventArgs.Empty});Application.DoEvents();
+            Check(Field<bool>(window,"adminPanelExpanded") && panel.ClientSize.Width==expandedWidth && body.Visible
+                && panel.Right==overlay.Left-MapWindow.AdminControlsGap && !panel.Bounds.IntersectsWith(overlay.Bounds) && overlay.Bounds==fullMapBounds,
+                "Expanding the admin viewport uses the existing left space without moving or resizing the map");
+            Check(Descendants(panel).Any(control=>control.Name=="AdminRailCaption" && control.AccessibleName==Localization.Get("AdminRailTitle"))
+                && commandToggle.AccessibleName==Localization.Get("AdminCommandsSection")
+                && teleportToggle.AccessibleName==Localization.Get("AdminTeleportSection") && close.Visible,
+                "The attached rail provides readable accessible labels and expanded collapse controls");
+            window.ShowAdminControlsSection(true);window.ShowAdminControlsSection(false);
+            Check(commandSection.Visible && teleportSection.Visible && Descendants(commandSection).Contains(add)
+                && Descendants(commandSection).Contains(cards) && !Descendants(commandSection).Contains(distance)
+                && Descendants(teleportSection).Contains(distance) && Descendants(teleportSection).Contains(send),
+                "Editable commands and directional teleport controls belong to their own independently expandable sections");
+            Check(Descendants(cards).OfType<Button>().Count(control=>control.Name=="EditAdminCommand")==3
+                && Descendants(cards).OfType<Button>().Count(control=>control.Name=="RemoveAdminCommand")==3 && add.Visible && add.Enabled,
+                "The command section retains add, edit and remove controls for every saved command");
+            typeof(Button).GetMethod("OnClick",Hidden).Invoke(commandToggle,new object[]{EventArgs.Empty});
+            Check(!commandSection.Visible && teleportSection.Visible && Field<bool>(window,"adminPanelExpanded"),
+                "Collapsing the command section keeps the teleport section open");
+            typeof(Button).GetMethod("OnClick",Hidden).Invoke(teleportToggle,new object[]{EventArgs.Empty});
+            Check(!commandSection.Visible && !teleportSection.Visible,
+                "The teleport section can collapse independently of the command section");
+            window.ShowAdminControlsSection(false);
+            Check(commandSection.Visible && !teleportSection.Visible,
+                "Opening commands from the rail leaves the teleport section's collapsed state intact");
+            window.ShowAdminControlsSection(true);
+            Check(commandSection.Visible && teleportSection.Visible,
+                "Opening teleport from the rail preserves the already open command section");
+            window.SetAdminControlsExpanded(true);
+            Check(directions.Length==6 && directions.Count(control=>control.Checked)==1
+                && directions.Single(control=>control.Checked).Name=="RelativeTeleportUp" && preview.ReadOnly && send.Enabled,
+                "The admin palette starts with one selected direction and a read-only ready-to-send preview");
+            distance.Value=3.5m;
+            string[] directionNames={"Up","Down","Left","Right","Forward","Back"};
+            string[] expected={"#Teleport 100 200 650","#Teleport 100 200 -50","#Teleport 100 -150 300",
+                "#Teleport 100 550 300","#Teleport 450 200 300","#Teleport -250 200 300"};
+            for(int i=0;i<directionNames.Length;i++) {
+                var choice=directions.Single(control=>control.Name=="RelativeTeleport"+directionNames[i]);choice.Checked=true;
+                Check(directions.Count(control=>control.Checked)==1 && choice.Checked && preview.Text==expected[i],
+                    "Selecting "+directionNames[i]+" is exclusive and updates the relative teleport preview using the chosen metres");
+            }
+            distance.Value=.1m;
+            Check(preview.Text=="#Teleport 90 200 300" && distance.Minimum==.1m && distance.Maximum==1000m,
+                "Distance changes update the clean teleport preview within the supported metre limits");
+            window.SetAdminControlsExpanded(false);
+            Check(panel.ClientSize.Width==collapsedWidth && !body.Visible && !send.Visible
+                && panel.Right==overlay.Left-MapWindow.AdminControlsGap && !panel.Bounds.IntersectsWith(overlay.Bounds) && overlay.Bounds==fullMapBounds,
+                "Collapsing the admin viewport preserves the map's size and position with the same clear gap");
+            window.ShowAdminControlsSection(true);
+            Check(Field<bool>(window,"adminPanelExpanded") && teleportSection.Visible && preview.Text=="#Teleport 90 200 300"
+                && directions.Single(control=>control.Checked).Name=="RelativeTeleportBack" && distance.Value==.1m,
+                "Opening the teleport section expands the rail and retains the chosen direction and distance");
+            Size originalSize=panel.ClientSize;
+            panel.ClientSize=new Size(originalSize.Width,340);panel.PerformLayout();Application.DoEvents();
+            body.RefreshContentLayout();
+            Check(body.MaximumScrollY>0,
+                "The compact floating palette exposes custom vertical scrolling on short screens");
+            body.ScrollBy(-1000000,-1000000);
+            Point contentBeforeVertical=body.Content.Location,offsetBeforeVertical=body.ScrollOffset;
+            body.ScrollBy(0,24);
+            Check(body.ScrollOffset.Y>offsetBeforeVertical.Y && body.Content.Top<contentBeforeVertical.Y,
+                "Custom vertical scrolling moves the actual admin content within its viewport");
+            body.ScrollBy(0,1000000);
+            Check(body.ScrollOffset.Y==body.MaximumScrollY,
+                "Custom vertical scrolling clamps at the last accessible content row");
+            body.ScrollBy(0,-1000000);
+            Check(body.ScrollOffset.Y==0,
+                "Custom vertical scrolling clamps at the first content row");
+            panel.ClientSize=originalSize;
+            panel.ClientSize=new Size(Math.Min(200,originalSize.Width),340);panel.PerformLayout();Application.DoEvents();
+            body.RefreshContentLayout();
+            Check(body.MinimumContentWidth==180 && body.MaximumScrollX>0,
+                "A narrow admin viewport keeps the compact content accessible through custom horizontal scrolling");
+            body.ScrollBy(-1000000,-1000000);
+            Point contentBeforeHorizontal=body.Content.Location,offsetBeforeHorizontal=body.ScrollOffset;
+            body.ScrollBy(20,0);
+            Check(body.ScrollOffset.X>offsetBeforeHorizontal.X && body.Content.Left<contentBeforeHorizontal.X,
+                "Custom horizontal scrolling moves the actual admin content within its viewport");
+            body.ScrollBy(1000000,0);
+            Check(body.ScrollOffset.X==body.MaximumScrollX,
+                "Custom horizontal scrolling clamps at the end of wider content");
+            body.ScrollBy(-1000000,0);
+            Check(body.ScrollOffset.X==0 && overlay.Bounds==fullMapBounds,
+                "Custom horizontal scrolling returns to the start without changing the full map");
+            panel.ClientSize=originalSize;
+
+            foreach(int width in new[]{326,275,180}) {
+                panel.ClientSize=new Size(width,340);panel.PerformLayout();Application.DoEvents();
+                Invoke(window,"RefreshAdminCommandsPanel");body.RefreshContentLayout();
+                if(width>=275)Check(body.MaximumScrollX==0,"Normal and narrow admin panels fit their buttons without horizontal clipping: "+width);
+                var actions=Descendants(panel).Single(control=>control.Name=="AdminCommandActions");
+                foreach(string name in new[]{"AddAdminCommand","OpenSpawnCart","OpenAdminPlayers"}) {
+                    var button=Descendants(actions).OfType<Button>().Single(control=>control.Name==name);
+                    Check(button.Left==10 && button.Right==actions.ClientSize.Width-10 && actions.ClientRectangle.Contains(button.Bounds),
+                        "Admin action "+name+" keeps both margins after refresh at viewport width "+width);
+                }
+                foreach(Control row in cards.Controls) {
+                    Check(row.Width==cards.ClientSize.Width && row.Controls.OfType<Button>().All(button=>row.ClientRectangle.Contains(button.Bounds)),
+                        "Command-row buttons fit their actual container after rebuild at viewport width "+width);
+                }
+                Check(Descendants(panel).OfType<Button>().Where(button=>button.Visible).All(button=>button.Parent.ClientRectangle.Contains(button.Bounds)),
+                    "Visible admin buttons never overhang their parent at viewport width "+width);
+            }
+            panel.ClientSize=originalSize;
+
+            window.SyncFullMapAdminControls(false,false);
+            Check(!panel.Visible,"The expanded admin controls hide with loss of map focus");
+            window.SyncFullMapAdminControls(true,false);
+            Check(panel.Visible && panel.TopMost,"Returning map focus restores the same expanded controls");
+            window.SyncFullMapAdminControls(true,true);
+            Check(!panel.Visible,"Chat or inventory hides the attached controls without losing their state");
+            window.SyncFullMapAdminControls(true,false);
+            overlay.Hide();window.SyncFullMapAdminControls(true,false);
+            Check(!panel.Visible,"Hiding the map also hides the attached admin controls");
+            overlay.Show();window.SyncFullMapAdminControls(true,false);
+            foreach(string guard in new[]{"adminCommandBusy","relativeTeleportBusy"}) {
+                if(guard=="adminCommandBusy") {
+                    SetField(window,"adminCommandBusy",true);SetField(window,"adminFocusHandoffPending",true);
+                    window.SyncFullMapAdminControls(false,true);
+                    Check(panel.Visible && panel.TopMost,"Expanded map admin controls keep their ordering until dispatch owns the focus/hide handoff");
+                    SetField(window,"adminFocusHandoffPending",false);
+                }
+                SetField(window,guard,true);window.SyncFullMapAdminControls(true,false);
+                Check(!panel.Visible,"All command origins hide the attached controls while "+guard+" is active");
+                SetField(window,guard,false);window.SyncFullMapAdminControls(true,false);
+                Check(panel.Visible,"The same controls return without activation after "+guard+" ends");
+            }
+            overlay.UpdateFullMapClickThrough(true,true);window.SyncFullMapAdminControls(true,false);
+            Check(!panel.Visible,"Temporary map click-through hides the attached admin controls");
+            overlay.UpdateFullMapClickThrough(false,true);window.SyncFullMapAdminControls(true,false);
+            Check(panel.Visible && panel.TopMost,"Leaving map click-through restores the existing controls");
+            typeof(Button).GetMethod("OnClick",Hidden).Invoke(close,new object[]{EventArgs.Empty});
+            window.SyncFullMapAdminControls(true,false);
+            Check(panel.Visible && !Field<bool>(window,"adminPanelExpanded") && panel.Bounds==collapsedBounds
+                && !Field<bool>(window,"adminPanelDismissedForFullMap") && overlay.Bounds==fullMapBounds,
+                "Closing collapses to the slim attached tab without moving the map or dismissing its controls");
+            Invoke(window,"SetFullMap",false);window.SyncFullMapAdminControls(true,false);
+            Check(!panel.Visible && overlay.Bounds==minimapBounds,
+                "Returning to the compact minimap hides the admin tab");
+            overlay.Location=new Point(overlay.Left+30,overlay.Top+20);
+            Check(!panel.Visible,"Moving the compact map cannot show its admin tab");
+            overlay.Size=new Size(overlay.Width+20,overlay.Height+20);
+            Check(!panel.Visible,"Resizing the compact map cannot show its admin tab");
+            overlay.Bounds=minimapBounds;
+            Invoke(window,"SetFullMap",true);overlay.Show();window.SyncFullMapAdminControls(true,false);
+            Check(Object.ReferenceEquals(panel,Field<Form>(window,"adminCommandsPanel")) && panel.Visible
+                && !Field<bool>(window,"adminPanelExpanded") && preview.Text=="#Teleport 90 200 300"
+                && overlay.Bounds==fullMapBounds && distance.Value==.1m
+                && directions.Single(control=>control.Checked).Name=="RelativeTeleportBack",
+                "Switching map modes retains the collapsed state and the same teleport choices");
+            using(var menu=new ToolStripMenuItem("Admin")) {
+                window.PopulateAdminMenu(menu);
+                Check(menu.DropDownItems.OfType<ToolStripMenuItem>().Single(item=>item.Text==Localization.Get("AdminTeleportMenu")).Enabled
+                    && menu.DropDownItems.OfType<ToolStripMenuItem>().Single(item=>item.Text=="Edit commands...").Enabled,
+                    "Admin menu shortcuts can expand the attached controls after collapse");
+            }
+            var settingsToggle=Descendants(window).Single(control=>control.Name=="AdminToolsToggle");
+            IntPtr previewForeground=Native.GetForegroundWindow();
+            typeof(Control).GetMethod("OnClick",Hidden).Invoke(settingsToggle,new object[]{EventArgs.Empty});
+            Check(!Field<bool>(window,"adminToolsEnabled") && !panel.Visible,"Settings pill disables and hides admin tools");
+            typeof(Control).GetMethod("OnClick",Hidden).Invoke(settingsToggle,new object[]{EventArgs.Empty});
+            Check(Field<bool>(window,"adminToolsEnabled") && Native.GetForegroundWindow()==previewForeground,"Settings pill re-enables admin tools without taking desktop focus");
+            Invoke(window,"SetFullMap",false);window.SyncFullMapAdminControls(true,false);
+            Check(!panel.Visible && overlay.Bounds==minimapBounds,"Expanded controls hide with the full map");
+            Invoke(window,"ShowAdminCommands");
+            Check(!panel.Visible,"Settings/admin shortcuts cannot show a panel on the compact minimap");
+            SetField(window,"adminControlsCommandReturn",true);
+            window.SyncFullMapAdminControls(true,false);
+            Check(panel.Visible && !Field<bool>(window,"fullMapActive"),"Command return restores admin controls without reopening the full map");
+            window.SyncFullMapAdminControls(true,false);
+            Check(panel.Visible,"Periodic visibility updates preserve returned command controls");
+            window.SyncFullMapAdminControls(false,false);
+            Check(!panel.Visible,"Returned command controls hide when an unrelated app gains focus");
+            window.SyncFullMapAdminControls(true,false);Invoke(window,"DismissAdminControls");
+            Check(!panel.Visible && !Field<bool>(window,"adminControlsCommandReturn"),"Closing returned controls clears their standalone return state");
+            Invoke(window,"SetFullMap",true);window.SyncFullMapAdminControls(true,false);
+            panel.WindowState=FormWindowState.Minimized;Invoke(window,"ShowAdminCommands");
+            Check(panel.WindowState==FormWindowState.Normal && Object.ReferenceEquals(panel,Field<Form>(window,"adminCommandsPanel")) && distance.Value==.1m,
+                "Repeated admin access restores the same controls and choices");
+            window.SyncFullMapAdminControls(false,true);
+            Check(!panel.Visible,"Explicit access cannot leave an orphan panel while the map is suppressed");
+            window.SyncFullMapAdminControls(true,false);panel.Close();window.SyncFullMapAdminControls(true,false);
+            Check(!panel.IsDisposed && panel.Visible && !Field<bool>(window,"adminPanelExpanded") && panel.Width==28,
+                "Native closing collapses to the attached tab and preserves the existing form");
+            window.ShowAdminControlsSection(false);
+            int editedType=0;
+            Action<Button,string> editFromButton=(button,numeric)=> {
+                bool opened=false;
+                using(var complete=new System.Windows.Forms.Timer { Interval=25 }) {
+                    complete.Tick+=(s,e)=> {
+                        var editor=Application.OpenForms.OfType<AdminCommandEditor>().FirstOrDefault();
+                        if(editor==null)return;
+                        complete.Stop();opened=true;
+                        ((TextBox)editor.Controls["Label"]).Text="Custom brightness";
+                        ((TextBox)editor.Controls["Command"]).Text="#SetTime";
+                        ((ComboBox)editor.Controls["CommandType"]).SelectedIndex=editedType;
+                        ((TextBox)editor.Controls["Quantity"]).Text=numeric;
+                        typeof(Button).GetMethod("OnClick",Hidden).Invoke(editor.Controls["Save"],new object[]{EventArgs.Empty});
+                    };
+                    complete.Start();
+                    typeof(Button).GetMethod("OnClick",Hidden).Invoke(button,new object[]{EventArgs.Empty});
+                    Check(!opened && !button.IsDisposed,"Custom-command editing waits until the current button event has finished");
+                    Application.DoEvents();
+                }
+                Check(opened,"The actual custom-command button opens a usable modal editor");
+            };
+            editFromButton(add,"0");
+            var savedCommands=AdminCommand.Load(Path.Combine(profile,"admin-commands.tsv"));
+            Check(savedCommands.Count==4 && savedCommands.Last().Build()=="#SetTime 0","The actual Add button saves a zero-valued numeric command and refreshes the attached palette");
+            var customRow=Descendants(panel).Where(control=>control.Name=="AdminCommandCard").Last();
+            editFromButton(Descendants(customRow).OfType<Button>().Single(button=>button.Name=="EditAdminCommand"),"0.5");
+            Check(AdminCommand.Load(Path.Combine(profile,"admin-commands.tsv")).Last().Build()=="#SetTime 0.5","The actual Edit button saves a fractional value without disposing an active click handler");
+            customRow=Descendants(panel).Where(control=>control.Name=="AdminCommandCard").Last();
+            editFromButton(Descendants(customRow).OfType<Button>().Single(button=>button.Name=="EditAdminCommand"),"1");
+            using(var cancelEditor=new System.Windows.Forms.Timer { Interval=25 }) {
+                cancelEditor.Tick+=(s,e)=> {
+                    var editor=Application.OpenForms.OfType<AdminCommandEditor>().FirstOrDefault();
+                    if(editor==null)return;
+                    cancelEditor.Stop();editor.Close();
+                };
+                Invoke(window,"SetFullMap",false);
+                SetField(window,"adminControlsCommandReturn",true);
+                window.SetAdminControlsExpanded(true);
+                window.SyncFullMapAdminControls(true,false);
+                Check(panel.Visible && !Field<bool>(window,"fullMapActive"),"Returned custom-command controls remain usable over the compact map before editing");
+                customRow=Descendants(panel).Where(control=>control.Name=="AdminCommandCard").Last();
+                cancelEditor.Start();
+                typeof(Button).GetMethod("OnClick",Hidden).Invoke(Descendants(customRow).OfType<Button>().Single(button=>button.Name=="EditAdminCommand"),new object[]{EventArgs.Empty});
+                Application.DoEvents();
+            }
+            Check(panel.Visible && overlay.Visible && panel.Enabled && Field<bool>(window,"adminControlsCommandReturn"),"Closing the custom-command editor restores the returned command panel over the compact map");
+            Check(AdminCommand.Load(Path.Combine(profile,"admin-commands.tsv")).Last().Build()=="#SetTime 1","Closing an editor without Save preserves the previous command");
+            editedType=3;
+            customRow=Descendants(panel).Where(control=>control.Name=="AdminCommandCard").Last();
+            editFromButton(Descendants(customRow).OfType<Button>().Single(button=>button.Name=="EditAdminCommand"),"0.5");
+            customRow=Descendants(panel).Where(control=>control.Name=="AdminCommandCard").Last();
+            var inlineValue=Descendants(customRow).OfType<TextBox>().Single(box=>box.Name=="AdminNumericValue");
+            var numericSend=Descendants(customRow).OfType<SidebarButton>().Single(button=>button.Top==4);
+            inlineValue.Text="not a number";
+            Check(!numericSend.Enabled,"Invalid inline numeric values disable the command button without sending game input");
+            inlineValue.Text="0.25";
+            Check(numericSend.Enabled && Descendants(customRow).OfType<Label>().Any(label=>label.Text=="#SetTime 0.25"),"Editing a numeric command card updates the preview and re-enables a valid request");
+            Check(AdminCommand.Load(Path.Combine(profile,"admin-commands.tsv")).Last().Quantity=="0.5","Typing an inline value alone does not submit or overwrite the saved command");
+        }
+    }
+
+    static void TestPersistedAdminDismissal(string testRoot) {
+        string profile=Path.Combine(testRoot,"persisted-admin-dismissal");Directory.CreateDirectory(profile);
+        File.WriteAllLines(Path.Combine(profile,"settings.ini"),new[]{"Welcomed=True","AdminPanelDismissed=True"});
+        using(var bitmap=new Bitmap(32,32))bitmap.Save(Path.Combine(profile,"map.png"));
+        using(var window=new MapWindow(profile,true)) {
+            SetField(window,"adminToolsEnabled",true);
+            var overlay=Field<OverlayWindow>(window,"overlay");overlay.Show();window.SyncFullMapAdminControls(true,false);
+            Check(Field<Form>(window,"adminCommandsPanel")==null,"Compact startup never creates the admin tab");
+            Invoke(window,"SetFullMap",true);window.SyncFullMapAdminControls(true,false);
+            var panel=Field<Form>(window,"adminCommandsPanel");
+            Check(!Field<bool>(window,"adminPanelDismissedForFullMap") && panel!=null && panel.Visible && panel.Width==28,
+                "An old saved dismissal cannot suppress the full-map admin tab");
+            window.ShowAdminCommandsFromSettings();
+            Check(panel.Visible && Field<bool>(window,"adminPanelExpanded"),"Settings expands the attached controls after migrating an old dismissal");
+            Invoke(window,"DismissAdminControls");
+            Check(panel.Visible && !Field<bool>(window,"adminPanelExpanded"),"Collapsing migrated controls retains the attached tab");
+            try {
+                SetField(window,"diagnosticMode",false);Invoke(window,"SaveSettings");
+                Check(File.ReadAllLines(Path.Combine(profile,"settings.ini")).Contains("AdminPanelDismissed=False"),
+                    "Saving migrated settings removes the obsolete persistent dismissal");
+            } finally { SetField(window,"diagnosticMode",true); }
+        }
+        using(var reopened=new MapWindow(profile,true)) {
+            var overlay=Field<OverlayWindow>(reopened,"overlay");overlay.Show();Invoke(reopened,"SetFullMap",true);reopened.SyncFullMapAdminControls(true,false);
+            Check(!Field<bool>(reopened,"adminPanelDismissedForFullMap") && Field<Form>(reopened,"adminCommandsPanel").Visible
+                && !Field<bool>(reopened,"adminPanelExpanded"),"Restarting retains the accessible slim tab");
+        }
+    }
+
+    static void TestDiagnosticProfileIsolation() {
+        const string firstSession="A19D1DA597A848C7B47D56C19AC2F1F3";
+        const string secondSession="16b57db03d6343b7898e9ea4b23b6da5";
+        const string diagnosticPrefix="ScumMiniMap-ShortcutDiagnostics-";
+        Check(Program.DiagnosticDataFolderName(false,null,null)=="ScumMiniMap"
+            && Program.DiagnosticDataFolderName(false,"1",firstSession)=="ScumMiniMap"
+            && Program.DiagnosticDataFolderName(false,"1","..\\ScumMiniMap")=="ScumMiniMap",
+            "Diagnostic launch arguments cannot redirect a release build's normal profile");
+        Check(Program.DiagnosticDataFolderName(true,null,null)=="ScumMiniMap-ResponsivenessTest"
+            && Program.DiagnosticDataFolderName(true,"1",null)=="ScumMiniMap-ResponsivenessTest",
+            "Ordinary test launches retain their existing isolated test profile");
+        string firstProfile=Program.DiagnosticDataFolderName(true,"1",firstSession);
+        string secondProfile=Program.DiagnosticDataFolderName(true,"1",secondSession);
+        Check(firstProfile==diagnosticPrefix+firstSession.ToLowerInvariant()
+            && secondProfile==diagnosticPrefix+secondSession && firstProfile!=secondProfile,
+            "Valid diagnostic sessions use normalized and distinct isolated profile names");
+        foreach(string invalidSession in new[]{"","not-a-guid","..\\ScumMiniMap","../ScumMiniMap",
+            "C:\\ScumMiniMap",firstSession+"\\settings.ini","{a19d1da5-97a8-48c7-b47d-56c19ac2f1f3}",
+            "a19d1da5-97a8-48c7-b47d-56c19ac2f1f3"}) {
+            Check(Program.DiagnosticDataFolderName(true,"1",invalidSession)=="ScumMiniMap-ResponsivenessTest",
+                "Invalid or path-shaped diagnostic sessions cannot select another profile: "+invalidSession);
+        }
+        foreach(string disabledTrace in new[]{null,"","0","true"," 1"}) {
+            Check(Program.DiagnosticDataFolderName(true,disabledTrace,firstSession)=="ScumMiniMap-ResponsivenessTest",
+                "A valid session cannot change the test profile without explicit input tracing: "+(disabledTrace??"<unset>"));
+        }
+    }
+
     static void TestAppControlModel() {
         Check(AppControlBindings.AllActions.SequenceEqual(new[]{AppControlAction.Settings,AppControlAction.AddWaypoint,AppControlAction.Search,
             AppControlAction.ToggleOverlay,AppControlAction.ZoomIn,AppControlAction.ZoomOut,AppControlAction.DeathMarker,
-            AppControlAction.ResetZoom,AppControlAction.ClearWaypoint,AppControlAction.ZoneEditor,AppControlAction.StartupGuide,AppControlAction.AdminCommands}),
+            AppControlAction.ResetZoom,AppControlAction.ClearWaypoint,AppControlAction.ZoneEditor,AppControlAction.StartupGuide,AppControlAction.AdminCommands,AppControlAction.AdminPlayers}),
             "Every map and tool button has a configurable app action");
         var defaults=new AppControlBindings();
         Check(defaults.BindingError(0x4D,0,0x54,0,0x6F,0)==null
             && defaults.Key(AppControlAction.ToggleOverlay)==0x23 && defaults.Key(AppControlAction.ZoomIn)==0x21
             && defaults.Key(AppControlAction.ZoomOut)==0x22 && defaults.Key(AppControlAction.DeathMarker)==0x28,
             "Existing show/hide, zoom and death-marker defaults remain valid");
-        Check(AppControlBindings.AllActions.Skip(7).All(action=>defaults.Key(action)==0 && defaults.ScanCode(action)==0),
+        Check(defaults.Key(AppControlAction.AdminPlayers)==0x6B,"NumPad plus opens the admin player directory by default");
+        Check(AppControlBindings.AllActions.Skip(7).Take(5).All(action=>defaults.Key(action)==0 && defaults.ScanCode(action)==0),
             "Additional app actions start unbound without conflicting with one another");
         var changed=defaults.Clone();changed.Set(AppControlAction.ZoomIn,0x77,0x42);
         Check(defaults.Key(AppControlAction.ZoomIn)==0x21 && changed.ScanCode(AppControlAction.ZoomIn)==0x42,
@@ -152,7 +748,7 @@ static class InputVoiceTests {
         string profile=Path.Combine(testRoot,"controls");Directory.CreateDirectory(profile);
         string settings=Path.Combine(profile,"settings.ini");File.WriteAllText(settings,"Welcomed=True");
         using(var bitmap=new Bitmap(32,32)) bitmap.Save(Path.Combine(profile,"map.png"));
-        var configured=new AppControlBindings();int[] scans={0x3B,0x3C,0x3D,0x3E,0x3F,0x40,0x41,0x42,0x43,0x44,0x57,0x58};
+        var configured=new AppControlBindings();int[] scans={0x3B,0x3C,0x3D,0x3E,0x3F,0x40,0x41,0x42,0x43,0x44,0x57,0x58,0x64};
         for(int i=0;i<AppControlBindings.AllActions.Length;i++) configured.Set(AppControlBindings.AllActions[i],0x70+i,scans[i]);
         using(var window=new MapWindow(profile)) {
             foreach(var action in AppControlBindings.AllActions) {
@@ -169,7 +765,7 @@ static class InputVoiceTests {
         using(var reopened=new MapWindow(profile,true)) {
             var loaded=WindowControls(reopened);
             Check(AppControlBindings.AllActions.All(action=>loaded.Key(action)==configured.Key(action)
-                && loaded.ScanCode(action)==configured.ScanCode(action)),"All twelve app keys and physical scan codes survive restart");
+                && loaded.ScanCode(action)==configured.ScanCode(action)),"All app keys and physical scan codes survive restart");
             var watched=typeof(MapWindow).GetMethod("IsWatchedPhysicalKey",Hidden);
             Check(AppControlBindings.AllActions.All(action=>(bool)watched.Invoke(reopened,new object[]{0xE2,loaded.ScanCode(action)})),
                 "Every rebound action reaches keyboard dispatch through its physical position");
@@ -205,9 +801,17 @@ static class InputVoiceTests {
                 && Field<float>(reopened,"targetZoom")==Field<float>(reopened,"zoom"),
                 "Compact zoom uses the configured step and switches to manual zoom");
             SetField(reopened,"fullMapActive",true);SetField(reopened,"fullMapZoom",2f);
+            SetField(reopened,"fullMapOpacity",35);
             SetField(reopened,"lastPgUpAction",DateTime.MinValue);Invoke(reopened,"TriggerZoomIn");
             Check(Field<float>(reopened,"fullMapZoom")>2f && Math.Abs(Field<float>(reopened,"zoom")-5f)<.001f,
                 "Expanded-map zoom changes the active full map while preserving compact zoom");
+            Check(reopened.EffectiveFullMapOpacity==100 && Field<int>(reopened,"fullMapOpacity")==35,
+                "Expanded zoom forces full visibility without changing configured opacity");
+            string opaqueKey=(string)Invoke(reopened,"OverlayKey");
+            Invoke(reopened,"RestoreFullMapOpacityAfterTeleport");
+            Check(reopened.EffectiveFullMapOpacity==35 && Field<float>(reopened,"fullMapZoom")>2f
+                && (string)Invoke(reopened,"OverlayKey")!=opaqueKey,
+                "Teleport cleanup restores configured opacity and invalidates the rendered frame without changing zoom");
             bool previousCopyBusy=Native.CopyInProgress;
             try {
                 // Cancelling a copy releases its keys immediately, while its async delay
@@ -226,6 +830,7 @@ static class InputVoiceTests {
             SetField(reopened,"fullMapPan",new PointF(.2f,.7f));Invoke(reopened,"ResetMapZoom");
             Check(Field<float>(reopened,"fullMapZoom")==1f && Field<PointF>(reopened,"fullMapPan")==new PointF(.5f,.5f),
                 "Expanded-map reset restores one-times zoom and the map centre");
+            Check(reopened.EffectiveFullMapOpacity==35,"Resetting zoom restores configured opacity");
             SetField(reopened,"fullMapActive",false);Invoke(reopened,"ResetMapZoom");
             Check(Field<float>(reopened,"zoom")==1f && Field<float>(reopened,"targetZoom")==1f,
                 "Compact-map reset restores one-times zoom without leaving a stale animation target");
@@ -262,6 +867,9 @@ static class InputVoiceTests {
         Check(!player.Busy && player.LastError==null,"MP3 sequence completed without decoder errors");
     }
     [STAThread] static void Main() {
+        TestDiagnosticProfileIsolation();
+        TestRelativeTeleportCommands();
+        TestFullMapAdminGeometry();
         Check(MapWindow.BuildMapTeleportCommand(new PointF(0,0))=="#Teleport 617718 618618 0"
             && MapWindow.BuildMapTeleportCommand(new PointF(1,1))=="#Teleport -903900 -905000 0",
             "Map teleport converts both map corners to world coordinates");
@@ -319,7 +927,48 @@ static class InputVoiceTests {
             typeof(Button).GetMethod("OnClick",Hidden).Invoke(editor.Controls["Save"],new object[]{EventArgs.Empty});
             Check(editor.SavedCommand.IsBoolean && editor.SavedCommand.Build(true)=="#Example true 5 target","Editor commits boolean and optional argument fields together");
         }
+        var originalCulture=Thread.CurrentThread.CurrentCulture;
+        try {
+            Thread.CurrentThread.CurrentCulture=new System.Globalization.CultureInfo("de-DE");
+            foreach(string numeric in new[]{"0","0.5","1","-2.5"}) {
+                var numericCommand=new AdminCommand("Numeric command","#Example") { Quantity=numeric };
+                Check(numericCommand.ValidationError()==null && numericCommand.Build()=="#Example "+numeric,"Custom numeric values preserve SCUM's decimal point independently of Windows locale: "+numeric);
+                AdminCommand.Save(adminPath,new List<AdminCommand>{numericCommand});
+                Check(AdminCommand.Load(adminPath).Single().Quantity==numeric,"Custom numeric values survive save and reload: "+numeric);
+            }
+        } finally { Thread.CurrentThread.CurrentCulture=originalCulture; }
+        using(var editor=new AdminCommandEditor(new AdminCommand("Numeric command","#Example"))) {
+            ((TextBox)editor.Controls["Quantity"]).Text="0,5";
+            typeof(Button).GetMethod("OnClick",Hidden).Invoke(editor.Controls["Save"],new object[]{EventArgs.Empty});
+            Check(editor.SavedCommand==null && editor.DialogResult!=DialogResult.OK && editor.Controls["ValidationError"].Text.Length>0,"Invalid numeric input stays in the editor with an inline error instead of a nested modal popup");
+            ((TextBox)editor.Controls["Quantity"]).Text="0.5";
+            typeof(Button).GetMethod("OnClick",Hidden).Invoke(editor.Controls["Save"],new object[]{EventArgs.Empty});
+            Check(editor.SavedCommand.Build()=="#Example 0.5" && editor.Controls["ValidationError"].Text.Length==0,"Correcting a numeric value clears the error and saves the fractional command");
+        }
         var migrated=AdminCommand.Toggles(new List<AdminCommand>{new AdminCommand("God mode ON","#SetGodMode true"),new AdminCommand("God mode OFF","#SetGodMode false")});
+        using(var editor=new AdminCommandEditor(new AdminCommand("Numeric toggle","#Example 0"))) {
+            ((ComboBox)editor.Controls["CommandType"]).SelectedIndex=2;
+            ((TextBox)editor.Controls["ExtraStrings"]).Text="target";
+            typeof(Button).GetMethod("OnClick",Hidden).Invoke(editor.Controls["Save"],new object[]{EventArgs.Empty});
+            Check(editor.SavedCommand.IsBoolean && editor.SavedCommand.ToggleNumeric && editor.SavedCommand.Build(true)=="#Example 1 target" && editor.SavedCommand.Build(false)=="#Example 0 target","Selecting a numeric pill toggle replaces an existing toggle value and generates exact 1/0 commands");
+            AdminCommand.Save(adminPath,new List<AdminCommand>{editor.SavedCommand});
+            var reloaded=AdminCommand.Load(adminPath).Single();
+            Check(reloaded.ToggleNumeric && reloaded.Build(false)=="#Example 0 target","Numeric toggle type, off value and free-text arguments survive reload");
+        }
+        using(var editor=new AdminCommandEditor(new AdminCommand("Brightness","#Example"))) {
+            ((ComboBox)editor.Controls["CommandType"]).SelectedIndex=3;
+            ((TextBox)editor.Controls["Quantity"]).Text="0.5";
+            typeof(Button).GetMethod("OnClick",Hidden).Invoke(editor.Controls["Save"],new object[]{EventArgs.Empty});
+            Check(editor.SavedCommand.NumericMode && !editor.SavedCommand.IsBoolean && editor.SavedCommand.Build()=="#Example 0.5","Numeric command type sends the chosen scalar without an unwanted toggle argument");
+            AdminCommand.Save(adminPath,new List<AdminCommand>{editor.SavedCommand});
+            Check(AdminCommand.Load(adminPath).Single().NumericMode,"Numeric command type survives save and reload");
+        }
+        using(var editor=new AdminCommandEditor(new AdminCommand("Announcement","#Example"))) {
+            ((ComboBox)editor.Controls["CommandType"]).SelectedIndex=0;
+            ((TextBox)editor.Controls["ExtraStrings"]).Text="\"Hello world\" target";
+            typeof(Button).GetMethod("OnClick",Hidden).Invoke(editor.Controls["Save"],new object[]{EventArgs.Empty});
+            Check(editor.SavedCommand.Build()=="#Example \"Hello world\" target","Run-once commands preserve arbitrary single-line arguments and quotes");
+        }
         Check(migrated.Count==1 && migrated[0].Name=="God mode" && migrated[0].Command=="#SetGodMode","Legacy true/false command pairs migrate into a single toggle");
         AdminCommand.Save(adminPath,new List<AdminCommand>());Check(AdminCommand.Load(adminPath).Count==0,"An intentionally empty admin button list stays empty");
         File.Delete(adminPath);Directory.Delete(Path.GetDirectoryName(adminPath));
@@ -600,13 +1249,23 @@ static class InputVoiceTests {
         string root=Path.Combine(Path.GetTempPath(),"MiniMap-voice-test-"+Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(root);
         try {
+            TestRelativeTeleportSubmission(root);
+            TestFullMapAdminControls(root);
+            TestPersistedAdminDismissal(root);
             string packs=Path.Combine(root,"voice-navigation"); VoicePacks.InstallBundled(packs);
-            Check(VoicePacks.Discover(packs).SequenceEqual(new[]{VoicePacks.DefaultName}),"Bundled voice installs all 12 clips and is discovered");
+            Check(VoicePacks.Discover(packs).SequenceEqual(VoicePacks.BundledNames.OrderBy(name=>name,StringComparer.CurrentCultureIgnoreCase)),"All four bundled voices install their required clips and are discovered");
+            Check(VoicePacks.Compose(VoicePacks.RussianName,new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}).SequenceEqual(new[]{VoicePacks.Clips[0],VoicePacks.Clips[5]}),"Russian distance guidance uses distance then turn without an incorrect preposition");
+            Check(VoicePacks.Compose(VoicePacks.DefaultName,new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}).SequenceEqual(new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}),"English navigation retains its In-distance-turn composition");
+            Check(VoicePacks.Compose(VoicePacks.GermanName,new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}).SequenceEqual(new[]{VoicePacks.Clips[0],VoicePacks.Clips[5]}),"German cues use distance then action without announcing a fixed northern heading");
+            Check(VoicePacks.Compose(VoicePacks.SpanishName,new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}).SequenceEqual(new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}),"Spanish cues retain the extracted En prefix before distance and action");
+            Check(!File.Exists(Path.Combine(packs,VoicePacks.GermanName,VoicePacks.Clips[10])) && VoicePacks.RequiredClips(VoicePacks.GermanName).Length==11,"German pack discovery does not require an unused distance-prefix recording");
+            string germanTurn=Path.Combine(packs,VoicePacks.GermanName,VoicePacks.Clips[5]);byte[] turnBytes=File.ReadAllBytes(germanTurn);File.Delete(germanTurn);
+            Check(!VoicePacks.Discover(packs).Contains(VoicePacks.GermanName),"A missing real turn instruction makes the German pack unavailable");File.WriteAllBytes(germanTurn,turnBytes);
             Directory.CreateDirectory(Path.Combine(packs,"Incomplete"));
-            Check(VoicePacks.Discover(packs).Length==1,"Incomplete voice packs are excluded");
+            Check(VoicePacks.Discover(packs).Length==4,"Incomplete voice packs are excluded");
             string second=Path.Combine(packs,"Second voice"); Directory.CreateDirectory(second);
             foreach(string file in VoicePacks.Clips) File.Copy(Path.Combine(packs,VoicePacks.DefaultName,file),Path.Combine(second,file));
-            Check(VoicePacks.Discover(packs).Length==2,"Additional voice folders are discovered without code changes");
+            Check(VoicePacks.Discover(packs).Length==5,"Additional voice folders are discovered without code changes");
             using(var player=new VoicePlayer { Volume=0 }) {
                 // Hosted CI runners have no reliable audio endpoint for Windows MCI playback.
                 // Keep decoder playback covered on developer machines and verify queue behavior everywhere.
@@ -641,6 +1300,26 @@ static class InputVoiceTests {
             Localization.Current=originalLanguage;
             using(var bitmap=new Bitmap(32,32)) bitmap.Save(Path.Combine(root,"map.png"));
             using(var window=new MapWindow(root,true)) {
+            SetField(window,"adminToolsEnabled",true);
+                var startupTimer=Field<System.Windows.Forms.Timer>(window,"timer");
+                startupTimer.Start();
+                var modalMethod=typeof(MapWindow).GetMethod("RunUiModal",Hidden).MakeGenericMethod(typeof(DialogResult));
+                Func<DialogResult> modalProbe=()=> {
+                    Check(!startupTimer.Enabled && Field<bool>(window,"panelOpening") && Field<bool>(window,"shortcutCaptureOpen"),
+                        "Startup modal suspends tracking and application shortcuts before opening");
+                    Check(!Field<Form>(window,"overlay").Visible && Cursor.Clip==SystemInformation.VirtualScreen,
+                        "Startup modal hides the map and releases cursor confinement for popup buttons");
+                    return DialogResult.No;
+                };
+                Check((DialogResult)modalMethod.Invoke(window,new object[]{modalProbe})==DialogResult.No,
+                    "Startup modal preserves the No choice");
+                Check(startupTimer.Enabled && !Field<bool>(window,"panelOpening") && !Field<bool>(window,"shortcutCaptureOpen"),
+                    "Startup modal restores tracking and input gates after closing");
+                Func<DialogResult> failedModal=()=> { throw new InvalidOperationException("modal fixture"); };
+                try { modalMethod.Invoke(window,new object[]{failedModal}); } catch(TargetInvocationException) {}
+                Check(startupTimer.Enabled && !Field<bool>(window,"panelOpening") && !Field<bool>(window,"shortcutCaptureOpen"),
+                    "Startup modal restores its input gates even when opening fails");
+                startupTimer.Stop();
                 var defaultAdminCommands=AdminCommand.Defaults();var godCommand=defaultAdminCommands[0];var playerCommand=defaultAdminCommands[1];
                 Check(defaultAdminCommands.All(command=>window.LastAdminToggleState(command)==null)
                     && window.AdminCommandLabel(godCommand)=="God mode: UNKNOWN",
@@ -661,7 +1340,8 @@ static class InputVoiceTests {
                     "Admin input prevents coordinate copying before clipboard capture or attempt bookkeeping");
                 typeof(MapWindow).GetField("savedDataObject",Hidden).SetValue(window,null);
                 typeof(MapWindow).GetField("adminCommandBusy",Hidden).SetValue(window,false);
-                Check(Descendants(window).OfType<Button>().Any(b=>b.Text=="Admin command panel"),"Settings exposes the admin command panel");
+                Check(Descendants(window).Any(control=>control.Name=="AdminToolsToggle"),"Settings exposes the admin tools pill toggle");
+                Invoke(window,"SetFullMap",true);
                 typeof(MapWindow).GetMethod("ShowAdminCommands",Hidden).Invoke(window,null);
                 var adminPanel=(Form)typeof(MapWindow).GetField("adminCommandsPanel",Hidden).GetValue(window);
                 Check(adminPanel.TopMost && (WindowStyle(adminPanel.Handle,-20)&8)!=0,"Admin panel uses native topmost style above SCUM");
@@ -747,6 +1427,7 @@ static class InputVoiceTests {
                 typeof(MapWindow).GetMethod("ShowAdminCommands",Hidden).Invoke(window,null);
                 Check(object.ReferenceEquals(adminPanel,typeof(MapWindow).GetField("adminCommandsPanel",Hidden).GetValue(window)) && adminPanel.WindowState==FormWindowState.Normal && adminPanel.TopMost,"Repeated opening restores the admin panel above SCUM");
                 adminPanel.Close();
+                Invoke(window,"SetFullMap",false);
                 Check((int)typeof(MapWindow).GetField("scumCopyModifierKey",Hidden).GetValue(window)==0 && (int)typeof(MapWindow).GetField("scumCopyKey",Hidden).GetValue(window)==0x6F,"New installations default to NumPad Divide without a modifier");
                 Check(!(bool)typeof(MapWindow).GetField("suppressCopyKeyReminder",Hidden).GetValue(window),"Copy-key reminder appears by default");
                 Check((bool)typeof(MapWindow).GetField("automaticDeathMarkers",Hidden).GetValue(window),"Automatic death markers are enabled for new profiles");
@@ -795,7 +1476,9 @@ static class InputVoiceTests {
                 Check(!(bool)typeof(MapWindow).GetProperty("SettingsVisible",Hidden).GetValue(window,null),"Minimized taskbar window does not count as open settings or pause tracking");
                 typeof(MapWindow).GetMethod("ShowSettings",Hidden).Invoke(window,null); Application.DoEvents();
                 Check(window.WindowState==FormWindowState.Normal && (bool)typeof(MapWindow).GetProperty("SettingsVisible",Hidden).GetValue(window,null),"Opening settings restores the taskbar window");
-                typeof(MapWindow).GetMethod("DismissSettings",Hidden).Invoke(window,null); Application.DoEvents();
+                var done=Field<Button>(window,"settingsDoneBtn");
+                Check(!done.CausesValidation,"Done remains clickable with unfinished settings edits");
+                done.PerformClick();Application.DoEvents();
                 Check(window.Visible && window.WindowState==FormWindowState.Minimized,"Dismissing settings retains the taskbar button");
                 typeof(MapWindow).GetField("lastHomeAction",Hidden).SetValue(window,DateTime.MinValue);
                 typeof(MapWindow).GetMethod("FocusSettingsShortcut",Hidden).Invoke(window,null); Application.DoEvents();

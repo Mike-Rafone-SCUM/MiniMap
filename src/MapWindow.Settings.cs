@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -71,7 +71,7 @@ namespace ScumMiniMap {
                 Native.CancelActiveCopy();
                 try {
                     using(var capture=new ShortcutCaptureDialog(title,bindingValidator??((key,scan)=>ShortcutBindingError(key,read(),scan,readScan())))) {
-                        if(capture.ShowDialog(this)!=DialogResult.OK) return;
+                        if(RunUiModal(() => capture.ShowDialog(this))!=DialogResult.OK) return;
                         write(capture.CapturedKey,capture.CapturedScanCode);
                         button.Text=title+": "+PhysicalKeyCapture.KeyName(read());
                         fallbackKeysArmed=false;
@@ -305,6 +305,8 @@ namespace ScumMiniMap {
                         if(key=="VoiceVolume") { int volume; if(int.TryParse(val,out volume)) voiceVolume=Math.Max(0,Math.Min(100,volume)); continue; }
                         if(key=="SuppressCopyKeyReminder") { if(bool.TryParse(val,out b)) suppressCopyKeyReminder=b; continue; }
                         if(key=="Welcomed") { foundWelcomed=true; continue; }
+                        if(key=="AdminToolsEnabled") { if(bool.TryParse(val,out b))adminToolsEnabled=b;continue; }
+                        if(key=="AdminPanelDismissed") { adminPanelDismissedForFullMap=false;continue; }
 
 
 
@@ -512,6 +514,7 @@ namespace ScumMiniMap {
 
                 File.AppendAllText(settingsPath+".tmp","ScumCopyScanCode="+scumCopyScanCode+Environment.NewLine+"ScumMapScanCode="+scumMapScanCode+Environment.NewLine+"ScumChatScanCode="+scumChatScanCode+Environment.NewLine);
                 File.AppendAllText(settingsPath+".tmp","AutomaticDeathMarkers="+automaticDeathMarkers+Environment.NewLine);
+                File.AppendAllText(settingsPath+".tmp","AdminToolsEnabled="+adminToolsEnabled+Environment.NewLine+"AdminPanelDismissed="+adminPanelDismissedForFullMap+Environment.NewLine);
                 File.AppendAllLines(settingsPath+".tmp",new[]{"SettingsShortcutKey="+settingsShortcutKey,"PinShortcutKey="+pinShortcutKey,"SearchShortcutKey="+searchShortcutKey,"SettingsShortcutScanCode="+settingsShortcutScanCode,"PinShortcutScanCode="+pinShortcutScanCode,"SearchShortcutScanCode="+searchShortcutScanCode});
                 foreach(var action in AppControlBindings.AllActions) {
                     // Preserve legacy keys for the first three actions; new actions have stable names.
@@ -564,8 +567,7 @@ namespace ScumMiniMap {
 
         async void ShowSettings() {
             if(panelOpening || searchOpen) return;
-            Native.ReleaseCapture();
-            Cursor.Clip=Rectangle.Empty;
+            PrepareUiInput();
             if(SettingsVisible) {
 
 

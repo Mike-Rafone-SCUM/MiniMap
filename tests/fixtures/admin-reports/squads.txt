@@ -1,0 +1,6 @@
+[SquadId: 1 SquadName: Sample Group]
+Platform ID: 76561198010000011 Platform Name: Sample Account Character Name: Sample Player Member Rank: 4
+[SquadId: 2 SquadName: Sample Vehicles]
+Platform ID: 76561198010000002 Platform Name: Account 0 Character Name: Driver 0 Member Rank: 3
+Platform ID: 76561198010000001 Platform Name: Account 1 Character Name: Driver 1 Member Rank: 3
+Platform ID: 76561198010000003 Platform Name: Account 2 Character Name: Driver 2 Member Rank: 3

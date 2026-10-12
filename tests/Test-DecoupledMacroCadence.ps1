@@ -5,7 +5,7 @@ $miniRoot = Split-Path $PSScriptRoot -Parent
 $srcDir = Join-Path $miniRoot 'src'
 $resDir = Join-Path $miniRoot 'resources'
 $sources = & (Join-Path (Split-Path $PSScriptRoot -Parent) 'scripts\Get-MiniMapSources.ps1')
-Add-Type -Path $sources -ReferencedAssemblies System.Windows.Forms,System.Drawing
+Add-Type -Path $sources -ReferencedAssemblies System.Windows.Forms,System.Drawing,System.Xml,System.IO.Compression
 
 Write-Output "--- Testing Decoupled Macro Cadence & Motion Advancement ---"
 $miniWindow = [ScumMiniMap.MapWindow]::new($resDir, $true)
@@ -23,6 +23,37 @@ try {
     $tickMethod.Invoke($miniWindow, @($null, [EventArgs]::Empty))
     $isBusyAfter = $tickBusyField.GetValue($miniWindow)
     if ($isBusyAfter) { throw "tickBusy must be released after Tick completes" }
+
+    # Simulate music presence without starting MusicalScumbag or sending game input.
+    $flags = [Reflection.BindingFlags]'NonPublic,Instance'
+    $type = $miniWindow.GetType()
+    $diagnostic = $type.GetField('diagnosticMode', $flags)
+    $music = $type.GetField('musicalScumbagOpen', $flags)
+    $type.GetField('nextMusicProcessCheck', $flags).SetValue($miniWindow, [DateTime]::MaxValue)
+    $music.SetValue($miniWindow, $true)
+    $diagnostic.SetValue($miniWindow, $false)
+    try {
+        $type.GetField('pending', $flags).SetValue($miniWindow, $true)
+        $tickMethod.Invoke($miniWindow, @($null, [EventArgs]::Empty))
+        if (-not $type.GetField('intensiveWorkWasPaused', $flags).GetValue($miniWindow)) { throw 'Music did not pause intensive work.' }
+        if ($type.GetField('pending', $flags).GetValue($miniWindow)) { throw 'Pending copy survived music pause.' }
+        if ($type.GetField('timer', $flags).GetValue($miniWindow).Interval -ne 250) { throw 'Music pause retained the intensive timer cadence.' }
+        $copyInProgressField.SetValue($miniWindow, $false)
+        $type.GetMethod('PerformCopyAsync', $flags).Invoke($miniWindow, @())
+        if ($copyInProgressField.GetValue($miniWindow)) { throw 'Music pause allowed a new copy request.' }
+        $frames = $miniWindow.PresentedFrames
+        $type.GetMethod('RenderOverlay', $flags).Invoke($miniWindow, @())
+        if ($miniWindow.PresentedFrames -ne $frames) { throw 'Music pause presented an overlay frame.' }
+        $music.SetValue($miniWindow, $false)
+        $type.GetField('adminCommandBusy', $flags).SetValue($miniWindow, $true)
+        $tickMethod.Invoke($miniWindow, @($null, [EventArgs]::Empty))
+        if ($type.GetField('intensiveWorkWasPaused', $flags).GetValue($miniWindow)) { throw 'Music close did not resume work.' }
+        if ($type.GetField('timer', $flags).GetValue($miniWindow).Interval -eq 250) { throw 'Music close retained the paused cadence.' }
+    } finally {
+        $type.GetField('adminCommandBusy', $flags).SetValue($miniWindow, $false)
+        $diagnostic.SetValue($miniWindow, $true)
+        $music.SetValue($miniWindow, $false)
+    }
 
     # Test MapMotion smooth interpolation during active sampling
     $motion = [ScumMiniMap.MapMotion]::new()

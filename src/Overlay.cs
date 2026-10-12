@@ -6,6 +6,366 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace ScumMiniMap {
+    // Wheel handlers only record intent. A single UI timer applies the combined
+    // movement, so a fast wheel cannot schedule a render/rebuild for every notch.
+    internal sealed class BatchedWheel:IDisposable {
+        readonly Timer timer;
+        readonly Action<int> apply;
+        int pending;
+        bool disposed;
+        internal bool Waiting { get { return !disposed && timer.Enabled; } }
+        internal BatchedWheel(Action<int> apply) {
+            this.apply=apply;timer=new Timer { Interval=50 };
+            timer.Tick+=(s,e)=>Flush();
+        }
+        internal void Add(int delta) {
+            if(disposed)return;
+            pending=(int)Math.Max(-120L*256,Math.Min(120L*256,(long)pending+delta));
+            if(!timer.Enabled)timer.Start();
+        }
+        internal void Flush() {
+            timer.Stop();if(disposed)return;
+            int steps=pending/120;pending%=120;
+            if(steps!=0)apply(steps);
+        }
+        internal void Cancel() { timer.Stop();pending=0; }
+        public void Dispose() { if(disposed)return;disposed=true;timer.Dispose();pending=0; }
+    }
+    internal static class FullMapSidebarStyle {
+        internal static readonly Color Background=Color.FromArgb(14,17,20);
+        internal static readonly Color Border=Color.FromArgb(42,52,61);
+        internal static readonly Color Divider=Color.FromArgb(60,60,75,90);
+        internal static readonly Color ButtonSurface=Color.FromArgb(22,27,32);
+        internal static readonly Color SelectedSurface=Color.FromArgb(45,56,68);
+        internal static readonly Color Muted=Color.FromArgb(160,170,180);
+        internal static readonly Color Secondary=Color.FromArgb(120,135,150);
+        internal static readonly Color Ink=Color.WhiteSmoke;
+        internal static readonly Color MiniInk=Color.FromArgb(180,190,200);
+        internal static readonly Color SelectedInk=Color.FromArgb(255,174,51);
+        internal static readonly Color Accent=Color.FromArgb(255,159,28);
+        internal static readonly Color Arrow=Color.SkyBlue;
+        internal static readonly Color SectionExpanded=Color.FromArgb(200,22,27,32);
+        internal static readonly Color SectionCollapsed=Color.FromArgb(160,16,20,24);
+        internal static readonly Color SectionBorder=Color.FromArgb(140,42,52,61);
+        internal static readonly Color ScrollTrack=Color.FromArgb(40,255,255,255);
+        internal static readonly Color ScrollThumb=Color.FromArgb(160,70,140,200);
+        internal static readonly Color ScrollThumbDragging=Color.FromArgb(220,80,170,240);
+
+        static GraphicsPath RoundedPath(Rectangle rect,int diameter) {
+            var path=new GraphicsPath();
+            int arc=Math.Min(diameter,Math.Min(rect.Width,rect.Height));
+            if(arc<=0)return path;
+            path.AddArc(rect.X,rect.Y,arc,arc,180,90);
+            path.AddArc(rect.Right-arc,rect.Y,arc,arc,270,90);
+            path.AddArc(rect.Right-arc,rect.Bottom-arc,arc,arc,0,90);
+            path.AddArc(rect.X,rect.Bottom-arc,arc,arc,90,90);
+            path.CloseFigure();return path;
+        }
+        internal static void DrawMiniButton(Graphics graphics,Rectangle rect,string text,bool selected) {
+            using(var font=new Font("Segoe UI",7f,FontStyle.Bold))DrawMiniButton(graphics,rect,text,selected,font,true,false);
+        }
+        internal static void DrawMiniButton(Graphics graphics,Rectangle rect,string text,bool selected,Font font,bool enabled,bool compact=true) {
+            if(rect.Width<=0 || rect.Height<=0)return;
+            using(var path=RoundedPath(rect,6)) {
+                using(var fill=new SolidBrush(selected && enabled?SelectedSurface:ButtonSurface))graphics.FillPath(fill,path);
+                using(var border=new Pen(selected && enabled?Accent:Border,1f))graphics.DrawPath(border,path);
+            }
+            DrawText(graphics,rect,text,font,!enabled?Secondary:(selected?SelectedInk:MiniInk),compact);
+        }
+        internal static void DrawActionButton(Graphics graphics,Rectangle rect,string text,Color background) {
+            using(var font=new Font("Segoe UI",7.5f,FontStyle.Bold))DrawActionButton(graphics,rect,text,background,font,true,false);
+        }
+        internal static void DrawActionButton(Graphics graphics,Rectangle rect,string text,Color background,Font font,bool enabled,bool compact=true) {
+            if(rect.Width<=0 || rect.Height<=0)return;
+            using(var path=RoundedPath(rect,7)) {
+                using(var fill=new SolidBrush(background))graphics.FillPath(fill,path);
+                using(var border=new Pen(OverlayTheme.Border,1f))graphics.DrawPath(border,path);
+            }
+            DrawText(graphics,rect,text,font,enabled?Ink:Secondary,compact);
+        }
+        static void DrawText(Graphics graphics,Rectangle rect,string text,Font font,Color ink,bool compact) {
+            using(var brush=new SolidBrush(ink))
+            using(var format=new StringFormat { Alignment=StringAlignment.Center,LineAlignment=StringAlignment.Center,
+                Trimming=compact?StringTrimming.EllipsisCharacter:StringTrimming.None,FormatFlags=compact?StringFormatFlags.NoWrap:0 })
+                graphics.DrawString(text??"",font,brush,rect,format);
+        }
+    }
+
+    internal sealed class SidebarButton:Button {
+        readonly Font sidebarFont=new Font("Segoe UI",7.5f,FontStyle.Bold);
+        bool selected,sectionHeader,expanded;
+        internal bool Pill;
+        internal bool Selected { get { return selected; } set { if(selected!=value) { selected=value;Invalidate(); } } }
+        internal bool SectionHeader { get { return sectionHeader; } set { if(sectionHeader!=value) { sectionHeader=value;Invalidate(); } } }
+        internal bool Expanded { get { return expanded; } set { if(expanded!=value) { expanded=value;Invalidate(); } } }
+        internal SidebarButton() {
+            SetStyle(ControlStyles.UserPaint|ControlStyles.AllPaintingInWmPaint|ControlStyles.OptimizedDoubleBuffer|ControlStyles.ResizeRedraw,true);
+            FlatStyle=FlatStyle.Flat;UseVisualStyleBackColor=false;BackColor=FullMapSidebarStyle.Background;
+            ForeColor=FullMapSidebarStyle.Ink;Font=sidebarFont;Cursor=Cursors.Hand;AutoEllipsis=true;
+        }
+        protected override void Dispose(bool disposing) { if(disposing)sidebarFont.Dispose();base.Dispose(disposing); }
+        protected override void OnPaint(PaintEventArgs e) {
+            e.Graphics.SmoothingMode=SmoothingMode.AntiAlias;
+            e.Graphics.Clear(BackColor);
+            var rect=new Rectangle(0,0,Math.Max(0,Width-1),Math.Max(0,Height-1));
+            if(sectionHeader) {
+                using(var fill=new SolidBrush(expanded?FullMapSidebarStyle.SectionExpanded:FullMapSidebarStyle.SectionCollapsed))e.Graphics.FillRectangle(fill,rect);
+                using(var border=new Pen(FullMapSidebarStyle.SectionBorder,1f))e.Graphics.DrawRectangle(border,rect);
+                using(var arrowFont=new Font("Segoe UI",7f,FontStyle.Bold))
+                using(var arrow=new SolidBrush(Enabled?FullMapSidebarStyle.Arrow:FullMapSidebarStyle.Secondary))
+                    e.Graphics.DrawString(expanded?"\u25bc":"\u25ba",arrowFont,arrow,6,6);
+                using(var textBrush=new SolidBrush(Enabled?FullMapSidebarStyle.Ink:FullMapSidebarStyle.Secondary))
+                using(var format=new StringFormat { LineAlignment=StringAlignment.Center,Trimming=StringTrimming.EllipsisCharacter,
+                    FormatFlags=StringFormatFlags.NoWrap })
+                    e.Graphics.DrawString(Text,Font,textBrush,new Rectangle(22,0,Math.Max(0,Width-26),Height),format);
+            } else if(Pill && rect.Width>rect.Height && rect.Height>0) {
+                int diameter=rect.Height;
+                using(var shape=new GraphicsPath()) {
+                    shape.AddArc(rect.Left,rect.Top,diameter,diameter,90,180);
+                    shape.AddArc(rect.Right-diameter,rect.Top,diameter,diameter,270,180);shape.CloseFigure();
+                    using(var fill=new SolidBrush(selected?FullMapSidebarStyle.SelectedSurface:FullMapSidebarStyle.ButtonSurface))e.Graphics.FillPath(fill,shape);
+                    using(var border=new Pen(selected?OverlayTheme.Accent:FullMapSidebarStyle.Border))e.Graphics.DrawPath(border,shape);
+                }
+                TextRenderer.DrawText(e.Graphics,Text,Font,rect,Enabled?(selected?OverlayTheme.Accent:FullMapSidebarStyle.Ink):FullMapSidebarStyle.Secondary,TextFormatFlags.HorizontalCenter|TextFormatFlags.VerticalCenter|TextFormatFlags.EndEllipsis|TextFormatFlags.NoPrefix);
+            } else if(Height<=22 || selected)FullMapSidebarStyle.DrawMiniButton(e.Graphics,rect,Text,selected,Font,Enabled);
+            else FullMapSidebarStyle.DrawActionButton(e.Graphics,rect,Text,OverlayTheme.Surface,Font,Enabled);
+            if(Focused && ShowFocusCues)ControlPaint.DrawFocusRectangle(e.Graphics,Rectangle.Inflate(rect,-4,-4),FullMapSidebarStyle.Muted,BackColor);
+        }
+        protected override void OnEnabledChanged(EventArgs e) { base.OnEnabledChanged(e);Invalidate(); }
+        protected override void OnTextChanged(EventArgs e) { base.OnTextChanged(e);Invalidate(); }
+        protected override void OnGotFocus(EventArgs e) { base.OnGotFocus(e);Invalidate(); }
+        protected override void OnLostFocus(EventArgs e) { base.OnLostFocus(e);Invalidate(); }
+    }
+
+    internal sealed class SidebarRadioButton:RadioButton {
+        readonly Font sidebarFont=new Font("Segoe UI",7f,FontStyle.Bold);
+        internal SidebarRadioButton() {
+            SetStyle(ControlStyles.UserPaint|ControlStyles.AllPaintingInWmPaint|ControlStyles.OptimizedDoubleBuffer|ControlStyles.ResizeRedraw,true);
+            Appearance=Appearance.Button;FlatStyle=FlatStyle.Flat;UseVisualStyleBackColor=false;
+            BackColor=FullMapSidebarStyle.Background;Font=sidebarFont;Cursor=Cursors.Hand;
+        }
+        protected override void Dispose(bool disposing) { if(disposing)sidebarFont.Dispose();base.Dispose(disposing); }
+        protected override void OnPaint(PaintEventArgs e) {
+            e.Graphics.SmoothingMode=SmoothingMode.AntiAlias;
+            e.Graphics.Clear(BackColor);
+            var rect=new Rectangle(0,0,Math.Max(0,Width-1),Math.Max(0,Height-1));
+            FullMapSidebarStyle.DrawMiniButton(e.Graphics,rect,Text,Checked,Font,Enabled);
+            if(Focused && ShowFocusCues)ControlPaint.DrawFocusRectangle(e.Graphics,Rectangle.Inflate(rect,-4,-4),FullMapSidebarStyle.Muted,BackColor);
+        }
+        protected override void OnCheckedChanged(EventArgs e) { base.OnCheckedChanged(e);Invalidate(); }
+        protected override void OnEnabledChanged(EventArgs e) { base.OnEnabledChanged(e);Invalidate(); }
+        protected override void OnGotFocus(EventArgs e) { base.OnGotFocus(e);Invalidate(); }
+        protected override void OnLostFocus(EventArgs e) { base.OnLostFocus(e);Invalidate(); }
+    }
+
+    internal sealed class SidebarSection:GroupBox {
+        internal SidebarSection() {
+            SetStyle(ControlStyles.UserPaint|ControlStyles.AllPaintingInWmPaint|ControlStyles.OptimizedDoubleBuffer|ControlStyles.ResizeRedraw,true);
+            BackColor=FullMapSidebarStyle.Background;ForeColor=FullMapSidebarStyle.Muted;
+        }
+        public override Rectangle DisplayRectangle {
+            get { return new Rectangle(Padding.Left,Padding.Top,Math.Max(0,ClientSize.Width-Padding.Horizontal),Math.Max(0,ClientSize.Height-Padding.Vertical)); }
+        }
+        protected override void OnPaint(PaintEventArgs e) {
+            e.Graphics.Clear(BackColor);
+            if(!string.IsNullOrEmpty(Text))TextRenderer.DrawText(e.Graphics,Text,Font,
+                new Rectangle(Padding.Left,0,Math.Max(0,Width-Padding.Horizontal),Font.Height+2),ForeColor,
+                TextFormatFlags.Left|TextFormatFlags.SingleLine|TextFormatFlags.EndEllipsis);
+        }
+    }
+
+    internal sealed class SidebarScrollPanel:Panel {
+        const int BarWidth=4,BarInset=2;
+        readonly Panel viewport;
+        readonly System.Collections.Generic.HashSet<Control> hooked=new System.Collections.Generic.HashSet<Control>();
+        internal Panel Content { get; private set; }
+        int minimumContentWidth=240,maximumScrollX,maximumScrollY;
+        readonly BatchedWheel wheel;
+        int contentUpdateDepth;
+        internal event EventHandler ViewportChanged;
+        internal Action<int> WheelNavigation;
+        internal Rectangle VisibleContentBounds { get { return new Rectangle(scrollOffset,viewport.ClientSize); } }
+        internal void BeginContentUpdate() { contentUpdateDepth++; }
+        internal void EndContentUpdate() { if(contentUpdateDepth>0 && --contentUpdateDepth==0)RefreshContentLayout(); }
+        Point scrollOffset;
+        bool layingOut,draggingHorizontal,draggingVertical;
+        Point dragStart,dragOffset;
+        Rectangle verticalTrack,verticalThumb,horizontalTrack,horizontalThumb;
+        internal int MinimumContentWidth { get { return minimumContentWidth; } set { minimumContentWidth=Math.Max(0,value);RefreshContentLayout(); } }
+        internal int MaximumScrollX { get { return maximumScrollX; } }
+        internal int MaximumScrollY { get { return maximumScrollY; } }
+        internal Point ScrollOffset { get { return scrollOffset; } set { SetScrollOffset(value); } }
+        internal SidebarScrollPanel() {
+            wheel=new BatchedWheel(steps=> {
+                if(IsDisposed || Disposing)return;
+                if(WheelNavigation!=null)WheelNavigation(-steps);
+                else if(maximumScrollX>0 && (((ModifierKeys&Keys.Shift)!=0) || maximumScrollY==0))ScrollBy(-steps*48,0);
+                else ScrollBy(0,-steps*48);
+            });
+            VisibleChanged+=(s,e)=> { if(!Visible)wheel.Cancel(); };
+            SetStyle(ControlStyles.UserPaint|ControlStyles.AllPaintingInWmPaint|ControlStyles.OptimizedDoubleBuffer|ControlStyles.ResizeRedraw,true);
+            SetStyle(ControlStyles.Selectable,false);TabStop=false;AutoScroll=false;
+            BackColor=FullMapSidebarStyle.Background;Padding=new Padding(10,0,10,0);
+            viewport=new Panel { BackColor=FullMapSidebarStyle.Background,TabStop=false };
+            Content=new Panel { BackColor=FullMapSidebarStyle.Background,TabStop=false };
+            viewport.Controls.Add(Content);Controls.Add(viewport);
+            Content.ControlAdded+=(s,e)=> { Hook(e.Control);RefreshContentLayout(); };
+            Content.ControlRemoved+=(s,e)=> { Unhook(e.Control);RefreshContentLayout(); };
+            Content.Layout+=(s,e)=>RefreshContentLayout();
+            viewport.MouseWheel+=ChildWheel;Content.MouseWheel+=ChildWheel;
+        }
+        void Hook(Control control) {
+            if(!hooked.Add(control))return;
+            control.SizeChanged+=ChildLayoutChanged;control.VisibleChanged+=ChildLayoutChanged;control.DockChanged+=ChildLayoutChanged;
+            control.GotFocus+=ChildGotFocus;control.ControlAdded+=DescendantAdded;control.ControlRemoved+=DescendantRemoved;
+            if(!(control is NumericUpDown) && !InNumericInput(control))control.MouseWheel+=ChildWheel;
+            foreach(Control child in control.Controls)Hook(child);
+        }
+        void Unhook(Control control) {
+            if(!hooked.Remove(control))return;
+            control.SizeChanged-=ChildLayoutChanged;control.VisibleChanged-=ChildLayoutChanged;control.DockChanged-=ChildLayoutChanged;
+            control.GotFocus-=ChildGotFocus;control.ControlAdded-=DescendantAdded;control.ControlRemoved-=DescendantRemoved;control.MouseWheel-=ChildWheel;
+            foreach(Control child in control.Controls)Unhook(child);
+        }
+        static bool InNumericInput(Control control) {
+            for(Control parent=control.Parent;parent!=null;parent=parent.Parent)if(parent is NumericUpDown)return true;
+            return false;
+        }
+        void DescendantAdded(object sender,ControlEventArgs e) { Hook(e.Control);RefreshContentLayout(); }
+        void DescendantRemoved(object sender,ControlEventArgs e) { Unhook(e.Control);RefreshContentLayout(); }
+        void ChildLayoutChanged(object sender,EventArgs e) { if(!layingOut)RefreshContentLayout(); }
+        void ChildGotFocus(object sender,EventArgs e) { ScrollControlIntoView((Control)sender); }
+        void ChildWheel(object sender,MouseEventArgs e) { HandleWheel(e); }
+        void HandleWheel(MouseEventArgs e) {
+            var handled=e as HandledMouseEventArgs;if(handled!=null && handled.Handled)return;
+            wheel.Add(e.Delta);
+            if(handled!=null)handled.Handled=true;
+        }
+        protected override void Dispose(bool disposing) { if(disposing)wheel.Dispose();base.Dispose(disposing); }
+        internal void RefreshContentLayout() {
+            if(contentUpdateDepth>0 || layingOut || viewport==null || Content==null || IsDisposed || Disposing)return;
+            Rectangle previousViewport=VisibleContentBounds;
+            layingOut=true;
+            try {
+                int contentHeight=0;
+                foreach(Control control in Content.Controls)if(control.Visible && control.Dock==DockStyle.Top)contentHeight+=Math.Max(0,control.Height);
+                bool horizontal=false,vertical=false;
+                int viewWidth=0,viewHeight=0,contentWidth=0;
+                for(int pass=0;pass<3;pass++) {
+                    int extraRight=vertical?Math.Max(0,BarWidth+BarInset-Padding.Right):0;
+                    int extraBottom=horizontal?Math.Max(0,BarWidth+BarInset-Padding.Bottom):0;
+                    viewWidth=Math.Max(0,ClientSize.Width-Padding.Horizontal-extraRight);
+                    viewHeight=Math.Max(0,ClientSize.Height-Padding.Vertical-extraBottom);
+                    contentWidth=Math.Max(minimumContentWidth,viewWidth);
+                    horizontal=contentWidth>viewWidth;vertical=contentHeight>viewHeight;
+                }
+                viewport.Bounds=new Rectangle(Padding.Left,Padding.Top,viewWidth,viewHeight);
+                Content.SuspendLayout();
+                try {
+                    Content.Size=new Size(contentWidth,Math.Max(contentHeight,viewHeight));
+                    int y=0;
+                    for(int index=Content.Controls.Count-1;index>=0;index--) {
+                        Control control=Content.Controls[index];
+                        if(!control.Visible || control.Dock!=DockStyle.Top)continue;
+                        control.SetBounds(0,y,contentWidth,control.Height);y+=control.Height;
+                    }
+                } finally { Content.ResumeLayout(true); }
+                maximumScrollX=Math.Max(0,contentWidth-viewWidth);maximumScrollY=Math.Max(0,contentHeight-viewHeight);
+                SetScrollOffset(scrollOffset);UpdateScrollbars();Invalidate();
+            } finally { layingOut=false; }
+            if(previousViewport!=VisibleContentBounds && ViewportChanged!=null)ViewportChanged(this,EventArgs.Empty);
+        }
+        void SetScrollOffset(Point value) {
+            Point previous=scrollOffset;
+            scrollOffset=new Point(Math.Max(0,Math.Min(maximumScrollX,value.X)),Math.Max(0,Math.Min(maximumScrollY,value.Y)));
+            if(Content!=null)Content.Location=new Point(-scrollOffset.X,-scrollOffset.Y);
+            UpdateScrollbars();Invalidate();
+            if(previous!=scrollOffset && !layingOut && ViewportChanged!=null)ViewportChanged(this,EventArgs.Empty);
+        }
+        internal void ScrollBy(int dx,int dy) {
+            int x=(int)Math.Max(0L,Math.Min((long)maximumScrollX,(long)scrollOffset.X+dx));
+            int y=(int)Math.Max(0L,Math.Min((long)maximumScrollY,(long)scrollOffset.Y+dy));
+            SetScrollOffset(new Point(x,y));
+        }
+        internal new void ScrollControlIntoView(Control control) {
+            if(control==null || viewport==null || Content==null)return;
+            Point position=Point.Empty;Control current=control;
+            while(current!=null && current!=Content) { position.Offset(current.Left,current.Top);current=current.Parent; }
+            if(current!=Content)return;
+            int x=scrollOffset.X,y=scrollOffset.Y;
+            if(control.Width>viewport.Width || position.X<x)x=position.X;
+            else if(position.X+control.Width>x+viewport.Width)x=position.X+control.Width-viewport.Width;
+            if(control.Height>viewport.Height || position.Y<y)y=position.Y;
+            else if(position.Y+control.Height>y+viewport.Height)y=position.Y+control.Height-viewport.Height;
+            SetScrollOffset(new Point(x,y));
+        }
+        void UpdateScrollbars() {
+            if(viewport==null || Content==null)return;
+            verticalTrack=maximumScrollY>0?new Rectangle(Math.Max(0,ClientSize.Width-BarWidth-BarInset),viewport.Top,BarWidth,viewport.Height):Rectangle.Empty;
+            horizontalTrack=maximumScrollX>0?new Rectangle(viewport.Left,Math.Max(0,ClientSize.Height-BarWidth-BarInset),viewport.Width,BarWidth):Rectangle.Empty;
+            verticalThumb=Thumb(verticalTrack,viewport.Height,Content.Height,scrollOffset.Y,maximumScrollY,true);
+            horizontalThumb=Thumb(horizontalTrack,viewport.Width,Content.Width,scrollOffset.X,maximumScrollX,false);
+        }
+        static Rectangle Thumb(Rectangle track,int visible,int total,int offset,int maximum,bool vertical) {
+            int length=vertical?track.Height:track.Width;
+            if(length<=0 || maximum<=0)return Rectangle.Empty;
+            int size=Math.Min(length,Math.Max(24,(int)((long)visible*length/Math.Max(1,total))));
+            int start=(int)((long)offset*(length-size)/maximum);
+            return vertical?new Rectangle(track.X,track.Y+start,track.Width,size):new Rectangle(track.X+start,track.Y,size,track.Height);
+        }
+        protected override void OnPaint(PaintEventArgs e) {
+            base.OnPaint(e);UpdateScrollbars();
+            using(var track=new SolidBrush(FullMapSidebarStyle.ScrollTrack)) {
+                if(!verticalTrack.IsEmpty)e.Graphics.FillRectangle(track,verticalTrack);
+                if(!horizontalTrack.IsEmpty)e.Graphics.FillRectangle(track,horizontalTrack);
+            }
+            using(var thumb=new SolidBrush(draggingVertical || draggingHorizontal?FullMapSidebarStyle.ScrollThumbDragging:FullMapSidebarStyle.ScrollThumb)) {
+                if(!verticalThumb.IsEmpty)e.Graphics.FillRectangle(thumb,verticalThumb);
+                if(!horizontalThumb.IsEmpty)e.Graphics.FillRectangle(thumb,horizontalThumb);
+            }
+        }
+        protected override void OnMouseWheel(MouseEventArgs e) { HandleWheel(e);base.OnMouseWheel(e); }
+        protected override void OnMouseDown(MouseEventArgs e) {
+            base.OnMouseDown(e);if(e.Button!=MouseButtons.Left)return;UpdateScrollbars();
+            if(maximumScrollY>0 && Rectangle.Inflate(verticalTrack,4,0).Contains(e.Location)) {
+                if(!verticalThumb.Contains(e.Location)) {
+                    int travel=verticalTrack.Height-verticalThumb.Height;
+                    int value=travel<=0?0:(int)((long)(e.Y-verticalTrack.Top-verticalThumb.Height/2)*maximumScrollY/travel);
+                    SetScrollOffset(new Point(scrollOffset.X,value));
+                }
+                draggingVertical=true;
+            } else if(maximumScrollX>0 && Rectangle.Inflate(horizontalTrack,0,4).Contains(e.Location)) {
+                if(!horizontalThumb.Contains(e.Location)) {
+                    int travel=horizontalTrack.Width-horizontalThumb.Width;
+                    int value=travel<=0?0:(int)((long)(e.X-horizontalTrack.Left-horizontalThumb.Width/2)*maximumScrollX/travel);
+                    SetScrollOffset(new Point(value,scrollOffset.Y));
+                }
+                draggingHorizontal=true;
+            }
+            if(draggingVertical || draggingHorizontal) { dragStart=e.Location;dragOffset=scrollOffset;Capture=true;Invalidate(); }
+        }
+        protected override void OnMouseMove(MouseEventArgs e) {
+            base.OnMouseMove(e);
+            if(draggingVertical) {
+                int travel=verticalTrack.Height-verticalThumb.Height;
+                int change=travel<=0?0:(int)((long)(e.Y-dragStart.Y)*maximumScrollY/travel);
+                SetScrollOffset(new Point(scrollOffset.X,dragOffset.Y+change));
+            } else if(draggingHorizontal) {
+                int travel=horizontalTrack.Width-horizontalThumb.Width;
+                int change=travel<=0?0:(int)((long)(e.X-dragStart.X)*maximumScrollX/travel);
+                SetScrollOffset(new Point(dragOffset.X+change,scrollOffset.Y));
+            }
+        }
+        void CancelDragging() { draggingHorizontal=draggingVertical=false;if(Capture)Capture=false;Invalidate(); }
+        protected override void OnMouseUp(MouseEventArgs e) { base.OnMouseUp(e);if(e.Button==MouseButtons.Left)CancelDragging(); }
+        protected override void OnMouseCaptureChanged(EventArgs e) { base.OnMouseCaptureChanged(e);if(!Capture)CancelDragging(); }
+        protected override void OnSizeChanged(EventArgs e) { base.OnSizeChanged(e);RefreshContentLayout(); }
+        protected override void OnPaddingChanged(EventArgs e) { base.OnPaddingChanged(e);RefreshContentLayout(); }
+        protected override void OnVisibleChanged(EventArgs e) { base.OnVisibleChanged(e);if(!Visible)CancelDragging();RefreshContentLayout(); }
+        protected override void OnEnabledChanged(EventArgs e) { base.OnEnabledChanged(e);if(!Enabled)CancelDragging(); }
+        protected override void OnParentChanged(EventArgs e) { base.OnParentChanged(e);if(Parent==null)CancelDragging(); }
+    }
+
     // Shared visual language for interactive HUD panels and popup menus (Tactical Survival Hardware aesthetic).
     public static class OverlayTheme {
         public static readonly Color Background=Color.FromArgb(12,12,12);
@@ -80,12 +440,12 @@ namespace ScumMiniMap {
             }
         }
 
-        public static void Frame(Form form,string title,Action dismiss) {
+        public static void Frame(Form form,string title,Action dismiss,int headerHeight=52) {
             form.FormBorderStyle=FormBorderStyle.None; form.TopMost=true; form.ShowInTaskbar=true;
             form.Padding=new Padding(1); form.BackColor=Background; form.Font=new Font("Segoe UI",9);
-            Panel header=new Panel { Dock=DockStyle.Top,Height=52,Padding=new Padding(14,8,8,8),BackColor=Surface };
+            Panel header=new Panel { Dock=DockStyle.Top,Height=headerHeight,Padding=new Padding(14,8,8,8),BackColor=Surface };
             Label caption=new Label { Text=title,Dock=DockStyle.Fill,TextAlign=ContentAlignment.MiddleLeft,Font=new Font("Segoe UI",11,FontStyle.Bold),ForeColor=Accent };
-            Button close=new Button { Text=Localization.Get("Close"),Dock=DockStyle.Right,Width=62,TabStop=false };
+            Button close=new Button { Name="CloseWindow",Text=Localization.Get("Close"),Dock=DockStyle.Right,Width=62,TabStop=false,CausesValidation=false };
             close.Click+=(s,e)=>dismiss();
             caption.MouseDown+=(s,e)=> { if(e.Button==MouseButtons.Left) { ReleaseCapture(); SendMessage(form.Handle,0xA1,new IntPtr(2),IntPtr.Zero); } };
             header.Controls.Add(caption); header.Controls.Add(close); form.Controls.Add(header);
@@ -441,12 +801,19 @@ namespace ScumMiniMap {
             if(hook!=IntPtr.Zero) UnhookWindowsHookEx(hook);
             if(mouseHook!=IntPtr.Zero) UnhookWindowsHookEx(mouseHook);
             hook=SetWindowsHookEx(13,callback,GetModuleHandle(null),0);
+            int keyboardError=hook==IntPtr.Zero?Marshal.GetLastWin32Error():0;
             mouseHook=SetWindowsHookEx(14,mouseCallback,GetModuleHandle(null),0);
+            int mouseError=mouseHook==IntPtr.Zero?Marshal.GetLastWin32Error():0;
+            if(Native.InputTraceActive) Native.TraceInput("hooks keyboard_installed="+(hook!=IntPtr.Zero)+" keyboard_error="+keyboardError+
+                " mouse_installed="+(mouseHook!=IntPtr.Zero)+" mouse_error="+mouseError);
             nextHookRefresh=DateTime.UtcNow.AddSeconds(30);
         }
         public void Resync(bool focused) {
             if(disposed) return;
-            if(Native.InputTraceEnabled && focused!=wasFocused) Native.TraceInput("game focus="+focused);
+            if(Native.InputTraceActive && focused!=wasFocused) {
+                Native.TraceInput("game focus="+focused);
+                Native.TraceFocusSecurity(focused);
+            }
             // Windows may silently remove a hook after a long UI stall; a non-zero handle
             // alone is not proof it still receives input. Refresh without changing chat state.
             if(!Native.CopyInProgress && !Native.AdminInputInProgress && (DateTime.UtcNow>=nextHookRefresh || (focused && !wasFocused))) RefreshHooks();
@@ -496,18 +863,31 @@ namespace ScumMiniMap {
         IntPtr OnKey(int code,IntPtr message,IntPtr data) {
             if(code>=0) {
                 KeyboardData key=(KeyboardData)Marshal.PtrToStructure(data,typeof(KeyboardData));
-                if(Native.InputTraceEnabled && (key.key==0x57 || key.key==0x10 || key.key==0xA0 || key.key==0xA1 || key.key==0x6F))
-                    Native.TraceInput("hook vk="+key.key+" scan="+key.scan+" flags="+key.flags+" message="+message.ToInt32()+
-                        " extra="+key.extra.ToUInt64()+" ownCopy="+(key.extra==Native.CopyInputTag)+
-                        " suppressed="+(key.key<256 && suppressedShortcuts[(int)key.key]));
-                // Injected events must never alter physical held-key or chat state, even after copying ends.
-                if((key.flags & 0x10)!=0) return CallNextHookEx(hook,code,message,data);
-                PhysicalInputRevision++;
                 int k=(int)key.key;
+                int eventScan=PhysicalKeyCapture.EncodeScanCode(key.scan,key.flags);
                 bool isDown=message.ToInt32()==0x100 || message.ToInt32()==0x104;
+                bool injected=(key.flags&0x10)!=0;
+                if(Native.ShouldSuppressCoordinateInput(injected,isDown,key.extra)) {
+                    if(Native.InputTraceActive)Native.TraceInput("copy delivery blocked vk="+k+" scan="+eventScan+" chat="+(chatState!=null && chatState.Paused));
+                    return new IntPtr(1);
+                }
+                bool traceKey=Native.InputTraceActive && key.extra!=Native.AdminInputTag && !Native.IsCoordinateCopyInput(key.extra) &&
+                    (k==0x57 || k==0x10 || k==0xA0 || k==0xA1 || k==0x6F ||
+                    (shouldDispatch!=null && shouldDispatch(k,eventScan)) || (getCopyKey!=null && k==getCopyKey()));
+                // Injected events must never alter physical held-key or chat state, even after copying ends.
+                if(injected) {
+                    if(traceKey) Native.TraceInput("hook vk="+k+" scan="+eventScan+" flags="+key.flags+" message="+message.ToInt32()+
+                        " source=injected decision=ignored-injected fresh=not-observed chat="+(chatState!=null && chatState.Paused)+
+                        " inventory=not-queried modifiers="+transitions.ShortcutModifiersDown(true)+" dispatch=False suppressed=False");
+                    return CallNextHookEx(hook,code,message,data);
+                }
+                PhysicalInputRevision++;
                 bool shortcutWasSuppressed=k>=0 && k<suppressedShortcuts.Length && suppressedShortcuts[k];
                 if(shortcutWasSuppressed) {
                     if(!isDown) suppressedShortcuts[k]=false;
+                    if(traceKey) Native.TraceInput("hook vk="+k+" scan="+eventScan+" flags="+key.flags+" message="+message.ToInt32()+
+                        " source=physical decision=suppressed-held-edge fresh=not-observed chat="+(chatState!=null && chatState.Paused)+
+                        " inventory=not-queried modifiers="+transitions.ShortcutModifiersDown(true)+" dispatch=False suppressed=True");
                     return new IntPtr(1);
                 }
                 if(isDown) PhysicalKeyCapture.Observe(k,key.scan,key.flags);
@@ -521,7 +901,6 @@ namespace ScumMiniMap {
                 int openKey=getChatOpenKey!=null?getChatOpenKey():0x54;
                 int copyKey=getCopyKey!=null?getCopyKey():0;
                 int chatScan=getChatScanCode!=null?getChatScanCode():0;
-                int eventScan=PhysicalKeyCapture.EncodeScanCode(key.scan,key.flags);
                 // A chat/map press can arrive before the sampler sees focus return.
                 // Resolve watched keys against the actual foreground window at that event.
                 gameFocused=ShortcutEventFocused(gameFocused,(shouldDispatch!=null && shouldDispatch(k,eventScan)) || PhysicalKeyCapture.Matches(k,eventScan,openKey,chatScan),()=>Native.IsGameWindow(foreground));
@@ -554,7 +933,13 @@ namespace ScumMiniMap {
                 bool chatControlKey=PhysicalKeyCapture.Matches(k,eventScan,openKey,chatScan) || k==0xBF || k==0x6F || k==0x09 || k==0x0D || k==0x1B;
                 bool appShortcut=gameFocused && fresh && isDown && !chatOwnsKey && !gameUiOwnsInput && !chatControlKey && ConsumesBinding(k,eventScan)
                     && !(transitions.ShortcutModifiersDown(true) || altDown || (Native.GetAsyncKeyState(0x5B)&0x8000)!=0 || (Native.GetAsyncKeyState(0x5C)&0x8000)!=0);
-                if(fresh && isDown && !chatOwnsKey && !gameUiOwnsInput && !(k==0x09 && altDown) && watched) {
+                bool dispatched=fresh && isDown && !chatOwnsKey && !gameUiOwnsInput && !(k==0x09 && altDown) && watched;
+                if(traceKey) Native.TraceInput("hook vk="+k+" scan="+eventScan+" flags="+key.flags+" message="+message.ToInt32()+
+                    " source=physical fresh="+fresh+" down="+isDown+" focused="+gameFocused+" watched="+watched+
+                    " chat_before="+chatWasPaused+" chat_after="+chatIsPaused+" chat_owns="+chatOwnsKey+
+                    " inventory="+gameUiOwnsInput+" modifiers="+transitions.ShortcutModifiersDown(true)+" alt="+altDown+
+                    " dispatch="+dispatched+" suppressed="+appShortcut+" copy_in_progress="+Native.CopyInProgress);
+                if(dispatched) {
                     // App-only shortcuts consume both edges. The configured map key
                     // also belongs to SCUM: dispatch it here without swallowing it.
                     if(appShortcut && k>=0 && k<suppressedShortcuts.Length) suppressedShortcuts[k]=true;
@@ -604,6 +989,7 @@ namespace ScumMiniMap {
         bool fullMapRightButtonDown;
         internal bool FullMapClickThrough { get { return fullMapClickThrough; } }
         public Action OnFullMapClickThrough;
+        public Action<bool> OnFullMapClickThroughChanged;
         public bool ChangingMapMode { get; private set; }
         Size savedSize;
         Point savedLocation;
@@ -615,6 +1001,8 @@ namespace ScumMiniMap {
         readonly ContextMenuStrip menu;
         readonly ToolStripMenuItem fullMapWaypointMenu;
         public Action<int, Point> OnFullMapWheel;
+        Point wheelPoint;
+        readonly BatchedWheel mouseWheel;
         public Action<Point, MouseButtons> OnFullMapMouseDown;
         public Action<Point, MouseButtons> OnFullMapMouseMove;
         public Action OnFullMapMouseLeave;
@@ -628,13 +1016,50 @@ namespace ScumMiniMap {
         internal Action<ToolStripMenuItem> PopulateAdminCommands;
         public Func<bool> CanAddFullMapWaypoint;
         public Func<bool> CanShowFullMapContextMenu;
+        public Action<ContextMenuStrip,Point> PopulateMarkerContextMenu;
+        internal void CloseAdminContextMenu() {
+            menu.Close(ToolStripDropDownCloseReason.ItemClicked);
+            Native.ReleaseCapture();Cursor.Clip=Rectangle.Empty;
+        }
+        public Func<bool> AdminToolsEnabled;
         Point fullMapContextPoint;
         Point fullMapContextScreenPoint;
 
+        internal static int FullMapAdminPanelWidth(Rectangle workingArea,Rectangle mapBounds,int requestedWidth) {
+            return Math.Max(0,Math.Min(requestedWidth,mapBounds.Left-workingArea.Left-MapWindow.AdminControlsGap));
+        }
+        internal static Rectangle AdminPanelBounds(Rectangle workingArea,Rectangle mapBounds,int requestedWidth,int requestedHeight,out bool dockLeft) {
+            int left=Math.Max(0,mapBounds.Left-workingArea.Left-MapWindow.AdminControlsGap);
+            int right=Math.Max(0,workingArea.Right-mapBounds.Right-MapWindow.AdminControlsGap);
+            // Select the same side for the tab and expanded panel. Prefer the left
+            // where the controls have useful room, otherwise use the larger side.
+            dockLeft=left>=240 || left>=right;
+            if(workingArea.Width<=0 || workingArea.Height<=0 || mapBounds.Width<=0 || mapBounds.Height<=0)return Rectangle.Empty;
+            int available=dockLeft?left:right;
+            bool inset=available<MapWindow.AdminControlsCollapsedWidth;
+            if(inset)available=Math.Min(workingArea.Width,mapBounds.Width);
+            int width=Math.Min(Math.Max(MapWindow.AdminControlsCollapsedWidth,requestedWidth),available);
+            int height=Math.Min(Math.Max(1,requestedHeight),Math.Max(1,workingArea.Height-24));
+            int x=inset?(dockLeft?mapBounds.Left:mapBounds.Right-width)
+                :(dockLeft?mapBounds.Left-width-MapWindow.AdminControlsGap:mapBounds.Right+MapWindow.AdminControlsGap);
+            // A map filling both screen edges keeps its tab against the map's
+            // inside edge rather than producing a detached or inaccessible window.
+            x=Math.Max(workingArea.Left,Math.Min(x,workingArea.Right-width));
+            int y=Math.Max(workingArea.Top,Math.Min(mapBounds.Top+72,workingArea.Bottom-height));
+            return new Rectangle(x,y,width,height);
+        }
+        internal static Rectangle FullMapBounds(Rectangle area) {
+            if(area.Width<=0 || area.Height<=0)return Rectangle.Empty;
+            int mapSide=area.Height;
+            int x=area.Left+(area.Width-mapSide)/2;
+            int sidebarWidth=Math.Min(260,Math.Max(0,area.Right-x-mapSide));
+            return new Rectangle(x,area.Top,mapSide+sidebarWidth,mapSide);
+        }
         public bool FullMapMode {
             get { return fullMapMode; }
             set {
                 if(fullMapMode==value) return;
+                if(mouseWheel!=null)mouseWheel.Cancel();
                 if(movingMinimap) { movingMinimap=false; Capture=false; }
                 ChangingMapMode=true;
                 try {
@@ -651,18 +1076,11 @@ namespace ScumMiniMap {
                         IntPtr fg=Native.GetForegroundWindow();
                         if(fg!=IntPtr.Zero && Native.IsGameWindow(fg)) scr=Screen.FromHandle(fg);
                     } catch {}
-                    Rectangle area=scr.Bounds;
-                    int mapDim=area.Height;
-                    int mapX=area.Left+(area.Width-mapDim)/2;
-                    int mapY=area.Top;
-                    int rightSpace=area.Right-(mapX+mapDim);
-                    int sidebarWidth=Math.Min(260,Math.Max(0,rightSpace));
-                    int totalW=mapDim+sidebarWidth;
+                    Rectangle bounds=FullMapBounds(scr.Bounds);
                     MinimumSize=Size.Empty;
                     MaximumSize=Size.Empty;
-                    SetWindowPos(Handle,IntPtr.Zero,mapX,mapY,totalW,mapDim,0x0014);
-                    Size=new Size(totalW,mapDim);
-                    Location=new Point(mapX,mapY);
+                    SetWindowPos(Handle,IntPtr.Zero,bounds.X,bounds.Y,bounds.Width,bounds.Height,0x0014);
+                    Size=bounds.Size;Location=bounds.Location;
                 } else {
                     MinimumSize=new Size(240,240);
                     MaximumSize=new Size(800,800);
@@ -681,6 +1099,14 @@ namespace ScumMiniMap {
             }
         }
         public OverlayWindow(Action settings,Action exit,Action<float> zoom,Action search) {
+            mouseWheel=new BatchedWheel(steps=> {
+                if(IsDisposed || Disposing || fullMapClickThrough)return;
+                if(fullMapMode) { if(OnFullMapWheel!=null)OnFullMapWheel(steps*120,wheelPoint); }
+                else if(!through)zoom((float)Math.Pow(1.5,Math.Max(-32,Math.Min(32,steps))));
+            });
+            var wheel=mouseWheel;
+            Disposed+=(s,e)=>wheel.Dispose();
+            VisibleChanged+=(s,e)=> { if(!Visible)wheel.Cancel(); };
             Text="SCUM Minimap Overlay"; FormBorderStyle=FormBorderStyle.None;
             ShowInTaskbar=false; TopMost=true; Size=new Size(360,360);
             MinimumSize=new Size(240,240); MaximumSize=new Size(800,800);
@@ -722,6 +1148,10 @@ namespace ScumMiniMap {
             menu.Items.Add(Localization.Get("TrayShowHide"),null,(s,e)=>Hide());
             menu.Items.Add(Localization.Get("TrayExit"),null,(s,e)=>exit());
             menu.Opening+=(s,e)=> {
+                Native.ReleaseCapture();
+                Cursor.Clip=Rectangle.Empty;
+                fullMapAdminMenu.Visible=fullMapMode && AdminToolsEnabled!=null && AdminToolsEnabled();
+                if(PopulateMarkerContextMenu!=null)PopulateMarkerContextMenu(menu,fullMapContextPoint);
                 if(fullMapMode && CanAddFullMapWaypoint!=null) fullMapWaypointMenu.Enabled=CanAddFullMapWaypoint();
                 else fullMapWaypointMenu.Enabled=true;
             };
@@ -794,15 +1224,20 @@ namespace ScumMiniMap {
             };
             MouseWheel+=(s,e)=> {
                 if(fullMapClickThrough) return;
-                if(fullMapMode) {
-                    if(OnFullMapWheel!=null) OnFullMapWheel(e.Delta, PointToClient(Cursor.Position));
-                } else if(!through) {
-                    zoom(e.Delta>0?1.5f:1/1.5f);
-                }
+                var handled=e as HandledMouseEventArgs;if(handled!=null)handled.Handled=true;
+                wheelPoint=e.Location;wheel.Add(e.Delta);
             };
         }
         protected override bool ShowWithoutActivation { get { return true; } }
-        protected override CreateParams CreateParams { get { CreateParams p=base.CreateParams; p.ExStyle|=0x80000|0x80|0x8000000; if(fullMapClickThrough || (through && !fullMapMode))p.ExStyle|=0x20; return p; } }
+        protected override CreateParams CreateParams { get {
+            CreateParams p=base.CreateParams;
+            // OBS excludes WS_EX_TOOLWINDOW from Window Capture enumeration.
+            // ShowInTaskbar=false retains the hidden owner; clearing this flag
+            // exposes the actual layered overlay without adding a taskbar button.
+            p.ExStyle=(p.ExStyle&~0x80)|0x80000|0x8000000;
+            if(fullMapClickThrough || (through && !fullMapMode))p.ExStyle|=0x20;
+            return p;
+        } }
         internal void UpdateFullMapClickThrough(bool controlHeld,bool gameFocused) {
             bool enabled=fullMapMode && controlHeld && gameFocused;
             if(fullMapClickThrough==enabled) {
@@ -811,6 +1246,7 @@ namespace ScumMiniMap {
             }
             fullMapClickThrough=enabled;
             if(enabled) {
+                mouseWheel.Cancel();
                 fullMapRightButtonDown=false;
                 Capture=false;
                 if(menu.Visible) menu.Close();
@@ -819,6 +1255,7 @@ namespace ScumMiniMap {
             }
             ApplyMousePassthrough();
             if(!enabled && hiddenForClickThrough && gameFocused) RestoreClickThroughVisibility();
+            if(OnFullMapClickThroughChanged!=null)OnFullMapClickThroughChanged(enabled);
         }
         void RestoreClickThroughVisibility() {
             hiddenForClickThrough=false;

@@ -186,7 +186,9 @@ namespace ScumMiniMap {
                     string name = ReadExactText(r,nameLen);
                     int bg = r.ReadInt32();
                     int fg = r.ReadInt32();
-                    bool def = r.ReadByte() != 0;
+                    r.ReadByte(); // Legacy pack defaults; the app owns its current default policy.
+                    bool def = !string.Equals(sec,"Hunting",StringComparison.OrdinalIgnoreCase)
+                        && !string.Equals(sec,"Fishing",StringComparison.OrdinalIgnoreCase);
 
                     ScumMapCategory cat = new ScumMapCategory {
                         Id = id,
@@ -300,7 +302,7 @@ namespace ScumMiniMap {
             string[] species=h.CategoryIds.Where(IsCategoryEnabled).Select(id=>Localization.GetCategoryName(CategoryById[id].Name)).OrderBy(name=>name).ToArray();
             string label=string.Join(", ",species.Take(3));
             if(species.Length>3) label+=" +"+(species.Length-3);
-            return h.Name+" — "+label;
+            return Localization.GetMapObjectName(h.Name)+" — "+label;
         }
         public ScumMapHabitat HabitatAt(PointF point) {
             // Prefer specific fishing volumes over island-wide biomes, and the smallest overlapping volume.
@@ -663,7 +665,7 @@ namespace ScumMiniMap {
                             if (font != null && (!smartLod || zoomedIn || (cat != null && (cat.Section == "Outposts" || cat.Section == "Bunkers")))) {
                                 string name = GetMarkerDisplayName(m);
                                 if (!string.IsNullOrEmpty(name)) {
-                                    string displayName = Localization.GetZoneName(name);
+                                    string displayName = Localization.GetMapObjectName(name);
                                     SizeF sz = g.MeasureString(displayName, font);
                                     RectangleF box = new RectangleF(screenX - sz.Width / 2f - 3f, screenY + markerRadius + 2f, sz.Width + 6f, sz.Height + 2f);
                                     labelBoxes.Add(new KeyValuePair<string, RectangleF>(displayName, box));

@@ -243,45 +243,11 @@ namespace ScumMiniMap {
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9f, FontStyle.Bold)
             };
-            langCombo.Items.AddRange(new object[] {
-                "English (US)",
-                "Español (AR)",
-                "Français",
-                "Deutsch",
-                "Nederlands",
-                "Русский",
-                "中文 (简体)",
-                "Türkçe",
-                "العربية",
-                "Português (BR)"
-            });
-            switch (Localization.Current) {
-                case AppLanguage.SpanishArgentina: langCombo.SelectedIndex = 1; break;
-                case AppLanguage.French: langCombo.SelectedIndex = 2; break;
-                case AppLanguage.German: langCombo.SelectedIndex = 3; break;
-                case AppLanguage.Dutch: langCombo.SelectedIndex = 4; break;
-                case AppLanguage.Russian: langCombo.SelectedIndex = 5; break;
-                case AppLanguage.Chinese: langCombo.SelectedIndex = 6; break;
-                case AppLanguage.Turkish: langCombo.SelectedIndex = 7; break;
-                case AppLanguage.Arabic: langCombo.SelectedIndex = 8; break;
-                case AppLanguage.Portuguese: langCombo.SelectedIndex = 9; break;
-                default: langCombo.SelectedIndex = 0; break;
-            }
+            langCombo.Items.AddRange(Localization.LanguageDisplayNames);
+            langCombo.SelectedIndex = Enum.IsDefined(typeof(AppLanguage),Localization.Current) ? (int)Localization.Current : 0;
             langCombo.SelectedIndexChanged += (s, e) => {
                 if (updatingLanguage) return;
-                AppLanguage chosen;
-                switch (langCombo.SelectedIndex) {
-                    case 1: chosen = AppLanguage.SpanishArgentina; break;
-                    case 2: chosen = AppLanguage.French; break;
-                    case 3: chosen = AppLanguage.German; break;
-                    case 4: chosen = AppLanguage.Dutch; break;
-                    case 5: chosen = AppLanguage.Russian; break;
-                    case 6: chosen = AppLanguage.Chinese; break;
-                    case 7: chosen = AppLanguage.Turkish; break;
-                    case 8: chosen = AppLanguage.Arabic; break;
-                    case 9: chosen = AppLanguage.Portuguese; break;
-                    default: chosen = AppLanguage.English; break;
-                }
+                AppLanguage chosen = Localization.LanguageAt(langCombo.SelectedIndex);
                 if (Localization.Current != chosen) {
                     Localization.Current = chosen;
                     RefreshTranslations();
@@ -538,12 +504,13 @@ namespace ScumMiniMap {
             prevButton.Enabled = currentSlide > 0;
             prevButton.Visible = !bindingEditorMode;
             nextButton.Visible = !bindingEditorMode && currentSlide < TotalSlides - 1;
-            finishButton.Visible = bindingEditorMode || currentSlide == TotalSlides - 1;
+            finishButton.Visible = bindingEditorMode || currentSlide == 0 || currentSlide == TotalSlides - 1;
+            nextButton.Left=footerPanel.Width-(currentSlide==0?300:200);
             finishButton.Text = Localization.Get(bindingEditorMode ? "KeyWizardSave" : "WizardBtnFinish");
             tabStrip.Visible = !bindingEditorMode;
 
             // Highlight skip button on Keybinds step (Slide 2)
-            skipButton.Visible = !bindingEditorMode && (currentSlide == 2 || currentSlide < TotalSlides - 1);
+            skipButton.Visible = !bindingEditorMode && currentSlide!=0 && (currentSlide == 2 || currentSlide < TotalSlides - 1);
             footerPanel.Height = currentSlide == 2 ? 96 : 62;
             captureStatusLabel.Visible = currentSlide == 2;
             captureStatusLabel.Text = Localization.Get("KeyWizardReady");
@@ -570,6 +537,15 @@ namespace ScumMiniMap {
         void RenderSlideOverview() {
             FlowLayoutPanel flow = CreateContentFlow();
 
+            AddTacticalCard(flow, Localization.Get("TutorialWelcome"), Localization.Get("TutorialFilters"));
+            AddTacticalKeyCard(flow, PhysicalKeyCapture.KeyName(appControls.Key(AppControlAction.Settings)),
+                Localization.Get("WzKeyHomeTitle"), appControls.Key(AppControlAction.Settings)==0?Localization.Get("TutorialUnbound"):Localization.T("TutorialSettings",PhysicalKeyCapture.KeyName(appControls.Key(AppControlAction.Settings))));
+            AddTacticalKeyCard(flow, PhysicalKeyCapture.KeyName(mapKey),
+                Localization.Get("WzKeyMTitle"), Localization.T("TutorialMap",PhysicalKeyCapture.KeyName(mapKey)));
+            AddTacticalKeyCard(flow, PhysicalKeyCapture.KeyName(appControls.Key(AppControlAction.Search)),
+                Localization.Get("WzKeyDeleteTitle"), appControls.Key(AppControlAction.Search)==0?Localization.Get("TutorialUnbound"):Localization.T("TutorialSearch",PhysicalKeyCapture.KeyName(appControls.Key(AppControlAction.Search))));
+            AddTacticalCard(flow, Localization.Get("ClearDeathMarkers"), Localization.Get("TutorialDeath"));
+
             AddTacticalCard(flow, Localization.Get("WizardLayoutTitle"), Localization.Get("WizardLayoutDescription"));
             Button layoutButton = new Button {
                 Text=Localization.Get("WizardAdjustLayout"), AutoSize=true, MinimumSize=new Size(280,36),
@@ -578,10 +554,6 @@ namespace ScumMiniMap {
             };
             layoutButton.Click+=(s,e)=> FinishWizard(true);
             flow.Controls.Add(layoutButton);
-
-            AddTacticalCard(flow, "[ SYS // 01 ] " + Localization.Get("WzOvTitle1"), Localization.Get("WzOvDesc1"));
-            AddTacticalCard(flow, "[ DISP // 02 ] " + Localization.Get("WzOvTitle2"), Localization.Get("WzOvDesc2"));
-            AddTacticalCard(flow, "[ NAV // 04 ] " + Localization.Get("WzOvTitle4"), Localization.Get("WzOvDesc4"));
 
             contentPanel.Controls.Add(flow);
         }
@@ -882,7 +854,7 @@ namespace ScumMiniMap {
 
         void AddTacticalCard(FlowLayoutPanel flow, string title, string description) {
             Panel card = new Panel {
-                Width = Math.Max(740, contentPanel.Width - 60),
+                Width = Math.Max(680, contentPanel.ClientSize.Width - contentPanel.Padding.Horizontal - 40),
                 Height = 84,
                 BackColor = CardBg,
                 Margin = new Padding(0, 0, 0, 10),
@@ -916,13 +888,14 @@ namespace ScumMiniMap {
                 AutoSize = false
             };
             card.Controls.Add(descLbl);
+            FitCardDescription(card,descLbl);
 
             flow.Controls.Add(card);
         }
 
         void AddTacticalKeyCard(FlowLayoutPanel flow, string key, string title, string description) {
             Panel card = new Panel {
-                Width = Math.Max(740, contentPanel.Width - 60),
+                Width = Math.Max(680, contentPanel.ClientSize.Width - contentPanel.Padding.Horizontal - 40),
                 Height = 74,
                 BackColor = CardBg,
                 Margin = new Padding(0, 0, 0, 8),
@@ -974,8 +947,17 @@ namespace ScumMiniMap {
                 AutoSize = false
             };
             card.Controls.Add(descLbl);
+            FitCardDescription(card,descLbl);
 
             flow.Controls.Add(card);
+        }
+
+        static void FitCardDescription(Panel card,Label label) {
+            bool arabic=Localization.Current==AppLanguage.Arabic;
+            label.RightToLeft=arabic?RightToLeft.Yes:RightToLeft.No;
+            TextFormatFlags flags=TextFormatFlags.WordBreak | (arabic?TextFormatFlags.RightToLeft:0);
+            label.Height=Math.Max(label.Height,TextRenderer.MeasureText(label.Text,label.Font,new Size(label.Width,int.MaxValue),flags).Height+4);
+            card.Height=Math.Max(card.Height,label.Bottom+10);
         }
 
         void RefreshTranslations() {
