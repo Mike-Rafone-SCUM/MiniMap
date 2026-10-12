@@ -17,6 +17,10 @@ jobs:
       - uses: actions/checkout@v7.0.1
       - name: Build and validate release package
         shell: powershell
+        env:
+          # Keep deeply nested disposable import fixtures within .NET Framework's path budget.
+          TEMP: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
         run: .\Build.ps1 -Configuration Release -OutputDirectory release/ci
       - uses: actions/upload-artifact@v7.0.1
         with:
