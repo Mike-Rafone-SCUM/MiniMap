@@ -536,19 +536,17 @@ static class AdminPlayerTests {
                 Check(panel.Visible && page.Value==lastPage && ReferenceEquals(bottomTile,tiles.Controls[0]),"Reopening players preserves the server, page and existing card controls");
                 measuredAction="Resize";
                 page.Value=1;Application.DoEvents();int smallPageCount=tiles.Controls.Count;
-                var originalSize=panel.ClientSize;
-                // Hosted Windows runners can cap native tracking size to a small desktop.
-                // Let this off-screen fixture request the same viewport growth on every host.
-                var originalMaximumSize=panel.MaximumSize;
-                panel.MaximumSize=new Size(Math.Max(2000,originalSize.Width+400),Math.Max(2000,originalSize.Height+400));
-                panel.ClientSize=new Size(originalSize.Width,originalSize.Height+600);
-                Console.WriteLine("Resize fixture: requested height="+(originalSize.Height+600)+", actual height="+panel.ClientSize.Height+", initial cards="+smallPageCount);
+                // Exercise the production viewport resize event independently of
+                // hosted Windows desktop/form layout limits.
+                var originalBounds=scroll.Bounds;var originalDock=scroll.Dock;
+                scroll.Dock=DockStyle.None;
+                scroll.Bounds=new Rectangle(originalBounds.X,originalBounds.Y,originalBounds.Width,originalBounds.Height+600);
+                Console.WriteLine("Resize fixture: viewport="+scroll.VisibleContentBounds+", initial cards="+smallPageCount);
                 WaitFor(()=>tiles.Controls.Count>smallPageCount);
                 Application.DoEvents();
-                Check(tiles.Controls.Count<=24,"Resizing only the window height increases the visible page without building unbounded cards");
-                panel.ClientSize=originalSize;
+                Check(tiles.Controls.Count<=24,"Resizing the player viewport grows its bounded page without building unbounded cards");
+                scroll.Bounds=originalBounds;scroll.Dock=originalDock;
                 WaitFor(()=>tiles.Controls.Count==smallPageCount);
-                panel.MaximumSize=originalMaximumSize;
                 Application.DoEvents();
                 Check(page.Value==1,"Restoring the window size recalculates pages and retains the visible player range");
                 measuredAction="Search";
