@@ -537,12 +537,18 @@ static class AdminPlayerTests {
                 measuredAction="Resize";
                 page.Value=1;Application.DoEvents();int smallPageCount=tiles.Controls.Count;
                 var originalSize=panel.ClientSize;
+                // Hosted Windows runners can cap native tracking size to a small desktop.
+                // Let this off-screen fixture request the same viewport growth on every host.
+                var originalMaximumSize=panel.MaximumSize;
+                panel.MaximumSize=new Size(Math.Max(2000,originalSize.Width+400),Math.Max(2000,originalSize.Height+400));
                 panel.ClientSize=new Size(originalSize.Width,originalSize.Height+300);
+                Console.WriteLine("Resize fixture: requested height="+(originalSize.Height+300)+", actual height="+panel.ClientSize.Height+", initial cards="+smallPageCount);
                 WaitFor(()=>tiles.Controls.Count>smallPageCount);
                 Application.DoEvents();
                 Check(tiles.Controls.Count<=24,"Resizing only the window height increases the visible page without building unbounded cards");
                 panel.ClientSize=originalSize;
                 WaitFor(()=>tiles.Controls.Count==smallPageCount);
+                panel.MaximumSize=originalMaximumSize;
                 Application.DoEvents();
                 Check(page.Value==1,"Restoring the window size recalculates pages and retains the visible player range");
                 measuredAction="Search";
