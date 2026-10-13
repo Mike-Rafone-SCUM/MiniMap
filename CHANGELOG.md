@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.23] - 2026-10-13
+
+### Fixed
+
+- Keep coordinate copying paused while chat owns typing: sampled Enter/Escape state cannot prove that chat closed. Only physical keyboard-hook close events or confirmed admin-chat cleanup may release the pause.
+- Preserve chat ownership when completing a full-map click instead of resetting the chat gate and resuming Num / injection.
+- Verify sampled/injected close-key activity cannot enable Num / copying, the next physical close edge remains recognized, and map-click cleanup retains an open chat gate. A live SCUM retest is still required.
+
 ## [1.7.22] - 2026-10-12
 
 ### Fixed

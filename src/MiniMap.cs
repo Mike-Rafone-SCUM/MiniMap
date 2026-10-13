@@ -1695,7 +1695,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "1.7.22";
+        public const string VersionString = "1.7.23";
 
 
 
@@ -4152,7 +4152,8 @@ namespace ScumMiniMap {
             DateTime now=DateTime.UtcNow;
             Native.CancelActiveCopy();
             inputGeneration++;
-            chat.Reset(); observedChatPaused=false;
+            // A map click does not close SCUM's chat box. Retain its input owner.
+            observedChatPaused=chat.Paused;
             inventoryInputLocked=false; inventoryProbeMisses=0;
             nextInventoryProbe=now.AddMilliseconds(500);
             pending=false; failures=0; resumeAfter=now; next=now;

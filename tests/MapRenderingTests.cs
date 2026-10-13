@@ -635,11 +635,11 @@ static class MapRenderingTests {
             Console.WriteLine("Admin cleanup state: chat="+adminChat.Paused+", observed="+typeof(MapWindow).GetField("observedChatPaused",Hidden).GetValue(adminWindow)+
                 ", inventory="+typeof(MapWindow).GetField("inventoryInputLocked",Hidden).GetValue(adminWindow)+", pending="+typeof(MapWindow).GetField("pending",Hidden).GetValue(adminWindow)+
                 ", resume="+((DateTime)typeof(MapWindow).GetField("resumeAfter",Hidden).GetValue(adminWindow)).ToString("O")+", now="+DateTime.UtcNow.ToString("O"));
-            Check(!adminChat.Paused && !(bool)typeof(MapWindow).GetField("observedChatPaused",Hidden).GetValue(adminWindow) &&
+            Check(adminChat.Paused && (bool)typeof(MapWindow).GetField("observedChatPaused",Hidden).GetValue(adminWindow) &&
                 !(bool)typeof(MapWindow).GetField("inventoryInputLocked",Hidden).GetValue(adminWindow) &&
                 !(bool)typeof(MapWindow).GetField("pending",Hidden).GetValue(adminWindow) &&
                 (DateTime)typeof(MapWindow).GetField("resumeAfter",Hidden).GetValue(adminWindow)<=DateTime.UtcNow,
-                "Admin cleanup clears stale chat, inventory and pending-copy blockers together");
+                "Admin cleanup preserves open chat while clearing inventory and pending-copy state");
             adminChat.Key(0x54);
             adminWindow.CompleteAdminMapClick();
             Check(adminChat.Paused,"Cleanup cannot clear a newly opened chat after the map is closed");

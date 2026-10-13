@@ -67,6 +67,35 @@ static class ChatCopyRegressionTests {
         Console.WriteLine("PASS: "+message);
     }
     static void Main() {
+        string profile=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"mmchat-"+Guid.NewGuid().ToString("N"));
+        System.IO.Directory.CreateDirectory(profile);
+        try {
+            using(var bitmap=new Bitmap(32,32))bitmap.Save(System.IO.Path.Combine(profile,"map.png"));
+            using(var window=new MapWindow(profile,true)) {
+                const BindingFlags hidden=BindingFlags.Instance|BindingFlags.NonPublic;
+                var state=(ChatState)typeof(MapWindow).GetField("chat",hidden).GetValue(window);
+                state.Key(0x54);
+                typeof(MapWindow).GetField("fullMapActive",hidden).SetValue(window,true);
+                typeof(MapWindow).GetMethod("CompleteAdminMapClick",hidden).Invoke(window,new object[0]);
+                Check(state.Paused,"Completing a map click cannot claim that SCUM chat closed");
+            }
+        }finally{System.IO.Directory.Delete(profile,true);}
+        foreach(int closeKey in new[]{0x0D,0x1B}) {
+            var state=new ChatState();var monitor=new ChatKeyMonitor();
+            monitor.Observe(0x54,true,true,state,0x54,0x6F);
+            monitor.Observe(0x54,false,true,state,0x54,0x6F);
+            for(int sample=0;sample<100;sample++) {
+                monitor.ObserveSample(closeKey,true,true,state,0x54,0x6F);
+                monitor.ObserveSample(closeKey,false,true,state,0x54,0x6F);
+            }
+            Check(state.Paused,"Unattributed sampled Enter/Escape cannot release open chat");
+            int sent=0;
+            Native.CopyChord((key,up)=>{sent++;return true;},ms=>Task.FromResult(0),()=>!state.Paused,0,0x6F).GetAwaiter().GetResult();
+            Check(sent==0,"Num / stays blocked after sampled close-key input");
+            monitor.ObserveSample(closeKey,true,true,state,0x54,0x6F);
+            monitor.Observe(closeKey,true,true,state,0x54,0x6F);
+            Check(!state.Paused,"Sampling cannot swallow the next real physical chat-close edge");
+        }
         QueuedSlashMustNotEnterChat();
         VerifyDeliveryOwnership();
         foreach(int openVirtualKey in new[]{0x54,0x45}) {

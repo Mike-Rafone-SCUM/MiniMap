@@ -653,6 +653,13 @@ namespace ScumMiniMap {
     // would clear the chat gate while SCUM's text box is still open.
     public sealed class ChatKeyMonitor {
         readonly bool[] held=new bool[256];
+        public bool ObserveSample(int key,bool down,bool focused,ChatState chat,int openKey,int copyKey=0,int chatOpenScanCode=0) {
+            // Async state cannot distinguish a physical close from injected admin
+            // cleanup or an older held key. Only hook events may release chat.
+            // Do not seed held[] here: that would hide the next physical close edge.
+            if(key==0x0D || key==0x1B)return false;
+            return Observe(key,down,focused,chat,openKey,copyKey,0,chatOpenScanCode);
+        }
         public bool Observe(int key,bool down,bool focused,ChatState chat,int openKey,int copyKey=0,int scanCode=0,int chatOpenScanCode=0) {
             if(key<0 || key>=held.Length) return false;
             bool fresh=down && !held[key];
@@ -834,7 +841,7 @@ namespace ScumMiniMap {
                 if(key<0 || key>=256) continue;
                 if(key==copyKey && key!=openKey && (key==0xBF || key==0x6F)) continue;
                 bool down=(Native.GetAsyncKeyState(key)&0x8000)!=0;
-                if(chatKeys.Observe(key,down,focused,chatState,openKey,copyKey,0,chatScan)) {
+                if(chatKeys.ObserveSample(key,down,focused,chatState,openKey,copyKey,chatScan)) {
                     Native.CancelActiveCopy();
                 }
             }

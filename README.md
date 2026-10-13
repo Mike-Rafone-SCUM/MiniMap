@@ -1,6 +1,6 @@
-# SCUM MiniMap v1.7.22
+# SCUM MiniMap v1.7.23
 
-Download the complete application from [the current release](https://github.com/Mike-Rafone-SCUM/MiniMap/releases/tag/v1.7.22). This repository contains the current buildable source; see [build instructions](DEVELOPMENT.md) and [source-release scope and checks](docs/SOURCE-RELEASE.md).
+Download the complete application from [the current release](https://github.com/Mike-Rafone-SCUM/MiniMap/releases/tag/v1.7.23). This repository contains the current buildable source; see [build instructions](DEVELOPMENT.md) and [source-release scope and checks](docs/SOURCE-RELEASE.md).
 
 SCUM MiniMap is an external map overlay and navigation utility for SCUM, made for the Skynett community. It displays player location, heading, road routes, points of interest, and custom waypoints. It does not read game memory or inject DLLs; this is not an official anticheat certification.
 
