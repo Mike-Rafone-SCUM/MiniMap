@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.24] - 2026-10-13
+
+### Fixed
+
+- Keep chat protection active after Enter submits a message. SCUM can keep its chat box open for subsequent messages; coordinate copying must remain paused until physical Escape closes that session.
+- Reproduce twenty successive message submissions with both default and configured chat keys, verify no Num / coordinate input is sent, and verify Escape releases the pause. Preserve the sampled-key and map-click protections from v1.7.23.
+
 ## [1.7.23] - 2026-10-13
 
 ### Fixed

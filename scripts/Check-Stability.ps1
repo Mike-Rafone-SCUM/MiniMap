@@ -58,7 +58,9 @@ try {
     $miniChat.Key(0x4D)
     if (-not $miniChat.Paused) { throw 'Typing M after Tab unlatched chat pause.' }
     $miniChat.Key(0x0D)
-    if ($miniChat.Paused) { throw 'Enter did not resume chat.' }
+    if (-not $miniChat.Paused) { throw 'Enter incorrectly released open chat.' }
+    $miniChat.Key(0x1B)
+    if ($miniChat.Paused) { throw 'Escape did not release chat.' }
     $miniChat.Key(0x09)
     if ($miniChat.Paused) { throw 'Tab while chat closed opened chat.' }
     $miniMotion = [ScumMiniMap.MapMotion]::new()

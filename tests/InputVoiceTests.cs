@@ -884,7 +884,8 @@ static class InputVoiceTests {
         var queuedChat=new ChatState();long queuedRevision=queuedChat.Revision;
         Check(queuedChat.AllowsQueuedShortcut(queuedRevision),"A current map shortcut can dispatch outside chat");
         queuedChat.Key(0x54);Check(!queuedChat.AllowsQueuedShortcut(queuedRevision),"Chat opening invalidates a queued M shortcut");
-        queuedChat.Key(0x0D);Check(!queuedChat.AllowsQueuedShortcut(queuedRevision),"Closing chat cannot revive an old queued M shortcut");
+        queuedChat.Key(0x0D);Check(!queuedChat.AllowsQueuedShortcut(queuedChat.Revision),"Submitting a message cannot enable a queued M shortcut");
+        queuedChat.Key(0x1B);Check(!queuedChat.AllowsQueuedShortcut(queuedRevision),"Closing chat cannot revive an old queued M shortcut");
         Check(queuedChat.AllowsQueuedShortcut(queuedChat.Revision),"A new shortcut works after chat closes");
         Check(GameKeys.ShortcutEventFocused(false,true,()=>true),"First chat/map key after focus return is checked against the actual game window");
         Check(!GameKeys.ShortcutEventFocused(false,true,()=>false),"Desktop chat/map keys do not acquire game focus");
@@ -1036,7 +1037,7 @@ static class InputVoiceTests {
         typeof(ChatState).GetField("openTime",Hidden).SetValue(chat,DateTime.UtcNow.AddMinutes(-5));
         Check(chat.Paused,"Idle chat remains protected beyond 25 seconds");
         chat.Key(0x09); chat.Key(0x4D); Check(chat.Paused,"Tab and typed M leave chat protection active");
-        chat.Key(0x0D); Check(!chat.Paused,"Enter ends chat protection");
+        chat.Key(0x0D); Check(chat.Paused,"Enter submits without ending chat protection");
         chat.Key(0x54); chat.Key(0x1B); Check(!chat.Paused,"Esc ends chat protection");
         var localizedChat=new ChatState();
         var localizedChatMonitor=new ChatKeyMonitor();

@@ -685,7 +685,8 @@ public void SaveSettingsPreview(string path) {
 
 
 
-            state.Key(0x0D); if(state.Paused)throw new Exception("Enter must resume.");
+            state.Key(0x0D); if(!state.Paused)throw new Exception("Enter submission must preserve chat pause.");
+            state.Key(0x1B); if(state.Paused)throw new Exception("Escape must resume.");
 
 
 

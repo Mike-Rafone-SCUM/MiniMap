@@ -67,6 +67,23 @@ static class ChatCopyRegressionTests {
         Console.WriteLine("PASS: "+message);
     }
     static void Main() {
+        foreach(int opening in new[]{0x54,0x59}) {
+            var state=new ChatState();var monitor=new ChatKeyMonitor();
+            monitor.Observe(opening,true,true,state,opening,0x6F);
+            monitor.Observe(opening,false,true,state,opening,0x6F);
+            int sent=0;
+            for(int message=0;message<20;message++) {
+                monitor.Observe(0x41,true,true,state,opening,0x6F);
+                monitor.Observe(0x41,false,true,state,opening,0x6F);
+                monitor.Observe(0x0D,true,true,state,opening,0x6F);
+                monitor.Observe(0x0D,false,true,state,opening,0x6F);
+                Check(state.Paused,"Sending another message with Enter preserves open chat");
+                Native.CopyChord((key,up)=>{sent++;return true;},ms=>Task.FromResult(0),()=>!state.Paused,0,0x6F).GetAwaiter().GetResult();
+            }
+            Check(sent==0,"Twenty successive message submissions cannot inject Num /");
+            monitor.Observe(0x1B,true,true,state,opening,0x6F);
+            Check(!state.Paused,"Escape explicitly closes chat after multiple messages");
+        }
         string profile=System.IO.Path.Combine(System.IO.Path.GetTempPath(),"mmchat-"+Guid.NewGuid().ToString("N"));
         System.IO.Directory.CreateDirectory(profile);
         try {
@@ -94,7 +111,7 @@ static class ChatCopyRegressionTests {
             Check(sent==0,"Num / stays blocked after sampled close-key input");
             monitor.ObserveSample(closeKey,true,true,state,0x54,0x6F);
             monitor.Observe(closeKey,true,true,state,0x54,0x6F);
-            Check(!state.Paused,"Sampling cannot swallow the next real physical chat-close edge");
+            Check(state.Paused==(closeKey==0x0D),"Physical Enter preserves chat while physical Escape closes it after sampling");
         }
         QueuedSlashMustNotEnterChat();
         VerifyDeliveryOwnership();
@@ -157,7 +174,7 @@ static class ChatCopyRegressionTests {
         Check(focusChat.Paused,"Real in-game chat still blocks Home, Insert, and Delete");
         focusMonitor.Observe(0x1B,true,true,focusChat,0x54);
         Check(!focusChat.Paused,"Closing real chat releases shortcut protection");
-        foreach(int opening in new[]{0x54,0xBF,0x6F}) foreach(int closing in new[]{0x0D,0x1B}) {
+        foreach(int opening in new[]{0x54,0xBF,0x6F}) foreach(int closing in new[]{0x1B}) {
             var state=new ChatState();
             foreach(int key in new[]{opening,0x09,0x4D,0xBF,0x09,0x4D,closing}) {
                 bool wasPaused=state.Paused;
@@ -167,7 +184,7 @@ static class ChatCopyRegressionTests {
             Check(!state.Paused,"Chat close releases sampling after protected key dispatch");
             Check(!GameKeys.ChatOwnsShortcut(false,false),"Map shortcuts remain available after chat closes");
         }
-        foreach(int closeKey in new[]{0x0D,0x1B}) foreach(int openKey in new[]{0x54,0x59}) {
+        foreach(int closeKey in new[]{0x1B}) foreach(int openKey in new[]{0x54,0x59}) {
             var chat=new ChatState();
             var monitor=new ChatKeyMonitor();
             monitor.Observe(closeKey,true,true,chat,openKey);

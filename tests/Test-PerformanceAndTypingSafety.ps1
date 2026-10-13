@@ -22,9 +22,11 @@ foreach ($k in $textKeys) {
     if (-not $chat.Paused) { throw "Typing key $k should keep chat paused" }
 }
 
-# Enter closes chat
+# Enter submits but preserves chat; Escape closes the session.
 $chat.Key(0x0D, 0x54)
-if ($chat.Paused) { throw "Enter should close chat" }
+if (-not $chat.Paused) { throw "Enter should preserve open chat" }
+$chat.Key(0x1B, 0x54)
+if ($chat.Paused) { throw "Escape should close chat" }
 
 # Slash opens chat
 $chat.Key(0xBF, 0x54)

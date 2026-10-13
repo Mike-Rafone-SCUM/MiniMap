@@ -629,8 +629,9 @@ namespace ScumMiniMap {
             }
         }
         public void Key(int key,int chatOpenKey=0x54,int copyKey=0,int scanCode=0,int chatOpenScanCode=0) {
-            // Enter (0x0D) and Escape (0x1B) close chat in SCUM
-            if(key==0x0D || key==0x1B) {
+            // Enter submits a message but can leave the chat box open for the
+            // next message. Only Escape proves this physical chat session ended.
+            if(key==0x1B) {
                 Revision++;
                 openTime = DateTime.MinValue;
                 return;
@@ -958,7 +959,7 @@ namespace ScumMiniMap {
         }
         internal static bool ChatOwnsShortcut(bool wasPaused,bool isPaused) {
             // Preserve ownership at the physical event, before asynchronous UI dispatch.
-            // This includes Escape/Enter closing chat and Tab changing its channel.
+            // This includes Escape closing chat, Enter submitting and Tab changing its channel.
             return wasPaused || isPaused;
         }
         internal static bool ShortcutEventFocused(bool sampled,bool watched,Func<bool> verify) { return sampled || (watched && verify()); }
