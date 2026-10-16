@@ -124,9 +124,9 @@ class WpfPreviewHarness {
    try {
     foreach(var fixture in new[]{new { Category=27,X=.11f,Y=.1f },new { Category=26,X=.31f,Y=.3f },new { Category=80,X=.51f,Y=.5f },new { Category=44,X=.7001f,Y=.7f }}) {
      var at=new System.Drawing.PointF(fixture.X,fixture.Y);var enabledTarget=Call(engine,"WpfClickedTarget",at,.001f);Check((bool)Field(enabledTarget,"IsMapObject")||((string)Field(enabledTarget,"Name")).StartsWith("Synthetic"),"Enabled POI category can name its marker or surrounding settlement: "+fixture.Category);
-     Call(clickStore,"SetCategoryEnabled",fixture.Category,false);var disabledTarget=Call(engine,"WpfClickedTarget",at,.001f);var sector=(string)assembly.GetType("ScumMiniMap.DestinationSearch").GetMethod("Sector",BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic).Invoke(null,new object[]{at});Check((string)Field(disabledTarget,"Name")==sector&&disabledTarget.GetType().GetProperty("Centroid").GetValue(disabledTarget,null).Equals(at),"Disabled POI category cannot name a clicked destination and exact coordinates are preserved: "+fixture.Category);Call(clickStore,"SetCategoryEnabled",fixture.Category,true);
+     Call(clickStore,"SetCategoryEnabled",fixture.Category,false);var disabledTarget=Call(engine,"WpfClickedTarget",at,.001f);Check((string)Field(disabledTarget,"Name")== (string)Field(enabledTarget,"Name")&&disabledTarget.GetType().GetProperty("Centroid").GetValue(disabledTarget,null).Equals(at),"Hidden POI categories retain clicked destination names and exact coordinates: "+fixture.Category);Call(clickStore,"SetCategoryEnabled",fixture.Category,true);
     }
-    clickStore.GetType().GetField("MasterEnabled").SetValue(clickStore,false);Check((string)Field(Call(engine,"WpfClickedTarget",new System.Drawing.PointF(.11f,.1f),.001f),"Name")=="D4","Disabled POI master also excludes settlement-area naming");
+    clickStore.GetType().GetField("MasterEnabled").SetValue(clickStore,false);Check((string)Field(Call(engine,"WpfClickedTarget",new System.Drawing.PointF(.11f,.1f),.001f),"Name")=="Synthetic town","Hidden POI master retains settlement-area destination names");
     var oldShowPoi=Field(engine,"showScumMap");var oldShowZones=Field(engine,"showZones");
     try {
      foreach(bool master in new[]{true,false})foreach(bool mapVisible in new[]{true,false}) {
@@ -164,6 +164,12 @@ class WpfPreviewHarness {
    Call(clusterStore,"SetCategoryEnabled",99,false);Check(layout(false).Length==0,"Category filters invalidate clustering and remove hidden members");Call(clusterStore,"SetCategoryEnabled",99,true);
    stateType.GetField("Zoom",Hidden).SetValue(clusterState,1f);var denseMarkers=(System.Collections.IList)Field(clusterStore,"Markers");for(int i=4;i<10000;i++) { var item=Activator.CreateInstance(clickMarkerType);clickMarkerType.GetField("Id").SetValue(item,i);clickMarkerType.GetField("CategoryId").SetValue(item,99);clickMarkerType.GetField("X").SetValue(item,.5f);clickMarkerType.GetField("Y").SetValue(item,.5f);denseMarkers.Add(item); }
    var clusterClock=System.Diagnostics.Stopwatch.StartNew();var denseClusters=layout(false);clusterClock.Stop();Check(denseClusters.Length==1&&((System.Collections.ICollection)Field(denseClusters.GetValue(0),"Members")).Count==10000&&(double)Field(denseClusters.GetValue(0),"Radius")<=13,"Dense 10,000-POI area stays one bounded badge with an accurate count");Check(clusterClock.ElapsedMilliseconds<1000,"Dense clustering remains responsive: "+clusterClock.ElapsedMilliseconds+" ms");
+   stateType.GetField("PoiClustering",Hidden).SetValue(clusterState,false);var individualBeforeZoom=layout(false);var firstIndividual=individualBeforeZoom.GetValue(0);
+   stateType.GetField("Zoom",Hidden).SetValue(clusterState,2f);var individualAfterZoom=layout(false);
+   Check(Object.ReferenceEquals(individualBeforeZoom,individualAfterZoom)&&Object.ReferenceEquals(firstIndividual,individualAfterZoom.GetValue(0))&&individualAfterZoom.Length==10000,
+    "Unclustered zoom reuses all 10,000 POI objects without dropping locations or rebuilding their membership");
+   Check((double)Field(firstIndividual,"Radius")>5.5,"Reused individual POIs still update their zoom-dependent size");
+   stateType.GetField("PoiClustering",Hidden).SetValue(clusterState,true);stateType.GetField("Zoom",Hidden).SetValue(clusterState,1f);
    var areaType=assembly.GetType("ScumMiniMap.MapZone");var namedArea=Activator.CreateInstance(areaType);areaType.GetField("Name").SetValue(namedArea,"Named GPS test area");areaType.GetField("Points").SetValue(namedArea,new[]{new System.Drawing.PointF(.97f,.97f),new System.Drawing.PointF(.99f,.97f),new System.Drawing.PointF(.99f,.99f),new System.Drawing.PointF(.97f,.99f)});
    var configuredAreas=(System.Collections.IList)Field(engine,"zones");configuredAreas.Add(namedArea);
    var packZones=(System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(areaType));var packedArea=Call(namedArea,"Clone");areaType.GetField("Name").SetValue(packedArea,"Folder pack area");areaType.GetField("Layer").SetValue(packedArea,"Downloaded pack");packZones.Add(packedArea);
@@ -174,7 +180,7 @@ class WpfPreviewHarness {
    packZones.Clear();Call(engine,"WpfRefreshFolderZones",packZones);Check(!((Array)Field(Call(engine,"WpfSnapshot",true),"Saved")).Cast<object>().Contains(packedArea)&&configuredAreas.Contains(namedArea),"Removing a folder pack preserves local annotations");
    var disabledLayers=(HashSet<string>)Field(engine,"disabledZoneLayers");Call(engine,"WpfZoneLayerToggle","Default",false);
    Check(!((Array)Field(Call(engine,"WpfSnapshot",true),"Saved")).Cast<object>().Contains(namedArea),"Hidden Default zone layer is absent from WPF shapes and labels");
-   Check((string)Field(Call(engine,"WpfClickedTarget",new System.Drawing.PointF(.98f,.98f),0.000001f),"Name")!="Named GPS test area","Hidden zone does not supply a click target");Call(engine,"WpfZoneLayerToggle","Default",true);
+   Check((string)Field(Call(engine,"WpfClickedTarget",new System.Drawing.PointF(.98f,.98f),0.000001f),"Name")=="Named GPS test area","Hidden named zone still supplies the clicked destination name");Call(engine,"WpfZoneLayerToggle","Default",true);
    Call(runtime,"Refresh");Children(poiWindow).OfType<Button>().Single(b=>(b.Tag as string)=="custom-zones:expand").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
    var customKey=(string)engine.GetType().GetMethod("WpfZoneKey",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{namedArea});
    var zoneSwitch=Children(poiWindow).OfType<CheckBox>().Single(c=>(c.Tag as string)=="custom-zone:"+customKey);zoneSwitch.IsChecked=false;

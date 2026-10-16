@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.1.4] - 2026-10-16
+
+- Unclustered POIs now retain their marker objects across zoom changes and share frozen icon drawings by appearance, avoiding thousands of duplicate glyph builds while scrolling. The shared cache is bounded; all POIs remain available.
+- Hidden POIs and zones still provide named click destinations, while preserving the exact clicked coordinates and leaving visibility settings unchanged. Unknown locations retain their grid-sector fallback.
+
 ## [2.1.3] - 2026-10-16
 
 - The main map now opens and accepts map clicks without taking keyboard focus from SCUM, allowing held movement and vehicle controls to continue. Closing a map dialog returns focus to the game when appropriate. The outside-map mouse shield no longer blocks game clicks while SCUM owns focus; text-entry dialogs retain their normal input ownership.

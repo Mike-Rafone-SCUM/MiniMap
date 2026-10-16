@@ -98,6 +98,7 @@ namespace ScumMiniMap {
         internal bool Mixed;
         internal DrawingGroup Icon;
         internal int IconColor;
+        internal Pen Outline;
     }
     internal sealed class WpfPoiCache {
         internal bool Clustering;
@@ -140,6 +141,12 @@ namespace ScumMiniMap {
             double side=MapSide(state,width,height,compact),spacing=Math.Max(compact?36:42,Math.Min(compact?64:80,Math.Min(width,height)/(compact?5:12)));
             var cache=poiCaches.GetValue(state.Store,store=>new[]{new WpfPoiCache(),new WpfPoiCache()})[compact?0:1];
             string filter=state.Store.GetFilterHashKey();
+            if(!state.PoiClustering&&cache.Clusters!=null&&!cache.Clustering&&cache.Filter==filter&&cache.Count==state.Store.Markers.Count) {
+                double radius=PoiRadius(state.Zoom,compact);
+                if(cache.Clusters.Length>0&&cache.Clusters[0].Radius!=radius)foreach(var cluster in cache.Clusters)cluster.Radius=radius;
+                cache.Zoom=state.Zoom;cache.Side=side;cache.Spacing=spacing;
+                return cache.Clusters;
+            }
             if(cache.Clusters!=null&&cache.Clustering==state.PoiClustering&&cache.Side==side&&cache.Spacing==spacing&&cache.Zoom==state.Zoom&&cache.Filter==filter&&cache.Count==state.Store.Markers.Count)return cache.Clusters;
             var bins=new Dictionary<Point,List<WpfPoiCluster>>(poiCellComparer);var clusters=new List<WpfPoiCluster>();
             if(cache.OrderedMarkers==null||cache.Filter!=filter||cache.Count!=state.Store.Markers.Count) {
@@ -440,18 +447,40 @@ namespace ScumMiniMap {
             if(name.Contains("town")||name.Contains("city"))return "⌂";
             if(name.Contains("vehicle"))return "V";return "◆";
         }
+        static readonly Dictionary<string,DrawingGroup> poiIcons=new Dictionary<string,DrawingGroup>();
+        static readonly Queue<string> poiIconOrder=new Queue<string>();
+        static readonly Dictionary<string,Pen> poiOutlinePens=new Dictionary<string,Pen>();
         void DrawPoi(DrawingContext dc,Point at,ScumMapCategory category,WpfPoiCluster cluster) {
             int color=category==null?unchecked((int)0xFFA4B1BC):category.ColorBackground;
-            if(cluster.Icon==null||cluster.IconColor!=color) {
-                var ink=cluster.Mixed?WpfFieldTheme.Amber:new SolidColorBrush(Color.FromRgb((byte)(color>>16),(byte)(color>>8),(byte)color));double radius=cluster.Radius;
-                var icon=new DrawingGroup();using(var drawing=icon.Open()) {
-                    drawing.DrawEllipse(WpfFieldTheme.Ground,new Pen(ink,2),new Point(),radius,radius);
-                    string label=cluster.Members.Count>1?(cluster.Members.Count>99?"99+":cluster.Members.Count.ToString(CultureInfo.InvariantCulture)):PoiSymbol(category);
-                    var text=new FormattedText(label,CultureInfo.InvariantCulture,FlowDirection.LeftToRight,poiTypeface,cluster.Members.Count>1?(Compact?9:11):radius*1.45,Brushes.White,1.0);
+            double radius=cluster.Radius;
+            if(cluster.Icon==null) {
+                string label=cluster.Members.Count>1?(cluster.Members.Count>99?"99+":cluster.Members.Count.ToString(CultureInfo.InvariantCulture)):PoiSymbol(category);
+                string key=label;
+                DrawingGroup icon;
+                if(!poiIcons.TryGetValue(key,out icon)) {
+                icon=new DrawingGroup();using(var drawing=icon.Open()) {
+                    // One frozen vector glyph per symbol/count. Zoom changes its
+                    // transform, never its font layout or drawing asset.
+                    var text=new FormattedText(label,CultureInfo.InvariantCulture,FlowDirection.LeftToRight,poiTypeface,12,Brushes.White,1.0);
                     drawing.DrawText(text,new Point(-text.Width/2,-text.Height/2));
-                }icon.Freeze();cluster.Icon=icon;cluster.IconColor=color;
+                }icon.Freeze();
+                if(poiIcons.Count>=512)poiIcons.Remove(poiIconOrder.Dequeue());
+                poiIcons.Add(key,icon);poiIconOrder.Enqueue(key);
+                }
+                cluster.Icon=icon;
             }
-            dc.PushTransform(new TranslateTransform(at.X,at.Y));dc.PushTransform(new RotateTransform(-renderRotation));dc.DrawDrawing(cluster.Icon);dc.Pop();dc.Pop();
+            if(cluster.Outline==null||cluster.IconColor!=color) {
+            string penKey=color+"|"+cluster.Mixed;Pen outline;
+            if(!poiOutlinePens.TryGetValue(penKey,out outline)) {
+                var ink=cluster.Mixed?WpfFieldTheme.Amber:new SolidColorBrush(Color.FromRgb((byte)(color>>16),(byte)(color>>8),(byte)color));
+                outline=new Pen(ink,2);outline.Freeze();if(poiOutlinePens.Count>=256)poiOutlinePens.Clear();poiOutlinePens.Add(penKey,outline);
+            }
+            cluster.Outline=outline;cluster.IconColor=color;
+            }
+            dc.DrawEllipse(WpfFieldTheme.Ground,cluster.Outline,at,radius,radius);
+            double scale=(cluster.Members.Count>1?(Compact?9:11):radius*1.45)/12;
+            var transform=new Matrix(scale,0,0,scale,0,0);if(renderRotation!=0)transform.Rotate(-renderRotation);transform.Translate(at.X,at.Y);
+            dc.PushTransform(new MatrixTransform(transform));dc.DrawDrawing(cluster.Icon);dc.Pop();
         }
     }
 

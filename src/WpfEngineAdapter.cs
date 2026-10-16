@@ -150,22 +150,22 @@ namespace ScumMiniMap {
         }
         internal MapZone WpfClickedTarget(PointF point,float hitRadius) {
             string name=null;bool mapObject=false;
-            var savedPoint=WpfAllZones().Where(z=>showZones&&WpfCustomZone(z)&&WpfZoneVisible(z)&&z.Points.Length<3)
+            var savedPoint=WpfAllZones().Where(z=>WpfCustomZone(z)&&z.Points!=null&&z.Points.Length>0&&z.Points.Length<3)
                 .Select(z=>new { Zone=z,Distance=(z.Points[0].X-point.X)*(z.Points[0].X-point.X)+(z.Points[0].Y-point.Y)*(z.Points[0].Y-point.Y) }).Where(z=>z.Distance<=hitRadius*hitRadius).OrderBy(z=>z.Distance).FirstOrDefault();
             if(savedPoint!=null) { name=savedPoint.Zone.Name;mapObject=savedPoint.Zone.IsMapObject; }
             if(string.IsNullOrWhiteSpace(name)&&scumMap!=null) {
-                var marker=scumMap.Markers.Where(m=>scumMap.MasterEnabled&&scumMap.IsCategoryEnabled(m.CategoryId))
+                var marker=scumMap.Markers
                     .Select(m=>new { Marker=m,Distance=(m.X-point.X)*(m.X-point.X)+(m.Y-point.Y)*(m.Y-point.Y) })
                     .Where(m=>m.Distance<=hitRadius*hitRadius).OrderBy(m=>m.Distance).FirstOrDefault();
                 if(marker!=null) { name=scumMap.GetMarkerDisplayName(marker.Marker);mapObject=true; }
             }
             if(string.IsNullOrWhiteSpace(name)&&zones!=null) {
-                var area=WpfAllZones().Where(z=>showZones&&WpfZoneVisible(z)&&z.Points!=null&&z.Points.Length>2&&!string.IsNullOrWhiteSpace(z.Name)&&z.Contains(point))
+                var area=WpfAllZones().Where(z=>z.Points!=null&&z.Points.Length>2&&!string.IsNullOrWhiteSpace(z.Name)&&z.Contains(point))
                     .OrderBy(z=>(z.Points.Max(p=>p.X)-z.Points.Min(p=>p.X))*(z.Points.Max(p=>p.Y)-z.Points.Min(p=>p.Y))).FirstOrDefault();
                 if(area!=null) { name=area.Name;mapObject=area.IsMapObject; }
             }
             if(string.IsNullOrWhiteSpace(name)&&scumMap!=null) {
-                var town=scumMap.Settlements.Where(t=>scumMap.IsCategoryEnabled(t.CategoryId)).Select(t=>new { Town=t,Distance=(t.X-point.X)*(t.X-point.X)+(t.Y-point.Y)*(t.Y-point.Y) })
+                var town=scumMap.Settlements.Select(t=>new { Town=t,Distance=(t.X-point.X)*(t.X-point.X)+(t.Y-point.Y)*(t.Y-point.Y) })
                     .Where(t=>t.Distance<=t.Town.Radius*t.Town.Radius).OrderBy(t=>t.Distance).FirstOrDefault();
                 if(town!=null) { name=town.Town.Name;mapObject=true; }
             }
