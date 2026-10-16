@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 class WpfPreviewHarness {
- [System.Runtime.InteropServices.DllImport("user32.dll",EntryPoint="GetWindowLongW")]static extern int WindowStyle(IntPtr window,int index);
+ [System.Runtime.InteropServices.DllImport("user32.dll",EntryPoint="GetWindowLongW")]static extern int ExtendedWindowStyle(IntPtr window,int index);
  [System.Runtime.InteropServices.DllImport("user32.dll")]static extern IntPtr SendMessage(IntPtr window,int message,IntPtr w,IntPtr l);
  [System.Runtime.InteropServices.DllImport("user32.dll")]static extern bool IsWindowEnabled(IntPtr window);
  const BindingFlags Hidden=BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic;
@@ -221,7 +221,7 @@ class WpfPreviewHarness {
    var foregroundBeforeMap=(IntPtr)foregroundMethod.Invoke(null,null);
    Call(runtime,"ToggleTactical",true);Check(mapWindow.IsVisible&&!((Window)Field(runtime,"hud")).IsVisible,"Map-key action opens the full map and hides the HUD");
    var tacticalHandle=new System.Windows.Interop.WindowInteropHelper(mapWindow).Handle;
-   Check(!mapWindow.ShowActivated&&(WindowStyle(tacticalHandle,-20)&0x08000000)!=0,
+   Check(!mapWindow.ShowActivated&&(ExtendedWindowStyle(tacticalHandle,-20)&0x08000000)!=0,
     "Main map uses the non-activating window style so held movement and vehicle keys remain with SCUM");
    Check(SendMessage(tacticalHandle,0x21,IntPtr.Zero,IntPtr.Zero)==new IntPtr(3),
     "Clicking main-map controls returns MA_NOACTIVATE without eating the mouse click");
