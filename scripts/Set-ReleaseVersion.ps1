@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][ValidatePattern('^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$')][string]$Version)
+﻿param([Parameter(Mandatory=$true)][ValidatePattern('^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$')][string]$Version)
 $ErrorActionPreference = 'Stop'
 $versionRoot = Split-Path $PSScriptRoot -Parent
 $sourcePath = Join-Path $versionRoot 'src\MiniMap.cs'

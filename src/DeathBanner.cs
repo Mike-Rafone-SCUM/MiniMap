@@ -177,6 +177,7 @@ namespace ScumMiniMap {
     internal enum DeathMarkerOutcome { None, Saved, MissingPosition, SaveFailed }
     public sealed partial class MapWindow {
         readonly HashSet<MapZone> departedDeathMarkers=new HashSet<MapZone>();
+        readonly HashSet<MapZone> recoveredDeathMarkers=new HashSet<MapZone>();
         DateTime nextDeathLabelRefresh;
         void RemoveDeathMarkersFromSidebar() { ClearDeathMarkers(); }
         internal bool ClearDeathMarkers() {
@@ -219,7 +220,7 @@ namespace ScumMiniMap {
                 StopVoice();voiceTarget=null;voiceNavigator.Reset();voiceStatusUntil=DateTime.MinValue;
                 lastVoicePosition=null;lastVoiceRoute=null;
             }
-            foreach(var marker in removed)departedDeathMarkers.Remove(marker);
+            foreach(var marker in removed) { departedDeathMarkers.Remove(marker);recoveredDeathMarkers.Remove(marker); }
             // A capture already in progress belongs to the state before removal.
             // A still-visible death screen stays dismissed until clear gameplay samples rearm it.
             deathProbeGeneration++;deathBannerState.DismissCurrentScreen();firstDeathBannerPosition=null;
@@ -229,21 +230,23 @@ namespace ScumMiniMap {
         }
         internal void ClearReachedDeathMarkers(PointF currentPoint) {
             departedDeathMarkers.RemoveWhere(z=>!zones.Contains(z));
+            recoveredDeathMarkers.RemoveWhere(z=>!zones.Contains(z));
             var reached=new List<MapZone>();
             foreach(MapZone marker in zones) {
                 if(!marker.IsDeathMarker)continue;
                 double distance=DestinationSearch.Metres(currentPoint,marker.Centroid);
-                if(distance>=50)departedDeathMarkers.Add(marker);
-                else if(distance<=25 && departedDeathMarkers.Contains(marker))reached.Add(marker);
+                if(distance>=100&&recoveredDeathMarkers.Contains(marker))reached.Add(marker);
+                else if(distance<=25&&departedDeathMarkers.Contains(marker))recoveredDeathMarkers.Add(marker);
+                else if(distance>=50)departedDeathMarkers.Add(marker);
             }
             if(reached.Count==0)return;
             var candidate=new List<MapZone>(zones);
             candidate.RemoveAll(z=>reached.Contains(z));
             if(!TryCommitZonesCore(candidate,null,true))return;
             if(reached.Contains(searchTarget)) {
-                VoiceArrived(); searchTarget=null; activeRoute=null; routeGeneration++; lastRouteTarget=null;
+                ClearActiveWaypoint();
             }
-            foreach(MapZone marker in reached)departedDeathMarkers.Remove(marker);
+            foreach(MapZone marker in reached) { departedDeathMarkers.Remove(marker);recoveredDeathMarkers.Remove(marker); }
             SettingsChanged();
         }
         void RefreshDeathLabels(DateTime now) {

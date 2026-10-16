@@ -97,6 +97,7 @@ namespace ScumMiniMap {
 
         public struct SettlementAnchor {
             public string Name;
+            public int CategoryId;
             public float X;
             public float Y;
             public float Radius;
@@ -109,12 +110,12 @@ namespace ScumMiniMap {
             for (int i = 0; i < Markers.Count; i++) {
                 ScumMapMarker sm = Markers[i];
                 if (sm.CategoryId == 27 && !string.IsNullOrEmpty(sm.Title)) {
-                    _settlements.Add(new SettlementAnchor { Name = sm.Title.Trim(), X = sm.X, Y = sm.Y, Radius = 0.020f });
+                    _settlements.Add(new SettlementAnchor { Name = sm.Title.Trim(), CategoryId=sm.CategoryId, X = sm.X, Y = sm.Y, Radius = 0.020f });
                 } else if (sm.CategoryId == 26 && !string.IsNullOrEmpty(sm.Title) && (sm.Title.IndexOf("City", StringComparison.OrdinalIgnoreCase) >= 0 || sm.Title.Equals("Novigrad", StringComparison.OrdinalIgnoreCase))) {
                     string sname = sm.Title.Replace(" City", "").Trim();
-                    _settlements.Add(new SettlementAnchor { Name = sname, X = sm.X, Y = sm.Y, Radius = 0.040f });
+                    _settlements.Add(new SettlementAnchor { Name = sname, CategoryId=sm.CategoryId, X = sm.X, Y = sm.Y, Radius = 0.040f });
                 } else if (sm.CategoryId == 80 && !string.IsNullOrEmpty(sm.Title)) {
-                    _settlements.Add(new SettlementAnchor { Name = sm.Title.Trim(), X = sm.X, Y = sm.Y, Radius = 0.015f });
+                    _settlements.Add(new SettlementAnchor { Name = sm.Title.Trim(), CategoryId=sm.CategoryId, X = sm.X, Y = sm.Y, Radius = 0.015f });
                 }
             }
         }

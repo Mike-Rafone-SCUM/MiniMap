@@ -1,4 +1,4 @@
-param(
+﻿param(
     [ValidateSet('Release','Test')][string]$Configuration = 'Release',
     [string]$OutputDirectory
 )
@@ -44,7 +44,7 @@ try {
     $defines = @()
     if ($Configuration -eq 'Test') { $defines = @('/define:MINIMAP_TEST') }
     $renderTest = Join-Path $stage 'RenderingChecks.exe'
-    & $compiler /nologo /optimize+ /target:exe /platform:x64 @defines /main:MapRenderingTests "/out:$renderTest" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.IO.Compression.dll "/resource:$tilePack,map-tiles.bin" @sources (Join-Path $buildRoot 'tests\MapRenderingTests.cs')
+    & $compiler /nologo /codepage:65001 /optimize+ /target:exe /platform:x64 @defines /main:MapRenderingTests "/out:$renderTest" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:Accessibility.dll "/reference:$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\WPF\PresentationCore.dll" "/reference:$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\WPF\PresentationFramework.dll" "/reference:$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\WPF\WindowsBase.dll" /reference:System.Xaml.dll /reference:System.IO.Compression.dll "/resource:$tilePack,map-tiles.bin" @sources (Join-Path $buildRoot 'tests\MapRenderingTests.cs')
     if ($LASTEXITCODE -ne 0) { throw 'Rendering check compilation failed.' }
     & $renderTest $res
     if ($LASTEXITCODE -ne 0) { throw 'Rendering checks failed.' }
@@ -71,12 +71,13 @@ try {
     })
     [IO.File]::WriteAllText($assetManifest,($assetLines -join "`n")+"`n",[Text.UTF8Encoding]::new($false))
     $embedded = @('zones.tsv','water-mask.bin','scummap.bin','spawn-items.tsv','spawn-compatibility.tsv','spawn-item-names-pl.tsv','keyboard-setup.png','steam-logo.png' | ForEach-Object { '/resource:' + (Join-Path $res $_) + ',' + $_ })
+    $embedded += @('BarlowSemiCondensed-Regular.ttf','BarlowSemiCondensed-SemiBold.ttf' | ForEach-Object { '/resource:' + (Join-Path $res ('fonts/' + $_)) + ',' + $_ })
     $embedded += '/resource:' + $assetManifest + ',installation-assets.txt'
     $embedded += $localizedResources
     $embedded += '/resource:' + (Join-Path $pack 'detect_zones.py') + ',detect_zones.py'
     $embedded += @(& (Join-Path $PSScriptRoot 'Get-VoiceResources.ps1'))
     $exe = Join-Path $stage $exeName
-    & $compiler /nologo /optimize+ /target:winexe /platform:x64 @defines @embedded "/out:$exe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.IO.Compression.dll "/win32icon:$res\App-Icon.ico" "/win32manifest:$executionManifest" @sources
+    & $compiler /nologo /codepage:65001 /optimize+ /target:winexe /platform:x64 @defines @embedded "/out:$exe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:Accessibility.dll "/reference:$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\WPF\PresentationCore.dll" "/reference:$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\WPF\PresentationFramework.dll" "/reference:$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\WPF\WindowsBase.dll" /reference:System.Xaml.dll /reference:System.IO.Compression.dll "/win32icon:$res\App-Icon.ico" "/win32manifest:$executionManifest" @sources
     if ($LASTEXITCODE -ne 0) { throw 'Application compilation failed.' }
     Remove-Item -LiteralPath $stampedPath
     Remove-Item -LiteralPath $assetManifest

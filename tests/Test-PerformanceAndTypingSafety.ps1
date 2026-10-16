@@ -1,11 +1,11 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 $miniRoot = Split-Path $PSScriptRoot -Parent
 $srcDir = Join-Path $miniRoot 'src'
 $resDir = Join-Path $miniRoot 'resources'
 $sources = & (Join-Path (Split-Path $PSScriptRoot -Parent) 'scripts\Get-MiniMapSources.ps1')
-Add-Type -Path $sources -ReferencedAssemblies System.Windows.Forms,System.Drawing,System.Xml,System.IO.Compression
+Add-Type -Path $sources -ReferencedAssemblies WindowsBase,PresentationCore,PresentationFramework,System.Xaml,Accessibility,System.Windows.Forms,System.Drawing,System.Xml,System.IO.Compression
 
 Write-Output "--- Testing ChatState and Typing Safety ---"
 $chat = [ScumMiniMap.ChatState]::new()

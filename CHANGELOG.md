@@ -8,6 +8,100 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-10-16
+
+- Reduced lag with every POI enabled: reuse frozen icon drawings, cache formatted text and localized marker names, retain sorted category ordering while zooming, and avoid cluster-grid hash collisions. All locations remain available with clustering on or off; caches refresh for category/language changes and text-cache size is bounded.
+
+- Expanded first-time setup into nine navigable pages covering key bindings, minimap size and shape, live appearance preview, opacity, rotation, clustering, grid and map layers, player/route/history colours, tracking, zoom, voice and private sharing. Reuses the live Settings controls; changes can be revisited and persist after setup. Added default-colour restoration and a modal POI category selector.
+- Changing minimap shape preserves its opacity, independently of tactical-map transparency.
+
+- Added per-player connection cards to the big-map sidebar with independent pills for live location, GPS waypoint, saved locations and death markers. View choices apply to both maps without changing sharing; connected players remain listed when coordinates are unavailable.
+
+- Private sharing now includes the active GPS navigation destination, even when it has not been saved as a waypoint. Changing or clearing GPS updates the shared pin, and destinations outside the minimap view have a cyan edge arrow with the owner's name. The active destination is prioritised within the marker limit.
+
+- Added a persistent Appearance switch for POI clustering on both maps. Disabling it shows individual category icons at every location; enabling it restores nearby count clusters. Clustering remains enabled by default.
+
+- Added private group sharing of saved waypoints and death markers, including owner labels, live updates and deletions, hover details and navigation targets. Received markers remain temporary and read-only, and are not imported into local saves or re-shared as your own. Protocol 3 requires the updated build on every participant's PC.
+
+- Added local UPnP WAN-address discovery when NAT-PMP cannot detect the public IPv4, without outside lookup services. Hosting automatically adds or reuses a verified Windows Firewall exception scoped to this executable and selected inbound TCP port. Address detection, firewall results and router forwarding now have separate status messages in every language.
+
+- Fixed private sharing silently rejecting a player's location when their PC clock differed from the host's. Sharing sends capture age and increasing sequence numbers, preserves age during forwarding, and rejects stale or replayed samples. Both players must use the updated build. Player markers now show names without last-seen timestamps; friends outside the minimap view get cyan direction arrows with their names.
+
+- Host group now queries the local NAT-PMP router for its public IPv4 and requests a temporary TCP mapping while hosting, without external lookup services, VPN accounts or relays. Leases renew during hosting and are withdrawn on stop. Unsupported routers, CGNAT and failed renewal show manual setup guidance. Hosting verifies a scoped Windows Firewall exception. Delayed detection preserves manual addresses and Join destinations; local adapters are listed separately. A mapping does not establish external reachability.
+
+- Fixed the private positions dialog opening behind the active modal input layer. It now uses the normal owned, topmost dialog flow, focuses the name field, restores settings interaction on close and protects group-key entry from map shortcuts.
+
+- Added an optional heading-up compact minimap with readable upright labels, rotating north indication and correctly projected destination guidance; the tactical map stays north-up.
+- Reworked POI sizing and clustering: bounded icon sizes adapt to zoom, nearby locations combine into accurate count badges, and zooming in reveals individual category symbols. World-anchored clusters remain stable while panning or rotating, respect category filters, and expose member names on hover. Label spacing and density limits reduce clutter on both maps.
+- Added opt-in encrypted private position sharing with in-app Host group / Join group controls, address, TCP port, display name and group key. Works over LAN, VPN or a forwarded TCP port. Peer names appear on both maps; stale positions expire after 30 seconds. Sharing is session-only and disabled by default.
+
+- Disabled POI categories and the POI master switch now also exclude settlement-area destination naming. Clicking near a hidden town, city or village keeps the exact clicked coordinates and uses the grid sector instead of the hidden POI name.
+- Clicking empty terrain or water on the tactical map places a destination even at 0% terrain opacity. A nearly transparent input surface prevents Windows from passing those clicks through to SCUM; the compact HUD remains click-through.
+- Minimap recovery restores minimized/hidden WPF windows, keeps saved positions inside connected monitor work areas and periodically restores the HUD's non-activating topmost placement. The tray's Show/Hide action now controls WPF rather than the hidden legacy overlay, and a failed WPF refresh no longer stops its timer permanently.
+- Zone TSV files can open MiniMap's importer from Explorer, including while WPF is already running. A localized **Name this map** prompt names the imported layer before review; Save commits the zones and Cancel preserves existing data. Settings registers the Windows Open With handler while respecting the user's existing TSV default app.
+- Zone Creator supports Ctrl/Shift multi-selection, selection highlights and a selected count, combined type/layer/name filtering, selecting all filtered zones or matching colours, batch outline/fill/opacity changes, duplicate, rename and deletion. Opacity edits preserve individual fill colours; the controls and zone types are localized in all 19 languages.
+- WPF automatically refreshes downloaded zone packs added, changed or removed under the executable's `zones` folder, including nested `zones/skynett/zones.tsv`. Background checks wait for a stable copy, retain working zones on invalid input, update map/search/filter options together and preserve profile annotations and saved visibility choices.
+
+## [2.0.0] - 2026-10-14
+
+SCUM MiniMap now uses WPF for its main map interface, settings, setup guide and Zone Creator. This release brings the recent interface work together with fixes for custom-zone visibility and idle performance. The existing tracking, routing, saved data and game-input protections remain behind the new interface.
+
+## Map and controls
+
+- The tactical map uses a transparent window and the bundled detailed SCUM terrain tiles. The surrounding blue background is removed and overlays are cropped to the world-map bounds.
+- Expanding or collapsing the sidebar preserves the map centre, scale and viewport size.
+- Floating controls beside the sidebar provide close, collapse/expand, Settings, setup help and removal of death markers. Tooltips describe their actions and change with the selected language. The duplicate sidebar close button is removed.
+- The bottom controls show the current zoom, follow-player state and terrain opacity. Drag the left handle to move the controls and the right handle to resize them between 70% and 160%; the context menu restores their default layout. These layout adjustments last for the current session.
+- The full map starts with 0% terrain opacity at 1×. Zooming above 1× uses fully opaque terrain; returning to 1× restores the saved base opacity. The compact minimap retains its own opacity setting.
+- Display settings now control grid labels, grid opacity, label size, smart label placement, compact-map edge fading, zoom step and maximum zoom.
+- Off-screen destinations show an arrow in the route colour at the viewport edge, including targets outside a circular minimap's crop. The arrow remains visible above edge fading and disappears when navigation is cleared.
+
+## Settings, setup and navigation
+
+- Settings and the five-step setup guide use WPF, with General, Shortcuts and Appearance settings views.
+- The Settings hotkey opens and closes the same dialog, including after focus returns to SCUM. Interactive dialogs gain mouse/keyboard focus consistently; nested editors and shortcut capture retain their input protection.
+- The compact minimap remains passive during play. Settings provides a draggable positioning editor; Done saves the new position and Escape cancels.
+- Colour swatches refresh immediately after selection. Route guidance, route history and the player marker have separate saved colour controls.
+- The compact status display separates the grid sector from the current location. Long route details scroll back and forth with pauses at the ends; changing distance readings preserves ticker progress. Route text refreshes every 500 ms.
+- The history line is thicker and remains thinner than the active route.
+- Clicking the active destination clears its route while preserving a saved waypoint. The map context menu offers navigation, saving a named waypoint, clearing the route and deleting a nearby saved marker by name.
+
+## POIs, wildlife and custom zones
+
+- The first WPF preferences migration enables all POI categories, including hunting and fishing, and sets the full map's base opacity to 0%. A saved migration revision prevents later launches from resetting the user's choices.
+- Every POI group has a switch, a mixed-selection state and independent switches for its individual types.
+- Hunting and fishing regions render with subtle coloured fills, thin outlines and preserved polygon holes. Hover details identify enabled POIs and available fish/animals from overlapping regions in a dedicated top-left card and tooltip.
+- Custom map zones expands into layer and individual-zone switches. Hidden entries remain listed, and visibility choices are saved. Enabling a zone also enables its parent layer and the custom-zone master switch; layer switches preserve individual choices.
+- Saved two-point markers render again. Single-point markers in named custom layers follow custom-zone visibility rather than the ordinary-waypoint switch.
+- The WPF Zone Creator supports screenshot/file import, export, layers, filtering, naming, grouping, ordering, duplication, deletion and polygon, rectangle, circle, move and outline-edit tools. The existing import/alignment engine is retained.
+- Screenshot work displays source and destination canvases together, with manual two-landmark alignment, calibrated tracing and geometry undo.
+- Saved outline colours render correctly. Fill colour and opacity can be set independently, and the optional fill field preserves compatibility with older zone files.
+
+## Death markers
+
+- Death markers use a distinct red tombstone/cross and an age label above other overlays. They remain visible when ordinary waypoints are hidden.
+- Right-click deletion removes the named marker from saved data; the floating tombstone button removes death markers through the existing removal action.
+- Automatic recovery cleanup observes an initial departure of at least 50 m, a return within 25 m, and then a departure of at least 100 m before removing the marker. Failed saves retain it. Recovery progress is session-local, so restarting safely retains markers.
+
+## Performance, languages and updates
+
+- Cached zone hashes, centroids, visibility/options lists and trail snapshots replace repeated processing on idle refreshes. Redraw comparison no longer formats every saved coordinate.
+- Polygon and habitat geometry is cached in world coordinates, transformed during rendering and culled when off-screen. Camera movement preserves sidebar controls; the closed full map stops rebuilding its sidebar in the background.
+- UI text and formatting are checked across all 19 supported languages. Toolbar help, move-editor text, route clearing, test-build labels, setup headings and sidebar action tooltips now use authored translations. Setup and floating controls refresh when the language changes.
+- Both WPF and legacy startup use the shared post-update result handler. WPF displays the result in a localized, scrollable dialog, then consumes the result file. Safe helper cleanup runs even when no result file remains. A notification failure preserves the result for a later launch; unreadable or oversized results are logged.
+
+## Installation and compatibility
+
+Extract the complete release ZIP, keep its `assets` directory beside `SkynettMiniMap.exe`, and approve the administrator prompt. Use SCUM in Windowed or Borderless Window mode. Match SCUM's Copy Location binding with MiniMap; NumPad / without a modifier remains the default for new profiles. Existing bindings and saved data are retained.
+
+The Release build uses `%LOCALAPPDATA%\ScumMiniMap`; the Test build uses a separate profile. Complete-package updates retain checksum validation and atomic installation. `--legacy-ui` remains available for the original frontend.
+
+## Verification and current limits
+
+Canonical build/package checks and isolated WPF behavior/rendering checks are required for both Test and Release artifacts. The detailed-zone stress test covers 300 polygons with 512 vertices each, cached snapshots, idle refreshes and sidebar reuse during camera movement. These checks do not certify every GPU, DPI, monitor, OBS or long-duration workload.
+
+WPF still uses the bundled terrain rather than arbitrary imported map textures. The full directional vision cone, detailed compass, history timestamps on hover and admin-player map overlay remain original-frontend parity gaps. Some specialist tools retain native dialogs. Death-marker age labels may remain stale while the map is stationary; marker creation, visibility and deletion are separately tested. Very large expanded custom-zone lists are not virtualized. Toolbar layout and death-recovery progress are session-local as described above.
+
 ## [1.7.24] - 2026-10-13
 
 ### Fixed
@@ -811,8 +905,6 @@ This release consolidates the complete 1.4.x development line, from 1.4.0 throug
 - Automated build packaging update.
 - Performance refinements and maintenance release.
 
-## [Unreleased]
-
 ## [1.7.0] - 2026-10-09
 
 ### Added
@@ -1128,3 +1220,4 @@ This release consolidates the complete 1.4.x development line, from 1.4.0 throug
 - In-game chat and modifier key detection to automatically pause coordinate polling during typing.
 - Custom map and zone support (%LocalAppData%\ScumMiniMap\map.png, zones.tsv).
 - Optional Python-based computer vision script (detect_zones.py) for automated zone boundary extraction from map screenshots.
+

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -495,6 +495,17 @@ namespace ScumMiniMap {
 
 
 
+        internal static async void ReturnMapKey(IntPtr window,int key,int scan) {
+            // Only deliver the user's closing map press to the SCUM window that opened it.
+            if(window==IntPtr.Zero||!IsWindow(window))return;
+            uint pid;GetWindowThreadProcessId(window,out pid);
+            try { using(var process=Process.GetProcessById((int)pid))if(!process.ProcessName.Equals("SCUM",StringComparison.OrdinalIgnoreCase)&&!process.ProcessName.Equals("SCUM-Win64-Shipping",StringComparison.OrdinalIgnoreCase))return; } catch { return; }
+            if(!SetForegroundWindow(window))return;
+            for(int i=0;i<50&&(GetAsyncKeyState(key)&0x8000)!=0;i++)await Task.Delay(10);
+            if(GetForegroundWindow()!=window||(GetAsyncKeyState(key)&0x8000)!=0||IsAltOrTabOrWinDown())return;
+            var layout=GetKeyboardLayout(GetWindowThreadProcessId(window,out pid));
+            if(Key((uint)key,false,scan,layout))Key((uint)key,true,scan,layout);
+        }
         internal static void ForceForeground(IntPtr window) {
 
 
@@ -523,6 +534,7 @@ namespace ScumMiniMap {
 
 
 
+        [DllImport("user32.dll")] internal static extern IntPtr WindowFromPoint(System.Drawing.Point point);
         internal static bool IsOurWindow(IntPtr window) {
 
 

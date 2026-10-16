@@ -63,6 +63,7 @@ namespace ScumMiniMap {
         public bool IsMapObject;
         public string Subtitle;
         public int Argb;
+        public int? FillArgb;
         public PointF[] Points;
         public ZoneCategory Category;
         static readonly HashSet<string> FactionNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
@@ -90,7 +91,7 @@ namespace ScumMiniMap {
         public bool IsFaction { get { return Argb == -1 || Argb == -657931 || (Argb & 0xFFFFFF) == 0xFFFFFF || IsFactionName(Name); } }
         public bool IsFuelStation { get { return Argb == -30720 || (Points != null && Points.Length < 3 && Name != null && Name.IndexOf("Gas", StringComparison.OrdinalIgnoreCase) >= 0); } }
         public string Layer = "Default";
-        public MapZone Clone() { return new MapZone { Name=Name,Subtitle=Subtitle,Argb=Argb,Points=Points==null?new PointF[0]:(PointF[])Points.Clone(),Category=Category,Layer=Layer,DeathCreatedUtc=DeathCreatedUtc }; }
+        public MapZone Clone() { return new MapZone { Name=Name,Subtitle=Subtitle,Argb=Argb,FillArgb=FillArgb,Points=Points==null?new PointF[0]:(PointF[])Points.Clone(),Category=Category,Layer=Layer,DeathCreatedUtc=DeathCreatedUtc }; }
         public PointF Centroid {
             get {
                 if(Points==null || Points.Length==0) return new PointF(0,0);
@@ -222,6 +223,7 @@ namespace ScumMiniMap {
                         if(zone.IsDeathMarker && parts.Length>5 && DateTime.TryParseExact(parts[5],"o",CultureInfo.InvariantCulture,
                             DateTimeStyles.RoundtripKind,out created))zone.DeathCreatedUtc=created.ToUniversalTime();
                         else if(zone.IsDeathMarker)zone.DeathCreatedUtc=zone.DeathTimeUtc;
+                        if(parts.Length>6&&!string.IsNullOrWhiteSpace(parts[6])) { int fill;if(!int.TryParse(parts[6],out fill))throw new InvalidDataException("Invalid zone fill colour.");zone.FillArgb=fill; }
                         result.Add(zone);
                     }
                 }
@@ -240,7 +242,8 @@ namespace ScumMiniMap {
                         throw new InvalidDataException("Invalid zone coordinates; nothing was saved.");
                 string layer=string.IsNullOrWhiteSpace(z.Layer)?"Default":z.Layer;
                 string line=Uri.EscapeDataString(z.Name)+"\t"+z.Argb+"\t"+string.Join(";",z.Points.Select(pt=>pt.X.ToString("R",CultureInfo.InvariantCulture)+","+pt.Y.ToString("R",CultureInfo.InvariantCulture)))+"\t"+z.Category+"\t"+Uri.EscapeDataString(layer);
-                if(z.IsDeathMarker && z.DeathTimeUtc.HasValue)line+="\t"+z.DeathTimeUtc.Value.ToString("o",CultureInfo.InvariantCulture);
+                if(z.IsDeathMarker&&z.DeathTimeUtc.HasValue||z.FillArgb.HasValue)line+="\t"+(z.IsDeathMarker&&z.DeathTimeUtc.HasValue?z.DeathTimeUtc.Value.ToString("o",CultureInfo.InvariantCulture):"");
+                if(z.FillArgb.HasValue)line+="\t"+z.FillArgb.Value.ToString(CultureInfo.InvariantCulture);
                 total+=line.Length+2;
                 if(line.Length>MaxLineLength || total>MaxTextChars) throw new InvalidDataException("Zone data exceeds the size limit.");
                 lines.Add(line);
@@ -297,7 +300,7 @@ namespace ScumMiniMap {
                         Color color=Color.FromArgb(zone.Argb);
                         int fillAlpha = (zone.IsFaction || zone.Category == ZoneCategory.Faction) ? 75 : 40;
                         float penWidth = (zone.IsFaction || zone.Category == ZoneCategory.Faction) ? 2.5f : 1.8f;
-                        using(Brush fill=new SolidBrush(Color.FromArgb(fillAlpha,color)))g.FillPolygon(fill,points);
+                        using(Brush fill=new SolidBrush(zone.FillArgb.HasValue?Color.FromArgb(zone.FillArgb.Value):Color.FromArgb(fillAlpha,color)))g.FillPolygon(fill,points);
                         using(Pen pen=new Pen(Color.FromArgb(220,color),penWidth))g.DrawPolygon(pen,points);
                         bool isMajor = zone.Category==ZoneCategory.City || zone.Category==ZoneCategory.Trader || zone.Category==ZoneCategory.Custom || zone.Category==ZoneCategory.Faction || zone.IsFaction;
                         if(showLabels && (!zoomedOut || isMajor) && !string.IsNullOrEmpty(zone.Name)) {
@@ -370,6 +373,8 @@ namespace ScumMiniMap {
             return new PointF(m1.X+(point.X-s1.X)*sx,m1.Y+(point.Y-s1.Y)*sy);
         }
         public static void SelfTest() {
+            AppZoneFolder.SelfTest();
+            ZoneFileOpen.SelfTest();
             using(MemoryStream stream=new MemoryStream(System.Text.Encoding.UTF8.GetBytes("Edge\t1\t-0.02,0.2;0.1,0.2;0.1,0.3"))) {
                 List<MapZone> edge=Load(stream);
                 if(edge.Count!=1 || edge[0].Points[0].X!=0)throw new Exception("Map-edge zone validation failed.");
@@ -392,6 +397,144 @@ namespace ScumMiniMap {
                 using(var image=new Bitmap(100,100)) using(var graphics=Graphics.FromImage(image))
                     Draw(graphics,new List<MapZone>{loaded[2]},new RectangleF(0,0,100,100),false,9,false,null,false);
             } finally { File.Delete(path);if(File.Exists(path+".tmp"))File.Delete(path+".tmp"); }
+        }
+    }
+    // Folder packs stay separate from profile annotations: refresh/removal must never
+    // overwrite saved waypoints, deaths, or zones created in the editor.
+    internal sealed class AppZoneFolder {
+        readonly string root;
+        string applied,observed;
+        DateTime next;
+        Task<Pack> pending;
+        internal sealed class Pack { internal string Signature;internal List<MapZone> Zones; }
+        internal AppZoneFolder(string appFolder) { root=Path.Combine(appFolder,"zones"); }
+        static string[] Files(string root) {
+            var files=new List<string>();var directories=new Queue<Tuple<string,int>>();
+            if(Directory.Exists(root)&&(File.GetAttributes(root)&FileAttributes.ReparsePoint)==0)directories.Enqueue(Tuple.Create(root,0));
+            int visited=0;
+            while(directories.Count>0) {
+                var dir=directories.Dequeue();if(++visited>256)throw new InvalidDataException("Too many zone folders.");
+                foreach(string file in Directory.EnumerateFiles(dir.Item1,"*.tsv")) {
+                    if((File.GetAttributes(file)&FileAttributes.ReparsePoint)!=0)continue;
+                    // source-zones.tsv is an editor calibration file, not a map pack.
+                    if(!string.Equals(Path.GetFileName(file),"zones.tsv",StringComparison.OrdinalIgnoreCase))continue;
+                    files.Add(file);if(files.Count>128)throw new InvalidDataException("Too many zone packs.");
+                }
+                foreach(string child in Directory.EnumerateDirectories(dir.Item1)) {
+                    if((File.GetAttributes(child)&FileAttributes.ReparsePoint)!=0)continue;
+                    if(dir.Item2>=8)throw new InvalidDataException("Zone folders are too deeply nested.");
+                    directories.Enqueue(Tuple.Create(child,dir.Item2+1));
+                }
+            }
+            return files.OrderBy(f=>f,StringComparer.OrdinalIgnoreCase).ToArray();
+        }
+        static string Signature(string[] files) {
+            return string.Join("\n",files.Select(f=> { var info=new FileInfo(f);return f+"|"+info.Length+"|"+info.LastWriteTimeUtc.Ticks; }));
+        }
+        internal static Pack Read(string root,string previous,string stable) {
+            string[] files=Files(root);string signature=Signature(files);
+            if(signature==previous||signature!=stable)return new Pack { Signature=signature };
+            var zones=new List<MapZone>();long bytes=0;
+            foreach(string file in files) {
+                bytes+=new FileInfo(file).Length;if(bytes>32L*1024*1024)throw new InvalidDataException("Zone packs exceed the size limit.");
+                zones.AddRange(ZoneStore.Load(file));if(zones.Count>ZoneStore.MaxZones)throw new InvalidDataException("Too many packed zones.");
+            }
+            if(Signature(Files(root))!=signature)throw new IOException("Zone folder is still changing.");
+            return new Pack { Signature=signature,Zones=zones.Where(z=>!z.IsDeathMarker).ToList() };
+        }
+        internal bool Poll(out List<MapZone> zones) {
+            zones=null;
+            if(pending!=null&&pending.IsCompleted) {
+                try {
+                    var result=pending.GetAwaiter().GetResult();observed=result.Signature;
+                    if(result.Zones!=null) { applied=result.Signature;zones=result.Zones; }
+                } catch(IOException) { } catch(UnauthorizedAccessException) { } catch(InvalidDataException) { }
+                finally { pending=null; }
+            }
+            if(pending==null&&DateTime.UtcNow>=next) {
+                next=DateTime.UtcNow.AddSeconds(2);string previous=applied,stable=observed;
+                pending=Task.Run(()=>Read(root,previous,stable));
+            }
+            return zones!=null;
+        }
+        internal static void SelfTest() {
+            string root=Path.Combine(Path.GetTempPath(),"minimap-zone-pack-"+Guid.NewGuid().ToString("N"));
+            string nested=Path.Combine(root,"zones","skynett"),file=Path.Combine(nested,"zones.tsv");
+            try {
+                var absent=Read(Path.Combine(root,"zones"),null,null);if(absent.Zones!=null)throw new Exception("Zone pack debounce failed.");
+                Directory.CreateDirectory(nested);File.WriteAllText(file,"Pack zone\t-65536\t0.1,0.1;0.2,0.1;0.2,0.2\tCustom\tSkynett\n");
+                var first=Read(Path.Combine(root,"zones"),null,null);var pack=Read(Path.Combine(root,"zones"),null,first.Signature);
+                if(pack.Zones.Count!=1||pack.Zones[0].Layer!="Skynett")throw new Exception("Nested zone pack did not load.");
+                if(Read(Path.Combine(root,"zones"),pack.Signature,pack.Signature).Zones!=null)throw new Exception("Unchanged zone pack was reloaded.");
+                File.WriteAllText(file,"Updated pack zone\t-16711936\t0.1,0.1;0.3,0.1;0.3,0.3\tCustom\tSkynett\n");
+                var update=Read(Path.Combine(root,"zones"),pack.Signature,null);var updated=Read(Path.Combine(root,"zones"),pack.Signature,update.Signature);
+                if(updated.Zones.Count!=1||updated.Zones[0].Name!="Updated pack zone"||updated.Zones[0].Argb!=-16711936)throw new Exception("Changed zone pack was not refreshed.");
+                pack=updated;
+                File.WriteAllText(file,"invalid");var changed=Read(Path.Combine(root,"zones"),pack.Signature,null);
+                bool rejected=false;try { Read(Path.Combine(root,"zones"),pack.Signature,changed.Signature); }catch(InvalidDataException) { rejected=true; }
+                if(!rejected)throw new Exception("Incomplete zone pack was accepted.");
+                File.Delete(file);var removed=Read(Path.Combine(root,"zones"),pack.Signature,"");
+                if(removed.Zones==null||removed.Zones.Count!=0)throw new Exception("Removed zone pack was retained.");
+            } finally { if(File.Exists(file))File.Delete(file);if(Directory.Exists(nested))Directory.Delete(nested);if(Directory.Exists(Path.Combine(root,"zones")))Directory.Delete(Path.Combine(root,"zones"));if(Directory.Exists(root))Directory.Delete(root); }
+        }
+    }
+    internal static class ZoneFileOpen {
+        internal static string ParseArguments(string[] args) {
+            if(args==null)return null;
+            string path=args.Length==2&&args[0].Equals("--import-zones",StringComparison.OrdinalIgnoreCase)?args[1]:args.Length==1&&Path.GetExtension(args[0]).Equals(".tsv",StringComparison.OrdinalIgnoreCase)?args[0]:null;
+            if(path==null)return null;
+            if(!Path.GetExtension(path).Equals(".tsv",StringComparison.OrdinalIgnoreCase))throw new InvalidDataException("A zone TSV file is required.");
+            return Path.GetFullPath(path);
+        }
+        internal static string QueueFolder(string profile) { return Path.Combine(profile,"zone-open-requests"); }
+        internal static void Enqueue(string profile,string path) {
+            path=Path.GetFullPath(path);if(!File.Exists(path))throw new FileNotFoundException("Zone file was not found.",path);
+            if(!Path.GetExtension(path).Equals(".tsv",StringComparison.OrdinalIgnoreCase)||path.Length>4096||new FileInfo(path).Length>32L*1024*1024)throw new InvalidDataException("Invalid zone file.");
+            string folder=QueueFolder(profile);Directory.CreateDirectory(folder);string key;
+            using(var hash=SHA256.Create())key=BitConverter.ToString(hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(path.ToUpperInvariant()))).Replace("-","");
+            string target=Path.Combine(folder,key+".request"),temp=Path.Combine(folder,Guid.NewGuid().ToString("N")+".tmp");
+            try { File.WriteAllText(temp,path);if(!File.Exists(target))try { File.Move(temp,target); }catch(IOException) { if(!File.Exists(target))throw; } }
+            finally { if(File.Exists(temp))File.Delete(temp); }
+        }
+        internal static string Take(string profile) {
+            string folder=QueueFolder(profile);if(!Directory.Exists(folder))return null;
+            foreach(string file in Directory.EnumerateFiles(folder,"*.request").Take(64)) {
+                if((File.GetAttributes(file)&FileAttributes.ReparsePoint)!=0)continue;
+                string path=new FileInfo(file).Length<=16384?File.ReadAllText(file):null;
+                File.Delete(file);
+                if(!string.IsNullOrWhiteSpace(path)&&path.Length<=4096&&Path.IsPathRooted(path)&&Path.GetExtension(path).Equals(".tsv",StringComparison.OrdinalIgnoreCase))return path;
+            }
+            return null;
+        }
+        internal static string OpenCommand(string executable) { return "\""+Path.GetFullPath(executable)+"\" --import-zones \"%1\""; }
+        internal static void Register(string executable) {
+            // Advertise an Open With handler. Windows owns UserChoice/default selection.
+            const string id="SCUMMiniMap.ZoneFile";
+            using(var key=Microsoft.Win32.Registry.CurrentUser.CreateSubKey("Software\\Classes\\"+id)) {
+                key.SetValue("","SCUM MiniMap");
+                using(var icon=key.CreateSubKey("DefaultIcon"))icon.SetValue("","\""+Path.GetFullPath(executable)+"\",0");
+                using(var open=key.CreateSubKey("shell\\open")) { open.SetValue("MultiSelectModel","Single");using(var command=open.CreateSubKey("command"))command.SetValue("",OpenCommand(executable)); }
+            }
+            using(var key=Microsoft.Win32.Registry.CurrentUser.CreateSubKey("Software\\Classes\\.tsv\\OpenWithProgids"))key.SetValue(id,new byte[0],Microsoft.Win32.RegistryValueKind.None);
+            using(var app=Microsoft.Win32.Registry.CurrentUser.CreateSubKey("Software\\Classes\\Applications\\"+Path.GetFileName(executable))) {
+                app.SetValue("FriendlyAppName","SCUM MiniMap");
+                using(var types=app.CreateSubKey("SupportedTypes"))types.SetValue(".tsv","");
+                using(var command=app.CreateSubKey("shell\\open\\command"))command.SetValue("",OpenCommand(executable));
+            }
+            NotifyAssociationChanged(0x08000000,0,IntPtr.Zero,IntPtr.Zero);
+        }
+        [System.Runtime.InteropServices.DllImport("shell32.dll",EntryPoint="SHChangeNotify")]static extern void NotifyAssociationChanged(uint action,uint flags,IntPtr first,IntPtr second);
+        internal static void SelfTest() {
+            string root=Path.Combine(Path.GetTempPath(),"minimap-zone-open-"+Guid.NewGuid().ToString("N"));Directory.CreateDirectory(root);string file=Path.Combine(root,"Zones with spaces 日本語.tsv");
+            try {
+                File.WriteAllText(file,"Synthetic\t-65536\t0.1,0.1;0.2,0.1;0.2,0.2\tCustom\tTest");
+                if(ParseArguments(new[]{"--import-zones",file})!=file||ParseArguments(new[]{file})!=file||ParseArguments(new[]{"--preview"})!=null)throw new Exception("Zone opening arguments failed.");
+                if(OpenCommand(Path.Combine(root,"MiniMap app.exe"))!="\""+Path.Combine(root,"MiniMap app.exe")+"\" --import-zones \"%1\"")throw new Exception("Zone association quoting failed.");
+                Enqueue(root,file);Enqueue(root,file);
+                if(Directory.GetFiles(QueueFolder(root),"*.request").Length!=1||Take(root)!=file||Take(root)!=null)throw new Exception("Zone opening handoff failed.");
+                bool rejected=false;try { ParseArguments(new[]{"--import-zones",Path.Combine(root,"not-zones.exe")}); }catch(InvalidDataException) { rejected=true; }
+                if(!rejected)throw new Exception("Non-TSV opening request was accepted.");
+            }finally { if(File.Exists(file))File.Delete(file);if(Directory.Exists(QueueFolder(root))) { foreach(string request in Directory.GetFiles(QueueFolder(root)))File.Delete(request);Directory.Delete(QueueFolder(root)); }Directory.Delete(root); }
         }
     }
     internal sealed class MapSidecarPaths {
@@ -495,7 +638,67 @@ namespace ScumMiniMap {
     }
 
     public sealed class ZoneEditor:Form {
-        sealed class EditorCanvas:Panel { internal EditorCanvas() { DoubleBuffered=true;ResizeRedraw=true;TabStop=true;SetStyle(ControlStyles.Selectable|ControlStyles.StandardClick|ControlStyles.StandardDoubleClick,true); } }
+        sealed class EditorCanvas:Panel {
+            internal EditorCanvas() { DoubleBuffered=true;ResizeRedraw=true;TabStop=true;SetStyle(ControlStyles.Selectable|ControlStyles.StandardClick|ControlStyles.StandardDoubleClick,true); }
+            internal void Pointer(string kind,MouseEventArgs args) { switch(kind) { case "down":OnMouseDown(args);break;case "move":OnMouseMove(args);break;case "up":OnMouseUp(args);break;case "click":OnMouseClick(args);break;case "double":OnMouseDoubleClick(args);break;case "wheel":OnMouseWheel(args);break; } }
+        }
+        internal bool WpfMode;
+        internal IWin32Window WpfOwner;
+        IWin32Window DialogOwner { get { return WpfOwner??this; } }
+        internal Control WpfSource { get { return source; } }
+        internal Control WpfTarget { get { return target; } }
+        internal TextBox WpfName { get { return name; } }
+        internal TextBox WpfFilter { get { return filterBox; } }
+        internal ComboBox WpfLayer { get { return cboLayer; } }
+        internal ComboBox WpfDrawingTool { get { return drawingTool; } }
+        internal ListBox WpfList { get { return list; } }
+        internal string WpfInstruction { get { return instruction.Text; } }
+        internal string WpfDetails { get { return detailsLabel.Text; } }
+        internal bool WpfHasScreenshot { get { return screenshot!=null; } }
+        internal bool WpfBusy { get { return busy; } }
+        internal Color WpfColour { get { return color; } }
+        ZoneCategory? categoryFilter;
+        internal ZoneCategory? WpfCategoryFilter { get { return categoryFilter; } set { categoryFilter=value;RefreshViews(); } }
+        internal int[] WpfSelectedVisible { get { return list.SelectedIndices.Cast<int>().ToArray(); } }
+        int[] SelectedZoneIndices() { return list.SelectedIndices.Cast<int>().Where(i=>i>=0&&i<visibleIndices.Count&&visibleIndices[i]<zones.Count).Select(i=>visibleIndices[i]).ToArray(); }
+        internal void WpfSelectVisible(int[] indices) {
+            if(busy)return;list.BeginUpdate();list.ClearSelected();foreach(int i in indices.Distinct())if(i>=0&&i<list.Items.Count)list.SetSelected(i,true);list.EndUpdate();UpdateDetails();source.Invalidate();target.Invalidate();
+        }
+        internal void WpfSelectSameColour() { int first=GetSelectedZoneIndex();if(first<0)return;int argb=zones[first].Argb;WpfSelectVisible(visibleIndices.Select((z,i)=>new { z,i }).Where(x=>zones[x.z].Argb==argb).Select(x=>x.i).ToArray()); }
+        internal void WpfSetOutlineColour(Color value) {
+            if(busy)return;color=value;foreach(int i in SelectedZoneIndices()) { zones[i].Argb=value.ToArgb();var origin=SourceFor(zones[i]);if(origin!=null)origin.Argb=value.ToArgb(); }UpdateDetails();source.Invalidate();target.Invalidate();
+        }
+        internal void WpfChooseOutlineColour() { if(busy)return;using(var dialog=new ColorDialog { Color=color,FullOpen=true,AnyColor=true })if(dialog.ShowDialog(DialogOwner)==DialogResult.OK)WpfSetOutlineColour(dialog.Color); }
+        internal void WpfImportZonePack(List<MapZone> imported,string layer) {
+            if(busy)return;if(string.IsNullOrWhiteSpace(layer)||layer.Trim().Length>80)throw new InvalidDataException("Invalid map name.");
+            if(imported==null||imported.Count==0||zones.Count+imported.Count>ZoneStore.MaxZones)throw new InvalidDataException("Invalid zone pack size.");
+            var added=imported.Select(z=>z.Clone()).ToList();foreach(var z in added) { if(z.IsDeathMarker)throw new InvalidDataException("Zone packs cannot import death markers.");z.Layer=layer.Trim(); }
+            list.ClearSelected();zones.AddRange(added);PopulateLayerCombo(layer.Trim());RefreshViews();WpfSelectVisible(visibleIndices.Select((z,i)=>new { z,i }).Where(x=>added.Contains(zones[x.z])).Select(x=>x.i).ToArray());UpdateInstruction();
+        }
+        int? draftFillArgb;
+        internal Color WpfFillColour { get { int selected=GetSelectedZoneIndex();int alpha=selected>=0&&selected<zones.Count&&(zones[selected].IsFaction||zones[selected].Category==ZoneCategory.Faction)?75:40;return draftFillArgb.HasValue?Color.FromArgb(draftFillArgb.Value):Color.FromArgb(alpha,color); } }
+        internal void WpfSetFillColour(Color fill) {
+            if(busy)return;draftFillArgb=fill.ToArgb();
+            foreach(int selected in SelectedZoneIndices()) { zones[selected].FillArgb=draftFillArgb;var origin=SourceFor(zones[selected]);if(origin!=null)origin.FillArgb=draftFillArgb; }
+            source.Invalidate();target.Invalidate();
+        }
+        internal void WpfChooseFillColour() { if(busy)return;using(var dialog=new ColorDialog { Color=WpfFillColour,FullOpen=true,AnyColor=true })if(dialog.ShowDialog(DialogOwner)==DialogResult.OK)WpfSetFillColour(Color.FromArgb(WpfFillColour.A,dialog.Color)); }
+        internal void WpfSetFillOpacity(int percent) {
+            if(busy)return;int alpha=Math.Max(0,Math.Min(100,percent))*255/100;draftFillArgb=Color.FromArgb(alpha,WpfFillColour).ToArgb();
+            foreach(int i in SelectedZoneIndices()) { var fill=Color.FromArgb(zones[i].FillArgb??zones[i].Argb);zones[i].FillArgb=Color.FromArgb(alpha,fill).ToArgb();var origin=SourceFor(zones[i]);if(origin!=null)origin.FillArgb=zones[i].FillArgb; }source.Invalidate();target.Invalidate();
+        }
+        internal Control WpfAction(string key) { return FindWpfControl(this,key)??FindWpfControl(this,Localization.Get(key)); }
+        internal void WpfNameEnter() { typeof(Control).GetMethod("OnKeyDown",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).Invoke(name,new object[]{new KeyEventArgs(Keys.Enter)}); }
+        static Control FindWpfControl(Control parent,string text) { foreach(Control child in parent.Controls) { if(child.Text==text||child.Name==text)return child;var found=FindWpfControl(child,text);if(found!=null)return found; }return null; }
+        internal void WpfClick(Control control) { if(control==null||!control.Enabled||busy)return;typeof(Control).GetMethod("OnClick",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).Invoke(control,new object[]{EventArgs.Empty}); }
+        internal void WpfPointer(bool isSource,string kind,MouseButtons button,int x,int y,int delta=0,int clicks=1) { (isSource?source:target).Pointer(kind,new MouseEventArgs(button,clicks,x,y,delta)); }
+        internal void WpfCancelPointer() { panningPanel=null;draggedVertex=-1;draggedZone=null;rectangleStart=null;suppressClick=false; }
+        internal Bitmap WpfRender(bool isSource,int width,int height) {
+            var canvas=isSource?source:target;canvas.Dock=DockStyle.None;canvas.Size=new Size(Math.Max(1,width),Math.Max(1,height));
+            var bitmap=new Bitmap(canvas.Width,canvas.Height,System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+            using(var graphics=Graphics.FromImage(bitmap)) { graphics.Clear(canvas.BackColor);if(isSource)DrawSource(graphics);else DrawTarget(graphics); }return bitmap;
+        }
+        void CaptureEditor(Control panel,bool capture) { if(!WpfMode)panel.Capture=capture; }
         readonly EditorCanvas source=new EditorCanvas(),target=new EditorCanvas();
         readonly Image map;
         Image editorPreview;
@@ -537,7 +740,7 @@ namespace ScumMiniMap {
         PointF moveStart;
         PointF[] moveOriginal;
         void ChangeZoneShape(int shape) {
-            int selected=GetSelectedZoneIndex();if(busy || selected<0)return;var zone=zones[selected];RememberOutline(zone);
+            int selected=GetSelectedZoneIndex();if(busy || selected<0||list.SelectedIndices.Count!=1)return;var zone=zones[selected];RememberOutline(zone);
             float left=zone.Points.Min(p=>p.X)*map.Width,right=zone.Points.Max(p=>p.X)*map.Width,top=zone.Points.Min(p=>p.Y)*map.Height,bottom=zone.Points.Max(p=>p.Y)*map.Height;
             float cx=(left+right)/2,cy=(top+bottom)/2,w=right-left,h=bottom-top;
             if(shape==1)w=h=Math.Min(w,h);
@@ -594,6 +797,7 @@ namespace ScumMiniMap {
         }
 
         void SetSelectedZoneIndex(int zoneIndex) {
+            list.ClearSelected();
             if(zoneIndex<0) { list.SelectedIndex=-1; return; }
             for(int i=0;i<visibleIndices.Count;i++) {
                 if(visibleIndices[i]==zoneIndex) {
@@ -612,6 +816,8 @@ namespace ScumMiniMap {
         }
 
         void UpdateDetails() {
+            int count=list.SelectedIndices.Count;
+            if(count>1) { detailsLabel.Text=Localization.T("ZeSelectedCount",count);return; }
             int selIdx = GetSelectedZoneIndex();
             string selectedLayer = GetSelectedLayer();
             if (selIdx >= 0 && selIdx < zones.Count) {
@@ -633,7 +839,7 @@ namespace ScumMiniMap {
 
         void RefreshViews() {
             foreach(var zone in importedSources.Keys.Where(zone=>!zones.Contains(zone)).ToArray()) { sourceZones.Remove(importedSources[zone]);importedSources.Remove(zone); }
-            int prevSelectedZone = GetSelectedZoneIndex();
+            var selected=SelectedZoneIndices().Select(i=>zones[i]).ToArray();
             list.BeginUpdate();
             list.Items.Clear();
             visibleIndices.Clear();
@@ -641,6 +847,7 @@ namespace ScumMiniMap {
             string q = (filterBox.Text ?? "").Trim().ToLowerInvariant();
             for (int i = 0; i < zones.Count; i++) {
                 MapZone z = zones[i];
+                if(categoryFilter.HasValue&&z.Category!=categoryFilter.Value)continue;
                 string lay = string.IsNullOrWhiteSpace(z.Layer) ? "Default" : z.Layer;
                 if(selectedLayer != null && !string.Equals(lay, selectedLayer, StringComparison.OrdinalIgnoreCase)) continue;
                 string zoneName=z.Name??string.Empty;
@@ -651,7 +858,7 @@ namespace ScumMiniMap {
                 }
             }
             list.EndUpdate();
-            if (prevSelectedZone >= 0) SetSelectedZoneIndex(prevSelectedZone);
+            WpfSelectVisible(visibleIndices.Select((z,i)=>new { z,i }).Where(x=>selected.Contains(zones[x.z])).Select(x=>x.i).ToArray());
             UpdateDetails();
             source.Invalidate();
             target.Invalidate();
@@ -730,7 +937,7 @@ namespace ScumMiniMap {
                 rbAppend.Enabled = rbReplace.Enabled = zones.Count > 0;
                 dlg.Shown += (s, e) => { txtNewName.Focus(); txtNewName.SelectAll(); };
 
-                if(dlg.ShowDialog(this) == DialogResult.OK) {
+                if(dlg.ShowDialog(DialogOwner) == DialogResult.OK) {
                     if(rbNew.Checked) {
                         newLayerName = (!string.IsNullOrWhiteSpace(txtNewName.Text)) ? txtNewName.Text.Trim() : "Layer " + (cboLayer.Items.Count);
                         return ImportMode.NewLayer;
@@ -761,7 +968,7 @@ namespace ScumMiniMap {
                 prompt.Controls.AddRange(new Control[] { lbl, txt, ok, cn });
                 prompt.AcceptButton = ok; prompt.CancelButton = cn;
                 txt.KeyDown += (s, e) => { if(e.KeyCode == Keys.Enter) { ok.PerformClick(); e.Handled = true; e.SuppressKeyPress = true; } };
-                if(prompt.ShowDialog(this) == DialogResult.OK && !string.IsNullOrWhiteSpace(txt.Text)) {
+                if(prompt.ShowDialog(DialogOwner) == DialogResult.OK && !string.IsNullOrWhiteSpace(txt.Text)) {
                     return txt.Text.Trim();
                 }
                 return null;
@@ -772,7 +979,7 @@ namespace ScumMiniMap {
             string selectedLayer = GetSelectedLayer();
             if(string.IsNullOrEmpty(selectedLayer)) return;
             int count = zones.Count(z => string.Equals(string.IsNullOrWhiteSpace(z.Layer) ? "Default" : z.Layer, selectedLayer, StringComparison.OrdinalIgnoreCase));
-            if(MessageBox.Show(this, Localization.T("ZeDeleteLayerConfirm", selectedLayer, count), Localization.Get("ZeDeleteLayer"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes) {
+            if(MessageBox.Show(DialogOwner, Localization.T("ZeDeleteLayerConfirm", selectedLayer, count), Localization.Get("ZeDeleteLayer"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes) {
                 zones.RemoveAll(z => string.Equals(string.IsNullOrWhiteSpace(z.Layer) ? "Default" : z.Layer, selectedLayer, StringComparison.OrdinalIgnoreCase));
                 sourceZones.RemoveAll(z => string.Equals(string.IsNullOrWhiteSpace(z.Layer) ? "Default" : z.Layer, selectedLayer, StringComparison.OrdinalIgnoreCase));
                 draft.Clear();
@@ -835,7 +1042,7 @@ namespace ScumMiniMap {
             reset.Click+=(s,e)=> { if(busy)return;automatic=false;step=0;draft.Clear();manualDraft.Clear();drawingTool.SelectedIndex=0;UpdateInstruction(); };
             name.KeyDown+=(s,e)=> { if(e.KeyCode==Keys.Enter) { e.SuppressKeyPress=true;if(manualDraft.Count>=3)AddZone();else Rename(false); } };
             Button choose=new Button { Text=Localization.Get("ZeZoneColour"),Width=95 };
-            choose.Click+=(s,e)=> { using(ColorDialog dialog=new ColorDialog { Color=color })if(dialog.ShowDialog(this)==DialogResult.OK)color=dialog.Color; };
+            choose.Click+=(s,e)=> { using(ColorDialog dialog=new ColorDialog { Color=color })if(dialog.ShowDialog(DialogOwner)==DialogResult.OK)color=dialog.Color; };
             Button undo=new Button { Text=Localization.Get("ZeUndoPoint"),Width=90 };
             undo.Click+=(s,e)=>UndoEditorPoint();
             Button clearDraft=new Button { Text=Localization.Get("ZeClearDraft"),Width=85 };
@@ -848,14 +1055,14 @@ namespace ScumMiniMap {
             Button save=new Button { Text=Localization.Get("ZeSaveZones"),Width=105,BackColor=Color.FromArgb(20,70,40),ForeColor=Color.White };
             save.Click+=(s,e)=> {
                 if(busy)return;
-                if(draft.Count>0 || manualDraft.Count>0) { MessageBox.Show(this,Localization.Get("ZeDraftWarning"));return; }
+                if(draft.Count>0 || manualDraft.Count>0) { MessageBox.Show(DialogOwner,Localization.Get("ZeDraftWarning"));return; }
                 try {
                     string waypointPath=Path.Combine(Path.GetDirectoryName(path),"customwaypoints.tsv");
                     MapSidecarStore.SaveFiles(path,waypointPath,zones.Concat(preservedWaypoints).ToList());
                     saved(zones.Select(z=>z.Clone()).ToList());DialogResult=DialogResult.OK;Close();
                 }
-                catch(InvalidDataException ex) { MessageBox.Show(this,Localization.T("ZeSaveZonesError",ex.Message)); }
-                catch(IOException ex) { MessageBox.Show(this,Localization.T("ZeSaveZonesError",ex.Message)); }catch(UnauthorizedAccessException ex) { MessageBox.Show(this,ex.Message); }
+                catch(InvalidDataException ex) { MessageBox.Show(DialogOwner,Localization.T("ZeSaveZonesError",ex.Message)); }
+                catch(IOException ex) { MessageBox.Show(DialogOwner,Localization.T("ZeSaveZonesError",ex.Message)); }catch(UnauthorizedAccessException ex) { MessageBox.Show(DialogOwner,ex.Message); }
             };
 
             bar.Controls.Add(open);
@@ -915,6 +1122,7 @@ namespace ScumMiniMap {
             Button deleteAll=new Button { Text=Localization.Get("ZeDeleteAll"),Width=110,BackColor=Color.FromArgb(85,25,25),ForeColor=Color.White };deleteAll.Click+=(s,e)=>DeleteAll();
 
             actRow.Controls.Add(rename);
+            moveUp.Name="ZeMoveUp";moveDown.Name="ZeMoveDown";
             actRow.Controls.Add(recolorGroup);
             actRow.Controls.Add(group);
             actRow.Controls.Add(moveUp);
@@ -931,11 +1139,14 @@ namespace ScumMiniMap {
             WireEditorCanvas(source,true);WireEditorCanvas(target,false);
             KeyPreview=true;
             KeyDown+=(s,e)=> { if(e.KeyCode==Keys.Escape && (manualDraft.Count>0 || draft.Count>0)) { ClearDraft();e.Handled=true;e.SuppressKeyPress=true; } };
+            list.SelectionMode=SelectionMode.MultiExtended;
             list.SelectedIndexChanged+=(s,e)=> {
+                if(list.SelectedIndices.Count>1&&(drawingTool.SelectedIndex==3||drawingTool.SelectedIndex==5))drawingTool.SelectedIndex=0;
                 int selIdx=GetSelectedZoneIndex();
                 if(selIdx>=0 && selIdx<zones.Count) {
                     name.Text=zones[selIdx].Name;
                     color=Color.FromArgb(zones[selIdx].Argb);
+                    draftFillArgb=zones[selIdx].FillArgb;
                 }
                 UpdateDetails();
                 source.Invalidate();target.Invalidate();
@@ -994,24 +1205,24 @@ namespace ScumMiniMap {
             panel.Invalidate();
         }
         void WireEditorCanvas(Control panel,bool isSource) {
-            panel.MouseCaptureChanged+=(s,e)=> { if(!panel.Capture) { if(panningPanel==panel)panningPanel=null;if(!isSource) { draggedVertex=-1;draggedZone=null;rectangleStart=null; } } };
+            panel.MouseCaptureChanged+=(s,e)=> { if(WpfMode)return;if(!panel.Capture) { if(panningPanel==panel)panningPanel=null;if(!isSource) { draggedVertex=-1;draggedZone=null;rectangleStart=null; } } };
             panel.MouseWheel+=(s,e)=>ZoomEditor(panel,isSource,e.Delta,e.Location);
             panel.MouseEnter+=(s,e)=>panel.Focus();
             panel.MouseDown+=(s,e)=> {
                 if(busy)return;
-                if(e.Button==MouseButtons.Middle) { panningPanel=panel;panStart=e.Location;viewPanStart=(isSource?sourceView:targetView).Pan;panel.Capture=true;return; }
+                if(e.Button==MouseButtons.Middle) { panningPanel=panel;panStart=e.Location;viewPanStart=(isSource?sourceView:targetView).Pan;CaptureEditor(panel,true);return; }
                 if(isSource || e.Button!=MouseButtons.Left)return;
                 PointF point;if(!ImagePoint(panel,false,e.Location,out point))return;
-                if(drawingTool.SelectedIndex==2 || drawingTool.SelectedIndex==4) { rectangleStart=point;manualDraft.Clear();panel.Capture=true; }
+                if(drawingTool.SelectedIndex==2 || drawingTool.SelectedIndex==4) { rectangleStart=point;manualDraft.Clear();CaptureEditor(panel,true); }
                 if(drawingTool.SelectedIndex==5) {
-                    int selected=GetSelectedZoneIndex();if(selected>=0 && zones[selected].Contains(point)) { draggedZone=zones[selected];moveStart=point;moveOriginal=(PointF[])draggedZone.Points.Clone();RememberOutline(draggedZone);panel.Capture=true; }
+                    int selected=GetSelectedZoneIndex();if(selected>=0 && zones[selected].Contains(point)) { draggedZone=zones[selected];moveStart=point;moveOriginal=(PointF[])draggedZone.Points.Clone();RememberOutline(draggedZone);CaptureEditor(panel,true); }
                 }
                 if(drawingTool.SelectedIndex==3) {
                     int selected=GetSelectedZoneIndex();if(selected<0)return;var zone=zones[selected];var rect=Fit(target,map);
                     draggedVertex=(ModifierKeys&Keys.Shift)!=0?InsertOutlineVertex(zone,rect,e.Location):NearestVertex(zone,rect,e.Location);
                     draggedZone=draggedVertex>=0?zone:null;
                     if(draggedVertex>=0 && (ModifierKeys&Keys.Shift)==0)RememberOutline(zone);
-                    if(draggedVertex>=0)panel.Capture=true;
+                    if(draggedVertex>=0)CaptureEditor(panel,true);
                 }
             };
             panel.MouseMove+=(s,e)=> {
@@ -1025,11 +1236,11 @@ namespace ScumMiniMap {
                 target.Invalidate();
             };
             panel.MouseUp+=(s,e)=> {
-                if(e.Button==MouseButtons.Middle) { panningPanel=null;panel.Capture=false;return; }
+                if(e.Button==MouseButtons.Middle) { panningPanel=null;CaptureEditor(panel,false);return; }
                 if(isSource || e.Button!=MouseButtons.Left)return;
                 if(rectangleStart.HasValue) { PointF point;if(ImagePoint(panel,false,e.Location,out point))SetRectangleDraft(rectangleStart.Value,point);rectangleStart=null;suppressClick=panel.ClientRectangle.Contains(e.Location); }
                 if(draggedVertex>=0 || (drawingTool.SelectedIndex==5 && draggedZone!=null)) { draggedVertex=-1;draggedZone=null;suppressClick=panel.ClientRectangle.Contains(e.Location);UpdateDetails();source.Invalidate(); }
-                panel.Capture=false;
+                CaptureEditor(panel,false);
             };
             panel.MouseClick+=(s,e)=> {
                 if(suppressClick) { suppressClick=false;return; }
@@ -1068,11 +1279,11 @@ namespace ScumMiniMap {
             if(busy)return;
             try {
                 using(OpenFileDialog dialog=new OpenFileDialog { Filter=Localization.Get("ZeMapScreenshotsFilter"),Title=Localization.Get("ZeSelectScreenshotTitle") }) {
-                    if(dialog.ShowDialog(this)!=DialogResult.OK)return;
+                    if(dialog.ShowDialog(DialogOwner)!=DialogResult.OK)return;
                     await ImportAutomatic(dialog.FileName);
                 }
             } catch(Exception ex) {
-                try { MessageBox.Show(this, ex.Message, Localization.Get("ZoneEditorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error); } catch {}
+                try { MessageBox.Show(DialogOwner, ex.Message, Localization.Get("ZoneEditorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error); } catch {}
             }
         }
         public async Task ImportAutomatic(string file) {
@@ -1253,7 +1464,7 @@ namespace ScumMiniMap {
                 RefreshViews();if(zones.Count>0)SetSelectedZoneIndex(insertIdx);UpdateInstruction();
                 try { File.WriteAllText(Path.Combine(folder,"last-detection.json"),report); }catch(IOException) {}catch(UnauthorizedAccessException) {}
             } catch(Exception ex) {
-                if(!IsDisposed) { instruction.Text=Localization.Get("ZeAutoFailedKept");MessageBox.Show(this,Localization.T("ZeCouldNotImportAuto",ex.Message)); }
+                if(!IsDisposed) { instruction.Text=Localization.Get("ZeAutoFailedKept");MessageBox.Show(DialogOwner,Localization.T("ZeCouldNotImportAuto",ex.Message)); }
             } finally {
                 if(busyTimer!=null)busyTimer.Stop();
                 busy=false;
@@ -1285,13 +1496,14 @@ namespace ScumMiniMap {
             if(busy || list.SelectedIndex<0)return;
             int index=GetSelectedZoneIndex();
             if(index<0 || index>=zones.Count)return;
-            if(string.IsNullOrWhiteSpace(name.Text) || name.Text.Length>80) { MessageBox.Show(this,Localization.Get("ZeLabelLengthWarning"));return; }
+            if(string.IsNullOrWhiteSpace(name.Text) || name.Text.Length>80) { MessageBox.Show(DialogOwner,Localization.Get("ZeLabelLengthWarning"));return; }
             int original=zones[index].Argb;
-            for(int i=0;i<zones.Count;i++)if(i==index || (sameColour && zones[i].Argb==original)) {
-                zones[i].Name=name.Text.Trim();zones[i].Argb=color.ToArgb();
+            var selected=new HashSet<int>(SelectedZoneIndices());
+            for(int i=0;i<zones.Count;i++)if(selected.Contains(i) || (sameColour && zones[i].Argb==original)) {
+                zones[i].Name=name.Text.Trim();if(!WpfMode||sameColour)zones[i].Argb=color.ToArgb();
                 var origin=SourceFor(zones[i]);if(origin!=null) { origin.Name=zones[i].Name;origin.Argb=zones[i].Argb; }
             }
-            RefreshViews();SetSelectedZoneIndex(index);
+            RefreshViews();
         }
         void RecolorGroup() {
             if(busy || list.SelectedIndex<0)return;
@@ -1315,16 +1527,15 @@ namespace ScumMiniMap {
         }
         void DuplicateSelected() {
             if(busy)return;
-            int idx=GetSelectedZoneIndex();
-            if(idx<0 || idx>=zones.Count)return;
-            MapZone copy=zones[idx].Clone();
-            copy.Name=zones[idx].Name+" (Copy)";
-            zones.Insert(idx+1,copy);
-            var origin=SourceFor(zones[idx]);if(origin!=null) { var clone=origin.Clone();sourceZones.Add(clone);importedSources[copy]=clone; }
-            RefreshViews();SetSelectedZoneIndex(idx+1);
+            var copies=new List<MapZone>();
+            foreach(int idx in SelectedZoneIndices().OrderByDescending(i=>i)) {
+                MapZone original=zones[idx],copy=original.Clone();copy.Name=original.Name+" (Copy)";zones.Insert(idx+1,copy);copies.Add(copy);
+                var origin=SourceFor(original);if(origin!=null) { var clone=origin.Clone();sourceZones.Add(clone);importedSources[copy]=clone; }
+            }
+            list.ClearSelected();RefreshViews();WpfSelectVisible(visibleIndices.Select((z,i)=>new { z,i }).Where(x=>copies.Contains(zones[x.z])).Select(x=>x.i).ToArray());
         }
         void DeselectSelection() {
-            list.SelectedIndex=-1;name.Text=Localization.Get("ZeNewZone");
+            list.ClearSelected();name.Text=Localization.Get("ZeNewZone");
             UpdateDetails();source.Invalidate();target.Invalidate();
         }
         void ClearDraft() {
@@ -1332,9 +1543,10 @@ namespace ScumMiniMap {
         }
         void DeleteSelected() {
             if(busy)return;
-            int index=GetSelectedZoneIndex();
-            if(index>=0 && index<zones.Count) {
-                var origin=SourceFor(zones[index]);if(origin!=null)sourceZones.Remove(origin);importedSources.Remove(zones[index]);zones.RemoveAt(index);
+            var selected=SelectedZoneIndices();int index=selected.Length==0?-1:selected.Min();
+            if(index>=0) {
+                list.ClearSelected();
+                foreach(int i in selected.OrderByDescending(i=>i)) { var origin=SourceFor(zones[i]);if(origin!=null)sourceZones.Remove(origin);importedSources.Remove(zones[i]);zones.RemoveAt(i); }
                 RefreshViews();
                 if(zones.Count>0) {
                     int nextIdx=Math.Min(index,zones.Count-1);
@@ -1347,7 +1559,7 @@ namespace ScumMiniMap {
         }
         void DeleteAll() {
             if(busy || zones.Count==0)return;
-            if(MessageBox.Show(this,Localization.Get("ZeDeleteAllConfirm"),Localization.Get("ZeDeleteAllTitle"),MessageBoxButtons.YesNo,MessageBoxIcon.Warning)==DialogResult.Yes) {
+            if(MessageBox.Show(DialogOwner,Localization.Get("ZeDeleteAllConfirm"),Localization.Get("ZeDeleteAllTitle"),MessageBoxButtons.YesNo,MessageBoxIcon.Warning)==DialogResult.Yes) {
                 zones.Clear();sourceZones.Clear();importedSources.Clear();draft.Clear();manualDraft.Clear();
                 PopulateLayerCombo();
                 RefreshViews();name.Text=Localization.Get("ZeNewZone");
@@ -1357,19 +1569,19 @@ namespace ScumMiniMap {
         void ExportZones() {
             if(busy)return;
             if(zones.Count==0) {
-                MessageBox.Show(this,Localization.Get("ZeNoZonesToExport"),Localization.Get("ZeExportTitle"),MessageBoxButtons.OK,MessageBoxIcon.Information);
+                MessageBox.Show(DialogOwner,Localization.Get("ZeNoZonesToExport"),Localization.Get("ZeExportTitle"),MessageBoxButtons.OK,MessageBoxIcon.Information);
                 return;
             }
             using(SaveFileDialog sfd=new SaveFileDialog {
                 Filter="JSON files (*.json)|*.json|TSV files (*.tsv)|*.tsv|All files (*.*)|*.*",
                 Title=Localization.Get("ZeExportTitle"),FileName="zones.json",InitialDirectory=Path.GetDirectoryName(path)
             }) {
-                if(sfd.ShowDialog(this)==DialogResult.OK) {
+                if(sfd.ShowDialog(DialogOwner)==DialogResult.OK) {
                     try {
                         ZoneStore.Save(sfd.FileName,zones);
-                        MessageBox.Show(this,Localization.T("ZeExportSuccess",zones.Count,Path.GetFileName(sfd.FileName)),Localization.Get("ZeExportTitle"),MessageBoxButtons.OK,MessageBoxIcon.Information);
+                        MessageBox.Show(DialogOwner,Localization.T("ZeExportSuccess",zones.Count,Path.GetFileName(sfd.FileName)),Localization.Get("ZeExportTitle"),MessageBoxButtons.OK,MessageBoxIcon.Information);
                     } catch(Exception ex) {
-                        MessageBox.Show(this,Localization.T("ZeSaveZonesError",ex.Message));
+                        MessageBox.Show(DialogOwner,Localization.T("ZeSaveZonesError",ex.Message));
                     }
                 }
             }
@@ -1380,11 +1592,11 @@ namespace ScumMiniMap {
                 Filter="Zone files (*.json;*.tsv)|*.json;*.tsv|All files (*.*)|*.*",
                 Title=Localization.Get("ZeImportTitle"),InitialDirectory=Path.GetDirectoryName(path)
             }) {
-                if(ofd.ShowDialog(this)==DialogResult.OK) {
+                if(ofd.ShowDialog(DialogOwner)==DialogResult.OK) {
                     try {
                         List<MapZone> imported=ZoneStore.Load(ofd.FileName);
                         if(imported.Count==0) {
-                            MessageBox.Show(this,Localization.Get("ZeNoUsableZonesFound"),Localization.Get("ZeImportTitle"),MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                            MessageBox.Show(DialogOwner,Localization.Get("ZeNoUsableZonesFound"),Localization.Get("ZeImportTitle"),MessageBoxButtons.OK,MessageBoxIcon.Warning);
                             return;
                         }
 
@@ -1421,9 +1633,9 @@ namespace ScumMiniMap {
                         PopulateLayerCombo(targetLayerName);
                         RefreshViews();
                         if(zones.Count>0)SetSelectedZoneIndex(insertIdx);UpdateInstruction();
-                        MessageBox.Show(this,Localization.T("ZeImportSuccess",imported.Count,Path.GetFileName(ofd.FileName)),Localization.Get("ZeImportTitle"),MessageBoxButtons.OK,MessageBoxIcon.Information);
+                        MessageBox.Show(DialogOwner,Localization.T("ZeImportSuccess",imported.Count,Path.GetFileName(ofd.FileName)),Localization.Get("ZeImportTitle"),MessageBoxButtons.OK,MessageBoxIcon.Information);
                     } catch(Exception ex) {
-                        MessageBox.Show(this,Localization.T("ZeCouldNotImportAuto",ex.Message));
+                        MessageBox.Show(DialogOwner,Localization.T("ZeCouldNotImportAuto",ex.Message));
                     }
                 }
             }
@@ -1445,7 +1657,9 @@ namespace ScumMiniMap {
                     }
                     if(items[i].Contains(p)) {
                         int zoneIndex=(automatic && isSource)?zones.FindIndex(zone=>Object.ReferenceEquals(SourceFor(zone),items[i])):i;
-                        SetSelectedZoneIndex(zoneIndex);
+                        if(categoryFilter.HasValue&&items[i].Category!=categoryFilter.Value)continue;
+                        int visible=visibleIndices.IndexOf(zoneIndex);
+                        if((ModifierKeys&Keys.Control)!=0&&visible>=0)list.SetSelected(visible,!list.GetSelected(visible));else SetSelectedZoneIndex(zoneIndex);
                         if(drawingTool.SelectedIndex!=3) { name.Focus();name.SelectAll(); }
                         return;
                     }
@@ -1457,10 +1671,10 @@ namespace ScumMiniMap {
             else if(step==1 && !isSource) { m1=p;step=2; }
             else if(step==2 && isSource) { s2=p;step=3; }
             else if(step==3 && !isSource) {
-                m2=p;try { ZoneStore.Align(s1,s1,s2,m1,m2);step=4; }catch(ArgumentException ex) { MessageBox.Show(this,ex.Message);step=0; }
+                m2=p;try { ZoneStore.Align(s1,s1,s2,m1,m2);step=4; }catch(ArgumentException ex) { MessageBox.Show(DialogOwner,ex.Message);step=0; }
             } else if(step==4 && isSource && draft.Count<512) {
                 PointF mapped=ZoneStore.Align(p,s1,s2,m1,m2);
-                if(mapped.X<0 || mapped.X>1 || mapped.Y<0 || mapped.Y>1) { MessageBox.Show(this,Localization.Get("ZeOutsideMapWarning"));return; }
+                if(mapped.X<0 || mapped.X>1 || mapped.Y<0 || mapped.Y>1) { MessageBox.Show(DialogOwner,Localization.Get("ZeOutsideMapWarning"));return; }
                 draft.Add(p);
             }
             UpdateInstruction();
@@ -1484,17 +1698,17 @@ namespace ScumMiniMap {
         void AddZone() {
             if(busy)return;
             if(drawingTool.SelectedIndex==1 || drawingTool.SelectedIndex==2 || drawingTool.SelectedIndex==4) {
-                if(manualDraft.Count<3) { MessageBox.Show(this,Localization.Get("ZePointsRequirementWarning"));return; }
-                if(string.IsNullOrWhiteSpace(name.Text) || name.Text.Length>80 || zones.Count>=500) { MessageBox.Show(this,Localization.Get("ZeZonesMaxWarning"));return; }
+                if(manualDraft.Count<3) { MessageBox.Show(DialogOwner,Localization.Get("ZePointsRequirementWarning"));return; }
+                if(string.IsNullOrWhiteSpace(name.Text) || name.Text.Length>80 || zones.Count>=500) { MessageBox.Show(DialogOwner,Localization.Get("ZeZonesMaxWarning"));return; }
                 string layer=GetSelectedLayer()??"Default";
-                var zone=new MapZone { Name=name.Text.Trim(),Argb=color.ToArgb(),Points=manualDraft.ToArray(),Category=ZoneCategory.Custom,Layer=layer };
+                var zone=new MapZone { Name=name.Text.Trim(),Argb=color.ToArgb(),FillArgb=draftFillArgb,Points=manualDraft.ToArray(),Category=ZoneCategory.Custom,Layer=layer };
                 zones.Add(zone);manualDraft.Clear();PopulateLayerCombo(layer);RefreshViews();SetSelectedZoneIndex(zones.Count-1);UpdateInstruction();return;
             }
             if(automatic || busy)return;
-            if(step!=4 || draft.Count<3) { MessageBox.Show(this,Localization.Get("ZePointsRequirementWarning"));return; }
-            if(string.IsNullOrWhiteSpace(name.Text) || name.Text.Length>80 || zones.Count>=500) { MessageBox.Show(this,Localization.Get("ZeZonesMaxWarning"));return; }
+            if(step!=4 || draft.Count<3) { MessageBox.Show(DialogOwner,Localization.Get("ZePointsRequirementWarning"));return; }
+            if(string.IsNullOrWhiteSpace(name.Text) || name.Text.Length>80 || zones.Count>=500) { MessageBox.Show(DialogOwner,Localization.Get("ZeZonesMaxWarning"));return; }
             string targetLayer = GetSelectedLayer() ?? "Default";
-            zones.Add(new MapZone { Name=name.Text.Trim(),Argb=color.ToArgb(),Points=draft.Select(p=>ZoneStore.Align(p,s1,s2,m1,m2)).ToArray(),Category=ZoneCategory.Custom,Layer=targetLayer });
+            zones.Add(new MapZone { Name=name.Text.Trim(),Argb=color.ToArgb(),FillArgb=draftFillArgb,Points=draft.Select(p=>ZoneStore.Align(p,s1,s2,m1,m2)).ToArray(),Category=ZoneCategory.Custom,Layer=targetLayer });
             draft.Clear();
             PopulateLayerCombo(targetLayer);
             RefreshViews();
@@ -1606,7 +1820,7 @@ namespace ScumMiniMap {
                             }
                         }
                     }
-                    int selIdx=GetSelectedZoneIndex();
+                    foreach(int selIdx in SelectedZoneIndices()) {
                     if(selIdx>=0 && selIdx<zones.Count && zones[selIdx].Points!=null && zones[selIdx].Points.Length>0) {
                         PointF[] points=zones[selIdx].Points.Select(p=>new PointF(rect.X+p.X*rect.Width,rect.Y+p.Y*rect.Height)).ToArray();
                         if(points.Length>=3) {
@@ -1616,6 +1830,7 @@ namespace ScumMiniMap {
                             using(Pen bgPen=new Pen(Color.FromArgb(200,0,0,0),4.5f))g.DrawEllipse(bgPen,points[0].X-12,points[0].Y-12,24,24);
                             using(Pen pen=new Pen(OverlayTheme.Accent,2.5f))g.DrawEllipse(pen,points[0].X-12,points[0].Y-12,24,24);
                         }
+                    }
                     }
                     if(step>=2)Cross(g,rect,m1,"1");if(step>=4)Cross(g,rect,m2,"2");
                     if(step==4 && draft.Count>=3)ZoneStore.Draw(g,new[]{new MapZone { Name=name.Text,Argb=color.ToArgb(),Points=draft.Select(p=>ZoneStore.Align(p,s1,s2,m1,m2)).ToArray(),Layer=selectedLayer??"Default" }},rect,true);
@@ -1641,12 +1856,10 @@ namespace ScumMiniMap {
                     }
                 }
             }
-            int selIdx=GetSelectedZoneIndex();
-            MapZone selectedZone = (selIdx >= 0 && selIdx < zones.Count) ? zones[selIdx] : null;
-            if(isSource && selectedZone!=null)selectedZone=SourceFor(selectedZone);
+            var selectedZones=new HashSet<MapZone>(SelectedZoneIndices().Select(i=>isSource?SourceFor(zones[i]):zones[i]).Where(z=>z!=null));
             for(int i=0;i<items.Count;i++) {
                 PointF[] points=items[i].Points.Select(p=>new PointF(rect.X+p.X*rect.Width,rect.Y+p.Y*rect.Height)).ToArray();
-                if(items[i] == selectedZone) {
+                if(selectedZones.Contains(items[i])) {
                     if(points.Length>=3) {
                         using(Pen bgPen=new Pen(Color.FromArgb(200,0,0,0),4.5f))g.DrawPolygon(bgPen,points);
                         using(Pen pen=new Pen(OverlayTheme.Accent,2.5f))g.DrawPolygon(pen,points);

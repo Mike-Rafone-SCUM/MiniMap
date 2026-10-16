@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.IO.Compression;
 using System.Reflection;
 
@@ -28,6 +29,7 @@ namespace ScumMiniMap {
                 bits=data;
             }
         }
+        internal bool IsWaterForPresentation(float x,float y) { return Water(x,y); }
         bool Water(float x,float y) {
             if(float.IsNaN(x)||float.IsNaN(y)||x<0||y<0||x>=1||y>=1) return true;
             int index=(int)(y*height)*width+(int)(x*width);
@@ -132,6 +134,7 @@ namespace ScumMiniMap {
             return Math.Sqrt(dx * dx + dy * dy);
         }
 
+        internal PointF[][] PresentationGeometry() { lock(loadLock) { return edgesList==null?new PointF[0][]:edgesList.Select(edge=>(PointF[])edge.Points.Clone()).ToArray(); } }
         public void InitializeFromResource() {
             lock(loadLock) { InitializeCore(); }
         }

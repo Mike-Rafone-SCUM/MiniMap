@@ -81,6 +81,27 @@ static class MapRenderingTests {
             foreach(var nested in Descendants(child))yield return nested;
         }
     }
+    static void CheckFieldConsoleControls() {
+        using(var toggle=new TacticalCheckBox { Text="Grid lines" }) {
+            int changes=0;toggle.CheckedChanged+=(sender,args)=>changes++;
+            var key=typeof(TacticalCheckBox).GetMethod("OnKeyDown",Hidden);
+            key.Invoke(toggle,new object[]{new System.Windows.Forms.KeyEventArgs(System.Windows.Forms.Keys.Space)});
+            Check(toggle.Checked && changes==1 && toggle.TabStop,"Layer switch toggles once with Space and is keyboard focusable");
+            Check(toggle.AccessibilityObject.Role==System.Windows.Forms.AccessibleRole.CheckButton && (toggle.AccessibilityObject.State&System.Windows.Forms.AccessibleStates.Checked)!=0,"Layer switch reports its checked state to assistive technology");
+            toggle.Enabled=false;key.Invoke(toggle,new object[]{new System.Windows.Forms.KeyEventArgs(System.Windows.Forms.Keys.Space)});
+            Check(toggle.Checked && changes==1,"Disabled layer switch does not change from keyboard input");
+        }
+        using(var slider=new TacticalSlider { Minimum=30,Maximum=100,Value=60 }) {
+            var key=typeof(TacticalSlider).GetMethod("OnKeyDown",Hidden);
+            key.Invoke(slider,new object[]{new System.Windows.Forms.KeyEventArgs(System.Windows.Forms.Keys.Right)});
+            Check(slider.Value==61 && slider.AccessibilityObject.Value=="61","Opacity slider keyboard value is exposed to assistive technology");
+            key.Invoke(slider,new object[]{new System.Windows.Forms.KeyEventArgs(System.Windows.Forms.Keys.Home)});
+            Check(slider.Value==30,"Opacity Home respects minimum");
+            key.Invoke(slider,new object[]{new System.Windows.Forms.KeyEventArgs(System.Windows.Forms.Keys.End)});
+            Check(slider.Value==100,"Opacity End respects maximum");
+        }
+        Check(PhysicalKeyCapture.KeyName(0x22)=="PageDown" && PhysicalKeyCapture.KeyName(0x6F)=="Num /","Shortcut labels distinguish PageDown and numpad slash");
+    }
     static void CheckQuickStartTutorial() {
         AppLanguage original=Localization.Current;
         try {
@@ -305,10 +326,14 @@ static class MapRenderingTests {
                 liveZones.Add(new MapZone { Name="Keep normal waypoint",Category=ZoneCategory.Custom,Points=new[]{death.Centroid} });
                 Set(window,"searchTarget",liveZones.First(z=>z.IsDeathMarker));
                 window.ClearReachedDeathMarkers(death.Centroid);
+                Check(ZoneStore.Load(waypointPath).Any(z=>z.IsDeathMarker),"Returning to the death area keeps its marker during recovery");
+                window.ClearReachedDeathMarkers(new PointF(death.Centroid.X+.004f,death.Centroid.Y));
+                Check(ZoneStore.Load(waypointPath).Any(z=>z.IsDeathMarker),"Leaving less than 100 metres keeps the recovery marker");
+                window.ClearReachedDeathMarkers(far);
                 List<MapZone> cleared=ZoneStore.Load(waypointPath);
                 Check(!cleared.Any(z=>z.IsDeathMarker) && cleared.Any(z=>z.Name=="Keep normal waypoint")
                     && typeof(MapWindow).GetField("searchTarget",Hidden).GetValue(window)==null,
-                    "Returning to a death marker removes it persistently, clears its destination and keeps ordinary waypoints");
+                    "Leaving after returning to the death area removes its marker persistently and preserves ordinary waypoints");
             }
             string missingFolder=Path.Combine(root,"missing-location"); Directory.CreateDirectory(missingFolder);
             using(var map=new Bitmap(64,64)) map.Save(Path.Combine(missingFolder,"map.png"));
@@ -534,6 +559,7 @@ static class MapRenderingTests {
         stream.Position=0; return stream;
     }
     [STAThread] static void Main(string[] args) {
+        CheckFieldConsoleControls();
         CheckQuickStartTutorial();
         CheckDeathScreens(args.Length>0?args[0]:Path.Combine(Environment.CurrentDirectory,"resources"));
         CheckOverlayMouseInteraction();
@@ -757,16 +783,16 @@ static class MapRenderingTests {
             Set(window,"searchTarget",new MapZone { Name="Destination",Points=new[]{new PointF(.8f,.5f)} });
             marker.Point=new PointF(.5f,.5f);
             Bitmap indicated=draw();
-            Check(indicated.GetPixel(207,109).G>180 && indicated.GetPixel(207,109).B>180,"Destination edge arrow remains visible above the circular edge fade");
+            Check(indicated.GetPixel(198,94).G>180 && indicated.GetPixel(198,94).B>180,"Destination edge arrow remains visible above the circular edge fade");
             indicated.Save(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"DestinationIndicatorPreview.png"));
             Set(window,"statusPos","Above");
             Set(window,"searchTarget",new MapZone { Name="Destination",Points=new[]{new PointF(.5f,.2f)} });
             Bitmap above=draw();
-            Color indicatorPixel=above.GetPixel(123,46);
+            Color indicatorPixel=above.GetPixel(123,70);
             Check(indicatorPixel.G>180 && indicatorPixel.B>180,"North destination indicator stays below an above-map status bar");
             Set(window,"searchTarget",null);
             Bitmap cleared=draw();
-            Check(cleared.GetPixel(123,46).ToArgb()!=indicatorPixel.ToArgb(),"Clearing navigation removes its edge marker");
+            Check(cleared.GetPixel(123,70).ToArgb()!=indicatorPixel.ToArgb(),"Clearing navigation removes its edge marker");
             using(var opaqueCircle=new Bitmap(100,100)) {
                 using(var graphics=Graphics.FromImage(opaqueCircle)) graphics.Clear(Color.White);
                 OverlayWindow.Fade(opaqueCircle,false,100,shape:"Circle");

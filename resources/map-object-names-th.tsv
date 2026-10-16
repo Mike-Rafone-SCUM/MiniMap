@@ -1,0 +1,243 @@
+# Offline localized catalogue; model IDs and technical identifiers retained.
+Apple trees	ต้นแอปเปิ้ล
+Armory	คลังแสง
+ATM	ATM
+Bars	บาร์
+Big Shipwrecks	ซากเรือขนาดใหญ่
+Bookshelves	ชั้นหนังสือ
+Bricks	อิฐ
+Broccoli	บรอกโคลี
+Cabbages	กะหล่ำปลี
+Carrots	แครอท
+Cement bags	ถุงปูน
+Cherry trees	ต้นเชอร์รี่
+Churches	โบสถ์
+Clubs	สโมสร
+Corn fields	ทุ่งข้าวโพด
+Cucumbers	แตงกวา
+Date palms	ฝ่ามือวันที่
+Depleted Uranium Crates	ลังยูเรเนียมที่หมดแล้ว
+Fig trees	ต้นมะเดื่อ
+Food Shop	ร้านอาหาร
+General Goods	สินค้าทั่วไป
+Grapevines	องุ่น
+Graphite	กราไฟท์
+Gravel bags	ถุงกรวด
+Hairdresser	ช่างทำผม
+Hazmat Suit Lockers	ตู้ล็อคเกอร์ชุด Hazmat
+Hospital	โรงพยาบาล
+Krsko POIs	Krsko POI
+Log Cabin	กระท่อมไม้ซุง
+Logs	บันทึก
+Mechanic	ช่างกล
+Novigrad POIs	Novigrad POI
+Olive trees	ต้นมะกอก
+Onions	หัวหอม
+Outposts	ด่านหน้า
+Paddle spawns	พายวางไข่
+Parsnip	หัวผักกาด
+Pear trees	ต้นแพร์
+Pharmacies	ร้านขายยา
+Pile of planks	กองไม้กระดาน
+Points of interest	จุดที่น่าสนใจ
+Potatoes	มันฝรั่ง
+Propane Tank	ถังโพรเพน
+Pubs	ผับ
+Radiation Equipment Lockers	ตู้เก็บอุปกรณ์รังสี
+Red Toolboxes	กล่องเครื่องมือสีแดง
+Restaurants	ร้านอาหาร
+RIB spawns	RIB วางไข่
+Rose hip / dog rose	โรสฮิป / กุหลาบหมา
+Saloon	รถเก๋ง
+Samobor POIs	Samobor POI
+Sardines	ปลาซาร์ดีน
+Schools	โรงเรียน
+Storage shed	โรงเก็บของ
+Strawberries	สตรอเบอร์รี่
+Sunflower fields	ทุ่งทานตะวัน
+Warehouses	โกดัง
+Watermelons	แตงโม
+Amur	อามูร์
+Bass	เบส
+Bleak	เยือกเย็น
+Carp	ปลาคาร์พ
+Carp Radioactive	ปลาคาร์พกัมมันตภาพรังสี
+Catfish	ปลาดุก
+Chub	ปลาน้ำจืด
+Crucian Carp	ปลาคาร์พ Crucian
+Dentex	เดนเท็กซ์
+Orata	โอราตะ
+Pike	หอก
+Prussian Carp	ปลาคาร์ปปรัสเซียน
+Ruffe	รัฟเฟ่
+Sardine	ปลาซาร์ดีน
+Tuna	ปลาทูน่า
+Bear	หมี
+Boar	หมูป่า
+Chicken	ไก่
+Deer	กวาง
+Donkey	ลา
+Goat	แพะ
+Horse	ม้า
+Rabbit	กระต่าย
+Wolf	หมาป่า
+Police Station	สถานีตำรวจ
+Gas Station	ปั๊มน้ำมัน
+Pharmacy	ร้านขายยา
+Bar	บาร์
+Pub	ผับ
+Club	สโมสร
+Restaurant	ร้านอาหาร
+Gun Shop	ร้านปืน
+Hunting Shop	ร้านล่าสัตว์
+Vehicle Repair Shop	ร้านซ่อมรถ
+Car Garage	อู่ซ่อมรถ
+Workshop	การประชุมเชิงปฏิบัติการ
+School	โรงเรียน
+Church	โบสถ์
+Lighthouse	ประภาคาร
+Military Warehouse	โกดังทหาร
+Military Hangar	โรงเก็บเครื่องบินทหาร
+Bunker	บังเกอร์
+Abandoned Bunker	บังเกอร์ที่ถูกทิ้งร้าง
+Secret Bunker	บังเกอร์ลับ
+WW2 Bunker	บังเกอร์ WW2
+WWII Bunker	บังเกอร์ WWII
+Bunker Hatch	บังเกอร์แฮทช์
+Research Facility	สิ่งอำนวยความสะดวกการวิจัย
+General Goods Store	ร้านขายของทั่วไป
+Killbox	คิลบ็อกซ์
+Mine Entrance	ทางเข้าเหมือง
+Storage Silo	ไซโลจัดเก็บ
+Warehouse	คลังสินค้า
+Dock	ท่าเรือ
+Quest Board	คณะกรรมการภารกิจ
+Hunting Camp	ค่ายล่าสัตว์
+Hunting Tower	หอคอยล่าสัตว์
+Workshop Lathe	โรงกลึง
+Toolbox	กล่องเครื่องมือ
+Medical Container	ภาชนะทางการแพทย์
+Locker	ล็อกเกอร์
+Hazmat Locker	ฮาซมัท ล็อกเกอร์
+Radiation Locker	ล็อกเกอร์รังสี
+Uranium Crate	ลังยูเรเนียม
+Airport	สนามบิน
+Airfield	สนามบิน
+Outpost Airfield	สนามบินของด่านการค้า
+Outpost	ด่านหน้า
+Castle	ปราสาท
+Big Vern monument	อนุสาวรีย์ Big Vern
+Boot Camp	บูทแคมป์
+Brick Factory	โรงงานอิฐ
+Camping Site	สถานที่ตั้งแคมป์
+Cheese Factory	โรงงานชีส
+Chinese shop	ร้านจีน
+Church in Novigrad	โบสถ์ใน Novigrad
+Small Church in Novigrad	โบสถ์เล็กๆ ใน Novigrad
+Clinic	คลินิก
+Clothing Shop	ร้านเสื้อผ้า
+Coal Mine	เหมืองถ่านหิน
+DPinchy monument	อนุสาวรีย์ DPinchy
+Dam	เขื่อน
+Duga Radar	เรดาร์ Duga
+Elementary School	โรงเรียนประถมศึกษา
+Elementary School Yard	ลานโรงเรียนประถมศึกษา
+Factory	โรงงาน
+Fire Station	สถานีดับเพลิง
+Fish Factory	โรงงานปลา
+Fishing Spot	จุดตกปลา
+Gun Range	สนามยิงปืน
+Halloween House	บ้านฮาโลวีน
+Hardware Store	ร้านฮาร์ดแวร์
+Hotel	โรงแรม
+Hotel Marina	โรงแรม Marina
+Junkyard	โรงเก็บขยะ
+Klenovnik Hospital	โรงพยาบาล Klenovnik
+Liquor Store	ร้านเหล้า
+Lumber Mill	โรงสีไม้
+MMA Cage	กรง MMA
+Mailbox	ตู้ไปรษณีย์
+Market	ตลาด
+Marketplace	ตลาด
+Military Airfield	สนามบินทหาร
+Military Barracks	ค่ายทหาร
+Military Compound	สารประกอบทหาร
+Military Radar & Trenches	เรดาร์ทหารและสนามเพลาะ
+Military Stash	คลังทหาร
+Monolith	เสาหิน
+Motorbike Track	สนามแข่งรถมอเตอร์ไซค์
+Naval Base	ฐานทัพเรือ
+North Quarry	เหมืองหินทางเหนือ
+Novigrad Hospital	โรงพยาบาล Novigrad
+Nuclear Power Plant	โรงไฟฟ้านิวเคลียร์
+Observatory	หอดูดาว
+Outdoor restaurant	ร้านอาหารกลางแจ้ง
+Park Pond	ปาร์คพอนด์
+Prison	เรือนจำ
+Radio Station	สถานีวิทยุ
+Running Track	ลู่วิ่ง
+Salt Ponds	บ่อเกลือ
+Sanitarium	สุขาภิบาล
+School Gym	ยิมของโรงเรียน
+Shoe Shop	ร้านรองเท้า
+Small Shipyard	อู่ต่อเรือขนาดเล็ก
+South Quarry	เหมืองหินใต้
+Sports Hall	สนามกีฬา
+Stadium	สนามกีฬา
+Supermarket	ซุปเปอร์มาร์เก็ต
+Train Yard	ลานรถไฟ
+Trainyard	ลานรถไฟ
+Waterfall	น้ำตก
+Weapons Factory	โรงงานอาวุธ
+Windmills	กังหันลม
+Ramsons Hill	แรมสันส์ ฮิลล์
+Rosemary Thyme	โรสแมรี่โหระพา
+City	เมือง
+POI	POI
+Camping	แคมป์ปิ้ง
+Offices	สำนักงาน
+Stables	คอกม้า
+Store with ATM	จัดเก็บด้วย ATM
+Farm	ฟาร์ม
+Island WWII bunker	บังเกอร์เกาะ WWII
+House ruins	ซากปรักหักพังของบ้าน
+Street between 2 houses	ถนนระหว่างบ้าน 2
+Barn	โรงนา
+Little Farm	ฟาร์มน้อย
+Little cabin	กระท่อมน้อย
+Wine farm	ฟาร์มไวน์
+CC	CC
+Food store	ร้านขายอาหาร
+Graveyard	สุสาน
+Little bridge	สะพานเล็กๆ
+Lumbermill cabin	กระท่อมไม้
+- General Store	- ร้านค้าทั่วไป
+City Warehouse	โกดังเมือง
+Little town - House	เมืองเล็กๆ-บ้าน
+City - Pharmacy	เมือง - ร้านขายยา
+City - Police Station	เมือง - สถานีตำรวจ
+Clock house	บ้านนาฬิกา
+Stable ruins	ซากปรักหักพังที่มั่นคง
+Demolition Derby	รื้อถอนดาร์บี้
+Airfield East	แอร์ฟิลด์ตะวันออก
+Airfield North	สนามบินเหนือ
+Boat Yard	ลานจอดเรือ
+Boatyard	อู่ต่อเรือ
+D3 Town	เมือง D3
+East Coast	ชายฝั่งตะวันออก
+Northeast	ตะวันออกเฉียงเหนือ
+Northwest	ตะวันตกเฉียงเหนือ
+Tisno East	ทิสโนตะวันออก
+Tisno South	ทิสโนเซาธ์
+WWII Bunker South	WWII บังเกอร์ใต้
+light house	บ้านแสง
+Island Lighthouse	ประภาคารเกาะ
+Abandoned City Quest Board	คณะกรรมการภารกิจเมืองร้าง
+Hosiptal Klenovnik Quest Board	คณะกรรมการภารกิจ Hosiptal Klenovnik
+Mountain	ภูเขา
+Mediterranean	เมดิเตอร์เรเนียน
+Continental Forest	ป่าภาคพื้นทวีป
+Continental Meadow	ทุ่งหญ้าภาคพื้นทวีป
+Lake Big	ทะเลสาบบิ๊ก
+River Big Radioactive Activity Spot	จุดกิจกรรมกัมมันตภาพรังสีแม่น้ำใหญ่
+Sea Dentex Activity Spot	จุดกิจกรรมซีเดนเท็กซ์

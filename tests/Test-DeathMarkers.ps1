@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 if ([Threading.Thread]::CurrentThread.GetApartmentState() -ne 'STA') {
     throw 'Run these focused checks with powershell.exe -NoProfile -STA -File.'
 }
@@ -7,7 +7,7 @@ $deathCheckRoot = Split-Path $PSScriptRoot -Parent
 # These focused fixtures provide their own map images and do not require a resource list.
 $deathCheckSources = @(& (Join-Path $deathCheckRoot 'scripts\Get-MiniMapSources.ps1'))
 $deathCheckSources += Join-Path $PSScriptRoot 'MapRenderingTests.cs'
-$deathCheckTypes = Add-Type -Path $deathCheckSources -ReferencedAssemblies System.Drawing,System.Windows.Forms,System.IO.Compression -PassThru
+$deathCheckTypes = Add-Type -Path $deathCheckSources -ReferencedAssemblies System.Drawing,WindowsBase,PresentationCore,PresentationFramework,System.Xaml,Accessibility,System.Windows.Forms,System.IO.Compression -PassThru
 $deathCheckClass = $deathCheckTypes | Where-Object { $_.FullName -eq 'MapRenderingTests' } | Select-Object -First 1
 if ($null -eq $deathCheckClass) { throw 'Could not load canonical death-marker regression fixtures.' }
 $deathCheckFlags = [Reflection.BindingFlags]'Static,NonPublic'

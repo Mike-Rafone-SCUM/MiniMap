@@ -51,6 +51,10 @@ static class AuditRegressionTests {
             for(int i=0;i<501;i++) zones.Add(Zone("Waypoint "+i));
             ZoneStore.Save(zoneFile,zones);
             Check(ZoneStore.Load(zoneFile).Count==501,"501 zones survive save/reload");
+            var filledZone=Zone("Separate zone colours");filledZone.Argb=Color.Red.ToArgb();filledZone.FillArgb=Color.FromArgb(120,Color.Blue).ToArgb();ZoneStore.Save(zoneFile,new List<MapZone>{filledZone});var loadedFill=ZoneStore.Load(zoneFile)[0];
+            Check(loadedFill.Argb==filledZone.Argb&&loadedFill.FillArgb==filledZone.FillArgb&&loadedFill.Clone().FillArgb==filledZone.FillArgb,"Independent outline and translucent fill colours survive save/load and cloning");
+            Check(ZoneStore.Load(new MemoryStream(Encoding.UTF8.GetBytes("Legacy\t-65536\t0.2,0.2;0.8,0.2;0.8,0.8\tCustom\tDefault")))[0].FillArgb==null,"Existing zone files retain the default fill without migration");
+            Reject(()=>ZoneStore.Load(new MemoryStream(Encoding.UTF8.GetBytes("Bad fill\t-65536\t0.2,0.2\tCustom\tDefault\t\tnot-a-colour"))),"Malformed custom fill colours fail closed");
             foreach(string name in new[]{"Custom Bunker","Gas Cache","D4 Clock house"}) {
                 var sample=new List<MapZone>{Zone(name)}; ZoneStore.Save(zoneFile,sample);
                 Check(ZoneStore.Load(zoneFile)[0].Category==ZoneCategory.Custom,"Explicit category survives: "+name);
@@ -98,7 +102,7 @@ static class AuditRegressionTests {
                 File.WriteAllLines(Path.Combine(root,"settings.ini"),new[]{
                     "Welcomed=True","Language=en","Width=420","Height=340","ShowHuntingLegend=False","ShowGasStations=True",
                     "ShowCities=True","ShowCustomWaypoints=False","GridBorders=False",
-                    "CopyInterval=3","PlayerConeColor=#123456","AutoZoomMin=12","AutoZoomMax=4"});
+                    "CopyInterval=3","PlayerConeColor=#123456","RouteHistoryColor=#E14579","AutoZoomMin=12","AutoZoomMax=4"});
                 Call(window,"LoadSettings");
                 Check(minimap.Size==new Size(420,340),"Existing users retain their saved minimap dimensions");
                 Check(!(bool)Field(window,"showCustomWaypoints").GetValue(window) &&
@@ -107,6 +111,13 @@ static class AuditRegressionTests {
                     ((Color)Field(window,"playerConeColor").GetValue(window)).ToArgb()==ColorTranslator.FromHtml("#123456").ToArgb(),
                     "Legacy interval and player colour aliases remain compatible");
                 Check((int)Field(window,"autoZoomMax").GetValue(window)==12,"Inverted saved zoom bounds are normalised");
+                Check(((Color)Field(window,"routeHistoryColor").GetValue(window)).ToArgb()==ColorTranslator.FromHtml("#E14579").ToArgb(),"Saved route history colour loads independently of player and guidance colours");
+                Field(window,"fullMapOpacity").SetValue(window,0);
+                Field(window,"diagnosticMode").SetValue(window,false);
+                try { Call(window,"SaveSettings"); }finally { Field(window,"diagnosticMode").SetValue(window,true); }
+                Field(window,"routeHistoryColor").SetValue(window,Color.Black);Call(window,"LoadSettings");
+                Check(((Color)Field(window,"routeHistoryColor").GetValue(window)).ToArgb()==ColorTranslator.FromHtml("#E14579").ToArgb(),"Route history colour survives a real settings save/load round trip");
+                Check((int)Field(window,"fullMapOpacity").GetValue(window)==0,"Fully transparent tactical opacity survives settings save/load");
                 Call(window,"BuildSettingsPanel");
                 Control settings=(Control)Field(window,"bar").GetValue(window);
                 var minimum=SettingNumber(settings,"AutoZoomMin");

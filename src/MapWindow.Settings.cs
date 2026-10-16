@@ -30,6 +30,7 @@ namespace ScumMiniMap {
                 CapturedKey=0; CapturedScanCode=0; DialogResult=DialogResult.OK;
             };
             Controls.Add(unbind);
+            OverlayTheme.Style(this);
         }
         protected override bool ProcessCmdKey(ref Message msg,Keys keyData) {
             if((keyData&Keys.KeyCode)==Keys.Escape) { DialogResult=DialogResult.Cancel; return true; }
@@ -48,6 +49,16 @@ namespace ScumMiniMap {
         // Keep the main window minimized for a persistent taskbar button while the overlay runs.
         bool SettingsVisible { get { return Visible && WindowState!=FormWindowState.Minimized; } }
         bool taskbarMinimized;
+        int fieldConsoleSettingsTab;
+        void BuildFieldConsoleSettingsTabs() {
+            var original=new List<Control>();foreach(Control control in bar.Controls)original.Add(control);
+            WpfCaptureSettings(original);
+            bar.Controls.Clear();bar.AutoScroll=false;
+            var view=new FieldConsoleSettingsView(original,fieldConsoleSettingsTab,index=>fieldConsoleSettingsTab=index);
+            EventHandler resize=(sender,args)=> { if(!view.IsDisposed)view.Size=new Size(Math.Max(390,bar.ClientSize.Width-bar.Padding.Horizontal-4),Math.Max(180,bar.ClientSize.Height-bar.Padding.Vertical-4)); };
+            bar.SizeChanged+=resize;view.Disposed+=(sender,args)=>bar.SizeChanged-=resize;bar.Controls.Add(view);resize(null,EventArgs.Empty);
+        }
+
         void AddShortcutSettings(FlowLayoutPanel panel) {
             panel.Controls.Add(new Label { Text=Localization.Get("ShortcutHeading"),Width=365,Height=40 });
             foreach(var action in AppControlBindings.AllActions) {
@@ -65,7 +76,10 @@ namespace ScumMiniMap {
         }
 
         void AddShortcutButton(FlowLayoutPanel panel,string title,Func<int> read,Func<int> readScan,Action<int,int> write,Func<int,int,string> bindingValidator=null) {
-            Button button=new Button { Text=title+": "+PhysicalKeyCapture.KeyName(read()),Width=365,Height=32 };
+            Panel row=new Panel { Width=365,Height=48,BackColor=OverlayTheme.Background,Margin=new Padding(0,0,0,4) };
+            Label name=new Label { Text=title,Location=new Point(0,0),Size=new Size(220,46),TextAlign=ContentAlignment.MiddleLeft,Font=OverlayTheme.UiFont(12),ForeColor=OverlayTheme.Ink };
+            Button button=new FieldConsoleButton { Text=PhysicalKeyCapture.KeyName(read()),Location=new Point(240,6),Size=new Size(118,36),AccessibleName=title };
+            row.Controls.Add(name);row.Controls.Add(button);
             button.Click+=(s,e)=> {
                 shortcutCaptureOpen=true;
                 Native.CancelActiveCopy();
@@ -73,12 +87,12 @@ namespace ScumMiniMap {
                     using(var capture=new ShortcutCaptureDialog(title,bindingValidator??((key,scan)=>ShortcutBindingError(key,read(),scan,readScan())))) {
                         if(RunUiModal(() => capture.ShowDialog(this))!=DialogResult.OK) return;
                         write(capture.CapturedKey,capture.CapturedScanCode);
-                        button.Text=title+": "+PhysicalKeyCapture.KeyName(read());
+                        button.Text=PhysicalKeyCapture.KeyName(read());
                         fallbackKeysArmed=false;
                     }
                 } finally { shortcutCaptureOpen=false; }
             };
-            panel.Controls.Add(button);
+            panel.Controls.Add(row);
         }
 
         static bool ValidShortcutKey(int key) {
@@ -152,7 +166,7 @@ namespace ScumMiniMap {
 
 
 
-        void SettingsChanged() { terrainKey=null; lastFrameKey=null; cachedLocationAnchors=null; locationDescriptionRevision++; InvalidateFullMapSidebar(); saveAfter=DateTime.UtcNow.AddMilliseconds(700); }
+        void SettingsChanged() { wpfZoneRevision++;terrainKey=null; lastFrameKey=null; cachedLocationAnchors=null; locationDescriptionRevision++; InvalidateFullMapSidebar(); saveAfter=DateTime.UtcNow.AddMilliseconds(700); }
 
 
 
@@ -305,6 +319,8 @@ namespace ScumMiniMap {
                         if(key=="VoiceVolume") { int volume; if(int.TryParse(val,out volume)) voiceVolume=Math.Max(0,Math.Min(100,volume)); continue; }
                         if(key=="SuppressCopyKeyReminder") { if(bool.TryParse(val,out b)) suppressCopyKeyReminder=b; continue; }
                         if(key=="Welcomed") { foundWelcomed=true; continue; }
+                        if(key=="RotateMinimap") { if(bool.TryParse(val,out b))wpfRotateMap=b;continue; }
+                        if(key=="PoiClustering") { if(bool.TryParse(val,out b))wpfPoiClustering=b;continue; }
                         if(key=="AdminToolsEnabled") { if(bool.TryParse(val,out b))adminToolsEnabled=b;continue; }
                         if(key=="AdminPanelDismissed") { adminPanelDismissedForFullMap=false;continue; }
 
@@ -330,6 +346,7 @@ namespace ScumMiniMap {
                                 }
                             }
                         }
+                        if(key=="DisabledWpfZones") { disabledWpfZones.Clear();foreach(string id in val.Split(new[]{';'},StringSplitOptions.RemoveEmptyEntries))disabledWpfZones.Add(id); }
                         if(key=="ScumMapDisabledCats") {
                             if(scumMap!=null) scumMap.ApplyDisabledCategoriesString(val);
                             else pendingDisabledCats=val;
@@ -356,6 +373,11 @@ namespace ScumMiniMap {
                             } catch {}
                             continue;
                         }
+                        if(key=="RouteHistoryColor") {
+                            try { if(val.StartsWith("#"))routeHistoryColor=ColorTranslator.FromHtml(val);else if(int.TryParse(val,out n))routeHistoryColor=Color.FromArgb(n); }catch {}
+                            continue;
+                        }
+                        if(key=="WpfDefaultsRevision"&&int.TryParse(val,out n)) { wpfDefaultsRevision=n;continue; }
 
 
 
@@ -382,7 +404,7 @@ namespace ScumMiniMap {
 
 
 
-                            switch(key) { case "LocationHistoryMinutes":locationHistoryMinutes=Math.Max(1,Math.Min(240,n));break;case "Width":width=Math.Max(240,Math.Min(800,n));break;case "Height":height=Math.Max(240,Math.Min(800,n));break;case "Left":left=n;break;case "Top":top=n;break;case "Opacity":mapOpacity=Math.Max(30,Math.Min(100,n));break;case "FullMapOpacity":fullMapOpacity=Math.Max(20,Math.Min(100,n));break;case "GridOpacity":gridOpacity=Math.Max(0,Math.Min(100,n));break;case "LabelSize":labelSize=Math.Max(6,Math.Min(24,n));break;case "MaxZoom":maxZoom=Math.Max(4,Math.Min(32,n));break;case "AutoZoomMin":autoZoomMin=Math.Max(1,Math.Min(32,n));break;case "AutoZoomMax":autoZoomMax=Math.Max(1,Math.Min(32,n));break;case "ZoomStep":zoomStepPercent=Math.Max(10,Math.Min(100,n));break;case "CopyInterval":copyIntervalMs=ReadCopyInterval(n,true);break;case "CopyIntervalMs":copyIntervalMs=ReadCopyInterval(n,false);break;case "ScumMapKey":if(n>0&&n<256)scumMapKey=n;break;case "ScumChatKey":if(n>0&&n<256)scumChatKey=n;break;case "ScumCopyModifierKey":if(n==0||PhysicalKeyCapture.IsModifierKey(n))scumCopyModifierKey=n;break;case "ScumCopyKey":if(n>0&&n<256&&!PhysicalKeyCapture.IsModifierKey(n))scumCopyKey=n;break; }
+                            switch(key) { case "LocationHistoryMinutes":locationHistoryMinutes=Math.Max(1,Math.Min(240,n));break;case "Width":width=Math.Max(240,Math.Min(800,n));break;case "Height":height=Math.Max(240,Math.Min(800,n));break;case "Left":left=n;break;case "Top":top=n;break;case "Opacity":mapOpacity=Math.Max(30,Math.Min(100,n));break;case "FullMapOpacity":fullMapOpacity=Math.Max(0,Math.Min(100,n));break;case "GridOpacity":gridOpacity=Math.Max(0,Math.Min(100,n));break;case "LabelSize":labelSize=Math.Max(6,Math.Min(24,n));break;case "MaxZoom":maxZoom=Math.Max(4,Math.Min(32,n));break;case "AutoZoomMin":autoZoomMin=Math.Max(1,Math.Min(32,n));break;case "AutoZoomMax":autoZoomMax=Math.Max(1,Math.Min(32,n));break;case "ZoomStep":zoomStepPercent=Math.Max(10,Math.Min(100,n));break;case "CopyInterval":copyIntervalMs=ReadCopyInterval(n,true);break;case "CopyIntervalMs":copyIntervalMs=ReadCopyInterval(n,false);break;case "ScumMapKey":if(n>0&&n<256)scumMapKey=n;break;case "ScumChatKey":if(n>0&&n<256)scumChatKey=n;break;case "ScumCopyModifierKey":if(n==0||PhysicalKeyCapture.IsModifierKey(n))scumCopyModifierKey=n;break;case "ScumCopyKey":if(n>0&&n<256&&!PhysicalKeyCapture.IsModifierKey(n))scumCopyKey=n;break; }
 
 
 
@@ -514,8 +536,11 @@ namespace ScumMiniMap {
 
                 File.AppendAllText(settingsPath+".tmp","ScumCopyScanCode="+scumCopyScanCode+Environment.NewLine+"ScumMapScanCode="+scumMapScanCode+Environment.NewLine+"ScumChatScanCode="+scumChatScanCode+Environment.NewLine);
                 File.AppendAllText(settingsPath+".tmp","AutomaticDeathMarkers="+automaticDeathMarkers+Environment.NewLine);
+                File.AppendAllText(settingsPath+".tmp","RotateMinimap="+wpfRotateMap+Environment.NewLine);
+                File.AppendAllText(settingsPath+".tmp","PoiClustering="+wpfPoiClustering+Environment.NewLine);
                 File.AppendAllText(settingsPath+".tmp","AdminToolsEnabled="+adminToolsEnabled+Environment.NewLine+"AdminPanelDismissed="+adminPanelDismissedForFullMap+Environment.NewLine);
-                File.AppendAllLines(settingsPath+".tmp",new[]{"SettingsShortcutKey="+settingsShortcutKey,"PinShortcutKey="+pinShortcutKey,"SearchShortcutKey="+searchShortcutKey,"SettingsShortcutScanCode="+settingsShortcutScanCode,"PinShortcutScanCode="+pinShortcutScanCode,"SearchShortcutScanCode="+searchShortcutScanCode});
+                File.AppendAllLines(settingsPath+".tmp",new[]{"WpfDefaultsRevision="+wpfDefaultsRevision,"FullMapOpacity="+fullMapOpacity,"RouteHistoryColor="+ColorTranslator.ToHtml(routeHistoryColor),"SettingsShortcutKey="+settingsShortcutKey,"PinShortcutKey="+pinShortcutKey,"SearchShortcutKey="+searchShortcutKey,"SettingsShortcutScanCode="+settingsShortcutScanCode,"PinShortcutScanCode="+pinShortcutScanCode,"SearchShortcutScanCode="+searchShortcutScanCode});
+                File.AppendAllLines(settingsPath+".tmp",new[]{"DisabledWpfZones="+string.Join(";",disabledWpfZones)});
                 foreach(var action in AppControlBindings.AllActions) {
                     // Preserve legacy keys for the first three actions; new actions have stable names.
                     if(action==AppControlAction.Settings || action==AppControlAction.AddWaypoint || action==AppControlAction.Search) continue;
@@ -566,6 +591,7 @@ namespace ScumMiniMap {
 
 
         async void ShowSettings() {
+            if(WpfFieldConsoleRuntime.Active!=null) { WpfFieldConsoleRuntime.Active.Handle(AppControlAction.Settings);return; }
             if(panelOpening || searchOpen) return;
             PrepareUiInput();
             if(SettingsVisible) {

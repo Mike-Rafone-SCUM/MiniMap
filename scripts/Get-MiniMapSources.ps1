@@ -1,5 +1,7 @@
-$miniRoot = Split-Path $PSScriptRoot -Parent
+﻿$miniRoot = Split-Path $PSScriptRoot -Parent
 Join-Path (Join-Path $miniRoot 'src') 'InstallationAssets.cs'
+Join-Path (Join-Path $miniRoot 'src') 'PrivatePositions.cs'
+Join-Path (Join-Path $miniRoot 'src') 'PeerNetworkSetup.cs'
 Join-Path (Join-Path $miniRoot 'src') 'UpdatePackage.cs'
 Join-Path (Join-Path $miniRoot 'src') 'Localization.MapObjects.cs'
 Join-Path (Join-Path $miniRoot 'src') 'Localization.MapObjects.DeNlPl.cs'
@@ -21,4 +23,4 @@ Join-Path (Join-Path $miniRoot 'src') 'AppControls.cs'
 Join-Path (Join-Path $miniRoot 'src') 'UpdateBootstrap.cs'
 Join-Path (Join-Path $miniRoot 'src') 'MapWindow.Controls.cs'
 Join-Path (Join-Path $miniRoot 'src') 'DeathBanner.cs'
-@('CopyInputLease.cs','VoiceNavigation.cs','MapWindow.Voice.cs','MapWindow.DestinationIndicator.cs','UpdateService.cs','Localization.cs','RoadRouter.cs','ScumMap.cs','PoiFilterDialog.cs','StartupGuideDialog.cs','CopyKeyReminderDialog.cs','MapTilePyramid.cs','MiniMap.cs','MapWindow.Diagnostics.cs','MapWindow.Settings.cs','MapCanvas.cs','Position.cs','Native.cs','Program.cs','Overlay.cs','Zones.cs','Search.cs') | ForEach-Object { Join-Path (Join-Path $miniRoot 'src') $_ }
+@('WpfEngineAdapter.cs','WpfFieldConsole.cs','FieldConsoleUi.cs','CopyInputLease.cs','VoiceNavigation.cs','MapWindow.Voice.cs','MapWindow.DestinationIndicator.cs','UpdateService.cs','Localization.cs','RoadRouter.cs','ScumMap.cs','PoiFilterDialog.cs','StartupGuideDialog.cs','CopyKeyReminderDialog.cs','MapTilePyramid.cs','MiniMap.cs','MapWindow.Diagnostics.cs','MapWindow.Settings.cs','MapCanvas.cs','Position.cs','Native.cs','Program.cs','Overlay.cs','Zones.cs','Search.cs') | ForEach-Object { Join-Path (Join-Path $miniRoot 'src') $_ }

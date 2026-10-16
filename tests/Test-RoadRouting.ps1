@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 
 Write-Host "Compiling standalone test harness for RoadRouter..."
 
@@ -65,7 +65,7 @@ $harnessPath = Join-Path $PSScriptRoot 'TestHarness.cs'
 [System.IO.File]::WriteAllText($harnessPath, $harnessCs, [System.Text.Encoding]::UTF8)
 
 try {
-    & $compiler /nologo /optimize+ /target:exe "/out:$testBin" /reference:System.Drawing.dll /reference:System.dll "/resource:$roadsBin,roads.bin" $routerCs (Join-Path $miniRoot 'src\InstallationAssets.cs') $harnessPath
+    & $compiler /nologo /codepage:65001 /optimize+ /target:exe "/out:$testBin" /reference:System.Drawing.dll /reference:System.dll "/resource:$roadsBin,roads.bin" $routerCs (Join-Path $miniRoot 'src\InstallationAssets.cs') $harnessPath
     if ($LASTEXITCODE -ne 0) { throw "Compilation failed" }
 
     Write-Host "Running Test-RoadRouter.exe..."

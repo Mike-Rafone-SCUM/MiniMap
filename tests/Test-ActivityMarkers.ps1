@@ -1,8 +1,8 @@
-$ErrorActionPreference='Stop'
+﻿$ErrorActionPreference='Stop'
 $miniRoot=Split-Path $PSScriptRoot -Parent
 Add-Type -AssemblyName System.Windows.Forms,System.Drawing
 $miniSources = & (Join-Path (Split-Path $PSScriptRoot -Parent) 'scripts\Get-MiniMapSources.ps1')
-Add-Type -Path $miniSources -ReferencedAssemblies System.Windows.Forms,System.Drawing,System.Xml,System.IO.Compression
+Add-Type -Path $miniSources -ReferencedAssemblies WindowsBase,PresentationCore,PresentationFramework,System.Xaml,Accessibility,System.Windows.Forms,System.Drawing,System.Xml,System.IO.Compression
 [ScumMiniMap.ScumMapStore]::SelfTest()
 $miniStore=[ScumMiniMap.ScumMapStore]::Load((Join-Path $miniRoot 'resources'))
 foreach($miniExpected in @(@(858,135),@(869,83),@(24,161),@(17,4),@(81,4),@(859,7),@(776,4))) {

@@ -1,0 +1,27 @@
+# key|es-AR|fr|de|nl|ru|zh-CN|tr|ar|pt-BR|pt-PT|ko
+magazine|Cargadores|Chargeurs|Magazine|Magazijnen|Магазины|弹匣|Şarjörler|مخازن الذخيرة|Carregadores|Carregadores|탄창
+scope|Miras telescópicas|Lunettes de visée|Zielfernrohre|Richtkijkers|Оптические прицелы|瞄准镜|Dürbünler|مناظير التصويب|Lunetas|Miras telescópicas|조준경
+sight|Miras|Organes de visée|Visiere|Vizieren|Прицельные приспособления|瞄具|Nişangâhlar|أجهزة التصويب|Miras|Miras|조준 장치
+suppressor|Silenciadores|Silencieux|Schalldämpfer|Geluiddempers|Глушители|消音器|Susturucular|كاتمات الصوت|Silenciadores|Silenciadores|소음기
+clip|Peines de munición|Lames-chargeurs|Ladestreifen|Laadstrips|Обоймы|弹夹|Fişek klipsleri|مشابك الذخيرة|Pentes de munição|Pentes de munições|장전 클립
+rail|Rieles de montaje|Rails de montage|Montageschienen|Montagerails|Крепёжные планки|安装导轨|Montaj rayları|قضبان التثبيت|Trilhos de montagem|Calhas de montagem|장착 레일
+farming|Agricultura|Agriculture|Landwirtschaft|Landbouw|Земледелие|农业|Tarım|الزراعة|Agricultura|Agricultura|농업
+fishing_catch|Peces capturados|Poissons pêchés|Gefangene Fische|Gevangen vis|Пойманная рыба|捕获的鱼|Yakalanan balıklar|الأسماك المصطادة|Peixes capturados|Peixes capturados|잡은 물고기
+blunt|Armas contundentes|Armes contondantes|Schlagwaffen|Slagwapens|Дробящее оружие|钝器|Darbe silahları|أسلحة راضة|Armas contundentes|Armas contundentes|둔기
+body|Carrocerías|Carrosseries|Karosserien|Carrosserieën|Кузова|车身|Araç gövdeleri|هياكل المركبات|Carrocerias|Carroçarias|차체
+light|Ligeros|Légers|Leicht|Lichtgewicht|Лёгкие|轻型|Hafif|خفيفة|Leves|Leves|경량
+Health|Estado|État|Zustand|Conditie|Состояние|状态|Durum|الحالة|Condição|Estado|상태
+12 Gauge|Calibre 12|Calibre 12|Kaliber 12|Kaliber 12|12-й калибр|12号口径|12 kalibre|عيار 12|Calibre 12|Calibre 12|12게이지
+Crossbow Bolt|Virotes de ballesta|Carreaux d’arbalète|Armbrustbolzen|Kruisboogbouten|Арбалетные болты|弩箭|Arbalet okları|سهام القوس النشاب|Virotes de besta|Virotes de besta|석궁 볼트
+throwable|Armas arrojadizas y trampas|Armes de jet et pièges|Wurfwaffen und Fallen|Werpwapens en vallen|Метательное оружие и ловушки|投掷武器和陷阱|Fırlatılan silahlar ve tuzaklar|أسلحة الرمي والفخاخ|Armas de arremesso e armadilhas|Armas de arremesso e armadilhas|투척 무기 및 함정
+crafting|Equipo y fabricación|Équipement et fabrication|Ausrüstung und Herstellung|Uitrusting en vervaardiging|Снаряжение и изготовление|装备和制作|Ekipman ve üretim|المعدات والتصنيع|Equipamentos e fabricação|Equipamento e fabrico|장비 및 제작
+item_magazine|Cargador|Chargeur|Magazin|Magazijn|Магазин|弹匣|Şarjör|مخزن ذخيرة|Carregador|Carregador|탄창
+item_scope|Mira telescópica|Lunette de visée|Zielfernrohr|Richtkijker|Оптический прицел|瞄准镜|Dürbün|منظار تصويب|Luneta|Mira telescópica|조준경
+item_suppressor|Silenciador|Silencieux|Schalldämpfer|Geluiddemper|Глушитель|消音器|Susturucu|كاتم صوت|Silenciador|Silenciador|소음기
+item_clip|Peine de munición|Lame-chargeur|Ladestreifen|Laadstrip|Обойма|弹夹|Fişek klipsi|مشبك ذخيرة|Pente de munição|Pente de munições|장전 클립
+item_rail|Riel de montaje|Rail de montage|Montageschiene|Montagerail|Крепёжная планка|安装导轨|Montaj rayı|قضيب تثبيت|Trilho de montagem|Calha de montagem|장착 레일
+item_red_dot|Mira de punto rojo|Viseur point rouge|Rotpunktvisier|Rodepuntvizier|Коллиматорный прицел|红点瞄具|Kırmızı nokta nişangâhı|منظار النقطة الحمراء|Mira de ponto vermelho|Mira de ponto vermelho|도트 조준기
+item_holographic|Mira holográfica|Viseur holographique|Holografisches Visier|Holografisch vizier|Голографический прицел|全息瞄具|Holografik nişangâh|منظار هولوغرافي|Mira holográfica|Mira holográfica|홀로그램 조준기
+item_reflex|Mira réflex|Viseur réflexe|Reflexvisier|Reflexvizier|Рефлекторный прицел|反射式瞄具|Refleks nişangâh|منظار عاكس|Mira reflexiva|Mira reflexa|반사식 조준기
+item_improvised|fabricación improvisada|fabrication improvisée|improvisierte Fertigung|geïmproviseerde uitvoering|самодельное изготовление|简易制作|doğaçlama üretim|صناعة مرتجلة|fabricação improvisada|fabricação improvisada|간이 제작
+item_hunting|caza|chasse|Jagd|jacht|охота|狩猎|avcılık|صيد|caça|caça|사냥

@@ -419,7 +419,8 @@ static class AdminPlayerTests {
             window.ShowAdminPlayers();server.Text="Other server";choose.PerformClick();
             WaitFor(()=>Field<string>(window,"adminPlayerServer")=="Other server" && choose.Enabled);
             Check(Field<IList<AdminAsset>>(window,"adminProfileMarkers").Count==0,"Switching servers clears selected asset markers");
-            Check(Native.GetForegroundWindow()==foreground,"Profile page and tile regressions never take desktop focus");
+            // External foreground changes are legitimate; fail only if this test process owns the unexpected focus.
+            Check(Native.GetForegroundWindow()==foreground || !Native.IsOurWindow(Native.GetForegroundWindow()),"Profile page and tile regressions never take desktop focus");
             var close=(Button)controls.Single(control=>control.Name=="CloseWindow");
             Check(!close.CausesValidation,"Player window Close does not depend on server-field validation");
             Set(window,"musicalScumbagOpen",true);
@@ -432,7 +433,9 @@ static class AdminPlayerTests {
             var previousClipboard=Native.CaptureClipboardAsync().GetAwaiter().GetResult();
             try {
                 Clipboard.SetText("{X=315989.281 Y=-229276.188 Z=16060.481|P=-22.862701 Y=-178.932495 R=0.000000}");
-                window.GetType().GetMethod("PollMusicPausedInput",Hidden).Invoke(window,null);
+                // Clipboard reads may briefly be unavailable after OLE replacement.
+                // Pump the same read-only poll until the fixture's bounded UI wait succeeds.
+                WaitFor(()=> { window.GetType().GetMethod("PollMusicPausedInput",Hidden).Invoke(window,null);var sample=Field<Position>(window,"position");return sample!=null&&sample.X==315989.281; });
                 Check(Field<Position>(window,"position")!=null && Field<Position>(window,"position").X==315989.281,
                     "Music pause still reads manually copied coordinates without injecting input");
             } finally { if(previousClipboard!=null)Clipboard.SetDataObject(previousClipboard,true); }

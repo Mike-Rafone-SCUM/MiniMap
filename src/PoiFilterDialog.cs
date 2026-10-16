@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -25,7 +25,7 @@ namespace ScumMiniMap {
             TopMost = true;
             BackColor = OverlayTheme.Background;
             ForeColor = OverlayTheme.Ink;
-            Font = new Font("Segoe UI", 9f);
+            Font = OverlayTheme.UiFont(9f);
 
             // Top control panel
             Panel topPanel = new Panel { Dock = DockStyle.Top, Height = 112, Padding = new Padding(12, 10, 12, 6), BackColor = OverlayTheme.Surface };
@@ -73,7 +73,7 @@ namespace ScumMiniMap {
                 BackColor = Color.FromArgb(22, 27, 32),
                 ForeColor = Color.WhiteSmoke,
                 LineColor = OverlayTheme.Border,
-                Font = new Font("Segoe UI", 9.5f),
+                Font = OverlayTheme.UiFont(9.5f),
                 ItemHeight = 22,
                 ShowLines = true,
                 ShowPlusMinus = true,
@@ -218,7 +218,7 @@ namespace ScumMiniMap {
         }
         void ShowHabitatGuide() {
             using(Form guide=new Form { Text=Localization.Get("HabitatGuide"),ClientSize=new Size(680,520),StartPosition=FormStartPosition.CenterParent,TopMost=true }) {
-                TextBox text=new TextBox { Multiline=true,ReadOnly=true,ScrollBars=ScrollBars.Vertical,Dock=DockStyle.Fill,Font=new Font("Segoe UI",10),BackColor=Color.FromArgb(22,27,32),ForeColor=Color.WhiteSmoke };
+                TextBox text=new TextBox { Multiline=true,ReadOnly=true,ScrollBars=ScrollBars.Vertical,Dock=DockStyle.Fill,Font=OverlayTheme.UiFont(10),BackColor=Color.FromArgb(22,27,32),ForeColor=Color.WhiteSmoke };
                 var lines=new List<string> { Localization.Get("HabitatHelp"), "", Localization.Get("GuideFishingSource")+": https://davoonline.com/scummap/", Localization.Get("GuideHuntingSource")+": https://scum-map.com/en/catalog/scum/island", Localization.T("GuideRetrieved","2026-09-14"), "" };
                 foreach(var category in store.Categories.Where(c=>c.Id<0).OrderBy(c=>c.Section).ThenBy(c=>c.Name)) {
                     lines.Add(Localization.GetCategoryName(category.Name)+" — "+Localization.GetSectionName(category.Section));

@@ -39,6 +39,20 @@ namespace ScumMiniMap {
 
 
         internal static string LocalUpdateSource;
+        internal static void CompletePostUpdate(string folder,Action<string> notify) {
+            string status=Path.Combine(folder,"update-result.txt");
+            UpdateInstaller.CleanupHelper(status);
+            try {
+                if(!File.Exists(status))return;
+                if(new FileInfo(status).Length>65536)throw new InvalidDataException("Update result exceeds the supported size.");
+                string result=File.ReadAllText(status);
+                notify(result);
+                File.Delete(status);
+            }catch(Exception ex) {
+                if(!(ex is IOException)&&!(ex is UnauthorizedAccessException)&&!(ex is InvalidDataException))throw;
+                LogException("PostUpdate",ex);
+            }
+        }
 
         static bool TryInstallDownloadedUpdate(string[] args) {
             bool requested=args!=null && args.Length>0 && args[0].Equals("-InstallUpdate",StringComparison.OrdinalIgnoreCase);
@@ -411,7 +425,12 @@ namespace ScumMiniMap {
 
             // Release downloads can install over an older running copy before the normal
             // single-instance mutex rejects them. Self-checks/previews and test profiles bypass this.
-            if(TryInstallDownloadedUpdate(args))return;
+            string zoneFile=null;
+            try {
+                if(args!=null&&args.Length==1&&args[0]=="--register-zone-files") { ZoneFileOpen.Register(Application.ExecutablePath);Localization.DetectSystemLanguage();MessageBox.Show(Localization.Get("ZoneAssociationInfo"),"SCUM MiniMap");return; }
+                zoneFile=ZoneFileOpen.ParseArguments(args);
+            }catch(Exception error) { LogException("ZoneFileOpen",error);Localization.DetectSystemLanguage();MessageBox.Show(Localization.T("ZoneOpenError",error.Message),"SCUM MiniMap");return; }
+            if(zoneFile==null&&TryInstallDownloadedUpdate(args))return;
             try { InstallationAssets.Validate(); }
             catch(Exception error) {
                 LogException("InstallationAssets",error);
@@ -420,6 +439,7 @@ namespace ScumMiniMap {
                     "SCUM MiniMap",MessageBoxButtons.OK,MessageBoxIcon.Error);return;
             }
 
+            if(zoneFile!=null)try { ZoneFileOpen.Enqueue(appData,zoneFile); }catch(Exception error) { LogException("ZoneFileOpen",error);Localization.DetectSystemLanguage();MessageBox.Show(Localization.T("ZoneOpenError",error.Message),"SCUM MiniMap");return; }
             bool createdNew;
 
 
@@ -429,6 +449,7 @@ namespace ScumMiniMap {
 
 
                 if(!createdNew) {
+                    if(zoneFile!=null)return;
                     if(IsTestBuild) MessageBox.Show("Exit the running SCUM MiniMap from its tray menu before starting this test package.","SCUM MiniMap responsiveness test");
                     return;
                 }
@@ -436,16 +457,13 @@ namespace ScumMiniMap {
 
 
                 try {
+                    if(!IsTestBuild)try { ZoneFileOpen.Register(Application.ExecutablePath); }catch(Exception error) { LogException("ZoneFileAssociation",error); }
 
 
 
+                    if(Array.IndexOf(args,"--legacy-ui")<0 && string.IsNullOrEmpty(LocalUpdateSource)) { WpfFieldConsoleRuntime.Run(appData);Native.FlushInputTrace();return; }
                     using(MapWindow window=new MapWindow(appData)) {
-                        string updateStatus=Path.Combine(appData,"update-result.txt");
-                        window.Shown+=(s,e)=>UpdateInstaller.CleanupHelper(updateStatus);
-                        if(File.Exists(updateStatus)) {
-                            string result=File.ReadAllText(updateStatus); File.Delete(updateStatus);
-                            window.Shown+=(s,e)=>MessageBox.Show(result,Localization.Get("UpdateCheckTitle"));
-                        }
+                        window.Shown+=(s,e)=>CompletePostUpdate(appData,result=>MessageBox.Show(result,Localization.Get("UpdateCheckTitle")));
 
 
 

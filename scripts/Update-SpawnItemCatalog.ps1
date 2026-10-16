@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string]$OutputPath,
     [ValidateRange(1,1000)][int]$PageSize = 500
 )

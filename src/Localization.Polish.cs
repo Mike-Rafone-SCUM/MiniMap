@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ScumMiniMap {
@@ -14,7 +14,83 @@ namespace ScumMiniMap {
             }
             return result;
         }
-        const string PolishUi = @"InstallationAssetsMissing|Brakuje plików instalacji MiniMap lub są uszkodzone. Rozpakuj całe oficjalne archiwum ZIP, w tym folder assets, i uruchom EXE z rozpakowanego folderu.
+        const string PolishUi = @"SetupSharingVisibility|Panel mapy ma osobne przełączniki pozycji, celu GPS, zapisanych miejsc i znaczników śmierci każdego gracza. Zmieniają tylko twój widok; udostępnianie trwa.
+SetupDefaultColours|Przywróć domyślne kolory
+PlayerWaiting|Oczekiwanie na graczy
+PlayerNoLocation|Brak współrzędnych
+PlayerDeaths|Znaczniki śmierci
+PlayerSaved|Zapisane miejsca
+PlayerGps|Cel GPS
+PlayerLiveLocation|Bieżąca pozycja
+PlayerConnected|Połączono
+SharedPlayers|Gracze
+PrivatePositionGpsHelp|Aktywny cel GPS jest udostępniany bez zapisywania. Przeniesienie lub wyczyszczenie celu aktualizuje go w grupie.
+PoiClustering|Grupuj pobliskie punkty zainteresowania
+PrivatePositionMarkersHelp|Udostępnia też grupie do 128 zapisanych punktów i znaczników śmierci. Znaczniki znajomych pokazują właściciela, służą do nawigacji i pozostają tu tymczasowe, tylko do odczytu.
+PrivatePositionRouterManual|Automatyczne przekierowanie niedostępne lub wygasło. Przekieruj port TCP na ten komputer ręcznie. Wykrycie IP i konfiguracja zapory nie potwierdzają dostępu z internetu.
+PrivatePositionFirewallFailed|Nie można dodać lub zweryfikować reguły Windows. Zezwól aplikacji i portowi TCP ręcznie; zarządzane zasady mogą blokować zmiany.
+PrivatePositionFirewallReady|Reguła zapory Windows dla tej aplikacji i portu TCP zweryfikowana.
+PrivatePositionLocalAddresses|Karty LAN / VPN / wirtualne
+PrivatePositionPublicIpFailed|Nie wykryto publicznego IP. Włącz NAT-PMP lub UPnP w routerze, ponów lub wpisz publiczny WAN IPv4. Przy CGNAT poproś dostawcę o publiczny IP.
+PrivatePositionPublicIpHelp|Połączenie równorzędne bez kont i zewnętrznych usług. Wykrywa publiczny IPv4 lokalnego routera przez NAT-PMP lub UPnP. Host żąda tymczasowego mapowania NAT-PMP i reguły Windows dla aplikacji i portu TCP.
+PrivatePositionDetectPublicIp|Wykryj publiczny IP
+PrivatePositionShareAddress|Adres do udostępnienia (publiczny IP lub VPN)
+PrivatePositionConnected|Połączono / nasłuchiwanie
+PrivatePositionConnecting|Łączenie…
+PrivatePositionPort|Port TCP
+PrivatePositionAddress|Adres / IP hosta
+PrivatePositionJoin|Dołącz do grupy
+PrivatePositionHost|Utwórz grupę
+RotateMinimap|Obracaj minimapę zgodnie z kierunkiem
+PrivatePositions|Prywatne pozycje
+PrivatePositionName|Twoja nazwa
+PrivatePositionFolder|Wybierz prywatny folder współdzielony
+PrivatePositionKey|Klucz grupy
+PrivatePositionNewKey|Utwórz i skopiuj klucz
+PrivatePositionInvalid|Połączenie nieudane. Sprawdź adres, port, nazwę, klucz i zezwolenie TCP w zaporze.
+PrivatePositionHelp|Host przekazuje znajomym IP, port i klucz. Dołączający wpisują te dane. Wymaga LAN, VPN lub przekierowania portu TCP. Tylko ta sesja; pozycje wygasają po 30 sekundach.
+ZoneAssociationInfo|MiniMap jest dostępny w menu Otwórz za pomocą dla plików TSV. Kliknij plik stref TSV prawym przyciskiem, wybierz Otwórz za pomocą → SCUM MiniMap i Zawsze, aby otwierać dwuklikiem. Inne pliki TSV mogą używać innej aplikacji.
+EnableZoneTsv|Włącz otwieranie stref TSV
+ZoneOpenError|Nie można otworzyć pliku stref: {0}
+NameThisMap|Nazwij tę mapę
+ZeTypeUnknown|Nieznana
+ZeTypeCustom|Własna
+ZeTypeGasStation|Stacja paliw
+ZeTypeBunker|Bunkier
+ZeTypeMilitary|Wojskowa
+ZeTypeFaction|Frakcja
+ZeTypeTrader|Handlarz
+ZeTypeFarm|Farma
+ZeTypeTown|Miasteczko
+ZeTypeCity|Miasto
+ZeMultiHelp|Ctrl+klik zaznacza kilka stref; Shift+klik zaznacza zakres. Kolor i wypełnienie dotyczą wszystkich zaznaczonych stref.
+ZeSelectedCount|Zaznaczone strefy: {0}
+ZeSelectSameColour|Zaznacz ten sam kolor
+ZeAllTypes|Wszystkie typy stref
+WpfCollapseSidebar|Zwiń pasek boczny
+WpfExpandSidebar|Rozwiń pasek boczny
+WpfFollowPlayer|Śledź gracza
+WpfMoveControls|Przeciągnij, aby przesunąć elementy sterowania
+WpfResizeControls|Przeciągnij, aby zmienić rozmiar elementów sterowania
+WpfResetControls|Przywróć rozmiar i położenie elementów sterowania
+WpfMoveMinimap|Przesuń minimapę
+WpfDragMinimap|Przeciągnij, aby przesunąć minimapę
+WpfGettingStarted|MINIMAPA · PIERWSZE KROKI
+WpfClearRoute|Usuń trasę
+WpfTutorialFilters|Wszystkie kategorie punktów zainteresowania, w tym łowiectwo i wędkarstwo, są początkowo włączone. Wybierz wyświetlane elementy na pasku bocznym.
+WpfTestBuild|TEST
+FieldGeneral|Ogólne
+FieldShortcuts|Skróty
+FieldAppearance|Wygląd
+FieldTarget|CEL
+FieldCalculating|Obliczanie trasy…
+FieldNoRoad|Trasa drogowa niedostępna
+FieldDirect|Odległość w linii prostej
+FieldMinutes|około {0} min
+FieldMatchKeys|Dopasuj klawisze do SCUM
+FieldToggle|Przełącz
+FieldPaused|Automatyczne śledzenie wstrzymane
+InstallationAssetsMissing|Brakuje plików instalacji MiniMap lub są uszkodzone. Rozpakuj całe oficjalne archiwum ZIP, w tym folder assets, i uruchom EXE z rozpakowanego folderu.
 ZeMoveHelp|Wybierz strefę i przeciągnij jej wnętrze. Cofnij przywraca poprzedni kształt lub położenie.
 ZeMoveZone|Przesuń strefę
 ZeChangeShape|Zmień kształt
@@ -429,6 +505,9 @@ ResetDefaults|Domyślne
 RoadSuffix| (droga)
 PlayerMarkerColor|Kolor stożka widzenia i znacznika…
 RouteGuidanceColor|Kolor prowadzenia po trasie…
+RouteHistoryColor|Kolor historii trasy…
+ZoneFillColour|Kolor wypełnienia
+ZoneFillOpacity|Krycie wypełnienia
 SearchFilterPrompt|Filtruj kategorie (nazwa, sekcja lub typ):
 SearchHint|Spróbuj: faction, lotnisko, bunkier C3, grid D4. Literówki są obsługiwane.
 SearchPlaceOrGrid|Szukaj miejsca lub sektora…

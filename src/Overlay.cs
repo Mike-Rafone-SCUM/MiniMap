@@ -33,17 +33,17 @@ namespace ScumMiniMap {
     }
     internal static class FullMapSidebarStyle {
         internal static readonly Color Background=Color.FromArgb(14,17,20);
-        internal static readonly Color Border=Color.FromArgb(42,52,61);
+        internal static readonly Color Border=OverlayTheme.Border;
         internal static readonly Color Divider=Color.FromArgb(60,60,75,90);
-        internal static readonly Color ButtonSurface=Color.FromArgb(22,27,32);
-        internal static readonly Color SelectedSurface=Color.FromArgb(45,56,68);
+        internal static readonly Color ButtonSurface=OverlayTheme.Surface;
+        internal static readonly Color SelectedSurface=OverlayTheme.SurfaceCard;
         internal static readonly Color Muted=Color.FromArgb(160,170,180);
         internal static readonly Color Secondary=Color.FromArgb(120,135,150);
         internal static readonly Color Ink=Color.WhiteSmoke;
         internal static readonly Color MiniInk=Color.FromArgb(180,190,200);
-        internal static readonly Color SelectedInk=Color.FromArgb(255,174,51);
-        internal static readonly Color Accent=Color.FromArgb(255,159,28);
-        internal static readonly Color Arrow=Color.SkyBlue;
+        internal static readonly Color SelectedInk=OverlayTheme.Accent;
+        internal static readonly Color Accent=OverlayTheme.Accent;
+        internal static readonly Color Arrow=OverlayTheme.InkMuted;
         internal static readonly Color SectionExpanded=Color.FromArgb(200,22,27,32);
         internal static readonly Color SectionCollapsed=Color.FromArgb(160,16,20,24);
         internal static readonly Color SectionBorder=Color.FromArgb(140,42,52,61);
@@ -368,42 +368,67 @@ namespace ScumMiniMap {
 
     // Shared visual language for interactive HUD panels and popup menus (Tactical Survival Hardware aesthetic).
     public static class OverlayTheme {
-        public static readonly Color Background=Color.FromArgb(12,12,12);
-        public static readonly Color Surface=Color.FromArgb(20,20,21);
-        public static readonly Color SurfaceCard=Color.FromArgb(27,27,28);
-        public static readonly Color Accent=Color.FromArgb(255,159,28);
-        public static readonly Color AccentHover=Color.FromArgb(255,178,55);
-        public static readonly Color Border=Color.FromArgb(50,48,44);
-        public static readonly Color BorderHighlight=Color.FromArgb(82,78,70);
-        public static readonly Color Ink=Color.FromArgb(240,238,232);
-        public static readonly Color InkMuted=Color.FromArgb(150,146,138);
+        public static readonly Color Background=Color.FromArgb(14,17,20);
+        public static readonly Color Surface=Color.FromArgb(21,26,31);
+        public static readonly Color SurfaceCard=Color.FromArgb(29,36,43);
+        public static readonly Color Accent=Color.FromArgb(255,181,71);
+        public static readonly Color AccentHover=Color.FromArgb(255,199,115);
+        public static readonly Color Border=Color.FromArgb(42,51,60);
+        public static readonly Color BorderHighlight=Color.FromArgb(126,143,159);
+        public static readonly Color Ink=Color.FromArgb(233,238,242);
+        public static readonly Color InkMuted=Color.FromArgb(164,177,188);
+
+        public static readonly Color Route=Color.FromArgb(53,214,200);
+        public static readonly Color Alert=Color.FromArgb(255,107,94);
+        // Fonts are registered once for GDI (TextRenderer) and GDI+ map drawing.
+        static readonly System.Drawing.Text.PrivateFontCollection fieldFonts=new System.Drawing.Text.PrivateFontCollection();
+        static readonly System.Collections.Generic.List<IntPtr> fontMemory=new System.Collections.Generic.List<IntPtr>();
+        static bool fontsLoaded;
+        [DllImport("gdi32.dll")] static extern IntPtr AddFontMemResourceEx(IntPtr data,uint length,IntPtr reserved,ref uint count);
+        internal static Font UiFont(float size,FontStyle style=FontStyle.Regular) {
+            if(!fontsLoaded) {
+                fontsLoaded=true;
+                foreach(string name in new[]{"BarlowSemiCondensed-Regular.ttf","BarlowSemiCondensed-SemiBold.ttf"}) {
+                    using(var stream=typeof(OverlayTheme).Assembly.GetManifestResourceStream(name)) {
+                        if(stream==null)continue;
+                        byte[] bytes=new byte[(int)stream.Length];int offset=0,read;
+                        while(offset<bytes.Length && (read=stream.Read(bytes,offset,bytes.Length-offset))>0)offset+=read;
+                        if(offset!=bytes.Length)continue;
+                        IntPtr memory=Marshal.AllocHGlobal(bytes.Length);Marshal.Copy(bytes,0,memory,bytes.Length);
+                        fontMemory.Add(memory);uint count=0;AddFontMemResourceEx(memory,(uint)bytes.Length,IntPtr.Zero,ref count);
+                        fieldFonts.AddMemoryFont(memory,bytes.Length);
+                    }
+                }
+            }
+            return fieldFonts.Families.Length>0?new Font(fieldFonts.Families[0],size,style):new Font("Segoe UI",size,style);
+        }
 
         [DllImport("user32.dll")] static extern bool ReleaseCapture();
         [DllImport("user32.dll")] static extern IntPtr SendMessage(IntPtr window,int message,IntPtr w,IntPtr l);
 
         public static void Style(Control root) {
-            root.ForeColor=Ink;
+            if(root.ForeColor!=InkMuted && root.ForeColor!=Accent && root.ForeColor!=Route)root.ForeColor=Ink;
             Button button=root as Button;
             if(button!=null) {
                 if((string)button.Tag == "swatch") return;
                 button.FlatStyle=FlatStyle.Flat;
                 button.FlatAppearance.BorderSize=1;
                 button.FlatAppearance.BorderColor=Border;
-                button.FlatAppearance.MouseOverBackColor=Color.FromArgb(34,32,28);
-                button.FlatAppearance.MouseDownBackColor=Color.FromArgb(48,45,40);
+                button.FlatAppearance.MouseOverBackColor=SurfaceCard;
+                button.FlatAppearance.MouseDownBackColor=SurfaceCard;
                 button.BackColor=Surface;
                 button.UseVisualStyleBackColor=false;
                 button.Cursor=Cursors.Hand;
                 button.Height=Math.Max(28,button.Height);
             } else if(root is TextBox || root is ListBox || root is NumericUpDown) {
                 root.BackColor=Color.FromArgb(14,17,20);
-                root.ForeColor=Ink;
+                if(root.ForeColor!=InkMuted && root.ForeColor!=Accent && root.ForeColor!=Route)root.ForeColor=Ink;
             } else if(root is TreeView) {
                 TreeView tv=root as TreeView;
                 tv.BackColor=Color.FromArgb(14,17,20);
                 tv.ForeColor=Ink;
                 tv.LineColor=Border;
-            } else {
+            } else if(!(root is Panel) || (root.BackColor!=Surface && root.BackColor!=SurfaceCard)) {
                 root.BackColor=Background;
             }
             CheckBox check=root as CheckBox;
@@ -414,8 +439,8 @@ namespace ScumMiniMap {
                 check.FlatAppearance.BorderSize=1;
                 check.FlatAppearance.BorderColor=Border;
                 check.FlatAppearance.CheckedBackColor=Accent;
-                check.FlatAppearance.MouseDownBackColor=Color.FromArgb(48,45,40);
-                check.FlatAppearance.MouseOverBackColor=Color.FromArgb(34,32,28);
+                check.FlatAppearance.MouseDownBackColor=SurfaceCard;
+                check.FlatAppearance.MouseOverBackColor=SurfaceCard;
             }
             ComboBox combo=root as ComboBox;
             if(combo!=null && !(combo is TacticalComboBox)) {
@@ -429,7 +454,7 @@ namespace ScumMiniMap {
                     combo.DrawItem+=(s,e)=> {
                         if(e.Index<0) return;
                         bool sel=(e.State & DrawItemState.Selected)!=0;
-                        using(Brush b=new SolidBrush(sel?Color.FromArgb(45,35,20):Surface)) e.Graphics.FillRectangle(b,e.Bounds);
+                        using(Brush b=new SolidBrush(sel?SurfaceCard:Surface)) e.Graphics.FillRectangle(b,e.Bounds);
                         string itmText=combo.Items[e.Index].ToString();
                         TextRenderer.DrawText(e.Graphics, itmText, combo.Font, e.Bounds, sel?Accent:Ink, TextFormatFlags.Left|TextFormatFlags.VerticalCenter);
                     };
@@ -705,6 +730,7 @@ namespace ScumMiniMap {
     // Observes shortcut transitions and activity timestamps. No typed text is collected or suppressed.
     internal static class PhysicalKeyCapture {
         internal static string KeyName(int key) {
+            if(key==0x22)return "PageDown";
             if(key==0)return Localization.Get("KeyNone");
             if(key==0xBF)return "/";
 
@@ -757,6 +783,21 @@ namespace ScumMiniMap {
             return false;
         }
     }
+    internal sealed class MapMouseShield {
+        int blocked,allowed;
+        internal bool Suppress(int message,uint data,bool active,bool inside,bool relevantFocus) {
+            int bit=message==0x201||message==0x202?1:message==0x204||message==0x205?2:message==0x207||message==0x208?4:message==0x20B||message==0x20C?((data>>16)==1?8:16):0;
+            bool down=message==0x201||message==0x204||message==0x207||message==0x20B;
+            bool up=message==0x202||message==0x205||message==0x208||message==0x20C;
+            if(up&&bit!=0) {
+                bool wasBlocked=(blocked&bit)!=0;blocked&=~bit;allowed&=~bit;
+                if(wasBlocked)return true;return false;
+            }
+            bool suppress=active&&relevantFocus&&!inside;
+            if(down&&bit!=0) { if(suppress)blocked|=bit;else allowed|=bit; }
+            return suppress&&(bit!=0||message==0x20A||message==0x20E);
+        }
+    }
     sealed class GameKeys:IDisposable {
         delegate IntPtr HookProc(int code,IntPtr message,IntPtr data);
         [DllImport("user32.dll",SetLastError=true)] static extern IntPtr SetWindowsHookEx(int id,HookProc callback,IntPtr module,uint thread);
@@ -795,6 +836,7 @@ namespace ScumMiniMap {
         public bool ShortcutModifiersDown(bool includeShift) { return transitions.ShortcutModifiersDown(includeShift); }
         internal bool PhysicalControlDown { get { return transitions.IsDown(0x11) || transitions.IsDown(0xA2) || transitions.IsDown(0xA3); } }
         internal Action<int,Point> OnPhysicalMouse;
+        internal Func<int,Point,uint,bool> SuppressPhysicalMouse;
         internal static void ClearInputCooldowns() {
             lastMouseAction=LastUserInputTime=LastFreshKeyDownTime=DateTime.MinValue;
         }
@@ -849,6 +891,10 @@ namespace ScumMiniMap {
         }
         IntPtr OnMouse(int code,IntPtr message,IntPtr data) {
             int kind=message.ToInt32();
+            if(code>=0&&kind!=0x200&&SuppressPhysicalMouse!=null) {
+                MouseData mouse=(MouseData)Marshal.PtrToStructure(data,typeof(MouseData));
+                if((mouse.flags&1)==0&&SuppressPhysicalMouse(kind,new Point(mouse.x,mouse.y),mouse.data))return new IntPtr(1);
+            }
             if(code>=0 && kind!=0x200 && Native.GameFocused()) {
                 MouseData mouse=(MouseData)Marshal.PtrToStructure(data,typeof(MouseData));
                 if((mouse.flags&1)==0) PhysicalInputRevision++;
@@ -986,6 +1032,31 @@ namespace ScumMiniMap {
         [DllImport("user32.dll")] static extern int GetWindowLong(IntPtr window,int index);
         [DllImport("user32.dll")] static extern int SetWindowLong(IntPtr window,int index,int value);
         [DllImport("user32.dll")] static extern bool SetWindowPos(IntPtr window,IntPtr after,int x,int y,int width,int height,uint flags);
+        public static readonly Color Route=Color.FromArgb(53,214,200);
+        public static readonly Color Alert=Color.FromArgb(255,107,94);
+        // Fonts are registered once for GDI (TextRenderer) and GDI+ map drawing.
+        static readonly System.Drawing.Text.PrivateFontCollection fieldFonts=new System.Drawing.Text.PrivateFontCollection();
+        static readonly System.Collections.Generic.List<IntPtr> fontMemory=new System.Collections.Generic.List<IntPtr>();
+        static bool fontsLoaded;
+        [DllImport("gdi32.dll")] static extern IntPtr AddFontMemResourceEx(IntPtr data,uint length,IntPtr reserved,ref uint count);
+        internal static Font UiFont(float size,FontStyle style=FontStyle.Regular) {
+            if(!fontsLoaded) {
+                fontsLoaded=true;
+                foreach(string name in new[]{"BarlowSemiCondensed-Regular.ttf","BarlowSemiCondensed-SemiBold.ttf"}) {
+                    using(var stream=typeof(OverlayTheme).Assembly.GetManifestResourceStream(name)) {
+                        if(stream==null)continue;
+                        byte[] bytes=new byte[(int)stream.Length];int offset=0,read;
+                        while(offset<bytes.Length && (read=stream.Read(bytes,offset,bytes.Length-offset))>0)offset+=read;
+                        if(offset!=bytes.Length)continue;
+                        IntPtr memory=Marshal.AllocHGlobal(bytes.Length);Marshal.Copy(bytes,0,memory,bytes.Length);
+                        fontMemory.Add(memory);uint count=0;AddFontMemResourceEx(memory,(uint)bytes.Length,IntPtr.Zero,ref count);
+                        fieldFonts.AddMemoryFont(memory,bytes.Length);
+                    }
+                }
+            }
+            return fieldFonts.Families.Length>0?new Font(fieldFonts.Families[0],size,style):new Font("Segoe UI",size,style);
+        }
+
         [DllImport("user32.dll")] static extern bool ReleaseCapture();
         [DllImport("user32.dll")] static extern IntPtr SendMessage(IntPtr window,int message,IntPtr w,IntPtr l);
         bool through=true;
@@ -1002,6 +1073,7 @@ namespace ScumMiniMap {
         Size savedSize;
         Point savedLocation;
         public Rectangle MinimapBounds { get { return fullMapMode ? new Rectangle(savedLocation,savedSize) : Bounds; } }
+        public void SetMinimapLocation(Point location) { if(fullMapMode)savedLocation=location;else Location=location; }
         public void SetMinimapSize(Size size) {
             size=new Size(Math.Max(240,Math.Min(800,size.Width)),Math.Max(240,Math.Min(800,size.Height)));
             if(fullMapMode) savedSize=size; else Size=size;
@@ -1269,6 +1341,7 @@ namespace ScumMiniMap {
             hiddenForClickThrough=false;
             if(!IsDisposed && !Disposing) Show();
         }
+        public new void Show() { if(WpfFieldConsoleRuntime.Active!=null)return;base.Show(); }
         public new void Hide() {
             // Explicit hide requests take precedence over a pending Ctrl restore.
             hiddenForClickThrough=false;
@@ -1583,7 +1656,9 @@ namespace ScumMiniMap {
 
         public TacticalSlider() {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
-            Height = 24;
+            SetStyle(ControlStyles.Selectable, true);
+            TabStop = true; AccessibleRole = AccessibleRole.Slider;
+            Height = 28;
             Width = 180;
             Cursor = Cursors.Hand;
             BackColor = OverlayTheme.Background;
@@ -1605,11 +1680,30 @@ namespace ScumMiniMap {
                 int v = Math.Max(_min, Math.Min(_max, value));
                 if (_value != v) {
                     _value = v;
+                    AccessibilityNotifyClients(AccessibleEvents.ValueChange, -1);
                     Invalidate();
                     if (ValueChanged != null) ValueChanged(this, EventArgs.Empty);
                 }
             }
         }
+
+        protected override AccessibleObject CreateAccessibilityInstance() { return new SliderAccessibleObject(this); }
+        sealed class SliderAccessibleObject : ControlAccessibleObject {
+            readonly TacticalSlider owner;
+            internal SliderAccessibleObject(TacticalSlider owner):base(owner) { this.owner=owner; }
+            public override string Value { get { return owner.Value.ToString(System.Globalization.CultureInfo.InvariantCulture); } set { int n;if(int.TryParse(value,out n))owner.Value=n; } }
+        }
+        protected override bool IsInputKey(Keys key) { return key==Keys.Left || key==Keys.Right || key==Keys.Up || key==Keys.Down || key==Keys.Home || key==Keys.End || base.IsInputKey(key); }
+        protected override void OnKeyDown(KeyEventArgs e) {
+            if(e.KeyCode==Keys.Home)Value=Minimum;
+            else if(e.KeyCode==Keys.End)Value=Maximum;
+            else if(e.KeyCode==Keys.Left || e.KeyCode==Keys.Down)Value--;
+            else if(e.KeyCode==Keys.Right || e.KeyCode==Keys.Up)Value++;
+            else { base.OnKeyDown(e);return; }
+            e.Handled=true;e.SuppressKeyPress=true;
+        }
+        protected override void OnGotFocus(EventArgs e) { base.OnGotFocus(e);Invalidate(); }
+        protected override void OnLostFocus(EventArgs e) { base.OnLostFocus(e);Invalidate(); }
 
         void UpdateFromX(int x) {
             int trackPad = 8;
@@ -1622,6 +1716,7 @@ namespace ScumMiniMap {
         protected override void OnMouseDown(MouseEventArgs e) {
             base.OnMouseDown(e);
             if (e.Button == MouseButtons.Left) {
+                Focus();
                 _dragging = true;
                 Capture = true;
                 UpdateFromX(e.X);
@@ -1643,6 +1738,7 @@ namespace ScumMiniMap {
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
+            if(Focused && ShowFocusCues)ControlPaint.DrawFocusRectangle(g,new Rectangle(1,1,Width-2,Height-2),OverlayTheme.Ink,BackColor);
             int trackPad = 8;
             int trackH = 6;
             int trackY = (Height - trackH) / 2;
@@ -1682,7 +1778,9 @@ namespace ScumMiniMap {
 
         public TacticalCheckBox() {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.SupportsTransparentBackColor, true);
-            Height = 26;
+            SetStyle(ControlStyles.Selectable, true);
+            TabStop = true; AccessibleRole = AccessibleRole.CheckButton;
+            Height = 32;
             Width = 365;
             Cursor = Cursors.Hand;
             BackColor = OverlayTheme.Background;
@@ -1695,6 +1793,7 @@ namespace ScumMiniMap {
             set {
                 if (_checked != value) {
                     _checked = value;
+                    AccessibilityNotifyClients(AccessibleEvents.StateChange, -1);
                     Invalidate();
                     if (CheckedChanged != null) CheckedChanged(this, EventArgs.Empty);
                 }
@@ -1705,6 +1804,22 @@ namespace ScumMiniMap {
             get { return _text; }
             set { _text = value ?? ""; Invalidate(); }
         }
+
+        protected override AccessibleObject CreateAccessibilityInstance() { return new SwitchAccessibleObject(this); }
+        sealed class SwitchAccessibleObject : ControlAccessibleObject {
+            readonly TacticalCheckBox owner;
+            internal SwitchAccessibleObject(TacticalCheckBox owner):base(owner) { this.owner=owner; }
+            public override AccessibleRole Role { get { return AccessibleRole.CheckButton; } }
+            public override AccessibleStates State { get { return base.State | (owner.Checked?AccessibleStates.Checked:AccessibleStates.None); } }
+            public override string DefaultAction { get { return Localization.Get("FieldToggle"); } }
+            public override void DoDefaultAction() { if(owner.Enabled)owner.Checked=!owner.Checked; }
+        }
+        protected override void OnKeyDown(KeyEventArgs e) {
+            if(e.KeyCode==Keys.Space && Enabled) { Checked=!Checked;e.Handled=true;e.SuppressKeyPress=true; }
+            base.OnKeyDown(e);
+        }
+        protected override void OnGotFocus(EventArgs e) { base.OnGotFocus(e);Invalidate(); }
+        protected override void OnLostFocus(EventArgs e) { base.OnLostFocus(e);Invalidate(); }
 
         protected override void OnMouseEnter(EventArgs e) {
             base.OnMouseEnter(e);
@@ -1720,40 +1835,27 @@ namespace ScumMiniMap {
 
         protected override void OnClick(EventArgs e) {
             base.OnClick(e);
-            Checked = !Checked;
+            if(Enabled) { Focus();Checked = !Checked; }
         }
 
         protected override void OnPaint(PaintEventArgs e) {
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            int boxSize = 16;
-            int boxX = 3;
-            int boxY = (Height - boxSize) / 2;
-            Rectangle boxRect = new Rectangle(boxX, boxY, boxSize, boxSize);
-
-            if (_checked) {
-                using (Brush b = new SolidBrush(OverlayTheme.Accent)) g.FillRectangle(b, boxRect);
-                using (Pen p = new Pen(_hover ? OverlayTheme.AccentHover : Color.FromArgb(255, 185, 60), 1.2f)) g.DrawRectangle(p, boxRect);
-
-                using (Pen checkPen = new Pen(OverlayTheme.Background, 2.2f)) {
-                    checkPen.StartCap = LineCap.Round;
-                    checkPen.EndCap = LineCap.Round;
-                    g.DrawLines(checkPen, new PointF[] {
-                        new PointF(boxX + 3.5f, boxY + 8f),
-                        new PointF(boxX + 6.5f, boxY + 11.5f),
-                        new PointF(boxX + 12f, boxY + 4.5f)
-                    });
-                }
-            } else {
-                using (Brush b = new SolidBrush(OverlayTheme.Surface)) g.FillRectangle(b, boxRect);
-                using (Pen p = new Pen(_hover ? OverlayTheme.AccentHover : OverlayTheme.Border, 1.2f)) g.DrawRectangle(p, boxRect);
+            int boxSize = 38, boxX = Width - boxSize - 4, boxY = (Height - 20) / 2;
+            Rectangle boxRect = new Rectangle(boxX, boxY, boxSize, 20);
+            using(var pill=new GraphicsPath()) {
+                pill.AddArc(boxX,boxY,20,20,90,180);pill.AddArc(boxX+18,boxY,20,20,270,180);pill.CloseFigure();
+                using(var fill=new SolidBrush(_checked?OverlayTheme.Accent:OverlayTheme.SurfaceCard))g.FillPath(fill,pill);
+                if(_hover || Focused)using(var edge=new Pen(OverlayTheme.BorderHighlight))g.DrawPath(edge,pill);
             }
-
-            int textX = boxX + boxSize + 9;
-            int textW = Width - textX - 4;
+            using(var knob=new SolidBrush(_checked?OverlayTheme.Background:OverlayTheme.InkMuted))
+                g.FillEllipse(knob,boxX+(_checked?21:3),boxY+3,14,14);
+            int textX = 4;
+            int textW = boxX - 12;
             Rectangle textRect = new Rectangle(textX, 1, textW, Height - 2);
-            Color txtCol = _checked ? OverlayTheme.Ink : (_hover ? Color.FromArgb(225, 220, 215) : OverlayTheme.InkMuted);
+            Color txtCol = Enabled ? OverlayTheme.Ink : OverlayTheme.InkMuted;
+            if(Focused && ShowFocusCues)ControlPaint.DrawFocusRectangle(g,new Rectangle(1,1,Width-2,Height-2),OverlayTheme.Ink,BackColor);
             TextRenderer.DrawText(g, _text, Font, textRect, txtCol, TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
         }
     }

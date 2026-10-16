@@ -1,4 +1,4 @@
-param(
+﻿param(
     [Parameter(Mandatory=$true)][string]$PackageDirectory,
     [ValidateSet('Release','Test')][string]$Configuration = 'Release'
 )

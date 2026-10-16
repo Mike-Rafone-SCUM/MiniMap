@@ -1,5 +1,5 @@
-param(
-    [ValidateSet('Release','Test')][string]$Configuration = 'Release',
+﻿param(
+    [ValidateSet('Release','Test')][string]$Configuration = 'Test',
     [string]$OutputDirectory
 )
 $ErrorActionPreference = 'Stop'

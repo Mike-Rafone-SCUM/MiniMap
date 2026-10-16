@@ -129,7 +129,8 @@ namespace ScumMiniMap {
             IntPtr foreground=Native.GetForegroundWindow();
             return Native.GameFocused()
                 || (fullMapActive && overlay!=null && overlay.IsHandleCreated && foreground==overlay.Handle)
-                || (settingsShortcut && IsHandleCreated && foreground==Handle);
+                || (settingsShortcut && IsHandleCreated && foreground==Handle)
+                || (WpfFieldConsoleRuntime.Active!=null && WpfFieldConsoleRuntime.Active.OwnsForeground(foreground));
         }
 
         internal void DispatchAppControl(AppControlAction action) {
@@ -142,6 +143,7 @@ namespace ScumMiniMap {
                 " maxZoom="+maxZoom.ToString(System.Globalization.CultureInfo.InvariantCulture));
             Native.CancelActiveCopy();
             resumeAfter=DateTime.UtcNow.AddMilliseconds(400);
+            if(WpfFieldConsoleRuntime.Active!=null) { WpfFieldConsoleRuntime.Active.Handle(action);return; }
             switch(action) {
                 case AppControlAction.Settings: FocusSettingsShortcut(); return;
                 case AppControlAction.AddWaypoint: TriggerPin(); return;
@@ -195,6 +197,7 @@ namespace ScumMiniMap {
         }
 
         internal void ClearActiveWaypoint() {
+            wpfQueuedTarget=null;
             searchTarget=null; pin=null; activeRoute=null; routeGeneration++; lastRouteTarget=null;
             StopVoice(); voiceTarget=null; voiceNavigator.Reset();
             voiceStatusUntil=DateTime.MinValue; lastVoicePosition=null; lastVoiceRoute=null;

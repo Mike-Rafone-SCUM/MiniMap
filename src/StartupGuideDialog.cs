@@ -50,12 +50,12 @@ namespace ScumMiniMap {
 
         // Tactical survival color palette (Gunmetal, Steel, Survival Amber/Hazard)
         static readonly Color BgDark = Color.FromArgb(14, 17, 20);
-        static readonly Color HeaderBg = Color.FromArgb(20, 24, 28);
-        static readonly Color CardBg = Color.FromArgb(22, 27, 32);
-        static readonly Color CardBorder = Color.FromArgb(48, 56, 66);
-        static readonly Color AmberAccent = Color.FromArgb(245, 158, 11);
-        static readonly Color AmberBright = Color.FromArgb(255, 184, 77);
-        static readonly Color TextWhite = Color.FromArgb(243, 239, 230);
+        static readonly Color HeaderBg = OverlayTheme.Surface;
+        static readonly Color CardBg = OverlayTheme.SurfaceCard;
+        static readonly Color CardBorder = OverlayTheme.Border;
+        static readonly Color AmberAccent = OverlayTheme.Accent;
+        static readonly Color AmberBright = OverlayTheme.Accent;
+        static readonly Color TextWhite = OverlayTheme.Ink;
         static readonly Color TextMuted = Color.FromArgb(168, 178, 188);
 
         public StartupGuideDialog() : this(null) {}
@@ -81,20 +81,21 @@ namespace ScumMiniMap {
             this.onSaveAppControls = onSaveAppControls;
 
             Text = Localization.Get("WizardTitle");
-            ClientSize = new Size(920, 640);
-            MinimumSize = new Size(840, 580);
+            ClientSize = new Size(1120, 720);
+            MinimumSize = new Size(1080, 640);
             StartPosition = FormStartPosition.CenterScreen;
             TopMost = true;
             KeyPreview = true;
             BackColor = BgDark;
             ForeColor = TextWhite;
-            Font = new Font("Segoe UI", 9f);
+            Font = OverlayTheme.UiFont(9f);
             ShowIcon = false;
             DoubleBuffered = true;
 
             KeyDown += HandleFormKeyDown;
 
             BuildLayout();
+            ConfigureFieldConsoleSidebar();
             UpdateSlide();
         }
 
@@ -215,7 +216,7 @@ namespace ScumMiniMap {
 
             titleLabel = new Label {
                 Text = Localization.Get("WizardBranding"),
-                Font = new Font("Consolas", 14f, FontStyle.Bold),
+                Font = OverlayTheme.UiFont(14f, FontStyle.Bold),
                 ForeColor = AmberAccent,
                 AutoSize = true,
                 Location = new Point(24, 14)
@@ -224,7 +225,7 @@ namespace ScumMiniMap {
 
             subtitleLabel = new Label {
                 Text = Localization.Get("WizardTagline"),
-                Font = new Font("Segoe UI", 9f),
+                Font = OverlayTheme.UiFont(9f),
                 ForeColor = TextMuted,
                 AutoSize = true,
                 Location = new Point(26, 44)
@@ -241,7 +242,7 @@ namespace ScumMiniMap {
                 BackColor = Color.FromArgb(28, 34, 40),
                 ForeColor = TextWhite,
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI", 9f, FontStyle.Bold)
+                Font = OverlayTheme.UiFont(9f, FontStyle.Bold)
             };
             langCombo.Items.AddRange(Localization.LanguageDisplayNames);
             langCombo.SelectedIndex = Enum.IsDefined(typeof(AppLanguage),Localization.Current) ? (int)Localization.Current : 0;
@@ -280,14 +281,14 @@ namespace ScumMiniMap {
             tabButtons = new Button[TotalSlides];
             for (int i = 0; i < TotalSlides; i++) {
                 int index = i;
-                Button tabBtn = new Button {
+                Button tabBtn = new FieldConsoleStepButton { Step=i+1,
                     Text = Localization.Get(tabKeys[i]),
                     Width = 162,
                     Height = 32,
                     FlatStyle = FlatStyle.Flat,
                     BackColor = Color.Transparent,
                     ForeColor = TextMuted,
-                    Font = new Font("Consolas", 8.8f, FontStyle.Bold),
+                    Font = OverlayTheme.UiFont(8.8f, FontStyle.Bold),
                     Cursor = Cursors.Hand,
                     Margin = new Padding(0, 0, 8, 0)
                 };
@@ -319,12 +320,12 @@ namespace ScumMiniMap {
                 AutoSize = true,
                 Location = new Point(24, 22),
                 ForeColor = TextMuted,
-                Font = new Font("Consolas", 9f, FontStyle.Bold)
+                Font = OverlayTheme.UiFont(9f, FontStyle.Bold)
             };
             footerPanel.Controls.Add(pageIndicator);
 
             // Previous Button
-            prevButton = new Button {
+            prevButton = new FieldConsoleButton {
                 Text = Localization.Get("WizardBtnPrev"),
                 Width = 110,
                 Height = 36,
@@ -334,7 +335,7 @@ namespace ScumMiniMap {
                 BackColor = Color.FromArgb(28, 34, 40),
                 ForeColor = TextWhite,
                 Cursor = Cursors.Hand,
-                Font = new Font("Consolas", 9f, FontStyle.Bold)
+                Font = OverlayTheme.UiFont(9f, FontStyle.Bold)
             };
             prevButton.FlatAppearance.BorderColor = CardBorder;
             prevButton.Click += (s, e) => {
@@ -347,7 +348,7 @@ namespace ScumMiniMap {
             footerPanel.Controls.Add(prevButton);
 
             // Skip Button (Featured prominently on Keybinds step or any step)
-            skipButton = new Button {
+            skipButton = new FieldConsoleButton {
                 Text = Localization.Get("WizardBtnSkip"),
                 Width = 130,
                 Height = 36,
@@ -357,7 +358,7 @@ namespace ScumMiniMap {
                 BackColor = Color.FromArgb(22, 26, 30),
                 ForeColor = AmberBright,
                 Cursor = Cursors.Hand,
-                Font = new Font("Consolas", 9f, FontStyle.Bold)
+                Font = OverlayTheme.UiFont(9f, FontStyle.Bold)
             };
             skipButton.FlatAppearance.BorderColor = AmberAccent;
             skipButton.Click += (s, e) => {
@@ -373,7 +374,7 @@ namespace ScumMiniMap {
             footerPanel.Controls.Add(skipButton);
 
             // Next Button
-            nextButton = new Button {
+            nextButton = new FieldConsoleButton { Primary=true,
                 Text = Localization.Get("WizardBtnNext"),
                 Width = 110,
                 Height = 36,
@@ -383,7 +384,7 @@ namespace ScumMiniMap {
                 BackColor = Color.FromArgb(44, 52, 62),
                 ForeColor = TextWhite,
                 Cursor = Cursors.Hand,
-                Font = new Font("Consolas", 9f, FontStyle.Bold)
+                Font = OverlayTheme.UiFont(9f, FontStyle.Bold)
             };
             nextButton.FlatAppearance.BorderColor = Color.FromArgb(70, 82, 96);
             nextButton.Click += (s, e) => {
@@ -396,7 +397,7 @@ namespace ScumMiniMap {
             footerPanel.Controls.Add(nextButton);
 
             // Finish Button: Tactical Amber Block
-            finishButton = new Button {
+            finishButton = new FieldConsoleButton { Primary=true,
                 Text = Localization.Get("WizardBtnFinish"),
                 Width = 160,
                 Height = 36,
@@ -406,7 +407,7 @@ namespace ScumMiniMap {
                 BackColor = AmberAccent,
                 ForeColor = Color.Black,
                 Cursor = Cursors.Hand,
-                Font = new Font("Consolas", 9.5f, FontStyle.Bold)
+                Font = OverlayTheme.UiFont(9.5f, FontStyle.Bold)
             };
             finishButton.FlatAppearance.BorderColor = Color.FromArgb(217, 119, 6);
             finishButton.Click += (s, e) => FinishWizard();
@@ -415,7 +416,7 @@ namespace ScumMiniMap {
             captureStatusLabel = new Label {
                 Name = "KeybindCaptureStatus",
                 Text = Localization.Get("KeyWizardReady"),
-                Font = new Font("Consolas", 9.5f, FontStyle.Bold),
+                Font = OverlayTheme.UiFont(9.5f, FontStyle.Bold),
                 ForeColor = AmberBright,
                 AutoSize = false,
                 Width = Math.Max(1, footerPanel.Width - 48),
@@ -438,6 +439,20 @@ namespace ScumMiniMap {
             Controls.Add(tabStrip);
             Controls.Add(headerPanel);
             Controls.Add(footerPanel);
+        }
+
+        void ConfigureFieldConsoleSidebar() {
+            headerPanel.Controls.Clear();headerPanel.Dock=DockStyle.Left;headerPanel.Width=220;headerPanel.Padding=new Padding(16);
+            titleLabel.AutoSize=false;titleLabel.Dock=DockStyle.Top;titleLabel.Height=40;titleLabel.Text="SCUM MINIMAP";titleLabel.Font=OverlayTheme.UiFont(17,FontStyle.Bold);titleLabel.ForeColor=TextWhite;
+            subtitleLabel.AutoSize=false;subtitleLabel.Dock=DockStyle.Top;subtitleLabel.Height=56;subtitleLabel.Text=Localization.Get("WizardTagline");subtitleLabel.Font=OverlayTheme.UiFont(10);subtitleLabel.ForeColor=TextMuted;
+            tabStrip.Dock=DockStyle.Fill;tabStrip.Padding=new Padding(0,16,0,0);tabStrip.FlowDirection=FlowDirection.TopDown;tabStrip.WrapContents=false;tabStrip.BackColor=HeaderBg;
+            foreach(Button button in tabButtons) { button.Width=188;button.Height=48;button.TextAlign=ContentAlignment.MiddleLeft;button.Font=OverlayTheme.UiFont(11);button.Margin=new Padding(0,0,0,6); }
+            langCombo.Dock=DockStyle.Bottom;langCombo.Font=OverlayTheme.UiFont(11);langCombo.Height=34;
+            headerPanel.Controls.Add(tabStrip);headerPanel.Controls.Add(subtitleLabel);headerPanel.Controls.Add(titleLabel);headerPanel.Controls.Add(langCombo);
+            nextButton.BackColor=AmberAccent;nextButton.ForeColor=BgDark;skipButton.ForeColor=TextWhite;skipButton.FlatAppearance.BorderColor=CardBorder;
+            prevButton.Left=24;prevButton.Anchor=AnchorStyles.Left|AnchorStyles.Top;
+            contentPanel.Padding=new Padding(32,24,24,16);
+            AutoScaleMode=AutoScaleMode.None;
         }
 
         void FinishWizard(bool layoutRequested = false) {
@@ -491,8 +506,10 @@ namespace ScumMiniMap {
             captureTarget = 0;
             // Update tab button highlights
             for (int i = 0; i < TotalSlides; i++) {
+                var step=tabButtons[i] as FieldConsoleStepButton;
+                if(step!=null) { step.Selected=i==currentSlide;step.Complete=i<currentSlide;step.Invalidate(); }
                 if (i == currentSlide) {
-                    tabButtons[i].BackColor = Color.FromArgb(28, 34, 42);
+                    tabButtons[i].BackColor = CardBg;
                     tabButtons[i].ForeColor = AmberAccent;
                 } else {
                     tabButtons[i].BackColor = Color.Transparent;
@@ -579,178 +596,44 @@ namespace ScumMiniMap {
         }
 
         void RenderSlideKeybinds() {
-            FlowLayoutPanel flow = CreateContentFlow();
-            flow.Controls.Add(new Label { Text=Program.CopyBindingHelp,ForeColor=TextWhite,Width=Math.Max(700,contentPanel.Width-80),Height=70 });
-            var illustration=CopyKeyIllustration.Create(Math.Max(740,contentPanel.Width-60),290);
-            if(illustration!=null) flow.Controls.Add(illustration);
-
-            // Header Banner Card
-            Panel banner = new Panel {
-                Width = Math.Max(740, contentPanel.Width - 60),
-                Height = 86,
-                BackColor = CardBg,
-                Margin = new Padding(0, 0, 0, 14),
-                Padding = new Padding(16, 10, 16, 10)
-            };
-            banner.Paint += (s, e) => {
-                using (Pen pen = new Pen(AmberAccent, 1.5f)) {
-                    e.Graphics.DrawRectangle(pen, 0, 0, banner.Width - 1, banner.Height - 1);
-                }
-                using (Brush b = new SolidBrush(AmberAccent)) {
-                    e.Graphics.FillRectangle(b, 0, 0, 4, banner.Height);
-                }
-            };
-
-            Label bannerTitle = new Label {
-                Text = Localization.Get("WizardKeybindsTitle"),
-                Font = new Font("Consolas", 11f, FontStyle.Bold),
-                ForeColor = AmberAccent,
-                AutoSize = true,
-                Location = new Point(14, 10)
-            };
-            banner.Controls.Add(bannerTitle);
-
-            Label bannerDesc = new Label {
-                Text = Localization.Get("WizardKeybindsDesc") + "\r\n" + Localization.Get("WizardKeybindsSkipNotice"),
-                Font = new Font("Segoe UI", 9f),
-                ForeColor = TextWhite,
-                Width = banner.Width - 30,
-                Height = 44,
-                Location = new Point(14, 34),
-                AutoSize = false
-            };
-            banner.Controls.Add(bannerDesc);
-            flow.Controls.Add(banner);
-
-            // 4 Key Calibration Rows
-            flow.Controls.Add(CreateKeybindRow(1, Localization.Get("WizardKeyMap"), PhysicalKeyCapture.KeyName(mapKey), out mapValLabel, out mapCapBtn));
-            flow.Controls.Add(CreateKeybindRow(2, Localization.Get("WizardKeyChat"), PhysicalKeyCapture.KeyName(chatKey), out chatValLabel, out chatCapBtn));
-            flow.Controls.Add(CreateKeybindRow(3, Localization.Get("WizardKeyModifier"), PhysicalKeyCapture.KeyName(copyModKey), out modValLabel, out modCapBtn));
-
-            Panel noModPanel = new Panel {
-                Width = Math.Max(740, contentPanel.Width - 60),
-                Height = 30,
-                BackColor = Color.Transparent,
-                Margin = new Padding(0, -2, 0, 4)
-            };
-            chkNoMod = new CheckBox {
-                Text = Localization.Get("KeyWizardNoModifier"),
-                Font = new Font("Segoe UI", 9.5f),
-                ForeColor = AmberBright,
-                AutoSize = true,
-                Location = new Point(16, 2),
-                Checked = (copyModKey == 0),
-                Cursor = Cursors.Hand
-            };
-            if (copyModKey == 0 && modCapBtn != null) modCapBtn.Enabled = false;
-            chkNoMod.CheckedChanged += (s, e) => {
-                if (chkNoMod.Checked) {
-                    copyModKey = 0;
-                    if (modValLabel != null) modValLabel.Text = Localization.Get("KeyNone");
-                    if (modCapBtn != null) modCapBtn.Enabled = false;
-                    if (captureTarget == 3) {
-                        captureTarget = 0;
-                        if (captureStatusLabel != null) captureStatusLabel.Text = Localization.Get("KeyWizardReady");
-                    }
-                } else {
-                    if (copyModKey == 0) copyModKey = 0x11;
-                    if (modValLabel != null) modValLabel.Text = PhysicalKeyCapture.KeyName(copyModKey);
-                    if (modCapBtn != null) modCapBtn.Enabled = true;
-                }
-            };
-            noModPanel.Controls.Add(chkNoMod);
-            flow.Controls.Add(noModPanel);
-
-            flow.Controls.Add(CreateKeybindRow(4, Localization.Get("WizardKeyCopy"), PhysicalKeyCapture.KeyName(copyKey), out copyValLabel, out copyCapBtn));
-
-            // Reset controls scroll with the bindings; capture feedback stays in the footer.
-            Panel statusRow = new Panel {
-                Width = Math.Max(740, contentPanel.Width - 60),
-                Height = 48,
-                BackColor = Color.Transparent,
-                Margin = new Padding(0, 8, 0, 0)
-            };
-
-            Button resetBtn = new Button {
-                Name = "ResetKeybindDefaults",
-                Text = Localization.Get("WizardBtnResetDefaults"),
-                Width = 170,
-                Height = 34,
-                Location = new Point(statusRow.Width - 180, 6),
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                FlatStyle = FlatStyle.Flat,
-                BackColor = Color.FromArgb(28, 34, 40),
-                ForeColor = TextWhite,
-                Font = new Font("Consolas", 8.8f, FontStyle.Bold),
-                Cursor = Cursors.Hand
-            };
-            resetBtn.FlatAppearance.BorderColor = CardBorder;
-            resetBtn.Click += (s, e) => {
-                mapKey = 0x4D;
-                chatKey = 0x54;
-                copyModKey = Program.DefaultCopyModifierKey;
-                copyKey = Program.DefaultCopyKey;
-                copyScanCode = 0;
-                mapScanCode = 0; chatScanCode = 0;
-                appControls = new AppControlBindings();
-                captureTarget = 0;
-                if (chkNoMod != null) chkNoMod.Checked = true;
-                if (modCapBtn != null) modCapBtn.Enabled = false;
-                UpdateKeybindValues();
-                captureStatusLabel.Text = Localization.Get("KeyWizardReady");
-            };
-            statusRow.Controls.Add(resetBtn);
-
-            flow.Controls.Add(statusRow);
-
-            flow.Controls.Add(new Label {
-                Text = Localization.Get("ShortcutHeading"), ForeColor = AmberAccent,
-                Font = new Font("Consolas", 11f, FontStyle.Bold), AutoSize = true,
-                Margin = new Padding(0, 18, 0, 8)
-            });
-            flow.Controls.Add(new Label {
-                Text = Localization.Get("ShortcutPrompt") + "\r\n" + Localization.Get("ShortcutPhysicalHelp"),
-                ForeColor = TextWhite, AutoSize = true,
-                MaximumSize = new Size(Math.Max(700, contentPanel.Width - 80), 0)
-            });
+            FlowLayoutPanel flow=CreateContentFlow();
+            int width=Math.Max(740,contentPanel.ClientSize.Width-contentPanel.Padding.Horizontal-24);
+            flow.Controls.Add(new Label { Text=Localization.Get("FieldMatchKeys"),Width=width,Height=44,Font=OverlayTheme.UiFont(24,FontStyle.Bold),ForeColor=TextWhite,Margin=new Padding(0,0,0,10) });
+            flow.Controls.Add(new Label { Text=Program.CopyBindingHelp,Width=width,Height=64,Font=OverlayTheme.UiFont(11),ForeColor=TextMuted,Margin=new Padding(0,0,0,16) });
+            flow.Controls.Add(new FieldConsoleNumpad { Width=width,Height=190,CopyKey=copyKey,Help=Localization.Get("CopyReminderBody"),Margin=new Padding(0,0,0,20) });
+            flow.Controls.Add(CreateKeybindRow(1,Localization.Get("WizardKeyMap"),PhysicalKeyCapture.KeyName(mapKey),out mapValLabel,out mapCapBtn));
+            flow.Controls.Add(CreateKeybindRow(2,Localization.Get("WizardKeyChat"),PhysicalKeyCapture.KeyName(chatKey),out chatValLabel,out chatCapBtn));
+            flow.Controls.Add(CreateKeybindRow(4,Localization.Get("WizardKeyCopy"),PhysicalKeyCapture.KeyName(copyKey),out copyValLabel,out copyCapBtn));
+            Label modifierValue;Button modifierCapture;
+            Panel modifierRow=CreateKeybindRow(3,Localization.Get("WizardKeyModifier"),PhysicalKeyCapture.KeyName(copyModKey),out modifierValue,out modifierCapture);
+            modValLabel=modifierValue;modCapBtn=modifierCapture;modifierRow.Visible=copyModKey!=0;
+            chkNoMod=new CheckBox { Text=Localization.Get("KeyWizardNoModifier"),Checked=copyModKey==0,AutoSize=true,Font=OverlayTheme.UiFont(11),ForeColor=TextWhite,Margin=new Padding(0,12,0,10) };
+            chkNoMod.CheckedChanged+=(sender,args)=> { copyModKey=chkNoMod.Checked?0:0x11;modifierRow.Visible=!chkNoMod.Checked;modCapBtn.Enabled=!chkNoMod.Checked;UpdateKeybindValues(); };
+            flow.Controls.Add(chkNoMod);flow.Controls.Add(modifierRow);
+            var advanced=new FlowLayoutPanel { Width=width,AutoSize=true,FlowDirection=FlowDirection.TopDown,WrapContents=false,Visible=bindingEditorMode,Margin=new Padding(0,8,0,12) };
+            var disclosure=new FieldConsoleButton { Text=Localization.Get("FieldShortcuts"),Width=180,Height=38,Margin=new Padding(0,12,0,0) };
+            disclosure.Click+=(sender,args)=>advanced.Visible=!advanced.Visible;flow.Controls.Add(disclosure);
             foreach(AppControlAction action in AppControlBindings.AllActions) {
-                int index = (int)action;
-                Label value;
-                Button capture;
-                Panel row = CreateKeybindRow(10 + index, Localization.Get(AppControlBindings.LabelKey(action)),
-                    PhysicalKeyCapture.KeyName(appControls.Key(action)), out value, out capture);
-                row.Name = "AppControlRow" + action;
-                value.Name = "AppControlValue" + action;
-                capture.Name = "AppControlCapture" + action;
-                capture.Location = new Point(498, 9);
-                capture.Width = 116;
-                appValLabels[index] = value;
-                appCapButtons[index] = capture;
-                Button unbind = new Button {
-                    Name = "AppControlUnbind" + action, Text = Localization.Get("ControlUnbind"),
-                    Width = 112, Height = 30, Location = new Point(622, 9),
-                    FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(28, 34, 40), ForeColor = TextWhite,
-                    Font = new Font("Segoe UI", 8.5f), Cursor = Cursors.Hand
-                };
-                unbind.FlatAppearance.BorderColor = CardBorder;
-                AppControlAction capturedAction = action;
-                unbind.Click += (s, e) => {
-                    captureTarget = 0;
-                    appControls.Set(capturedAction, 0, 0);
-                    UpdateKeybindValues();
-                    if(captureStatusLabel != null) captureStatusLabel.Text = Localization.Get("KeyWizardReady");
-                };
-                row.Controls.Add(unbind);
-                flow.Controls.Add(row);
+                int index=(int)action;Label value;Button capture;
+                Panel row=CreateKeybindRow(10+index,Localization.Get(AppControlBindings.LabelKey(action)),PhysicalKeyCapture.KeyName(appControls.Key(action)),out value,out capture);
+                row.Name="AppControlRow"+action;value.Name="AppControlValue"+action;capture.Name="AppControlCapture"+action;
+                value.Left=320;value.Width=110;capture.Left=442;capture.Width=110;
+                appValLabels[index]=value;appCapButtons[index]=capture;
+                var unbind=new FieldConsoleButton { Name="AppControlUnbind"+action,Text=Localization.Get("ControlUnbind"),Location=new Point(566,9),Size=new Size(136,32) };
+                AppControlAction selected=action;unbind.Click+=(sender,args)=> { captureTarget=0;appControls.Set(selected,0,0);UpdateKeybindValues(); };
+                row.Controls.Add(unbind);advanced.Controls.Add(row);
             }
+            var reset=new FieldConsoleButton { Name="ResetKeybindDefaults",Text=Localization.Get("WizardBtnResetDefaults"),Width=220,Height=38 };
+            reset.Click+=(sender,args)=> { mapKey=0x4D;chatKey=0x54;copyModKey=Program.DefaultCopyModifierKey;copyKey=Program.DefaultCopyKey;copyScanCode=mapScanCode=chatScanCode=0;appControls=new AppControlBindings();captureTarget=0;UpdateKeybindValues(); };
+            advanced.Controls.Add(reset);flow.Controls.Add(advanced);
             contentPanel.Controls.Add(flow);
         }
 
         Panel CreateKeybindRow(int targetId, string labelText, string keyString, out Label valLabel, out Button capBtn) {
             Panel row = new Panel {
-                Width = Math.Max(740, contentPanel.Width - 60),
-                Height = 48,
-                BackColor = CardBg,
+                Width = Math.Max(740, contentPanel.ClientSize.Width - contentPanel.Padding.Horizontal - 24),
+                Height = 54,
+                BackColor = BgDark,
                 Margin = new Padding(0, 0, 0, 6),
                 Padding = new Padding(12, 6, 12, 6)
             };
@@ -762,7 +645,7 @@ namespace ScumMiniMap {
 
             Label title = new Label {
                 Text = labelText,
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                Font = OverlayTheme.UiFont(12),
                 ForeColor = TextWhite,
                 Width = 320,
                 Location = new Point(16, 13),
@@ -772,9 +655,9 @@ namespace ScumMiniMap {
 
             valLabel = new Label {
                 Text = keyString,
-                Font = new Font("Consolas", 10.5f, FontStyle.Bold),
-                ForeColor = AmberAccent,
-                BackColor = Color.FromArgb(16, 20, 24),
+                Font = OverlayTheme.UiFont(10.5f, FontStyle.Bold),
+                ForeColor = TextWhite,
+                BackColor = OverlayTheme.SurfaceCard,
                 TextAlign = ContentAlignment.MiddleCenter,
                 Width = 140,
                 Height = 30,
@@ -788,9 +671,9 @@ namespace ScumMiniMap {
                 Height = 30,
                 Location = new Point(510, 9),
                 FlatStyle = FlatStyle.Flat,
-                BackColor = Color.FromArgb(34, 42, 52),
+                BackColor = OverlayTheme.Surface,
                 ForeColor = TextWhite,
-                Font = new Font("Consolas", 9f, FontStyle.Bold),
+                Font = OverlayTheme.UiFont(9f, FontStyle.Bold),
                 Cursor = Cursors.Hand
             };
             capBtn.FlatAppearance.BorderColor = CardBorder;
@@ -871,7 +754,7 @@ namespace ScumMiniMap {
 
             Label titleLbl = new Label {
                 Text = title,
-                Font = new Font("Consolas", 10f, FontStyle.Bold),
+                Font = OverlayTheme.UiFont(10f, FontStyle.Bold),
                 ForeColor = AmberAccent,
                 AutoSize = true,
                 Location = new Point(14, 10)
@@ -880,7 +763,7 @@ namespace ScumMiniMap {
 
             Label descLbl = new Label {
                 Text = description,
-                Font = new Font("Segoe UI", 9f),
+                Font = OverlayTheme.UiFont(9f),
                 ForeColor = TextWhite,
                 Width = card.Width - 30,
                 Height = 44,
@@ -921,7 +804,7 @@ namespace ScumMiniMap {
                 using (Pen p = new Pen(AmberAccent, 1.5f)) {
                     e.Graphics.DrawRectangle(p, 0, 0, keyBadge.Width - 1, keyBadge.Height - 1);
                 }
-                using (Font kFont = new Font("Consolas", 9.5f, FontStyle.Bold))
+                using (Font kFont = OverlayTheme.UiFont(9.5f, FontStyle.Bold))
                 using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center }) {
                     e.Graphics.DrawString("[ " + key + " ]", kFont, Brushes.White, new RectangleF(0, 0, keyBadge.Width, keyBadge.Height), sf);
                 }
@@ -930,7 +813,7 @@ namespace ScumMiniMap {
 
             Label titleLbl = new Label {
                 Text = title,
-                Font = new Font("Consolas", 10f, FontStyle.Bold),
+                Font = OverlayTheme.UiFont(10f, FontStyle.Bold),
                 ForeColor = AmberAccent,
                 AutoSize = true,
                 Location = new Point(144, 12)
@@ -939,7 +822,7 @@ namespace ScumMiniMap {
 
             Label descLbl = new Label {
                 Text = description,
-                Font = new Font("Segoe UI", 9f),
+                Font = OverlayTheme.UiFont(9f),
                 ForeColor = TextWhite,
                 Width = card.Width - 156,
                 Height = 34,
@@ -964,7 +847,7 @@ namespace ScumMiniMap {
             updatingLanguage = true;
             try {
                 Text = Localization.Get("WizardTitle");
-                titleLabel.Text = Localization.Get("WizardBranding");
+                titleLabel.Text = "SCUM MINIMAP";
                 subtitleLabel.Text = Localization.Get("WizardTagline");
                 prevButton.Text = Localization.Get("WizardBtnPrev");
                 nextButton.Text = Localization.Get("WizardBtnNext");

@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 $resourceRoot = Join-Path (Split-Path $PSScriptRoot -Parent) 'resources'
 # Polish names already belong to the original canonical resource list.
 foreach ($language in @('es-AR','fr','de','nl','ru','zh-CN','tr','ar','pt-BR','pt-PT','ko','th','zh-TW','ja','cs','it','uk')) {

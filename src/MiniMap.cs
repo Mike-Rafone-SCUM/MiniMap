@@ -434,8 +434,9 @@ namespace ScumMiniMap {
 
         MapZone searchTarget;
 
-        Color routeGuidanceColor = Color.FromArgb(255, 159, 28);
-        Color playerConeColor = Color.FromArgb(220, 220, 45, 45);
+        Color routeGuidanceColor = OverlayTheme.Route;
+        Color playerConeColor = OverlayTheme.Accent;
+        Color routeHistoryColor = Color.FromArgb(164,177,188);
         static readonly GraphicsPath ConeBasePath = CreateConeBasePath();
         static GraphicsPath CreateConeBasePath() {
             GraphicsPath path = new GraphicsPath();
@@ -886,7 +887,7 @@ namespace ScumMiniMap {
 
 
 
-            Font=new Font("Segoe UI",9); StartPosition=FormStartPosition.Manual;
+            Font=OverlayTheme.UiFont(9); StartPosition=FormStartPosition.Manual;
 
 
 
@@ -1112,7 +1113,7 @@ namespace ScumMiniMap {
 
 
 
-                if(closing || IsDisposed || !IsHandleCreated || shortcutCaptureOpen) {
+                if(closing || IsDisposed || !IsHandleCreated || (shortcutCaptureOpen && !(WpfFieldConsoleRuntime.Active!=null&&WpfFieldConsoleRuntime.Active.IsSettingsToggleKey(key,scanCode)))) {
                     TraceShortcutContext("queue rejected",key,scanCode);
                     return;
                 }
@@ -1138,6 +1139,7 @@ namespace ScumMiniMap {
 
             }, IsWatchedPhysicalKey, chat, () => scumChatKey, () => scumCopyModifierKey, () => inventoryInputLocked, () => scumCopyKey, () => scumChatScanCode,
                 (key,scan)=>PhysicalKeyCapture.Matches(key,scan,scumMapKey,scumMapScanCode));
+            keys.SuppressPhysicalMouse=(message,point,data)=>WpfFieldConsoleRuntime.Active!=null&&WpfFieldConsoleRuntime.Active.SuppressMapMouse(message,point,data);
             keys.OnPhysicalMouse = (message,point) => {
                 if(!ObserveAdminMapMouse(message,point) || closing || IsDisposed || !IsHandleCreated) return;
                 // Queue cleanup after the hook has passed the physical click to SCUM.
@@ -1176,7 +1178,7 @@ namespace ScumMiniMap {
             status.Dock=DockStyle.Top;
             status.Height=32;
             status.Padding=new Padding(2,0,2,0);
-            status.Font=new Font("Segoe UI",7.8f);
+            status.Font=OverlayTheme.UiFont(7.8f);
             status.ForeColor=OverlayTheme.InkMuted;
             status.BackColor=OverlayTheme.Surface;
 
@@ -1212,7 +1214,7 @@ namespace ScumMiniMap {
 
 
 
-            OverlayTheme.Frame(this,Localization.T("HeaderSettings",VersionString+(Program.IsTestBuild?" TEST":"")),DismissSettings);
+            FieldConsoleSettingsFrame.Compose(this,DismissSettings);
 
 
 
@@ -1487,7 +1489,9 @@ namespace ScumMiniMap {
             Button keyWizardButton = new Button { Text = Localization.Get("KeyRebindingWizard"), Width = 280 };
             keyWizardButton.Click += (s, e) => ShowKeyRebindingWizard();
             bar.Controls.Add(keyWizardButton);
+            OverlayTheme.Section(bar, Localization.Get("ShortcutHeading"));
             AddShortcutSettings(bar);
+            OverlayTheme.Section(bar, Localization.Get("SecGeneral"));
             var adminToggle=new Panel { Name="AdminToolsToggle",Width=365,Height=32,Cursor=Cursors.Hand };
             adminToggle.Paint+=(s,e)=> { DrawSwitchPill(e.Graphics,new Rectangle(8,9,30,14),adminToolsEnabled,false);TextRenderer.DrawText(e.Graphics,Localization.Get("AdminToolsEnabled"),adminToggle.Font,new Rectangle(48,0,310,32),OverlayTheme.Ink,TextFormatFlags.VerticalCenter); };
             adminToggle.Click+=(s,e)=> { SetAdminToolsEnabled(!adminToolsEnabled);adminToggle.Invalidate(); };
@@ -1570,6 +1574,13 @@ namespace ScumMiniMap {
             playerColorRow.Controls.Add(playerColorBtn);
             bar.Controls.Add(playerColorRow);
 
+            var historyColorRow=new FlowLayoutPanel { Width=365,Height=34,Margin=new Padding(3,2,3,6) };
+            historyColorRow.Controls.Add(new Label { Text=Localization.Get("RouteHistoryColor"),Width=230,Padding=new Padding(0,5,0,0) });
+            var historyColorBtn=new Button { Name="RouteHistoryColor",Width=90,Height=24,BackColor=routeHistoryColor,FlatStyle=FlatStyle.Flat,Text="",Cursor=Cursors.Hand,Tag="swatch" };
+            historyColorBtn.FlatAppearance.BorderColor=OverlayTheme.Border;historyColorBtn.FlatAppearance.BorderSize=1;
+            historyColorBtn.Click+=(s,e)=> { ChangeHistoryColor();historyColorBtn.BackColor=routeHistoryColor; };
+            historyColorRow.Controls.Add(historyColorBtn);bar.Controls.Add(historyColorRow);
+
             AddCheck(bar, Localization.Get("ShowScumMap"), showScumMap, value => {
                 showScumMap = value;
                 if (scumMap != null) scumMap.MasterEnabled = value;
@@ -1592,6 +1603,8 @@ namespace ScumMiniMap {
             Button zoneButton = new Button { Text = Localization.Get("MapZonesScreenshot"), Width = 280 };
             zoneButton.Click += (s, e) => OpenZoneImport(null);
             bar.Controls.Add(zoneButton);
+            var zoneFilesButton=new Button { Text=Localization.Get("EnableZoneTsv"),Width=280 };
+            zoneFilesButton.Click+=(s,e)=> { if(WpfFieldConsoleRuntime.Active!=null)WpfFieldConsoleRuntime.Active.ShowZoneAssociation();else try { ZoneFileOpen.Register(Application.ExecutablePath);RunUiModal(()=>MessageBox.Show(UiDialogOwner,Localization.Get("ZoneAssociationInfo"),Localization.Get("ZoneEditorTitle"))); }catch(Exception error) { Program.LogException("ZoneFileAssociation",error); } };bar.Controls.Add(zoneFilesButton);
             Button clearZonesBtn = new Button { Text = Localization.Get("ClearAllCustomZones"), Width = 280 };
             clearZonesBtn.Click += (s, e) => {
                 if (zones == null || zones.Count == 0) {
@@ -1683,19 +1696,21 @@ namespace ScumMiniMap {
             };
             bar.Controls.Add(discordBtn);
 
-            OverlayTheme.Sections(bar);
+            BuildFieldConsoleSettingsTabs();
             OverlayTheme.Style(bar);
             if(settingsFooter != null) {
                 settingsDoneBtn.Text = Localization.Get("Done");
                 settingsOpenFolderBtn.Text = Localization.Get("OpenDataFolder");
                 OverlayTheme.Style(settingsFooter);
+                settingsDoneBtn.BackColor=OverlayTheme.Accent;
+                settingsDoneBtn.ForeColor=OverlayTheme.Background;
             }
             bar.ResumeLayout(true);
         }
 
 
 
-        public const string VersionString = "1.7.24";
+        public const string VersionString = "2.1.0";
 
 
 
@@ -2098,7 +2113,7 @@ namespace ScumMiniMap {
 
 
 
-        void ExitApp() { closing=true; SaveSettings(); Close(); }
+        void ExitApp() { if(WpfFieldConsoleRuntime.Active!=null) { WpfFieldConsoleRuntime.Active.RequestExit();return; }closing=true; SaveSettings(); Close(); }
 
 
 
@@ -2236,6 +2251,7 @@ namespace ScumMiniMap {
         }
 
         public void OpenZoneImport(string file) {
+            if(WpfFieldConsoleRuntime.Active!=null) { WpfFieldConsoleRuntime.Active.ShowZoneWizard(file);return; }
             if(zonesLoadFailed) { if(!diagnosticMode) RunUiModal(() => MessageBox.Show(Localization.Get("NoteZonesLoadFail"))); return; }
             if(IsHandleCreated && InvokeRequired) {
                 BeginInvoke(new Action(() => OpenZoneImport(file)));
@@ -2338,6 +2354,7 @@ namespace ScumMiniMap {
 
 
         void ToggleOverlay() {
+            if(WpfFieldConsoleRuntime.Active!=null) { WpfFieldConsoleRuntime.Active.Handle(AppControlAction.ToggleOverlay);return; }
 
 
 
@@ -2486,7 +2503,7 @@ namespace ScumMiniMap {
 
 
 
-                    dlg.ClientSize=new Size(430,390);
+                    dlg.ClientSize=new Size(520,460);
 
 
 
@@ -2494,7 +2511,7 @@ namespace ScumMiniMap {
 
 
 
-                    dlg.Font=new Font("Segoe UI",9);
+                    dlg.Font=OverlayTheme.UiFont(9);
 
 
 
@@ -2526,7 +2543,7 @@ namespace ScumMiniMap {
 
 
 
-                    FlowLayoutPanel buttons=new FlowLayoutPanel { Dock=DockStyle.Bottom,Height=38 };
+                    FlowLayoutPanel buttons=new FlowLayoutPanel { Dock=DockStyle.Bottom,Height=54,Padding=new Padding(8),FlowDirection=FlowDirection.RightToLeft,WrapContents=false };
 
 
 
@@ -2543,7 +2560,7 @@ namespace ScumMiniMap {
 
 
                     OverlayTheme.Style(dlg);
-            go.BackColor=OverlayTheme.Accent; go.ForeColor=Color.FromArgb(14,17,20); go.Font=new Font("Segoe UI",9f,FontStyle.Bold);
+            go.BackColor=OverlayTheme.Accent; go.ForeColor=Color.FromArgb(14,17,20); go.Font=OverlayTheme.UiFont(9f, FontStyle.Bold);
             buttons.Controls.AddRange(new Control[]{go,clear,cancel});
 
 
@@ -2572,7 +2589,7 @@ namespace ScumMiniMap {
 
 
 
-                        using(Brush fill=new SolidBrush(active?Color.FromArgb(45,35,20):OverlayTheme.Surface)) e.Graphics.FillRectangle(fill,e.Bounds);
+                        using(Brush fill=new SolidBrush(active?OverlayTheme.SurfaceCard:OverlayTheme.Surface)) e.Graphics.FillRectangle(fill,e.Bounds);
 
 
 
@@ -2885,7 +2902,7 @@ namespace ScumMiniMap {
 
 
 
-                    clear.Click+=(s,e)=> { searchTarget=null; activeRoute=null; routeGeneration++; lastRouteTarget=null; note=Localization.Get("NoteWaypointCleared"); SettingsChanged(); dlg.DialogResult=DialogResult.Cancel; };
+                    clear.Click+=(s,e)=> { ClearActiveWaypoint(); dlg.DialogResult=DialogResult.Cancel; };
 
 
 
@@ -2921,8 +2938,8 @@ namespace ScumMiniMap {
 
 
 
-                    OverlayTheme.Frame(dlg,Localization.Get("HeaderWaypoint"),()=>dlg.DialogResult=DialogResult.Cancel);
-                    go.BackColor=OverlayTheme.Accent; go.ForeColor=Color.FromArgb(14,17,20); go.FlatAppearance.BorderColor=OverlayTheme.AccentHover; go.Font=new Font("Segoe UI",9f,FontStyle.Bold);
+                    FieldConsoleSearchView.Compose(dlg,search,hint,list,status,buttons,go,clear,cancel);
+                    go.BackColor=OverlayTheme.Accent; go.ForeColor=Color.FromArgb(14,17,20); go.FlatAppearance.BorderColor=OverlayTheme.AccentHover; go.Font=OverlayTheme.UiFont(9f, FontStyle.Bold);
 
 
 
@@ -3282,6 +3299,17 @@ namespace ScumMiniMap {
             }
         }
 
+        void ChangeHistoryColor() {
+            using(var dlg=new ColorDialog { Color=routeHistoryColor,FullOpen=true,AnyColor=true }) {
+                IWin32Window owner=(SettingsVisible&&IsHandleCreated)?(IWin32Window)this:(overlay!=null&&overlay.IsHandleCreated?(IWin32Window)overlay:null);
+                var result=owner!=null?RunUiModal(()=>dlg.ShowDialog(owner)):RunUiModal(()=>dlg.ShowDialog());
+                if(result!=DialogResult.OK)return;
+                routeHistoryColor=dlg.Color;SettingsChanged();lastFrameKey=null;
+                if(SettingsVisible) { BuildSettingsPanel();canvas.Invalidate(); }
+                RenderOverlay();
+            }
+        }
+
                 void ChangePlayerColor() {
             using(ColorDialog dlg = new ColorDialog()) {
                 dlg.Color = playerConeColor;
@@ -3351,9 +3379,9 @@ namespace ScumMiniMap {
                     Cursor=Cursors.Default
                 }) {
                     OverlayTheme.Frame(prompt, Localization.Get("WaypointNameTitle"), () => prompt.DialogResult = DialogResult.Cancel);
-                    Label lbl=new Label { Left=20,Top=64,Width=340,Text=Localization.Get("WaypointNamePrompt"),TabIndex=1,ForeColor=OverlayTheme.InkMuted,Font=new Font("Segoe UI",9f) };
-                    TextBox txt=new TextBox { Left=20,Top=92,Width=340,TabIndex=0,BackColor=OverlayTheme.Surface,ForeColor=OverlayTheme.Ink,BorderStyle=BorderStyle.FixedSingle,Font=new Font("Segoe UI",10f) };
-                    Button ok=new Button { Text=Localization.Get("Done"),Left=190,Top=132,Width=80,Height=30,DialogResult=DialogResult.OK,TabIndex=2,BackColor=OverlayTheme.Accent,ForeColor=Color.FromArgb(12,12,12),Font=new Font("Segoe UI",9f,FontStyle.Bold),FlatStyle=FlatStyle.Flat,Cursor=Cursors.Hand };
+                    Label lbl=new Label { Left=20,Top=64,Width=340,Text=Localization.Get("WaypointNamePrompt"),TabIndex=1,ForeColor=OverlayTheme.InkMuted,Font=OverlayTheme.UiFont(9f) };
+                    TextBox txt=new TextBox { Left=20,Top=92,Width=340,TabIndex=0,BackColor=OverlayTheme.Surface,ForeColor=OverlayTheme.Ink,BorderStyle=BorderStyle.FixedSingle,Font=OverlayTheme.UiFont(10f) };
+                    Button ok=new Button { Text=Localization.Get("Done"),Left=190,Top=132,Width=80,Height=30,DialogResult=DialogResult.OK,TabIndex=2,BackColor=OverlayTheme.Accent,ForeColor=Color.FromArgb(12,12,12),Font=OverlayTheme.UiFont(9f, FontStyle.Bold),FlatStyle=FlatStyle.Flat,Cursor=Cursors.Hand };
                     ok.FlatAppearance.BorderColor=OverlayTheme.AccentHover;
                     Button cn=new Button { Text=Localization.Get("Cancel"),Left=280,Top=132,Width=80,Height=30,DialogResult=DialogResult.Cancel,TabIndex=3,BackColor=OverlayTheme.Surface,ForeColor=OverlayTheme.Ink,FlatStyle=FlatStyle.Flat,Cursor=Cursors.Hand };
                     cn.FlatAppearance.BorderColor=OverlayTheme.Border;
@@ -3471,8 +3499,8 @@ namespace ScumMiniMap {
             Form prompt=new Form { Text=Localization.Get("RemoveWaypoint"),ClientSize=new Size(420,170),
                 StartPosition=FormStartPosition.CenterScreen,MaximizeBox=false,MinimizeBox=false,TopMost=true,ShowInTaskbar=true,Cursor=Cursors.Default };
             OverlayTheme.Frame(prompt, Localization.Get("RemoveWaypoint"), () => prompt.DialogResult = DialogResult.Cancel);
-            Label message=new Label { Text=Localization.T("WaypointDeleteConfirm",displayName),Left=20,Top=64,Width=380,Height=50,ForeColor=OverlayTheme.Ink,Font=new Font("Segoe UI",9.25f) };
-            Button remove=new Button { Text=Localization.Get("RemoveWaypoint"),Left=140,Top=122,Width=150,Height=32,DialogResult=DialogResult.Yes,TabIndex=1,BackColor=OverlayTheme.Accent,ForeColor=Color.FromArgb(12,12,12),Font=new Font("Segoe UI",9f,FontStyle.Bold),FlatStyle=FlatStyle.Flat,Cursor=Cursors.Hand };
+            Label message=new Label { Text=Localization.T("WaypointDeleteConfirm",displayName),Left=20,Top=64,Width=380,Height=50,ForeColor=OverlayTheme.Ink,Font=OverlayTheme.UiFont(9.25f) };
+            Button remove=new Button { Text=Localization.Get("RemoveWaypoint"),Left=140,Top=122,Width=150,Height=32,DialogResult=DialogResult.Yes,TabIndex=1,BackColor=OverlayTheme.Accent,ForeColor=Color.FromArgb(12,12,12),Font=OverlayTheme.UiFont(9f, FontStyle.Bold),FlatStyle=FlatStyle.Flat,Cursor=Cursors.Hand };
             remove.FlatAppearance.BorderColor=OverlayTheme.AccentHover;
             Button cancel=new Button { Text=Localization.Get("Cancel"),Left=300,Top=122,Width=100,Height=32,DialogResult=DialogResult.Cancel,TabIndex=0,BackColor=OverlayTheme.Surface,ForeColor=OverlayTheme.Ink,FlatStyle=FlatStyle.Flat,Cursor=Cursors.Hand };
             cancel.FlatAppearance.BorderColor=OverlayTheme.Border;
@@ -3671,6 +3699,7 @@ namespace ScumMiniMap {
 
 
         bool IsWatchedPhysicalKey(int key,int scanCode) {
+            if(WpfFieldConsoleRuntime.Active!=null&&WpfFieldConsoleRuntime.Active.IsSettingsToggleKey(key,scanCode))return true;
             if(shortcutCaptureOpen) return false;
             if(PhysicalKeyCapture.Matches(key,scanCode,scumMapKey,scumMapScanCode)
                 || PhysicalKeyCapture.Matches(key,scanCode,scumChatKey,scumChatScanCode)) return true;
@@ -3763,6 +3792,11 @@ namespace ScumMiniMap {
 
         void OnGameKeyCore(int key,int scanCode=0) {
             TraceShortcutContext("UI received",key,scanCode);
+            // Settings remains closable after clicking back into SCUM, even while modal gates are set.
+            if(WpfFieldConsoleRuntime.Active!=null&&WpfFieldConsoleRuntime.Active.IsSettingsToggleKey(key,scanCode)
+                && !closing&&!IsDisposed&&!keys.ShortcutModifiersDown(true)&&AppShortcutWindowFocused(true)) {
+                WpfFieldConsoleRuntime.Active.Handle(AppControlAction.Settings);return;
+            }
             if(shortcutCaptureOpen) return;
 
 
@@ -3827,7 +3861,7 @@ namespace ScumMiniMap {
             }
             Action action=null;
             if(mapKey) action=TriggerFullMap;
-            else if((key==0x09 || key==0x1B) && fullMapActive) action=()=>SetFullMap(false);
+            else if((key==0x09 || key==0x1B) && fullMapActive) action=()=> { if(WpfFieldConsoleRuntime.Active!=null)WpfFieldConsoleRuntime.Active.CloseTactical();else SetFullMap(false); };
 
             if(action==null) return;
             if(Native.InputTraceActive) Native.TraceInput("shortcut game action vk="+key+" scan="+scanCode+" map="+mapKey);
@@ -4129,6 +4163,7 @@ namespace ScumMiniMap {
 
 
 
+            if(WpfFieldConsoleRuntime.Active!=null) { WpfFieldConsoleRuntime.Active.ToggleTactical(true);return; }
             SetFullMap(!fullMapActive);
 
 
@@ -4569,6 +4604,8 @@ namespace ScumMiniMap {
 
 
 
+            if(HandleFieldConsoleChromeDown(pt,btn))return;
+
             // Map interaction (pt.X < mapW)
 
 
@@ -4831,6 +4868,7 @@ namespace ScumMiniMap {
 
 
         void HandleFullMapMouseUp(Point pt, MouseButtons btn) {
+            if(fieldConsoleChromePress) { fieldConsoleChromePress=false;return; }
 
 
 
@@ -5138,11 +5176,11 @@ namespace ScumMiniMap {
 
 
 
-            using (Font biomeFont = new Font("Segoe UI", 6.8f, FontStyle.Bold))
+            using (Font biomeFont = OverlayTheme.UiFont(6.8f, FontStyle.Bold))
 
 
 
-            using (Font animFont = new Font("Segoe UI", 6.4f, FontStyle.Regular))
+            using (Font animFont = OverlayTheme.UiFont(6.4f, FontStyle.Regular))
 
 
 
@@ -5218,7 +5256,7 @@ namespace ScumMiniMap {
 
 
 
-            using (Font noteFont = new Font("Segoe UI", 5.8f, FontStyle.Italic))
+            using (Font noteFont = OverlayTheme.UiFont(5.8f, FontStyle.Italic))
 
 
 
@@ -5274,1347 +5312,10 @@ namespace ScumMiniMap {
             FullMapSidebarStyle.DrawActionButton(g,rect,text,baseColor);
         }
 
-        void DrawFullMapSidebar(Graphics g, int sidebarX, int sidebarW, int sidebarH) {
-
-
-
-            sidebarClickables.Clear();
-
-
-
-            int pad = 10;
-
-
-
-            int innerX = sidebarX + pad;
-
-
-
-            int innerW = sidebarW - pad * 2;
-
-
-
-            // Background
-
-
-
-            using (Brush bg = new SolidBrush(Color.FromArgb(242, 14, 17, 20))) {
-
-
-
-                g.FillRectangle(bg, sidebarX, 0, sidebarW, sidebarH);
-
-
-
-            }
-
-
-
-            using (Pen border = new Pen(Color.FromArgb(180, 42, 52, 61), 1.5f)) {
-
-
-
-                g.DrawLine(border, sidebarX, 0, sidebarX, sidebarH);
-
-
-
-            }
-
-
-
-            // === PINNED HEADER (Y = 12 to 142) ===
-
-
-
-            int curY = 12;
-
-
-
-            using (Font titleFont = new Font("Segoe UI", 9.5f, FontStyle.Bold)) {
-
-
-
-                using (Brush tb = new SolidBrush(OverlayTheme.Accent)) g.DrawString(Localization.Get("SidebarTitle"), titleFont, tb, innerX, curY);
-
-
-
-            }
-
-
-
-            curY += 24;
-
-
-
-            string zoomText = string.Format(CultureInfo.InvariantCulture, "ZOOM {0:0.0}x", fullMapZoom);
-
-
-
-            using (Font zoomFont = new Font("Segoe UI", 8.0f, FontStyle.Bold)) {
-
-
-
-                using (Brush zb = new SolidBrush(OverlayTheme.AccentHover)) g.DrawString(zoomText, zoomFont, zb, innerX, curY + 3);
-
-
-
-            }
-
-
-
-            int btnH = 20;
-
-
-
-            int rstW = 26;
-
-
-
-            sidebarZoomResetRect = new Rectangle(innerX + innerW - rstW, curY, rstW, btnH);
-
-
-
-            DrawMiniButton(g, sidebarZoomResetRect, "1x", fullMapZoom > 1.01f);
-
-
-
-            int plusW = 22;
-
-
-
-            sidebarZoomInRect = new Rectangle(sidebarZoomResetRect.Left - plusW - 3, curY, plusW, btnH);
-
-
-
-            DrawMiniButton(g, sidebarZoomInRect, "+", fullMapZoom < 16.0f);
-
-
-
-            int minusW = 22;
-
-
-
-            sidebarZoomOutRect = new Rectangle(sidebarZoomInRect.Left - minusW - 3, curY, minusW, btnH);
-
-
-
-            DrawMiniButton(g, sidebarZoomOutRect, "-", fullMapZoom > 1.01f);
-
-
-
-            curY += 28;
-
-
-
-            string opText = string.Format(CultureInfo.InvariantCulture, "{0} {1}%", Localization.Get("OpacityLabel"), EffectiveFullMapOpacity);
-
-
-
-            using (Font font = new Font("Segoe UI", 7.2f, FontStyle.Bold)) {
-
-
-
-                g.DrawString(opText, font, Brushes.WhiteSmoke, innerX, curY);
-
-
-
-            }
-
-
-
-            curY += 16;
-
-
-
-            int trackH = 6;
-
-
-
-            sidebarOpacityTrackRect = new Rectangle(innerX, curY, innerW, trackH);
-
-
-
-            using (GraphicsPath trackPath = new GraphicsPath()) {
-
-
-
-                trackPath.AddArc(sidebarOpacityTrackRect.X, sidebarOpacityTrackRect.Y, trackH, trackH, 90, 180);
-
-
-
-                trackPath.AddArc(sidebarOpacityTrackRect.Right - trackH, sidebarOpacityTrackRect.Y, trackH, trackH, 270, 180);
-
-
-
-                trackPath.CloseFigure();
-
-
-
-                using (Brush tb = new SolidBrush(Color.FromArgb(180, 22, 27, 32))) g.FillPath(tb, trackPath);
-
-
-
-            }
-
-
-
-            float frac = Math.Max(0f,Math.Min(1f,(EffectiveFullMapOpacity - 20) / 80f));
-
-
-
-            int fillW = Math.Max(trackH, (int)Math.Round(innerW * frac));
-
-
-
-            using (GraphicsPath fillPath = new GraphicsPath()) {
-
-
-
-                fillPath.AddArc(sidebarOpacityTrackRect.X, sidebarOpacityTrackRect.Y, trackH, trackH, 90, 180);
-
-
-
-                fillPath.AddArc(sidebarOpacityTrackRect.X + fillW - trackH, sidebarOpacityTrackRect.Y, trackH, trackH, 270, 180);
-
-
-
-                fillPath.CloseFigure();
-
-
-
-                using (Brush fb = new SolidBrush(Color.FromArgb(240, 255, 159, 28))) g.FillPath(fb, fillPath);
-
-
-
-            }
-
-
-
-            float knobX = sidebarOpacityTrackRect.X + innerW * frac;
-
-
-
-            float knobY = sidebarOpacityTrackRect.Y + trackH / 2f;
-
-
-
-            float knobR = 5.5f;
-
-
-
-            using (Brush kb = new SolidBrush(Color.White)) g.FillEllipse(kb, knobX - knobR, knobY - knobR, knobR * 2, knobR * 2);
-
-
-
-            using (Pen kp = new Pen(Color.FromArgb(255, 159, 28), 1.5f)) g.DrawEllipse(kp, knobX - knobR, knobY - knobR, knobR * 2, knobR * 2);
-
-
-
-            curY += 20;
-
-
-
-            sidebarSearchRect = new Rectangle(innerX, curY, innerW, 26);
-
-
-
-            DrawActionButton(g, sidebarSearchRect, Localization.T("SidebarSearchBtn",PhysicalKeyCapture.KeyName(searchShortcutKey)), OverlayTheme.SurfaceCard);
-
-
-
-            curY += 30;
-
-
-
-            if (searchTarget != null || pin != null) {
-
-
-
-                string targetName = searchTarget != null ? searchTarget.DisplayName : "GPS Pin";
-
-
-
-                if (targetName.Length > 20) targetName = targetName.Substring(0, 18) + "...";
-
-
-
-                using (Font tf = new Font("Segoe UI", 7.0f, FontStyle.Italic)) {
-
-
-
-                    using (Brush tb = new SolidBrush(OverlayTheme.Accent)) g.DrawString(Localization.T("SidebarTarget",targetName), tf, tb, innerX, curY + 2);
-
-
-
-                }
-
-
-
-                sidebarClearWaypointRect = new Rectangle(innerX + innerW - 55, curY, 55, 20);
-
-
-
-                DrawMiniButton(g, sidebarClearWaypointRect, "Clear", true);
-
-
-
-                curY += 24;
-
-
-
-            } else {
-
-
-
-                sidebarClearWaypointRect = Rectangle.Empty;
-
-
-
-            }
-
-
-
-            DrawSidebarDivider(g, innerX, curY, innerW);
-
-
-
-            curY += 6;
-
-
-
-            int scrollStartY = curY;
-
-
-
-            int viewportH = sidebarH - scrollStartY - 10;
-
-
-
-            Rectangle viewportRect = new Rectangle(sidebarX, scrollStartY, sidebarW, viewportH);
-
-
-
-            GraphicsState origState = g.Save();
-
-
-
-            g.SetClip(viewportRect);
-
-
-
-            int itemY = scrollStartY - sidebarScrollY;
-
-
-
-            // === 1. MAP LAYERS SECTION ===
-
-
-
-            using (Font secFont = new Font("Segoe UI", 7.5f, FontStyle.Bold)) {
-
-
-
-                g.DrawString(Localization.Get("SidebarLayers"), secFont, Brushes.LightSlateGray, innerX, itemY);
-
-
-
-            }
-
-
-
-            itemY += 18;
-
-
-
-            int toggleH = 20;
-
-
-
-            int toggleGap = 4;
-
-
-
-            // Collect custom layers and their zone counts
-            var customLayers = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-            if(zones != null) {
-                for(int i = 0; i < zones.Count; i++) {
-                    MapZone z = zones[i];
-                    if(z != null && !IsCustomWaypointZone(z) && z.Points != null && z.Points.Length >= 3) {
-                        string lName = string.IsNullOrWhiteSpace(z.Layer) ? "Default" : z.Layer;
-                        int c;
-                        customLayers.TryGetValue(lName, out c);
-                        customLayers[lName] = c + 1;
-                    }
-                }
-            }
-
-            int totalCustomZones = 0;
-            int activeCustomLayers = 0;
-            foreach(var kvp in customLayers) {
-                totalCustomZones += kvp.Value;
-                if(!disabledZoneLayers.Contains(kvp.Key)) activeCustomLayers++;
-            }
-
-            bool isZonesEnabled;
-            bool isZonesPartial = false;
-            if(customLayers.Count == 0) {
-                isZonesEnabled = showZones;
-            } else {
-                if(!showZones || activeCustomLayers == 0) {
-                    isZonesEnabled = false;
-                } else if(activeCustomLayers == customLayers.Count) {
-                    isZonesEnabled = true;
-                } else {
-                    isZonesEnabled = true;
-                    isZonesPartial = true;
-                }
-            }
-
-            int zoneSecH = 22;
-            Rectangle zoneHeaderRect = new Rectangle(innerX, itemY, innerW, zoneSecH);
-
-            RegisterClickable(zoneHeaderRect, viewportRect, () => {
-                sidebarZonesExpanded = !sidebarZonesExpanded;
-                InvalidateFullMapSidebar();
-                lastFrameKey = null;
-                RenderOverlay();
-            });
-
-            Color zoneSecBg = sidebarZonesExpanded ? Color.FromArgb(40, 24, 32, 42) : Color.FromArgb(20, 20, 26, 32);
-            using (Brush b = new SolidBrush(zoneSecBg)) g.FillRectangle(b, zoneHeaderRect);
-            using (Pen zoneSecBorder = new Pen(Color.FromArgb(140, 42, 52, 61), 1.0f)) g.DrawRectangle(zoneSecBorder, zoneHeaderRect);
-
-            string zoneArrow = sidebarZonesExpanded ? "▼" : "►";
-            using (Font zoneArrowFont = new Font("Segoe UI", 7.0f, FontStyle.Bold)) {
-                g.DrawString(zoneArrow, zoneArrowFont, Brushes.SkyBlue, innerX + 5, itemY + 5.5f);
-            }
-
-            int zoneSwW = 24, zoneSwH = 12;
-            int zoneSwX = innerX + 18;
-            int zoneSwY = itemY + (zoneSecH - zoneSwH) / 2;
-            Rectangle zoneSwRect = new Rectangle(zoneSwX, zoneSwY, zoneSwW, zoneSwH);
-            DrawSwitchPill(g, zoneSwRect, isZonesEnabled, isZonesPartial);
-
-            RegisterClickable(new Rectangle(zoneSwX - 2, itemY, zoneSwW + 4, zoneSecH), viewportRect, () => {
-                if(!showZones) {
-                    showZones = true;
-                    disabledZoneLayers.Clear();
-                } else if(isZonesPartial) {
-                    disabledZoneLayers.Clear();
-                } else {
-                    showZones = false;
-                }
-                SettingsChanged();
-                lastFrameKey = null; terrainKey = null;
-                RenderOverlay();
-            });
-
-            using (Font zoneHeaderFont = new Font("Segoe UI", 7.4f, isZonesEnabled ? FontStyle.Bold : FontStyle.Regular))
-            using (Brush textBrush = new SolidBrush(isZonesEnabled ? Color.WhiteSmoke : Color.FromArgb(160, 170, 180))) {
-                g.DrawString(Localization.Get("SidebarLayerZones"), zoneHeaderFont, textBrush, zoneSwX + zoneSwW + 6, itemY + 3.5f);
-            }
-
-            string zoneBadgeText = customLayers.Count > 0 ? (totalCustomZones + " zones") : "0";
-            using (Font zoneBadgeFont = new Font("Segoe UI", 6.8f, FontStyle.Regular))
-            using (Brush zoneBadgeBrush = new SolidBrush(Color.FromArgb(120, 140, 160))) {
-                SizeF zoneBadgeSize = g.MeasureString(zoneBadgeText, zoneBadgeFont);
-                g.DrawString(zoneBadgeText, zoneBadgeFont, zoneBadgeBrush, innerX + innerW - zoneBadgeSize.Width - 4, itemY + 4.5f);
-            }
-
-            itemY += zoneSecH + toggleGap;
-
-            if (sidebarZonesExpanded) {
-                if (customLayers.Count == 0) {
-                    using (Font noLayersFont = new Font("Segoe UI", 7.0f, FontStyle.Italic))
-                    using (Brush noLayersBrush = new SolidBrush(Color.FromArgb(120, 135, 150))) {
-                        g.DrawString(Localization.Get("SidebarNoCustomLayers"), noLayersFont, noLayersBrush, innerX + 26, itemY + 2);
-                    }
-                    itemY += 16 + toggleGap;
-                } else {
-                    foreach (var kvp in customLayers) {
-                        string layerName = kvp.Key;
-                        int zoneCount = kvp.Value;
-                        bool isLayerActive = showZones && !disabledZoneLayers.Contains(layerName);
-
-                        int subX = innerX + 16;
-                        int subW = innerW - 16;
-                        int subH = 19;
-                        Rectangle subRowRect = new Rectangle(subX, itemY, subW, subH);
-
-                        int childSwW = 20, childSwH = 11;
-                        int childSwX = subX + 6;
-                        int childSwY = itemY + (subH - childSwH) / 2;
-                        Rectangle childSwRect = new Rectangle(childSwX, childSwY, childSwW, childSwH);
-
-                        DrawSwitchPill(g, childSwRect, isLayerActive, false);
-
-                        using (Font layerFont = new Font("Segoe UI", 7.0f, isLayerActive ? FontStyle.Bold : FontStyle.Regular))
-                        using (Brush layerBrush = new SolidBrush(isLayerActive ? Color.WhiteSmoke : Color.FromArgb(145, 155, 165))) {
-                            g.DrawString(layerName, layerFont, layerBrush, childSwX + childSwW + 5, itemY + 2.0f);
-                        }
-
-                        string countStr = "[" + zoneCount + "]";
-                        using (Font countFont = new Font("Segoe UI", 6.8f, FontStyle.Regular))
-                        using (Brush countBrush = new SolidBrush(Color.FromArgb(110, 130, 150))) {
-                            SizeF cSize = g.MeasureString(countStr, countFont);
-                            g.DrawString(countStr, countFont, countBrush, subX + subW - cSize.Width - 4, itemY + 2.5f);
-                        }
-
-                        string captureLayer = layerName;
-                        RegisterClickable(subRowRect, viewportRect, () => {
-                            if (disabledZoneLayers.Contains(captureLayer)) {
-                                disabledZoneLayers.Remove(captureLayer);
-                                showZones = true;
-                            } else {
-                                disabledZoneLayers.Add(captureLayer);
-                            }
-                            SettingsChanged();
-                            lastFrameKey = null; terrainKey = null;
-                            RenderOverlay();
-                        });
-
-                        itemY += subH + 2;
-                    }
-                    itemY += 2;
-                }
-            }
-
-
-
-            DrawScrollableToggle(g, innerX, itemY, innerW, toggleH, Localization.Get("SidebarLayerWaypoints"), showCustomWaypoints, viewportRect, () => {
-
-
-
-                showCustomWaypoints = !showCustomWaypoints;
-
-
-
-                SettingsChanged();
-
-
-
-                lastFrameKey = null; terrainKey = null;
-
-
-
-                RenderOverlay();
-
-
-
-            });
-
-
-
-            itemY += toggleH + toggleGap;
-
-
-
-            DrawScrollableToggle(g, innerX, itemY, innerW, toggleH, Localization.Get("SidebarLayerGrid"), gridBorders, viewportRect, () => {
-
-
-
-                gridBorders = !gridBorders;
-
-
-
-                SettingsChanged();
-
-
-
-                lastFrameKey = null; terrainKey = null;
-
-
-
-                RenderOverlay();
-
-
-
-            });
-
-
-
-            itemY += toggleH + toggleGap;
-
-
-
-            DrawScrollableToggle(g, innerX, itemY, innerW, toggleH, Localization.Get("HistoryEnabled"), locationHistory, viewportRect, () => {
-                locationHistory = !locationHistory;
-                SettingsChanged();
-                lastFrameKey = null;
-                RenderOverlay();
-            });
-
-            itemY += toggleH + toggleGap;
-
-            DrawScrollableToggle(g, innerX, itemY, innerW, toggleH, Localization.Get("HistoryHover"), locationHistoryTimestamps, viewportRect, () => {
-                locationHistoryTimestamps = !locationHistoryTimestamps;
-                SettingsChanged();
-                lastFrameKey = null;
-                RenderOverlay();
-            });
-
-            itemY += toggleH + toggleGap;
-
-
-
-            DrawScrollableToggle(g, innerX, itemY, innerW, toggleH, Localization.Get("SidebarLayerLabels"), showZoneLabels, viewportRect, () => {
-
-
-
-                showZoneLabels = !showZoneLabels;
-
-
-
-                SettingsChanged();
-
-
-
-                lastFrameKey = null; terrainKey = null;
-
-
-
-                RenderOverlay();
-
-
-
-            });
-
-
-
-            itemY += toggleH + toggleGap + 4;
-
-
-
-            DrawSidebarDivider(g, innerX, itemY, innerW);
-
-
-
-            itemY += 10;
-
-
-
-            // === 2. FULL POI CATEGORIES ACCORDION SYSTEM ===
-
-
-
-            using (Font secFont = new Font("Segoe UI", 7.5f, FontStyle.Bold)) {
-
-
-
-                using (Brush sb = new SolidBrush(OverlayTheme.Accent)) g.DrawString(Localization.Get("SidebarCategories"), secFont, sb, innerX, itemY + 2);
-
-
-
-            }
-
-
-
-            Rectangle allBtnRect = new Rectangle(innerX + innerW - 54, itemY, 25, 18);
-
-
-
-            DrawMiniButton(g, allBtnRect, "All", true);
-
-
-
-            RegisterClickable(allBtnRect, viewportRect, () => {
-
-
-
-                if (scumMap != null) {
-
-
-
-                    scumMap.SetAllEnabled(true);
-
-
-
-                    showScumMap = true;
-
-
-
-                    scumMap.MasterEnabled = true;
-
-
-
-                    SettingsChanged();
-
-
-
-                    lastFrameKey = null; terrainKey = null;
-
-
-
-                    RenderOverlay();
-
-
-
-                }
-
-
-
-            });
-
-
-
-            Rectangle noneBtnRect = new Rectangle(innerX + innerW - 26, itemY, 26, 18);
-
-
-
-            DrawMiniButton(g, noneBtnRect, "Off", true);
-
-
-
-            RegisterClickable(noneBtnRect, viewportRect, () => {
-
-
-
-                if (scumMap != null) {
-
-
-
-                    scumMap.SetAllEnabled(false);
-
-
-
-                    SettingsChanged();
-
-
-
-                    lastFrameKey = null; terrainKey = null;
-
-
-
-                    RenderOverlay();
-
-
-
-                }
-
-
-
-            });
-
-
-
-            itemY += 24;
-
-
-
-            if (scumMap != null && scumMap.Sections != null) {
-
-
-
-                foreach (string sec in scumMap.Sections) {
-
-
-
-                    List<ScumMapCategory> cats;
-
-
-
-                    if (!scumMap.CategoriesBySection.TryGetValue(sec, out cats) || cats == null || cats.Count == 0) continue;
-
-
-
-                    bool isExpanded = sidebarExpandedSections.Contains(sec);
-
-
-
-                    bool isSecEnabled = scumMap.IsSectionEnabled(sec);
-
-
-
-                    bool isSecPartial = scumMap.IsSectionPartiallyEnabled(sec);
-
-
-
-                    int secH = 26;
-
-
-
-                    Rectangle secBoxRect = new Rectangle(innerX, itemY, innerW, secH);
-
-
-
-                    using (Brush secBg = new SolidBrush(isExpanded ? Color.FromArgb(200, 22, 27, 32) : Color.FromArgb(160, 16, 20, 24))) {
-
-
-
-                        g.FillRectangle(secBg, secBoxRect);
-
-
-
-                    }
-
-
-
-                    using (Pen secBorder = new Pen(Color.FromArgb(140, 42, 52, 61), 1.0f)) {
-
-
-
-                        g.DrawRectangle(secBorder, secBoxRect);
-
-
-
-                    }
-
-
-
-                    string currentSec = sec;
-
-
-
-                    RegisterClickable(secBoxRect, viewportRect, () => {
-
-
-
-                        if (sidebarExpandedSections.Contains(currentSec)) sidebarExpandedSections.Remove(currentSec);
-
-
-
-                        else sidebarExpandedSections.Add(currentSec);
-
-
-
-                        InvalidateFullMapSidebar();
-
-
-
-                        lastFrameKey = null;
-
-
-
-                        RenderOverlay();
-
-
-
-                    });
-
-
-
-                    string arrow = isExpanded ? "▼" : "►";
-
-
-
-                    using (Font arrowFont = new Font("Segoe UI", 7.0f, FontStyle.Bold)) {
-
-
-
-                        g.DrawString(arrow, arrowFont, Brushes.SkyBlue, innerX + 6, itemY + 6);
-
-
-
-                    }
-
-
-
-                    int swW = 24, swH = 12;
-
-
-
-                    int swX = innerX + 20;
-
-
-
-                    int swY = itemY + (secH - swH) / 2;
-
-
-
-                    Rectangle swRect = new Rectangle(swX, swY, swW, swH);
-
-
-
-                    DrawSwitchPill(g, swRect, isSecEnabled, isSecPartial);
-
-
-
-                    RegisterClickable(new Rectangle(swX - 2, itemY, swW + 4, secH), viewportRect, () => {
-
-
-
-                        bool nextState = !isSecEnabled;
-
-
-
-                        scumMap.SetSectionEnabled(currentSec, nextState);
-
-
-
-                        if (nextState) { showScumMap = true; scumMap.MasterEnabled = true; }
-
-
-
-                        SettingsChanged();
-
-
-
-                        lastFrameKey = null; terrainKey = null;
-
-
-
-                        RenderOverlay();
-
-
-
-                    });
-
-
-
-                    string secTitle = Localization.GetSectionName(sec);
-
-
-
-                    using (Font sf = new Font("Segoe UI", 7.5f, FontStyle.Bold))
-
-
-
-                    using (Brush sb = new SolidBrush(isSecEnabled ? Color.WhiteSmoke : Color.FromArgb(165, 175, 185))) {
-
-
-
-                        g.DrawString(secTitle, sf, sb, swX + swW + 6, itemY + 5);
-
-
-
-                    }
-
-
-
-                    int enabledInSec = 0;
-
-
-
-                    foreach (var c in cats) if (scumMap.IsCategoryEnabled(c.Id)) enabledInSec++;
-
-
-
-                    string countStr = string.Format(CultureInfo.InvariantCulture, "{0}/{1}", enabledInSec, cats.Count);
-
-
-
-                    using (Font cf = new Font("Segoe UI", 6.8f, FontStyle.Regular))
-
-
-
-                    using (Brush cb = new SolidBrush(enabledInSec > 0 ? Color.FromArgb(255, 159, 28) : Color.FromArgb(130, 140, 150))) {
-
-
-
-                        SizeF cSz = g.MeasureString(countStr, cf);
-
-
-
-                        g.DrawString(countStr, cf, cb, innerX + innerW - cSz.Width - 6, itemY + 6);
-
-
-
-                    }
-
-
-
-                    itemY += secH + 3;
-
-
-
-                    if (isExpanded) {
-
-
-
-                        if (sec == "Hunting") {
-
-
-
-                            itemY = DrawEmbeddedWildlifeBiomes(g, innerX + 6, itemY, innerW - 6, viewportRect);
-
-
-
-                        }
-
-
-
-                        int catH = 20;
-
-
-
-                        int catIndent = innerX + 14;
-
-
-
-                        int catRowW = innerW - 14;
-
-
-
-                        foreach (var cat in cats) {
-
-
-
-                            var currentCat = cat;
-
-
-
-                            bool isCatEnabled = scumMap.IsCategoryEnabled(cat.Id);
-
-
-
-                            Rectangle catRowRect = new Rectangle(catIndent, itemY, catRowW, catH);
-
-
-
-                            int cswW = 20, cswH = 11;
-
-
-
-                            int cswX = catIndent;
-
-
-
-                            int cswY = itemY + (catH - cswH) / 2;
-
-
-
-                            Rectangle cswRect = new Rectangle(cswX, cswY, cswW, cswH);
-
-
-
-                            DrawSwitchPill(g, cswRect, isCatEnabled, false);
-
-
-
-                            RegisterClickable(catRowRect, viewportRect, () => {
-
-
-
-                                scumMap.SetCategoryEnabled(currentCat.Id, !isCatEnabled);
-
-
-
-                                if (!isCatEnabled) { showScumMap = true; scumMap.MasterEnabled = true; }
-
-
-
-                                SettingsChanged();
-
-
-
-                                lastFrameKey = null; terrainKey = null;
-
-
-
-                                RenderOverlay();
-
-
-
-                            });
-
-
-
-                            Color catCol = Color.FromArgb(cat.ColorBackground);
-
-
-
-                            if (catCol.A == 0) catCol = OverlayTheme.Accent;
-
-
-
-                            using (Brush dotB = new SolidBrush(catCol)) {
-
-
-
-                                g.FillEllipse(dotB, cswX + cswW + 5, itemY + 7, 6, 6);
-
-
-
-                            }
-
-
-
-                            string catName = Localization.GetCategoryName(cat.Name);
-
-
-
-                            using (Font catFont = new Font("Segoe UI", 6.8f, isCatEnabled ? FontStyle.Bold : FontStyle.Regular))
-
-
-
-                            using (Brush catBrush = new SolidBrush(isCatEnabled ? Color.FromArgb(220, 230, 240) : Color.FromArgb(145, 155, 165))) {
-
-
-
-                                g.DrawString(catName, catFont, catBrush, cswX + cswW + 14, itemY + 3.5f);
-
-
-
-                            }
-
-
-
-                            if (cat.MarkerCount > 0) {
-
-
-
-                                using (Font mFont = new Font("Segoe UI", 6.0f, FontStyle.Regular))
-
-
-
-                                using (Brush mBrush = new SolidBrush(Color.FromArgb(115, 130, 145))) {
-
-
-
-                                    string mStr = cat.MarkerCount.ToString(CultureInfo.InvariantCulture);
-
-
-
-                                    SizeF mSz = g.MeasureString(mStr, mFont);
-
-
-
-                                    g.DrawString(mStr, mFont, mBrush, catIndent + catRowW - mSz.Width - 4, itemY + 4.5f);
-
-
-
-                                }
-
-
-
-                            }
-
-
-
-                            itemY += catH + 1;
-
-
-
-                        }
-
-
-
-                        itemY += 4;
-
-
-
-                    }
-
-
-
-                }
-
-
-
-            }
-
-
-
-            // === 3. QUICK TOOLS & FOOTER ===
-
-
-
-            DrawSidebarDivider(g, innerX, itemY, innerW);
-
-
-
-            itemY += 10;
-
-
-
-            using (Font secFont = new Font("Segoe UI", 7.5f, FontStyle.Bold)) {
-
-
-
-                g.DrawString(Localization.Get("SidebarTools"), secFont, Brushes.LightSlateGray, innerX, itemY);
-
-
-
-            }
-
-
-
-            itemY += 18;
-
-
-
-            Rectangle toolEditorRect = new Rectangle(innerX, itemY, innerW, 24);
-
-
-
-            DrawActionButton(g, toolEditorRect, Localization.Get("SidebarZoneEditor"), OverlayTheme.Surface);
-            RegisterClickable(toolEditorRect, viewportRect, () => { if(IsHandleCreated) BeginInvoke(new Action(() => OpenZoneImport(null))); else OpenZoneImport(null); });
-            itemY += 28;
-
-            Rectangle toolGuideRect = new Rectangle(innerX, itemY, innerW, 24);
-            DrawActionButton(g, toolGuideRect, Localization.Get("OpenStartupGuide"), OverlayTheme.Surface);
-            RegisterClickable(toolGuideRect, viewportRect, () => { if(IsHandleCreated) BeginInvoke(new Action(() => OpenStartupGuide())); else OpenStartupGuide(); });
-            itemY += 28;
-
-            Rectangle toolSettingsRect = new Rectangle(innerX, itemY, innerW, 24);
-            Rectangle adminMenuRect=new Rectangle(innerX,itemY,innerW,24);
-            DrawScrollableToggle(g,innerX,itemY,innerW,24,Localization.Get("AdminToolsEnabled"),adminToolsEnabled,viewportRect,()=>SetAdminToolsEnabled(!adminToolsEnabled));
-            itemY+=28;
-            Rectangle clearDeathsRect=new Rectangle(innerX,itemY,innerW,24);
-            bool hasDeathMarkers=zones.Any(marker=>marker.IsDeathMarker);
-            using(var toolFont=new Font("Segoe UI",7.5f,FontStyle.Bold))
-                FullMapSidebarStyle.DrawActionButton(g,clearDeathsRect,Localization.Get("ClearDeathMarkers"),OverlayTheme.Surface,toolFont,hasDeathMarkers,false);
-            if(hasDeathMarkers)RegisterClickable(clearDeathsRect,viewportRect,RemoveDeathMarkersFromSidebar);
-            itemY+=28;
-            toolSettingsRect=new Rectangle(innerX,itemY,innerW,24);
-            DrawActionButton(g, toolSettingsRect, Localization.T("SidebarSettings",PhysicalKeyCapture.KeyName(settingsShortcutKey)), OverlayTheme.Surface);
-            RegisterClickable(toolSettingsRect, viewportRect, () => { if(IsHandleCreated) BeginInvoke(new Action(() => ShowSettings())); else ShowSettings(); });
-
-
-
-            itemY += 34;
-
-
-
-            // Tips Footer
-
-
-
-            DrawSidebarDivider(g, innerX, itemY, innerW);
-
-
-
-            itemY += 8;
-
-
-
-            using (Font tipFont = new Font("Segoe UI", 6.6f, FontStyle.Regular))
-
-
-
-            using (Brush tipBrush = new SolidBrush(Color.FromArgb(120, 135, 150))) {
-
-
-
-                g.DrawString(Localization.Get("SidebarPanHint"), tipFont, tipBrush, innerX, itemY);
-
-
-
-                itemY += 14;
-
-
-
-                g.DrawString(Localization.Get("SidebarContextHint"), tipFont, tipBrush, innerX, itemY);
-
-
-
-                itemY += 14;
-
-
-
-                g.DrawString(Localization.Get("SidebarScrollHint"), tipFont, tipBrush, innerX, itemY);
-
-
-
-                itemY += 14;
-
-
-
-                g.DrawString(Localization.T("SidebarExitHint",PhysicalKeyCapture.KeyName(scumMapKey)), tipFont, tipBrush, innerX, itemY);
-
-
-
-                itemY += 24;
-
-
-
-            }
-
-
-
-            int totalContentHeight = (itemY + sidebarScrollY) - scrollStartY;
-
-
-
-            sidebarMaxScroll = Math.Max(0, totalContentHeight - viewportH + 20);
-
-
-
-            g.Restore(origState);
-
-
-
-            // === 4. VERTICAL SCROLLBAR ON RIGHT EDGE ===
-
-
-
-            if (sidebarMaxScroll > 0) {
-
-
-
-                int barW = 4;
-
-
-
-                int barX = sidebarX + sidebarW - barW - 2;
-
-
-
-                int trackY = scrollStartY;
-
-
-
-                int sbTrackH = viewportH;
-
-
-
-                sidebarScrollbarTrackRect = new Rectangle(barX, trackY, barW, sbTrackH);
-
-
-
-                using (Brush trkB = new SolidBrush(Color.FromArgb(40, 255, 255, 255))) {
-
-
-
-                    g.FillRectangle(trkB, sidebarScrollbarTrackRect);
-
-
-
-                }
-
-
-
-                int thumbH = Math.Max(24, (int)((float)viewportH / totalContentHeight * sbTrackH));
-
-
-
-                int thumbY = trackY + (int)((float)sidebarScrollY / sidebarMaxScroll * (sbTrackH - thumbH));
-
-
-
-                sidebarScrollbarThumbRect = new Rectangle(barX, thumbY, barW, thumbH);
-
-
-
-                using (Brush thmB = new SolidBrush(draggingSidebarScrollbar ? Color.FromArgb(220, 80, 170, 240) : Color.FromArgb(160, 70, 140, 200))) {
-
-
-
-                    g.FillRectangle(thmB, sidebarScrollbarThumbRect);
-
-
-
-                }
-
-
-
-            } else {
-
-
-
-                sidebarScrollbarThumbRect = Rectangle.Empty;
-
-
-
-                sidebarScrollbarTrackRect = Rectangle.Empty;
-
-
-
-            }
-
-
-
+        void DrawFullMapSidebar(Graphics g,int sidebarX,int sidebarW,int sidebarH) {
+            DrawFieldConsoleSidebar(g,sidebarX,sidebarW,sidebarH);
         }
+
 
 
 
@@ -7696,6 +6397,7 @@ namespace ScumMiniMap {
                 .Append(searchTarget==null?PointF.Empty:searchTarget.Centroid).Append('|')
                 .Append(routeGuidanceColor.ToArgb()).Append('|')
                 .Append(playerConeColor.ToArgb()).Append('|')
+                .Append(routeHistoryColor.ToArgb()).Append('|')
                 .Append(mx).Append('|')
                 .Append(my).Append('|')
                 .Append(myaw).Append('|')
@@ -7918,7 +6620,7 @@ namespace ScumMiniMap {
 
 
 
-            const int barH=28;
+            const int barH=52;
 
 
 
@@ -8038,200 +6740,8 @@ namespace ScumMiniMap {
 
 
             if(barActive) {
-
-
-
-                using(Graphics g=Graphics.FromImage(bitmap)) {
-
-
-
-                    g.SmoothingMode=System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
-
-
-                    g.TextRenderingHint=System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-
-
-
-                    string loc=string.IsNullOrEmpty(VoiceStatus)?GetLocationDescription():VoiceStatus+"  |  "+GetLocationDescription();
-
-
-
-                    Color badgeColor=chat.Paused?Color.FromArgb(240,195,65):(searchTarget!=null?routeGuidanceColor:(TrackingEnabled?Color.FromArgb(57,211,83):Color.FromArgb(150,146,138)));
-
-
-
-                    using(Font locFont=new Font("Segoe UI",8.25f,FontStyle.Bold))
-
-
-
-                    {
-
-
-
-                        SizeF locSz=g.MeasureString(loc,locFont);
-
-
-
-                        if(overlayShape=="Circle") {
-
-
-
-                            int pillH = 26;
-
-
-
-                            int pillW = Math.Min(bitmap.Width - 12, Math.Max(160, (int)Math.Ceiling(locSz.Width) + 38));
-
-
-
-                            int pillX = (bitmap.Width - pillW) / 2;
-
-
-
-                            int pillY = barAbove ? 2 : bitmap.Height - pillH + 1;
-
-
-
-                            Rectangle pillRect = new Rectangle(pillX, pillY, pillW, pillH);
-
-
-
-                            using(GraphicsPath pillPath = new GraphicsPath()) {
-
-
-
-                                int r = pillH;
-
-
-
-                                pillPath.AddArc(pillRect.X, pillRect.Y, r, r, 90, 180);
-
-
-
-                                pillPath.AddArc(pillRect.Right - r, pillRect.Y, r, r, 270, 180);
-
-
-
-                                pillPath.CloseFigure();
-
-
-
-                                using(Brush bg = new SolidBrush(Color.FromArgb(245, 12, 12, 12))) {
-
-
-
-                                    g.FillPath(bg, pillPath);
-
-
-
-                                }
-
-
-
-                                using(Pen border = new Pen(searchTarget != null ? routeGuidanceColor : Color.FromArgb(220, 50, 48, 44), 1.2f)) {
-
-
-
-                                    g.DrawPath(border, pillPath);
-
-
-
-                                }
-
-
-
-                            }
-
-
-
-                            using(Brush b = new SolidBrush(badgeColor)) {
-
-
-
-                                g.FillEllipse(b, pillX + 11, pillY + (pillH - 8) / 2, 8, 8);
-
-
-
-                            }
-
-
-
-                            RectangleF textRect=new RectangleF(pillX+24,pillY+1,pillW-36,pillH-2);
-
-
-
-                            DrawScrollingInfobarText(g,loc,locFont,Brushes.White,textRect);
-
-
-
-                        } else {
-
-
-
-                            int barY = barAbove ? 0 : bitmap.Height - barH;
-
-
-
-                            using(Brush b = new SolidBrush(Color.FromArgb(245, 12, 12, 12))) {
-
-
-
-                                g.FillRectangle(b, 0, barY, bitmap.Width, barH);
-
-
-
-                            }
-
-
-
-                            using(Pen border = new Pen(searchTarget != null ? routeGuidanceColor : Color.FromArgb(200, 50, 48, 44), 1.0f)) {
-
-
-
-                                g.DrawLine(border, 0, barAbove ? barH - 1 : barY, bitmap.Width, barAbove ? barH - 1 : barY);
-
-
-
-                            }
-
-
-
-                            using(Brush b = new SolidBrush(badgeColor)) {
-
-
-
-                                g.FillEllipse(b, 10, barY + (barH - 8) / 2, 8, 8);
-
-
-
-                            }
-
-
-
-                            RectangleF textRect=new RectangleF(24,barY+1,Math.Max(1,bitmap.Width-34),barH-2);
-
-
-
-                            DrawScrollingInfobarText(g,loc,locFont,Brushes.White,textRect);
-
-
-
-                        }
-
-
-
-                    }
-
-
-
-                }
-
-
-
+                using(Graphics g=Graphics.FromImage(bitmap)) { g.SmoothingMode=SmoothingMode.AntiAlias;DrawFieldConsoleHud(g,bitmap,barAbove,barH); }
             }
-
-
 
             if(fullMapActive) {
 
@@ -8258,6 +6768,7 @@ namespace ScumMiniMap {
 
 
                         DrawCachedFullMapSidebar(g, mapW, sidebarW, bitmap.Height);
+                        DrawFieldConsoleMapChrome(g,mapW,bitmap.Height);
 
 
 
@@ -8282,6 +6793,7 @@ namespace ScumMiniMap {
 
 
         void RenderOverlay() {
+            if(WpfFieldConsoleRuntime.Active!=null) { WpfFieldConsoleRuntime.Active.Refresh();return; }
             if(InvokeRequired) {
                 if(Interlocked.Exchange(ref renderQueued,1)!=0)return;
                 try {
@@ -8398,6 +6910,7 @@ namespace ScumMiniMap {
                                 visibleTexture.Width*textureScale,visibleTexture.Height*textureScaleY),GraphicsUnit.Pixel);
                         }
                     }
+                    using(var wash=new SolidBrush(Color.FromArgb(145,14,25,22)))background.FillRectangle(wash,visibleTexture);
                     DrawGrid(background,left,top,side);
                     float currentZoom=fullMapActive?fullMapZoom:zoom;
 
@@ -8636,7 +7149,7 @@ namespace ScumMiniMap {
 
 
 
-                using(Font navFont=new Font("Segoe UI",7.5f,FontStyle.Bold)) {
+                using(Font navFont=OverlayTheme.UiFont(7.5f, FontStyle.Bold)) {
 
 
 
@@ -8732,7 +7245,7 @@ namespace ScumMiniMap {
 
 
 
-                using(Font distFont=new Font("Segoe UI",7f,FontStyle.Bold)) {
+                using(Font distFont=OverlayTheme.UiFont(7f, FontStyle.Bold)) {
 
 
 
@@ -8832,7 +7345,7 @@ namespace ScumMiniMap {
 
 
 
-                using(Font compFont=new Font("Segoe UI",8.5f,FontStyle.Bold))
+                using(Font compFont=OverlayTheme.UiFont(8.5f, FontStyle.Bold))
 
 
 
@@ -8894,7 +7407,7 @@ namespace ScumMiniMap {
             try {
                 g.TranslateTransform(left,top);
                 g.ScaleTransform(side,side);
-                using(Pen trail=new Pen(Color.FromArgb(205,80,220,255),2.2f/side) { LineJoin=LineJoin.Round,StartCap=LineCap.Round,EndCap=LineCap.Round })
+                using(Pen trail=new Pen(Color.FromArgb(205,routeHistoryColor),2.2f/side) { LineJoin=LineJoin.Round,StartCap=LineCap.Round,EndCap=LineCap.Round })
                     g.DrawPath(trail,locationHistoryPath);
             } finally { g.Restore(pathState); }
             if(!fullMapActive || !locationHistoryTimestamps || !locationHistoryHoverPoint.HasValue) return;
@@ -8902,7 +7415,7 @@ namespace ScumMiniMap {
             int segment=FindLocationHistoryHoverSegment(locationHistoryHoverPoint.Value,left,top,side,out hover);
             displayedLocationHistorySegment=segment;
             if(segment<0) return;
-            using(Font font=new Font("Segoe UI",9f,FontStyle.Bold))
+            using(Font font=OverlayTheme.UiFont(9f, FontStyle.Bold))
             using(Brush background=new SolidBrush(Color.FromArgb(155,8,14,20)))
             using(Brush foreground=new SolidBrush(Color.FromArgb(230,225,245,255))) {
                 string age=FormatHistoryAge(DateTime.UtcNow-locationHistoryPoints[segment].SampledAtUtc);
@@ -9068,6 +7581,7 @@ namespace ScumMiniMap {
                     if(IsDisposed) return;
                     BeginInvoke((Action)(()=> {
                         routeCalculating=false;
+                        if(wpfQueuedTarget!=null && request!=routeGeneration) { var queued=wpfQueuedTarget;wpfQueuedTarget=null;if(Object.ReferenceEquals(searchTarget,queued)&&position!=null)UpdateRouteAsync(ToMap(position),queued); }
                         if(failure!=null) { Program.LogException("Route",failure); if(force) FinishVoiceReroute(false); return; }
                         if(closing || IsDisposed || request!=routeGeneration || !Object.ReferenceEquals(searchTarget,target) || target.Centroid!=targetPoint) return;
                         activeRoute=result; lastRouteTarget=target; lastRoutePlayerPt=playerPt;

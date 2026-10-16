@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string]$CataloguePath,
     [string]$OutputPath,
     [ValidateRange(1,3)][int]$RequestAttempts = 2

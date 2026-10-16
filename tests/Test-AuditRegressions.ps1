@@ -1,4 +1,4 @@
-$ErrorActionPreference='Stop'
+﻿$ErrorActionPreference='Stop'
 $miniRoot=Split-Path $PSScriptRoot -Parent
 $testDir=Join-Path ([IO.Path]::GetTempPath()) ('MiniMap-audit-build-'+[guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $testDir | Out-Null
@@ -6,7 +6,7 @@ $compiler=Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 try {
     $sources=& (Join-Path $miniRoot 'scripts\Get-MiniMapSources.ps1')
     $testExe=Join-Path $testDir 'AuditTests.exe'
-    & $compiler /nologo /target:exe /platform:x64 /main:AuditRegressionTests "/out:$testExe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.IO.Compression.dll "/resource:$miniRoot\resources\roads.bin,roads.bin" @sources (Join-Path $PSScriptRoot 'AuditRegressionTests.cs')
+    & $compiler /nologo /codepage:65001 /target:exe /platform:x64 /main:AuditRegressionTests "/out:$testExe" /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:Accessibility.dll "/reference:$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\WPF\PresentationCore.dll" "/reference:$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\WPF\PresentationFramework.dll" "/reference:$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\WPF\WindowsBase.dll" /reference:System.Xaml.dll /reference:System.IO.Compression.dll "/resource:$miniRoot\resources\roads.bin,roads.bin" @sources (Join-Path $PSScriptRoot 'AuditRegressionTests.cs')
     if($LASTEXITCODE -ne 0) { throw 'Audit regression compilation failed.' }
     # Owned, inert older/newer executables satisfy the real updater's stable-file
     # contract. They write one version marker and exit, with no app UI or UAC manifest.
@@ -28,7 +28,7 @@ class MiniMapLaunchFixture {
 '@
         [IO.File]::WriteAllText($fixture,$fixtureSource.Replace('VERSION',$fixtureSpec.Version))
         $fixtureExe=Join-Path $testDir ('MiniMap-LaunchFixture-'+$fixtureSpec.Name+'.exe')
-        & $compiler /nologo /target:winexe "/out:$fixtureExe" $fixture
+        & $compiler /nologo /codepage:65001 /target:winexe "/out:$fixtureExe" $fixture
         if($LASTEXITCODE -ne 0) { throw 'Launch fixture compilation failed.' }
         $fixtureExecutables += $fixtureExe
     }

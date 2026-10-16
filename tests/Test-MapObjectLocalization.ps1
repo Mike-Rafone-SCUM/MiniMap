@@ -2,7 +2,7 @@
 $miniRoot = Split-Path $PSScriptRoot -Parent
 Add-Type -AssemblyName System.Windows.Forms,System.Drawing
 $miniSources = & (Join-Path $miniRoot 'scripts\Get-MiniMapSources.ps1')
-Add-Type -Path $miniSources -ReferencedAssemblies System.Windows.Forms,System.Drawing,System.Xml,System.IO.Compression
+Add-Type -Path $miniSources -ReferencedAssemblies WindowsBase,PresentationCore,PresentationFramework,System.Xaml,Accessibility,System.Windows.Forms,System.Drawing,System.Xml,System.IO.Compression
 $store = [ScumMiniMap.ScumMapStore]::Load((Join-Path $miniRoot 'resources'))
 foreach ($category in $store.Categories) {
     $expected = $category.Section -notin @('Hunting','Fishing')

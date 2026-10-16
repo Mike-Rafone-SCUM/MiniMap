@@ -13,6 +13,10 @@
 *.log
 *.bak
 /resources/settings.ini
+/resources/maps/
+/resources/imports/
+*.db
+*.sqlite
 /resources/settings.ini.*
 /resources/automatic.log
 /resources/last-detection.json

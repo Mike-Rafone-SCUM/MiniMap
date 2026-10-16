@@ -753,7 +753,7 @@ static class InputVoiceTests {
         using(var window=new MapWindow(profile)) {
             foreach(var action in AppControlBindings.AllActions) {
                 string title=Localization.Get(AppControlBindings.LabelKey(action))+":";
-                Check(Descendants(window).OfType<Button>().Any(button=>button.Text.StartsWith(title,StringComparison.Ordinal)),
+                Check(Descendants(window).OfType<Button>().Any(button=>button.AccessibleName==title.TrimEnd(':') && button.Text==PhysicalKeyCapture.KeyName(window.AppControlKey(action))),
                     "Settings exposes rebinding for "+action);
             }
             Invoke(window,"ApplyAppControls",configured);

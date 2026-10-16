@@ -21,6 +21,8 @@ namespace ScumMiniMap {
 
 
 
+        static IEnumerable<Control> FieldConsoleDescendants(Control root) { foreach(Control child in root.Controls) { yield return child;foreach(var nested in FieldConsoleDescendants(child))yield return nested; } }
+
         public void CheckSearchPreview(string output) {
 
 
@@ -65,7 +67,7 @@ namespace ScumMiniMap {
 
 
 
-                        foreach(Control control in dialog.Controls) {
+                        foreach(Control control in FieldConsoleDescendants(dialog)) {
 
 
 

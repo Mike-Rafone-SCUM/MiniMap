@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][string]$PackageDirectory)
+﻿param([Parameter(Mandatory=$true)][string]$PackageDirectory)
 $ErrorActionPreference='Stop'
 $artifactRoot=[IO.Path]::GetFullPath($PackageDirectory)
 $assembly=[Reflection.Assembly]::LoadFile((Join-Path $artifactRoot 'SkynettMiniMap.exe'))

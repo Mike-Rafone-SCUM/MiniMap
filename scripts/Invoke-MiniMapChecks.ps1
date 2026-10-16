@@ -1,8 +1,9 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 $checkRoot = Split-Path $PSScriptRoot -Parent
 # Fresh Windows PowerShell STA processes isolate assemblies and UI fixtures.
 foreach ($check in @(
     'tests\Test-Localization.ps1',
+    'tests\Test-PrivatePositions.ps1',
     'tests\Test-MapObjectLocalization.ps1',
     'tests\Test-SpawnCart.ps1',
     'tests\Test-AdminPlayers.ps1',

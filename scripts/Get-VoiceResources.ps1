@@ -1,4 +1,4 @@
-$root=Split-Path $PSScriptRoot -Parent
+﻿$root=Split-Path $PSScriptRoot -Parent
 $voiceRoot=Join-Path $root 'resources\voice-navigation'
 if(Test-Path -LiteralPath $voiceRoot) {
     Get-ChildItem -LiteralPath $voiceRoot -Directory | ForEach-Object {
