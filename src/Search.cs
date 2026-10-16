@@ -119,7 +119,9 @@ namespace ScumMiniMap {
         }
         public static List<MapZone> FindScumMap(ScumMapStore scumMap, string query, PointF? origin, int maxResults = 30) {
             List<MapZone> result = new List<MapZone>();
-            if (scumMap == null || !scumMap.MasterEnabled) return result;
+            // Explicit location searches use the full catalogue. Map visibility
+            // controls drawing and click naming, not which destinations exist.
+            if (scumMap == null) return result;
             string filter = Normalize(query ?? "");
             if (filter.Length > 120) return result;
             bool nearest = (Regex.IsMatch(filter, @"\b(nearest|near|cerca|cercano|cercana)\b") || filter.Length == 0) && origin.HasValue;
@@ -135,7 +137,6 @@ namespace ScumMiniMap {
             List<Match> matches = new List<Match>();
             int index = 0;
             foreach (ScumMapMarker m in scumMap.Markers) {
-                if (!scumMap.IsCategoryEnabled(m.CategoryId)) continue;
                 PointF pt = m.Point;
                 if (sector != null && Sector(pt) != sector) continue;
                 string name = scumMap.GetMarkerDisplayName(m);

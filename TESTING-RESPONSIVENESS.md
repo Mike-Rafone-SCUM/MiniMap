@@ -8,6 +8,9 @@ Home now restores Settings from the taskbar and brings it to the foreground. Rep
 
 ## Destination indicator and full-map tracking
 
+- Hold movement or vehicle controls while opening the main map. The map must retain SCUM's foreground keyboard ownership, including after map clicks. Search/Settings text-entry dialogs may take focus; dismissing them should return to the game while keeping the map visible. Verify walking, driving and flying in SCUM; the automated checks cover window styles, mouse activation and retained foreground focus without sending gameplay input.
+- With POI categories, the POI master switch and map zones disabled, use Delete location search. Hidden destinations should still appear and keep their exact coordinates without enabling those layers.
+
 - Select a destination: a glowing arrow on the minimap edge points toward the final endpoint, using your route colour. Circular maps also show a short glowing arc. The indicator works independently of voice navigation and disappears when the destination is cleared or reached.
 - Check different bearings, zoom levels, circular/square shapes and status-bar positions. The arrow indicates the direct destination bearing, not the next road turn.
 - Open the full map while travelling. Position and heading should continue updating even though SCUM shows its map cursor. Chat, other applications, held keys and active mouse interactions still retain their normal input protections.

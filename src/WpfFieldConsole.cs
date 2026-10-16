@@ -645,8 +645,15 @@ namespace ScumMiniMap {
             if(!tacticalMouseShieldActive)return mouseShield.Suppress(message,data,false,false,false);
             IntPtr target=Native.WindowFromPoint(point);
             // Restrict the actual SCUM destination, never desktop/taskbar/other applications.
-            return mouseShield.Suppress(message,data,tacticalMouseShieldActive,
+            return mouseShield.Suppress(message,data,TacticalMouseShieldEnabled(tacticalMouseShieldActive,Native.IsOurWindow(Native.GetForegroundWindow())),
                 Native.IsOurWindow(target),Native.IsGameWindow(target));
+        }
+        internal static bool TacticalMouseShieldEnabled(bool visible,bool appFocused) { return visible&&appFocused; }
+        static IntPtr TacticalWindowMessage(IntPtr hwnd,int message,IntPtr w,IntPtr l,ref bool handled) {
+            // MA_NOACTIVATE keeps keyboard/held movement in SCUM while still
+            // delivering this mouse click to the map's controls.
+            if(message==0x21) {handled=true;return new IntPtr(3);}
+            return IntPtr.Zero;
         }
         internal void CloseTactical(bool closeGameMap=false) { tactical.Hide();tacticalMap.ClearHover();engine.WpfTactical(false);if(hudEnabled)hud.Show();if(closeGameMap&&!diagnostic&&gameMapWindow!=IntPtr.Zero) { var binding=engine.WpfSnapshot(false);if(!binding.TrackingPaused)Native.ReturnMapKey(gameMapWindow,binding.MapKey,binding.MapScan); }Refresh(); }
         internal System.Drawing.Rectangle LastMonitorBounds;
@@ -702,9 +709,13 @@ namespace ScumMiniMap {
             return window;
         }
         Window BuildTactical() {
-            var window=Window("SCUM MiniMap — Field console",1280,850);window.MinWidth=900;window.MinHeight=620;window.Topmost=true;window.ShowActivated=!diagnostic;
+            var window=Window("SCUM MiniMap — Field console",1280,850);window.MinWidth=900;window.MinHeight=620;window.Topmost=true;window.ShowActivated=false;
             window.AllowsTransparency=true;window.Background=Brushes.Transparent;
-            window.Loaded+=(s,e)=>FocusInteractive(window);
+            window.SourceInitialized+=(s,e)=> {
+                var handle=new WindowInteropHelper(window).Handle;
+                SetWindowLong(handle,-20,GetWindowLong(handle,-20)|0x08000000);
+                HwndSource.FromHwnd(handle).AddHook(TacticalWindowMessage);
+            };
             var grid=new Grid();grid.ColumnDefinitions.Add(new ColumnDefinition());grid.ColumnDefinitions.Add(new ColumnDefinition { Width=new GridLength(320) });
             tacticalMap=new WpfMapSurface { BaseMap=geography,Terrain=terrain };
             tacticalMap.ClearRouteRequested=()=> { engine.WpfClear();Refresh(); };tacticalMap.DeleteWaypointRequested=marker=> { engine.WpfDeleteWaypoint(marker);Refresh(); };
@@ -871,8 +882,8 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
                 tactical.Hide();tacticalMap.ClearHover();engine.WpfTactical(false);if(hudEnabled)hud.Show();
                 if(forward&&!diagnostic) { var binding=engine.WpfSnapshot(false);Native.ReturnMapKey(gameMapWindow,binding.MapKey,binding.MapScan); }
             } else {
-                gameMapWindow=gameKey&&Native.GameFocused()?Native.GetForegroundWindow():IntPtr.Zero;
-                hud.Hide();engine.WpfTactical(true);engine.WpfFollow();tactical.WindowState=WindowState.Normal;tactical.Show();FitTacticalToMonitor();FocusInteractive(tactical);
+                gameMapWindow=Native.GameFocused()?Native.GetForegroundWindow():IntPtr.Zero;
+                hud.Hide();engine.WpfTactical(true);engine.WpfFollow();tactical.WindowState=WindowState.Normal;tactical.Show();FitTacticalToMonitor();
             }
             Refresh();
         }
@@ -892,6 +903,10 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
             else { window.Focus();window.MoveFocus(new TraversalRequest(FocusNavigationDirection.First)); }
             if(Native.GetForegroundWindow()==handle)ClipCursor(IntPtr.Zero);
         }
+        void RestoreGameplayFocus() {
+            if(diagnostic||gameMapWindow==IntPtr.Zero)return;
+            if(Native.IsOurWindow(Native.GetForegroundWindow())&&Native.IsGameWindow(gameMapWindow))Native.SetForegroundWindow(gameMapWindow);
+        }
         void Modal(Window window) {
             // A dialog opened from the HUD has no topmost tactical owner to keep it above SCUM.
             window.Topmost=true;window.ShowActivated=!diagnostic;
@@ -905,7 +920,7 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
             var previousForeground=Native.GetForegroundWindow();
             try { window.ShowDialog(); }finally {
                 dialogs.Remove(window);UpdateSettingsToggle();engine.WpfModal(dialogs.Count>0);engine.WpfSave();Refresh();
-                if(dialogs.Count>0)FocusInteractive(dialogs[dialogs.Count-1]);else if(tactical.IsVisible)FocusInteractive(tactical);
+                if(dialogs.Count>0)FocusInteractive(dialogs[dialogs.Count-1]);else if(tactical.IsVisible)RestoreGameplayFocus();
                 else if(!diagnostic&&Native.IsGameWindow(previousForeground))Native.SetForegroundWindow(previousForeground);
             }
         }

@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 class WpfPreviewHarness {
+ [System.Runtime.InteropServices.DllImport("user32.dll",EntryPoint="GetWindowLongW")]static extern int WindowStyle(IntPtr window,int index);
+ [System.Runtime.InteropServices.DllImport("user32.dll")]static extern IntPtr SendMessage(IntPtr window,int message,IntPtr w,IntPtr l);
  [System.Runtime.InteropServices.DllImport("user32.dll")]static extern bool IsWindowEnabled(IntPtr window);
  const BindingFlags Hidden=BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic;
  static object Field(object o,string n) { return o.GetType().GetField(n,Hidden).GetValue(o); }
@@ -125,6 +127,30 @@ class WpfPreviewHarness {
      Call(clickStore,"SetCategoryEnabled",fixture.Category,false);var disabledTarget=Call(engine,"WpfClickedTarget",at,.001f);var sector=(string)assembly.GetType("ScumMiniMap.DestinationSearch").GetMethod("Sector",BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic).Invoke(null,new object[]{at});Check((string)Field(disabledTarget,"Name")==sector&&disabledTarget.GetType().GetProperty("Centroid").GetValue(disabledTarget,null).Equals(at),"Disabled POI category cannot name a clicked destination and exact coordinates are preserved: "+fixture.Category);Call(clickStore,"SetCategoryEnabled",fixture.Category,true);
     }
     clickStore.GetType().GetField("MasterEnabled").SetValue(clickStore,false);Check((string)Field(Call(engine,"WpfClickedTarget",new System.Drawing.PointF(.11f,.1f),.001f),"Name")=="D4","Disabled POI master also excludes settlement-area naming");
+    var oldShowPoi=Field(engine,"showScumMap");var oldShowZones=Field(engine,"showZones");
+    try {
+     foreach(bool master in new[]{true,false})foreach(bool mapVisible in new[]{true,false}) {
+      clickStore.GetType().GetField("MasterEnabled").SetValue(clickStore,master);
+      engine.GetType().GetField("showScumMap",Hidden).SetValue(engine,mapVisible);
+      engine.GetType().GetField("showZones",Hidden).SetValue(engine,false);
+      Call(clickStore,"SetCategoryEnabled",44,false);
+      var filterBefore=Call(clickStore,"GetFilterHashKey");
+      var hiddenMatches=(System.Collections.IList)Call(engine,"WpfSearch","Synthetic POI");
+      Check(hiddenMatches.Count==1&&((string)Field(hiddenMatches[0],"Name")).IndexOf("Synthetic POI",StringComparison.Ordinal)>=0
+       &&hiddenMatches[0].GetType().GetProperty("Centroid").GetValue(hiddenMatches[0],null).Equals(new System.Drawing.PointF(.7f,.7f)),
+       "Delete-menu search finds a hidden POI with zones off: master="+master+", map="+mapVisible);
+      Check(Equals(filterBefore,Call(clickStore,"GetFilterHashKey"))&&Equals(Field(engine,"showScumMap"),mapVisible)&&!(bool)Field(engine,"showZones"),
+       "Searching hidden locations preserves map visibility and category choices");
+      Check(((System.Collections.IList)Call(engine,"WpfSearch","grid D4")).Count>0,"Grid destination search remains available with hidden layers");
+     }
+     var hiddenSearch=(Window)Call(runtime,"BuildSearch");
+     try {
+      Children(hiddenSearch).OfType<TextBox>().Single().Text="Synthetic POI";
+      var searchResults=Children(hiddenSearch).OfType<ListBox>().Single();
+      Check(searchResults.Items.Count==1&&searchResults.SelectedIndex==0,
+       "Actual Delete search dialog lists and selects a POI with its category, master and map layers disabled");
+     }finally {hiddenSearch.Close();}
+    }finally {engine.GetType().GetField("showScumMap",Hidden).SetValue(engine,oldShowPoi);engine.GetType().GetField("showZones",Hidden).SetValue(engine,oldShowZones);}
    }finally {engine.GetType().GetField("scumMap",Hidden).SetValue(engine,originalPoiStore);}
    var clusterStore=Activator.CreateInstance(originalPoiStore.GetType());var clusterState=Activator.CreateInstance(stateType,true);stateType.GetField("Store",Hidden).SetValue(clusterState,clusterStore);stateType.GetField("Zoom",Hidden).SetValue(clusterState,1f);
    for(int i=0;i<4;i++) { var item=Activator.CreateInstance(clickMarkerType);clickMarkerType.GetField("Id").SetValue(item,i);clickMarkerType.GetField("CategoryId").SetValue(item,99);clickMarkerType.GetField("Title").SetValue(item,"Cluster fixture "+i);clickMarkerType.GetField("X").SetValue(item,.5f+i*.012f);clickMarkerType.GetField("Y").SetValue(item,.5f);((System.Collections.IList)Field(clusterStore,"Markers")).Add(item); }
@@ -192,7 +218,17 @@ class WpfPreviewHarness {
     var guide=(Window)Call(runtime,"BuildOnboarding",0);try {var languageSelector=Children(guide).OfType<ComboBox>().Single();languageSelector.SelectedIndex=0;languageSelector.SelectedIndex=Convert.ToInt32(languageValue);Check(Children(guide).OfType<TextBlock>().Any(t=>t.Text==(string)getLocalized.Invoke(null,new object[]{"WpfGettingStarted"}))&&Children(guide).OfType<TextBlock>().Any(t=>t.Text==(string)getLocalized.Invoke(null,new object[]{"WpfTutorialFilters"})),"Setup guide refreshes translated headings and current POI defaults: "+languageValue); }finally {guide.Close();}
    }
    languageProperty.SetValue(null,originalLanguage,null);Call(runtime,"Refresh");
+   var foregroundBeforeMap=(IntPtr)foregroundMethod.Invoke(null,null);
    Call(runtime,"ToggleTactical",true);Check(mapWindow.IsVisible&&!((Window)Field(runtime,"hud")).IsVisible,"Map-key action opens the full map and hides the HUD");
+   var tacticalHandle=new System.Windows.Interop.WindowInteropHelper(mapWindow).Handle;
+   Check(!mapWindow.ShowActivated&&(WindowStyle(tacticalHandle,-20)&0x08000000)!=0,
+    "Main map uses the non-activating window style so held movement and vehicle keys remain with SCUM");
+   Check(SendMessage(tacticalHandle,0x21,IntPtr.Zero,IntPtr.Zero)==new IntPtr(3),
+    "Clicking main-map controls returns MA_NOACTIVATE without eating the mouse click");
+   Check((IntPtr)foregroundMethod.Invoke(null,null)==foregroundBeforeMap,"Opening and clicking the main map preserve the existing foreground window");
+   var shieldPolicy=type.GetMethod("TacticalMouseShieldEnabled",BindingFlags.Static|BindingFlags.NonPublic);
+   Check(!(bool)shieldPolicy.Invoke(null,new object[]{true,false})&&(bool)shieldPolicy.Invoke(null,new object[]{true,true})
+    &&!(bool)shieldPolicy.Invoke(null,new object[]{false,true}),"Visible main map does not block outside mouse input while the game owns focus");
    Call(runtime,"ToggleTactical",true);Check(!mapWindow.IsVisible&&((Window)Field(runtime,"hud")).IsVisible,"A second map-key action closes the full map and restores the HUD");((Window)Field(runtime,"hud")).Hide();
    Call(runtime,"ToggleTactical",true);System.Windows.Forms.Application.DoEvents();mapWindow.UpdateLayout();Check(!(bool)isNativeMinimized.Invoke(null,new object[]{new System.Windows.Interop.WindowInteropHelper(mapWindow).Handle}),"Reopening the tactical map clears stale native minimization");var closeMap=Children(mapWindow).OfType<Button>().First(b=>(b.Content as string)=="×");closeMap.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
    Check(!mapWindow.IsVisible&&((Window)Field(runtime,"hud")).IsVisible,"Visible close-map button always dismisses the tactical map");((Window)Field(runtime,"hud")).Hide();

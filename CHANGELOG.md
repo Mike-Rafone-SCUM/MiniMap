@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.1.3] - 2026-10-16
+
+- The main map now opens and accepts map clicks without taking keyboard focus from SCUM, allowing held movement and vehicle controls to continue. Closing a map dialog returns focus to the game when appropriate. The outside-map mouse shield no longer blocks game clicks while SCUM owns focus; text-entry dialogs retain their normal input ownership.
+- Location search (Delete by default) now searches the full POI catalogue even when POIs, zones or individual categories are hidden. Searching does not change map visibility settings.
+
 ## [2.1.2] - 2026-10-16
 
 - Moved the keyboard hook to a dedicated input thread so map rendering cannot delay character movement. Physical input cancels coordinate-copy delivery immediately; injected-key cleanup and UI diagnostics run on the UI thread. Chat revision state is atomic, and held-key reconciliation runs on the keyboard thread.

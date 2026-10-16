@@ -1712,7 +1712,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "2.1.2";
+        public const string VersionString = "2.1.3";
 
 
 
@@ -2639,7 +2639,7 @@ namespace ScumMiniMap {
 
 
 
-                        if(showScumMap && scumMap!=null) {
+                        if(scumMap!=null) {
 
 
 

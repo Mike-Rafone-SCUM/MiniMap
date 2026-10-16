@@ -145,7 +145,7 @@ namespace ScumMiniMap {
         }
         internal List<MapZone> WpfSearch(string text) {
             PointF? origin=position==null?(PointF?)null:ToMap(position);var matches=DestinationSearch.Find(WpfAllZones().ToList(),text,origin);
-            if(showScumMap&&scumMap!=null)matches.AddRange(DestinationSearch.FindScumMap(scumMap,text,origin,100));
+            if(scumMap!=null)matches.AddRange(DestinationSearch.FindScumMap(scumMap,text,origin,100));
             var grid=GridTarget(text);if(grid!=null)matches.Insert(0,grid);return matches;
         }
         internal MapZone WpfClickedTarget(PointF point,float hitRadius) {
