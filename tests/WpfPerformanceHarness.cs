@@ -33,6 +33,15 @@ class WpfPreviewHarness {
   object runtime=Activator.CreateInstance(type,Hidden,null,new object[]{Path.Combine(args[1],"isolated-profile"),true},null);
   try {
    Directory.CreateDirectory(args[1]);
+   // Invoke the real shield callback from the input thread without pumping WPF.
+   var suppressMouse=type.GetMethod("SuppressMapMouse",Hidden);
+   var mousePoint=Activator.CreateInstance(suppressMouse.GetParameters()[1].ParameterType,new object[]{0,0});
+   Exception mouseFailure=null;
+   type.GetField("tacticalMouseShieldActive",Hidden).SetValue(runtime,true);
+   var mouseWorker=new System.Threading.Thread(()=> { try { suppressMouse.Invoke(runtime,new object[]{0x20A,mousePoint,0u}); }catch(Exception error) { mouseFailure=error; } });
+   mouseWorker.IsBackground=true;mouseWorker.Start();
+   Check(mouseWorker.Join(2000)&&mouseFailure==null,"Mouse shield executes independently without accessing WPF controls or waiting for UI dispatch");
+   type.GetField("tacticalMouseShieldActive",Hidden).SetValue(runtime,false);
    var completeUpdate=assembly.GetType("ScumMiniMap.Program").GetMethod("CompletePostUpdate",BindingFlags.Static|BindingFlags.NonPublic);string updateFolder=Path.Combine(args[1],"post-update-fixture");Directory.CreateDirectory(updateFolder);string updateResult=Path.Combine(updateFolder,"update-result.txt");int updateNotifications=0;
    Action<string> updateNotify=result=> {Check(result=="Synthetic update result"&&File.Exists(updateResult),"Post-update result remains available until its notification completes");updateNotifications++;};
    completeUpdate.Invoke(null,new object[]{updateFolder,updateNotify});Check(updateNotifications==0,"Ordinary startup produces no post-update notification");

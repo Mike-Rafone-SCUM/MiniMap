@@ -585,9 +585,13 @@ namespace ScumMiniMap {
 
         internal static bool CopyInProgress;
         static CopyInputLease activeCopy;
-        static CopyInputDeliveryGate activeCopyDelivery;
+        static volatile CopyInputDeliveryGate activeCopyDelivery;
+        internal static void CancelCopyDelivery() {
+            var delivery=activeCopyDelivery;
+            if(delivery!=null)delivery.Cancel();
+        }
         internal static void CancelActiveCopy() {
-            if(activeCopyDelivery!=null)activeCopyDelivery.Cancel();
+            CancelCopyDelivery();
             if(activeCopy!=null) activeCopy.Cancel();
         }
         internal static bool IsCoordinateCopyInput(UIntPtr tag){return CopyInputDeliveryGate.OwnsTag(tag);}

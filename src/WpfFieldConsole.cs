@@ -565,6 +565,7 @@ namespace ScumMiniMap {
         readonly List<Window> dialogs=new List<Window>();
         bool rebuilding,disposed,hudEnabled=true;
         readonly MapMouseShield mouseShield=new MapMouseShield();
+        volatile bool tacticalMouseShieldActive;
         IntPtr gameMapWindow;
         Button followButton,zoomResetButton;
         Slider tacticalOpacity;
@@ -615,6 +616,9 @@ namespace ScumMiniMap {
             foreach(string font in new[]{"BarlowSemiCondensed-Regular.ttf","BarlowSemiCondensed-SemiBold.ttf"})using(var stream=typeof(MapWindow).Assembly.GetManifestResourceStream(font))if(stream!=null)using(var file=File.Create(Path.Combine(fonts,font)))stream.CopyTo(file);
             application.Resources[typeof(Window)]=new Style(typeof(Window)) { Setters={new Setter(Control.FontFamilyProperty,new FontFamily(new Uri(fonts+Path.DirectorySeparatorChar),"./#Barlow Semi Condensed")),new Setter(Control.ForegroundProperty,WpfFieldTheme.Ink),new Setter(Control.BackgroundProperty,WpfFieldTheme.Ground),new Setter(Control.FontSizeProperty,15.0)} };
             tactical=BuildTactical();hud=BuildHud();
+            tactical.IsVisibleChanged+=(s,e)=>tacticalMouseShieldActive=tactical.IsVisible&&tactical.WindowState!=WindowState.Minimized;
+            tactical.StateChanged+=(s,e)=>tacticalMouseShieldActive=tactical.IsVisible&&tactical.WindowState!=WindowState.Minimized;
+            tactical.Closed+=(s,e)=>tacticalMouseShieldActive=false;
             refresh=new DispatcherTimer { Interval=TimeSpan.FromMilliseconds(250) };refresh.Tick+=(s,e)=> {
                 // DispatcherTimer does not schedule its next tick if its callback escapes.
                 try { Refresh(); }catch(Exception error) { if(refreshClock.ElapsedMilliseconds>=nextRefreshError) { nextRefreshError=refreshClock.ElapsedMilliseconds+10000;Program.LogException("WpfRefresh",error); } }
@@ -637,9 +641,11 @@ namespace ScumMiniMap {
         }
         void ShowPostUpdate(string result) { Modal(BuildPostUpdate(result)); }
         internal bool SuppressMapMouse(int message,System.Drawing.Point point,uint data) {
+            // Called on the mouse hook thread: never read WPF dependency properties here.
+            if(!tacticalMouseShieldActive)return mouseShield.Suppress(message,data,false,false,false);
             IntPtr target=Native.WindowFromPoint(point);
             // Restrict the actual SCUM destination, never desktop/taskbar/other applications.
-            return mouseShield.Suppress(message,data,!disposed&&tactical.IsVisible&&tactical.WindowState!=WindowState.Minimized,
+            return mouseShield.Suppress(message,data,tacticalMouseShieldActive,
                 Native.IsOurWindow(target),Native.IsGameWindow(target));
         }
         internal void CloseTactical(bool closeGameMap=false) { tactical.Hide();tacticalMap.ClearHover();engine.WpfTactical(false);if(hudEnabled)hud.Show();if(closeGameMap&&!diagnostic&&gameMapWindow!=IntPtr.Zero) { var binding=engine.WpfSnapshot(false);if(!binding.TrackingPaused)Native.ReturnMapKey(gameMapWindow,binding.MapKey,binding.MapScan); }Refresh(); }

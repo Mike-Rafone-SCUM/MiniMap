@@ -821,8 +821,12 @@ namespace ScumMiniMap {
         readonly bool[] suppressedShortcuts=new bool[256];
         IntPtr hook;
         IntPtr mouseHook;
+        System.Windows.Forms.ApplicationContext mouseContext;
+        System.Windows.Forms.Control mouseDispatch;
+        readonly System.Threading.Thread mouseThread;
         DateTime nextHookRefresh=DateTime.MinValue;
-        bool disposed,wasFocused;
+        bool disposed;
+        volatile bool wasFocused;
         IntPtr sampledGameWindow;
         readonly ChatKeyMonitor chatKeys=new ChatKeyMonitor();
         static DateTime lastMouseAction=DateTime.MinValue;
@@ -844,18 +848,42 @@ namespace ScumMiniMap {
             this.sharedGameBinding=sharedGameBinding;
             this.action=action; this.shouldDispatch=shouldDispatch; this.chatState=chatState; this.getChatOpenKey=getChatOpenKey; this.getCopyModifier=getCopyModifier; this.inventoryOwnsInput=inventoryOwnsInput; this.getCopyKey=getCopyKey; this.getChatScanCode=getChatScanCode; callback=OnKey;
             mouseCallback=OnMouse;
+            // Low-level hooks delay input system-wide until their owning thread pumps
+            // messages. Never put the high-frequency mouse hook on the renderer.
+            using(var ready=new System.Threading.ManualResetEvent(false)) {
+                Exception startupError=null;
+                mouseThread=new System.Threading.Thread(()=> {
+                    try {
+                        mouseContext=new System.Windows.Forms.ApplicationContext();
+                        mouseDispatch=new System.Windows.Forms.Control();
+                        var dispatchHandle=mouseDispatch.Handle;
+                        mouseHook=SetWindowsHookEx(14,mouseCallback,GetModuleHandle(null),0);
+                    } catch(Exception error) { startupError=error; }
+                    finally { ready.Set(); }
+                    if(startupError!=null) {
+                        if(mouseDispatch!=null)mouseDispatch.Dispose();
+                        if(mouseContext!=null)mouseContext.Dispose();
+                        return;
+                    }
+                    try { System.Windows.Forms.Application.Run(mouseContext); }
+                    finally {
+                        if(mouseHook!=IntPtr.Zero)UnhookWindowsHookEx(mouseHook);
+                        mouseHook=IntPtr.Zero;mouseDispatch.Dispose();mouseContext.Dispose();
+                    }
+                });
+                mouseThread.IsBackground=true;mouseThread.Name="MiniMap mouse input";
+                mouseThread.SetApartmentState(System.Threading.ApartmentState.STA);
+                mouseThread.Start();ready.WaitOne();
+            }
             RefreshHooks();
         }
         void RefreshHooks() {
             if(disposed) return;
             if(hook!=IntPtr.Zero) UnhookWindowsHookEx(hook);
-            if(mouseHook!=IntPtr.Zero) UnhookWindowsHookEx(mouseHook);
             hook=SetWindowsHookEx(13,callback,GetModuleHandle(null),0);
             int keyboardError=hook==IntPtr.Zero?Marshal.GetLastWin32Error():0;
-            mouseHook=SetWindowsHookEx(14,mouseCallback,GetModuleHandle(null),0);
-            int mouseError=mouseHook==IntPtr.Zero?Marshal.GetLastWin32Error():0;
             if(Native.InputTraceActive) Native.TraceInput("hooks keyboard_installed="+(hook!=IntPtr.Zero)+" keyboard_error="+keyboardError+
-                " mouse_installed="+(mouseHook!=IntPtr.Zero)+" mouse_error="+mouseError);
+                " mouse_installed="+(mouseHook!=IntPtr.Zero));
             nextHookRefresh=DateTime.UtcNow.AddSeconds(30);
         }
         public void Resync(bool focused) {
@@ -891,19 +919,23 @@ namespace ScumMiniMap {
         }
         IntPtr OnMouse(int code,IntPtr message,IntPtr data) {
             int kind=message.ToInt32();
+            try {
             if(code>=0&&kind!=0x200&&SuppressPhysicalMouse!=null) {
                 MouseData mouse=(MouseData)Marshal.PtrToStructure(data,typeof(MouseData));
                 if((mouse.flags&1)==0&&SuppressPhysicalMouse(kind,new Point(mouse.x,mouse.y),mouse.data))return new IntPtr(1);
             }
-            if(code>=0 && kind!=0x200 && Native.GameFocused()) {
+            if(code>=0 && kind!=0x200 && FocusStillMatches(wasFocused,sampledGameWindow,Native.GetForegroundWindow())) {
                 MouseData mouse=(MouseData)Marshal.PtrToStructure(data,typeof(MouseData));
-                if((mouse.flags&1)==0) PhysicalInputRevision++;
-                if((mouse.flags&1)==0 && OnPhysicalMouse!=null) OnPhysicalMouse(kind,new Point(mouse.x,mouse.y));
+                if((mouse.flags&1)==0) System.Threading.Interlocked.Increment(ref PhysicalInputRevision);
                 if((mouse.flags&1)==0 && MouseActionBlocksCopy(kind,getCopyModifier!=null?getCopyModifier():0xA2)) {
                     lastMouseAction=DateTime.UtcNow;
-                    Native.CancelActiveCopy();
+                    // Invalidate queued key-downs immediately; release the UI-owned
+                    // input lease on its owner thread via OnPhysicalMouse.
+                    Native.CancelCopyDelivery();
                 }
+                if((mouse.flags&1)==0 && OnPhysicalMouse!=null) OnPhysicalMouse(kind,new Point(mouse.x,mouse.y));
             }
+            } catch(Exception) { /* Fail open: input must survive a monitoring failure. */ }
             return CallNextHookEx(mouseHook,code,message,data);
         }
         internal static bool MouseActionBlocksCopy(int message,int modifier) {
@@ -935,7 +967,7 @@ namespace ScumMiniMap {
                         " inventory=not-queried modifiers="+transitions.ShortcutModifiersDown(true)+" dispatch=False suppressed=False");
                     return CallNextHookEx(hook,code,message,data);
                 }
-                PhysicalInputRevision++;
+                System.Threading.Interlocked.Increment(ref PhysicalInputRevision);
                 bool shortcutWasSuppressed=k>=0 && k<suppressedShortcuts.Length && suppressedShortcuts[k];
                 if(shortcutWasSuppressed) {
                     if(!isDown) suppressedShortcuts[k]=false;
@@ -1016,7 +1048,10 @@ namespace ScumMiniMap {
             disposed=true;
             Native.CancelActiveCopy();
             if(hook!=IntPtr.Zero) { UnhookWindowsHookEx(hook); hook=IntPtr.Zero; }
-            if(mouseHook!=IntPtr.Zero) { UnhookWindowsHookEx(mouseHook); mouseHook=IntPtr.Zero; }
+            if(mouseDispatch!=null&&!mouseDispatch.IsDisposed) {
+                try { mouseDispatch.BeginInvoke(new Action(()=>mouseContext.ExitThread())); }
+                catch(InvalidOperationException) { }
+            }
         }
     }
     sealed class OverlayWindow:Form {

@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.1.1] - 2026-10-16
+
+- Fixed mouse jitter and delayed gameplay input caused by the global mouse hook sharing the map-rendering UI thread. Mouse monitoring now has its own message thread, uses a thread-safe tactical-map visibility snapshot and queues UI cleanup separately.
+- Added regressions proving that mouse monitoring continues while the UI thread is blocked and that the map mouse shield does not access WPF controls from the input thread. Confirmed smoother gameplay in a live user test.
+
 ## [2.1.0] - 2026-10-16
 
 - Reduced lag with every POI enabled: reuse frozen icon drawings, cache formatted text and localized marker names, retain sorted category ordering while zooming, and avoid cluster-grid hash collisions. All locations remain available with clustering on or off; caches refresh for category/language changes and text-cache size is bounded.

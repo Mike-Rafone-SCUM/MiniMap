@@ -21,7 +21,9 @@ The app now keeps its icon in the taskbar while minimized. Click it to open Sett
 
 Ctrl+C remains supported but now uses at least 1 second between automatic copies. It still injects gameplay keys and cannot guarantee freedom from control conflicts. For the crouching test, bind Copy location inside SCUM to an unused single key (such as F8), then select that same key and Single key without modifier in the MiniMap key setup. The game binding must be changed first; this build does not change it for you. Single-key mode retains the 250 ms cadence.
 
-All held shortcuts, including M, now recover from missed key-up events. Keyboard and mouse hooks renew every 30 seconds and on game focus gain without clearing chat protection. T/Enter/Esc also have physical-state polling to recover missed chat transitions.
+All held shortcuts, including M, recover from missed key-up events. The keyboard hook renews every 30 seconds and on game focus gain without clearing chat protection. Mouse monitoring runs on its own message thread so map rendering cannot delay mouse delivery. T/Enter/Esc also have physical-state polling to recover missed chat transitions.
+
+For the mouse jitter fix, compare camera movement and aiming with the compact HUD visible and hidden, then open and close the tactical map and Settings. Check clicks and wheel input after returning to gameplay and after Alt-Tab. The regression suite checks that the mouse thread pumps while the UI thread is blocked; live SCUM testing is still required to confirm the symptom is resolved.
 
 - Scroll normally during gameplay while position sampling is active. Physical wheel events cancel modifier-based shortcuts and pause their sampling for 400 ms; single-key copying continues through wheel events. Button-event protections remain active. The copy key is released before its modifier.
 - Press T, leave chat idle for over 25 seconds, use Tab to switch channels, and type text containing M. Chat remains protected until Enter sends the message or Esc closes chat.

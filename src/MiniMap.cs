@@ -1141,9 +1141,12 @@ namespace ScumMiniMap {
                 (key,scan)=>PhysicalKeyCapture.Matches(key,scan,scumMapKey,scumMapScanCode));
             keys.SuppressPhysicalMouse=(message,point,data)=>WpfFieldConsoleRuntime.Active!=null&&WpfFieldConsoleRuntime.Active.SuppressMapMouse(message,point,data);
             keys.OnPhysicalMouse = (message,point) => {
-                if(!ObserveAdminMapMouse(message,point) || closing || IsDisposed || !IsHandleCreated) return;
-                // Queue cleanup after the hook has passed the physical click to SCUM.
-                try { BeginInvoke(new Action(CompleteAdminMapClick)); } catch(InvalidOperationException) {}
+                if(closing || IsDisposed || !IsHandleCreated) return;
+                // All engine/UI access belongs on the UI thread, outside the hook.
+                try { BeginInvoke(new Action(()=> {
+                    if(GameKeys.MouseActionBlocksCopy(message,scumCopyModifierKey))Native.CancelActiveCopy();
+                    if(!closing && !IsDisposed && ObserveAdminMapMouse(message,point))CompleteAdminMapClick();
+                })); } catch(InvalidOperationException) {}
             };
 
 
@@ -1710,7 +1713,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "2.1.0";
+        public const string VersionString = "2.1.1";
 
 
 

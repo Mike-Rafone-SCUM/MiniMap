@@ -1061,7 +1061,17 @@ static class InputVoiceTests {
         Check(true,"Map shortcut rearms across 10,000 missed-release cycles");
         chat.Key(0x54);
         using(var hooks=new GameKeys((key,scan)=>{},(key,scan)=>true,chat,()=>0x54)) {
+            var mouseDispatch=(System.Windows.Forms.Control)typeof(GameKeys).GetField("mouseDispatch",Hidden).GetValue(hooks);
+            using(var pumped=new System.Threading.ManualResetEvent(false)) {
+                int mouseThreadId=System.Threading.Thread.CurrentThread.ManagedThreadId;
+                mouseDispatch.BeginInvoke(new Action(()=> { mouseThreadId=System.Threading.Thread.CurrentThread.ManagedThreadId;pumped.Set(); }));
+                Check(pumped.WaitOne(2000)&&mouseThreadId!=System.Threading.Thread.CurrentThread.ManagedThreadId,
+                    "Mouse hook keeps pumping while the rendering/UI thread is blocked");
+            }
+            IntPtr originalMouseHook=(IntPtr)typeof(GameKeys).GetField("mouseHook",Hidden).GetValue(hooks);
             typeof(GameKeys).GetMethod("RefreshHooks",Hidden).Invoke(hooks,null);
+            Check(originalMouseHook==(IntPtr)typeof(GameKeys).GetField("mouseHook",Hidden).GetValue(hooks),
+                "UI hook renewal does not interrupt or reinstall the independent mouse hook");
             Check(hooks.Available && chat.Paused,"Hook renewal restores monitoring without clearing chat protection");
         }
         Check(Program.TrackingIntervalMs(250,0xA2)==1000 && Program.TrackingIntervalMs(250,0)==250 && Program.TrackingIntervalMs(3000,0xA2)==3000,"Modifier shortcuts use at most one copy per second; single-key tracking retains 250 ms");
