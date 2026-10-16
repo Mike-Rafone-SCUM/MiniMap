@@ -1062,6 +1062,13 @@ static class InputVoiceTests {
         chat.Key(0x54);
         using(var hooks=new GameKeys((key,scan)=>{},(key,scan)=>true,chat,()=>0x54)) {
             var mouseDispatch=(System.Windows.Forms.Control)typeof(GameKeys).GetField("mouseDispatch",Hidden).GetValue(hooks);
+            var keyboardDispatch=(System.Windows.Forms.Control)typeof(GameKeys).GetField("keyboardDispatch",Hidden).GetValue(hooks);
+            using(var pumped=new ManualResetEvent(false)) {
+                int keyboardThreadId=Thread.CurrentThread.ManagedThreadId;
+                keyboardDispatch.BeginInvoke(new Action(()=> {keyboardThreadId=Thread.CurrentThread.ManagedThreadId;pumped.Set();}));
+                Check(pumped.WaitOne(2000)&&keyboardThreadId!=Thread.CurrentThread.ManagedThreadId,
+                    "Keyboard hook keeps pumping while the rendering/UI thread is blocked");
+            }
             using(var pumped=new System.Threading.ManualResetEvent(false)) {
                 int mouseThreadId=System.Threading.Thread.CurrentThread.ManagedThreadId;
                 mouseDispatch.BeginInvoke(new Action(()=> { mouseThreadId=System.Threading.Thread.CurrentThread.ManagedThreadId;pumped.Set(); }));
@@ -1073,6 +1080,31 @@ static class InputVoiceTests {
             Check(originalMouseHook==(IntPtr)typeof(GameKeys).GetField("mouseHook",Hidden).GetValue(hooks),
                 "UI hook renewal does not interrupt or reinstall the independent mouse hook");
             Check(hooks.Available && chat.Paused,"Hook renewal restores monitoring without clearing chat protection");
+        }
+        using(var movementHooks=new GameKeys((key,scan)=>{},(key,scan)=>key==0x4D)) {
+            var dispatch=(Control)typeof(GameKeys).GetField("keyboardDispatch",Hidden).GetValue(movementHooks);
+            var keyType=typeof(GameKeys).GetNestedType("KeyboardData",BindingFlags.NonPublic);
+            var onKey=typeof(GameKeys).GetMethod("OnKey",Hidden);
+            Exception failure=null;bool swallowed=false;
+            using(var completed=new ManualResetEvent(false)) {
+                dispatch.BeginInvoke(new Action(()=> {
+                    IntPtr packet=Marshal.AllocHGlobal(Marshal.SizeOf(keyType));
+                    try {
+                        typeof(GameKeys).GetField("sampledGameWindow",Hidden).SetValue(movementHooks,Native.GetForegroundWindow());
+                        typeof(GameKeys).GetField("wasFocused",Hidden).SetValue(movementHooks,true);
+                        for(int repeat=0;repeat<100;repeat++)foreach(int key in new[]{0x57,0x41,0x53,0x44,0xA0,0x20}) {
+                            object data=Activator.CreateInstance(keyType);
+                            keyType.GetField("key").SetValue(data,(uint)key);keyType.GetField("scan").SetValue(data,0x11u);
+                            Marshal.StructureToPtr(data,packet,false);
+                            foreach(int message in new[]{0x100,0x100,0x101})
+                                swallowed|=(IntPtr)onKey.Invoke(movementHooks,new object[]{0,new IntPtr(message),packet})==new IntPtr(1);
+                        }
+                    }catch(Exception error) {failure=error;}
+                    finally {Marshal.FreeHGlobal(packet);completed.Set();}
+                }));
+                Check(completed.WaitOne(2000)&&failure==null&&!swallowed,
+                    "Movement, sprint and jump down/repeat/up callbacks pass through while the UI thread is blocked");
+            }
         }
         Check(Program.TrackingIntervalMs(250,0xA2)==1000 && Program.TrackingIntervalMs(250,0)==250 && Program.TrackingIntervalMs(3000,0xA2)==3000,"Modifier shortcuts use at most one copy per second; single-key tracking retains 250 ms");
         Check(Program.CopyResponseTimeoutMs(0)==350 && Program.CopyResponseTimeoutMs(0xA2)==1000 && Program.CopyRetryDelayMs(0)==1000,"Single-key misses no longer introduce a one-second response wait or five-second retry pause");

@@ -1114,18 +1114,17 @@ namespace ScumMiniMap {
 
 
                 if(closing || IsDisposed || !IsHandleCreated || (shortcutCaptureOpen && !(WpfFieldConsoleRuntime.Active!=null&&WpfFieldConsoleRuntime.Active.IsSettingsToggleKey(key,scanCode)))) {
-                    TraceShortcutContext("queue rejected",key,scanCode);
                     return;
                 }
-                TraceShortcutContext("queued",key,scanCode);
 
 
 
-                if(key>0 && key<fallbackKeyDown.Length) fallbackKeyDown[key]=true;
                 int bindingRevision=controlBindingRevision;
                 long chatRevision=chat.Revision;
                 IntPtr origin=Native.GetForegroundWindow();
                 try { BeginInvoke((Action)(()=> {
+                    TraceShortcutContext("queued",key,scanCode);
+                    if(key>0 && key<fallbackKeyDown.Length) fallbackKeyDown[key]=true;
                     if(bindingRevision!=controlBindingRevision || !chat.AllowsQueuedShortcut(chatRevision) || Native.GetForegroundWindow()!=origin || adminCommandBusy) {
                         if(Native.InputTraceActive) Native.TraceInput("shortcut queued rejected vk="+key+" scan="+scanCode+
                             " bindingsChanged="+(bindingRevision!=controlBindingRevision)+" chatChanged="+!chat.AllowsQueuedShortcut(chatRevision)+
@@ -1713,7 +1712,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "2.1.1";
+        public const string VersionString = "2.1.2";
 
 
 
@@ -6128,7 +6127,11 @@ namespace ScumMiniMap {
                     BeginCopyRequest();
                     CopyResult copyResult = await Native.Copy(
                         () => !IntensiveWorkPaused && !closing && !panelOpening && !SettingsVisible && !searchOpen && TrackingEnabled && !chat.Paused && !inventoryInputLocked && DateTime.UtcNow >= resumeAfter,
-                        scumCopyModifierKey, scumCopyKey,()=>fullMapActive,scumCopyScanCode);
+                        scumCopyModifierKey, scumCopyKey,()=>fullMapActive,scumCopyScanCode,
+                        // The delivery hook runs on the input thread. Read only input
+                        // gates here; UI/control inspection stays in allowed() above.
+                        ()=>!closing && !panelOpening && !searchOpen && !diagnosticMode && !adminCommandBusy
+                            && !shortcutCaptureOpen && !chat.Paused && !inventoryInputLocked);
                     CompleteCopyRequest(copyResult);
                     if(pending) note=Localization.Get("NoteAutoCopyActive");
                     if(copyResult != CopyResult.Sent) {

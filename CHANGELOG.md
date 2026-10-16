@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.1.2] - 2026-10-16
+
+- Moved the keyboard hook to a dedicated input thread so map rendering cannot delay character movement. Physical input cancels coordinate-copy delivery immediately; injected-key cleanup and UI diagnostics run on the UI thread. Chat revision state is atomic, and held-key reconciliation runs on the keyboard thread.
+
 ## [2.1.1] - 2026-10-16
 
 - Fixed mouse jitter and delayed gameplay input caused by the global mouse hook sharing the map-rendering UI thread. Mouse monitoring now has its own message thread, uses a thread-safe tactical-map visibility snapshot and queues UI cleanup separately.

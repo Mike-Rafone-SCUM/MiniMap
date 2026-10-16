@@ -583,7 +583,7 @@ namespace ScumMiniMap {
 
 
 
-        internal static bool CopyInProgress;
+        internal static volatile bool CopyInProgress;
         static CopyInputLease activeCopy;
         static volatile CopyInputDeliveryGate activeCopyDelivery;
         internal static void CancelCopyDelivery() {
@@ -595,14 +595,14 @@ namespace ScumMiniMap {
             if(activeCopy!=null) activeCopy.Cancel();
         }
         internal static bool IsCoordinateCopyInput(UIntPtr tag){return CopyInputDeliveryGate.OwnsTag(tag);}
-        internal static bool ShouldSuppressCoordinateInput(bool injected,bool down,UIntPtr tag) {
+        internal static bool ShouldSuppressCoordinateInput(bool injected,bool down,UIntPtr tag,bool releaseLease=true) {
             // Key-ups always reach Windows, including cleanup after focus/chat loss.
             // Admin sends and other applications' injected input have separate tags.
             if(!injected || !down || !IsCoordinateCopyInput(tag))return false;
             var delivery=activeCopyDelivery;
             if(delivery==null || delivery.Tag!=tag)return true;
             if(CopyInProgress && delivery.AllowsDown(tag))return false;
-            CancelActiveCopy();
+            if(releaseLease)CancelActiveCopy();else CancelCopyDelivery();
             return true;
         }
 
@@ -777,7 +777,7 @@ namespace ScumMiniMap {
 
 
 
-        internal static async Task<CopyResult> Copy(Func<bool> allowed,int copyModifierKey,int copyKey,Func<bool> fullMapActive=null,int copyScanCode=0) {
+        internal static async Task<CopyResult> Copy(Func<bool> allowed,int copyModifierKey,int copyKey,Func<bool> fullMapActive=null,int copyScanCode=0,Func<bool> deliveryAllowed=null) {
 
 
 
@@ -799,7 +799,7 @@ namespace ScumMiniMap {
             CopyInProgress=true;
             CopyInputDeliveryGate delivery=null;
             var lease=new CopyInputLease((vk,up)=>Key(vk,up,(int)vk==effectiveCopyKey?copyScanCode:0,layout,delivery.Tag));
-            delivery=new CopyInputDeliveryGate(()=>!lease.Cancelled && allowed() && GetForegroundWindow()==game && GameFocused()
+            delivery=new CopyInputDeliveryGate(()=>!lease.Cancelled && (deliveryAllowed??allowed)() && GetForegroundWindow()==game && GameFocused()
                 && !UserTypingOrActive() && !CursorBlocksCopy(IsCursorVisible(),fullMapActive!=null && fullMapActive()) && !IsRightMouseDown() && !IsAltOrTabOrWinDown());
             activeCopy=lease;
             activeCopyDelivery=delivery;
@@ -810,7 +810,7 @@ namespace ScumMiniMap {
 
 
 
-                bool sent=await CopyChord(lease.Send,Task.Delay,()=>delivery.AllowsDown(delivery.Tag),
+                bool sent=await CopyChord(lease.Send,Task.Delay,()=>allowed() && delivery.AllowsDown(delivery.Tag),
                     copyModifierKey,effectiveCopyKey);
                 return ClassifyCopy(sent && !lease.Cancelled,CopyError);
             } finally { CancelActiveCopy(); activeCopy=null; activeCopyDelivery=null; CopyInProgress=false; }

@@ -643,12 +643,13 @@ namespace ScumMiniMap {
         }
     }
     public sealed class ChatState {
-        internal long Revision { get; private set; }
+        long state;
+        internal long Revision { get { return System.Threading.Interlocked.Read(ref state)>>1; } }
         internal bool AllowsQueuedShortcut(long revision) { return !Paused && Revision==revision; }
         DateTime openTime = DateTime.MinValue;
         public bool Paused {
             get {
-                if(openTime == DateTime.MinValue) return false;
+                if((System.Threading.Interlocked.Read(ref state)&1)==0) return false;
                 // An idle chat box still owns typing; only an explicit close releases it.
                 return true;
             }
@@ -657,13 +658,13 @@ namespace ScumMiniMap {
             // Enter submits a message but can leave the chat box open for the
             // next message. Only Escape proves this physical chat session ended.
             if(key==0x1B) {
-                Revision++;
+                SetPaused(false);
                 openTime = DateTime.MinValue;
                 return;
             }
             // Opening chat via configured chat key, '/' or keypad '/'
             if(PhysicalKeyCapture.Matches(key,scanCode,chatOpenKey,chatOpenScanCode) || ((key==0xBF || key==0x6F) && key!=copyKey)) {
-                Revision++;
+                SetPaused(true);
                 openTime = DateTime.UtcNow;
                 return;
             }
@@ -673,7 +674,12 @@ namespace ScumMiniMap {
                 openTime = DateTime.UtcNow;
             }
         }
-        public void Reset() { Revision++;openTime = DateTime.MinValue; }
+        void SetPaused(bool paused) {
+            long before,after;
+            do { before=System.Threading.Interlocked.Read(ref state);after=((before>>1)+1)*2+(paused?1:0); }
+            while(System.Threading.Interlocked.CompareExchange(ref state,after,before)!=before);
+        }
+        public void Reset() { SetPaused(false);openTime = DateTime.MinValue; }
     }
     // Hook and polling must share edges: replaying an old Enter after a newer T
     // would clear the chat gate while SCUM's text box is still open.
@@ -824,8 +830,13 @@ namespace ScumMiniMap {
         System.Windows.Forms.ApplicationContext mouseContext;
         System.Windows.Forms.Control mouseDispatch;
         readonly System.Threading.Thread mouseThread;
+        System.Windows.Forms.ApplicationContext keyboardContext;
+        System.Windows.Forms.Control keyboardDispatch;
+        readonly System.Threading.Thread keyboardThread;
+        readonly System.Windows.Forms.Control uiDispatch;
+        int resyncQueued,cancelQueued;
         DateTime nextHookRefresh=DateTime.MinValue;
-        bool disposed;
+        volatile bool disposed;
         volatile bool wasFocused;
         IntPtr sampledGameWindow;
         readonly ChatKeyMonitor chatKeys=new ChatKeyMonitor();
@@ -848,6 +859,31 @@ namespace ScumMiniMap {
             this.sharedGameBinding=sharedGameBinding;
             this.action=action; this.shouldDispatch=shouldDispatch; this.chatState=chatState; this.getChatOpenKey=getChatOpenKey; this.getCopyModifier=getCopyModifier; this.inventoryOwnsInput=inventoryOwnsInput; this.getCopyKey=getCopyKey; this.getChatScanCode=getChatScanCode; callback=OnKey;
             mouseCallback=OnMouse;
+            uiDispatch=new System.Windows.Forms.Control();var uiHandle=uiDispatch.Handle;
+            using(var ready=new System.Threading.ManualResetEvent(false)) {
+                Exception startupError=null;
+                keyboardThread=new System.Threading.Thread(()=> {
+                    try {
+                        keyboardContext=new System.Windows.Forms.ApplicationContext();
+                        keyboardDispatch=new System.Windows.Forms.Control();var handle=keyboardDispatch.Handle;
+                        InstallKeyboardHook();
+                    }catch(Exception error) {startupError=error;}
+                    finally { ready.Set(); }
+                    if(startupError!=null) {
+                        if(keyboardDispatch!=null)keyboardDispatch.Dispose();
+                        if(keyboardContext!=null)keyboardContext.Dispose();
+                        return;
+                    }
+                    try { System.Windows.Forms.Application.Run(keyboardContext); }
+                    finally {
+                        if(hook!=IntPtr.Zero)UnhookWindowsHookEx(hook);
+                        hook=IntPtr.Zero;keyboardDispatch.Dispose();keyboardContext.Dispose();
+                    }
+                });
+                keyboardThread.IsBackground=true;keyboardThread.Name="MiniMap keyboard input";
+                keyboardThread.SetApartmentState(System.Threading.ApartmentState.STA);
+                keyboardThread.Start();ready.WaitOne();
+            }
             // Low-level hooks delay input system-wide until their owning thread pumps
             // messages. Never put the high-frequency mouse hook on the renderer.
             using(var ready=new System.Threading.ManualResetEvent(false)) {
@@ -879,6 +915,14 @@ namespace ScumMiniMap {
         }
         void RefreshHooks() {
             if(disposed) return;
+            if(keyboardDispatch!=null&&!keyboardDispatch.IsDisposed) {
+                try { keyboardDispatch.BeginInvoke(new Action(InstallKeyboardHook)); }catch(InvalidOperationException) { }
+            }
+            nextHookRefresh=DateTime.UtcNow.AddSeconds(30);
+        }
+        void InstallKeyboardHook() {
+            if(disposed)return;
+            if(hook!=IntPtr.Zero&&(Native.CopyInProgress||Native.AdminInputInProgress))return;
             if(hook!=IntPtr.Zero) UnhookWindowsHookEx(hook);
             hook=SetWindowsHookEx(13,callback,GetModuleHandle(null),0);
             int keyboardError=hook==IntPtr.Zero?Marshal.GetLastWin32Error():0;
@@ -895,8 +939,16 @@ namespace ScumMiniMap {
             // Windows may silently remove a hook after a long UI stall; a non-zero handle
             // alone is not proof it still receives input. Refresh without changing chat state.
             if(!Native.CopyInProgress && !Native.AdminInputInProgress && (DateTime.UtcNow>=nextHookRefresh || (focused && !wasFocused))) RefreshHooks();
-            wasFocused=focused;
             sampledGameWindow=focused?Native.GetForegroundWindow():IntPtr.Zero;
+            wasFocused=focused;
+            if(System.Threading.Interlocked.Exchange(ref resyncQueued,1)!=0)return;
+            try { keyboardDispatch.BeginInvoke(new Action(()=> {
+                System.Threading.Interlocked.Exchange(ref resyncQueued,0);
+                if(!disposed)ResyncKeyboard(wasFocused);
+            })); }catch(InvalidOperationException) {System.Threading.Interlocked.Exchange(ref resyncQueued,0);}
+        }
+        void ResyncKeyboard(bool focused) {
+            focused=FocusStillMatches(focused,sampledGameWindow,Native.GetForegroundWindow());
             if(!Native.CopyInProgress && !Native.AdminInputInProgress) {
                 transitions.Resync(key => (Native.GetAsyncKeyState(key)&0x8000)!=0);
                 for(int key=0;key<suppressedShortcuts.Length;key++)
@@ -913,7 +965,7 @@ namespace ScumMiniMap {
                 if(key==copyKey && key!=openKey && (key==0xBF || key==0x6F)) continue;
                 bool down=(Native.GetAsyncKeyState(key)&0x8000)!=0;
                 if(chatKeys.ObserveSample(key,down,focused,chatState,openKey,copyKey,chatScan)) {
-                    Native.CancelActiveCopy();
+                    CancelFromHook();
                 }
             }
         }
@@ -946,14 +998,23 @@ namespace ScumMiniMap {
             return (shouldDispatch==null || shouldDispatch(key,scanCode)) &&
                 (sharedGameBinding==null || !sharedGameBinding(key,scanCode));
         }
+        void CancelFromHook() {
+            Native.CancelCopyDelivery();
+            if(!Native.CopyInProgress || System.Threading.Interlocked.Exchange(ref cancelQueued,1)!=0)return;
+            try { uiDispatch.BeginInvoke(new Action(()=> {
+                System.Threading.Interlocked.Exchange(ref cancelQueued,0);
+                if(!disposed)Native.CancelActiveCopy();
+            })); }catch(InvalidOperationException) {System.Threading.Interlocked.Exchange(ref cancelQueued,0);}
+        }
         IntPtr OnKey(int code,IntPtr message,IntPtr data) {
+            try {
             if(code>=0) {
                 KeyboardData key=(KeyboardData)Marshal.PtrToStructure(data,typeof(KeyboardData));
                 int k=(int)key.key;
                 int eventScan=PhysicalKeyCapture.EncodeScanCode(key.scan,key.flags);
                 bool isDown=message.ToInt32()==0x100 || message.ToInt32()==0x104;
                 bool injected=(key.flags&0x10)!=0;
-                if(Native.ShouldSuppressCoordinateInput(injected,isDown,key.extra)) {
+                if(Native.ShouldSuppressCoordinateInput(injected,isDown,key.extra,false)) {
                     if(Native.InputTraceActive)Native.TraceInput("copy delivery blocked vk="+k+" scan="+eventScan+" chat="+(chatState!=null && chatState.Paused));
                     return new IntPtr(1);
                 }
@@ -997,7 +1058,7 @@ namespace ScumMiniMap {
                 bool altDown=transitions.IsDown(0x12) || transitions.IsDown(0xA4) || transitions.IsDown(0xA5)
                     || (Native.GetAsyncKeyState(0x12)&0x8000)!=0 || (Native.GetAsyncKeyState(0xA4)&0x8000)!=0 || (Native.GetAsyncKeyState(0xA5)&0x8000)!=0;
                 if(Native.CopyInProgress && isDown && (k==0x12 || k==0xA4 || k==0xA5 || k==0x09 || k==0x5B || k==0x5C)) {
-                    Native.CancelActiveCopy();
+                    CancelFromHook();
                 }
                 if(k==0x09 && altDown) {
                     Native.LastAltTabTime=DateTime.UtcNow;
@@ -1006,7 +1067,7 @@ namespace ScumMiniMap {
                     LastUserInputTime=DateTime.UtcNow;
                     if(fresh && isDown) {
                         LastFreshKeyDownTime=DateTime.UtcNow;
-                        Native.CancelActiveCopy();
+                        CancelFromHook();
                     }
                 }
                 // Dispatch only keys that can affect the application. The hook still tracks
@@ -1033,6 +1094,7 @@ namespace ScumMiniMap {
                 }
                 if(appShortcut) return new IntPtr(1);
             }
+            }catch(Exception) { /* Fail open: never strand the user's physical input. */ }
             return CallNextHookEx(hook,code,message,data);
         }
         internal static bool ChatOwnsShortcut(bool wasPaused,bool isPaused) {
@@ -1047,7 +1109,10 @@ namespace ScumMiniMap {
         public void Dispose() {
             disposed=true;
             Native.CancelActiveCopy();
-            if(hook!=IntPtr.Zero) { UnhookWindowsHookEx(hook); hook=IntPtr.Zero; }
+            if(keyboardDispatch!=null&&!keyboardDispatch.IsDisposed) {
+                try { keyboardDispatch.BeginInvoke(new Action(()=>keyboardContext.ExitThread())); }catch(InvalidOperationException) { }
+            }
+            uiDispatch.Dispose();
             if(mouseDispatch!=null&&!mouseDispatch.IsDisposed) {
                 try { mouseDispatch.BeginInvoke(new Action(()=>mouseContext.ExitThread())); }
                 catch(InvalidOperationException) { }

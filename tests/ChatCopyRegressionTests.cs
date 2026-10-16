@@ -55,6 +55,16 @@ static class ChatCopyRegressionTests {
             Check(!Native.ShouldSuppressCoordinateInput(true,true,Native.AdminInputTag),"Admin chat sequences retain their independent input ownership");
             Check(!Native.ShouldSuppressCoordinateInput(true,true,new UIntPtr(123)),"Other applications' injected input is not swallowed");
             Check(!Native.ShouldSuppressCoordinateInput(false,true,Native.CopyInputTag),"Physical keyboard input is not swallowed by coordinate-copy ownership");
+            int cleanupCalls=0;
+            var deferredLease=new CopyInputLease((key,up)=> {cleanupCalls++;return true;});
+            deferredLease.Send(0x6F,false);cleanupCalls=0;
+            var deferredGate=new CopyInputDeliveryGate(()=>false);
+            leaseField.SetValue(null,deferredLease);deliveryField.SetValue(null,deferredGate);
+            Check(Native.ShouldSuppressCoordinateInput(true,true,deferredGate.Tag,false)
+                && !deferredLease.Cancelled && cleanupCalls==0 && !deferredGate.AllowsDown(deferredGate.Tag),
+                "Input thread cancels copy delivery without sending cleanup keys or touching the UI-owned lease");
+            Native.CancelActiveCopy();
+            Check(deferredLease.Cancelled&&cleanupCalls==1,"Owner-thread cleanup releases the cancelled copy key once");
             var invalidContext=new CopyInputDeliveryGate(()=>{throw new InvalidOperationException("Disposed context");});
             Check(!invalidContext.AllowsDown(invalidContext.Tag),"An unavailable copy context fails closed at delivery");
             deliveryField.SetValue(null,null);Native.CopyInProgress=false;
