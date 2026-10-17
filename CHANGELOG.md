@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.3.6] - 2026-10-17
+
+- Automatically start GPS navigation, background route calculation and the distance/ETA display when route stops are placed or edited. Keep the current stop when editing an active route; clear navigation when its final stop is removed.
+- Explicit Stop still pauses navigation until another route edit or a manual restart. Received routes remain visible without taking over your selected navigation.
+- Fix Clear route on the map, GPS card and shortcut so it removes local route stops, previews, shared publication and navigation together. Stopped routes also have an accessible Clear route button and enabled map-menu action.
+- Reuse the completed own-route plan for navigation from its first stop instead of calculating the same journey twice.
+
 ## [2.3.5] - 2026-10-17
 
 - Cache dense full-map POI composition as a frozen, bounded image on the existing background worker. Reuse it while positions and destinations change; retain vector detail at large zoom levels without allocating unbounded images.

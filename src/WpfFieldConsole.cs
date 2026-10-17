@@ -233,7 +233,7 @@ namespace ScumMiniMap {
         internal DrawingGroup BaseMap;
         internal WpfTerrainTiles Terrain;
         internal Action<DrawingPoint> PanChanged;
-        internal Action ClearRouteRequested;
+        internal Action ClearRouteRequested,StopNavigationRequested;
         internal Action<MapZone> DeleteWaypointRequested;
         internal Action<string> HoverChanged;
         internal void ClearHover() { ToolTip=null;hoverText=null;if(HoverChanged!=null)HoverChanged(null); }
@@ -291,11 +291,11 @@ namespace ScumMiniMap {
                 var ownMenu=new MenuItem { Header=Localization.Get("OwnRoute") };foreach(bool shared in new[]{false,true}) { bool kind=shared;var mode=new MenuItem { Header=Localization.Get(shared?"SquadRoute":"SoloRoute"),IsCheckable=true,IsChecked=State.LocalRoute.Length>0&&SquadState.IsShared(State.LocalRoute[0])==shared };mode.Click+=(s,e)=> { if(RouteKind!=null)RouteKind(kind); };ownMenu.Items.Add(mode); }routeMenu.Items.Add(ownMenu);
                 var undo=new MenuItem { Header=Localization.Get("SquadUndoStop"),IsEnabled=State.LocalRoute.Length>0 };undo.Click+=(s,e)=> { if(RouteUndo!=null)RouteUndo(); };routeMenu.Items.Add(undo);
                 var clearLocal=new MenuItem { Header=Localization.Get("WpfClearRoute"),IsEnabled=State.LocalRoute.Length>0 };clearLocal.Click+=(s,e)=> { if(RouteClear!=null)RouteClear(); };routeMenu.Items.Add(clearLocal);
-                var end=new MenuItem { Header=Localization.Get("SquadStopNav"),IsEnabled=State.SquadNavigating };end.Click+=(s,e)=> { if(ClearRouteRequested!=null)ClearRouteRequested(); };routeMenu.Items.Add(end);menu.Items.Add(routeMenu);
+                var end=new MenuItem { Header=Localization.Get("SquadStopNav"),IsEnabled=State.SquadNavigating };end.Click+=(s,e)=> { if(StopNavigationRequested!=null)StopNavigationRequested(); };routeMenu.Items.Add(end);menu.Items.Add(routeMenu);
             }
             if(NavigatePeer!=null&&State!=null)foreach(var peer in State.Peers.Where(p=>MarkerDistance(MapWindow.ToMap(p.Position),target)<=14/MapSide(State,ActualWidth,ActualHeight,Compact))) { string id=peer.Id;var follow=new MenuItem { Header=Localization.Get("SquadFollow")+": "+peer.Name };follow.Click+=(s,e)=>NavigatePeer(id);menu.Items.Add(follow); }
             if(PingAt!=null)for(int i=0;i<3;i++) { int kind=i;var ping=new MenuItem { Header=Localization.Get(new[]{"PingDanger","PingLoot","PingPickup"}[i]) };ping.Click+=(s,e)=>PingAt(kind,target);menu.Items.Add(ping); }
-            menu.Items.Add(new Separator());var clear=new MenuItem { Header=Localization.Get("WpfClearRoute"),IsEnabled=State!=null&&State.Target!=null };clear.Click+=(s,e)=> { if(ClearRouteRequested!=null)ClearRouteRequested(); };menu.Items.Add(clear);
+            menu.Items.Add(new Separator());var clear=new MenuItem { Header=Localization.Get("WpfClearRoute"),IsEnabled=State!=null&&(State.Target!=null||State.LocalRoute.Length>0) };clear.Click+=(s,e)=> { if(ClearRouteRequested!=null)ClearRouteRequested(); };menu.Items.Add(clear);
             var saved=State==null||State.Saved==null?null:State.Saved.Where(z=>z.Points!=null&&z.Points.Length==1&&MarkerDistance(target,z.Centroid)<=14/MapSide(State,ActualWidth,ActualHeight,Compact)).OrderByDescending(z=>z.IsDeathMarker).ThenBy(z=>MarkerDistance(target,z.Centroid)).FirstOrDefault();
             if(saved!=null&&MarkerDistance(target,saved.Centroid)<=14/MapSide(State,ActualWidth,ActualHeight,Compact)) { var delete=new MenuItem { Header=Localization.T("DeleteWaypointNamed",saved.DisplayName) };delete.Click+=(s,e)=> { if(DeleteWaypointRequested!=null)DeleteWaypointRequested(saved); };menu.Items.Add(delete); }
             return menu;
@@ -942,7 +942,7 @@ namespace ScumMiniMap {
             tacticalMap=new WpfMapSurface { BaseMap=geography,Terrain=terrain };
             tacticalMap.RouteStopAt=AddSquadStop;tacticalMap.PingAt=(kind,p)=>SendPing(kind,p);
             tacticalMap.RouteNavigate=StartSquadRoute;tacticalMap.RouteRemove=RemoveOwnRouteStop;tacticalMap.RouteKind=ChangeOwnRouteKind;tacticalMap.RouteUndo=UndoOwnRouteStop;tacticalMap.RouteClear=ClearOwnRoute;tacticalMap.NavigatePeer=FollowSquadPeer;
-            tacticalMap.ClearRouteRequested=()=> { StopSquadNavigation();Refresh(); };tacticalMap.DeleteWaypointRequested=marker=> { engine.WpfDeleteWaypoint(marker);Refresh(); };
+            tacticalMap.ClearRouteRequested=ClearMapRoute;tacticalMap.StopNavigationRequested=()=> { StopSquadNavigation();Refresh(); };tacticalMap.DeleteWaypointRequested=marker=> { engine.WpfDeleteWaypoint(marker);Refresh(); };
             tacticalMap.NavigateAt=p=> { engine.WpfTarget(engine.WpfClickedTarget(p,(float)(8/Math.Max(1,Math.Min(tacticalMap.ActualWidth,tacticalMap.ActualHeight)*engine.WpfSnapshot(true).Zoom))));Refresh(); };tacticalMap.WaypointAt=p=>ShowAddWaypoint(p);tacticalMap.ZoomRequested=d=> { engine.WpfZoom(true,d);Refresh(); };tacticalMap.PanChanged=p=> { engine.WpfPan(p);Refresh(); };
             tacticalMap.NavigateShared=sharedTarget=> { engine.WpfTarget(sharedTarget);Refresh(); };
             // The sidebar overlays the full monitor viewport; toggling it must not move the camera.
@@ -952,14 +952,14 @@ namespace ScumMiniMap {
             var target=new Grid();target.ColumnDefinitions.Add(new ColumnDefinition());target.ColumnDefinitions.Add(new ColumnDefinition { Width=GridLength.Auto });
             var text=new StackPanel();text.Children.Add(WpfFieldTheme.Text(Localization.Get("FieldTarget"),11,WpfFieldTheme.Muted,true));targetTitle=WpfFieldTheme.Text("",21,null,true);targetDetail=WpfFieldTheme.Text("",14,WpfFieldTheme.Muted);targetDetail.TextWrapping=TextWrapping.Wrap;targetDetail.TextTrimming=TextTrimming.None;text.Children.Add(targetTitle);text.Children.Add(targetDetail);target.Children.Add(text);
             ((FrameworkElement)text.Children[0]).Tag="text:FieldTarget";
-            var clear=WpfFieldTheme.Button(Localization.Get("ClearWaypoint"),()=> { StopSquadNavigation();Refresh(); });clear.MaxWidth=112;clear.FontSize=13;Grid.SetColumn(clear,1);target.Children.Add(clear);
-            clear.Tag="text:ClearWaypoint";
+            var clear=WpfFieldTheme.Button(Localization.Get("WpfClearRoute"),ClearMapRoute);clear.MaxWidth=112;clear.FontSize=13;Grid.SetColumn(clear,1);target.Children.Add(clear);
+            clear.Tag="text:WpfClearRoute";
             var topCards=new StackPanel { Width=408,HorizontalAlignment=HorizontalAlignment.Left,VerticalAlignment=VerticalAlignment.Top,Margin=new Thickness(24) };
             targetCard=WpfFieldTheme.Card(target);topCards.Children.Add(targetCard);
             targetCard.PreviewMouseRightButtonDown+=(s,e)=> { if(tacticalMap.BeginContextPointer(e.GetPosition(tacticalMap)))e.Handled=true; };
             var preview=new StackPanel();routePreviewTitle=WpfFieldTheme.Text("",17,null,true);preview.Children.Add(routePreviewTitle);
             routePreviewDetail=WpfFieldTheme.Text("",14,WpfFieldTheme.Muted);routePreviewDetail.TextWrapping=TextWrapping.Wrap;routePreviewDetail.TextTrimming=TextTrimming.None;preview.Children.Add(routePreviewDetail);
-            var startPreview=WpfFieldTheme.Button(Localization.Get("SquadStartRoute"),()=>StartSquadRoute(squad.Stops));startPreview.Tag="text:SquadStartRoute";preview.Children.Add(startPreview);
+            var previewActions=new WrapPanel();var startPreview=WpfFieldTheme.Button(Localization.Get("SquadStartRoute"),()=>StartSquadRoute(squad.Stops));startPreview.Tag="text:SquadStartRoute";previewActions.Children.Add(startPreview);var clearPreview=WpfFieldTheme.Button(Localization.Get("WpfClearRoute"),ClearMapRoute);clearPreview.Tag="text:WpfClearRoute";previewActions.Children.Add(clearPreview);preview.Children.Add(previewActions);
             routePreviewCard=WpfFieldTheme.Card(preview);routePreviewCard.Margin=new Thickness(0,8,0,0);routePreviewCard.Visibility=Visibility.Collapsed;topCards.Children.Add(routePreviewCard);
             routePreviewCard.PreviewMouseRightButtonDown+=(s,e)=> { if(tacticalMap.BeginContextPointer(e.GetPosition(tacticalMap)))e.Handled=true; };
             hoverInfo=WpfFieldTheme.Text("",15);hoverInfo.TextWrapping=TextWrapping.Wrap;hoverInfo.TextTrimming=TextTrimming.None;
@@ -1115,7 +1115,7 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
                 case AppControlAction.PingDanger:SendPing(0);break;case AppControlAction.PingLoot:SendPing(1);break;case AppControlAction.PingPickup:SendPing(2);break;
                 case AppControlAction.Settings:ShowSettings();break;case AppControlAction.Search:ShowSearch();break;
                 case AppControlAction.ToggleOverlay:ToggleHud();break;
-                case AppControlAction.AddWaypoint:ShowAddWaypoint();break;case AppControlAction.ClearWaypoint:StopSquadNavigation();break;
+                case AppControlAction.AddWaypoint:ShowAddWaypoint();break;case AppControlAction.ClearWaypoint:ClearMapRoute();break;
                 case AppControlAction.ZoomIn:engine.WpfZoom(TacticalVisible,1);break;case AppControlAction.ZoomOut:engine.WpfZoom(TacticalVisible,-1);break;
                 case AppControlAction.StartupGuide:ShowOnboarding();break;case AppControlAction.ZoneEditor:ShowZoneWizard();break;default:engine.WpfNativeTool(action);break;
             }

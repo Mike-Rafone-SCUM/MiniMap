@@ -28,13 +28,17 @@ namespace ScumMiniMap {
         void ChangeOwnRouteKind(bool shared) { squad.SetShared(shared);OwnRouteEdited(); }
         void RemoveOwnRouteStop(string id) { if(squad.RemoveStop(id))OwnRouteEdited(); }
         void UndoOwnRouteStop() { squad.RemoveLast();OwnRouteEdited(); }
-        void ClearOwnRoute() {
+        void ClearOwnRoute() { ClearLocalRoute(false); }
+        void ClearMapRoute() { ClearLocalRoute(true); }
+        void ClearLocalRoute(bool stopNavigation) {
             bool ownActive=activeStops.Length>0&&activeStops[0].OwnerId==null;
-            squad.ClearRoute();ownRouteSignature=null;ownRoutePlanner.Clear();if(ownActive)StopSquadNavigation();filterIdentity=null;Refresh();
+            squad.ClearRoute();ownRouteSignature=null;ownRoutePlanner.Clear();if(stopNavigation||ownActive)StopSquadNavigation();filterIdentity=null;Refresh();
         }
         void OwnRouteEdited() {
-            if(activeStops.Length>0&&activeStops[0].OwnerId==null) {
-                var next=squad.Stops;if(next.Length==0)StopSquadNavigation();else { activeStop=AlignedStop(next);activeStops=next;SetSquadStop(); }
+            var next=squad.Stops;bool ownActive=activeStops.Length>0&&activeStops[0].OwnerId==null;
+            if(next.Length==0) { if(ownActive)StopSquadNavigation(); }
+            else {
+                activeStop=ownActive?AlignedStop(next):0;followingPeer=null;activeStops=next;SetSquadStop();
             }
             ownRouteSignature=null;UpdateRoutePreviews();filterIdentity=null;Refresh();
         }
@@ -47,13 +51,14 @@ namespace ScumMiniMap {
             }
             return Math.Min(activeStop,next.Length-1);
         }
+        bool UsesOwnNavigationPlan { get { return activeStop==0&&activeStops.Length>0&&activeStops[0].OwnerId==null; } }
         void UpdateRoutePreviews() {
             var now=DateTime.UtcNow;var origin=PlanningOrigin();var own=squad.Stops;string signature=StopSignature(own);
             if(own.Length==0) { if(ownRouteSignature!="")ownRoutePlanner.Clear();ownRouteSignature=""; }
             else if(signature!=ownRouteSignature||now-ownPlanRequested>=TimeSpan.FromSeconds(2)&&OriginChanged(ownPlanOrigin,origin)) {
                 ownRouteSignature=signature;ownPlanOrigin=origin;ownPlanRequested=now;ownRoutePlanner.Update(origin,StopPoints(own));
             }
-            if(activeStops.Length==0) { if(activeRouteSignature!=null)squadRoutePlanner.Clear();activeRouteSignature=null; }
+            if(activeStops.Length==0||UsesOwnNavigationPlan) { if(activeRouteSignature!=null)squadRoutePlanner.Clear();activeRouteSignature=null; }
             else {
                 var remaining=activeStops.Skip(activeStop).ToArray();signature=StopSignature(remaining);
                 if(remaining.Length>0&&(signature!=activeRouteSignature||now-activePlanRequested>=TimeSpan.FromSeconds(2)&&OriginChanged(activePlanOrigin,origin))) {
@@ -79,7 +84,7 @@ namespace ScumMiniMap {
         }
         void AddRouteState(WpfMapState state,WpfMapState compact) {
             state.LocalRoute=compact.LocalRoute=squad.Stops;state.OwnRoutePlan=compact.OwnRoutePlan=ownRoutePlanner.Plan;
-            state.SquadPlan=compact.SquadPlan=squadRoutePlanner.Plan;state.SquadPlanning=compact.SquadPlanning=ownRoutePlanner.Busy;
+            state.SquadPlan=compact.SquadPlan=UsesOwnNavigationPlan?ownRoutePlanner.Plan:squadRoutePlanner.Plan;state.SquadPlanning=compact.SquadPlanning=UsesOwnNavigationPlan?ownRoutePlanner.Busy:squadRoutePlanner.Busy;
             state.SquadNavigating=compact.SquadNavigating=followingPeer!=null||activeStops.Length>0;
             state.ActiveSquadRoute=compact.ActiveSquadRoute=activeStops.Length>0?SquadState.RouteKey(activeStops[0]):null;
             state.ActiveSquadShared=compact.ActiveSquadShared=activeStops.Length>0&&SquadState.IsShared(activeStops[0]);
@@ -89,12 +94,12 @@ namespace ScumMiniMap {
                 state.OwnRouteSummary=compact.OwnRouteSummary=engine.WpfTravelSummary(own==null?distance:own.Distance,own!=null&&own.MissingRoads==0,ownRoutePlanner.Busy);
             }
             if(activeStops.Length>activeStop&&state.Target!=null&&state.Position!=null) {
-                var plan=squadRoutePlanner.Plan;
+                var plan=state.SquadPlan;
                 double distance=0;var from=MapWindow.ToMap(state.Position);
                 foreach(var stop in activeStops.Skip(activeStop)) { var to=new DrawingPoint((float)stop.X,(float)stop.Y);distance+=DestinationSearch.Metres(from,to);from=to; }
                 bool road=plan!=null&&plan.HasOrigin&&plan.MissingRoads==0;
                 if(plan!=null&&plan.HasOrigin)distance=plan.Distance;
-                state.RouteSummary=compact.RouteSummary=S("NavigationNext")+": "+state.RouteSummary+" · "+S("NavigationRemaining")+": "+engine.WpfTravelSummary(distance,road,squadRoutePlanner.Busy);
+                state.RouteSummary=compact.RouteSummary=S("NavigationNext")+": "+state.RouteSummary+" · "+S("NavigationRemaining")+": "+engine.WpfTravelSummary(distance,road,state.SquadPlanning);
             }
             var markers=ReceivedSquadMarkers();var descriptions=SquadState.Routes(markers).Select(r=>new { Key=SquadState.RouteKey(r[0]),Marker=r[0] }).Concat(markers.Where(m=>m.Id==SharedMapMarker.GpsId).Select(m=>new { Key=(m.OwnerId??"")+":gps",Marker=m })).ToArray();
             state.OtherRoutePlans=compact.OtherRoutePlans=remoteRoutes.Where(p=>p.Value.Planner.Plan!=null).Select(p=> {
