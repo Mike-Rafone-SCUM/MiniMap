@@ -662,3 +662,9 @@ SquadExploring	探索
 SquadDelete	刪除
 SquadPingHelp	標記會在60秒後消失。請在設定中配置快捷鍵。僅在連線時共享。
 SquadRouteHelp	以滑鼠右鍵點擊地圖新增中途站，或在下方新增目前目的地。已連線的群組會收到路線。接近40公尺內時前往下一站。
+PrivateGroupNameLabel	群組名稱（建立時可選）
+PrivateGroupRename	儲存群組名稱
+SoloRoute	個人路線
+OwnRoute	你的路線
+RouteList	路線
+RouteAutoHelp	中途站變更時自動計算路線。琥珀色為個人路線，青色為共享路線。虛線表示無道路路線時的直線引導。你的個人路線對已連線的群組可見。跟隨共享路線不會再次轉送它。

@@ -662,3 +662,9 @@ SquadExploring	Esplorazione
 SquadDelete	Elimina
 SquadPingHelp	I segnali scadono dopo 60 secondi. Assegna i tasti nelle impostazioni. Condivisione solo durante la connessione.
 SquadRouteHelp	Fai clic destro sulla mappa per aggiungere tappe oppure aggiungi la destinazione attuale qui sotto. I gruppi connessi ricevono il percorso. Le tappe avanzano entro 40 m.
+PrivateGroupNameLabel	Nome del gruppo (facoltativo alla creazione)
+PrivateGroupRename	Salva nome del gruppo
+SoloRoute	Percorso individuale
+OwnRoute	Il tuo percorso
+RouteList	Percorsi
+RouteAutoHelp	I percorsi si calcolano al cambiare delle tappe. Ambra indica individuale, ciano condiviso. I tratti tratteggiati sono guida diretta senza percorso stradale. Il tuo percorso individuale è visibile ai gruppi connessi. Seguire un percorso condiviso non lo ritrasmette.

@@ -5,6 +5,7 @@ foreach ($check in @(
     'tests\Test-Localization.ps1',
     'tests\Test-PrivatePositions.ps1',
     'tests\Test-SquadState.ps1',
+    'tests\Test-SquadRoutePlanner.ps1',
     'tests\Test-MapObjectLocalization.ps1',
     'tests\Test-SpawnCart.ps1',
     'tests\Test-AdminPlayers.ps1',

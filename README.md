@@ -1,4 +1,4 @@
-# SCUM MiniMap v2.3.0
+# SCUM MiniMap v2.3.1
 
 SCUM MiniMap is an external map overlay and road-navigation utility for SCUM, made for the Skynett community. Version 2 uses WPF for the tactical map, compact minimap, Settings, setup guide and Zone Creator. The existing tracking and routing engine remains behind the new interface.
 
@@ -76,6 +76,12 @@ Open **Squad tools** in the full-map sidebar. While connected to a private group
 Teammate cards show connection status and seconds since the last captured location. Disconnected cards remain for up to five minutes, with their location hidden. **Follow teammate** updates your destination when they move at least 25 m, at most once every two seconds. Navigation pauses when their position is unavailable and resumes on a fresh update. **Stop navigation**, Clear, or choosing another destination cancels follow.
 
 Right-click to **Add route stop**, or add your current destination from Squad tools. A route holds up to 16 ordered stops and is shared with your connected groups through the encrypted marker transport. Choose **Start route** for your route or another member's route. Stops advance within 40 m; you can navigate independently of other members. Route drafts and pings are session-local. Only your own route and pings are published; received routes are not automatically forwarded into other groups. New clients understand stop ordering; older clients see individual markers.
+
+Routes now calculate automatically as stops are placed or edited; **Start route** begins step-by-step navigation rather than being required for calculation. Right-click → **Squad tools** to add a stop, remove the clicked stop, undo, start or stop navigation. **Your route** selects **Solo route** or **Shared route**. Right-click a teammate's arrow for **Follow teammate**.
+
+**Solo routes are amber** and represent a player's own plan, automatically visible to their connected groups. **Shared squad routes are cyan** and appear under their original owner. Following a shared route updates with the owner's new stages without rebroadcasting that route into your other groups; your duplicate personal route publication is suppressed while following it. Other players' routes are calculated locally from their encrypted stops and available positions. No route geometry is sent to the server. Each player has a separate **Routes** visibility pill.
+
+Solid route legs follow calculated roads. Dashed legs provide direct guidance when a road route is unavailable; they are not a verified drivable road. Calculations run off the UI thread, coalesce rapid edits and discard outdated results. Removing a stop recalculates the remaining ordered route. Without a fresh player position, the inter-stop sections can still be calculated.
 
 Under **Map presets**, choose a suggested name or type your own, then **Save current map preset**. Saving the same name on the same map replaces that preset. Click a saved name to restore categories, custom-zone visibility, map layers, zoom, rotation, clustering and opacity. Up to 24 presets are stored in the current Windows profile; each applies only to its original map. Group memberships, sharing and hotkeys are not changed by presets.
 

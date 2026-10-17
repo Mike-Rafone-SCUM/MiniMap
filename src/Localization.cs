@@ -961,6 +961,11 @@ private static readonly Dictionary<string, string> CategoryNamesAr = new Diction
 
 
 public static readonly Dictionary<string, string> StringsEn = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "SoloRoute", "Solo route" },
+            { "OwnRoute", "Your route" },
+            { "RouteList", "Routes" },
+            { "RouteAutoHelp", "Routes calculate automatically as stops change. Amber means solo; cyan means shared. Dashed legs are direct guidance without a road route. Your solo route is visible to connected groups. Following a shared route does not rebroadcast it." },
+
             { "PrivateGroupNameLabel", "Group name (optional when creating)" },
             { "PrivateGroupRename", "Save group name" },
 
@@ -1713,6 +1718,11 @@ public static readonly Dictionary<string, string> StringsEn = new Dictionary<str
         };
 
 public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "SoloRoute", "Ruta individual" },
+            { "OwnRoute", "Tu ruta" },
+            { "RouteList", "Rutas" },
+            { "RouteAutoHelp", "Las rutas se calculan al cambiar las paradas. Ámbar indica individual y cian compartida. Los tramos discontinuos son guía directa sin ruta por carretera. Tu ruta individual es visible para los grupos conectados. Seguir una compartida no la retransmite." },
+
             { "PrivateGroupNameLabel", "Nombre del grupo (opcional al crear)" },
             { "PrivateGroupRename", "Guardar nombre del grupo" },
 
@@ -2465,6 +2475,11 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsFr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "SoloRoute", "Itinéraire solo" },
+            { "OwnRoute", "Votre itinéraire" },
+            { "RouteList", "Itinéraires" },
+            { "RouteAutoHelp", "Les itinéraires se calculent dès que les étapes changent. Ambre : solo ; cyan : partagé. Les tronçons pointillés sont un guidage direct sans route routière. Votre itinéraire solo est visible par les groupes connectés. Suivre un itinéraire partagé ne le retransmet pas." },
+
             { "PrivateGroupNameLabel", "Nom du groupe (facultatif à la création)" },
             { "PrivateGroupRename", "Enregistrer le nom du groupe" },
 
@@ -3217,6 +3232,11 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsDe = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "SoloRoute", "Soloroute" },
+            { "OwnRoute", "Deine Route" },
+            { "RouteList", "Routen" },
+            { "RouteAutoHelp", "Routen werden bei geänderten Stopps automatisch berechnet. Bernstein bedeutet solo, Cyan geteilt. Gestrichelte Abschnitte sind direkte Orientierung ohne Straßenroute. Deine Soloroute ist für verbundene Gruppen sichtbar. Eine verfolgte geteilte Route wird nicht erneut gesendet." },
+
             { "PrivateGroupNameLabel", "Gruppenname (beim Erstellen optional)" },
             { "PrivateGroupRename", "Gruppennamen speichern" },
 
@@ -3969,6 +3989,11 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsNl = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "SoloRoute", "Soloroute" },
+            { "OwnRoute", "Jouw route" },
+            { "RouteList", "Routes" },
+            { "RouteAutoHelp", "Routes worden automatisch berekend zodra stops veranderen. Amber betekent solo, cyaan gedeeld. Gestreepte delen geven directe begeleiding zonder wegroute. Je soloroute is zichtbaar voor verbonden groepen. Een gevolgde gedeelde route wordt niet opnieuw doorgestuurd." },
+
             { "PrivateGroupNameLabel", "Groepsnaam (optioneel bij aanmaken)" },
             { "PrivateGroupRename", "Groepsnaam opslaan" },
 
@@ -4721,6 +4746,11 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsRu = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "SoloRoute", "Личный маршрут" },
+            { "OwnRoute", "Ваш маршрут" },
+            { "RouteList", "Маршруты" },
+            { "RouteAutoHelp", "Маршруты рассчитываются при изменении остановок. Янтарный — личный, голубой — общий. Пунктир означает прямое направление без дорожного маршрута. Личный маршрут виден подключённым группам. Следование общему маршруту не передаёт его повторно." },
+
             { "PrivateGroupNameLabel", "Название группы (необязательно при создании)" },
             { "PrivateGroupRename", "Сохранить название группы" },
 
@@ -5473,6 +5503,11 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsZh = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "SoloRoute", "个人路线" },
+            { "OwnRoute", "你的路线" },
+            { "RouteList", "路线" },
+            { "RouteAutoHelp", "途经点变化时自动计算路线。琥珀色为个人路线，青色为共享路线。虚线表示无道路路线时的直线引导。你的个人路线对已连接的群组可见。跟随共享路线不会再次转发它。" },
+
             { "PrivateGroupNameLabel", "群组名称（创建时可选）" },
             { "PrivateGroupRename", "保存群组名称" },
 
@@ -6225,6 +6260,11 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsTr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "SoloRoute", "Kişisel rota" },
+            { "OwnRoute", "Rotanız" },
+            { "RouteList", "Rotalar" },
+            { "RouteAutoHelp", "Duraklar değişince rotalar otomatik hesaplanır. Kehribar kişisel, camgöbeği ortak rotadır. Kesikli kısımlar yol rotası olmadan doğrudan yönlendirmedir. Kişisel rotanız bağlı gruplara görünür. Ortak rotayı takip etmek onu yeniden yayınlamaz." },
+
             { "PrivateGroupNameLabel", "Grup adı (oluştururken isteğe bağlı)" },
             { "PrivateGroupRename", "Grup adını kaydet" },
 
@@ -6977,6 +7017,11 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsAr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "SoloRoute", "مسار فردي" },
+            { "OwnRoute", "مسارك" },
+            { "RouteList", "المسارات" },
+            { "RouteAutoHelp", "تُحسب المسارات تلقائيًا عند تغيير المحطات. الكهرماني للفردي والسماوي للمشترك. المقاطع المتقطعة إرشاد مباشر دون مسار طريق. يظهر مسارك الفردي للمجموعات المتصلة. اتباع مسار مشترك لا يعيد بثه." },
+
             { "PrivateGroupNameLabel", "اسم المجموعة (اختياري عند الإنشاء)" },
             { "PrivateGroupRename", "حفظ اسم المجموعة" },
 
@@ -7729,6 +7774,11 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsPt = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "SoloRoute", "Rota individual" },
+            { "OwnRoute", "Sua rota" },
+            { "RouteList", "Rotas" },
+            { "RouteAutoHelp", "As rotas são calculadas ao mudar as paradas. Âmbar indica individual e ciano compartilhada. Trechos tracejados são orientação direta sem rota por estrada. Sua rota individual fica visível aos grupos conectados. Seguir uma rota compartilhada não a retransmite." },
+
             { "PrivateGroupNameLabel", "Nome do grupo (opcional ao criar)" },
             { "PrivateGroupRename", "Salvar nome do grupo" },
 
@@ -8481,6 +8531,11 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
 
 
         public static readonly Dictionary<string, string> StringsKo = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "SoloRoute", "개인 경로" },
+            { "OwnRoute", "내 경로" },
+            { "RouteList", "경로" },
+            { "RouteAutoHelp", "경유지가 바뀌면 경로가 자동 계산됩니다. 호박색은 개인, 청록색은 공유 경로입니다. 점선 구간은 도로 경로가 없는 직선 안내입니다. 개인 경로는 연결된 그룹에 표시됩니다. 공유 경로를 따라가도 다시 전달하지 않습니다." },
+
             { "PrivateGroupNameLabel", "그룹 이름 (생성 시 선택 사항)" },
             { "PrivateGroupRename", "그룹 이름 저장" },
 

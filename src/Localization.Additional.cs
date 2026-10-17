@@ -4,6 +4,11 @@ using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsTh = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "SoloRoute", "เส้นทางส่วนตัว" },
+            { "OwnRoute", "เส้นทางของคุณ" },
+            { "RouteList", "เส้นทาง" },
+            { "RouteAutoHelp", "คำนวณเส้นทางอัตโนมัติเมื่อจุดแวะเปลี่ยน สีอำพันคือส่วนตัว สีฟ้าอมเขียวคือร่วมกัน เส้นประคือแนวทางตรงเมื่อไม่มีเส้นทางถนน กลุ่มที่เชื่อมต่อจะเห็นเส้นทางส่วนตัวของคุณ การตามเส้นทางร่วมจะไม่ส่งซ้ำ" },
+
             { "PrivateGroupNameLabel", "ชื่อกลุ่ม (ไม่บังคับตอนสร้าง)" },
             { "PrivateGroupRename", "บันทึกชื่อกลุ่ม" },
 
@@ -1062,6 +1067,11 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "จุดกิจกรรมซีเดนเท็กซ์" },
         };
         public static readonly Dictionary<string,string> StringsZhTw = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "SoloRoute", "個人路線" },
+            { "OwnRoute", "你的路線" },
+            { "RouteList", "路線" },
+            { "RouteAutoHelp", "中途站變更時自動計算路線。琥珀色為個人路線，青色為共享路線。虛線表示無道路路線時的直線引導。你的個人路線對已連線的群組可見。跟隨共享路線不會再次轉送它。" },
+
             { "PrivateGroupNameLabel", "群組名稱（建立時可選）" },
             { "PrivateGroupRename", "儲存群組名稱" },
 
@@ -2120,6 +2130,11 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex活動點" },
         };
         public static readonly Dictionary<string,string> StringsJa = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "SoloRoute", "ソロルート" },
+            { "OwnRoute", "自分のルート" },
+            { "RouteList", "ルート" },
+            { "RouteAutoHelp", "経由地の変更時に自動計算します。琥珀色はソロ、シアンは共有ルートです。破線は道路ルートがない区間の直線案内です。ソロルートは接続中のグループに表示されます。共有ルートを追っても再転送しません。" },
+
             { "PrivateGroupNameLabel", "グループ名（作成時は任意）" },
             { "PrivateGroupRename", "グループ名を保存" },
 
@@ -3178,6 +3193,11 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "シーデンテックスアクティビティスポット" },
         };
         public static readonly Dictionary<string,string> StringsCs = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "SoloRoute", "Samostatná trasa" },
+            { "OwnRoute", "Vaše trasa" },
+            { "RouteList", "Trasy" },
+            { "RouteAutoHelp", "Trasy se automaticky počítají při změně zastávek. Jantarová znamená samostatnou, azurová sdílenou trasu. Přerušované úseky jsou přímé vedení bez silniční trasy. Vaši trasu vidí připojené skupiny. Sledování sdílené trasy ji znovu nevysílá." },
+
             { "PrivateGroupNameLabel", "Název skupiny (při vytvoření volitelný)" },
             { "PrivateGroupRename", "Uložit název skupiny" },
 
@@ -4236,6 +4256,11 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex Activity Spot" },
         };
         public static readonly Dictionary<string,string> StringsIt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "SoloRoute", "Percorso individuale" },
+            { "OwnRoute", "Il tuo percorso" },
+            { "RouteList", "Percorsi" },
+            { "RouteAutoHelp", "I percorsi si calcolano al cambiare delle tappe. Ambra indica individuale, ciano condiviso. I tratti tratteggiati sono guida diretta senza percorso stradale. Il tuo percorso individuale è visibile ai gruppi connessi. Seguire un percorso condiviso non lo ritrasmette." },
+
             { "PrivateGroupNameLabel", "Nome del gruppo (facoltativo alla creazione)" },
             { "PrivateGroupRename", "Salva nome del gruppo" },
 
@@ -5294,6 +5319,11 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Punto di attività del dentice marino" },
         };
         public static readonly Dictionary<string,string> StringsUk = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "SoloRoute", "Особистий маршрут" },
+            { "OwnRoute", "Ваш маршрут" },
+            { "RouteList", "Маршрути" },
+            { "RouteAutoHelp", "Маршрути обчислюються при зміні зупинок. Бурштиновий — особистий, блакитний — спільний. Пунктир означає прямий напрямок без дорожнього маршруту. Особистий маршрут бачать підключені групи. Стеження спільним маршрутом не передає його повторно." },
+
             { "PrivateGroupNameLabel", "Назва групи (необов’язкова при створенні)" },
             { "PrivateGroupRename", "Зберегти назву групи" },
 

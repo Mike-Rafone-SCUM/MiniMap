@@ -14,7 +14,11 @@ namespace ScumMiniMap {
             }
             return result;
         }
-        const string PolishUi = @"PrivateGroupNameLabel|Nazwa grupy (opcjonalna przy tworzeniu)
+        const string PolishUi = @"SoloRoute|Trasa solo
+OwnRoute|Twoja trasa
+RouteList|Trasy
+RouteAutoHelp|Trasy przeliczają się po zmianie przystanków. Bursztynowy oznacza solo, turkusowy wspólną trasę. Linie przerywane to bezpośrednie wskazanie bez trasy drogowej. Twoją trasę solo widzą połączone grupy. Podążanie wspólną trasą nie rozsyła jej ponownie.
+PrivateGroupNameLabel|Nazwa grupy (opcjonalna przy tworzeniu)
 PrivateGroupRename|Zapisz nazwę grupy
 SquadTools|Narzędzia drużyny
 PingDanger|Niebezpieczeństwo

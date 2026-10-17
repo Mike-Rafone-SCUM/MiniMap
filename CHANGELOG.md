@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.3.1] - 2026-10-17
+
+- Add right-click squad navigation controls: add/remove route stops, undo, start/stop navigation, follow a teammate, and choose solo or shared route mode.
+- Calculate every route stage automatically in the background as stops change. Coalesce rapid edits, discard obsolete calculations and clearly dash direct-only legs when road routing is unavailable.
+- Automatically display other players' personal routes from encrypted stops and fresh positions. Solo routes use amber labels/lines; shared squad routes use cyan. Following a shared route updates with its owner's edits without rebroadcasting it or creating duplicate personal route publications.
+- Preserve surviving stop identities when removing or changing route mode, and keep following the same stage when earlier stops change. Add an independent Routes visibility control per player.
+
 ## [2.3.0] - 2026-10-17
 
 - Name private groups when creating them or rename saved groups. Names synchronize as encrypted group metadata and are saved with memberships without changing invite codes or refresh ownership.

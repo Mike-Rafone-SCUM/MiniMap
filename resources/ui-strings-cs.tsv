@@ -662,3 +662,9 @@ SquadExploring	Průzkum
 SquadDelete	Smazat
 SquadPingHelp	Signály zmizí po 60 sekundách. Klávesy nastavte v nastavení. Sdílení funguje jen při připojení.
 SquadRouteHelp	Pravým tlačítkem na mapě přidejte zastávky nebo níže přidejte aktuální cíl. Připojené skupiny dostanou trasu. Zastávky se posouvají do vzdálenosti 40 m.
+PrivateGroupNameLabel	Název skupiny (při vytvoření volitelný)
+PrivateGroupRename	Uložit název skupiny
+SoloRoute	Samostatná trasa
+OwnRoute	Vaše trasa
+RouteList	Trasy
+RouteAutoHelp	Trasy se automaticky počítají při změně zastávek. Jantarová znamená samostatnou, azurová sdílenou trasu. Přerušované úseky jsou přímé vedení bez silniční trasy. Vaši trasu vidí připojené skupiny. Sledování sdílené trasy ji znovu nevysílá.

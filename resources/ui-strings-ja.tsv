@@ -662,3 +662,9 @@ SquadExploring	探索
 SquadDelete	削除
 SquadPingHelp	ピンは60秒後に消えます。設定でショートカットを割り当ててください。接続中のみ共有します。
 SquadRouteHelp	地図を右クリックして経由地を追加するか、下で現在の目的地を追加できます。接続中のグループにルートが共有されます。40m以内に近づくと次の経由地へ進みます。
+PrivateGroupNameLabel	グループ名（作成時は任意）
+PrivateGroupRename	グループ名を保存
+SoloRoute	ソロルート
+OwnRoute	自分のルート
+RouteList	ルート
+RouteAutoHelp	経由地の変更時に自動計算します。琥珀色はソロ、シアンは共有ルートです。破線は道路ルートがない区間の直線案内です。ソロルートは接続中のグループに表示されます。共有ルートを追っても再転送しません。

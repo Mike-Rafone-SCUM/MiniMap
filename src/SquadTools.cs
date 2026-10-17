@@ -29,7 +29,7 @@ namespace ScumMiniMap {
         string followingPeer;MapZone squadTarget;DateTime nextSquadRoute;
         SharedMapMarker[] activeStops=new SharedMapMarker[0];int activeStop;
         static string S(string key) { return Localization.Get(key); }
-        void StopSquadNavigation() { followingPeer=null;activeStops=new SharedMapMarker[0];squadTarget=null;engine.WpfClear(); }
+        void StopSquadNavigation() { followingPeer=null;activeStops=new SharedMapMarker[0];squadTarget=null;squadRoutePlanner.Clear();activeRouteSignature=null;engine.WpfClear(); }
         static TextBlock SquadHelp(string key) { var text=WpfFieldTheme.Text(S(key),13,WpfFieldTheme.Muted);text.TextWrapping=TextWrapping.Wrap;text.TextTrimming=TextTrimming.None;text.Margin=new Thickness(0,10,0,10);return text; }
         void SendPing(int kind,DrawingPoint? at=null) {
             var state=engine.WpfSnapshot(false);var sessions=(relayGroups==null?new DirectPositions[0]:relayGroups.Sessions).Concat(privatePositions==null?new DirectPositions[0]:new[]{privatePositions});
@@ -47,9 +47,10 @@ namespace ScumMiniMap {
             foreach(var p in current) { PrivatePositions.Peer previous;if(p.Position==null)p.Updated=knownPlayers.TryGetValue(p.Id,out previous)?previous.Updated:DateTime.MinValue;knownPlayers[p.Id]=p;playerSeen[p.Id]=now; }
             foreach(string id in playerSeen.Where(p=>now-p.Value>TimeSpan.FromMinutes(5)).Select(p=>p.Key).ToArray()) { playerSeen.Remove(id);knownPlayers.Remove(id); }
             playerRoster=knownPlayers.Values.OrderBy(p=>p.Name,StringComparer.CurrentCultureIgnoreCase).Select(p=>new PrivatePositions.Peer { Id=p.Id,Name=p.Name,Updated=p.Updated,Position=current.Any(c=>c.Id==p.Id)?p.Position:null }).ToArray();
+            SyncSelectedSharedRoute();
             var state=engine.WpfSnapshot(false);
             // A manual destination or Clear takes precedence over squad navigation.
-            if(squadTarget!=null&&!object.ReferenceEquals(squadTarget,state.Target)||(followingPeer!=null&&squadTarget==null&&state.Target!=null)) { followingPeer=null;activeStops=new SharedMapMarker[0];squadTarget=null; }
+            if(squadTarget!=null&&!object.ReferenceEquals(squadTarget,state.Target)||(followingPeer!=null&&squadTarget==null&&state.Target!=null)) { followingPeer=null;activeStops=new SharedMapMarker[0];squadTarget=null;squadRoutePlanner.Clear();activeRouteSignature=null; }
             if(followingPeer!=null) {
                 var peer=current.FirstOrDefault(p=>p.Id==followingPeer);
                 if(peer==null||peer.Position==null) { bool clear=squadTarget!=null;squadTarget=null;if(clear)engine.WpfClear();return; }
@@ -65,24 +66,26 @@ namespace ScumMiniMap {
         }
         void SetSquadStop() { var m=activeStops[activeStop];squadTarget=new MapZone { Name=(activeStop+1)+"/"+activeStops.Length+" · "+m.Name,Points=new[]{new DrawingPoint((float)m.X,(float)m.Y)} };engine.WpfSquadTarget(squadTarget); }
         void StartSquadRoute(SharedMapMarker[] stops) { if(stops.Length==0)return;followingPeer=null;activeStops=stops.Select(m=>m.Copy()).ToArray();activeStop=0;SetSquadStop();Refresh(); }
-        void AddSquadStop(DrawingPoint at) { var m=engine.WpfClickedTarget(at,.003f);squad.AddStop(m.DisplayName,at.X,at.Y);filterIdentity=null;Refresh(); }
+        void AddSquadStop(DrawingPoint at) { var m=engine.WpfClickedTarget(at,.003f);if(squad.AddStop(m.DisplayName,at.X,at.Y))OwnRouteEdited(); }
         void ShowSquadTools() {
             var window=Window(S("SquadTools"),620,740);var body=new StackPanel { Margin=new Thickness(22) };var scroll=new ScrollViewer { Content=body,VerticalScrollBarVisibility=ScrollBarVisibility.Auto };
             var layout=new DockPanel();var header=new DockPanel { Margin=new Thickness(22,16,22,0) };var done=WpfFieldTheme.Button(S("Done"),()=>window.Close());DockPanel.SetDock(done,Dock.Right);header.Children.Add(done);header.Children.Add(WpfFieldTheme.Text(S("SquadTools"),24,null,true));header.MouseLeftButtonDown+=(s,e)=> { if(e.OriginalSource is TextBlock)window.DragMove(); };DockPanel.SetDock(header,Dock.Top);layout.Children.Add(header);layout.Children.Add(scroll);window.Content=layout;
             body.Children.Add(SquadHelp("SquadPingHelp"));
             var pingRow=new WrapPanel();string[] keys={"PingDanger","PingLoot","PingPickup"};for(int i=0;i<3;i++) { int k=i;pingRow.Children.Add(WpfFieldTheme.Button(S(keys[i]),()=>SendPing(k))); }body.Children.Add(pingRow);
-            body.Children.Add(SquadHelp("SquadRouteHelp"));var routes=new StackPanel();body.Children.Add(routes);
+            body.Children.Add(SquadHelp("SquadRouteHelp"));body.Children.Add(SquadHelp("RouteAutoHelp"));var routes=new StackPanel();body.Children.Add(routes);
             Action redraw=null;redraw=()=> {
                 routes.Children.Clear();var local=squad.Stops;
-                routes.Children.Add(WpfFieldTheme.Text(S("SquadRoute")+" · "+local.Length+" / 16",17,null,true));
+                routes.Children.Add(WpfFieldTheme.Text(S(squad.Shared?"SquadRoute":"SoloRoute")+" · "+local.Length+" / 16",17,null,true));
+                var kind=new WrapPanel();kind.Children.Add(WpfFieldTheme.Button(S("SoloRoute"),()=> { ChangeOwnRouteKind(false);redraw(); },!squad.Shared));kind.Children.Add(WpfFieldTheme.Button(S("SquadRoute"),()=> { ChangeOwnRouteKind(true);redraw(); },squad.Shared));routes.Children.Add(kind);
+                var plan=ownRoutePlanner.Plan;routes.Children.Add(WpfFieldTheme.Text(ownRoutePlanner.Busy?S("FieldCalculating"):plan==null?"":DestinationSearch.Distance(plan.Distance)+(plan.MissingRoads>0?" · "+S("FieldNoRoad")+" · "+plan.MissingRoads:""),13,WpfFieldTheme.Muted));
                 foreach(var m in local)routes.Children.Add(WpfFieldTheme.Text((SquadState.StopIndex(m)+1)+". "+m.Name));
-                var row=new WrapPanel();row.Children.Add(WpfFieldTheme.Button(S("SquadAddStop"),()=> { var t=engine.WpfSnapshot(true).Target;if(t!=null)AddSquadStop(t.Centroid);redraw(); }));row.Children.Add(WpfFieldTheme.Button(S("SquadUndoStop"),()=> { squad.RemoveLast();redraw();Refresh(); }));row.Children.Add(WpfFieldTheme.Button(S("WpfClearRoute"),()=> { squad.ClearRoute();redraw();Refresh(); }));routes.Children.Add(row);
+                var row=new WrapPanel();row.Children.Add(WpfFieldTheme.Button(S("SquadAddStop"),()=> { var t=engine.WpfSnapshot(true).Target;if(t!=null)AddSquadStop(t.Centroid);redraw(); }));row.Children.Add(WpfFieldTheme.Button(S("SquadUndoStop"),()=> { UndoOwnRouteStop();redraw(); }));row.Children.Add(WpfFieldTheme.Button(S("WpfClearRoute"),()=> { ClearOwnRoute();redraw(); }));routes.Children.Add(row);
                 var own=WpfFieldTheme.Button(S("SquadStartRoute"),()=> { StartSquadRoute(local);window.Close(); });own.IsEnabled=local.Length>0;routes.Children.Add(own);
                 var remote=(privatePositions==null?new SharedMapMarker[0]:privatePositions.SnapshotMarkers()).Concat(relayGroups==null?new SharedMapMarker[0]:relayGroups.Markers());
                 foreach(var route in SquadState.Routes(remote)) { var copy=route;routes.Children.Add(WpfFieldTheme.Button(S("SquadStartRoute")+": "+route[0].Owner+" · "+route.Length,()=> { StartSquadRoute(copy);window.Close(); })); }
             };redraw();
             var timer=new DispatcherTimer { Interval=TimeSpan.FromSeconds(2) };timer.Tick+=(s,e)=>redraw();window.Closed+=(s,e)=>timer.Stop();timer.Start();
-            body.Children.Add(WpfFieldTheme.Button(S("SquadStopNav"),()=> { followingPeer=null;activeStops=new SharedMapMarker[0];squadTarget=null;engine.WpfClear();Refresh(); }));
+            body.Children.Add(WpfFieldTheme.Button(S("SquadStopNav"),()=> { StopSquadNavigation();Refresh(); }));
             body.Children.Add(WpfFieldTheme.Text(S("SquadPresets"),19,null,true));
             string file=Path.Combine(engine.WpfDataFolder,"map-presets.dat");var presets=new List<MapPreset>();
             try { presets.AddRange(MapPresetFile.Load(file)); }catch(Exception e) { Program.LogException("MapPresets",e);body.Children.Add(WpfFieldTheme.Text(S("PrivatePositionInvalid"))); }

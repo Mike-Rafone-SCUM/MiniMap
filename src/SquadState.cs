@@ -17,9 +17,13 @@ namespace ScumMiniMap {
         readonly List<SharedMapMarker> stops=new List<SharedMapMarker>();
         DateTime lastPing=DateTime.MinValue;
         string route=Guid.NewGuid().ToString("N");
+        internal bool Shared { get;private set; }
         internal SquadState(Func<DateTime> clock=null) { this.clock=clock??(()=>DateTime.UtcNow); }
         internal static bool IsPing(SharedMapMarker m) { return m!=null&&m.Id!=null&&m.Id.StartsWith("50494E47",StringComparison.Ordinal)&&m.Id.Length==64; }
-        internal static bool IsStop(SharedMapMarker m) { return m!=null&&m.Id!=null&&m.Id.StartsWith("524F5554",StringComparison.Ordinal)&&m.Id.Length==64&&StopIndex(m)<MaximumStops; }
+        internal static bool IsStop(SharedMapMarker m) { return m!=null&&m.Id!=null&&m.Id.Length==64&&(m.Id.StartsWith("524F5554",StringComparison.Ordinal)||m.Id.StartsWith("534F4C4F",StringComparison.Ordinal)||m.Id.StartsWith("53485244",StringComparison.Ordinal))&&StopIndex(m)<MaximumStops; }
+        internal static bool IsShared(SharedMapMarker m) { return IsStop(m)&&!m.Id.StartsWith("534F4C4F",StringComparison.Ordinal); }
+        string StopId(int index,string identity=null) { return (Shared?"53485244":"534F4C4F")+route+index.ToString("X2")+(identity??Guid.NewGuid().ToString("N").Substring(0,22)); }
+        internal void SetShared(bool shared) { Shared=shared;for(int i=0;i<stops.Count;i++)stops[i].Id=StopId(i,stops[i].Id.Substring(42)); }
         internal static int StopIndex(SharedMapMarker m) { int value;return m!=null&&m.Id!=null&&m.Id.Length==64&&int.TryParse(m.Id.Substring(40,2),NumberStyles.HexNumber,CultureInfo.InvariantCulture,out value)?value:int.MaxValue; }
         internal static string RouteKey(SharedMapMarker m) { return (m.OwnerId??"")+":"+m.Id.Substring(8,32); }
         internal bool Ping(int kind,string name,double x,double y) {
@@ -43,11 +47,15 @@ namespace ScumMiniMap {
         internal SharedMapMarker[] Stops { get { return stops.Select(m=>m.Copy()).ToArray(); } }
         internal bool AddStop(string name,double x,double y) {
             if(stops.Count>=MaximumStops)return false;
-            var m=new SharedMapMarker { Id="524F5554"+route+stops.Count.ToString("X2")+new string('0',22),Name=name,X=x,Y=y };
+            var m=new SharedMapMarker { Id=StopId(stops.Count),Name=name,X=x,Y=y };
             if(!SharedMapMarker.Valid(m))return false;stops.Add(m);return true;
         }
         internal void ClearRoute() { stops.Clear();route=Guid.NewGuid().ToString("N"); }
         internal void RemoveLast() { if(stops.Count>0)stops.RemoveAt(stops.Count-1); }
+        internal bool RemoveStop(string id) {
+            int index=stops.FindIndex(m=>m.Id==id);if(index<0)return false;stops.RemoveAt(index);
+            for(int i=0;i<stops.Count;i++)stops[i].Id=StopId(i,stops[i].Id.Substring(42));return true;
+        }
         internal static SharedMapMarker[][] Routes(IEnumerable<SharedMapMarker> markers) {
             return markers.Where(IsStop).GroupBy(RouteKey).Select(g=>g.OrderBy(StopIndex).Take(MaximumStops).ToArray()).Where(g=>g.Select(StopIndex).SequenceEqual(Enumerable.Range(0,g.Length))).ToArray();
         }

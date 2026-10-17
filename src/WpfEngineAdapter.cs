@@ -17,6 +17,11 @@ namespace ScumMiniMap {
         internal bool PoiClustering=true;
         internal PrivatePositions.Peer[] Peers=new PrivatePositions.Peer[0];
         internal SharedMapMarker[] SharedMarkers=new SharedMapMarker[0];
+        internal SquadRoutePlan SquadPlan,OwnRoutePlan;
+        internal SquadRouteDrawing[] OtherRoutePlans=new SquadRouteDrawing[0];
+        internal SharedMapMarker[] LocalRoute=new SharedMapMarker[0];
+        internal string ActiveSquadRoute;
+        internal bool SquadPlanning,SquadNavigating,ActiveSquadShared;
         internal bool GridLabels,EdgeFade,SmartLabels;
         internal int GridOpacity,LabelSize;
         internal int ZoneRevision;

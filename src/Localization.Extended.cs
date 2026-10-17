@@ -5,6 +5,11 @@ using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsPtPt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "SoloRoute", "Rota individual" },
+            { "OwnRoute", "A sua rota" },
+            { "RouteList", "Rotas" },
+            { "RouteAutoHelp", "As rotas são calculadas ao mudar as paragens. Âmbar indica individual e ciano partilhada. Troços tracejados são orientação direta sem rota rodoviária. A sua rota individual é visível aos grupos ligados. Seguir uma rota partilhada não a retransmite." },
+
             { "PrivateGroupNameLabel", "Nome do grupo (opcional ao criar)" },
             { "PrivateGroupRename", "Guardar nome do grupo" },
 

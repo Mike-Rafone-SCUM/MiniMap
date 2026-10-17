@@ -196,7 +196,10 @@ namespace ScumMiniMap {
             var arrow=new StreamGeometry();using(var context=arrow.Open()) { context.BeginFigure(new Point(p.X,p.Y-13),true,true);context.LineTo(new Point(p.X+9,p.Y+10),true,false);context.LineTo(new Point(p.X,p.Y+5),true,false);context.LineTo(new Point(p.X-9,p.Y+10),true,false); }
             if(heading)dc.DrawGeometry(ink,new Pen(WpfFieldTheme.Ground,2),arrow);else dc.DrawEllipse(ink,new Pen(WpfFieldTheme.Ground,2),p,7,7);dc.Pop();
         }
-        static string SharedMarkerLabel(SharedMapMarker marker) { int kind;string name=SquadState.IsPing(marker)&&int.TryParse(marker.Id.Substring(8,2),NumberStyles.HexNumber,CultureInfo.InvariantCulture,out kind)&&kind<3?Localization.Get(new[]{"PingDanger","PingLoot","PingPickup"}[kind]):marker.Death?Localization.Get("DeathName"):marker.Name;return marker.Owner+" · "+(SquadState.IsStop(marker)?(SquadState.StopIndex(marker)+1)+". ":"")+name; }
+        static void DrawRoutePlan(DrawingContext dc,SquadRoutePlan plan,bool shared,Func<DrawingPoint,Point> point) {
+            for(int i=0;i<plan.Legs.Length;i++) { var pen=new Pen(shared?WpfFieldTheme.Cyan:WpfFieldTheme.Amber,shared?3:2);if(!plan.Verified[i])pen.DashStyle=DashStyles.Dash;DrawLine(dc,plan.Legs[i].Select(point),pen); }
+        }
+        static string SharedMarkerLabel(SharedMapMarker marker) { int kind;string name=SquadState.IsPing(marker)&&int.TryParse(marker.Id.Substring(8,2),NumberStyles.HexNumber,CultureInfo.InvariantCulture,out kind)&&kind<3?Localization.Get(new[]{"PingDanger","PingLoot","PingPickup"}[kind]):marker.Death?Localization.Get("DeathName"):marker.Name;return (SquadState.IsStop(marker)?Localization.Get(SquadState.IsShared(marker)?"SquadRoute":"SoloRoute")+" · ":marker.Id==SharedMapMarker.GpsId?Localization.Get("SoloRoute")+" · ":"")+marker.Owner+" · "+(SquadState.IsStop(marker)?(SquadState.StopIndex(marker)+1)+". ":"")+name; }
         SharedMapMarker SharedMarkerAt(DrawingPoint at) { return State==null?null:State.SharedMarkers.Where(marker=>MarkerDistance(new DrawingPoint((float)marker.X,(float)marker.Y),at)<=14/MapSide(State,ActualWidth,ActualHeight,Compact)).OrderBy(marker=>MarkerDistance(new DrawingPoint((float)marker.X,(float)marker.Y),at)).FirstOrDefault(); }
         void NavigateTo(DrawingPoint at) {
             var marker=SharedMarkerAt(at);
@@ -216,7 +219,18 @@ namespace ScumMiniMap {
             menu.Items.Add(new MenuItem { Header=DestinationSearch.Sector(target),IsEnabled=false });
             var navigate=new MenuItem { Header=Localization.Get("SetWaypoint") };navigate.Click+=(s,e)=>NavigateTo(target);menu.Items.Add(navigate);
             var save=new MenuItem { Header=Localization.Get("ShortcutWaypoint") };save.Click+=(s,e)=> { if(WaypointAt!=null)WaypointAt(target); };menu.Items.Add(save);
-            if(RouteStopAt!=null) { var stop=new MenuItem { Header=Localization.Get("SquadAddStop") };stop.Click+=(s,e)=>RouteStopAt(target);menu.Items.Add(stop); }
+            if(RouteStopAt!=null&&State!=null) {
+                var routeMenu=new MenuItem { Header=Localization.Get("SquadTools") };
+                var stop=new MenuItem { Header=Localization.Get("SquadAddStop") };stop.Click+=(s,e)=>RouteStopAt(target);routeMenu.Items.Add(stop);
+                var clicked=State.SharedMarkers.Where(m=>SquadState.IsStop(m)&&MarkerDistance(new DrawingPoint((float)m.X,(float)m.Y),target)<=14/MapSide(State,ActualWidth,ActualHeight,Compact)).FirstOrDefault();var chosen=clicked!=null?SquadState.Routes(State.SharedMarkers).FirstOrDefault(r=>SquadState.RouteKey(r[0])==SquadState.RouteKey(clicked)):State.LocalRoute;
+                var start=new MenuItem { Header=Localization.Get("SquadStartRoute"),IsEnabled=chosen!=null&&chosen.Length>0 };start.Click+=(s,e)=> { if(RouteNavigate!=null)RouteNavigate(chosen); };routeMenu.Items.Add(start);
+                if(clicked!=null&&clicked.OwnerId==null&&State.LocalRoute.Any(m=>m.Id==clicked.Id)) { var remove=new MenuItem { Header=Localization.Get("SquadDelete")+": "+clicked.Name };remove.Click+=(s,e)=> { if(RouteRemove!=null)RouteRemove(clicked.Id); };routeMenu.Items.Add(remove); }
+                var ownMenu=new MenuItem { Header=Localization.Get("OwnRoute") };foreach(bool shared in new[]{false,true}) { bool kind=shared;var mode=new MenuItem { Header=Localization.Get(shared?"SquadRoute":"SoloRoute"),IsCheckable=true,IsChecked=State.LocalRoute.Length>0&&SquadState.IsShared(State.LocalRoute[0])==shared };mode.Click+=(s,e)=> { if(RouteKind!=null)RouteKind(kind); };ownMenu.Items.Add(mode); }routeMenu.Items.Add(ownMenu);
+                var undo=new MenuItem { Header=Localization.Get("SquadUndoStop"),IsEnabled=State.LocalRoute.Length>0 };undo.Click+=(s,e)=> { if(RouteUndo!=null)RouteUndo(); };routeMenu.Items.Add(undo);
+                var clearLocal=new MenuItem { Header=Localization.Get("WpfClearRoute"),IsEnabled=State.LocalRoute.Length>0 };clearLocal.Click+=(s,e)=> { if(RouteClear!=null)RouteClear(); };routeMenu.Items.Add(clearLocal);
+                var end=new MenuItem { Header=Localization.Get("SquadStopNav"),IsEnabled=State.SquadNavigating };end.Click+=(s,e)=> { if(ClearRouteRequested!=null)ClearRouteRequested(); };routeMenu.Items.Add(end);menu.Items.Add(routeMenu);
+            }
+            if(NavigatePeer!=null&&State!=null)foreach(var peer in State.Peers.Where(p=>MarkerDistance(MapWindow.ToMap(p.Position),target)<=14/MapSide(State,ActualWidth,ActualHeight,Compact))) { string id=peer.Id;var follow=new MenuItem { Header=Localization.Get("SquadFollow")+": "+peer.Name };follow.Click+=(s,e)=>NavigatePeer(id);menu.Items.Add(follow); }
             if(PingAt!=null)for(int i=0;i<3;i++) { int kind=i;var ping=new MenuItem { Header=Localization.Get(new[]{"PingDanger","PingLoot","PingPickup"}[i]) };ping.Click+=(s,e)=>PingAt(kind,target);menu.Items.Add(ping); }
             menu.Items.Add(new Separator());var clear=new MenuItem { Header=Localization.Get("WpfClearRoute"),IsEnabled=State!=null&&State.Target!=null };clear.Click+=(s,e)=> { if(ClearRouteRequested!=null)ClearRouteRequested(); };menu.Items.Add(clear);
             var saved=State==null||State.Saved==null?null:State.Saved.Where(z=>z.Points!=null&&z.Points.Length==1&&MarkerDistance(target,z.Centroid)<=14/MapSide(State,ActualWidth,ActualHeight,Compact)).OrderByDescending(z=>z.IsDeathMarker).ThenBy(z=>MarkerDistance(target,z.Centroid)).FirstOrDefault();
@@ -226,6 +240,10 @@ namespace ScumMiniMap {
         internal Action<int> ZoomRequested;
         internal Action<DrawingPoint> NavigateAt,WaypointAt,RouteStopAt;
         internal Action<int,DrawingPoint> PingAt;
+        internal Action<SharedMapMarker[]> RouteNavigate;
+        internal Action<string> RouteRemove,NavigatePeer;
+        internal Action<bool> RouteKind;
+        internal Action RouteUndo,RouteClear;
         internal Action<MapZone> NavigateShared;
         Point? drag;
         DrawingPoint pan;
@@ -337,9 +355,17 @@ namespace ScumMiniMap {
                 var p=point(MapWindow.ToMap(peer.Position));DrawPlayer(dc,p,peer.Position.Yaw,WpfFieldTheme.Cyan,State.Heading);
                 Label(dc,peer.Name,p+new Vector(11,-18),WpfFieldTheme.Cyan,12);
             }
-            foreach(var route in SquadState.Routes(State.SharedMarkers))for(int i=1;i<route.Length;i++)dc.DrawLine(new Pen(WpfFieldTheme.Cyan,2),point(new DrawingPoint((float)route[i-1].X,(float)route[i-1].Y)),point(new DrawingPoint((float)route[i].X,(float)route[i].Y)));
+            string ownKey=State.LocalRoute.Length>0?SquadState.RouteKey(State.LocalRoute[0]):null;
+            if(State.OwnRoutePlan!=null&&ownKey!=State.ActiveSquadRoute)DrawRoutePlan(dc,State.OwnRoutePlan,State.LocalRoute.Length>0&&SquadState.IsShared(State.LocalRoute[0]),point);
+            if(State.SquadPlan!=null)DrawRoutePlan(dc,State.SquadPlan,State.ActiveSquadShared,point);
+            foreach(var plan in State.OtherRoutePlans.Where(p=>p.Key!=State.ActiveSquadRoute))DrawRoutePlan(dc,plan.Plan,plan.Shared,point);
+            foreach(var route in SquadState.Routes(State.SharedMarkers)) {
+                string key=SquadState.RouteKey(route[0]);bool ready=key==ownKey&&State.OwnRoutePlan!=null||key==State.ActiveSquadRoute&&State.SquadPlan!=null||State.OtherRoutePlans.Any(p=>p.Key==key);
+                if(!ready)for(int i=1;i<route.Length;i++) { var pen=new Pen(SquadState.IsShared(route[0])?WpfFieldTheme.Cyan:WpfFieldTheme.Amber,1) { DashStyle=DashStyles.Dot };dc.DrawLine(pen,point(new DrawingPoint((float)route[i-1].X,(float)route[i-1].Y)),point(new DrawingPoint((float)route[i].X,(float)route[i].Y))); }
+            }
             foreach(var marker in State.SharedMarkers) {
                 var at=point(new DrawingPoint((float)marker.X,(float)marker.Y));var ink=marker.Death?WpfFieldTheme.ColorBrush("#FF654F"):WpfFieldTheme.Cyan;
+                if(SquadState.IsStop(marker)||marker.Id==SharedMapMarker.GpsId)ink=SquadState.IsShared(marker)?WpfFieldTheme.Cyan:WpfFieldTheme.Amber;
                 if(SquadState.IsPing(marker))ink=marker.Id.Substring(8,2)=="00"?WpfFieldTheme.ColorBrush("#FF654F"):marker.Id.Substring(8,2)=="01"?WpfFieldTheme.Amber:WpfFieldTheme.Cyan;
                 if(marker.Death) { dc.DrawRoundedRectangle(WpfFieldTheme.Ground,new Pen(ink,2),new Rect(at.X-7,at.Y-10,14,19),3,3);dc.DrawLine(new Pen(ink,2),at+new Vector(0,-5),at+new Vector(0,4));dc.DrawLine(new Pen(ink,2),at+new Vector(-4,-1),at+new Vector(4,-1)); }
                 else { var diamond=new StreamGeometry();using(var shape=diamond.Open()) { shape.BeginFigure(at+new Vector(0,-8),true,true);shape.LineTo(at+new Vector(7,0),true,false);shape.LineTo(at+new Vector(0,8),true,false);shape.LineTo(at+new Vector(-7,0),true,false); }dc.DrawGeometry(WpfFieldTheme.Ground,new Pen(ink,2),diamond); }
@@ -552,8 +578,8 @@ namespace ScumMiniMap {
         RelayGroupStore relayGroups;
         readonly Dictionary<string,int> playerVisibility=new Dictionary<string,int>(StringComparer.Ordinal);
         PrivatePositions.Peer[] playerRoster=new PrivatePositions.Peer[0];
-        int PlayerVisibility(string id) { int value;return id!=null&&playerVisibility.TryGetValue(id,out value)?value:15; }
-        bool PlayerMarkerVisible(SharedMapMarker marker) { return (PlayerVisibility(marker.OwnerId)&(marker.Death?8:marker.Id==SharedMapMarker.GpsId?2:4))!=0; }
+        int PlayerVisibility(string id) { int value;return id!=null&&playerVisibility.TryGetValue(id,out value)?value:31; }
+        bool PlayerMarkerVisible(SharedMapMarker marker) { return (PlayerVisibility(marker.OwnerId)&(marker.Death?8:marker.Id==SharedMapMarker.GpsId?2:SquadState.IsStop(marker)?16:4))!=0; }
         void AddPlayers(Panel container) {
             if(privatePositions==null&&(relayGroups==null||relayGroups.Sessions.Length==0)&&playerRoster.Length==0)return;
             container.Children.Add(WpfFieldTheme.Text(Localization.Get("SharedPlayers"),11,WpfFieldTheme.Muted,true));
@@ -561,9 +587,9 @@ namespace ScumMiniMap {
             foreach(var player in playerRoster) {
                 string ownerId=player.Id;var body=new StackPanel();body.Children.Add(WpfFieldTheme.Text(player.Name,16,null,true));
                 var statusLabel=WpfFieldTheme.Text(PeerStatus(player),11,WpfFieldTheme.Muted);statusLabel.TextWrapping=TextWrapping.Wrap;statusLabel.TextTrimming=TextTrimming.None;playerStatusLabels[ownerId]=statusLabel;body.Children.Add(statusLabel);
-                var follow=WpfFieldTheme.Button(S(followingPeer==ownerId?"SquadStopNav":"SquadFollow"),()=> { if(followingPeer==ownerId) { followingPeer=null;squadTarget=null;engine.WpfClear(); }else { engine.WpfClear();followingPeer=ownerId;activeStops=new SharedMapMarker[0];squadTarget=null;nextSquadRoute=DateTime.MinValue; }filterIdentity=null;Refresh(); });follow.IsEnabled=player.Position!=null||followingPeer==ownerId;body.Children.Add(follow);
+                var follow=WpfFieldTheme.Button(S(followingPeer==ownerId?"SquadStopNav":"SquadFollow"),()=> { if(followingPeer==ownerId) { followingPeer=null;squadTarget=null;engine.WpfClear(); }else { engine.WpfClear();followingPeer=ownerId;activeStops=new SharedMapMarker[0];squadTarget=null;squadRoutePlanner.Clear();activeRouteSignature=null;nextSquadRoute=DateTime.MinValue; }filterIdentity=null;Refresh(); });follow.IsEnabled=player.Position!=null||followingPeer==ownerId;body.Children.Add(follow);
                 var pills=new WrapPanel { Margin=new Thickness(0,8,0,0) };
-                string[] labels={"PlayerLiveLocation","PlayerGps","PlayerSaved","PlayerDeaths"};
+                string[] labels={"PlayerLiveLocation","PlayerGps","PlayerSaved","PlayerDeaths","RouteList"};
                 for(int index=0;index<labels.Length;index++) {
                     int bit=1<<index;bool selected=(PlayerVisibility(ownerId)&bit)!=0;
                     var pill=new ToggleButton { Content=Localization.Get(labels[index]),IsChecked=selected,Tag="player:"+ownerId+":"+bit,Margin=new Thickness(0,0,5,5),Padding=new Thickness(9,4,9,4),FontSize=12,Foreground=WpfFieldTheme.Ink,Background=selected?WpfFieldTheme.Amber:WpfFieldTheme.Panel,BorderBrush=WpfFieldTheme.Line,BorderThickness=new Thickness(1),Cursor=Cursors.Hand };
@@ -632,7 +658,9 @@ namespace ScumMiniMap {
                 if(value is Position) { var p=(Position)value;key.Append(p.X).Append(',').Append(p.Y).Append(',').Append(p.Yaw); }
                 else if(value is ScumMapStore)key.Append(((ScumMapStore)value).GetFilterHashKey());
                 else if(value is PrivatePositions.Peer[])foreach(var peer in (PrivatePositions.Peer[])value)key.Append(peer.Name).Append(peer.Position.X).Append(peer.Position.Y).Append(peer.Position.Yaw);
-                else if(value is SharedMapMarker[])foreach(var marker in (SharedMapMarker[])value)key.Append('|').Append(marker.OwnerId).Append('|').Append(marker.Id).Append('|').Append(marker.Name).Append('|').Append(marker.Death).Append('|').Append(marker.X).Append('|').Append(marker.Y);
+                else if(value is SquadRoutePlan)key.Append(((SquadRoutePlan)value).Revision);
+                else if(value is SquadRouteDrawing[])foreach(var route in (SquadRouteDrawing[])value)key.Append(route.Key).Append(route.Name).Append(route.Shared).Append(route.Plan.Revision);
+                else if(value is SharedMapMarker[])foreach(var marker in (SharedMapMarker[])value)key.Append('|').Append(marker.OwnerId).Append('|').Append(marker.Owner).Append('|').Append(marker.Id).Append('|').Append(marker.Name).Append('|').Append(marker.Death).Append('|').Append(marker.X).Append('|').Append(marker.Y);
                 else if(value is MapZone[]||value is DrawingPoint[]||value is WpfZoneOption[])key.Append(System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(value));
                 else key.Append(value);
                 key.Append('|');
@@ -770,6 +798,7 @@ namespace ScumMiniMap {
             var grid=new Grid();grid.ColumnDefinitions.Add(new ColumnDefinition());grid.ColumnDefinitions.Add(new ColumnDefinition { Width=new GridLength(320) });
             tacticalMap=new WpfMapSurface { BaseMap=geography,Terrain=terrain };
             tacticalMap.RouteStopAt=AddSquadStop;tacticalMap.PingAt=(kind,p)=>SendPing(kind,p);
+            tacticalMap.RouteNavigate=StartSquadRoute;tacticalMap.RouteRemove=RemoveOwnRouteStop;tacticalMap.RouteKind=ChangeOwnRouteKind;tacticalMap.RouteUndo=UndoOwnRouteStop;tacticalMap.RouteClear=ClearOwnRoute;tacticalMap.NavigatePeer=FollowSquadPeer;
             tacticalMap.ClearRouteRequested=()=> { StopSquadNavigation();Refresh(); };tacticalMap.DeleteWaypointRequested=marker=> { engine.WpfDeleteWaypoint(marker);Refresh(); };
             tacticalMap.NavigateAt=p=> { engine.WpfTarget(engine.WpfClickedTarget(p,(float)(8/Math.Max(1,Math.Min(tacticalMap.ActualWidth,tacticalMap.ActualHeight)*engine.WpfSnapshot(true).Zoom))));Refresh(); };tacticalMap.WaypointAt=p=>ShowAddWaypoint(p);tacticalMap.ZoomRequested=d=> { engine.WpfZoom(true,d);Refresh(); };tacticalMap.PanChanged=p=> { engine.WpfPan(p);Refresh(); };
             tacticalMap.NavigateShared=sharedTarget=> { engine.WpfTarget(sharedTarget);Refresh(); };
@@ -877,9 +906,9 @@ namespace ScumMiniMap {
             if(relayGroups!=null)relayGroups.SynchronizeNames();
             var sharingSessions=(relayGroups==null?new DirectPositions[0]:relayGroups.Sessions).Concat(privatePositions==null?new DirectPositions[0]:new[]{privatePositions}).ToArray();
             if(sharingSessions.Length>0) {
-                var sample=engine.WpfSnapshot(false);var markers=squad.Local().Concat(engine.WpfSharedMarkers()).Take(128).ToArray();foreach(var session in sharingSessions) { session.Update(sample.Tracking&&!sample.TrackingPaused?sample.Position:null,sample.Updated);session.UpdateMarkers(relayGroups==null?markers:relayGroups.MarkersFor(session,markers)); }
+                var sample=engine.WpfSnapshot(false);var markers=OwnSquadPublication().Concat(engine.WpfSharedMarkers()).Take(128).ToArray();foreach(var session in sharingSessions) { session.Update(sample.Tracking&&!sample.TrackingPaused?sample.Position:null,sample.Updated);session.UpdateMarkers(relayGroups==null?markers:relayGroups.MarkersFor(session,markers)); }
             }
-            UpdateSquad();foreach(var peer in playerRoster) { TextBlock label;if(playerStatusLabels.TryGetValue(peer.Id,out label))label.Text=PeerStatus(peer); }
+            UpdateSquad();UpdateRoutePreviews();foreach(var peer in playerRoster) { TextBlock label;if(playerStatusLabels.TryGetValue(peer.Id,out label))label.Text=PeerStatus(peer); }
             if(!diagnostic) {
                 SyncHudVisibility();
                 if(!TacticalVisible&&!hud.IsVisible)return;
@@ -894,6 +923,7 @@ namespace ScumMiniMap {
                 state.SharedMarkers=compact.SharedMarkers=squad.Receive((privatePositions==null?new SharedMapMarker[0]:privatePositions.SnapshotMarkers()).Concat(relayGroups==null?new SharedMapMarker[0]:relayGroups.Markers()).Where(PlayerMarkerVisible)).Concat(squad.Local().Select(m=> { m.Owner=S("PrivateGroupSurvivor");return m; })).ToArray();
             }
             else state.SharedMarkers=compact.SharedMarkers=squad.Local();
+            AddRouteState(state,compact);
             deathRemovalButton.IsEnabled=state.Saved.Any(marker=>marker.IsDeathMarker);if(chromeLanguage!=Localization.CurrentCode) { chromeLanguage=Localization.CurrentCode;RefreshLocalizedChrome(tactical);if(settingsWindow!=null)RefreshLocalizedChrome(settingsWindow); }
             if(diagnostic||TacticalVisible) { string key=VisualIdentity(state);if(key!=tacticalVisualIdentity) { tacticalVisualIdentity=key;tacticalMap.State=state;tacticalMap.InvalidateVisual(); } }
             if(diagnostic||hud.IsVisible) { string key=VisualIdentity(compact);if(key!=hudVisualIdentity) { hudVisualIdentity=key;hudMap.State=compact;hudMap.InvalidateVisual(); } }
@@ -1335,6 +1365,6 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
         }
         internal static void Capture(Window window,string file) { window.ShowActivated=false;window.Left=-32000;window.Top=-32000;window.Show();window.UpdateLayout();var content=(FrameworkElement)window.Content;var bitmap=new RenderTargetBitmap((int)window.ActualWidth,(int)window.ActualHeight,96,96,PixelFormats.Pbgra32);bitmap.Render(window);var encoder=new PngBitmapEncoder();encoder.Frames.Add(BitmapFrame.Create(bitmap));using(var stream=File.Create(file))encoder.Save(stream);window.Hide(); }
         sealed class WindowLifetime:IDisposable { internal static Window Current;readonly Window window;internal WindowLifetime(Window window) { this.window=window;Current=window; }public void Dispose() { window.Close(); } }
-        public void Dispose() { disposed=true;if(privatePositions!=null)privatePositions.Dispose();if(relayGroups!=null)relayGroups.Dispose();refresh.Stop();hud.Close();tactical.Close();engine.WpfSave();engine.Dispose();terrain.Dispose(); }
+        public void Dispose() { disposed=true;DisposeRoutePreviews();if(privatePositions!=null)privatePositions.Dispose();if(relayGroups!=null)relayGroups.Dispose();refresh.Stop();hud.Close();tactical.Close();engine.WpfSave();engine.Dispose();terrain.Dispose(); }
     }
 }
