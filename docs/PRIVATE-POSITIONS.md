@@ -59,7 +59,7 @@ Capture age is preserved across clients with different PC clocks. Positions expi
 
 Give a group a name when creating it, or edit its name and Save group name. Any member can update the encrypted name; it is saved with the Windows-protected membership without changing the code. New members learn the name when another member is online.
 
-Right-click the map for squad tools, route stops and teammate navigation. Context menus retain the original press location when the mouse drifts, take focus while open and return it to SCUM on dismissal. Hiding the map dismisses its menu. Floating information cards accept map right-clicks too.
+Right-click the map for squad tools, route stops and teammate navigation. Context menus retain the original press location when the mouse drifts. Every menu level is drawn inside the existing map window without native popup activation or foreground focus switches. Escape closes the menu first; clicking outside or hiding the map dismisses it. Floating information cards accept map right-clicks too.
 
 Up to 16 route stops calculate automatically as they change. Solo routes use amber; shared squad routes use cyan. Connected groups automatically see personal plans. Following a shared route applies its owner's edits without publishing a duplicate personal plan or forwarding it into other groups. Calculations happen locally; road geometry is not sent to the relay. Dashed legs are direct guidance without a verified road route. Start route begins navigation and advances within 40 metres. Follow teammate updates a moving target and pauses without a fresh position.
 

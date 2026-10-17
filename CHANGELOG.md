@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.3.3] - 2026-10-17
+
+- Replace native map context popups with an interactive menu inside the existing map window. Opening and using every menu level no longer switches Windows foreground focus or creates popup windows that SCUM can immediately dismiss.
+- Keep route actions, original click targeting, outside-click dismissal, scrolling, nested controls and monitor-edge bounds. Escape closes the menu first; hiding the map removes it. Ordinary gameplay focus remains unchanged.
+
 ## [2.3.2] - 2026-10-17
 
 - Make map context menus capture the right-button gesture, keep its original click position, obtain popup focus and return focus to SCUM after dismissal. Right-clicks on the floating map details also open the map menu; hiding the map closes its popup.

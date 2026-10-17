@@ -39,14 +39,27 @@ class SquadUiTests {
             }finally { groups.Close();memberships.Clear(); }
             var tactical=(Window)Get(runtime,"tactical");Call(runtime,"ToggleTactical",false);Check(tactical.IsVisible&&(bool)Get(engine,"fullMapActive"),"Opening map synchronizes visible window and engine flag");
             var contextMap=Get(runtime,"tacticalMap");tactical.UpdateLayout();
+            Check(VisualTreeHelper.GetParent((Canvas)Get(contextMap,"ContextHost"))==tactical.Content,"Context overlay is above the full window including its sidebar");
             var clickPoint=new Point(((FrameworkElement)contextMap).ActualWidth/2,((FrameworkElement)contextMap).ActualHeight/2);
             for(int attempt=0;attempt<8;attempt++) {
                 Check((bool)Call(contextMap,"BeginContextPointer",clickPoint),"Map accepts right-button press "+(attempt+1));
                 Check((bool)Call(contextMap,"EndContextPointer",new Point(-20,-20)),"Right-button release after pointer drift still opens the menu "+(attempt+1));
-                Pump();var popup=(ContextMenu)Get(contextMap,"openContext");
-                Check(popup!=null&&popup.IsOpen&&popup.Placement==System.Windows.Controls.Primitives.PlacementMode.RelativePoint&&popup.HorizontalOffset==clickPoint.X&&popup.VerticalOffset==clickPoint.Y,"Context menu stays open at the original click position "+(attempt+1));
+                Pump();var popup=(Border)Get(contextMap,"openContext");
+                Check(popup!=null&&popup.IsVisible&&Canvas.GetLeft(popup)==clickPoint.X&&Canvas.GetTop(popup)==clickPoint.Y,"Context menu stays open at the original click position "+(attempt+1));
+                Check(PresentationSource.FromVisual(popup)==PresentationSource.FromVisual((System.Windows.Media.Visual)contextMap),"Context menu shares the map HWND without native popup activation "+(attempt+1));
                 Call(contextMap,"CloseContextMenu");Pump();
             }
+            var native=asm.GetType("ScumMiniMap.Native");var foreground=native.GetMethod("GetForegroundWindow",BindingFlags.Static|BindingFlags.NonPublic|BindingFlags.Public);var beforeMenu=(IntPtr)foreground.Invoke(null,null);
+            Call(contextMap,"OpenContextMenu",clickPoint);for(int tick=0;tick<30;tick++) { Call(runtime,"SyncTacticalFocus",true,false);Call(runtime,"Refresh");Pump(); }
+            Check(Get(contextMap,"openContext")!=null&&(IntPtr)foreground.Invoke(null,null)==beforeMenu,"Menu survives repeated refreshes without stealing foreground focus");
+            Check((bool)Call(runtime,"TryDismissTactical",0x1B,0,false)&&tactical.IsVisible&&Get(contextMap,"openContext")==null,"Escape closes only the in-map menu before closing the map");
+            Call(contextMap,"OpenContextMenu",clickPoint);Check((bool)Call(contextMap,"DismissContextOutside",new Point(0,0))&&Get(contextMap,"openContext")==null,"Outside click dismisses the in-map menu");
+            Call(contextMap,"OpenContextMenu",clickPoint);Pump();
+            var inline=(Border)Get(contextMap,"openContext");var expandSquad=Children(inline).OfType<Button>().Single(b=>(b.Content as string)=="▸ Squad tools");expandSquad.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Pump();
+            Check(Canvas.GetLeft(inline)>=0&&Canvas.GetTop(inline)>=0&&Canvas.GetLeft(inline)+inline.ActualWidth<=((FrameworkElement)contextMap).ActualWidth&&Canvas.GetTop(inline)+inline.ActualHeight<=((FrameworkElement)contextMap).ActualHeight,"Expanded squad menu stays within the map edges");
+            var menuImage=new RenderTargetBitmap((int)tactical.ActualWidth,(int)tactical.ActualHeight,96,96,PixelFormats.Pbgra32);menuImage.Render(tactical);var menuPng=new PngBitmapEncoder();menuPng.Frames.Add(BitmapFrame.Create(menuImage));using(var file=File.Create(Path.Combine(folder,"map-context-menu.png")))menuPng.Save(file);
+            var inlineStop=Children(inline).OfType<Button>().Single(b=>b.Content is TextBlock&&((TextBlock)b.Content).Text=="Add route stop");inlineStop.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Check(Get(contextMap,"openContext")==null&&((Array)Get(runtime,"squad").GetType().GetProperty("Stops",F).GetValue(Get(runtime,"squad"),null)).Length==1,"Clicking an actual nested in-map route action adds its stop and dismisses the menu");Call(runtime,"ClearOwnRoute");
             Check(!(bool)Call(contextMap,"OpenContextMenu",new Point(-1,-1)),"Clicks outside the map cannot open its context menu");
             Call(contextMap,"OpenContextMenu",clickPoint);
             Call(runtime,"SyncTacticalFocus",true,false);Check(tactical.IsVisible,"Gameplay focus keeps full map visible");Call(runtime,"SyncTacticalFocus",false,true);Check(tactical.IsVisible,"MiniMap controls remain usable");

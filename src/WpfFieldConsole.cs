@@ -245,9 +245,10 @@ namespace ScumMiniMap {
         internal Action<bool> RouteKind;
         internal Action RouteUndo,RouteClear;
         internal Action<MapZone> NavigateShared;
-        internal Action ContextOpening,ContextClosed;
-        ContextMenu openContext;
-        internal bool ContextMenuOpen { get { return openContext!=null&&openContext.IsOpen; } }
+        internal Canvas ContextHost;
+        Border openContext;
+        Point contextAnchor;
+        internal bool ContextMenuOpen { get { return openContext!=null; } }
         Point? contextPointer;
         internal bool BeginContextPointer(Point point) {
             DrawingPoint target;if(!TryMapPoint(point,out target))return false;
@@ -260,19 +261,47 @@ namespace ScumMiniMap {
             return OpenContextMenu(origin);
         }
         internal bool OpenContextMenu(Point point) {
-            DrawingPoint target;if(!TryMapPoint(point,out target))return false;
-            if(openContext!=null)openContext.IsOpen=false;
-            ClearHover();
-            if(ContextOpening!=null)ContextOpening();
-            var menu=BuildContextMenu(target);openContext=menu;
-            menu.PlacementTarget=this;menu.Placement=PlacementMode.RelativePoint;
-            menu.HorizontalOffset=point.X;menu.VerticalOffset=point.Y;
-            menu.Closed+=(s,e)=> { if(openContext!=menu)return;openContext=null;if(ContextClosed!=null)ContextClosed(); };
-            menu.IsOpen=true;return true;
+            DrawingPoint target;if(ContextHost==null||!TryMapPoint(point,out target))return false;
+            CloseContextMenu();ClearHover();contextAnchor=point;
+            // Keep every level in the map's existing HWND. Native Popup/MenuItem
+            // windows need activation/capture that conflicts with SCUM's focus.
+            var actions=BuildContextMenu(target);
+            var scroll=new ScrollViewer { Content=ContextItems(actions.Items),VerticalScrollBarVisibility=ScrollBarVisibility.Auto,HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled,MaxHeight=Math.Max(80,ActualHeight-24) };
+            openContext=WpfFieldTheme.Card(scroll,new Thickness(6));openContext.Width=Math.Min(350,Math.Max(180,ActualWidth-16));
+            openContext.SizeChanged+=(s,e)=>PositionContextMenu();ContextHost.Children.Add(openContext);PositionContextMenu();return true;
+        }
+        StackPanel ContextItems(ItemCollection items) {
+            var panel=new StackPanel();
+            foreach(var value in items) {
+                var item=value as MenuItem;
+                if(item==null) { panel.Children.Add(new Border { Height=1,Background=WpfFieldTheme.Line,Margin=new Thickness(4,5,4,5) });continue; }
+                string title=(item.IsChecked?"✓ ":"")+Convert.ToString(item.Header,CultureInfo.CurrentCulture);
+                if(item.HasItems) {
+                    var children=ContextItems(item.Items);children.Margin=new Thickness(12,0,0,0);children.Visibility=Visibility.Collapsed;
+                    Button expand=null;expand=WpfFieldTheme.Button("▸ "+title,()=> { bool show=children.Visibility!=Visibility.Visible;children.Visibility=show?Visibility.Visible:Visibility.Collapsed;expand.Content=(show?"▾ ":"▸ ")+title; });
+                    expand.IsEnabled=item.IsEnabled;expand.HorizontalContentAlignment=HorizontalAlignment.Left;expand.Margin=new Thickness(0,1,0,1);expand.MinHeight=32;panel.Children.Add(expand);panel.Children.Add(children);
+                } else {
+                    var captured=item;var action=WpfFieldTheme.Button(title,()=> { CloseContextMenu();captured.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent,captured)); });
+                    action.IsEnabled=item.IsEnabled;action.HorizontalContentAlignment=HorizontalAlignment.Left;action.Margin=new Thickness(0,1,0,1);action.MinHeight=32;action.Padding=new Thickness(10,6,10,6);
+                    action.Content=new TextBlock { Text=title,TextWrapping=TextWrapping.Wrap };panel.Children.Add(action);
+                }
+            }
+            return panel;
+        }
+        void PositionContextMenu() {
+            if(openContext==null)return;
+            openContext.Measure(new Size(openContext.Width,Math.Max(80,ActualHeight-16)));
+            Canvas.SetLeft(openContext,Math.Max(8,Math.Min(contextAnchor.X,ActualWidth-openContext.DesiredSize.Width-8)));
+            Canvas.SetTop(openContext,Math.Max(8,Math.Min(contextAnchor.Y,ActualHeight-openContext.DesiredSize.Height-8)));
+        }
+        internal bool DismissContextOutside(Point point) {
+            if(openContext==null)return false;
+            var bounds=new Rect(Canvas.GetLeft(openContext),Canvas.GetTop(openContext),openContext.ActualWidth,openContext.ActualHeight);
+            if(bounds.Contains(point))return false;CloseContextMenu();return true;
         }
         internal void CloseContextMenu() {
             contextPointer=null;if(IsMouseCaptured)ReleaseMouseCapture();
-            var menu=openContext;if(menu==null)return;openContext=null;menu.IsOpen=false;if(ContextClosed!=null)ContextClosed();
+            var menu=openContext;if(menu==null)return;openContext=null;if(ContextHost!=null)ContextHost.Children.Remove(menu);
         }
         Point? drag;
         DrawingPoint pan;
@@ -754,6 +783,7 @@ namespace ScumMiniMap {
             if(!tactical.IsVisible||dialogs.Count!=0||EditingText(Keyboard.FocusedElement))return false;
             var binding=engine.WpfSnapshot(false);bool mapKey=PhysicalKeyCapture.Matches(key,scan,binding.MapKey,binding.MapScan);
             if(key!=0x1B&&key!=0x09&&(!mapKey||chatPaused))return false;
+            if(key==0x1B&&tacticalMap.ContextMenuOpen) { tacticalMap.CloseContextMenu();return true; }
             CloseTactical(mapKey&&new WindowInteropHelper(tactical).Handle==Native.GetForegroundWindow());return true;
         }
         static IntPtr TacticalWindowMessage(IntPtr hwnd,int message,IntPtr w,IntPtr l,ref bool handled) {
@@ -812,7 +842,7 @@ namespace ScumMiniMap {
         }
         Window Window(string title,double w,double h) {
             var window=new Window { Title=title,Width=w,Height=h,MinWidth=Math.Min(w,420),MinHeight=Math.Min(h,300),WindowStartupLocation=WindowStartupLocation.CenterScreen,WindowStyle=WindowStyle.None,ResizeMode=ResizeMode.CanResizeWithGrip,Background=WpfFieldTheme.Ground,Foreground=WpfFieldTheme.Ink,FlowDirection=Localization.Current==AppLanguage.Arabic?FlowDirection.RightToLeft:FlowDirection.LeftToRight };
-            window.PreviewKeyDown+=(s,e)=> { if(e.Key==Key.Escape) { window.Close();e.Handled=true; } };
+            window.PreviewKeyDown+=(s,e)=> { if(e.Key==Key.Escape) { if(window==tactical&&tacticalMap!=null&&tacticalMap.ContextMenuOpen)tacticalMap.CloseContextMenu();else window.Close();e.Handled=true; } };
             return window;
         }
         Window BuildTactical() {
@@ -825,10 +855,6 @@ namespace ScumMiniMap {
             };
             var grid=new Grid();grid.ColumnDefinitions.Add(new ColumnDefinition());grid.ColumnDefinitions.Add(new ColumnDefinition { Width=new GridLength(320) });
             tacticalMap=new WpfMapSurface { BaseMap=geography,Terrain=terrain };
-            // Ordinary map clicks retain game focus; a deliberately opened popup
-            // needs foreground ownership so WPF can keep mouse capture reliably.
-            tacticalMap.ContextOpening=()=> { if(!diagnostic) { Native.ForceForeground(new WindowInteropHelper(window).Handle);ClipCursor(IntPtr.Zero); } };
-            tacticalMap.ContextClosed=()=>window.Dispatcher.BeginInvoke(new Action(()=> { if(dialogs.Count==0&&!tacticalMap.ContextMenuOpen)RestoreGameplayFocus(); }),DispatcherPriority.Background);
             tacticalMap.RouteStopAt=AddSquadStop;tacticalMap.PingAt=(kind,p)=>SendPing(kind,p);
             tacticalMap.RouteNavigate=StartSquadRoute;tacticalMap.RouteRemove=RemoveOwnRouteStop;tacticalMap.RouteKind=ChangeOwnRouteKind;tacticalMap.RouteUndo=UndoOwnRouteStop;tacticalMap.RouteClear=ClearOwnRoute;tacticalMap.NavigatePeer=FollowSquadPeer;
             tacticalMap.ClearRouteRequested=()=> { StopSquadNavigation();Refresh(); };tacticalMap.DeleteWaypointRequested=marker=> { engine.WpfDeleteWaypoint(marker);Refresh(); };
@@ -836,6 +862,8 @@ namespace ScumMiniMap {
             tacticalMap.NavigateShared=sharedTarget=> { engine.WpfTarget(sharedTarget);Refresh(); };
             // The sidebar overlays the full monitor viewport; toggling it must not move the camera.
             var scene=new Grid();Grid.SetColumnSpan(scene,2);scene.Children.Add(tacticalMap);
+            var contextLayer=new Canvas();tacticalMap.ContextHost=contextLayer;Grid.SetColumnSpan(contextLayer,2);Panel.SetZIndex(contextLayer,200);grid.Children.Add(contextLayer);
+            window.PreviewMouseDown+=(s,e)=> { if(tacticalMap.DismissContextOutside(e.GetPosition(contextLayer))&&e.ChangedButton==MouseButton.Left)e.Handled=true; };
             var target=new Grid();target.ColumnDefinitions.Add(new ColumnDefinition());target.ColumnDefinitions.Add(new ColumnDefinition { Width=GridLength.Auto });
             var text=new StackPanel();text.Children.Add(WpfFieldTheme.Text(Localization.Get("FieldTarget"),11,WpfFieldTheme.Muted,true));targetTitle=WpfFieldTheme.Text("",21,null,true);targetDetail=WpfFieldTheme.Text("",14,WpfFieldTheme.Muted);text.Children.Add(targetTitle);text.Children.Add(targetDetail);target.Children.Add(text);
             ((FrameworkElement)text.Children[0]).Tag="text:FieldTarget";
