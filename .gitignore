@@ -17,6 +17,7 @@
 /resources/imports/
 *.db
 *.sqlite
+private-groups.dat*
 /resources/settings.ini.*
 /resources/automatic.log
 /resources/last-detection.json

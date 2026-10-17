@@ -4,6 +4,22 @@ Build the current source with `Build.ps1 -Configuration Test`. Exit the current 
 
 Keep the packaged `assets` folder beside the test EXE. If moving the build to another PC, extract the entire test ZIP rather than copying only the executable. Map tiles and road data are loaded locally and verified before normal startup.
 
+To test private groups, open Settings > General > Private positions. Click
+**Create group and copy code**, then share that code privately with friends.
+They paste it into **Group code** and click **Connect**. Names are prefilled and
+can be edited. You can save and join multiple groups at once. **Leave group**
+disconnects just that group and retains its code for later. Only its creator sees
+**Refresh code**, which disconnects that group and invalidates the old code.
+Saved codes and owner credentials are protected by this Windows account. Keep
+the creator's saved profile to retain ownership. Sharing starts disabled after
+each app restart. Close Settings to resume game position capture. The relay uses
+no home port forwarding and cannot read encrypted positions or markers. It has a
+50 GB monthly traffic cutoff and no paid fallback. Direct Host/Join remains available.
+
+First-time setup describes the same group flow. Hold the forward button for one
+second to advance, then release before advancing again. Short clicks, key repeats,
+forward sidebar clicks and instant Skip cannot bypass the hold requirement.
+
 Home now restores Settings from the taskbar and brings it to the foreground. Repeated presses keep Settings open. Use Escape, Done or the close button to minimize Settings and return to gameplay.
 
 ## Destination indicator and full-map tracking

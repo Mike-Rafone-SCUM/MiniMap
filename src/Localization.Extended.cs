@@ -5,6 +5,21 @@ using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsPtPt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupCreate", "Criar grupo e copiar código" },
+            { "PrivateGroupConnect", "Ligar" },
+            { "PrivateGroupLeave", "Sair do grupo" },
+            { "PrivateGroupCopy", "Copiar código" },
+            { "PrivateGroupCode", "Código do grupo" },
+            { "PrivateGroupRotate", "Renovar código" },
+            { "PrivateGroupLabel", "Grupo" },
+            { "PrivateGroupOwner", "Proprietário" },
+            { "PrivateGroupSurvivor", "Sobrevivente" },
+            { "WizardHoldNext", "Mantenha premido 1 segundo para continuar" },
+            { "PrivateGroupHelp", "Crie um grupo e partilhe o código em privado, ou cole um código e ligue-se. Os códigos são válidos até o proprietário os renovar. Pode aderir a vários grupos. Os códigos guardados estão protegidos nesta conta Windows; a partilha começa desativada. Renovar desliga o grupo e invalida o código anterior. O criador deve conservar o perfil guardado para manter a propriedade." },
+
+            { "PrivatePositionRelay", "Grupo privado via retransmissor" },
+            { "PrivatePositionRelayHelp", "Não é necessário encaminhar portas. Partilhe uma chave de grupo em privado com os seus amigos. O retransmissor não pode ler as suas posições. A capacidade gratuita é limitada." },
+
             { "SetupSharingVisibility", "A barra lateral tem botões por jogador para localização, destino GPS, locais guardados e mortes. Só alteram a sua visualização; a partilha continua." },
             { "SetupDefaultColours", "Repor cores predefinidas" },
             { "PlayerWaiting", "À espera de jogadores" },

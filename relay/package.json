@@ -1,0 +1,9 @@
+{
+  "name": "scum-minimap-private-relay",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Opaque encrypted transport for persistent SCUM MiniMap private groups",
+  "engines": {"node": ">=22"},
+  "scripts": {"build": "tsc -p tsconfig.json", "test": "npm run build && node --test test.cjs"},
+  "devDependencies": {"@types/node": "20.19.43", "typescript": "5.9.3"}
+}

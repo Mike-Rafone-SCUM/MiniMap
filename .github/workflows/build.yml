@@ -33,3 +33,22 @@ jobs:
           if-no-files-found: error
           retention-days: 7
           compression-level: 0
+
+  relay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: relay
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: relay/package-lock.json
+      - run: npm ci --ignore-scripts
+      - name: Test encrypted relay and persistent groups
+        run: |
+          openssl req -x509 -newkey rsa:2048 -sha256 -days 1 -nodes -keyout /tmp/minimap-test.key -out /tmp/minimap-test.crt -subj /CN=localhost
+          TEST_KEY=/tmp/minimap-test.key TEST_CERT=/tmp/minimap-test.crt npm test

@@ -1,6 +1,8 @@
 ﻿$miniRoot = Split-Path $PSScriptRoot -Parent
 Join-Path (Join-Path $miniRoot 'src') 'InstallationAssets.cs'
 Join-Path (Join-Path $miniRoot 'src') 'PrivatePositions.cs'
+Join-Path (Join-Path $miniRoot 'src') 'RelayGroups.cs'
+Join-Path (Join-Path $miniRoot 'src') 'HoldToProceed.cs'
 Join-Path (Join-Path $miniRoot 'src') 'PeerNetworkSetup.cs'
 Join-Path (Join-Path $miniRoot 'src') 'UpdatePackage.cs'
 Join-Path (Join-Path $miniRoot 'src') 'Localization.MapObjects.cs'

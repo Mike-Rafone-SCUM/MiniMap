@@ -269,6 +269,30 @@ class WpfPreviewHarness {
     engine.GetType().GetField("routeHistoryColor",Hidden).SetValue(engine,System.Drawing.Color.Magenta);Children(colourSetup).OfType<Button>().Single(button=>(button.Tag as string)=="setup-default-colours").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check((int)Field(Call(engine,"WpfSnapshot",false),"HistoryColor")==System.Drawing.Color.FromArgb(164,177,188).ToArgb(),"Setup restores the actual default history colour");
    }finally {colourSetup.Close();}
    var sharingSetup=(Window)Call(runtime,"BuildOnboarding",8);try {Check(Children(sharingSetup).OfType<Button>().Any(button=>(button.Tag as string)=="setup-private-positions")&&Children(sharingSetup).OfType<TextBlock>().Any(text=>text.Text==(string)getLocalized.Invoke(null,new object[]{"SetupSharingVisibility"})),"Setup offers private Host/Join configuration and explains player visibility pills");}finally {sharingSetup.Close();}
+   var groupSetup=(Window)Call(runtime,"BuildOnboarding",8);try {Check(Children(groupSetup).OfType<TextBlock>().Any(text=>text.Text==(string)getLocalized.Invoke(null,new object[]{"PrivateGroupHelp"})),"First-time setup explains persistent codes, owner refresh and multiple groups");}finally {groupSetup.Close();}
+   var holdSetup=(Window)Call(runtime,"BuildOnboarding",0);try {
+    var before=string.Join("|",Children(holdSetup).OfType<TextBlock>().Select(t=>t.Text));var nextHold=Children(holdSetup).OfType<Button>().Single(b=>(b.Tag as string)=="setup-next-hold");
+    for(int click=0;click<50;click++)nextHold.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+    Check(before==string.Join("|",Children(holdSetup).OfType<TextBlock>().Select(t=>t.Text)),"Rapid Next clicks cannot skip setup pages");
+    var future=Children(holdSetup).OfType<Button>().Single(b=>(b.Content as string??"").StartsWith("9    "));Check(!future.IsEnabled,"Unvisited setup pages stay locked until sequential progression");for(int click=0;click<20;click++)future.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+    Check(before==string.Join("|",Children(holdSetup).OfType<TextBlock>().Select(t=>t.Text)),"Forward sidebar clicks cannot bypass the setup hold requirement");
+    Check(!Children(holdSetup).OfType<Button>().Any(b=>(b.Content as string)==(string)getLocalized.Invoke(null,new object[]{"WizardBtnSkip"})),"Setup has no instant Skip shortcut around the hold gate");
+    var holdType=assembly.GetType("ScumMiniMap.HoldAdvance");var gesture=Activator.CreateInstance(holdType,true);
+    Check((bool)Call(gesture,"Press")&&!(bool)Call(gesture,"Tick",999L)&&(bool)Call(gesture,"Tick",1000L)&&!(bool)Call(gesture,"Tick",5000L)&&!(bool)Call(gesture,"Press"),"A continuous one-second hold advances exactly once and cannot repeat while held");
+    Call(gesture,"Release");Check((bool)Call(gesture,"Press")&&!(bool)Call(gesture,"Tick",500L),"Each subsequent setup page requires a fresh full hold");Call(gesture,"Release");Check(!(bool)Call(gesture,"Tick",2000L),"Releasing early cancels setup progression");
+    holdSetup.ShowActivated=false;holdSetup.Left=-32000;holdSetup.Top=-32000;holdSetup.Show();holdSetup.UpdateLayout();
+    var inputSource=PresentationSource.FromVisual(holdSetup);
+    Action<Button,bool> space=(button,down)=>button.RaiseEvent(new System.Windows.Input.KeyEventArgs(System.Windows.Input.Keyboard.PrimaryDevice,inputSource,Environment.TickCount,System.Windows.Input.Key.Space) { RoutedEvent=down?System.Windows.Input.Keyboard.PreviewKeyDownEvent:System.Windows.Input.Keyboard.PreviewKeyUpEvent });
+    Action<int> pump=milliseconds=> {var end=DateTime.UtcNow.AddMilliseconds(milliseconds);while(DateTime.UtcNow<end) {System.Windows.Forms.Application.DoEvents();System.Threading.Thread.Sleep(10);} };
+    space(nextHold,true);pump(250);space(nextHold,false);pump(1100);Check(Children(holdSetup).Contains(nextHold),"Actual setup button cancels a short keyboard hold without advancing");
+    var held=System.Diagnostics.Stopwatch.StartNew();space(nextHold,true);Until(()=>!Children(holdSetup).Contains(nextHold));Check(held.ElapsedMilliseconds>=950,"Actual setup button advances only after its full one-second hold");
+    var nextPage=Children(holdSetup).OfType<Button>().Single(b=>(b.Tag as string)=="setup-next-hold");pump(1200);Check(Children(holdSetup).Contains(nextPage),"Keeping the original press held does not advance the next setup page");space(nextHold,false);
+   }finally {holdSetup.Close();}
+   var groupsWindow=(Window)Call(runtime,"BuildRelayGroups");try {
+    Capture(type,groupsWindow,Path.Combine(args[1],"persistent-groups.png"));
+    Check(Children(groupsWindow).OfType<PasswordBox>().Single().MaxLength==128&&Children(groupsWindow).OfType<Button>().Any(b=>(b.Tag as string)=="group-connect")&&Children(groupsWindow).OfType<Button>().Any(b=>(b.Tag as string)=="group-create"),"Group setup offers paste-code Connect and one-click create-and-copy");
+    Check(!Children(groupsWindow).OfType<ComboBox>().Any()&&Children(groupsWindow).OfType<TextBox>().Count()==1&&Children(groupsWindow).OfType<TextBox>().Single().Text.Length>0,"Joining needs no IP, port, mode selection or mandatory name entry");
+   }finally {groupsWindow.Close();}
    var poiSetup=(Window)Call(runtime,"BuildPoiFilters");try {var firstPoi=Children(poiSetup).OfType<CheckBox>().First();int setupCategoryId=int.Parse(((string)firstPoi.Tag).Substring("setup-poi:".Length));bool wasEnabled=(bool)Call(poiStore,"IsCategoryEnabled",setupCategoryId);firstPoi.IsChecked=!wasEnabled;firstPoi.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check((bool)Call(poiStore,"IsCategoryEnabled",setupCategoryId)==!wasEnabled,"Setup POI selector changes the actual map category without leaving the modal flow");Call(poiStore,"SetCategoryEnabled",setupCategoryId,wasEnabled);}finally {poiSetup.Close();}
    for(int i=0;i<3;i++) { var w=(Window)Call(runtime,"BuildSettings",i);Capture(type,w,Path.Combine(args[1],"settings-"+new[]{"general","shortcuts","appearance"}[i]+".png"));w.Close(); }
    var searchPreview=(Window)Call(runtime,"BuildSearch");Capture(type,searchPreview,Path.Combine(args[1],"search.png"));searchPreview.Close();
@@ -363,8 +387,8 @@ class WpfPreviewHarness {
    var sharing=(Window)Call(runtime,"BuildPrivatePositions");
    try {
     Capture(type,sharing,Path.Combine(args[1],"private-positions.png"));
-    var modes=Children(sharing).OfType<ComboBox>().Single();Check(modes.Items.Count==2&&modes.SelectedIndex==1,"Private position setup offers Host and Join, defaulting to Join");
-    Check(Children(sharing).OfType<PasswordBox>().Count()==1&&Children(sharing).OfType<TextBox>().Any(t=>t.Text=="47831"),"Connection settings expose a masked group key and TCP port");
+    var modes=Children(sharing).OfType<ComboBox>().Single();Check(modes.Items.Count==2&&modes.SelectedIndex==1,"Advanced private setup retains direct Host and Join");
+    Check(Children(sharing).OfType<PasswordBox>().Count()==1&&Children(sharing).OfType<TextBox>().Any(t=>t.Text=="47831"),"Direct settings expose a masked group key and TCP port");
     var shareToggle=Children(sharing).OfType<CheckBox>().Single();Check(shareToggle.IsChecked==false&&Field(runtime,"privatePositions")==null,"Private sharing starts disabled with no network session");
     shareToggle.IsChecked=true;Check(shareToggle.IsChecked==false&&Field(runtime,"privatePositions")==null,"Incomplete connection settings fail closed without opening a session");
     var lookupField=type.GetField("publicAddressLookup",Hidden);int lookups=0;var pendingIp=new System.Threading.Tasks.TaskCompletionSource<string>();lookupField.SetValue(runtime,new Func<System.Threading.Tasks.Task<string>>(()=> { lookups++;return pendingIp.Task; }));
@@ -459,7 +483,7 @@ var movedGps=Call(activeGpsFixture,"Clone");movedGps.GetType().GetField("Name").
    Children(moveEditor).OfType<Button>().Single(b=>(b.Content as string)=="Done").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
    var movedHud=Call(engine,"WpfSnapshot",false);Check((int)Field(movedHud,"HudLeft")==(int)Math.Round(expectedHudLocation.X)&&(int)Field(movedHud,"HudTop")==(int)Math.Round(expectedHudLocation.Y),"Minimap positioning commits the dragged location through the saved backend bounds");
    var cancelEditor=(Window)Call(runtime,"BuildHudMoveEditor");cancelEditor.Left=-31700;cancelEditor.Top=-31600;cancelEditor.Close();var cancelledHud=Call(engine,"WpfSnapshot",false);Check((int)Field(cancelledHud,"HudLeft")== (int)Field(movedHud,"HudLeft")&&(int)Field(cancelledHud,"HudTop")== (int)Field(movedHud,"HudTop"),"Cancelling minimap positioning preserves the last saved location");
-   Check(Directory.GetFiles(args[1],"*.png").Length==18,"All nine setup pages, settings, search, tactical map, both HUD shapes, rotating HUD and private connection setup were rendered");
+   Check(Directory.GetFiles(args[1],"*.png").Length==19,"All nine setup pages, settings, search, tactical map, both HUD shapes, rotating HUD, persistent groups and direct connection setup were rendered");
    Check(Call(engine,"WpfGameBind",0,0x0D,0)!=null,"The WPF game-key adapter rejects Enter as a reserved binding");
    var sample=Call(engine,"WpfSnapshot",false);
    Check((int)Field(sample,"HudWidth")>=240&&(int)Field(sample,"HudHeight")>=240,"The new HUD reads its saved size from the controller");

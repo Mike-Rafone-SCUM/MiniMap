@@ -4,6 +4,21 @@ using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsTh = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupCreate", "สร้างกลุ่มและคัดลอกรหัส" },
+            { "PrivateGroupConnect", "เชื่อมต่อ" },
+            { "PrivateGroupLeave", "ออกจากกลุ่ม" },
+            { "PrivateGroupCopy", "คัดลอกรหัส" },
+            { "PrivateGroupCode", "รหัสกลุ่ม" },
+            { "PrivateGroupRotate", "เปลี่ยนรหัส" },
+            { "PrivateGroupLabel", "กลุ่ม" },
+            { "PrivateGroupOwner", "เจ้าของ" },
+            { "PrivateGroupSurvivor", "ผู้รอดชีวิต" },
+            { "WizardHoldNext", "กดค้าง 1 วินาทีเพื่อดำเนินการต่อ" },
+            { "PrivateGroupHelp", "สร้างกลุ่มและแชร์รหัสเป็นการส่วนตัว หรือวางรหัสแล้วเชื่อมต่อ รหัสใช้ได้จนกว่าเจ้าของจะเปลี่ยน คุณเข้าร่วมหลายกลุ่มได้ รหัสที่บันทึกได้รับการป้องกันด้วยบัญชี Windows นี้ การแชร์เริ่มต้นเป็นปิด การเปลี่ยนรหัสจะตัดการเชื่อมต่อกลุ่มและยกเลิกรหัสเดิม ผู้สร้างต้องเก็บโปรไฟล์ที่บันทึกไว้เพื่อรักษาสิทธิ์เจ้าของ" },
+
+            { "PrivatePositionRelay", "กลุ่มส่วนตัวผ่านเซิร์ฟเวอร์ส่งต่อ" },
+            { "PrivatePositionRelayHelp", "ไม่ต้องตั้งค่าพอร์ต แชร์คีย์กลุ่มเดียวกันกับเพื่อนเป็นการส่วนตัว เซิร์ฟเวอร์ส่งต่ออ่านตำแหน่งของคุณไม่ได้ ความจุฟรีมีจำกัด" },
+
             { "SetupSharingVisibility", "แถบข้างแผนที่ใหญ่มีปุ่มแยกสำหรับตำแหน่งสด จุดหมาย GPS สถานที่ที่บันทึก และเครื่องหมายเสียชีวิตของผู้เล่นแต่ละคน เปลี่ยนเฉพาะมุมมองของคุณ การแชร์ยังทำงานต่อ" },
             { "SetupDefaultColours", "คืนค่าสีเริ่มต้น" },
             { "PlayerWaiting", "กำลังรอผู้เล่น" },
@@ -1023,6 +1038,21 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "จุดกิจกรรมซีเดนเท็กซ์" },
         };
         public static readonly Dictionary<string,string> StringsZhTw = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupCreate", "建立群組並複製代碼" },
+            { "PrivateGroupConnect", "連線" },
+            { "PrivateGroupLeave", "離開群組" },
+            { "PrivateGroupCopy", "複製代碼" },
+            { "PrivateGroupCode", "群組代碼" },
+            { "PrivateGroupRotate", "更新代碼" },
+            { "PrivateGroupLabel", "群組" },
+            { "PrivateGroupOwner", "擁有者" },
+            { "PrivateGroupSurvivor", "倖存者" },
+            { "WizardHoldNext", "按住1秒以繼續" },
+            { "PrivateGroupHelp", "建立群組並私下分享代碼，或貼上代碼後連線。代碼在擁有者更新前持續有效。可加入多個群組。儲存的代碼受目前Windows帳戶保護；分享預設關閉。更新代碼會中斷群組連線並使舊代碼失效。建立者需保留本機設定檔以保留擁有權。" },
+
+            { "PrivatePositionRelay", "透過中繼建立私密群組" },
+            { "PrivatePositionRelayHelp", "無需連接埠轉送。請私下與好友共用同一個群組金鑰。中繼無法讀取你的位置。免費中繼容量有限。" },
+
             { "SetupSharingVisibility", "大地圖側欄可分別切換每位玩家的即時位置、GPS路點、已儲存地點及死亡標記。這些僅改變本機顯示，不會停止分享。" },
             { "SetupDefaultColours", "還原預設顏色" },
             { "PlayerWaiting", "等待玩家" },
@@ -2042,6 +2072,21 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex活動點" },
         };
         public static readonly Dictionary<string,string> StringsJa = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupCreate", "グループを作成してコードをコピー" },
+            { "PrivateGroupConnect", "接続" },
+            { "PrivateGroupLeave", "グループを退出" },
+            { "PrivateGroupCopy", "コードをコピー" },
+            { "PrivateGroupCode", "グループコード" },
+            { "PrivateGroupRotate", "コードを更新" },
+            { "PrivateGroupLabel", "グループ" },
+            { "PrivateGroupOwner", "所有者" },
+            { "PrivateGroupSurvivor", "生存者" },
+            { "WizardHoldNext", "1秒間長押しして続行" },
+            { "PrivateGroupHelp", "グループを作成してコードを非公開で共有するか、コードを貼り付けて接続します。コードは所有者が更新するまで有効です。複数のグループに参加できます。保存されたコードは現在のWindowsアカウントで保護され、共有はオフで起動します。更新するとグループが切断され、以前のコードは無効になります。所有権を保つには作成者の保存済みプロファイルが必要です。" },
+
+            { "PrivatePositionRelay", "中継サーバーで非公開グループ" },
+            { "PrivatePositionRelayHelp", "ポート開放は不要です。同じグループキーを友達と非公開で共有してください。中継サーバーは位置情報を読み取れません。無料の中継容量には制限があります。" },
+
             { "SetupSharingVisibility", "大きなマップのサイドバーで各プレイヤーの現在位置、GPS目的地、保存した場所、死亡マーカーを個別に表示できます。自分の表示だけが変わり、共有は続きます。" },
             { "SetupDefaultColours", "既定の色に戻す" },
             { "PlayerWaiting", "プレイヤーを待機中" },
@@ -3061,6 +3106,21 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "シーデンテックスアクティビティスポット" },
         };
         public static readonly Dictionary<string,string> StringsCs = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupCreate", "Vytvořit skupinu a zkopírovat kód" },
+            { "PrivateGroupConnect", "Připojit" },
+            { "PrivateGroupLeave", "Opustit skupinu" },
+            { "PrivateGroupCopy", "Kopírovat kód" },
+            { "PrivateGroupCode", "Kód skupiny" },
+            { "PrivateGroupRotate", "Obnovit kód" },
+            { "PrivateGroupLabel", "Skupina" },
+            { "PrivateGroupOwner", "Vlastník" },
+            { "PrivateGroupSurvivor", "Přeživší" },
+            { "WizardHoldNext", "Pokračujte podržením na 1 sekundu" },
+            { "PrivateGroupHelp", "Vytvořte skupinu a sdílejte kód soukromě nebo vložte kód a připojte se. Kódy platí, dokud je vlastník neobnoví. Můžete se připojit k více skupinám. Uložené kódy chrání tento účet Windows; sdílení začíná vypnuté. Obnovení odpojí skupinu a zneplatní starý kód. Tvůrce musí zachovat uložený profil, aby si ponechal vlastnictví." },
+
+            { "PrivatePositionRelay", "Soukromá skupina přes přenosový server" },
+            { "PrivatePositionRelayHelp", "Přesměrování portů není potřeba. Sdílejte jeden klíč skupiny soukromě s přáteli. Přenosový server nemůže číst vaše pozice. Bezplatná kapacita je omezená." },
+
             { "SetupSharingVisibility", "Boční panel mapy má pro každého hráče přepínače polohy, cíle GPS, uložených míst a úmrtí. Mění pouze váš pohled; sdílení pokračuje." },
             { "SetupDefaultColours", "Obnovit výchozí barvy" },
             { "PlayerWaiting", "Čekání na hráče" },
@@ -4080,6 +4140,21 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex Activity Spot" },
         };
         public static readonly Dictionary<string,string> StringsIt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupCreate", "Crea gruppo e copia codice" },
+            { "PrivateGroupConnect", "Connetti" },
+            { "PrivateGroupLeave", "Esci dal gruppo" },
+            { "PrivateGroupCopy", "Copia codice" },
+            { "PrivateGroupCode", "Codice gruppo" },
+            { "PrivateGroupRotate", "Rinnova codice" },
+            { "PrivateGroupLabel", "Gruppo" },
+            { "PrivateGroupOwner", "Proprietario" },
+            { "PrivateGroupSurvivor", "Sopravvissuto" },
+            { "WizardHoldNext", "Tieni premuto 1 secondo per continuare" },
+            { "PrivateGroupHelp", "Crea un gruppo e condividi il codice in privato, oppure incolla un codice e connettiti. I codici restano validi finché il proprietario non li rinnova. Puoi unirti a più gruppi. I codici salvati sono protetti da questo account Windows; la condivisione parte disattivata. Il rinnovo disconnette il gruppo e invalida il vecchio codice. Il creatore deve conservare il profilo salvato per mantenere la proprietà." },
+
+            { "PrivatePositionRelay", "Gruppo privato tramite relay" },
+            { "PrivatePositionRelayHelp", "Non serve inoltrare le porte. Condividi una chiave di gruppo in privato con gli amici. Il relay non può leggere le posizioni. La capacità gratuita è limitata." },
+
             { "SetupSharingVisibility", "La barra laterale ha pulsanti per posizione, destinazione GPS, luoghi salvati e morti di ogni giocatore. Cambiano solo la tua visualizzazione; la condivisione continua." },
             { "SetupDefaultColours", "Ripristina i colori predefiniti" },
             { "PlayerWaiting", "In attesa di giocatori" },
@@ -5099,6 +5174,21 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Punto di attività del dentice marino" },
         };
         public static readonly Dictionary<string,string> StringsUk = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupCreate", "Створити групу й скопіювати код" },
+            { "PrivateGroupConnect", "Підключитися" },
+            { "PrivateGroupLeave", "Вийти з групи" },
+            { "PrivateGroupCopy", "Копіювати код" },
+            { "PrivateGroupCode", "Код групи" },
+            { "PrivateGroupRotate", "Оновити код" },
+            { "PrivateGroupLabel", "Група" },
+            { "PrivateGroupOwner", "Власник" },
+            { "PrivateGroupSurvivor", "Уцілілий" },
+            { "WizardHoldNext", "Утримуйте 1 секунду для продовження" },
+            { "PrivateGroupHelp", "Створіть групу й передайте код приватно або вставте код і підключіться. Код діє, доки власник не оновить його. Можна приєднуватися до кількох груп. Збережені коди захищені цим обліковим записом Windows; обмін спочатку вимкнено. Оновлення відключає групу та скасовує старий код. Творець має зберігати свій профіль, щоб зберегти права власника." },
+
+            { "PrivatePositionRelay", "Приватна група через ретранслятор" },
+            { "PrivatePositionRelayHelp", "Перенаправлення портів не потрібне. Передайте спільний ключ групи друзям приватно. Ретранслятор не може читати ваші позиції. Безкоштовна пропускна здатність обмежена." },
+
             { "SetupSharingVisibility", "Бічна панель карти має окремі перемикачі позиції, GPS-цілі, збережених місць і позначок смерті кожного гравця. Вони змінюють лише ваш вигляд; обмін триває." },
             { "SetupDefaultColours", "Відновити стандартні кольори" },
             { "PlayerWaiting", "Очікування гравців" },

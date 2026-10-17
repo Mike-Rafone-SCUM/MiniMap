@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-10-17
+
+- Added persistent private group codes: create and copy a code, or paste a code and connect without home port forwarding or VPN setup. Players can save and join multiple groups; only the creator can refresh a code, disconnect its members and invalidate the previous code. Codes and separate owner credentials are protected with Windows DPAPI; sharing starts disabled.
+- Added a separate lightweight relay service with pinned TLS, room isolation, connection/rate limits and a persistent 50 GB monthly traffic cutoff. No paid fallback is used.
+- Updated first-time setup for persistent groups. Forward navigation requires a fresh one-second hold with progress feedback, including sidebar jumps and the final step; instant Skip and rapid Next clicks cannot bypass it.
+
 ## [2.1.4] - 2026-10-16
 
 - Unclustered POIs now retain their marker objects across zoom changes and share frozen icon drawings by appearance, avoiding thousands of duplicate glyph builds while scrolling. The shared cache is bounded; all POIs remain available.

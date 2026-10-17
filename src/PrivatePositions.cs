@@ -160,7 +160,7 @@ namespace ScumMiniMap {
     // framed message. The host forwards only authenticated, fresh publications.
     internal sealed class DirectPositions:IDisposable {
         sealed class Publication { internal string Id;internal PrivatePositions.Peer Peer;internal long Sequence;internal DateTime Seen;internal SharedMapMarker[] Markers; }
-        sealed class Link { internal System.Net.Sockets.TcpClient Client;internal string Id;internal readonly System.Collections.Generic.Dictionary<string,long> Sequences=new System.Collections.Generic.Dictionary<string,long>(); }
+        sealed class Link { internal System.Net.Sockets.TcpClient Client;internal Stream Stream;internal string Id;internal readonly System.Collections.Generic.Dictionary<string,long> Sequences=new System.Collections.Generic.Dictionary<string,long>(); }
         readonly object gate=new object();readonly byte[] key;readonly string id=Guid.NewGuid().ToString("N"),name;
         readonly System.Collections.Generic.Dictionary<string,Publication> publications=new System.Collections.Generic.Dictionary<string,Publication>();
         readonly System.Collections.Generic.List<Link> links=new System.Collections.Generic.List<Link>();
@@ -175,12 +175,24 @@ namespace ScumMiniMap {
         internal bool Ready { get { return ready&&!stopped; } }
         internal string Error { get { return error; } }
         internal bool Host { get { return host; } }
+        internal const string RelayAddress="92.5.169.22";
+        internal const int RelayPort=47832;
+        internal const string RelayCertificate="53678a99647bc63a5f86791cff101a420a680a9dc22b7dfd0440b983a47f8099";
+        internal bool Relay { get;private set; }
+        readonly string relayCertificate,relayGroup;
+        internal static string RelayRoom(byte[] secret) {
+            using(var mac=new HMACSHA256(secret))return BitConverter.ToString(mac.ComputeHash(Encoding.UTF8.GetBytes("SCUM MiniMap opaque relay room v1"))).Replace("-","").ToLowerInvariant();
+        }
         internal string Name { get { return name; } }
         internal string Address { get;private set; }
         internal void SetShareAddress(string value) { if(host&&value!=null&&value.Length<=253)Address=value.Trim(); }
         internal int Port { get;private set; }
-        internal int Connections { get { lock(gate)return host?links.Count(link=>link.Id!=null):(ready?links.Count:0); } }
-        internal DirectPositions(bool host,string address,int port,string secret,string name,bool configureRouter=false,Func<DateTime> clock=null) {
+        internal int Connections { get { lock(gate)return host?links.Count(link=>link.Id!=null):Relay?(ready?publications.Values.Count(p=>p.Id!=id&&PrivatePositions.Fresh(p.Seen,clock())):0):(ready?links.Count:0); } }
+        internal DirectPositions(bool host,string address,int port,string secret,string name,bool configureRouter=false,Func<DateTime> clock=null):this(host,address,port,secret,name,configureRouter,clock,false,null) {}
+        internal DirectPositions(bool host,string address,int port,string secret,string name,bool configureRouter,Func<DateTime> clock,bool relay,string certificate=null):this(host,address,port,secret,name,configureRouter,clock,relay,certificate,null) {}
+        internal DirectPositions(bool host,string address,int port,string secret,string name,bool configureRouter,Func<DateTime> clock,bool relay,string certificate,string group) {
+            if(host&&relay)throw new ArgumentException();Relay=relay;relayCertificate=certificate??RelayCertificate;
+            if(group!=null&&(group.Length!=32||!group.All(Uri.IsHexDigit)))throw new ArgumentException();relayGroup=group;
             key=Convert.FromBase64String(secret.Trim());if(key.Length!=32)throw new ArgumentException();
             this.name=(name??"").Trim();if(this.name.Length<1||this.name.Length>32||this.name.Any(char.IsControl)||port<1024||port>65535)throw new ArgumentException();
             this.host=host;this.clock=clock??(()=>DateTime.UtcNow);
@@ -206,12 +218,21 @@ namespace ScumMiniMap {
             var client=new System.Net.Sockets.TcpClient();
             try {
                 var task=client.ConnectAsync(address,port);if(!task.Wait(5000))throw new TimeoutException();
-                lock(gate) { if(stopped) { client.Close();return; }Attach(client); }
+                client.SendTimeout=5000;client.ReceiveTimeout=5000;Stream stream=client.GetStream();
+                if(Relay) {
+                    var secure=new System.Net.Security.SslStream(stream,false,(sender,cert,chain,errors)=> {
+                        if(cert==null)return false;using(var sha=SHA256.Create())return string.Equals(BitConverter.ToString(sha.ComputeHash(cert.GetRawCertData())).Replace("-",""),relayCertificate,StringComparison.OrdinalIgnoreCase);
+                    });
+                    secure.AuthenticateAsClient("minimap-relay",null,System.Security.Authentication.SslProtocols.Tls12,false);
+                    byte[] hello=Encoding.ASCII.GetBytes(relayGroup==null?"SCUMRELAY1 "+RelayRoom(key)+"\n":"SCUMGROUP1 "+relayGroup+" "+RelayRoom(key)+"\n");secure.Write(hello,0,hello.Length);
+                    byte[] reply=new byte[3];ReadExact(secure,reply);if(Encoding.ASCII.GetString(reply)!="OK\n")throw new InvalidDataException();stream=secure;
+                }
+                lock(gate) { if(stopped) { stream.Dispose();client.Close();return; }Attach(client,stream);if(Relay)ready=true; }
             }catch(Exception e) { client.Close();if(!stopped)error=e.Message; }
         }
-        void Attach(System.Net.Sockets.TcpClient client) {
+        void Attach(System.Net.Sockets.TcpClient client,Stream stream=null) {
             client.NoDelay=true;client.SendTimeout=2000;client.ReceiveTimeout=10000;
-            var link=new Link { Client=client };links.Add(link);System.Threading.Tasks.Task.Run(()=>Read(link));
+            var link=new Link { Client=client,Stream=stream??client.GetStream() };links.Add(link);System.Threading.Tasks.Task.Run(()=>Read(link));
         }
         internal static byte[] ReadFrame(Stream stream) {
             var header=new byte[4];ReadExact(stream,header);int size=System.Net.IPAddress.NetworkToHostOrder(BitConverter.ToInt32(header,0));
@@ -248,7 +269,7 @@ namespace ScumMiniMap {
         }
         void Read(Link link) {
             try {
-                var stream=link.Client.GetStream();
+                var stream=link.Stream;
                 while(!stopped) {
                     var publication=Decode(ReadFrame(stream));if(publication==null)continue;
                     lock(gate) {
@@ -263,7 +284,7 @@ namespace ScumMiniMap {
                     }
                 }
             }catch(Exception e) { if(!host&&!stopped)lock(gate) { error=e.Message;ready=false;publications.Clear(); } }
-            finally { lock(gate) { links.Remove(link);if(host&&link.Id!=null)publications.Remove(link.Id);if(!host)publications.Clear(); }link.Client.Close(); }
+            finally { lock(gate) { links.Remove(link);if(host&&link.Id!=null)publications.Remove(link.Id);if(!host) { ready=false;publications.Clear(); } }link.Stream.Dispose();link.Client.Close(); }
         }
         void Tick(object unused) {
             if(stopped||Interlocked.Exchange(ref ticking,1)!=0)return;
@@ -278,7 +299,7 @@ namespace ScumMiniMap {
                     // forwarding never makes an old captured location fresh.
                     packets=host?publications.Values.Select(value=>Encode(value,now)).ToArray():new[]{Encode(own,now)};connections=links.ToArray();
                 }
-                foreach(var connection in connections)try { var stream=connection.Client.GetStream();foreach(var packet in packets) { if(stopped)return;WriteFrame(stream,packet); } }catch(Exception) { connection.Client.Close(); }
+                foreach(var connection in connections)try { var stream=connection.Stream;foreach(var packet in packets) { if(stopped)return;WriteFrame(stream,packet); } }catch(Exception) { connection.Client.Close(); }
             }catch(Exception e) { if(!stopped)error=e.Message; }finally { Interlocked.Exchange(ref ticking,0); }
         }
         public void Dispose() {

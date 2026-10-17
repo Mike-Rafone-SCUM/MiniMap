@@ -1,6 +1,57 @@
-# Private peer-to-peer positions
+# Private positions
 
-Open Settings > General > Private positions. The host enters a display name,
+## Persistent private groups (default)
+
+Open Settings > General > Private positions. A display name is filled in for you;
+you can change it. Click **Create group and copy code** to create and connect to
+your group. Give that code privately to your friends. They paste it into **Group
+code** and click **Connect**. Nobody enters an IP, port or connection mode, and
+nobody needs home port forwarding, a VPN account or a public home address.
+All members need the persistent-group build. Close Settings to resume normal
+game position capture.
+
+Codes stay valid until their owner clicks **Refresh code**. A refresh disconnects
+that group's existing members and makes the old code unusable. Share the new code
+to admit people again. Only the creator has the separate owner credential; it is
+never included in the shared group code. Keep the creator's saved Windows profile
+to retain ownership. The current application stores codes and owner credentials
+encrypted with Windows DPAPI in `private-groups.dat` inside its profile directory.
+They are tied to that Windows account, not a portable ownership backup.
+
+You can save up to 16 groups and connect to several at once. Each saved group has
+its own Connect/Leave and Copy code controls; owned groups also show Refresh code.
+Leaving disconnects you immediately and keeps the code for later. Starting the
+app restores saved groups with sharing disabled. Rooms with no connected members
+are removed from memory immediately; their persistent codes and ownership remain
+valid. There is no seven-day inactivity expiry. The server stores only opaque
+group/routing identifiers and owner-credential hashes, never decryption keys or
+position history. Each group shares only your own positions and markers; joining
+several groups does not forward one group's members into another group.
+
+The configured Oracle relay uses outbound TLS connections and a pinned server
+certificate. Names, positions, GPS destinations, waypoints and death markers are
+encrypted and authenticated on the participants' PCs. The relay receives an
+opaque room identifier derived from the key, never the key itself. It forwards
+encrypted packets without decoding them or retaining location history. The relay
+operator can still see connecting IP addresses, room membership, sizes and timing.
+People with your group code can read and publish in your group. Refresh the code
+when membership changes. Active sharing remains opt-in and disabled at startup.
+
+Each room supports nine participants. The service has connection/rate limits and
+a conservative 50 GB monthly traffic budget with an automatic cutoff. Unused
+reserved traffic is forfeited on restart; restarting does not reset the budget.
+The allowance renews at the start of each UTC calendar month. Reconnect by
+using that group's Connect button after a failure. Direct Host/Join remains available
+when relay capacity is unavailable. No paid fallback is used.
+
+The relay's budget limits this service only. It cannot guarantee a zero Oracle
+bill or account-wide availability: other workloads share the account's free
+allowances, and Oracle controls infrastructure availability and billing.
+
+## Direct Host / Join
+
+Open Settings > General > Private positions, then Host group / Join group.
+The host enters a display name,
 selects Host group, chooses a TCP port (default 47831), generates a group key,
 and enables Private positions. Friends select Join group and enter the host's
 address, matching port and key. Share these details privately.
