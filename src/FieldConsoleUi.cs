@@ -169,14 +169,15 @@ namespace ScumMiniMap {
         Rectangle fieldConsoleTargetCard;
         string FieldConsoleRouteSummary() {
             if(searchTarget==null)return "";
-            if(routeCalculating)return Localization.Get("FieldCalculating");
-            if(position==null)return Localization.Get("FieldNoRoad");
+            if(position==null)return Localization.Get("WaitingForCoordinates");
             bool road=activeRoute!=null&&activeRoute.Success;
             double distance=road?activeRoute.TotalDistanceMeters:DestinationSearch.Metres(ToMap(position),searchTarget.Centroid);
-            if(!road)return Localization.Get("FieldNoRoad")+" · "+DestinationSearch.Distance(distance)+" ("+Localization.Get("FieldDirect")+")";
+            return WpfTravelSummary(distance,road,routeCalculating);
+        }
+        internal string WpfTravelSummary(double distance,bool road,bool calculating=false) {
             double speed=filteredSpeed>1.2?filteredSpeed:13.9;
             int minutes=Math.Max(1,(int)Math.Round(distance/Math.Max(.5,speed)/60));
-            return DestinationSearch.Distance(distance)+Localization.Get("RoadSuffix")+" · "+Localization.T("FieldMinutes",minutes);
+            return DestinationSearch.Distance(distance)+(road?Localization.Get("RoadSuffix"):" ("+Localization.Get("FieldDirect")+")")+" · "+Localization.Get("NavigationEta")+" "+Localization.T("FieldMinutes",minutes)+(calculating?" · "+Localization.Get("FieldCalculating"):road?"":" · "+Localization.Get("FieldNoRoad"));
         }
         void DrawFieldConsoleSidebar(Graphics g,int x,int w,int h) {
             sidebarClickables.Clear();sidebarOpacityTrackRect=sidebarZoomInRect=sidebarZoomOutRect=sidebarZoomResetRect=sidebarClearWaypointRect=Rectangle.Empty;

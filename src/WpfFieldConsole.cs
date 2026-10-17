@@ -133,6 +133,7 @@ namespace ScumMiniMap {
         DrawingGroup poiScene;
         long poiGeneration;
         internal int PoiSceneBuilds;
+        internal bool PoiSceneRasterized;
         static void PostPoiScene(Dispatcher dispatcher,Action apply) { if(!dispatcher.HasShutdownStarted)dispatcher.BeginInvoke(apply,DispatcherPriority.Background); }
         void DrawRetainedPois(DrawingContext dc,double side,double left,double top,double width,double height) {
             Dispatcher.VerifyAccess();
@@ -145,6 +146,7 @@ namespace ScumMiniMap {
                 if(poiBuild!=null)poiBuild.Cancel();var cancel=new System.Threading.CancellationTokenSource();poiBuild=cancel;
                 long generation=System.Threading.Interlocked.Increment(ref poiGeneration);
                 var dispatcher=Dispatcher;
+                double pixelSide=side*VisualTreeHelper.GetDpi(this).DpiScaleX;
                 var stamps=new PoiStamp[layout.Length];
                 for(int i=0;i<layout.Length;i++) {
                     var cluster=layout[i];ScumMapCategory category;State.Store.CategoryById.TryGetValue(cluster.Members[0].CategoryId,out category);EnsurePoiAssets(category,cluster);
@@ -162,7 +164,19 @@ namespace ScumMiniMap {
                             context.PushTransform(new MatrixTransform(stamp.Scale,0,0,stamp.Scale,stamp.At.X,stamp.At.Y));context.DrawDrawing(stamp.Icon);context.Pop();
                         }
                         drawing.Freeze();cancel.Token.ThrowIfCancellationRequested();
-                        PostPoiScene(dispatcher,()=> { if(generation!=poiGeneration)return;poiScene=drawing;drawnPoiLayout=layout;drawnPoiSide=side;PoiSceneBuilds++;InvalidateVisual(); });
+                        // Freeze a bounded raster once, rather than asking composition
+                        // to replay thousands of icon drawings for each position/click.
+                        // Large zoom levels retain vectors instead of allocating huge images.
+                        bool rasterized=pixelSide<=4096;
+                        if(rasterized) {
+                            int pixels=Math.Max(1,(int)Math.Ceiling(pixelSide));
+                            var visual=new DrawingVisual();using(var context=visual.RenderOpen()) { context.PushTransform(new ScaleTransform(pixels/side,pixels/side));context.DrawDrawing(drawing);context.Pop(); }
+                            var bitmap=new RenderTargetBitmap(pixels,pixels,96,96,PixelFormats.Pbgra32);bitmap.Render(visual);bitmap.Freeze();
+                            var cached=new DrawingGroup();using(var context=cached.Open())context.DrawImage(bitmap,new Rect(0,0,side,side));cached.Freeze();drawing=cached;
+                        }
+                        cancel.Token.ThrowIfCancellationRequested();
+                        var completed=drawing;
+                        PostPoiScene(dispatcher,()=> { if(generation!=poiGeneration)return;poiScene=completed;PoiSceneRasterized=rasterized;drawnPoiLayout=layout;drawnPoiSide=side;PoiSceneBuilds++;InvalidateVisual(); });
                     }catch(OperationCanceledException) { }
                     catch(Exception error) { Program.LogException("PoiScene",error); }
                     finally { if(workerThread!=null)workerThread.Priority=priority;if(entered)poiBuildSlots.Release(); }
@@ -731,9 +745,9 @@ namespace ScumMiniMap {
         StackPanel sidebar;
         Grid hudLayout;
         Border hudStatus;
-        TextBlock targetTitle,targetDetail,hudLocation,hudSector;
+        TextBlock targetTitle,targetDetail,hudLocation,hudSector,routePreviewTitle,routePreviewDetail;
         WpfSatnavTicker hudRoute;
-        Border targetCard;
+        Border targetCard,routePreviewCard;
         Border hoverCard;
         TextBlock hoverInfo;
         void ShowHoverDetails(string text) { hoverInfo.Text=text??"";hoverCard.Visibility=string.IsNullOrWhiteSpace(text)?Visibility.Collapsed:Visibility.Visible; }
@@ -936,13 +950,18 @@ namespace ScumMiniMap {
             var contextLayer=new Canvas();tacticalMap.ContextHost=contextLayer;Grid.SetColumnSpan(contextLayer,2);Panel.SetZIndex(contextLayer,200);grid.Children.Add(contextLayer);
             window.PreviewMouseDown+=(s,e)=> { if(tacticalMap.DismissContextOutside(e.GetPosition(contextLayer))&&e.ChangedButton==MouseButton.Left)e.Handled=true; };
             var target=new Grid();target.ColumnDefinitions.Add(new ColumnDefinition());target.ColumnDefinitions.Add(new ColumnDefinition { Width=GridLength.Auto });
-            var text=new StackPanel();text.Children.Add(WpfFieldTheme.Text(Localization.Get("FieldTarget"),11,WpfFieldTheme.Muted,true));targetTitle=WpfFieldTheme.Text("",21,null,true);targetDetail=WpfFieldTheme.Text("",14,WpfFieldTheme.Muted);text.Children.Add(targetTitle);text.Children.Add(targetDetail);target.Children.Add(text);
+            var text=new StackPanel();text.Children.Add(WpfFieldTheme.Text(Localization.Get("FieldTarget"),11,WpfFieldTheme.Muted,true));targetTitle=WpfFieldTheme.Text("",21,null,true);targetDetail=WpfFieldTheme.Text("",14,WpfFieldTheme.Muted);targetDetail.TextWrapping=TextWrapping.Wrap;targetDetail.TextTrimming=TextTrimming.None;text.Children.Add(targetTitle);text.Children.Add(targetDetail);target.Children.Add(text);
             ((FrameworkElement)text.Children[0]).Tag="text:FieldTarget";
             var clear=WpfFieldTheme.Button(Localization.Get("ClearWaypoint"),()=> { StopSquadNavigation();Refresh(); });clear.MaxWidth=112;clear.FontSize=13;Grid.SetColumn(clear,1);target.Children.Add(clear);
             clear.Tag="text:ClearWaypoint";
             var topCards=new StackPanel { Width=408,HorizontalAlignment=HorizontalAlignment.Left,VerticalAlignment=VerticalAlignment.Top,Margin=new Thickness(24) };
             targetCard=WpfFieldTheme.Card(target);topCards.Children.Add(targetCard);
             targetCard.PreviewMouseRightButtonDown+=(s,e)=> { if(tacticalMap.BeginContextPointer(e.GetPosition(tacticalMap)))e.Handled=true; };
+            var preview=new StackPanel();routePreviewTitle=WpfFieldTheme.Text("",17,null,true);preview.Children.Add(routePreviewTitle);
+            routePreviewDetail=WpfFieldTheme.Text("",14,WpfFieldTheme.Muted);routePreviewDetail.TextWrapping=TextWrapping.Wrap;routePreviewDetail.TextTrimming=TextTrimming.None;preview.Children.Add(routePreviewDetail);
+            var startPreview=WpfFieldTheme.Button(Localization.Get("SquadStartRoute"),()=>StartSquadRoute(squad.Stops));startPreview.Tag="text:SquadStartRoute";preview.Children.Add(startPreview);
+            routePreviewCard=WpfFieldTheme.Card(preview);routePreviewCard.Margin=new Thickness(0,8,0,0);routePreviewCard.Visibility=Visibility.Collapsed;topCards.Children.Add(routePreviewCard);
+            routePreviewCard.PreviewMouseRightButtonDown+=(s,e)=> { if(tacticalMap.BeginContextPointer(e.GetPosition(tacticalMap)))e.Handled=true; };
             hoverInfo=WpfFieldTheme.Text("",15);hoverInfo.TextWrapping=TextWrapping.Wrap;hoverInfo.TextTrimming=TextTrimming.None;
             hoverCard=WpfFieldTheme.Card(new ScrollViewer { Content=hoverInfo,MaxHeight=240,VerticalScrollBarVisibility=ScrollBarVisibility.Auto });hoverCard.Margin=new Thickness(0,8,0,0);hoverCard.Visibility=Visibility.Collapsed;topCards.Children.Add(hoverCard);scene.Children.Add(topCards);tacticalMap.HoverChanged=ShowHoverDetails;
             // The details card is an overlay on the map, not a dead area for its
@@ -1022,12 +1041,14 @@ namespace ScumMiniMap {
         void Category(int id,bool enabled) { if(rebuilding)return;engine.WpfSnapshot(true).Store.SetCategoryEnabled(id,enabled);engine.WpfSave();filterIdentity=null;Refresh(); }
         void FilterAll(bool enabled) { var store=engine.WpfSnapshot(true).Store;if(store==null)return;store.SetAllEnabled(enabled);engine.WpfSave();filterIdentity=null;Refresh(); }
         void FilterSection(string section,bool enabled) { var store=engine.WpfSnapshot(true).Store;if(store==null||!store.CategoriesBySection.ContainsKey(section))return;foreach(var category in store.CategoriesBySection[section])store.SetCategoryEnabled(category.Id,enabled);engine.WpfSave();filterIdentity=null;Refresh(); }
+        MapZone lastPresentedTarget;
         internal void Refresh() {
             application.Dispatcher.VerifyAccess();
             if(disposed)return;
             RefreshSetupPreview();
             // The native controller also requests refreshes. Coalesce those with the WPF timer.
-            if(!diagnostic&&refreshClock.ElapsedMilliseconds-lastRefresh<100)return;
+            bool targetChanged=!object.ReferenceEquals(lastPresentedTarget,engine.WpfCurrentTarget);
+            if(!diagnostic&&!targetChanged&&refreshClock.ElapsedMilliseconds-lastRefresh<100)return;
             lastRefresh=refreshClock.ElapsedMilliseconds;
             if(!diagnostic&&tactical.IsVisible) { var foreground=Native.GetForegroundWindow();SyncTacticalFocus(Native.IsGameWindow(foreground),Native.IsOurWindow(foreground)); }
             List<MapZone> refreshedZones;
@@ -1051,6 +1072,8 @@ namespace ScumMiniMap {
             }
             bool fullView=diagnostic||TacticalVisible;
             var state=engine.WpfSnapshot(fullView);
+            targetChanged|=!object.ReferenceEquals(lastPresentedTarget,state.Target);
+            lastPresentedTarget=state.Target;
             syncingOpacity=true;try { tacticalOpacity.Value=state.Opacity;tacticalOpacity.IsEnabled=state.Zoom<=1; }finally { syncingOpacity=false; }
             var compact=fullView?engine.WpfSnapshot(false):state;
             if(sharingSessions.Length>0) {
@@ -1072,10 +1095,12 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
             targetCard.Visibility=state.Target==null?Visibility.Collapsed:Visibility.Visible;
             if(hudRoute.Foreground==null||((SolidColorBrush)hudRoute.Foreground).Color!=Color.FromArgb((byte)(state.RouteColor>>24),(byte)(state.RouteColor>>16),(byte)(state.RouteColor>>8),(byte)state.RouteColor))hudRoute.Foreground=new SolidColorBrush(Color.FromArgb((byte)(state.RouteColor>>24),(byte)(state.RouteColor>>16),(byte)(state.RouteColor>>8),(byte)state.RouteColor));
             targetTitle.Text=state.Target==null?"":state.Target.DisplayName;targetDetail.Text=state.RouteSummary;
+            routePreviewCard.Visibility=state.LocalRoute.Length>0&&state.ActiveSquadRoute==null?Visibility.Visible:Visibility.Collapsed;
+            routePreviewTitle.Text=Localization.Get("OwnRoute")+" · "+Localization.Get(squad.Shared?"SquadRoute":"SoloRoute")+" · "+state.LocalRoute.Length+" / 16";routePreviewTitle.Foreground=squad.Shared?WpfFieldTheme.Cyan:WpfFieldTheme.Amber;routePreviewDetail.Text=state.OwnRouteSummary??"";
             string sector=compact.Position==null?"":DestinationSearch.Sector(MapWindow.ToMap(compact.Position));string locationLabel=compact.Location;
             if(sector.Length>0&&locationLabel.StartsWith(sector+" - ",StringComparison.Ordinal))locationLabel=locationLabel.Substring(sector.Length+3);
             hudSector.Text=sector;hudSector.Visibility=sector.Length==0?Visibility.Collapsed:Visibility.Visible;hudLocation.Text=locationLabel;hudLocation.ToolTip=compact.Location;
-            if(refreshClock.ElapsedMilliseconds-lastRouteTextRefresh>=500||state.Target==null||compact.TrackingPaused) {
+            if(targetChanged||refreshClock.ElapsedMilliseconds-lastRouteTextRefresh>=500||state.Target==null||compact.TrackingPaused) {
                 lastRouteTextRefresh=refreshClock.ElapsedMilliseconds;
                 hudRoute.Text=compact.TrackingPaused?compact.TrackingStatus:state.Target==null?"": "→ "+state.Target.DisplayName+" · "+state.RouteSummary;
             }

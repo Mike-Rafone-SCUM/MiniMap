@@ -83,6 +83,19 @@ namespace ScumMiniMap {
             state.SquadNavigating=compact.SquadNavigating=followingPeer!=null||activeStops.Length>0;
             state.ActiveSquadRoute=compact.ActiveSquadRoute=activeStops.Length>0?SquadState.RouteKey(activeStops[0]):null;
             state.ActiveSquadShared=compact.ActiveSquadShared=activeStops.Length>0&&SquadState.IsShared(activeStops[0]);
+            if(state.LocalRoute.Length>0) {
+                var own=state.OwnRoutePlan;double distance=0;var from=state.Position==null?new DrawingPoint((float)state.LocalRoute[0].X,(float)state.LocalRoute[0].Y):MapWindow.ToMap(state.Position);
+                foreach(var stop in state.LocalRoute) { var to=new DrawingPoint((float)stop.X,(float)stop.Y);distance+=DestinationSearch.Metres(from,to);from=to; }
+                state.OwnRouteSummary=compact.OwnRouteSummary=engine.WpfTravelSummary(own==null?distance:own.Distance,own!=null&&own.MissingRoads==0,ownRoutePlanner.Busy);
+            }
+            if(activeStops.Length>activeStop&&state.Target!=null&&state.Position!=null) {
+                var plan=squadRoutePlanner.Plan;
+                double distance=0;var from=MapWindow.ToMap(state.Position);
+                foreach(var stop in activeStops.Skip(activeStop)) { var to=new DrawingPoint((float)stop.X,(float)stop.Y);distance+=DestinationSearch.Metres(from,to);from=to; }
+                bool road=plan!=null&&plan.HasOrigin&&plan.MissingRoads==0;
+                if(plan!=null&&plan.HasOrigin)distance=plan.Distance;
+                state.RouteSummary=compact.RouteSummary=S("NavigationNext")+": "+state.RouteSummary+" · "+S("NavigationRemaining")+": "+engine.WpfTravelSummary(distance,road,squadRoutePlanner.Busy);
+            }
             var markers=ReceivedSquadMarkers();var descriptions=SquadState.Routes(markers).Select(r=>new { Key=SquadState.RouteKey(r[0]),Marker=r[0] }).Concat(markers.Where(m=>m.Id==SharedMapMarker.GpsId).Select(m=>new { Key=(m.OwnerId??"")+":gps",Marker=m })).ToArray();
             state.OtherRoutePlans=compact.OtherRoutePlans=remoteRoutes.Where(p=>p.Value.Planner.Plan!=null).Select(p=> {
                 var marker=descriptions.FirstOrDefault(d=>d.Key==p.Key);return new SquadRouteDrawing { Key=p.Key,Name=marker==null?"":marker.Marker.Owner,Shared=marker!=null&&SquadState.IsShared(marker.Marker),Plan=p.Value.Planner.Plan };

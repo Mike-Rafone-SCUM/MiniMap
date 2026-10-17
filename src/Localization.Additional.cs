@@ -4,6 +4,10 @@ using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsTh = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "NavigationNext", "จุดแวะถัดไป" },
+            { "NavigationRemaining", "เส้นทางที่เหลือ" },
+            { "NavigationEta", "เวลาโดยประมาณ" },
+
             { "MapGpsDestination", "นำทางมาที่นี่ (GPS)" },
             { "MapSaveLocation", "บันทึกสถานที่" },
             { "MapGpsSavedHelp", "GPS คือจุดหมายชั่วคราว สถานที่ที่บันทึกจะอยู่จนกว่าจะลบ จุดแวะเป็นลำดับการเดินทาง" },
@@ -1075,6 +1079,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "จุดกิจกรรมซีเดนเท็กซ์" },
         };
         public static readonly Dictionary<string,string> StringsZhTw = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "NavigationNext", "下一站" },
+            { "NavigationRemaining", "剩餘路線" },
+            { "NavigationEta", "預計用時" },
+
             { "MapGpsDestination", "導航至此（GPS）" },
             { "MapSaveLocation", "儲存地點" },
             { "MapGpsSavedHelp", "GPS 是臨時目的地。儲存的地點會保留至刪除。路線途經點組成有序行程。" },
@@ -2146,6 +2154,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex活動點" },
         };
         public static readonly Dictionary<string,string> StringsJa = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "NavigationNext", "次の経由地" },
+            { "NavigationRemaining", "残りのルート" },
+            { "NavigationEta", "所要時間の目安" },
+
             { "MapGpsDestination", "ここへ案内（GPS）" },
             { "MapSaveLocation", "場所を保存" },
             { "MapGpsSavedHelp", "GPSは一時的な目的地です。保存した場所は削除するまで残ります。経由地は順番のある旅程を作ります。" },
@@ -3217,6 +3229,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "シーデンテックスアクティビティスポット" },
         };
         public static readonly Dictionary<string,string> StringsCs = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "NavigationNext", "Další zastávka" },
+            { "NavigationRemaining", "Zbývající trasa" },
+            { "NavigationEta", "Odhad času" },
+
             { "MapGpsDestination", "Navigovat sem (GPS)" },
             { "MapSaveLocation", "Uložit místo" },
             { "MapGpsSavedHelp", "GPS je dočasný cíl. Uložená místa zůstávají do smazání. Zastávky tvoří uspořádanou cestu." },
@@ -4288,6 +4304,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex Activity Spot" },
         };
         public static readonly Dictionary<string,string> StringsIt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "NavigationNext", "Prossima tappa" },
+            { "NavigationRemaining", "Percorso rimanente" },
+            { "NavigationEta", "Tempo stimato" },
+
             { "MapGpsDestination", "Naviga qui (GPS)" },
             { "MapSaveLocation", "Salva luogo" },
             { "MapGpsSavedHelp", "Il GPS è una destinazione temporanea. I luoghi salvati restano fino alla rimozione. Le tappe formano un viaggio ordinato." },
@@ -5359,6 +5379,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Punto di attività del dentice marino" },
         };
         public static readonly Dictionary<string,string> StringsUk = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "NavigationNext", "Наступна зупинка" },
+            { "NavigationRemaining", "Залишок маршруту" },
+            { "NavigationEta", "Орієнтовний час" },
+
             { "MapGpsDestination", "Навігація сюди (GPS)" },
             { "MapSaveLocation", "Зберегти місце" },
             { "MapGpsSavedHelp", "GPS — тимчасова ціль. Збережені місця залишаються до видалення. Зупинки маршруту утворюють упорядкований шлях." },

@@ -961,6 +961,10 @@ private static readonly Dictionary<string, string> CategoryNamesAr = new Diction
 
 
 public static readonly Dictionary<string, string> StringsEn = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "NavigationNext", "Next stop" },
+            { "NavigationRemaining", "Remaining route" },
+            { "NavigationEta", "ETA" },
+
             { "MapGpsDestination", "Navigate here (GPS)" },
             { "MapSaveLocation", "Save location" },
             { "MapGpsSavedHelp", "GPS is a temporary destination. Saved locations remain until you delete them. Route stops form an ordered journey." },
@@ -1726,6 +1730,10 @@ public static readonly Dictionary<string, string> StringsEn = new Dictionary<str
         };
 
 public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "NavigationNext", "Próxima parada" },
+            { "NavigationRemaining", "Ruta restante" },
+            { "NavigationEta", "Llegada estimada" },
+
             { "MapGpsDestination", "Navegar acá (GPS)" },
             { "MapSaveLocation", "Guardar ubicación" },
             { "MapGpsSavedHelp", "GPS es un destino temporal. Las ubicaciones guardadas permanecen hasta que las elimines. Las paradas forman un recorrido ordenado." },
@@ -2491,6 +2499,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsFr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "NavigationNext", "Prochaine étape" },
+            { "NavigationRemaining", "Trajet restant" },
+            { "NavigationEta", "Arrivée estimée" },
+
             { "MapGpsDestination", "Naviguer ici (GPS)" },
             { "MapSaveLocation", "Enregistrer le lieu" },
             { "MapGpsSavedHelp", "Le GPS est une destination temporaire. Les lieux enregistrés restent jusqu’à leur suppression. Les étapes forment un trajet ordonné." },
@@ -3256,6 +3268,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsDe = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "NavigationNext", "Nächster Halt" },
+            { "NavigationRemaining", "Verbleibende Route" },
+            { "NavigationEta", "Ankunft geschätzt" },
+
             { "MapGpsDestination", "Hierhin navigieren (GPS)" },
             { "MapSaveLocation", "Ort speichern" },
             { "MapGpsSavedHelp", "GPS ist ein vorübergehendes Ziel. Gespeicherte Orte bleiben bis zum Löschen. Routenstopps bilden eine geordnete Fahrt." },
@@ -4021,6 +4037,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsNl = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "NavigationNext", "Volgende stop" },
+            { "NavigationRemaining", "Resterende route" },
+            { "NavigationEta", "Geschatte aankomst" },
+
             { "MapGpsDestination", "Hierheen navigeren (GPS)" },
             { "MapSaveLocation", "Locatie opslaan" },
             { "MapGpsSavedHelp", "GPS is een tijdelijke bestemming. Opgeslagen locaties blijven tot je ze verwijdert. Routestops vormen een geordende reis." },
@@ -4786,6 +4806,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsRu = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "NavigationNext", "Следующая остановка" },
+            { "NavigationRemaining", "Оставшийся маршрут" },
+            { "NavigationEta", "Время в пути" },
+
             { "MapGpsDestination", "Навигация сюда (GPS)" },
             { "MapSaveLocation", "Сохранить место" },
             { "MapGpsSavedHelp", "GPS — временная цель. Сохранённые места остаются до удаления. Остановки маршрута образуют упорядоченный путь." },
@@ -5551,6 +5575,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsZh = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "NavigationNext", "下一站" },
+            { "NavigationRemaining", "剩余路线" },
+            { "NavigationEta", "预计用时" },
+
             { "MapGpsDestination", "导航至此（GPS）" },
             { "MapSaveLocation", "保存地点" },
             { "MapGpsSavedHelp", "GPS 是临时目的地。保存的地点会保留至删除。路线途经点组成有序行程。" },
@@ -6316,6 +6344,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsTr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "NavigationNext", "Sonraki durak" },
+            { "NavigationRemaining", "Kalan rota" },
+            { "NavigationEta", "Tahmini süre" },
+
             { "MapGpsDestination", "Buraya git (GPS)" },
             { "MapSaveLocation", "Konumu kaydet" },
             { "MapGpsSavedHelp", "GPS geçici bir hedeftir. Kayıtlı konumlar silinene kadar kalır. Rota durakları sıralı bir yolculuk oluşturur." },
@@ -7081,6 +7113,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsAr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "NavigationNext", "المحطة التالية" },
+            { "NavigationRemaining", "المسار المتبقي" },
+            { "NavigationEta", "المدة المقدرة" },
+
             { "MapGpsDestination", "انتقل إلى هنا (GPS)" },
             { "MapSaveLocation", "حفظ الموقع" },
             { "MapGpsSavedHelp", "GPS وجهة مؤقتة. تبقى المواقع المحفوظة حتى تحذفها. تشكّل محطات المسار رحلة مرتبة." },
@@ -7846,6 +7882,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsPt = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "NavigationNext", "Próxima parada" },
+            { "NavigationRemaining", "Rota restante" },
+            { "NavigationEta", "Tempo estimado" },
+
             { "MapGpsDestination", "Navegar até aqui (GPS)" },
             { "MapSaveLocation", "Salvar local" },
             { "MapGpsSavedHelp", "GPS é um destino temporário. Locais salvos ficam até serem excluídos. Paradas formam uma viagem ordenada." },
@@ -8611,6 +8651,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
 
 
         public static readonly Dictionary<string, string> StringsKo = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "NavigationNext", "다음 경유지" },
+            { "NavigationRemaining", "남은 경로" },
+            { "NavigationEta", "예상 소요 시간" },
+
             { "MapGpsDestination", "여기로 안내 (GPS)" },
             { "MapSaveLocation", "위치 저장" },
             { "MapGpsSavedHelp", "GPS는 임시 목적지입니다. 저장한 위치는 삭제할 때까지 남습니다. 경유지는 순서가 있는 여정을 만듭니다." },

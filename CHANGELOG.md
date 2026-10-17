@@ -8,6 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.3.5] - 2026-10-17
+
+- Cache dense full-map POI composition as a frozen, bounded image on the existing background worker. Reuse it while positions and destinations change; retain vector detail at large zoom levels without allocating unbounded images.
+- Present changed GPS destinations immediately, bypassing the routine refresh throttle and HUD text delay. Destination changes no longer invalidate unrelated zone and location caches.
+- Marshal worker render notifications to the UI before entering WPF refresh, preserving the thread-ownership checks.
+- Show approximate ETA and distance for direct guidance as well as road routes, including while road calculation is pending. Multi-stop navigation displays the next leg and the complete remaining journey; route previews also include estimated travel time.
+- Show your planned route's distance and ETA directly on the full map as stops are placed, with an accessible Start route button. Keep full navigation details readable instead of truncating them.
+- Advance the stop number correctly when consecutive route stops share coordinates.
+
 ## [2.3.4] - 2026-10-17
 
 - Record dense full-map POI layers on a single bounded background worker using copied coordinates and frozen assets; the UI reuses retained drawings while panning and applies only current results. Cache immutable polygon bounds instead of recalculating them on every redraw. Measured median redraw recording fell from about 212 ms to 20 ms with 8,056 POIs and the same view settings.

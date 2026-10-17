@@ -131,6 +131,9 @@ FieldTarget|CEL
 FieldCalculating|Obliczanie trasy…
 FieldNoRoad|Trasa drogowa niedostępna
 FieldDirect|Odległość w linii prostej
+NavigationNext|Następny przystanek
+NavigationRemaining|Pozostała trasa
+NavigationEta|Szacowany czas
 FieldMinutes|około {0} min
 FieldMatchKeys|Dopasuj klawisze do SCUM
 FieldToggle|Przełącz

@@ -5,6 +5,10 @@ using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsPtPt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "NavigationNext", "Próxima paragem" },
+            { "NavigationRemaining", "Percurso restante" },
+            { "NavigationEta", "Tempo estimado" },
+
             { "MapGpsDestination", "Navegar até aqui (GPS)" },
             { "MapSaveLocation", "Guardar local" },
             { "MapGpsSavedHelp", "GPS é um destino temporário. Os locais guardados ficam até serem eliminados. As paragens formam uma viagem ordenada." },

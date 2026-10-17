@@ -20,7 +20,7 @@ namespace ScumMiniMap {
         internal SquadRoutePlan SquadPlan,OwnRoutePlan;
         internal SquadRouteDrawing[] OtherRoutePlans=new SquadRouteDrawing[0];
         internal SharedMapMarker[] LocalRoute=new SharedMapMarker[0];
-        internal string ActiveSquadRoute;
+        internal string ActiveSquadRoute,OwnRouteSummary;
         internal bool SquadPlanning,SquadNavigating,ActiveSquadShared;
         internal bool GridLabels,EdgeFade,SmartLabels;
         internal int GridOpacity,LabelSize;
@@ -179,8 +179,9 @@ namespace ScumMiniMap {
         }
         MapZone wpfQueuedTarget;
         MapZone wpfUnsharedTarget;
+        internal MapZone WpfCurrentTarget { get { return searchTarget; } }
         internal void WpfSquadTarget(MapZone target) { wpfUnsharedTarget=target;WpfTarget(target); }
-        internal void WpfTarget(MapZone target) { searchTarget=target;pin=null;activeRoute=null;routeGeneration++;lastRouteTarget=null;SettingsChanged();if(position!=null) { if(routeCalculating)wpfQueuedTarget=target;else UpdateRouteAsync(ToMap(position),target); } }
+        internal void WpfTarget(MapZone target) { searchTarget=target;pin=null;activeRoute=null;routeGeneration++;lastRouteTarget=null;lastFrameKey=null;saveAfter=DateTime.UtcNow.AddMilliseconds(700);if(position!=null) { if(routeCalculating)wpfQueuedTarget=target;else UpdateRouteAsync(ToMap(position),target); } }
         internal void WpfClear() { ClearActiveWaypoint(); }
         internal void WpfModal(bool open) { panelOpening=open;shortcutCaptureOpen=open;Native.CancelActiveCopy();fallbackKeysArmed=false; }
         internal bool WpfSettingsKeyMatches(int key,int scan) { return MatchesAppControl(AppControlAction.Settings,key,scan); }

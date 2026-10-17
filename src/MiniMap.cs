@@ -1712,7 +1712,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "2.3.4";
+        public const string VersionString = "2.3.5";
 
 
 
@@ -6806,7 +6806,6 @@ namespace ScumMiniMap {
 
 
         void RenderOverlay() {
-            if(WpfFieldConsoleRuntime.Active!=null) { WpfFieldConsoleRuntime.Active.Refresh();return; }
             if(InvokeRequired) {
                 if(Interlocked.Exchange(ref renderQueued,1)!=0)return;
                 try {
@@ -6817,6 +6816,7 @@ namespace ScumMiniMap {
                 } catch(InvalidOperationException) { Interlocked.Exchange(ref renderQueued,0); }
                 return;
             }
+            if(WpfFieldConsoleRuntime.Active!=null) { WpfFieldConsoleRuntime.Active.Refresh();return; }
             Debug.Assert(!InvokeRequired,"Overlay rendering must run on the WinForms UI thread.");
             if(AdminPlayerWorkPaused) return;
 

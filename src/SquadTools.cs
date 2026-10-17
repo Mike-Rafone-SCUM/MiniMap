@@ -58,9 +58,10 @@ namespace ScumMiniMap {
                 if(now>=nextSquadRoute&&(squadTarget==null||DestinationSearch.Metres(squadTarget.Centroid,destination)>=25)) { squadTarget=new MapZone { Name=S("SquadFollow")+": "+peer.Name,Points=new[]{destination} };engine.WpfSquadTarget(squadTarget);nextSquadRoute=now.AddSeconds(2); }
             }
             else if(activeStops.Length>0&&activeStop<activeStops.Length) {
+                int previousStop=activeStop;
                 if(state.Position!=null&&state.Tracking&&!state.TrackingPaused&&PrivatePositions.Fresh(state.Updated,now)&&DestinationSearch.Metres(MapWindow.ToMap(state.Position),new DrawingPoint((float)activeStops[activeStop].X,(float)activeStops[activeStop].Y))<40)activeStop++;
                 if(activeStop>=activeStops.Length) { engine.WpfClear();activeStops=new SharedMapMarker[0];squadTarget=null; }
-                else if(squadTarget==null||!object.ReferenceEquals(squadTarget,state.Target))SetSquadStop();
+                else if(previousStop!=activeStop||squadTarget==null||!object.ReferenceEquals(squadTarget,state.Target))SetSquadStop();
                 else { var stop=activeStops[activeStop];if(squadTarget.Centroid.X!=(float)stop.X||squadTarget.Centroid.Y!=(float)stop.Y)SetSquadStop(); }
             }
         }
@@ -77,7 +78,7 @@ namespace ScumMiniMap {
                 routes.Children.Clear();var local=squad.Stops;
                 routes.Children.Add(WpfFieldTheme.Text(S(squad.Shared?"SquadRoute":"SoloRoute")+" · "+local.Length+" / 16",17,null,true));
                 var kind=new WrapPanel();kind.Children.Add(WpfFieldTheme.Button(S("SoloRoute"),()=> { ChangeOwnRouteKind(false);redraw(); },!squad.Shared));kind.Children.Add(WpfFieldTheme.Button(S("SquadRoute"),()=> { ChangeOwnRouteKind(true);redraw(); },squad.Shared));routes.Children.Add(kind);
-                var plan=ownRoutePlanner.Plan;routes.Children.Add(WpfFieldTheme.Text(ownRoutePlanner.Busy?S("FieldCalculating"):plan==null?"":DestinationSearch.Distance(plan.Distance)+(plan.MissingRoads>0?" · "+S("FieldNoRoad")+" · "+plan.MissingRoads:""),13,WpfFieldTheme.Muted));
+                var plan=ownRoutePlanner.Plan;routes.Children.Add(WpfFieldTheme.Text(ownRoutePlanner.Busy?S("FieldCalculating"):plan==null?"":engine.WpfTravelSummary(plan.Distance,plan.MissingRoads==0),13,WpfFieldTheme.Muted));
                 foreach(var m in local)routes.Children.Add(WpfFieldTheme.Text((SquadState.StopIndex(m)+1)+". "+m.Name));
                 var row=new WrapPanel();row.Children.Add(WpfFieldTheme.Button(S("SquadAddStop"),()=> { var t=engine.WpfSnapshot(true).Target;if(t!=null)AddSquadStop(t.Centroid);redraw(); }));row.Children.Add(WpfFieldTheme.Button(S("SquadUndoStop"),()=> { UndoOwnRouteStop();redraw(); }));row.Children.Add(WpfFieldTheme.Button(S("WpfClearRoute"),()=> { ClearOwnRoute();redraw(); }));routes.Children.Add(row);
                 var own=WpfFieldTheme.Button(S("SquadStartRoute"),()=> { StartSquadRoute(local);window.Close(); });own.IsEnabled=local.Length>0;routes.Children.Add(own);
