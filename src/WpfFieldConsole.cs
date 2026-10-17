@@ -208,7 +208,7 @@ namespace ScumMiniMap {
         }
         void UpdateHover(Point at) {
             long now=Environment.TickCount&int.MaxValue;if(now-lastHover<80&&now>=lastHover)return;lastHover=now;
-            DrawingPoint point;string text=drag.HasValue||!TryMapPoint(at,out point)?null:HoverDetails(point);if(text==hoverText)return;hoverText=text;
+            DrawingPoint point;string text=drag.HasValue||contextPointer.HasValue||openContext!=null||!TryMapPoint(at,out point)?null:HoverDetails(point);if(text==hoverText)return;hoverText=text;
             ToolTip=text==null?null:new ToolTip { Content=new TextBlock { Text=text,TextWrapping=TextWrapping.Wrap,MaxWidth=380 },Background=WpfFieldTheme.Panel,Foreground=WpfFieldTheme.Ink,BorderBrush=WpfFieldTheme.Line,Padding=new Thickness(12) };
             if(HoverChanged!=null)HoverChanged(text);
         }
@@ -245,6 +245,35 @@ namespace ScumMiniMap {
         internal Action<bool> RouteKind;
         internal Action RouteUndo,RouteClear;
         internal Action<MapZone> NavigateShared;
+        internal Action ContextOpening,ContextClosed;
+        ContextMenu openContext;
+        internal bool ContextMenuOpen { get { return openContext!=null&&openContext.IsOpen; } }
+        Point? contextPointer;
+        internal bool BeginContextPointer(Point point) {
+            DrawingPoint target;if(!TryMapPoint(point,out target))return false;
+            CancelPointer();ClearHover();contextPointer=point;CaptureMouse();return true;
+        }
+        internal bool EndContextPointer(Point point) {
+            if(!contextPointer.HasValue)return false;
+            var origin=contextPointer.Value;contextPointer=null;
+            if(IsMouseCaptured)ReleaseMouseCapture();
+            return OpenContextMenu(origin);
+        }
+        internal bool OpenContextMenu(Point point) {
+            DrawingPoint target;if(!TryMapPoint(point,out target))return false;
+            if(openContext!=null)openContext.IsOpen=false;
+            ClearHover();
+            if(ContextOpening!=null)ContextOpening();
+            var menu=BuildContextMenu(target);openContext=menu;
+            menu.PlacementTarget=this;menu.Placement=PlacementMode.RelativePoint;
+            menu.HorizontalOffset=point.X;menu.VerticalOffset=point.Y;
+            menu.Closed+=(s,e)=> { if(openContext!=menu)return;openContext=null;if(ContextClosed!=null)ContextClosed(); };
+            menu.IsOpen=true;return true;
+        }
+        internal void CloseContextMenu() {
+            contextPointer=null;if(IsMouseCaptured)ReleaseMouseCapture();
+            var menu=openContext;if(menu==null)return;openContext=null;menu.IsOpen=false;if(ContextClosed!=null)ContextClosed();
+        }
         Point? drag;
         DrawingPoint pan;
         bool dragging;
@@ -279,17 +308,16 @@ namespace ScumMiniMap {
         internal void CancelPointer() { drag=null;dragging=false; }
         internal WpfMapSurface() {
             FlowDirection=FlowDirection.LeftToRight;ClipToBounds=true;Focusable=true;
-            MouseRightButtonUp+=(sender,args)=> {
-                DrawingPoint target;if(!TryMapPoint(args.GetPosition(this),out target))return;
-                var menu=BuildContextMenu(target);menu.PlacementTarget=this;menu.IsOpen=true;args.Handled=true;
-            };
+            PreviewMouseRightButtonDown+=(sender,args)=> { if(BeginContextPointer(args.GetPosition(this)))args.Handled=true; };
+            PreviewMouseRightButtonUp+=(sender,args)=> { if(EndContextPointer(args.GetPosition(this)))args.Handled=true; };
             MouseWheel+=(s,e)=> { if(ZoomRequested!=null)ZoomRequested(e.Delta>0?1:-1);e.Handled=true; };
             MouseLeftButtonDown+=(s,e)=> { if(Compact||State==null)return;BeginPointer(e.GetPosition(this));CaptureMouse();e.Handled=true; };
             MouseMove+=(s,e)=> { if(drag.HasValue&&e.LeftButton!=MouseButtonState.Pressed)CancelPointer();else MovePointer(e.GetPosition(this));UpdateHover(e.GetPosition(this)); };
             MouseLeave+=(s,e)=> { ToolTip=null;hoverText=null; };
             ToolTipService.SetInitialShowDelay(this,250);ToolTipService.SetShowDuration(this,30000);
             MouseLeftButtonUp+=(s,e)=> { if(!drag.HasValue)return;EndPointer(e.GetPosition(this));ReleaseMouseCapture();e.Handled=true; };
-            LostMouseCapture+=(s,e)=>CancelPointer();
+            LostMouseCapture+=(s,e)=> { CancelPointer();contextPointer=null; };
+            IsVisibleChanged+=(s,e)=> { if(!IsVisible)CloseContextMenu(); };
         }
         protected override void OnRender(DrawingContext dc) {
             base.OnRender(dc);double w=ActualWidth,h=ActualHeight;if(w<1||h<1)return;
@@ -683,7 +711,7 @@ namespace ScumMiniMap {
             foreach(string font in new[]{"BarlowSemiCondensed-Regular.ttf","BarlowSemiCondensed-SemiBold.ttf"})using(var stream=typeof(MapWindow).Assembly.GetManifestResourceStream(font))if(stream!=null)using(var file=File.Create(Path.Combine(fonts,font)))stream.CopyTo(file);
             application.Resources[typeof(Window)]=new Style(typeof(Window)) { Setters={new Setter(Control.FontFamilyProperty,new FontFamily(new Uri(fonts+Path.DirectorySeparatorChar),"./#Barlow Semi Condensed")),new Setter(Control.ForegroundProperty,WpfFieldTheme.Ink),new Setter(Control.BackgroundProperty,WpfFieldTheme.Ground),new Setter(Control.FontSizeProperty,15.0)} };
             tactical=BuildTactical();hud=BuildHud();
-            tactical.IsVisibleChanged+=(s,e)=>tacticalMouseShieldActive=tactical.IsVisible&&tactical.WindowState!=WindowState.Minimized;
+            tactical.IsVisibleChanged+=(s,e)=> { tacticalMouseShieldActive=tactical.IsVisible&&tactical.WindowState!=WindowState.Minimized;if(!tactical.IsVisible)tacticalMap.CloseContextMenu(); };
             tactical.StateChanged+=(s,e)=>tacticalMouseShieldActive=tactical.IsVisible&&tactical.WindowState!=WindowState.Minimized;
             tactical.Closed+=(s,e)=>tacticalMouseShieldActive=false;
             refresh=new DispatcherTimer { Interval=TimeSpan.FromMilliseconds(250) };refresh.Tick+=(s,e)=> {
@@ -797,6 +825,10 @@ namespace ScumMiniMap {
             };
             var grid=new Grid();grid.ColumnDefinitions.Add(new ColumnDefinition());grid.ColumnDefinitions.Add(new ColumnDefinition { Width=new GridLength(320) });
             tacticalMap=new WpfMapSurface { BaseMap=geography,Terrain=terrain };
+            // Ordinary map clicks retain game focus; a deliberately opened popup
+            // needs foreground ownership so WPF can keep mouse capture reliably.
+            tacticalMap.ContextOpening=()=> { if(!diagnostic) { Native.ForceForeground(new WindowInteropHelper(window).Handle);ClipCursor(IntPtr.Zero); } };
+            tacticalMap.ContextClosed=()=>window.Dispatcher.BeginInvoke(new Action(()=> { if(dialogs.Count==0&&!tacticalMap.ContextMenuOpen)RestoreGameplayFocus(); }),DispatcherPriority.Background);
             tacticalMap.RouteStopAt=AddSquadStop;tacticalMap.PingAt=(kind,p)=>SendPing(kind,p);
             tacticalMap.RouteNavigate=StartSquadRoute;tacticalMap.RouteRemove=RemoveOwnRouteStop;tacticalMap.RouteKind=ChangeOwnRouteKind;tacticalMap.RouteUndo=UndoOwnRouteStop;tacticalMap.RouteClear=ClearOwnRoute;tacticalMap.NavigatePeer=FollowSquadPeer;
             tacticalMap.ClearRouteRequested=()=> { StopSquadNavigation();Refresh(); };tacticalMap.DeleteWaypointRequested=marker=> { engine.WpfDeleteWaypoint(marker);Refresh(); };
@@ -811,8 +843,12 @@ namespace ScumMiniMap {
             clear.Tag="text:ClearWaypoint";
             var topCards=new StackPanel { Width=408,HorizontalAlignment=HorizontalAlignment.Left,VerticalAlignment=VerticalAlignment.Top,Margin=new Thickness(24) };
             targetCard=WpfFieldTheme.Card(target);topCards.Children.Add(targetCard);
+            targetCard.PreviewMouseRightButtonDown+=(s,e)=> { if(tacticalMap.BeginContextPointer(e.GetPosition(tacticalMap)))e.Handled=true; };
             hoverInfo=WpfFieldTheme.Text("",15);hoverInfo.TextWrapping=TextWrapping.Wrap;hoverInfo.TextTrimming=TextTrimming.None;
             hoverCard=WpfFieldTheme.Card(new ScrollViewer { Content=hoverInfo,MaxHeight=240,VerticalScrollBarVisibility=ScrollBarVisibility.Auto });hoverCard.Margin=new Thickness(0,8,0,0);hoverCard.Visibility=Visibility.Collapsed;topCards.Children.Add(hoverCard);scene.Children.Add(topCards);tacticalMap.HoverChanged=ShowHoverDetails;
+            // The details card is an overlay on the map, not a dead area for its
+            // context menu. Preserve normal left-click/scroll behavior in it.
+            hoverCard.PreviewMouseRightButtonDown+=(s,e)=> { if(tacticalMap.BeginContextPointer(e.GetPosition(tacticalMap)))e.Handled=true; };
             var controls=new StackPanel { Orientation=Orientation.Horizontal };controls.Children.Add(WpfFieldTheme.Button("−",()=> { engine.WpfZoom(true,-1);Refresh(); }));zoomResetButton=WpfFieldTheme.Button("1.0×",()=> { engine.WpfNativeTool(AppControlAction.ResetZoom);Refresh(); });controls.Children.Add(zoomResetButton);controls.Children.Add(WpfFieldTheme.Button("+",()=> { engine.WpfZoom(true,1);Refresh(); }));
             ((FrameworkElement)controls.Children[0]).Tag="tooltip:ControlZoomOut";zoomResetButton.Tag="tooltip:ControlResetZoom";((FrameworkElement)controls.Children[2]).Tag="tooltip:ControlZoomIn";
             followButton=WpfFieldTheme.Button(Localization.Get("WpfFollowPlayer"),()=> { engine.WpfFollow();Refresh(); });followButton.Tag="text:WpfFollowPlayer";controls.Children.Add(followButton);
@@ -1056,7 +1092,7 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
                     busy=false;if(task.IsFaulted)task.Exception.Handle(error=>true);if(closed)return;form.IsEnabled=true;
                     if(task.Status==System.Threading.Tasks.TaskStatus.RanToCompletion) {
                         var group=task.Result;if(group!=null&&group.Pending=="") { code.Password=group.Code;if(copy)try { System.Windows.Clipboard.SetText(group.Code); }catch { } }
-                        status.Text=Localization.Get("PrivatePositionConnecting");
+                        if(group==null)code.Clear();status.Text=Localization.Get(group==null?"PrivateGroupDeleted":"PrivatePositionConnecting");
                     }else status.Text=Localization.Get("PrivatePositionInvalid");draw();Refresh();
                 })));
             };
@@ -1073,13 +1109,18 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
                     var connect=WpfFieldTheme.Button(Localization.Get(group.Session==null||group.Session.Error!=null?"PrivateGroupConnect":"PrivateGroupLeave"),()=> {
                         if(captured.Session!=null&&captured.Session.Error==null) { relayGroups.Leave(captured);draw();Refresh(); }
                         else run(()=> { relayGroups.Connect(captured);return captured; },false);
-                    });connect.Tag="group-toggle:"+group.Id;buttons.Children.Add(connect);
+                    });connect.Tag="group-toggle:"+group.Id;connect.IsEnabled=group.Pending!="DELETE";buttons.Children.Add(connect);
                     var copy=WpfFieldTheme.Button(Localization.Get("PrivateGroupCopy"),()=> { code.Password=captured.Code;try { System.Windows.Clipboard.SetText(captured.Code); }catch { } });copy.IsEnabled=group.Pending=="";buttons.Children.Add(copy);
-                    if(group.IsOwner) { var rotate=WpfFieldTheme.Button(Localization.Get("PrivateGroupRotate"),()=>run(()=> { relayGroups.Rotate(captured);return captured; },true));rotate.Tag="group-rotate:"+group.Id;buttons.Children.Add(rotate); }
+                    if(group.IsOwner) {
+                        var rotate=WpfFieldTheme.Button(Localization.Get("PrivateGroupRotate"),()=>run(()=> { relayGroups.Rotate(captured);return captured; },true));rotate.Tag="group-rotate:"+group.Id;rotate.IsEnabled=group.Pending!="DELETE";buttons.Children.Add(rotate);
+                        var delete=WpfFieldTheme.Button(Localization.Get("PrivateGroupDelete"),()=> {
+                            if(MessageBox.Show(window,Localization.T("PrivateGroupDeleteConfirm",captured.Label),Localization.Get("PrivateGroupDelete"),MessageBoxButton.YesNo,MessageBoxImage.Warning,MessageBoxResult.No)!=MessageBoxResult.Yes)return;
+                            run(()=> { relayGroups.Delete(captured);return null; },false);
+                        });delete.Tag="group-delete:"+group.Id;delete.IsEnabled=group.Pending==""||group.Pending=="DELETE";buttons.Children.Add(delete);
+                    }
                     card.Children.Add(buttons);rows.Children.Add(WpfFieldTheme.Card(card,new Thickness(12)));
                 }
             };draw();
-            body.Children.Add(WpfFieldTheme.Button(Localization.Get("PrivatePositionHost")+" / "+Localization.Get("PrivatePositionJoin"),()=>Modal(BuildPrivatePositions())));
             body.Children.Add(WpfFieldTheme.Button(Localization.Get("Done"),()=>window.Close(),true));
             var timer=new DispatcherTimer { Interval=TimeSpan.FromSeconds(1) };timer.Tick+=(s,e)=> { if(!busy)foreach(var label in ChildrenOf<TextBlock>(rows).Where(t=>(t.Tag as string??"").StartsWith("group-state:"))) {
                 string id=((string)label.Tag).Substring(12);var group=relayGroups.Groups.FirstOrDefault(g=>g.Id==id);if(group!=null)label.Text=group.Pending!=""||group.Session!=null&&group.Session.Error!=null?Localization.Get("PrivatePositionInvalid"):group.Session==null?Localization.Get("PrivateGroupLeave"):group.Session.Ready?Localization.Get("PlayerConnected")+" · "+group.Session.Connections:Localization.Get("PrivatePositionConnecting");

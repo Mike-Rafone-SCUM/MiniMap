@@ -3,7 +3,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {createHash, timingSafeEqual} from 'node:crypto';
 
-type Group = {room: string; owner: string};
+type Group = {room: string; owner: string; deleted?: boolean};
 export class GroupRegistry {
   private groups: Record<string, Group>;
   constructor(private file: string) {
@@ -12,22 +12,25 @@ export class GroupRegistry {
     if (state.version !== 1 || !state.groups || typeof state.groups !== 'object' || Array.isArray(state.groups)) throw Error('Invalid group registry');
     this.groups = Object.create(null);
     for (const [id, group] of Object.entries(state.groups) as [string, Group][]) {
-      if (!/^[a-f0-9]{32}$/.test(id) || !group || !/^[a-f0-9]{64}$/.test(group.room) || !/^[a-f0-9]{64}$/.test(group.owner)) throw Error('Invalid group metadata');
+      if (!/^[a-f0-9]{32}$/.test(id) || !group || !/^[a-f0-9]{64}$/.test(group.room) || !/^[a-f0-9]{64}$/.test(group.owner) || group.deleted !== undefined && typeof group.deleted !== 'boolean') throw Error('Invalid group metadata');
       this.groups[id] = group;
     }
     if (Object.keys(this.groups).length > 10000) throw Error('Too many registered groups');
   }
-  allows(id: string, room: string): boolean { return this.groups[id]?.room === room; }
+  allows(id: string, room: string): boolean { return this.groups[id]?.room === room && !this.groups[id]?.deleted; }
   change(action: string, id: string, room: string, token: string): boolean {
     if (!/^[a-f0-9]{32}$/.test(id) || !/^[a-f0-9]{64}$/.test(room) || !/^[a-f0-9]{64}$/.test(token)) return false;
     const owner = createHash('sha256').update('MiniMap owner v1:' + id + ':' + token).digest('hex');
     const previous = this.groups[id];
     if (previous && !timingSafeEqual(Buffer.from(previous.owner, 'hex'), Buffer.from(owner, 'hex'))) return false;
+    if (action === 'DELETE' && !previous) return false;
+    if (previous?.deleted && action !== 'DELETE') return false;
     if (action === 'CREATE' && previous && previous.room !== room) return false;
     if (action === 'ROTATE' && !previous) return false;
-    if (action !== 'CREATE' && action !== 'ROTATE') return false;
+    if (action !== 'CREATE' && action !== 'ROTATE' && action !== 'DELETE') return false;
     if (!previous && Object.keys(this.groups).length >= 10000) return false;
-    const groups = {...this.groups, [id]: {room, owner}};
+    // Keep an owner-hash tombstone so a deleted code cannot be re-created.
+    const groups = {...this.groups, [id]: action === 'DELETE' ? {...previous!, deleted: true} : {room, owner}};
     const fd = fs.openSync(this.file + '.tmp', 'w', 0o600);
     try { fs.writeFileSync(fd, JSON.stringify({version: 1, groups})); fs.fsyncSync(fd); } finally { fs.closeSync(fd); }
     fs.renameSync(this.file + '.tmp', this.file);
@@ -106,11 +109,11 @@ export function createRelay(options: tls.TlsOptions, budget: {take(bytes: number
         if (end < 0) { if (buffer.length > 256) socket.destroy(); return; }
         if (end > 256) { socket.destroy(); return; }
         const hello = buffer.subarray(0, end).toString('utf8');
-        const management = /^SCUM(CREATE|ROTATE)1 ([a-f0-9]{32}) ([a-f0-9]{64}) ([a-f0-9]{64})$/.exec(hello);
+        const management = /^SCUM(CREATE|ROTATE|DELETE)1 ([a-f0-9]{32}) ([a-f0-9]{64}) ([a-f0-9]{64})$/.exec(hello);
         if (management) {
           try {
             if (!registry || !spend(128) || !registry.change(management[1], management[2], management[3], management[4])) { socket.destroy(); return; }
-            if (management[1] === 'ROTATE') for (const [name, group] of rooms) if (name.startsWith(management[2] + ':') && name !== management[2] + ':' + management[3]) for (const peer of group) peer.destroy();
+            if (management[1] === 'ROTATE' || management[1] === 'DELETE') for (const [name, group] of rooms) if (name.startsWith(management[2] + ':') && (management[1] === 'DELETE' || name !== management[2] + ':' + management[3])) for (const peer of group) peer.destroy();
             socket.end('OK\n');
           } catch { server.close(); for (const peer of sockets) peer.destroy(); socket.destroy(); }
           return;

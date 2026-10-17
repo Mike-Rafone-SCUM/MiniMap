@@ -961,6 +961,10 @@ private static readonly Dictionary<string, string> CategoryNamesAr = new Diction
 
 
 public static readonly Dictionary<string, string> StringsEn = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "PrivateGroupDelete", "Delete group" },
+            { "PrivateGroupDeleteConfirm", "Delete group “{0}” for everyone? All members will disconnect and its code will stop working." },
+            { "PrivateGroupDeleted", "Group deleted." },
+
             { "SoloRoute", "Solo route" },
             { "OwnRoute", "Your route" },
             { "RouteList", "Routes" },
@@ -1718,6 +1722,10 @@ public static readonly Dictionary<string, string> StringsEn = new Dictionary<str
         };
 
 public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "PrivateGroupDelete", "Eliminar grupo" },
+            { "PrivateGroupDeleteConfirm", "¿Eliminar el grupo «{0}» para todos? Se desconectarán todos los miembros y el código dejará de funcionar." },
+            { "PrivateGroupDeleted", "Grupo eliminado." },
+
             { "SoloRoute", "Ruta individual" },
             { "OwnRoute", "Tu ruta" },
             { "RouteList", "Rutas" },
@@ -2475,6 +2483,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsFr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "PrivateGroupDelete", "Supprimer le groupe" },
+            { "PrivateGroupDeleteConfirm", "Supprimer le groupe « {0} » pour tous ? Tous les membres seront déconnectés et son code ne fonctionnera plus." },
+            { "PrivateGroupDeleted", "Groupe supprimé." },
+
             { "SoloRoute", "Itinéraire solo" },
             { "OwnRoute", "Votre itinéraire" },
             { "RouteList", "Itinéraires" },
@@ -3232,6 +3244,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsDe = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "PrivateGroupDelete", "Gruppe löschen" },
+            { "PrivateGroupDeleteConfirm", "Gruppe „{0}“ für alle löschen? Alle Mitglieder werden getrennt und der Code wird ungültig." },
+            { "PrivateGroupDeleted", "Gruppe gelöscht." },
+
             { "SoloRoute", "Soloroute" },
             { "OwnRoute", "Deine Route" },
             { "RouteList", "Routen" },
@@ -3989,6 +4005,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsNl = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "PrivateGroupDelete", "Groep verwijderen" },
+            { "PrivateGroupDeleteConfirm", "Groep ‘{0}’ voor iedereen verwijderen? Alle leden worden losgekoppeld en de code werkt niet meer." },
+            { "PrivateGroupDeleted", "Groep verwijderd." },
+
             { "SoloRoute", "Soloroute" },
             { "OwnRoute", "Jouw route" },
             { "RouteList", "Routes" },
@@ -4746,6 +4766,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsRu = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "PrivateGroupDelete", "Удалить группу" },
+            { "PrivateGroupDeleteConfirm", "Удалить группу «{0}» для всех? Все участники будут отключены, а код перестанет работать." },
+            { "PrivateGroupDeleted", "Группа удалена." },
+
             { "SoloRoute", "Личный маршрут" },
             { "OwnRoute", "Ваш маршрут" },
             { "RouteList", "Маршруты" },
@@ -5503,6 +5527,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsZh = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "PrivateGroupDelete", "删除群组" },
+            { "PrivateGroupDeleteConfirm", "为所有人删除群组“{0}”？所有成员将断开连接，群组代码将失效。" },
+            { "PrivateGroupDeleted", "群组已删除。" },
+
             { "SoloRoute", "个人路线" },
             { "OwnRoute", "你的路线" },
             { "RouteList", "路线" },
@@ -6260,6 +6288,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsTr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "PrivateGroupDelete", "Grubu sil" },
+            { "PrivateGroupDeleteConfirm", "“{0}” grubu herkes için silinsin mi? Tüm üyelerin bağlantısı kesilir ve kod geçersiz olur." },
+            { "PrivateGroupDeleted", "Grup silindi." },
+
             { "SoloRoute", "Kişisel rota" },
             { "OwnRoute", "Rotanız" },
             { "RouteList", "Rotalar" },
@@ -7017,6 +7049,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsAr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "PrivateGroupDelete", "حذف المجموعة" },
+            { "PrivateGroupDeleteConfirm", "هل تريد حذف المجموعة «{0}» للجميع؟ سيتم قطع اتصال جميع الأعضاء وسيتوقف رمزها عن العمل." },
+            { "PrivateGroupDeleted", "تم حذف المجموعة." },
+
             { "SoloRoute", "مسار فردي" },
             { "OwnRoute", "مسارك" },
             { "RouteList", "المسارات" },
@@ -7774,6 +7810,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsPt = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "PrivateGroupDelete", "Excluir grupo" },
+            { "PrivateGroupDeleteConfirm", "Excluir o grupo “{0}” para todos? Todos os membros serão desconectados e o código deixará de funcionar." },
+            { "PrivateGroupDeleted", "Grupo excluído." },
+
             { "SoloRoute", "Rota individual" },
             { "OwnRoute", "Sua rota" },
             { "RouteList", "Rotas" },
@@ -8531,6 +8571,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
 
 
         public static readonly Dictionary<string, string> StringsKo = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "PrivateGroupDelete", "그룹 삭제" },
+            { "PrivateGroupDeleteConfirm", "모든 사용자의 “{0}” 그룹을 삭제할까요? 모든 멤버의 연결이 끊기고 코드가 무효화됩니다." },
+            { "PrivateGroupDeleted", "그룹이 삭제되었습니다." },
+
             { "SoloRoute", "개인 경로" },
             { "OwnRoute", "내 경로" },
             { "RouteList", "경로" },

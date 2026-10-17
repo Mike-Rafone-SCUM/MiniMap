@@ -37,7 +37,23 @@ class PersistentGroupTests {
             using(var reloaded=new RelayGroupStore(Path.Combine(root,"owner"),address,port)) {
                 Check(reloaded.Groups.Length==2&&reloaded.Groups.Single(g=>g.Id==first.Id).Code==first.Code&&reloaded.Groups.All(g=>g.IsOwner)&&reloaded.Sessions.Length==0,"Codes and ownership survive app restart while sharing starts disabled");
                 Check(reloaded.Groups.Single(g=>g.Id==first.Id).Name=="Rescue crew","Shared group name survives rotation and Windows-protected profile reload");
+                bool memberDeleteDenied=false;try { member.Delete(joinedFirst); }catch(InvalidOperationException) { memberDeleteDenied=true; }Check(memberDeleteDenied,"Members cannot delete a group owned by someone else");
+                string retryFolder=Path.Combine(root,"delete-retry");Directory.CreateDirectory(retryFolder);File.WriteAllBytes(Path.Combine(retryFolder,"private-groups.dat"),saved);
+                using(var offline=new RelayGroupStore(retryFolder,"127.0.0.1",1)) {
+                    bool failed=false;try { offline.Delete(offline.Groups.Single(g=>g.Id==first.Id)); }catch { failed=true; }
+                    Check(failed&&offline.Groups.Single(g=>g.Id==first.Id).Pending=="DELETE","Offline deletion preserves a durable retry instead of claiming success");
+                }
+                using(var retry=new RelayGroupStore(retryFolder,address,port)) {
+                    Check(retry.Groups.Single(g=>g.Id==first.Id).Pending=="DELETE","Pending deletion survives profile reload");
+                    retry.Delete(retry.Groups.Single(g=>g.Id==first.Id));Check(retry.Groups.Length==1,"Retried owner deletion completes after connectivity returns");
+                }
+                reloaded.Delete(reloaded.Groups.Single(g=>g.Id==first.Id));
+                Check(reloaded.Groups.Length==1&&reloaded.Groups[0].Id==second.Id,"Owner deletion removes only the selected saved group after acknowledgement");
+                Await(()=>joinedFirst.Session.Error!=null&&!joinedFirst.Session.Ready&&joinedFirst.Session.Snapshot().Length==0,"Group deletion disconnects members and clears their received locations");
+                Check(joinedSecond.Session.Ready,"Deleting a group preserves other active groups");
+                outside.Join(first.Code);Await(()=>retired.Session.Error!=null&&!retired.Session.Ready,"A deleted group code cannot reconnect");
             }
+            using(var afterDelete=new RelayGroupStore(Path.Combine(root,"owner"),address,port))Check(afterDelete.Groups.Length==1&&afterDelete.Groups[0].Id==second.Id,"Deleted group stays absent after profile reload");
             var protect=typeof(RelayGroupStore).GetMethod("Protect",System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static);
             var legacyLines=System.Text.Encoding.UTF8.GetString((byte[])protect.Invoke(null,new object[]{saved,false})).Split('\n');legacyLines[0]="1";
             for(int i=2;i<legacyLines.Length;i++)if(legacyLines[i].Length>0) { var fields=legacyLines[i].Split('\t');legacyLines[i]=string.Join("\t",fields.Take(4).Concat(new[]{fields[5]})); }

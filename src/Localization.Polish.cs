@@ -19,6 +19,9 @@ OwnRoute|Twoja trasa
 RouteList|Trasy
 RouteAutoHelp|Trasy przeliczają się po zmianie przystanków. Bursztynowy oznacza solo, turkusowy wspólną trasę. Linie przerywane to bezpośrednie wskazanie bez trasy drogowej. Twoją trasę solo widzą połączone grupy. Podążanie wspólną trasą nie rozsyła jej ponownie.
 PrivateGroupNameLabel|Nazwa grupy (opcjonalna przy tworzeniu)
+PrivateGroupDelete|Usuń grupę
+PrivateGroupDeleteConfirm|Usunąć grupę „{0}” dla wszystkich? Wszyscy członkowie zostaną rozłączeni, a kod przestanie działać.
+PrivateGroupDeleted|Grupa usunięta.
 PrivateGroupRename|Zapisz nazwę grupy
 SquadTools|Narzędzia drużyny
 PingDanger|Niebezpieczeństwo

@@ -4,6 +4,10 @@ using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsTh = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupDelete", "ลบกลุ่ม" },
+            { "PrivateGroupDeleteConfirm", "ลบกลุ่ม “{0}” สำหรับทุกคนหรือไม่? สมาชิกทุกคนจะถูกตัดการเชื่อมต่อและรหัสจะใช้ไม่ได้อีก" },
+            { "PrivateGroupDeleted", "ลบกลุ่มแล้ว" },
+
             { "SoloRoute", "เส้นทางส่วนตัว" },
             { "OwnRoute", "เส้นทางของคุณ" },
             { "RouteList", "เส้นทาง" },
@@ -1067,6 +1071,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "จุดกิจกรรมซีเดนเท็กซ์" },
         };
         public static readonly Dictionary<string,string> StringsZhTw = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupDelete", "刪除群組" },
+            { "PrivateGroupDeleteConfirm", "為所有人刪除群組「{0}」？所有成員將中斷連線，群組代碼將失效。" },
+            { "PrivateGroupDeleted", "群組已刪除。" },
+
             { "SoloRoute", "個人路線" },
             { "OwnRoute", "你的路線" },
             { "RouteList", "路線" },
@@ -2130,6 +2138,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex活動點" },
         };
         public static readonly Dictionary<string,string> StringsJa = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupDelete", "グループを削除" },
+            { "PrivateGroupDeleteConfirm", "全員のグループ「{0}」を削除しますか？全メンバーが切断され、コードが無効になります。" },
+            { "PrivateGroupDeleted", "グループを削除しました。" },
+
             { "SoloRoute", "ソロルート" },
             { "OwnRoute", "自分のルート" },
             { "RouteList", "ルート" },
@@ -3193,6 +3205,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "シーデンテックスアクティビティスポット" },
         };
         public static readonly Dictionary<string,string> StringsCs = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupDelete", "Smazat skupinu" },
+            { "PrivateGroupDeleteConfirm", "Smazat skupinu „{0}“ pro všechny? Všichni členové budou odpojeni a kód přestane fungovat." },
+            { "PrivateGroupDeleted", "Skupina smazána." },
+
             { "SoloRoute", "Samostatná trasa" },
             { "OwnRoute", "Vaše trasa" },
             { "RouteList", "Trasy" },
@@ -4256,6 +4272,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex Activity Spot" },
         };
         public static readonly Dictionary<string,string> StringsIt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupDelete", "Elimina gruppo" },
+            { "PrivateGroupDeleteConfirm", "Eliminare il gruppo «{0}» per tutti? Tutti i membri saranno disconnessi e il codice non sarà più valido." },
+            { "PrivateGroupDeleted", "Gruppo eliminato." },
+
             { "SoloRoute", "Percorso individuale" },
             { "OwnRoute", "Il tuo percorso" },
             { "RouteList", "Percorsi" },
@@ -5319,6 +5339,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Punto di attività del dentice marino" },
         };
         public static readonly Dictionary<string,string> StringsUk = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupDelete", "Видалити групу" },
+            { "PrivateGroupDeleteConfirm", "Видалити групу «{0}» для всіх? Усіх учасників буде відключено, а код перестане працювати." },
+            { "PrivateGroupDeleted", "Групу видалено." },
+
             { "SoloRoute", "Особистий маршрут" },
             { "OwnRoute", "Ваш маршрут" },
             { "RouteList", "Маршрути" },

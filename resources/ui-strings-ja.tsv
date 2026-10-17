@@ -668,3 +668,6 @@ SoloRoute	ソロルート
 OwnRoute	自分のルート
 RouteList	ルート
 RouteAutoHelp	経由地の変更時に自動計算します。琥珀色はソロ、シアンは共有ルートです。破線は道路ルートがない区間の直線案内です。ソロルートは接続中のグループに表示されます。共有ルートを追っても再転送しません。
+PrivateGroupDelete	グループを削除
+PrivateGroupDeleteConfirm	全員のグループ「{0}」を削除しますか？全メンバーが切断され、コードが無効になります。
+PrivateGroupDeleted	グループを削除しました。

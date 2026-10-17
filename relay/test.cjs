@@ -55,6 +55,14 @@ test('persistent groups retain ownership, reject member rotation and retire old 
     assert.equal(registry.change('ROTATE',id,next,owner),true);
     assert.equal(registry.change('ROTATE',id,next,owner),true);
     registry=new GroupRegistry(file);assert.equal(registry.allows(id,room),false);assert.equal(registry.allows(id,next),true);
+    assert.equal(registry.change('DELETE',id,next,'e'.repeat(64)),false);
+    assert.equal(registry.allows(id,next),true);
+    assert.equal(registry.change('DELETE',id,next,owner),true);
+    registry=new GroupRegistry(file);assert.equal(registry.allows(id,next),false);
+    assert.equal(registry.change('DELETE',id,next,owner),true); // Retry after lost acknowledgement.
+    assert.equal(registry.change('CREATE',id,next,owner),false);
+    assert.equal(registry.change('CREATE',id,room,'e'.repeat(64)),false);
+    assert.equal(registry.change('ROTATE',id,room,owner),false);
     assert.equal(fs.readFileSync(file,'utf8').includes(owner),false);
     fs.writeFileSync(file,'broken');assert.throws(()=>new GroupRegistry(file));
   }finally{fs.rmSync(dir,{recursive:true});}
@@ -75,7 +83,13 @@ test('registered TLS groups disconnect old-code members on owner rotation', {ski
     await connect(`SCUMROTATE1 ${id} ${next} ${room}`,false);
     const disconnected=once(member,'close');await connect(`SCUMROTATE1 ${id} ${next} ${owner}`);await disconnected;
     await connect(`SCUMGROUP1 ${id} ${room}`,false);
-    await connect(`SCUMGROUP1 ${id} ${next}`);
+    const current=await connect(`SCUMGROUP1 ${id} ${next}`);
+    await connect(`SCUMDELETE1 ${id} ${next} ${room}`,false);
+    assert.equal(current.destroyed,false);
+    const removed=once(current,'close');await connect(`SCUMDELETE1 ${id} ${next} ${owner}`);await removed;
+    await connect(`SCUMGROUP1 ${id} ${next}`,false);
+    await connect(`SCUMDELETE1 ${id} ${next} ${owner}`);
+    await connect(`SCUMCREATE1 ${id} ${next} ${owner}`,false);
     await connect(`SCUMRELAY1 ${room}`,false);
   }finally{for(const client of clients)client.destroy();await new Promise(resolve=>server.close(resolve));fs.rmSync(dir,{recursive:true});}
 });

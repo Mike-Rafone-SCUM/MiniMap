@@ -668,3 +668,6 @@ SoloRoute	Percorso individuale
 OwnRoute	Il tuo percorso
 RouteList	Percorsi
 RouteAutoHelp	I percorsi si calcolano al cambiare delle tappe. Ambra indica individuale, ciano condiviso. I tratti tratteggiati sono guida diretta senza percorso stradale. Il tuo percorso individuale è visibile ai gruppi connessi. Seguire un percorso condiviso non lo ritrasmette.
+PrivateGroupDelete	Elimina gruppo
+PrivateGroupDeleteConfirm	Eliminare il gruppo «{0}» per tutti? Tutti i membri saranno disconnessi e il codice non sarà più valido.
+PrivateGroupDeleted	Gruppo eliminato.

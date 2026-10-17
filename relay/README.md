@@ -32,3 +32,5 @@ are intentionally outside the public source archive.
 Group names, pings and ordered routes are encrypted client marker metadata. The
 relay does not parse or persist them. Group-name edits are available to group
 members; separate owner capabilities still exclusively control code rotation.
+
+Owner-only `SCUMDELETE1 <group ID> <room ID> <owner token>` durably retires a group and disconnects its members. The registry keeps a deleted tombstone with its existing room/owner hashes; old CREATE/ROTATE requests cannot revive it. DELETE retries are idempotent. Preserve the live registry and monthly traffic ledger during updates.

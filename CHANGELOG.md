@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.3.2] - 2026-10-17
+
+- Make map context menus capture the right-button gesture, keep its original click position, obtain popup focus and return focus to SCUM after dismissal. Right-clicks on the floating map details also open the map menu; hiding the map closes its popup.
+- Let group creators delete a saved private group for everyone after confirmation. The relay disconnects its members, permanently retires its code and retains an owner-hash tombstone so deletion cannot be undone by replaying a create request. Interrupted deletion can be retried.
+- Remove the direct-IP Host/Join button from private groups; group codes through the Oracle relay remain the available connection flow.
+
 ## [2.3.1] - 2026-10-17
 
 - Add right-click squad navigation controls: add/remove route stops, undo, start/stop navigation, follow a teammate, and choose solo or shared route mode.

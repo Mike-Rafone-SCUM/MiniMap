@@ -668,3 +668,6 @@ SoloRoute	個人路線
 OwnRoute	你的路線
 RouteList	路線
 RouteAutoHelp	中途站變更時自動計算路線。琥珀色為個人路線，青色為共享路線。虛線表示無道路路線時的直線引導。你的個人路線對已連線的群組可見。跟隨共享路線不會再次轉送它。
+PrivateGroupDelete	刪除群組
+PrivateGroupDeleteConfirm	為所有人刪除群組「{0}」？所有成員將中斷連線，群組代碼將失效。
+PrivateGroupDeleted	群組已刪除。

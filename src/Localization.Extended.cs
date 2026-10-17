@@ -5,6 +5,10 @@ using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsPtPt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupDelete", "Eliminar grupo" },
+            { "PrivateGroupDeleteConfirm", "Eliminar o grupo «{0}» para todos? Todos os membros serão desligados e o código deixará de funcionar." },
+            { "PrivateGroupDeleted", "Grupo eliminado." },
+
             { "SoloRoute", "Rota individual" },
             { "OwnRoute", "A sua rota" },
             { "RouteList", "Rotas" },

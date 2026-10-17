@@ -44,7 +44,7 @@ namespace ScumMiniMap {
                 group.Owner=fields[1];group.Pending=fields[2];group.Name=Text(fields[3]);
                 group.NameStamp=version2?fields[4]:"";
                 if(group.Name.Length>48||group.Name.Any(char.IsControl)||group.NameStamp!=""&&(group.NameStamp.Length!=64||!group.NameStamp.All(Uri.IsHexDigit)||!group.NameStamp.StartsWith("4752504E",StringComparison.Ordinal)))throw new InvalidDataException();
-                if(fields[version2?5:4]!="1"||group.Owner.Length!=0&&(group.Owner.Length!=64||!group.Owner.All(Uri.IsHexDigit))||group.Pending!=""&&group.Pending!="CREATE"&&group.Pending!="ROTATE"||groups.Any(g=>g.Id==group.Id)||groups.Count>=16)throw new InvalidDataException();groups.Add(group);
+                if(fields[version2?5:4]!="1"||group.Owner.Length!=0&&(group.Owner.Length!=64||!group.Owner.All(Uri.IsHexDigit))||group.Pending!=""&&group.Pending!="CREATE"&&group.Pending!="ROTATE"&&group.Pending!="DELETE"||groups.Any(g=>g.Id==group.Id)||groups.Count>=16)throw new InvalidDataException();groups.Add(group);
             }
         }
         static string Text(string value) { return new UTF8Encoding(false,true).GetString(Convert.FromBase64String(value)); }
@@ -107,8 +107,15 @@ namespace ScumMiniMap {
         }
         internal void Rotate(RelayMembership group) {
             lock(gate) {
-                if(disposed||!groups.Contains(group)||!group.IsOwner)throw new InvalidOperationException();
+                if(disposed||!groups.Contains(group)||!group.IsOwner||group.Pending=="DELETE")throw new InvalidOperationException();
                 if(group.Pending=="") { if(group.Session!=null)group.Session.Dispose();group.Session=null;group.Key=PrivatePositions.NewKey();group.Pending="ROTATE";Save(); }
+            }
+            Complete(group);
+        }
+        internal void Delete(RelayMembership group) {
+            lock(gate) {
+                if(disposed||!groups.Contains(group)||!group.IsOwner||group.Pending!=""&&group.Pending!="DELETE")throw new InvalidOperationException();
+                if(group.Session!=null)group.Session.Dispose();group.Session=null;group.Pending="DELETE";Save();
             }
             Complete(group);
         }
@@ -116,7 +123,9 @@ namespace ScumMiniMap {
             // A retry must durably journal its key and owner capability as well,
             // even if an earlier local save failed before any network request.
             lock(gate) { if(disposed||!groups.Contains(group)||!group.IsOwner||group.Pending=="")throw new InvalidOperationException();Save(); }
-            Manage(group.Pending,group.Id,DirectPositions.RelayRoom(Convert.FromBase64String(group.Key)),group.Owner);
+            string action=group.Pending;
+            Manage(action,group.Id,DirectPositions.RelayRoom(Convert.FromBase64String(group.Key)),group.Owner);
+            if(action=="DELETE") { lock(gate) { int index=groups.IndexOf(group);groups.Remove(group);try { Save(); }catch { if(index>=0)groups.Insert(index,group);throw; } }return; }
             lock(gate) { if(disposed)return;group.Pending="";Save(); }
             Connect(group);
         }
