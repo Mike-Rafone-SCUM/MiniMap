@@ -1,4 +1,4 @@
-# SCUM MiniMap v2.2.0
+# SCUM MiniMap v2.3.0
 
 SCUM MiniMap is an external map overlay and road-navigation utility for SCUM, made for the Skynett community. Version 2 uses WPF for the tactical map, compact minimap, Settings, setup guide and Zone Creator. The existing tracking and routing engine remains behind the new interface.
 
@@ -66,6 +66,20 @@ Set outline colour independently from fill colour and opacity. Older zone files 
 In Zone Creator, use Ctrl-click for individual selections or Shift-click for a range. Filter by zone type (such as Bunker or Town), layer and name, then choose **Select All** to edit that visible group. **Select same colour** selects matching visible zones. Outline colour, fill colour and opacity apply to every selected zone; changing opacity preserves each zone's fill colour. Duplicate, Apply name and Delete selected also operate on the selection. Single-zone geometry tools stay separate. Save zones commits your changes; Cancel leaves saved data unchanged.
 
 To open downloaded zone TSVs from Explorer, use **Enable opening zone TSV files** in Settings. Right-click a zone `.tsv`, choose **Open with → SCUM MiniMap**, and choose **Always** if you want double-click opening. Windows keeps control of the default application for this shared file extension. A TSV can also be dropped onto the MiniMap executable or opened with `--import-zones "path/to/zones.tsv"`. MiniMap shows **Name this map**, then opens Zone Creator with the file's zones selected in that named layer. Save to add them to the map; Cancel preserves existing zones. If MiniMap is already running, the request goes to that instance and waits until any current dialog has closed. Zone files are validated before the naming/import flow.
+
+## Squad tools
+
+Give a group a name when creating it, or edit its name in Private positions and choose **Save group name**. Any member with the group code can update its shared name; only the creator retains code-refresh controls. Names travel encrypted between connected members and are saved with each Windows-protected membership. A new member learns the name when another member is online. Renaming leaves invite codes unchanged. Names distinguish players and markers across multiple groups. Teammates use the same heading-arrow shape as your own marker and point in their own direction; the heading-display setting applies to both.
+
+Open **Squad tools** in the full-map sidebar. While connected to a private group with a fresh tracked position, send **Danger**, **Loot** or **Pick me up** at your current location. Right-click the map to place a ping at a selected location. Assign the three optional hotkeys in Settings; they start unbound to preserve your existing controls. A two-second cooldown prevents repeated presses from flooding the group. Pings expire after 60 seconds from first receipt; heartbeat updates do not extend them. Older clients display them as ordinary markers until the sender withdraws them.
+
+Teammate cards show connection status and seconds since the last captured location. Disconnected cards remain for up to five minutes, with their location hidden. **Follow teammate** updates your destination when they move at least 25 m, at most once every two seconds. Navigation pauses when their position is unavailable and resumes on a fresh update. **Stop navigation**, Clear, or choosing another destination cancels follow.
+
+Right-click to **Add route stop**, or add your current destination from Squad tools. A route holds up to 16 ordered stops and is shared with your connected groups through the encrypted marker transport. Choose **Start route** for your route or another member's route. Stops advance within 40 m; you can navigate independently of other members. Route drafts and pings are session-local. Only your own route and pings are published; received routes are not automatically forwarded into other groups. New clients understand stop ordering; older clients see individual markers.
+
+Under **Map presets**, choose a suggested name or type your own, then **Save current map preset**. Saving the same name on the same map replaces that preset. Click a saved name to restore categories, custom-zone visibility, map layers, zoom, rotation, clustering and opacity. Up to 24 presets are stored in the current Windows profile; each applies only to its original map. Group memberships, sharing and hotkeys are not changed by presets.
+
+The full map closes when you switch to an unrelated application and stays closed when you return. Escape, Tab and the map toggle can dismiss the visible map even if tracking is paused. Dialogs and text entry retain their own keyboard behavior.
 
 ## Death markers
 

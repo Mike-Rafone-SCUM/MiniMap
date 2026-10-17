@@ -1712,7 +1712,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "2.2.0";
+        public const string VersionString = "2.3.0";
 
 
 
@@ -3809,6 +3809,10 @@ namespace ScumMiniMap {
 
             bool settingsKey=PhysicalKeyCapture.Matches(key,scanCode,settingsShortcutKey,settingsShortcutScanCode);
             bool inputWindowFocused=AppShortcutWindowFocused(settingsKey);
+            // Dismiss the visible map before tracking/chat/inventory gates. A
+            // stale controller flag must never strand a WPF window on screen.
+            if(WpfFieldConsoleRuntime.Active!=null&&!closing&&!IsDisposed&&!panelOpening&&inputWindowFocused
+                &&!keys.ShortcutModifiersDown(false)&&WpfFieldConsoleRuntime.Active.TryDismissTactical(key,scanCode,chat.Paused))return;
 
 
 
@@ -4048,7 +4052,7 @@ namespace ScumMiniMap {
 
 
 
-            if(DestinationReached(searchTarget,currentPt)) {
+            if(!object.ReferenceEquals(searchTarget,wpfUnsharedTarget)&&DestinationReached(searchTarget,currentPt)) {
                 VoiceArrived();
 
 
@@ -4201,6 +4205,9 @@ namespace ScumMiniMap {
         }
 
         void SetFullMap(bool active) {
+            // Keep the visible WPF window and controller flag in the same state
+            // for chat, focus and all other legacy close paths.
+            if(WpfFieldConsoleRuntime.Active!=null) { WpfFieldConsoleRuntime.Active.SetTactical(active);return; }
 
 
 

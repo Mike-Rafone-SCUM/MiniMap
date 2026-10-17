@@ -119,7 +119,7 @@ namespace ScumMiniMap {
         }
         internal SharedMapMarker[] WpfSharedMarkers() {
             var markers=new List<SharedMapMarker>();
-            if(searchTarget!=null&&searchTarget.Points!=null&&searchTarget.Points.Length>0) {
+            if(searchTarget!=null&&!object.ReferenceEquals(searchTarget,wpfUnsharedTarget)&&searchTarget.Points!=null&&searchTarget.Points.Length>0) {
                 var point=searchTarget.Centroid;string name=searchTarget.DisplayName??"";if(name.Length>96)name=name.Substring(0,96);
                 var gps=new SharedMapMarker { Id=SharedMapMarker.GpsId,Name=name,X=point.X,Y=point.Y };
                 if(SharedMapMarker.Valid(gps))markers.Add(gps);
@@ -173,6 +173,8 @@ namespace ScumMiniMap {
             return new MapZone { Name=name,IsMapObject=mapObject,Points=new[]{point} };
         }
         MapZone wpfQueuedTarget;
+        MapZone wpfUnsharedTarget;
+        internal void WpfSquadTarget(MapZone target) { wpfUnsharedTarget=target;WpfTarget(target); }
         internal void WpfTarget(MapZone target) { searchTarget=target;pin=null;activeRoute=null;routeGeneration++;lastRouteTarget=null;SettingsChanged();if(position!=null) { if(routeCalculating)wpfQueuedTarget=target;else UpdateRouteAsync(ToMap(position),target); } }
         internal void WpfClear() { ClearActiveWaypoint(); }
         internal void WpfModal(bool open) { panelOpening=open;shortcutCaptureOpen=open;Native.CancelActiveCopy();fallbackKeysArmed=false; }

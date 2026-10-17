@@ -14,7 +14,29 @@ namespace ScumMiniMap {
             }
             return result;
         }
-        const string PolishUi = @"SetupSharingVisibility|Panel mapy ma osobne przełączniki pozycji, celu GPS, zapisanych miejsc i znaczników śmierci każdego gracza. Zmieniają tylko twój widok; udostępnianie trwa.
+        const string PolishUi = @"PrivateGroupNameLabel|Nazwa grupy (opcjonalna przy tworzeniu)
+PrivateGroupRename|Zapisz nazwę grupy
+SquadTools|Narzędzia drużyny
+PingDanger|Niebezpieczeństwo
+PingLoot|Łupy
+PingPickup|Odbierzcie mnie
+SquadUpdated|Ostatnia aktualizacja
+SquadOffline|Rozłączono
+SquadFollow|Podążaj za graczem
+SquadStopNav|Zatrzymaj nawigację
+SquadRoute|Wspólna trasa
+SquadAddStop|Dodaj przystanek
+SquadUndoStop|Usuń ostatni przystanek
+SquadStartRoute|Rozpocznij trasę
+SquadPresets|Profile mapy
+SquadSavePreset|Zapisz bieżącą mapę
+SquadLooting|Zbieranie łupów
+SquadDriving|Jazda
+SquadExploring|Eksploracja
+SquadDelete|Usuń
+SquadPingHelp|Sygnały wygasają po 60 sekundach. Przypisz skróty w ustawieniach. Udostępnianie działa tylko podczas połączenia.
+SquadRouteHelp|Kliknij mapę prawym przyciskiem, aby dodać przystanki, lub dodaj bieżący cel poniżej. Połączone grupy otrzymają trasę. Kolejny przystanek włącza się w promieniu 40 m.
+SetupSharingVisibility|Panel mapy ma osobne przełączniki pozycji, celu GPS, zapisanych miejsc i znaczników śmierci każdego gracza. Zmieniają tylko twój widok; udostępnianie trwa.
 SetupDefaultColours|Przywróć domyślne kolory
 PlayerWaiting|Oczekiwanie na graczy
 PlayerNoLocation|Brak współrzędnych

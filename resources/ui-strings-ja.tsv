@@ -1,4 +1,4 @@
-# Offline localized labels; native-speaker review remains pending.
+﻿# Offline localized labels; native-speaker review remains pending.
 InstallationAssetsMissing	"MiniMap インストール ファイルが見つからないか破損しています。アセットフォルダーを含む完全な公式 ZIP を抽出し、そのフォルダーから EXE を実行します。"
 ZeRectangle	"長方形"
 ZeSquare	"正方形"
@@ -642,3 +642,23 @@ NameThisMap	"このマップに名前を付ける"
 ZoneOpenError	"区域ファイルを開けませんでした：{0}"
 EnableZoneTsv	"区域TSVファイルを開く設定"
 ZoneAssociationInfo	"TSVのプログラムから開くでMiniMapを選べます。区域TSVを右クリックし、プログラムから開く → SCUM MiniMap と常に使うを選ぶと、ダブルクリックで開けます。他のTSVには別のアプリを使用できます。"
+SquadTools	分隊ツール
+PingDanger	危険
+PingLoot	戦利品
+PingPickup	迎えに来て
+SquadUpdated	最終更新
+SquadOffline	切断
+SquadFollow	チームメイトを追跡
+SquadStopNav	ナビを停止
+SquadRoute	共有ルート
+SquadAddStop	経由地を追加
+SquadUndoStop	最後の経由地を削除
+SquadStartRoute	ルート開始
+SquadPresets	地図プリセット
+SquadSavePreset	現在の地図を保存
+SquadLooting	物資集め
+SquadDriving	運転
+SquadExploring	探索
+SquadDelete	削除
+SquadPingHelp	ピンは60秒後に消えます。設定でショートカットを割り当ててください。接続中のみ共有します。
+SquadRouteHelp	地図を右クリックして経由地を追加するか、下で現在の目的地を追加できます。接続中のグループにルートが共有されます。40m以内に近づくと次の経由地へ進みます。

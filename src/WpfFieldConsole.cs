@@ -191,7 +191,12 @@ namespace ScumMiniMap {
             }
             return parts.Count==0?null:string.Join(Environment.NewLine,parts.Distinct());
         }
-        static string SharedMarkerLabel(SharedMapMarker marker) { return marker.Owner+" · "+(marker.Death?Localization.Get("DeathName"):marker.Name); }
+        internal static void DrawPlayer(DrawingContext dc,Point p,double yaw,Brush ink,bool heading) {
+            dc.PushTransform(new RotateTransform(yaw-90,p.X,p.Y));
+            var arrow=new StreamGeometry();using(var context=arrow.Open()) { context.BeginFigure(new Point(p.X,p.Y-13),true,true);context.LineTo(new Point(p.X+9,p.Y+10),true,false);context.LineTo(new Point(p.X,p.Y+5),true,false);context.LineTo(new Point(p.X-9,p.Y+10),true,false); }
+            if(heading)dc.DrawGeometry(ink,new Pen(WpfFieldTheme.Ground,2),arrow);else dc.DrawEllipse(ink,new Pen(WpfFieldTheme.Ground,2),p,7,7);dc.Pop();
+        }
+        static string SharedMarkerLabel(SharedMapMarker marker) { int kind;string name=SquadState.IsPing(marker)&&int.TryParse(marker.Id.Substring(8,2),NumberStyles.HexNumber,CultureInfo.InvariantCulture,out kind)&&kind<3?Localization.Get(new[]{"PingDanger","PingLoot","PingPickup"}[kind]):marker.Death?Localization.Get("DeathName"):marker.Name;return marker.Owner+" · "+(SquadState.IsStop(marker)?(SquadState.StopIndex(marker)+1)+". ":"")+name; }
         SharedMapMarker SharedMarkerAt(DrawingPoint at) { return State==null?null:State.SharedMarkers.Where(marker=>MarkerDistance(new DrawingPoint((float)marker.X,(float)marker.Y),at)<=14/MapSide(State,ActualWidth,ActualHeight,Compact)).OrderBy(marker=>MarkerDistance(new DrawingPoint((float)marker.X,(float)marker.Y),at)).FirstOrDefault(); }
         void NavigateTo(DrawingPoint at) {
             var marker=SharedMarkerAt(at);
@@ -211,13 +216,16 @@ namespace ScumMiniMap {
             menu.Items.Add(new MenuItem { Header=DestinationSearch.Sector(target),IsEnabled=false });
             var navigate=new MenuItem { Header=Localization.Get("SetWaypoint") };navigate.Click+=(s,e)=>NavigateTo(target);menu.Items.Add(navigate);
             var save=new MenuItem { Header=Localization.Get("ShortcutWaypoint") };save.Click+=(s,e)=> { if(WaypointAt!=null)WaypointAt(target); };menu.Items.Add(save);
+            if(RouteStopAt!=null) { var stop=new MenuItem { Header=Localization.Get("SquadAddStop") };stop.Click+=(s,e)=>RouteStopAt(target);menu.Items.Add(stop); }
+            if(PingAt!=null)for(int i=0;i<3;i++) { int kind=i;var ping=new MenuItem { Header=Localization.Get(new[]{"PingDanger","PingLoot","PingPickup"}[i]) };ping.Click+=(s,e)=>PingAt(kind,target);menu.Items.Add(ping); }
             menu.Items.Add(new Separator());var clear=new MenuItem { Header=Localization.Get("WpfClearRoute"),IsEnabled=State!=null&&State.Target!=null };clear.Click+=(s,e)=> { if(ClearRouteRequested!=null)ClearRouteRequested(); };menu.Items.Add(clear);
             var saved=State==null||State.Saved==null?null:State.Saved.Where(z=>z.Points!=null&&z.Points.Length==1&&MarkerDistance(target,z.Centroid)<=14/MapSide(State,ActualWidth,ActualHeight,Compact)).OrderByDescending(z=>z.IsDeathMarker).ThenBy(z=>MarkerDistance(target,z.Centroid)).FirstOrDefault();
             if(saved!=null&&MarkerDistance(target,saved.Centroid)<=14/MapSide(State,ActualWidth,ActualHeight,Compact)) { var delete=new MenuItem { Header=Localization.T("DeleteWaypointNamed",saved.DisplayName) };delete.Click+=(s,e)=> { if(DeleteWaypointRequested!=null)DeleteWaypointRequested(saved); };menu.Items.Add(delete); }
             return menu;
         }
         internal Action<int> ZoomRequested;
-        internal Action<DrawingPoint> NavigateAt,WaypointAt;
+        internal Action<DrawingPoint> NavigateAt,WaypointAt,RouteStopAt;
+        internal Action<int,DrawingPoint> PingAt;
         internal Action<MapZone> NavigateShared;
         Point? drag;
         DrawingPoint pan;
@@ -323,16 +331,16 @@ namespace ScumMiniMap {
             if(State.Route!=null&&State.Route.Success&&State.Position!=null)DrawLine(dc,new[]{MapWindow.ToMap(State.Position)}.Concat(State.Route.Polyline??new DrawingPoint[0]).Concat(State.Target==null?new DrawingPoint[0]:new[]{State.Target.Centroid}).Select(point),new Pen(routeInk,4));
             if(State.Target!=null) { var p=point(State.Target.Centroid);dc.DrawEllipse(null,new Pen(routeInk,3),p,9,9);Label(dc,State.Target.DisplayName,p+new Vector(12,-30),WpfFieldTheme.Cyan,13); }
             if(State.Position!=null) {
-                var p=point(MapWindow.ToMap(State.Position));dc.PushTransform(new RotateTransform(State.Position.Yaw-90,p.X,p.Y));
-                var arrow=new StreamGeometry();using(var context=arrow.Open()) { context.BeginFigure(new Point(p.X,p.Y-13),true,true);context.LineTo(new Point(p.X+9,p.Y+10),true,false);context.LineTo(new Point(p.X,p.Y+5),true,false);context.LineTo(new Point(p.X-9,p.Y+10),true,false); }
-                if(State.Heading)dc.DrawGeometry(playerInk,new Pen(WpfFieldTheme.Ground,2),arrow);else dc.DrawEllipse(playerInk,new Pen(WpfFieldTheme.Ground,2),p,7,7);dc.Pop();
+                DrawPlayer(dc,point(MapWindow.ToMap(State.Position)),State.Position.Yaw,playerInk,State.Heading);
             }
             foreach(var peer in State.Peers) {
-                var p=point(MapWindow.ToMap(peer.Position));dc.DrawEllipse(WpfFieldTheme.Cyan,new Pen(WpfFieldTheme.Ground,2),p,7,7);
+                var p=point(MapWindow.ToMap(peer.Position));DrawPlayer(dc,p,peer.Position.Yaw,WpfFieldTheme.Cyan,State.Heading);
                 Label(dc,peer.Name,p+new Vector(11,-18),WpfFieldTheme.Cyan,12);
             }
+            foreach(var route in SquadState.Routes(State.SharedMarkers))for(int i=1;i<route.Length;i++)dc.DrawLine(new Pen(WpfFieldTheme.Cyan,2),point(new DrawingPoint((float)route[i-1].X,(float)route[i-1].Y)),point(new DrawingPoint((float)route[i].X,(float)route[i].Y)));
             foreach(var marker in State.SharedMarkers) {
                 var at=point(new DrawingPoint((float)marker.X,(float)marker.Y));var ink=marker.Death?WpfFieldTheme.ColorBrush("#FF654F"):WpfFieldTheme.Cyan;
+                if(SquadState.IsPing(marker))ink=marker.Id.Substring(8,2)=="00"?WpfFieldTheme.ColorBrush("#FF654F"):marker.Id.Substring(8,2)=="01"?WpfFieldTheme.Amber:WpfFieldTheme.Cyan;
                 if(marker.Death) { dc.DrawRoundedRectangle(WpfFieldTheme.Ground,new Pen(ink,2),new Rect(at.X-7,at.Y-10,14,19),3,3);dc.DrawLine(new Pen(ink,2),at+new Vector(0,-5),at+new Vector(0,4));dc.DrawLine(new Pen(ink,2),at+new Vector(-4,-1),at+new Vector(4,-1)); }
                 else { var diamond=new StreamGeometry();using(var shape=diamond.Open()) { shape.BeginFigure(at+new Vector(0,-8),true,true);shape.LineTo(at+new Vector(7,0),true,false);shape.LineTo(at+new Vector(0,8),true,false);shape.LineTo(at+new Vector(-7,0),true,false); }dc.DrawGeometry(WpfFieldTheme.Ground,new Pen(ink,2),diamond); }
                 Label(dc,SharedMarkerLabel(marker),at+new Vector(11,-19),ink,12);
@@ -537,7 +545,7 @@ namespace ScumMiniMap {
         public void Dispose() { cache.Clear();recent.Clear();stream.Dispose(); }
     }
 
-    internal sealed class WpfFieldConsoleRuntime:IDisposable {
+    internal sealed partial class WpfFieldConsoleRuntime:IDisposable {
         internal static WpfFieldConsoleRuntime Active;
         readonly MapWindow engine;
         DirectPositions privatePositions;
@@ -547,12 +555,13 @@ namespace ScumMiniMap {
         int PlayerVisibility(string id) { int value;return id!=null&&playerVisibility.TryGetValue(id,out value)?value:15; }
         bool PlayerMarkerVisible(SharedMapMarker marker) { return (PlayerVisibility(marker.OwnerId)&(marker.Death?8:marker.Id==SharedMapMarker.GpsId?2:4))!=0; }
         void AddPlayers(Panel container) {
-            if(privatePositions==null&&(relayGroups==null||relayGroups.Sessions.Length==0))return;
+            if(privatePositions==null&&(relayGroups==null||relayGroups.Sessions.Length==0)&&playerRoster.Length==0)return;
             container.Children.Add(WpfFieldTheme.Text(Localization.Get("SharedPlayers"),11,WpfFieldTheme.Muted,true));
             if(playerRoster.Length==0)container.Children.Add(WpfFieldTheme.Text(Localization.Get("PlayerWaiting"),12,WpfFieldTheme.Muted));
             foreach(var player in playerRoster) {
                 string ownerId=player.Id;var body=new StackPanel();body.Children.Add(WpfFieldTheme.Text(player.Name,16,null,true));
-                body.Children.Add(WpfFieldTheme.Text(Localization.Get("PlayerConnected")+" · "+Localization.Get(player.Position==null?"PlayerNoLocation":"PlayerLiveLocation"),11,WpfFieldTheme.Muted));
+                var statusLabel=WpfFieldTheme.Text(PeerStatus(player),11,WpfFieldTheme.Muted);statusLabel.TextWrapping=TextWrapping.Wrap;statusLabel.TextTrimming=TextTrimming.None;playerStatusLabels[ownerId]=statusLabel;body.Children.Add(statusLabel);
+                var follow=WpfFieldTheme.Button(S(followingPeer==ownerId?"SquadStopNav":"SquadFollow"),()=> { if(followingPeer==ownerId) { followingPeer=null;squadTarget=null;engine.WpfClear(); }else { engine.WpfClear();followingPeer=ownerId;activeStops=new SharedMapMarker[0];squadTarget=null;nextSquadRoute=DateTime.MinValue; }filterIdentity=null;Refresh(); });follow.IsEnabled=player.Position!=null||followingPeer==ownerId;body.Children.Add(follow);
                 var pills=new WrapPanel { Margin=new Thickness(0,8,0,0) };
                 string[] labels={"PlayerLiveLocation","PlayerGps","PlayerSaved","PlayerDeaths"};
                 for(int index=0;index<labels.Length;index++) {
@@ -622,7 +631,7 @@ namespace ScumMiniMap {
                 if(value==null) { key.Append("null|");continue; }
                 if(value is Position) { var p=(Position)value;key.Append(p.X).Append(',').Append(p.Y).Append(',').Append(p.Yaw); }
                 else if(value is ScumMapStore)key.Append(((ScumMapStore)value).GetFilterHashKey());
-                else if(value is PrivatePositions.Peer[])foreach(var peer in (PrivatePositions.Peer[])value)key.Append(peer.Name).Append(peer.Position.X).Append(peer.Position.Y);
+                else if(value is PrivatePositions.Peer[])foreach(var peer in (PrivatePositions.Peer[])value)key.Append(peer.Name).Append(peer.Position.X).Append(peer.Position.Y).Append(peer.Position.Yaw);
                 else if(value is SharedMapMarker[])foreach(var marker in (SharedMapMarker[])value)key.Append('|').Append(marker.OwnerId).Append('|').Append(marker.Id).Append('|').Append(marker.Name).Append('|').Append(marker.Death).Append('|').Append(marker.X).Append('|').Append(marker.Y);
                 else if(value is MapZone[]||value is DrawingPoint[]||value is WpfZoneOption[])key.Append(System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(value));
                 else key.Append(value);
@@ -679,6 +688,18 @@ namespace ScumMiniMap {
                 Native.IsOurWindow(target),Native.IsGameWindow(target));
         }
         internal static bool TacticalMouseShieldEnabled(bool visible,bool appFocused) { return visible&&appFocused; }
+        internal static bool ShouldHideTactical(bool visible,bool gameFocused,bool appFocused) { return visible&&!gameFocused&&!appFocused; }
+        internal void SyncTacticalFocus(bool gameFocused,bool appFocused) {
+            if(ShouldHideTactical(tactical.IsVisible,gameFocused,appFocused)) { tacticalMouseShieldActive=false;tactical.Hide();tacticalMap.ClearHover();engine.WpfTactical(false); }
+            else if(tactical.IsVisible)tactical.Topmost=true;
+        }
+        internal void SetTactical(bool active) { if(active) { if(!tactical.IsVisible)ToggleTactical(); }else CloseTactical(); }
+        internal bool TryDismissTactical(int key,int scan,bool chatPaused) {
+            if(!tactical.IsVisible||dialogs.Count!=0||EditingText(Keyboard.FocusedElement))return false;
+            var binding=engine.WpfSnapshot(false);bool mapKey=PhysicalKeyCapture.Matches(key,scan,binding.MapKey,binding.MapScan);
+            if(key!=0x1B&&key!=0x09&&(!mapKey||chatPaused))return false;
+            CloseTactical(mapKey&&new WindowInteropHelper(tactical).Handle==Native.GetForegroundWindow());return true;
+        }
         static IntPtr TacticalWindowMessage(IntPtr hwnd,int message,IntPtr w,IntPtr l,ref bool handled) {
             // MA_NOACTIVATE keeps keyboard/held movement in SCUM while still
             // delivering this mouse click to the map's controls.
@@ -748,7 +769,8 @@ namespace ScumMiniMap {
             };
             var grid=new Grid();grid.ColumnDefinitions.Add(new ColumnDefinition());grid.ColumnDefinitions.Add(new ColumnDefinition { Width=new GridLength(320) });
             tacticalMap=new WpfMapSurface { BaseMap=geography,Terrain=terrain };
-            tacticalMap.ClearRouteRequested=()=> { engine.WpfClear();Refresh(); };tacticalMap.DeleteWaypointRequested=marker=> { engine.WpfDeleteWaypoint(marker);Refresh(); };
+            tacticalMap.RouteStopAt=AddSquadStop;tacticalMap.PingAt=(kind,p)=>SendPing(kind,p);
+            tacticalMap.ClearRouteRequested=()=> { StopSquadNavigation();Refresh(); };tacticalMap.DeleteWaypointRequested=marker=> { engine.WpfDeleteWaypoint(marker);Refresh(); };
             tacticalMap.NavigateAt=p=> { engine.WpfTarget(engine.WpfClickedTarget(p,(float)(8/Math.Max(1,Math.Min(tacticalMap.ActualWidth,tacticalMap.ActualHeight)*engine.WpfSnapshot(true).Zoom))));Refresh(); };tacticalMap.WaypointAt=p=>ShowAddWaypoint(p);tacticalMap.ZoomRequested=d=> { engine.WpfZoom(true,d);Refresh(); };tacticalMap.PanChanged=p=> { engine.WpfPan(p);Refresh(); };
             tacticalMap.NavigateShared=sharedTarget=> { engine.WpfTarget(sharedTarget);Refresh(); };
             // The sidebar overlays the full monitor viewport; toggling it must not move the camera.
@@ -756,7 +778,7 @@ namespace ScumMiniMap {
             var target=new Grid();target.ColumnDefinitions.Add(new ColumnDefinition());target.ColumnDefinitions.Add(new ColumnDefinition { Width=GridLength.Auto });
             var text=new StackPanel();text.Children.Add(WpfFieldTheme.Text(Localization.Get("FieldTarget"),11,WpfFieldTheme.Muted,true));targetTitle=WpfFieldTheme.Text("",21,null,true);targetDetail=WpfFieldTheme.Text("",14,WpfFieldTheme.Muted);text.Children.Add(targetTitle);text.Children.Add(targetDetail);target.Children.Add(text);
             ((FrameworkElement)text.Children[0]).Tag="text:FieldTarget";
-            var clear=WpfFieldTheme.Button(Localization.Get("ClearWaypoint"),()=> { engine.WpfClear();Refresh(); });clear.MaxWidth=112;clear.FontSize=13;Grid.SetColumn(clear,1);target.Children.Add(clear);
+            var clear=WpfFieldTheme.Button(Localization.Get("ClearWaypoint"),()=> { StopSquadNavigation();Refresh(); });clear.MaxWidth=112;clear.FontSize=13;Grid.SetColumn(clear,1);target.Children.Add(clear);
             clear.Tag="text:ClearWaypoint";
             var topCards=new StackPanel { Width=408,HorizontalAlignment=HorizontalAlignment.Left,VerticalAlignment=VerticalAlignment.Top,Margin=new Thickness(24) };
             targetCard=WpfFieldTheme.Card(target);topCards.Children.Add(targetCard);
@@ -801,8 +823,9 @@ namespace ScumMiniMap {
             window.Closing+=(s,e)=> { if(!disposed) { e.Cancel=true;window.Hide(); } };return window;
         }
         void RebuildSidebar(WpfMapState state) {
-            sidebar.Children.Clear();var heading=new Grid();heading.ColumnDefinitions.Add(new ColumnDefinition());heading.ColumnDefinitions.Add(new ColumnDefinition { Width=GridLength.Auto });heading.Children.Add(WpfFieldTheme.Text(Localization.Get("SidebarTitle"),24,null,true));var key=WpfFieldTheme.Card(WpfFieldTheme.Text(PhysicalKeyCapture.KeyName(state.MapKey),14),new Thickness(10,5,10,5));Grid.SetColumn(key,1);heading.Children.Add(key);sidebar.Children.Add(heading);
+            playerStatusLabels.Clear();sidebar.Children.Clear();var heading=new Grid();heading.ColumnDefinitions.Add(new ColumnDefinition());heading.ColumnDefinitions.Add(new ColumnDefinition { Width=GridLength.Auto });heading.Children.Add(WpfFieldTheme.Text(Localization.Get("SidebarTitle"),24,null,true));var key=WpfFieldTheme.Card(WpfFieldTheme.Text(PhysicalKeyCapture.KeyName(state.MapKey),14),new Thickness(10,5,10,5));Grid.SetColumn(key,1);heading.Children.Add(key);sidebar.Children.Add(heading);
             var search=WpfFieldTheme.Button(Localization.Get("SearchTitle")+"  "+PhysicalKeyCapture.KeyName(state.Bindings.Key(AppControlAction.Search)),ShowSearch);search.Margin=new Thickness(0,18,0,22);sidebar.Children.Add(search);
+            sidebar.Children.Add(WpfFieldTheme.Button(S("SquadTools"),ShowSquadTools));
             AddPlayers(sidebar);
             sidebar.Children.Add(WpfFieldTheme.Text(Localization.Get("SidebarLayers"),11,WpfFieldTheme.Muted,true));
             var customRow=new DockPanel();var customMaster=new CheckBox { IsChecked=state.Zones,Width=42,Tag="custom-zones:master",ToolTip=Localization.Get("ShowSavedZones") };customMaster.Checked+=(s,e)=> { if(!rebuilding) { engine.WpfLayer("zones",true);Refresh(); } };customMaster.Unchecked+=(s,e)=> { if(!rebuilding) { engine.WpfLayer("zones",false);Refresh(); } };DockPanel.SetDock(customMaster,Dock.Right);customRow.Children.Add(customMaster);
@@ -841,6 +864,7 @@ namespace ScumMiniMap {
             // The native controller also requests refreshes. Coalesce those with the WPF timer.
             if(!diagnostic&&refreshClock.ElapsedMilliseconds-lastRefresh<100)return;
             lastRefresh=refreshClock.ElapsedMilliseconds;
+            if(!diagnostic&&tactical.IsVisible) { var foreground=Native.GetForegroundWindow();SyncTacticalFocus(Native.IsGameWindow(foreground),Native.IsOurWindow(foreground)); }
             List<MapZone> refreshedZones;
             if(zoneFolder!=null&&zoneFolder.Poll(out refreshedZones))engine.WpfRefreshFolderZones(refreshedZones);
             if(!diagnostic&&!zoneFileActive&&dialogs.Count==0) {
@@ -850,12 +874,13 @@ namespace ScumMiniMap {
                 }
                 if(zoneOpenRead==null&&DateTime.UtcNow>=nextZoneOpenRead) { nextZoneOpenRead=DateTime.UtcNow.AddSeconds(1);string profile=engine.WpfDataFolder;zoneOpenRead=System.Threading.Tasks.Task.Run(()=>ZoneFileOpen.Take(profile)); }
             }
+            if(relayGroups!=null)relayGroups.SynchronizeNames();
             var sharingSessions=(relayGroups==null?new DirectPositions[0]:relayGroups.Sessions).Concat(privatePositions==null?new DirectPositions[0]:new[]{privatePositions}).ToArray();
             if(sharingSessions.Length>0) {
-                var sample=engine.WpfSnapshot(false);var markers=engine.WpfSharedMarkers();foreach(var session in sharingSessions) { session.Update(sample.Tracking&&!sample.TrackingPaused?sample.Position:null,sample.Updated);session.UpdateMarkers(markers); }
+                var sample=engine.WpfSnapshot(false);var markers=squad.Local().Concat(engine.WpfSharedMarkers()).Take(128).ToArray();foreach(var session in sharingSessions) { session.Update(sample.Tracking&&!sample.TrackingPaused?sample.Position:null,sample.Updated);session.UpdateMarkers(relayGroups==null?markers:relayGroups.MarkersFor(session,markers)); }
             }
+            UpdateSquad();foreach(var peer in playerRoster) { TextBlock label;if(playerStatusLabels.TryGetValue(peer.Id,out label))label.Text=PeerStatus(peer); }
             if(!diagnostic) {
-                if(tactical.IsVisible) { var foreground=Native.GetForegroundWindow();tactical.Topmost=Native.IsGameWindow(foreground)||Native.IsOurWindow(foreground); }
                 SyncHudVisibility();
                 if(!TacticalVisible&&!hud.IsVisible)return;
             }
@@ -864,11 +889,11 @@ namespace ScumMiniMap {
             syncingOpacity=true;try { tacticalOpacity.Value=state.Opacity;tacticalOpacity.IsEnabled=state.Zoom<=1; }finally { syncingOpacity=false; }
             var compact=fullView?engine.WpfSnapshot(false):state;
             if(sharingSessions.Length>0) {
-                playerRoster=(privatePositions==null?new PrivatePositions.Peer[0]:privatePositions.Roster()).Concat(relayGroups==null?new PrivatePositions.Peer[0]:relayGroups.Roster()).ToArray();
+
                 state.Peers=compact.Peers=(privatePositions==null?new PrivatePositions.Peer[0]:privatePositions.Snapshot()).Concat(relayGroups==null?new PrivatePositions.Peer[0]:relayGroups.Roster(true)).Where(peer=>(PlayerVisibility(peer.Id)&1)!=0).ToArray();
-                state.SharedMarkers=compact.SharedMarkers=(privatePositions==null?new SharedMapMarker[0]:privatePositions.SnapshotMarkers()).Concat(relayGroups==null?new SharedMapMarker[0]:relayGroups.Markers()).Where(PlayerMarkerVisible).ToArray();
+                state.SharedMarkers=compact.SharedMarkers=squad.Receive((privatePositions==null?new SharedMapMarker[0]:privatePositions.SnapshotMarkers()).Concat(relayGroups==null?new SharedMapMarker[0]:relayGroups.Markers()).Where(PlayerMarkerVisible)).Concat(squad.Local().Select(m=> { m.Owner=S("PrivateGroupSurvivor");return m; })).ToArray();
             }
-            else playerRoster=new PrivatePositions.Peer[0];
+            else state.SharedMarkers=compact.SharedMarkers=squad.Local();
             deathRemovalButton.IsEnabled=state.Saved.Any(marker=>marker.IsDeathMarker);if(chromeLanguage!=Localization.CurrentCode) { chromeLanguage=Localization.CurrentCode;RefreshLocalizedChrome(tactical);if(settingsWindow!=null)RefreshLocalizedChrome(settingsWindow); }
             if(diagnostic||TacticalVisible) { string key=VisualIdentity(state);if(key!=tacticalVisualIdentity) { tacticalVisualIdentity=key;tacticalMap.State=state;tacticalMap.InvalidateVisual(); } }
             if(diagnostic||hud.IsVisible) { string key=VisualIdentity(compact);if(key!=hudVisualIdentity) { hudVisualIdentity=key;hudMap.State=compact;hudMap.InvalidateVisual(); } }
@@ -896,9 +921,10 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
         }
         internal void Handle(AppControlAction action) {
             switch(action) {
+                case AppControlAction.PingDanger:SendPing(0);break;case AppControlAction.PingLoot:SendPing(1);break;case AppControlAction.PingPickup:SendPing(2);break;
                 case AppControlAction.Settings:ShowSettings();break;case AppControlAction.Search:ShowSearch();break;
                 case AppControlAction.ToggleOverlay:ToggleHud();break;
-                case AppControlAction.AddWaypoint:ShowAddWaypoint();break;case AppControlAction.ClearWaypoint:engine.WpfClear();break;
+                case AppControlAction.AddWaypoint:ShowAddWaypoint();break;case AppControlAction.ClearWaypoint:StopSquadNavigation();break;
                 case AppControlAction.ZoomIn:engine.WpfZoom(TacticalVisible,1);break;case AppControlAction.ZoomOut:engine.WpfZoom(TacticalVisible,-1);break;
                 case AppControlAction.StartupGuide:ShowOnboarding();break;case AppControlAction.ZoneEditor:ShowZoneWizard();break;default:engine.WpfNativeTool(action);break;
             }
@@ -992,6 +1018,7 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
             catch { status.Text=Localization.Get("PrivatePositionInvalid");body.Children.Add(status);body.Children.Add(WpfFieldTheme.Button(Localization.Get("Done"),()=>window.Close()));window.Content=body;return window; }
             form.Children.Add(WpfFieldTheme.Text(Localization.Get("PrivatePositionName")));var name=new TextBox { Text=relayGroups.DisplayName,MaxLength=32,Margin=new Thickness(0,4,0,12) };name.Tag="group-name";form.Children.Add(name);
             form.Children.Add(WpfFieldTheme.Text(Localization.Get("PrivateGroupCode")));var code=new PasswordBox { MaxLength=128,Margin=new Thickness(0,4,0,12),MinHeight=40,FontSize=16,Padding=new Thickness(12,9,12,9),Background=WpfFieldTheme.Ground,Foreground=WpfFieldTheme.Ink };code.Tag="group-code";form.Children.Add(code);
+            form.Children.Add(WpfFieldTheme.Text(Localization.Get("PrivateGroupNameLabel")));var groupLabel=new TextBox { MaxLength=48,Margin=new Thickness(0,4,0,12),Tag="new-group-label" };form.Children.Add(groupLabel);
             bool closed=false,busy=false;var rows=new StackPanel { Margin=new Thickness(0,12,0,12) };Action draw=null;
             Action<Func<RelayMembership>,bool> run=(action,copy)=> {
                 if(busy)return;busy=true;form.IsEnabled=false;status.Text=Localization.Get("PrivatePositionConnecting");string display=name.Text;
@@ -1004,11 +1031,12 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
                 })));
             };
             var join=WpfFieldTheme.Button(Localization.Get("PrivateGroupConnect"),()=> { string value=code.Password;run(()=>relayGroups.Join(value),false); },true);join.Tag="group-connect";form.Children.Add(join);
-            var create=WpfFieldTheme.Button(Localization.Get("PrivateGroupCreate"),()=>run(()=>relayGroups.Create(),true));create.Tag="group-create";form.Children.Add(create);form.Children.Add(rows);body.Children.Add(status);
+            var create=WpfFieldTheme.Button(Localization.Get("PrivateGroupCreate"),()=> { string label=groupLabel.Text;run(()=>relayGroups.Create(label),true); });create.Tag="group-create";form.Children.Add(create);form.Children.Add(rows);body.Children.Add(status);
             draw=()=> {
                 rows.Children.Clear();foreach(var group in relayGroups.Groups) {
                     var captured=group;var card=new StackPanel { Margin=new Thickness(0,6,0,6) };
-                    card.Children.Add(WpfFieldTheme.Text(Localization.Get("PrivateGroupLabel")+" "+group.Id.Substring(0,8)+(group.IsOwner?" · "+Localization.Get("PrivateGroupOwner"):""),16,null,true));
+                    var title=WpfFieldTheme.Text(group.Label+(group.IsOwner?" · "+Localization.Get("PrivateGroupOwner"):""),16,null,true);title.Tag="group-title:"+group.Id;card.Children.Add(title);
+                    var groupName=new TextBox { Text=group.Name,MaxLength=48,Margin=new Thickness(0,8,0,4),Tag="rename-group:"+group.Id };card.Children.Add(groupName);var rename=WpfFieldTheme.Button(Localization.Get("PrivateGroupRename"),()=> { string label=groupName.Text;run(()=> { relayGroups.Rename(captured,label);return captured; },false); });card.Children.Add(rename);
                     string state=group.Pending!=""||group.Session!=null&&group.Session.Error!=null?Localization.Get("PrivatePositionInvalid"):group.Session==null?Localization.Get("PrivateGroupLeave"):group.Session.Ready?Localization.Get("PlayerConnected")+" · "+group.Session.Connections:Localization.Get("PrivatePositionConnecting");
                     var stateText=WpfFieldTheme.Text(state,12,WpfFieldTheme.Muted);stateText.Tag="group-state:"+group.Id;card.Children.Add(stateText);
                     var buttons=new WrapPanel();
@@ -1025,7 +1053,7 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
             body.Children.Add(WpfFieldTheme.Button(Localization.Get("Done"),()=>window.Close(),true));
             var timer=new DispatcherTimer { Interval=TimeSpan.FromSeconds(1) };timer.Tick+=(s,e)=> { if(!busy)foreach(var label in ChildrenOf<TextBlock>(rows).Where(t=>(t.Tag as string??"").StartsWith("group-state:"))) {
                 string id=((string)label.Tag).Substring(12);var group=relayGroups.Groups.FirstOrDefault(g=>g.Id==id);if(group!=null)label.Text=group.Pending!=""||group.Session!=null&&group.Session.Error!=null?Localization.Get("PrivatePositionInvalid"):group.Session==null?Localization.Get("PrivateGroupLeave"):group.Session.Ready?Localization.Get("PlayerConnected")+" · "+group.Session.Connections:Localization.Get("PrivatePositionConnecting");
-            } };timer.Start();window.Closed+=(s,e)=> { closed=true;timer.Stop();code.Clear(); };window.ContentRendered+=(s,e)=>code.Focus();window.Content=new ScrollViewer { Content=body,VerticalScrollBarVisibility=ScrollBarVisibility.Auto };return window;
+            } if(!busy)foreach(var title in ChildrenOf<TextBlock>(rows).Where(t=>(t.Tag as string??"" ).StartsWith("group-title:"))) { var group=relayGroups.Groups.FirstOrDefault(g=>g.Id==((string)title.Tag).Substring(12));if(group!=null)title.Text=group.Label+(group.IsOwner?" · "+Localization.Get("PrivateGroupOwner"):""); } };timer.Start();window.Closed+=(s,e)=> { closed=true;timer.Stop();code.Clear(); };window.ContentRendered+=(s,e)=>code.Focus();window.Content=new ScrollViewer { Content=body,VerticalScrollBarVisibility=ScrollBarVisibility.Auto };return window;
         }
         static IEnumerable<T> ChildrenOf<T>(DependencyObject root) where T:DependencyObject {
             for(int i=0;i<VisualTreeHelper.GetChildrenCount(root);i++) { var child=VisualTreeHelper.GetChild(root,i);var item=child as T;if(item!=null)yield return item;foreach(var nested in ChildrenOf<T>(child))yield return nested; }

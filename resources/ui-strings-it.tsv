@@ -1,4 +1,4 @@
-# Offline localized labels; native-speaker review remains pending.
+﻿# Offline localized labels; native-speaker review remains pending.
 InstallationAssetsMissing	"I file di installazione MiniMap mancano o sono danneggiati. Estrai lo ZIP ufficiale completo, inclusa la cartella delle risorse, quindi esegui EXE da quella cartella."
 ZeRectangle	"Rettangolo"
 ZeSquare	"Quadrato"
@@ -642,3 +642,23 @@ NameThisMap	"Dai un nome a questa mappa"
 ZoneOpenError	"Impossibile aprire il file delle zone: {0}"
 EnableZoneTsv	"Abilita apertura dei file zone TSV"
 ZoneAssociationInfo	"MiniMap è disponibile in Apri con per i file TSV. Fai clic destro su un TSV delle zone, scegli Apri con → SCUM MiniMap e Sempre per aprirlo con doppio clic. Gli altri TSV possono usare un’altra app."
+SquadTools	Strumenti squadra
+PingDanger	Pericolo
+PingLoot	Bottino
+PingPickup	Venite a prendermi
+SquadUpdated	Ultimo aggiornamento
+SquadOffline	Disconnesso
+SquadFollow	Segui compagno
+SquadStopNav	Ferma navigazione
+SquadRoute	Percorso condiviso
+SquadAddStop	Aggiungi tappa
+SquadUndoStop	Rimuovi ultima tappa
+SquadStartRoute	Avvia percorso
+SquadPresets	Profili mappa
+SquadSavePreset	Salva mappa attuale
+SquadLooting	Saccheggio
+SquadDriving	Guida
+SquadExploring	Esplorazione
+SquadDelete	Elimina
+SquadPingHelp	I segnali scadono dopo 60 secondi. Assegna i tasti nelle impostazioni. Condivisione solo durante la connessione.
+SquadRouteHelp	Fai clic destro sulla mappa per aggiungere tappe oppure aggiungi la destinazione attuale qui sotto. I gruppi connessi ricevono il percorso. Le tappe avanzano entro 40 m.

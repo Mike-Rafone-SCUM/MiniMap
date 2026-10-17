@@ -1,4 +1,4 @@
-# Offline localized labels; native-speaker review remains pending.
+﻿# Offline localized labels; native-speaker review remains pending.
 InstallationAssetsMissing	"ไฟล์การติดตั้ง MiniMap สูญหายหรือเสียหาย แยก ZIP อย่างเป็นทางการที่สมบูรณ์ รวมถึงโฟลเดอร์ Asset จากนั้นเรียกใช้ EXE จากโฟลเดอร์นั้น"
 ZeRectangle	"สี่เหลี่ยมผืนผ้า"
 ZeSquare	"สี่เหลี่ยมจัตุรัส"
@@ -642,3 +642,23 @@ NameThisMap	"ตั้งชื่อแผนที่นี้"
 ZoneOpenError	"เปิดไฟล์โซนไม่ได้: {0}"
 EnableZoneTsv	"เปิดใช้การเปิดไฟล์โซน TSV"
 ZoneAssociationInfo	"MiniMap พร้อมใช้งานในเมนูเปิดด้วยสำหรับไฟล์ TSV คลิกขวาที่ TSV โซน เลือกเปิดด้วย → SCUM MiniMap และเลือกเสมอเพื่อเปิดด้วยการดับเบิลคลิก ไฟล์ TSV อื่นสามารถใช้แอปอื่นได้"
+SquadTools	เครื่องมือทีม
+PingDanger	อันตราย
+PingLoot	ของเก็บ
+PingPickup	มารับฉันหน่อย
+SquadUpdated	อัปเดตล่าสุด
+SquadOffline	ขาดการเชื่อมต่อ
+SquadFollow	ติดตามเพื่อนร่วมทีม
+SquadStopNav	หยุดนำทาง
+SquadRoute	เส้นทางร่วม
+SquadAddStop	เพิ่มจุดแวะ
+SquadUndoStop	ลบจุดแวะสุดท้าย
+SquadStartRoute	เริ่มเส้นทาง
+SquadPresets	ค่าตั้งแผนที่
+SquadSavePreset	บันทึกแผนที่ปัจจุบัน
+SquadLooting	เก็บของ
+SquadDriving	ขับรถ
+SquadExploring	สำรวจ
+SquadDelete	ลบ
+SquadPingHelp	สัญญาณจะหายไปหลัง 60 วินาที ตั้งปุ่มลัดได้ในการตั้งค่า แชร์เฉพาะขณะเชื่อมต่อ
+SquadRouteHelp	คลิกขวาบนแผนที่เพื่อเพิ่มจุดแวะ หรือเพิ่มปลายทางปัจจุบันด้านล่าง กลุ่มที่เชื่อมต่อจะได้รับเส้นทาง เปลี่ยนจุดแวะเมื่อเข้าใกล้ในระยะ 40 ม.

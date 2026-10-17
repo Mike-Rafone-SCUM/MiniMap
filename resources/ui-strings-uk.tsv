@@ -1,4 +1,4 @@
-# Offline localized labels; native-speaker review remains pending.
+﻿# Offline localized labels; native-speaker review remains pending.
 InstallationAssetsMissing	"Файли встановлення MiniMap відсутні або пошкоджені. Розпакуйте повний офіційний ZIP, включаючи папку активів, а потім запустіть EXE із цієї папки."
 ZeRectangle	"Прямокутник"
 ZeSquare	"Квадратний"
@@ -642,3 +642,23 @@ NameThisMap	"Назвіть цю мапу"
 ZoneOpenError	"Не вдалося відкрити файл зон: {0}"
 EnableZoneTsv	"Увімкнути відкриття зон TSV"
 ZoneAssociationInfo	"MiniMap доступна в меню Відкрити за допомогою для TSV. Натисніть правою кнопкою на TSV із зонами, виберіть Відкрити за допомогою → SCUM MiniMap і Завжди для відкриття подвійним клацанням. Інші TSV можна відкривати іншою програмою."
+SquadTools	Інструменти загону
+PingDanger	Небезпека
+PingLoot	Здобич
+PingPickup	Заберіть мене
+SquadUpdated	Останнє оновлення
+SquadOffline	Від’єднано
+SquadFollow	Слідувати за товаришем
+SquadStopNav	Зупинити навігацію
+SquadRoute	Спільний маршрут
+SquadAddStop	Додати зупинку
+SquadUndoStop	Видалити останню
+SquadStartRoute	Почати маршрут
+SquadPresets	Профілі мапи
+SquadSavePreset	Зберегти поточну мапу
+SquadLooting	Збір здобичі
+SquadDriving	Водіння
+SquadExploring	Дослідження
+SquadDelete	Видалити
+SquadPingHelp	Сигнали зникають через 60 секунд. Призначте клавіші в налаштуваннях. Передавання лише під час підключення.
+SquadRouteHelp	Додавайте зупинки правою кнопкою миші на мапі або додайте поточну ціль нижче. Підключені групи отримують маршрут. Перехід до наступної зупинки — у радіусі 40 м.

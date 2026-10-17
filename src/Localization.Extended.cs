@@ -5,6 +5,30 @@ using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsPtPt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "PrivateGroupNameLabel", "Nome do grupo (opcional ao criar)" },
+            { "PrivateGroupRename", "Guardar nome do grupo" },
+
+            { "SquadTools", "Ferramentas do grupo" },
+            { "PingDanger", "Perigo" },
+            { "PingLoot", "Saque" },
+            { "PingPickup", "Venham buscar-me" },
+            { "SquadUpdated", "Última atualização" },
+            { "SquadOffline", "Desligado" },
+            { "SquadFollow", "Seguir colega" },
+            { "SquadStopNav", "Parar navegação" },
+            { "SquadRoute", "Rota partilhada" },
+            { "SquadAddStop", "Adicionar paragem" },
+            { "SquadUndoStop", "Remover última paragem" },
+            { "SquadStartRoute", "Iniciar rota" },
+            { "SquadPresets", "Perfis do mapa" },
+            { "SquadSavePreset", "Guardar mapa atual" },
+            { "SquadLooting", "Saquear" },
+            { "SquadDriving", "Conduzir" },
+            { "SquadExploring", "Explorar" },
+            { "SquadDelete", "Eliminar" },
+            { "SquadPingHelp", "Os sinais expiram após 60 segundos. Configure os atalhos nas Definições. Partilha apenas com ligação ativa." },
+            { "SquadRouteHelp", "Clique com o botão direito no mapa para adicionar paragens ou adicione o destino atual abaixo. Os grupos ligados recebem a rota. As paragens avançam a menos de 40 m." },
+
             { "PrivateGroupCreate", "Criar grupo e copiar código" },
             { "PrivateGroupConnect", "Ligar" },
             { "PrivateGroupLeave", "Sair do grupo" },

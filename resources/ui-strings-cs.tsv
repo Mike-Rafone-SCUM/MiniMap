@@ -1,4 +1,4 @@
-# Offline localized labels; native-speaker review remains pending.
+﻿# Offline localized labels; native-speaker review remains pending.
 InstallationAssetsMissing	"Instalační soubory MiniMap chybí nebo jsou poškozené. Rozbalte kompletní oficiální ZIP včetně složky aktiv a poté spusťte EXE z této složky."
 ZeRectangle	"Obdélník"
 ZeSquare	"náměstí"
@@ -642,3 +642,23 @@ NameThisMap	"Pojmenujte tuto mapu"
 ZoneOpenError	"Soubor zón nelze otevřít: {0}"
 EnableZoneTsv	"Povolit otevírání zón TSV"
 ZoneAssociationInfo	"MiniMap je dostupný v nabídce Otevřít v programu pro TSV. Klikněte pravým tlačítkem na TSV se zónami, zvolte Otevřít v programu → SCUM MiniMap a Vždy pro otevírání dvojklikem. Jiné TSV lze otevřít jinou aplikací."
+SquadTools	Nástroje týmu
+PingDanger	Nebezpečí
+PingLoot	Kořist
+PingPickup	Vyzvedněte mě
+SquadUpdated	Poslední aktualizace
+SquadOffline	Odpojeno
+SquadFollow	Sledovat spoluhráče
+SquadStopNav	Zastavit navigaci
+SquadRoute	Sdílená trasa
+SquadAddStop	Přidat zastávku
+SquadUndoStop	Odebrat poslední
+SquadStartRoute	Spustit trasu
+SquadPresets	Profily mapy
+SquadSavePreset	Uložit aktuální mapu
+SquadLooting	Sbírání kořisti
+SquadDriving	Řízení
+SquadExploring	Průzkum
+SquadDelete	Smazat
+SquadPingHelp	Signály zmizí po 60 sekundách. Klávesy nastavte v nastavení. Sdílení funguje jen při připojení.
+SquadRouteHelp	Pravým tlačítkem na mapě přidejte zastávky nebo níže přidejte aktuální cíl. Připojené skupiny dostanou trasu. Zastávky se posouvají do vzdálenosti 40 m.

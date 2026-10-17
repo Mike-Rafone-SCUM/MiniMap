@@ -622,9 +622,10 @@ static class InputVoiceTests {
     static void TestAppControlModel() {
         Check(AppControlBindings.AllActions.SequenceEqual(new[]{AppControlAction.Settings,AppControlAction.AddWaypoint,AppControlAction.Search,
             AppControlAction.ToggleOverlay,AppControlAction.ZoomIn,AppControlAction.ZoomOut,AppControlAction.DeathMarker,
-            AppControlAction.ResetZoom,AppControlAction.ClearWaypoint,AppControlAction.ZoneEditor,AppControlAction.StartupGuide,AppControlAction.AdminCommands,AppControlAction.AdminPlayers}),
+            AppControlAction.ResetZoom,AppControlAction.ClearWaypoint,AppControlAction.ZoneEditor,AppControlAction.StartupGuide,AppControlAction.AdminCommands,AppControlAction.AdminPlayers,AppControlAction.PingDanger,AppControlAction.PingLoot,AppControlAction.PingPickup}),
             "Every map and tool button has a configurable app action");
         var defaults=new AppControlBindings();
+        Check(new[]{AppControlAction.PingDanger,AppControlAction.PingLoot,AppControlAction.PingPickup}.All(a=>defaults.Key(a)==0&&defaults.ScanCode(a)==0),"Squad pings require explicit key assignment and preserve existing game controls");
         Check(defaults.BindingError(0x4D,0,0x54,0,0x6F,0)==null
             && defaults.Key(AppControlAction.ToggleOverlay)==0x23 && defaults.Key(AppControlAction.ZoomIn)==0x21
             && defaults.Key(AppControlAction.ZoomOut)==0x22 && defaults.Key(AppControlAction.DeathMarker)==0x28,
@@ -748,7 +749,7 @@ static class InputVoiceTests {
         string profile=Path.Combine(testRoot,"controls");Directory.CreateDirectory(profile);
         string settings=Path.Combine(profile,"settings.ini");File.WriteAllText(settings,"Welcomed=True");
         using(var bitmap=new Bitmap(32,32)) bitmap.Save(Path.Combine(profile,"map.png"));
-        var configured=new AppControlBindings();int[] scans={0x3B,0x3C,0x3D,0x3E,0x3F,0x40,0x41,0x42,0x43,0x44,0x57,0x58,0x64};
+        var configured=new AppControlBindings();int[] scans={0x3B,0x3C,0x3D,0x3E,0x3F,0x40,0x41,0x42,0x43,0x44,0x57,0x58,0x64,0x65,0x66,0x67};
         for(int i=0;i<AppControlBindings.AllActions.Length;i++) configured.Set(AppControlBindings.AllActions[i],0x70+i,scans[i]);
         using(var window=new MapWindow(profile)) {
             foreach(var action in AppControlBindings.AllActions) {

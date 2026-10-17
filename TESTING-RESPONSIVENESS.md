@@ -4,6 +4,12 @@ Build the current source with `Build.ps1 -Configuration Test`. Exit the current 
 
 Keep the packaged `assets` folder beside the test EXE. If moving the build to another PC, extract the entire test ZIP rather than copying only the executable. Map tiles and road data are loaded locally and verified before normal startup.
 
+Squad tools checks: connect two test clients to the same group. Assign optional Danger/Loot/Pick me up shortcuts, send pings and confirm that each disappears within 60 seconds of first receipt without repeat-key flooding. Right-click to add several route stops, then start the shared route from the other client and visit each stop in order. Follow a moving teammate, pause their capture, and verify that navigation clears until they send a fresh position. In a second group, confirm that following does not publish that teammate's location as your shared GPS marker. Save and reload differently named map presets, including after an app restart.
+
+Full-map focus checks: open the map, Alt-Tab to another app, then return to SCUM. The full map should stay closed. Reopen it and dismiss it using Escape, Tab and the map key. Repeat while tracking is paused and after opening/closing Settings. These actions must release map mouse interception. Text entry and key-binding capture must still keep their own keyboard handling.
+
+Automated state/transport regressions run in `tests/Test-SquadState.ps1`. Against a built package, run `tests/Test-SquadUi.ps1 -Executable <test-exe> -OutputDirectory <fresh-folder>` from Windows PowerShell STA. This exercises the actual WPF visibility, controller state, teammate navigation and preset application with synthetic loopback peers; it also renders the squad panel.
+
 To test private groups, open Settings > General > Private positions. Click
 **Create group and copy code**, then share that code privately with friends.
 They paste it into **Group code** and click **Connect**. Names are prefilled and

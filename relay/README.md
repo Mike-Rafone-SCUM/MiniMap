@@ -28,3 +28,7 @@ Connection, buffer, room, rate and queue limits are enforced in `server.ts`.
 
 Private operator credentials, systemd installation files and deployment tooling
 are intentionally outside the public source archive.
+
+Group names, pings and ordered routes are encrypted client marker metadata. The
+relay does not parse or persist them. Group-name edits are available to group
+members; separate owner capabilities still exclusively control code rotation.

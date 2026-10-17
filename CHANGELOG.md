@@ -8,6 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-10-17
+
+- Name private groups when creating them or rename saved groups. Names synchronize as encrypted group metadata and are saved with memberships without changing invite codes or refresh ownership.
+- Draw teammates using the same directional player-arrow geometry as your own marker, following each player's heading. Turning changes redraw stationary teammates too.
+
+- Add expiring Danger, Loot and Pick me up pings, with individually configurable shortcuts and right-click map actions. Pings use existing encrypted group sharing and expire after 60 seconds on each receiving client.
+- Show teammate connection state and the age of their last captured position. Keep disconnected entries briefly, without showing old positions as live.
+- Follow a moving teammate with bounded route recalculation; pause navigation when their position is unavailable and cancel it when a manual destination is chosen.
+- Share ordered routes with up to 16 stops. Add stops from the map or current destination, follow another member's route, and advance within 40 metres of each stop.
+- Save named map presets for looting, driving and exploring, including categories, layers, zoom, rotation, clustering and opacity. Presets remain local and apply only to their matching map.
+- Hide the full map when switching to another application. Synchronize legacy close paths with the visible WPF window, release its mouse shield, and prioritize Escape/map dismissal over tracking gates.
+
 ## [2.2.0] - 2026-10-17
 
 - Added persistent private group codes: create and copy a code, or paste a code and connect without home port forwarding or VPN setup. Players can save and join multiple groups; only the creator can refresh a code, disconnect its members and invalidate the previous code. Codes and separate owner credentials are protected with Windows DPAPI; sharing starts disabled.
