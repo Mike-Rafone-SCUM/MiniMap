@@ -118,11 +118,60 @@ namespace ScumMiniMap {
         static readonly Brush tacticalHitSurface=WpfFieldTheme.ColorBrush("#01000000");
         static readonly System.Runtime.CompilerServices.ConditionalWeakTable<DrawingPoint[],StreamGeometry> zoneGeometryCache=new System.Runtime.CompilerServices.ConditionalWeakTable<DrawingPoint[],StreamGeometry>();
         static readonly System.Runtime.CompilerServices.ConditionalWeakTable<DrawingPoint[][],StreamGeometry> habitatGeometryCache=new System.Runtime.CompilerServices.ConditionalWeakTable<DrawingPoint[][],StreamGeometry>();
+        sealed class GeometryBounds { internal Rect Value;internal GeometryBounds(StreamGeometry geometry) { Value=geometry.Bounds; } }
+        static readonly System.Runtime.CompilerServices.ConditionalWeakTable<StreamGeometry,GeometryBounds> geometryBoundsCache=new System.Runtime.CompilerServices.ConditionalWeakTable<StreamGeometry,GeometryBounds>();
         static StreamGeometry WorldGeometry(DrawingPoint[][] rings) {
             var geometry=new StreamGeometry { FillRule=FillRule.Nonzero };using(var context=geometry.Open())foreach(var ring in rings) { if(ring==null||ring.Length<3)continue;context.BeginFigure(new Point(ring[0].X,ring[0].Y),true,true);context.PolyLineTo(ring.Skip(1).Select(p=>new Point(p.X,p.Y)).ToArray(),true,false); }geometry.Freeze();return geometry;
         }
         internal WpfMapState State;
         internal bool Compact;
+        sealed class PoiStamp { internal Point At;internal double Radius,Scale;internal DrawingGroup Icon;internal Pen Outline; }
+        static readonly System.Threading.SemaphoreSlim poiBuildSlots=new System.Threading.SemaphoreSlim(1);
+        System.Threading.CancellationTokenSource poiBuild;
+        WpfPoiCluster[] requestedPoiLayout,drawnPoiLayout;
+        double requestedPoiSide,drawnPoiSide;
+        DrawingGroup poiScene;
+        long poiGeneration;
+        internal int PoiSceneBuilds;
+        static void PostPoiScene(Dispatcher dispatcher,Action apply) { if(!dispatcher.HasShutdownStarted)dispatcher.BeginInvoke(apply,DispatcherPriority.Background); }
+        void DrawRetainedPois(DrawingContext dc,double side,double left,double top,double width,double height) {
+            Dispatcher.VerifyAccess();
+            var layout=PoiClusters(State,width,height,false);
+            if(layout.Length<=256) {
+                foreach(var cluster in layout) { ScumMapCategory category;State.Store.CategoryById.TryGetValue(cluster.Members[0].CategoryId,out category);DrawPoi(dc,new Point(left+cluster.Point.X*side,top+cluster.Point.Y*side),category,cluster); }return;
+            }
+            if(!object.ReferenceEquals(layout,requestedPoiLayout)||side!=requestedPoiSide) {
+                requestedPoiLayout=layout;requestedPoiSide=side;
+                if(poiBuild!=null)poiBuild.Cancel();var cancel=new System.Threading.CancellationTokenSource();poiBuild=cancel;
+                long generation=System.Threading.Interlocked.Increment(ref poiGeneration);
+                var dispatcher=Dispatcher;
+                var stamps=new PoiStamp[layout.Length];
+                for(int i=0;i<layout.Length;i++) {
+                    var cluster=layout[i];ScumMapCategory category;State.Store.CategoryById.TryGetValue(cluster.Members[0].CategoryId,out category);EnsurePoiAssets(category,cluster);
+                    stamps[i]=new PoiStamp { At=new Point(cluster.Point.X*side,cluster.Point.Y*side),Radius=cluster.Radius,Scale=(cluster.Members.Count>1?11:cluster.Radius*1.45)/12,Icon=cluster.Icon,Outline=cluster.Outline };
+                }
+                // The worker receives copied coordinates and frozen assets only.
+                // It never reads controls, State, live clusters or mutable stores.
+                System.Threading.Tasks.Task.Run(async()=> {
+                    bool entered=false;System.Threading.Thread workerThread=null;System.Threading.ThreadPriority priority=System.Threading.ThreadPriority.Normal;try {
+                        await poiBuildSlots.WaitAsync(cancel.Token);entered=true;cancel.Token.ThrowIfCancellationRequested();
+                        workerThread=System.Threading.Thread.CurrentThread;priority=workerThread.Priority;workerThread.Priority=System.Threading.ThreadPriority.BelowNormal;
+                        var drawing=new DrawingGroup();using(var context=drawing.Open())for(int i=0;i<stamps.Length;i++) {
+                            if((i&127)==0)cancel.Token.ThrowIfCancellationRequested();var stamp=stamps[i];
+                            context.DrawEllipse(WpfFieldTheme.Ground,stamp.Outline,stamp.At,stamp.Radius,stamp.Radius);
+                            context.PushTransform(new MatrixTransform(stamp.Scale,0,0,stamp.Scale,stamp.At.X,stamp.At.Y));context.DrawDrawing(stamp.Icon);context.Pop();
+                        }
+                        drawing.Freeze();cancel.Token.ThrowIfCancellationRequested();
+                        PostPoiScene(dispatcher,()=> { if(generation!=poiGeneration)return;poiScene=drawing;drawnPoiLayout=layout;drawnPoiSide=side;PoiSceneBuilds++;InvalidateVisual(); });
+                    }catch(OperationCanceledException) { }
+                    catch(Exception error) { Program.LogException("PoiScene",error); }
+                    finally { if(workerThread!=null)workerThread.Priority=priority;if(entered)poiBuildSlots.Release(); }
+                });
+            }
+            if(poiScene!=null&&object.ReferenceEquals(drawnPoiLayout,layout)) {
+                dc.PushTransform(new TranslateTransform(left,top));double scale=side/drawnPoiSide;dc.PushTransform(new ScaleTransform(scale,scale));dc.DrawDrawing(poiScene);dc.Pop();dc.Pop();
+            }
+        }
         double renderRotation;
         internal static double Rotation(WpfMapState state,bool compact) { return compact&&state.RotateMap&&state.Position!=null?90-state.Position.Yaw:0; }
         internal static Point RotatePoint(Point p,double angle,double width,double height) {
@@ -217,11 +266,11 @@ namespace ScumMiniMap {
         internal ContextMenu BuildContextMenu(DrawingPoint target) {
             var menu=new ContextMenu { Background=WpfFieldTheme.Panel,Foreground=WpfFieldTheme.Ink };
             menu.Items.Add(new MenuItem { Header=DestinationSearch.Sector(target),IsEnabled=false });
-            var navigate=new MenuItem { Header=Localization.Get("SetWaypoint") };navigate.Click+=(s,e)=>NavigateTo(target);menu.Items.Add(navigate);
-            var save=new MenuItem { Header=Localization.Get("ShortcutWaypoint") };save.Click+=(s,e)=> { if(WaypointAt!=null)WaypointAt(target); };menu.Items.Add(save);
+            var navigate=new MenuItem { Header=Localization.Get("MapGpsDestination"),ToolTip=Localization.Get("MapGpsSavedHelp") };navigate.Click+=(s,e)=>NavigateTo(target);menu.Items.Add(navigate);
+            var save=new MenuItem { Header=Localization.Get("MapSaveLocation"),ToolTip=Localization.Get("MapGpsSavedHelp") };save.Click+=(s,e)=> { if(WaypointAt!=null)WaypointAt(target); };menu.Items.Add(save);
             if(RouteStopAt!=null&&State!=null) {
                 var routeMenu=new MenuItem { Header=Localization.Get("SquadTools") };
-                var stop=new MenuItem { Header=Localization.Get("SquadAddStop") };stop.Click+=(s,e)=>RouteStopAt(target);routeMenu.Items.Add(stop);
+                var stop=new MenuItem { Header=Localization.Get("SquadAddStop") };stop.Click+=(s,e)=>RouteStopAt(target);menu.Items.Insert(1,stop);
                 var clicked=State.SharedMarkers.Where(m=>SquadState.IsStop(m)&&MarkerDistance(new DrawingPoint((float)m.X,(float)m.Y),target)<=14/MapSide(State,ActualWidth,ActualHeight,Compact)).FirstOrDefault();var chosen=clicked!=null?SquadState.Routes(State.SharedMarkers).FirstOrDefault(r=>SquadState.RouteKey(r[0])==SquadState.RouteKey(clicked)):State.LocalRoute;
                 var start=new MenuItem { Header=Localization.Get("SquadStartRoute"),IsEnabled=chosen!=null&&chosen.Length>0 };start.Click+=(s,e)=> { if(RouteNavigate!=null)RouteNavigate(chosen); };routeMenu.Items.Add(start);
                 if(clicked!=null&&clicked.OwnerId==null&&State.LocalRoute.Any(m=>m.Id==clicked.Id)) { var remove=new MenuItem { Header=Localization.Get("SquadDelete")+": "+clicked.Name };remove.Click+=(s,e)=> { if(RouteRemove!=null)RouteRemove(clicked.Id); };routeMenu.Items.Add(remove); }
@@ -282,7 +331,7 @@ namespace ScumMiniMap {
                     expand.IsEnabled=item.IsEnabled;expand.HorizontalContentAlignment=HorizontalAlignment.Left;expand.Margin=new Thickness(0,1,0,1);expand.MinHeight=32;panel.Children.Add(expand);panel.Children.Add(children);
                 } else {
                     var captured=item;var action=WpfFieldTheme.Button(title,()=> { CloseContextMenu();captured.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent,captured)); });
-                    action.IsEnabled=item.IsEnabled;action.HorizontalContentAlignment=HorizontalAlignment.Left;action.Margin=new Thickness(0,1,0,1);action.MinHeight=32;action.Padding=new Thickness(10,6,10,6);
+                    action.ToolTip=item.ToolTip;action.IsEnabled=item.IsEnabled;action.HorizontalContentAlignment=HorizontalAlignment.Left;action.Margin=new Thickness(0,1,0,1);action.MinHeight=32;action.Padding=new Thickness(10,6,10,6);
                     action.Content=new TextBlock { Text=title,TextWrapping=TextWrapping.Wrap };panel.Children.Add(action);
                 }
             }
@@ -347,6 +396,7 @@ namespace ScumMiniMap {
             MouseLeftButtonUp+=(s,e)=> { if(!drag.HasValue)return;EndPointer(e.GetPosition(this));ReleaseMouseCapture();e.Handled=true; };
             LostMouseCapture+=(s,e)=> { CancelPointer();contextPointer=null; };
             IsVisibleChanged+=(s,e)=> { if(!IsVisible)CloseContextMenu(); };
+            Unloaded+=(s,e)=> { if(poiBuild!=null)poiBuild.Cancel();System.Threading.Interlocked.Increment(ref poiGeneration);requestedPoiLayout=null; };
         }
         protected override void OnRender(DrawingContext dc) {
             base.OnRender(dc);double w=ActualWidth,h=ActualHeight;if(w<1||h<1)return;
@@ -380,14 +430,14 @@ namespace ScumMiniMap {
                 dc.Pop();
             }
             if(State.Store!=null&&State.Store.MasterEnabled)foreach(var habitat in State.Store.Habitats.AsEnumerable().Reverse().Where(State.Store.IsHabitatEnabled)) {
-                if(habitat.Rings==null)continue;var geometry=habitatGeometryCache.GetValue(habitat.Rings,WorldGeometry);var bounds=geometry.Bounds;bounds.Transform(new Matrix(side,0,0,side,left,top));if(!bounds.IntersectsWith(layerViewport))continue;
+                if(habitat.Rings==null)continue;var geometry=habitatGeometryCache.GetValue(habitat.Rings,WorldGeometry);var bounds=geometryBoundsCache.GetValue(geometry,g=>new GeometryBounds(g)).Value;bounds.Transform(new Matrix(side,0,0,side,left,top));if(!bounds.IntersectsWith(layerViewport))continue;
                 var color=Color.FromRgb((byte)(habitat.Color>>16),(byte)(habitat.Color>>8),(byte)habitat.Color);
                 dc.PushTransform(new MatrixTransform(side,0,0,side,left,top));dc.DrawGeometry(new SolidColorBrush(Color.FromArgb(12,color.R,color.G,color.B)),new Pen(new SolidColorBrush(Color.FromArgb(100,color.R,color.G,color.B)),.8/side),geometry);dc.Pop();
             }
             if(State.History&&State.Trail.Length>1)DrawLine(dc,State.Trail.Select(point),new Pen(new SolidColorBrush(Color.FromArgb((byte)(State.HistoryColor>>24),(byte)(State.HistoryColor>>16),(byte)(State.HistoryColor>>8),(byte)State.HistoryColor)),2));
             if(State.Zones)foreach(var zone in State.Saved.Where(z=>z.Points!=null&&z.Points.Length>2)) {
                 var outline=Color.FromArgb((byte)(zone.Argb>>24),(byte)(zone.Argb>>16),(byte)(zone.Argb>>8),(byte)zone.Argb);int fillArgb=zone.FillArgb??(((zone.IsFaction||zone.Category==ZoneCategory.Faction?75:40)<<24)|(zone.Argb&0xFFFFFF));
-                var geometry=zoneGeometryCache.GetValue(zone.Points,points=>WorldGeometry(new[]{points}));var bounds=geometry.Bounds;bounds.Transform(new Matrix(side,0,0,side,left,top));if(!bounds.IntersectsWith(layerViewport))continue;
+                var geometry=zoneGeometryCache.GetValue(zone.Points,points=>WorldGeometry(new[]{points}));var bounds=geometryBoundsCache.GetValue(geometry,g=>new GeometryBounds(g)).Value;bounds.Transform(new Matrix(side,0,0,side,left,top));if(!bounds.IntersectsWith(layerViewport))continue;
                 dc.PushTransform(new MatrixTransform(side,0,0,side,left,top));dc.DrawGeometry(new SolidColorBrush(Color.FromArgb((byte)(fillArgb>>24),(byte)(fillArgb>>16),(byte)(fillArgb>>8),(byte)fillArgb)),new Pen(new SolidColorBrush(outline),1.8/side),geometry);dc.Pop();
             }
             if(State.Zones)foreach(var zone in State.Saved.Where(z=>MapWindow.WpfCustomZone(z)&&z.Points.Length<3)) {
@@ -395,7 +445,8 @@ namespace ScumMiniMap {
             }
             if(State.Waypoints)foreach(var zone in State.Saved.Where(z=>z.Points!=null&&z.Points.Length==1&&!MapWindow.WpfCustomZone(z)&&!z.IsDeathMarker))dc.DrawEllipse(null,new Pen(WpfFieldTheme.Cyan,2),point(zone.Centroid),5,5);
             if(State.Store!=null&&State.Store.MasterEnabled) {
-                foreach(var cluster in PoiClusters(State,w,h,Compact)) {
+                if(!Compact)DrawRetainedPois(dc,side,left,top,w,h);
+                else foreach(var cluster in PoiClusters(State,w,h,Compact)) {
                     var at=point(cluster.Point);var screen=RotatePoint(at,rotation,w,h);
                     if(screen.X<-14||screen.Y<-14||screen.X>w+14||screen.Y>h+14)continue;
                     ScumMapCategory category;State.Store.CategoryById.TryGetValue(cluster.Members[0].CategoryId,out category);DrawPoi(dc,at,category,cluster);
@@ -542,8 +593,15 @@ namespace ScumMiniMap {
         static readonly Queue<string> poiIconOrder=new Queue<string>();
         static readonly Dictionary<string,Pen> poiOutlinePens=new Dictionary<string,Pen>();
         void DrawPoi(DrawingContext dc,Point at,ScumMapCategory category,WpfPoiCluster cluster) {
-            int color=category==null?unchecked((int)0xFFA4B1BC):category.ColorBackground;
+            EnsurePoiAssets(category,cluster);
             double radius=cluster.Radius;
+            dc.DrawEllipse(WpfFieldTheme.Ground,cluster.Outline,at,radius,radius);
+            double scale=(cluster.Members.Count>1?(Compact?9:11):radius*1.45)/12;
+            var transform=new Matrix(scale,0,0,scale,0,0);if(renderRotation!=0)transform.Rotate(-renderRotation);transform.Translate(at.X,at.Y);
+            dc.PushTransform(new MatrixTransform(transform));dc.DrawDrawing(cluster.Icon);dc.Pop();
+        }
+        void EnsurePoiAssets(ScumMapCategory category,WpfPoiCluster cluster) {
+            int color=category==null?unchecked((int)0xFFA4B1BC):category.ColorBackground;
             if(cluster.Icon==null) {
                 string label=cluster.Members.Count>1?(cluster.Members.Count>99?"99+":cluster.Members.Count.ToString(CultureInfo.InvariantCulture)):PoiSymbol(category);
                 string key=label;
@@ -568,10 +626,6 @@ namespace ScumMiniMap {
             }
             cluster.Outline=outline;cluster.IconColor=color;
             }
-            dc.DrawEllipse(WpfFieldTheme.Ground,cluster.Outline,at,radius,radius);
-            double scale=(cluster.Members.Count>1?(Compact?9:11):radius*1.45)/12;
-            var transform=new Matrix(scale,0,0,scale,0,0);if(renderRotation!=0)transform.Rotate(-renderRotation);transform.Translate(at.X,at.Y);
-            dc.PushTransform(new MatrixTransform(transform));dc.DrawDrawing(cluster.Icon);dc.Pop();
         }
     }
 
@@ -698,6 +752,16 @@ namespace ScumMiniMap {
         long lastRouteTextRefresh=-1000;
         Button deathRemovalButton;
         string chromeLanguage;
+        IntPtr inputTacticalHandle;
+        volatile IntPtr[] inputDialogHandles=new IntPtr[0];
+        volatile bool inputEditingText;
+        void RefreshInputOwnership() {
+            application.Dispatcher.VerifyAccess();
+            System.Threading.Interlocked.Exchange(ref inputTacticalHandle,tactical==null?IntPtr.Zero:new WindowInteropHelper(tactical).Handle);
+            inputDialogHandles=dialogs.Select(w=>new WindowInteropHelper(w).Handle).Where(h=>h!=IntPtr.Zero).ToArray();
+            var focused=Keyboard.FocusedElement as DependencyObject;var owner=focused==null?null:System.Windows.Window.GetWindow(focused);
+            inputEditingText=owner!=null&&owner.IsVisible&&EditingText(Keyboard.FocusedElement);
+        }
         static void RefreshLocalizedChrome(DependencyObject root) {
             var element=root as FrameworkElement;string tag=element==null?null:element.Tag as string;
             if(tag!=null&&(tag.StartsWith("text:")||tag.StartsWith("tooltip:"))) {
@@ -730,6 +794,7 @@ namespace ScumMiniMap {
         [DllImport("user32.dll")]static extern int GetWindowLong(IntPtr window,int index);
         [DllImport("user32.dll")]static extern int SetWindowLong(IntPtr window,int index,int value);
         [DllImport("user32.dll")]static extern bool ClipCursor(IntPtr rectangle);
+        [DllImport("user32.dll")]static extern IntPtr GetAncestor(IntPtr window,uint flags);
         internal WpfFieldConsoleRuntime(string folder,bool diagnostic=false) {
             this.diagnostic=diagnostic;application=Application.Current??new Application { ShutdownMode=ShutdownMode.OnExplicitShutdown };application.Resources.MergedDictionaries.Add(WpfFieldTheme.Resources());
             engine=new MapWindow(folder,diagnostic);var handle=engine.Handle;engine.WpfInitializeDefaults();
@@ -767,10 +832,14 @@ namespace ScumMiniMap {
         internal bool SuppressMapMouse(int message,System.Drawing.Point point,uint data) {
             // Called on the mouse hook thread: never read WPF dependency properties here.
             if(!tacticalMouseShieldActive)return mouseShield.Suppress(message,data,false,false,false);
+            bool active=TacticalMouseShieldEnabled(tacticalMouseShieldActive,Native.IsOurWindow(Native.GetForegroundWindow()));
+            if(!active)return mouseShield.Suppress(message,data,false,false,false);
             IntPtr target=Native.WindowFromPoint(point);
-            // Restrict the actual SCUM destination, never desktop/taskbar/other applications.
-            return mouseShield.Suppress(message,data,TacticalMouseShieldEnabled(tacticalMouseShieldActive,Native.IsOurWindow(Native.GetForegroundWindow())),
-                Native.IsOurWindow(target),Native.IsGameWindow(target));
+            bool inside=Native.IsOurWindow(target);
+            // The game HWND was validated on the UI thread when opening the map.
+            // Never enumerate processes or touch controls in a low-level hook.
+            IntPtr game=System.Threading.Interlocked.CompareExchange(ref gameMapWindow,IntPtr.Zero,IntPtr.Zero);
+            return mouseShield.Suppress(message,data,true,inside,!inside&&game!=IntPtr.Zero&&GetAncestor(target,2)==game);
         }
         internal static bool TacticalMouseShieldEnabled(bool visible,bool appFocused) { return visible&&appFocused; }
         internal static bool ShouldHideTactical(bool visible,bool gameFocused,bool appFocused) { return visible&&!gameFocused&&!appFocused; }
@@ -842,6 +911,8 @@ namespace ScumMiniMap {
         }
         Window Window(string title,double w,double h) {
             var window=new Window { Title=title,Width=w,Height=h,MinWidth=Math.Min(w,420),MinHeight=Math.Min(h,300),WindowStartupLocation=WindowStartupLocation.CenterScreen,WindowStyle=WindowStyle.None,ResizeMode=ResizeMode.CanResizeWithGrip,Background=WpfFieldTheme.Ground,Foreground=WpfFieldTheme.Ink,FlowDirection=Localization.Current==AppLanguage.Arabic?FlowDirection.RightToLeft:FlowDirection.LeftToRight };
+            window.SourceInitialized+=(s,e)=>RefreshInputOwnership();
+            window.GotKeyboardFocus+=(s,e)=>RefreshInputOwnership();window.LostKeyboardFocus+=(s,e)=>inputEditingText=EditingText(e.NewFocus);
             window.PreviewKeyDown+=(s,e)=> { if(e.Key==Key.Escape) { if(window==tactical&&tacticalMap!=null&&tacticalMap.ContextMenuOpen)tacticalMap.CloseContextMenu();else window.Close();e.Handled=true; } };
             return window;
         }
@@ -952,6 +1023,7 @@ namespace ScumMiniMap {
         void FilterAll(bool enabled) { var store=engine.WpfSnapshot(true).Store;if(store==null)return;store.SetAllEnabled(enabled);engine.WpfSave();filterIdentity=null;Refresh(); }
         void FilterSection(string section,bool enabled) { var store=engine.WpfSnapshot(true).Store;if(store==null||!store.CategoriesBySection.ContainsKey(section))return;foreach(var category in store.CategoriesBySection[section])store.SetCategoryEnabled(category.Id,enabled);engine.WpfSave();filterIdentity=null;Refresh(); }
         internal void Refresh() {
+            application.Dispatcher.VerifyAccess();
             if(disposed)return;
             RefreshSetupPreview();
             // The native controller also requests refreshes. Coalesce those with the WPF timer.
@@ -1026,7 +1098,7 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
         }
         internal void RequestExit() { application.Shutdown(); }
         internal bool IsSettingsToggleKey(int key,int scan) { return settingsToggleOpen&&engine.WpfSettingsKeyMatches(key,scan); }
-        void UpdateSettingsToggle() { settingsToggleOpen=settingsWindow!=null&&settingsWindow.IsVisible&&dialogs.Count==1&&dialogs[0]==settingsWindow; }
+        void UpdateSettingsToggle() { settingsToggleOpen=settingsWindow!=null&&settingsWindow.IsVisible&&dialogs.Count==1&&dialogs[0]==settingsWindow;RefreshInputOwnership(); }
         internal void ToggleTactical(bool gameKey=false) {
             if(tactical.IsVisible) {
                 bool forward=gameKey&&new WindowInteropHelper(tactical).Handle==Native.GetForegroundWindow();
@@ -1040,9 +1112,9 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
         }
 
         internal bool OwnsForeground(IntPtr handle) {
-            bool owned=new WindowInteropHelper(tactical).Handle==handle||dialogs.Any(w=>new WindowInteropHelper(w).Handle==handle);
-            var focus=Keyboard.FocusedElement;
-            return owned && !EditingText(focus);
+            // Also called on the keyboard-hook thread. Only read published values.
+            if(handle==IntPtr.Zero||inputEditingText)return false;
+            return handle==System.Threading.Interlocked.CompareExchange(ref inputTacticalHandle,IntPtr.Zero,IntPtr.Zero)||Array.IndexOf(inputDialogHandles,handle)>=0;
         }
         internal static bool EditingText(IInputElement focus) { return focus is TextBox || focus is PasswordBox || focus is ComboBox; }
         void FocusInteractive(Window window) {

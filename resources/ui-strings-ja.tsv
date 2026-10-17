@@ -671,3 +671,6 @@ RouteAutoHelp	経由地の変更時に自動計算します。琥珀色はソロ
 PrivateGroupDelete	グループを削除
 PrivateGroupDeleteConfirm	全員のグループ「{0}」を削除しますか？全メンバーが切断され、コードが無効になります。
 PrivateGroupDeleted	グループを削除しました。
+MapGpsDestination	ここへ案内（GPS）
+MapSaveLocation	場所を保存
+MapGpsSavedHelp	GPSは一時的な目的地です。保存した場所は削除するまで残ります。経由地は順番のある旅程を作ります。

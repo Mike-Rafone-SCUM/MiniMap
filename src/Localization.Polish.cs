@@ -22,6 +22,9 @@ PrivateGroupNameLabel|Nazwa grupy (opcjonalna przy tworzeniu)
 PrivateGroupDelete|Usuń grupę
 PrivateGroupDeleteConfirm|Usunąć grupę „{0}” dla wszystkich? Wszyscy członkowie zostaną rozłączeni, a kod przestanie działać.
 PrivateGroupDeleted|Grupa usunięta.
+MapGpsDestination|Nawiguj tutaj (GPS)
+MapSaveLocation|Zapisz miejsce
+MapGpsSavedHelp|GPS to cel tymczasowy. Zapisane miejsca pozostają do usunięcia. Przystanki tworzą uporządkowaną trasę.
 PrivateGroupRename|Zapisz nazwę grupy
 SquadTools|Narzędzia drużyny
 PingDanger|Niebezpieczeństwo

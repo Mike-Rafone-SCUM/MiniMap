@@ -8,6 +8,14 @@ using System.Windows.Media;
 class PoiZoomHarness {
  const BindingFlags Hidden=BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic;
  static void Set(object target,string field,object value){target.GetType().GetField(field,Hidden).SetValue(target,value);}
+ static void AwaitScene(object surface) {
+  var requested=surface.GetType().GetField("requestedPoiLayout",Hidden);if(requested==null||requested.GetValue(surface)==null)return;
+  var drawn=surface.GetType().GetField("drawnPoiLayout",Hidden);var targetSide=surface.GetType().GetField("requestedPoiSide",Hidden);var side=surface.GetType().GetField("drawnPoiSide",Hidden);var end=DateTime.UtcNow.AddSeconds(15);
+  while(!object.ReferenceEquals(requested.GetValue(surface),drawn.GetValue(surface))||!Equals(targetSide.GetValue(surface),side.GetValue(surface))) {
+   if(DateTime.UtcNow>end)throw new Exception("Requested POI drawing did not arrive");
+   var frame=new System.Windows.Threading.DispatcherFrame();System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background,new Action(()=>frame.Continue=false));System.Windows.Threading.Dispatcher.PushFrame(frame);System.Threading.Thread.Sleep(5);
+  }
+ }
  [STAThread]static void Main(string[] args){
   var assembly=Assembly.LoadFrom(args[0]);var storeType=assembly.GetType("ScumMiniMap.ScumMapStore");
   Directory.CreateDirectory(args[1]);var store=storeType.GetMethod("Load",BindingFlags.Static|BindingFlags.Public|BindingFlags.NonPublic).Invoke(null,new object[]{args[1]});
@@ -23,7 +31,8 @@ class PoiZoomHarness {
   Array firstLayout=null,lastLayout=null;bool reused=true,glyphsReused=true;object[] firstGlyphs=null;
   int before=GC.CollectionCount(0);
   foreach(float zoom in new[]{1f,1.2f,1.44f,1.728f,2.0736f,1.728f,1.44f,1.2f,1f}){
-   Set(state,"Zoom",zoom);var drawing=new DrawingGroup();var clock=Stopwatch.StartNew();using(var dc=drawing.Open())render.Invoke(surface,new object[]{dc});clock.Stop();timings.Add(clock.Elapsed.TotalMilliseconds);
+   Set(state,"Zoom",zoom);var requestDrawing=new DrawingGroup();using(var dc=requestDrawing.Open())render.Invoke(surface,new object[]{dc});AwaitScene(surface);
+   var drawing=new DrawingGroup();var clock=Stopwatch.StartNew();using(var dc=drawing.Open())render.Invoke(surface,new object[]{dc});clock.Stop();timings.Add(clock.Elapsed.TotalMilliseconds);
    lastLayout=(Array)layout.Invoke(null,new object[]{state,1200d,900d,false});
    if(firstLayout==null){firstLayout=lastLayout;firstGlyphs=lastLayout.Cast<object>().Select(item=>item.GetType().GetField("Icon",Hidden).GetValue(item)).ToArray();}
    else {reused&=Object.ReferenceEquals(firstLayout,lastLayout);for(int i=0;i<firstGlyphs.Length;i++)if(firstGlyphs[i]!=null)glyphsReused&=Object.ReferenceEquals(firstGlyphs[i],lastLayout.GetValue(i).GetType().GetField("Icon",Hidden).GetValue(lastLayout.GetValue(i)));}

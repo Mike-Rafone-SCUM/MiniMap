@@ -1,0 +1,15 @@
+# Thread ownership and responsiveness
+
+Keyboard and mouse hooks have dedicated message-pump threads. Their high-frequency callbacks must not read WPF dependency properties, invoke the UI synchronously, access files, repeatedly look up processes or perform route/render work. Map mouse suppression uses the foreground PID and the game window handle validated when the map opened. Previously blocked button releases are still paired after focus changes. Ordinary keyboard transitions use the sampled game handle; a watched key arriving at a focus boundary can validate the foreground game before the sampler catches up, preserving chat/input safety.
+
+The WPF dispatcher owns windows, controls, menus, map state, POI cluster caches and icon creation. `Refresh` and retained-POI snapshot preparation verify dispatcher ownership. Native controller UI work shares that application UI thread; background completions post results back to it.
+
+The UI publishes native window handles and text-entry focus as an input-ownership snapshot. Keyboard-hook checks read that snapshot rather than inspecting `WindowInteropHelper`, `Keyboard.FocusedElement` or the live dialog list from their own thread. Window initialization, focus changes and modal stack changes update the snapshot on the dispatcher.
+
+Dense full-map POIs are copied into immutable drawing stamps on the UI thread. Each stamp contains coordinates, sizes and frozen icon/pen assets. A worker builds and freezes a retained drawing from that snapshot. It never reads controls, live clusters, current map state or mutable filters. One shared slot bounds POI construction across surfaces. New requests cancel obsolete work; generation checks reject stale completions. The UI applies a completed drawing through its dispatcher. Camera panning reuses that drawing, and zooming can display a scaled valid layer until the replacement is ready. Small scenes remain inexpensive synchronous drawings. Immutable polygon bounds are cached rather than recalculated on each frame.
+
+Squad route searches remain off the dispatcher with a bounded calculation gate. They run at below-normal priority, restoring the worker's original priority before returning it to the pool. The road router serializes its reusable A* search scratch arrays with `searchLock`; callers do not share mutable search state without that lock. Route revisions discard obsolete results. Only the UI applies navigation state or changes controls.
+
+The same below-normal priority rule applies to dense POI recording. No await occurs between setting and restoring thread priority. Workers do not hold a POI slot while waiting synchronously for the UI.
+
+Regression verification covers dispatcher misuse, frozen scene publication, repeated full-map redraw timing, menu persistence through refresh, nested actions, input-thread mouse suppression and obsolete route work. Performance measurements must wait for the requested scene to arrive, so a missing layer cannot produce a falsely fast result. Use synthetic profiles; player databases and group credentials are not performance fixtures.

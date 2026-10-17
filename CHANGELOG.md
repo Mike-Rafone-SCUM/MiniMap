@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.3.4] - 2026-10-17
+
+- Record dense full-map POI layers on a single bounded background worker using copied coordinates and frozen assets; the UI reuses retained drawings while panning and applies only current results. Cache immutable polygon bounds instead of recalculating them on every redraw. Measured median redraw recording fell from about 212 ms to 20 ms with 8,056 POIs and the same view settings.
+- Enforce dispatcher ownership for control refresh and POI snapshots. Keep process-name lookup out of map mouse suppression, preserve paired button releases and use the validated game-window handle. Run background POI construction and squad previews at below-normal thread priority, restoring thread priority before returning pooled workers.
+- Put Add route stop directly in the main context menu. Distinguish Navigate here (GPS) from Save location, with explanatory tooltips describing temporary destinations, persistent saved places and ordered route stops in all 19 languages.
+- Add thread ownership, frozen-scene and dense redraw regressions; update the POI benchmark to wait for the requested drawing before measuring, and refresh older group/visibility fixtures to cover optional group names and all five player visibility controls.
+
 ## [2.3.3] - 2026-10-17
 
 - Replace native map context popups with an interactive menu inside the existing map window. Opening and using every menu level no longer switches Windows foreground focus or creates popup windows that SCUM can immediately dismiss.

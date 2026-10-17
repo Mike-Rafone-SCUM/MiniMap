@@ -671,3 +671,6 @@ RouteAutoHelp	中途站變更時自動計算路線。琥珀色為個人路線，
 PrivateGroupDelete	刪除群組
 PrivateGroupDeleteConfirm	為所有人刪除群組「{0}」？所有成員將中斷連線，群組代碼將失效。
 PrivateGroupDeleted	群組已刪除。
+MapGpsDestination	導航至此（GPS）
+MapSaveLocation	儲存地點
+MapGpsSavedHelp	GPS 是臨時目的地。儲存的地點會保留至刪除。路線途經點組成有序行程。

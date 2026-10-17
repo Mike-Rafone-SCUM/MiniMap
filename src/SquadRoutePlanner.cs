@@ -34,6 +34,11 @@ namespace ScumMiniMap {
             }
         }
         bool Current(Request request) { lock(gate)return !disposed&&request.Revision==revision; }
+        RoadRoute CalculateBackground(PointF from,PointF to) {
+            var thread=Thread.CurrentThread;var previous=thread.Priority;
+            try { thread.Priority=ThreadPriority.BelowNormal;return calculate(from,to); }
+            finally { thread.Priority=previous; }
+        }
         async Task Work() {
             while(true) {
                 Request request;lock(gate) { if(disposed||pending==null) { worker=false;return; }request=pending;pending=null; }
@@ -43,7 +48,7 @@ namespace ScumMiniMap {
                 for(int i=first;i<request.Stops.Length;i++) {
                     if(!Current(request))break;PointF to=request.Stops[i];RoadRoute route=null;
                     await calculations.WaitAsync();
-                    try { if(Current(request))route=await Task.Run(()=>calculate(from,to)); }catch(Exception) { }finally { calculations.Release(); }
+                    try { if(Current(request))route=await Task.Run(()=>CalculateBackground(from,to)); }catch(Exception) { }finally { calculations.Release(); }
                     if(!Current(request))break;
                     bool good=route!=null&&route.Success&&route.Polyline!=null&&route.Polyline.Length>0&&route.Polyline.All(Valid);
                     legs.Add(good?new[]{from}.Concat(route.Polyline).Concat(new[]{to}).ToArray():new[]{from,to});verified.Add(good);

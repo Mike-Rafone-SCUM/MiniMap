@@ -4,6 +4,10 @@ using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsTh = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "MapGpsDestination", "นำทางมาที่นี่ (GPS)" },
+            { "MapSaveLocation", "บันทึกสถานที่" },
+            { "MapGpsSavedHelp", "GPS คือจุดหมายชั่วคราว สถานที่ที่บันทึกจะอยู่จนกว่าจะลบ จุดแวะเป็นลำดับการเดินทาง" },
+
             { "PrivateGroupDelete", "ลบกลุ่ม" },
             { "PrivateGroupDeleteConfirm", "ลบกลุ่ม “{0}” สำหรับทุกคนหรือไม่? สมาชิกทุกคนจะถูกตัดการเชื่อมต่อและรหัสจะใช้ไม่ได้อีก" },
             { "PrivateGroupDeleted", "ลบกลุ่มแล้ว" },
@@ -1071,6 +1075,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "จุดกิจกรรมซีเดนเท็กซ์" },
         };
         public static readonly Dictionary<string,string> StringsZhTw = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "MapGpsDestination", "導航至此（GPS）" },
+            { "MapSaveLocation", "儲存地點" },
+            { "MapGpsSavedHelp", "GPS 是臨時目的地。儲存的地點會保留至刪除。路線途經點組成有序行程。" },
+
             { "PrivateGroupDelete", "刪除群組" },
             { "PrivateGroupDeleteConfirm", "為所有人刪除群組「{0}」？所有成員將中斷連線，群組代碼將失效。" },
             { "PrivateGroupDeleted", "群組已刪除。" },
@@ -2138,6 +2146,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex活動點" },
         };
         public static readonly Dictionary<string,string> StringsJa = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "MapGpsDestination", "ここへ案内（GPS）" },
+            { "MapSaveLocation", "場所を保存" },
+            { "MapGpsSavedHelp", "GPSは一時的な目的地です。保存した場所は削除するまで残ります。経由地は順番のある旅程を作ります。" },
+
             { "PrivateGroupDelete", "グループを削除" },
             { "PrivateGroupDeleteConfirm", "全員のグループ「{0}」を削除しますか？全メンバーが切断され、コードが無効になります。" },
             { "PrivateGroupDeleted", "グループを削除しました。" },
@@ -3205,6 +3217,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "シーデンテックスアクティビティスポット" },
         };
         public static readonly Dictionary<string,string> StringsCs = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "MapGpsDestination", "Navigovat sem (GPS)" },
+            { "MapSaveLocation", "Uložit místo" },
+            { "MapGpsSavedHelp", "GPS je dočasný cíl. Uložená místa zůstávají do smazání. Zastávky tvoří uspořádanou cestu." },
+
             { "PrivateGroupDelete", "Smazat skupinu" },
             { "PrivateGroupDeleteConfirm", "Smazat skupinu „{0}“ pro všechny? Všichni členové budou odpojeni a kód přestane fungovat." },
             { "PrivateGroupDeleted", "Skupina smazána." },
@@ -4272,6 +4288,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex Activity Spot" },
         };
         public static readonly Dictionary<string,string> StringsIt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "MapGpsDestination", "Naviga qui (GPS)" },
+            { "MapSaveLocation", "Salva luogo" },
+            { "MapGpsSavedHelp", "Il GPS è una destinazione temporanea. I luoghi salvati restano fino alla rimozione. Le tappe formano un viaggio ordinato." },
+
             { "PrivateGroupDelete", "Elimina gruppo" },
             { "PrivateGroupDeleteConfirm", "Eliminare il gruppo «{0}» per tutti? Tutti i membri saranno disconnessi e il codice non sarà più valido." },
             { "PrivateGroupDeleted", "Gruppo eliminato." },
@@ -5339,6 +5359,10 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Punto di attività del dentice marino" },
         };
         public static readonly Dictionary<string,string> StringsUk = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "MapGpsDestination", "Навігація сюди (GPS)" },
+            { "MapSaveLocation", "Зберегти місце" },
+            { "MapGpsSavedHelp", "GPS — тимчасова ціль. Збережені місця залишаються до видалення. Зупинки маршруту утворюють упорядкований шлях." },
+
             { "PrivateGroupDelete", "Видалити групу" },
             { "PrivateGroupDeleteConfirm", "Видалити групу «{0}» для всіх? Усіх учасників буде відключено, а код перестане працювати." },
             { "PrivateGroupDeleted", "Групу видалено." },

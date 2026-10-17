@@ -671,3 +671,6 @@ RouteAutoHelp	คำนวณเส้นทางอัตโนมัติเ
 PrivateGroupDelete	ลบกลุ่ม
 PrivateGroupDeleteConfirm	ลบกลุ่ม “{0}” สำหรับทุกคนหรือไม่? สมาชิกทุกคนจะถูกตัดการเชื่อมต่อและรหัสจะใช้ไม่ได้อีก
 PrivateGroupDeleted	ลบกลุ่มแล้ว
+MapGpsDestination	นำทางมาที่นี่ (GPS)
+MapSaveLocation	บันทึกสถานที่
+MapGpsSavedHelp	GPS คือจุดหมายชั่วคราว สถานที่ที่บันทึกจะอยู่จนกว่าจะลบ จุดแวะเป็นลำดับการเดินทาง

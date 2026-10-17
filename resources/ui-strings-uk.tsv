@@ -671,3 +671,6 @@ RouteAutoHelp	Маршрути обчислюються при зміні зуп
 PrivateGroupDelete	Видалити групу
 PrivateGroupDeleteConfirm	Видалити групу «{0}» для всіх? Усіх учасників буде відключено, а код перестане працювати.
 PrivateGroupDeleted	Групу видалено.
+MapGpsDestination	Навігація сюди (GPS)
+MapSaveLocation	Зберегти місце
+MapGpsSavedHelp	GPS — тимчасова ціль. Збережені місця залишаються до видалення. Зупинки маршруту утворюють упорядкований шлях.

@@ -671,3 +671,6 @@ RouteAutoHelp	I percorsi si calcolano al cambiare delle tappe. Ambra indica indi
 PrivateGroupDelete	Elimina gruppo
 PrivateGroupDeleteConfirm	Eliminare il gruppo «{0}» per tutti? Tutti i membri saranno disconnessi e il codice non sarà più valido.
 PrivateGroupDeleted	Gruppo eliminato.
+MapGpsDestination	Naviga qui (GPS)
+MapSaveLocation	Salva luogo
+MapGpsSavedHelp	Il GPS è una destinazione temporanea. I luoghi salvati restano fino alla rimozione. Le tappe formano un viaggio ordinato.

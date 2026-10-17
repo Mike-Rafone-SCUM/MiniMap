@@ -671,3 +671,6 @@ RouteAutoHelp	Trasy se automaticky počítají při změně zastávek. Jantarov�
 PrivateGroupDelete	Smazat skupinu
 PrivateGroupDeleteConfirm	Smazat skupinu „{0}“ pro všechny? Všichni členové budou odpojeni a kód přestane fungovat.
 PrivateGroupDeleted	Skupina smazána.
+MapGpsDestination	Navigovat sem (GPS)
+MapSaveLocation	Uložit místo
+MapGpsSavedHelp	GPS je dočasný cíl. Uložená místa zůstávají do smazání. Zastávky tvoří uspořádanou cestu.

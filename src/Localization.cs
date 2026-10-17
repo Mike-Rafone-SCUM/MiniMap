@@ -961,6 +961,10 @@ private static readonly Dictionary<string, string> CategoryNamesAr = new Diction
 
 
 public static readonly Dictionary<string, string> StringsEn = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "MapGpsDestination", "Navigate here (GPS)" },
+            { "MapSaveLocation", "Save location" },
+            { "MapGpsSavedHelp", "GPS is a temporary destination. Saved locations remain until you delete them. Route stops form an ordered journey." },
+
             { "PrivateGroupDelete", "Delete group" },
             { "PrivateGroupDeleteConfirm", "Delete group “{0}” for everyone? All members will disconnect and its code will stop working." },
             { "PrivateGroupDeleted", "Group deleted." },
@@ -1722,6 +1726,10 @@ public static readonly Dictionary<string, string> StringsEn = new Dictionary<str
         };
 
 public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "MapGpsDestination", "Navegar acá (GPS)" },
+            { "MapSaveLocation", "Guardar ubicación" },
+            { "MapGpsSavedHelp", "GPS es un destino temporal. Las ubicaciones guardadas permanecen hasta que las elimines. Las paradas forman un recorrido ordenado." },
+
             { "PrivateGroupDelete", "Eliminar grupo" },
             { "PrivateGroupDeleteConfirm", "¿Eliminar el grupo «{0}» para todos? Se desconectarán todos los miembros y el código dejará de funcionar." },
             { "PrivateGroupDeleted", "Grupo eliminado." },
@@ -2483,6 +2491,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsFr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "MapGpsDestination", "Naviguer ici (GPS)" },
+            { "MapSaveLocation", "Enregistrer le lieu" },
+            { "MapGpsSavedHelp", "Le GPS est une destination temporaire. Les lieux enregistrés restent jusqu’à leur suppression. Les étapes forment un trajet ordonné." },
+
             { "PrivateGroupDelete", "Supprimer le groupe" },
             { "PrivateGroupDeleteConfirm", "Supprimer le groupe « {0} » pour tous ? Tous les membres seront déconnectés et son code ne fonctionnera plus." },
             { "PrivateGroupDeleted", "Groupe supprimé." },
@@ -3244,6 +3256,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsDe = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "MapGpsDestination", "Hierhin navigieren (GPS)" },
+            { "MapSaveLocation", "Ort speichern" },
+            { "MapGpsSavedHelp", "GPS ist ein vorübergehendes Ziel. Gespeicherte Orte bleiben bis zum Löschen. Routenstopps bilden eine geordnete Fahrt." },
+
             { "PrivateGroupDelete", "Gruppe löschen" },
             { "PrivateGroupDeleteConfirm", "Gruppe „{0}“ für alle löschen? Alle Mitglieder werden getrennt und der Code wird ungültig." },
             { "PrivateGroupDeleted", "Gruppe gelöscht." },
@@ -4005,6 +4021,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsNl = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "MapGpsDestination", "Hierheen navigeren (GPS)" },
+            { "MapSaveLocation", "Locatie opslaan" },
+            { "MapGpsSavedHelp", "GPS is een tijdelijke bestemming. Opgeslagen locaties blijven tot je ze verwijdert. Routestops vormen een geordende reis." },
+
             { "PrivateGroupDelete", "Groep verwijderen" },
             { "PrivateGroupDeleteConfirm", "Groep ‘{0}’ voor iedereen verwijderen? Alle leden worden losgekoppeld en de code werkt niet meer." },
             { "PrivateGroupDeleted", "Groep verwijderd." },
@@ -4766,6 +4786,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsRu = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "MapGpsDestination", "Навигация сюда (GPS)" },
+            { "MapSaveLocation", "Сохранить место" },
+            { "MapGpsSavedHelp", "GPS — временная цель. Сохранённые места остаются до удаления. Остановки маршрута образуют упорядоченный путь." },
+
             { "PrivateGroupDelete", "Удалить группу" },
             { "PrivateGroupDeleteConfirm", "Удалить группу «{0}» для всех? Все участники будут отключены, а код перестанет работать." },
             { "PrivateGroupDeleted", "Группа удалена." },
@@ -5527,6 +5551,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsZh = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "MapGpsDestination", "导航至此（GPS）" },
+            { "MapSaveLocation", "保存地点" },
+            { "MapGpsSavedHelp", "GPS 是临时目的地。保存的地点会保留至删除。路线途经点组成有序行程。" },
+
             { "PrivateGroupDelete", "删除群组" },
             { "PrivateGroupDeleteConfirm", "为所有人删除群组“{0}”？所有成员将断开连接，群组代码将失效。" },
             { "PrivateGroupDeleted", "群组已删除。" },
@@ -6288,6 +6316,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsTr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "MapGpsDestination", "Buraya git (GPS)" },
+            { "MapSaveLocation", "Konumu kaydet" },
+            { "MapGpsSavedHelp", "GPS geçici bir hedeftir. Kayıtlı konumlar silinene kadar kalır. Rota durakları sıralı bir yolculuk oluşturur." },
+
             { "PrivateGroupDelete", "Grubu sil" },
             { "PrivateGroupDeleteConfirm", "“{0}” grubu herkes için silinsin mi? Tüm üyelerin bağlantısı kesilir ve kod geçersiz olur." },
             { "PrivateGroupDeleted", "Grup silindi." },
@@ -7049,6 +7081,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsAr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "MapGpsDestination", "انتقل إلى هنا (GPS)" },
+            { "MapSaveLocation", "حفظ الموقع" },
+            { "MapGpsSavedHelp", "GPS وجهة مؤقتة. تبقى المواقع المحفوظة حتى تحذفها. تشكّل محطات المسار رحلة مرتبة." },
+
             { "PrivateGroupDelete", "حذف المجموعة" },
             { "PrivateGroupDeleteConfirm", "هل تريد حذف المجموعة «{0}» للجميع؟ سيتم قطع اتصال جميع الأعضاء وسيتوقف رمزها عن العمل." },
             { "PrivateGroupDeleted", "تم حذف المجموعة." },
@@ -7810,6 +7846,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsPt = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "MapGpsDestination", "Navegar até aqui (GPS)" },
+            { "MapSaveLocation", "Salvar local" },
+            { "MapGpsSavedHelp", "GPS é um destino temporário. Locais salvos ficam até serem excluídos. Paradas formam uma viagem ordenada." },
+
             { "PrivateGroupDelete", "Excluir grupo" },
             { "PrivateGroupDeleteConfirm", "Excluir o grupo “{0}” para todos? Todos os membros serão desconectados e o código deixará de funcionar." },
             { "PrivateGroupDeleted", "Grupo excluído." },
@@ -8571,6 +8611,10 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
 
 
         public static readonly Dictionary<string, string> StringsKo = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "MapGpsDestination", "여기로 안내 (GPS)" },
+            { "MapSaveLocation", "위치 저장" },
+            { "MapGpsSavedHelp", "GPS는 임시 목적지입니다. 저장한 위치는 삭제할 때까지 남습니다. 경유지는 순서가 있는 여정을 만듭니다." },
+
             { "PrivateGroupDelete", "그룹 삭제" },
             { "PrivateGroupDeleteConfirm", "모든 사용자의 “{0}” 그룹을 삭제할까요? 모든 멤버의 연결이 끊기고 코드가 무효화됩니다." },
             { "PrivateGroupDeleted", "그룹이 삭제되었습니다." },
