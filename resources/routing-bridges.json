@@ -1,0 +1,143 @@
+[
+  {
+    "name": "East Suspension Bridge",
+    "provenance": "Existing MiniMap surveyed highway bridge curve; not landscape-spline telemetry. Railway and generic water links are excluded.",
+    "pointsUV": [
+      [
+        0.91458,
+        0.73791
+      ],
+      [
+        0.91506,
+        0.74176
+      ],
+      [
+        0.91554,
+        0.74561
+      ],
+      [
+        0.91603,
+        0.74945
+      ],
+      [
+        0.91644,
+        0.7533
+      ],
+      [
+        0.9172,
+        0.75715
+      ]
+    ],
+    "sourceSegments": [
+      "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_A_0_1d.Landscape_A_0_1d:PersistentLevel.LandscapeStreamingProxy_A_0_1d.LandscapeSplinesComponent_0.LandscapeSplineSegment_4",
+      "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_A_0_1b.Landscape_A_0_1b:PersistentLevel.LandscapeStreamingProxy_A_0_1b.LandscapeSplinesComponent_0.LandscapeSplineSegment_0"
+    ],
+    "maxApproachMeters": 150
+  },
+  {
+    "name": "West Rogoznica Bridge",
+    "provenance": "Existing MiniMap surveyed highway bridge curve; not landscape-spline telemetry. Railway and generic water links are excluded.",
+    "pointsUV": [
+      [
+        0.28624,
+        0.75685
+      ],
+      [
+        0.29611,
+        0.76082
+      ],
+      [
+        0.29687,
+        0.76874
+      ],
+      [
+        0.29687,
+        0.77666
+      ],
+      [
+        0.2966,
+        0.78459
+      ],
+      [
+        0.29611,
+        0.79251
+      ],
+      [
+        0.29577,
+        0.80043
+      ],
+      [
+        0.29521,
+        0.80836
+      ],
+      [
+        0.29459,
+        0.81628
+      ],
+      [
+        0.29411,
+        0.8242
+      ],
+      [
+        0.29397,
+        0.82816
+      ]
+    ],
+    "sourceSegments": [
+      "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_A_3_2.Landscape_A_3_2:PersistentLevel.LandscapeProxy_A_3_2.LandscapeSplinesComponent_0.LandscapeSplineSegment_171",
+      "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_4c.Landscape_Z_3_4c:PersistentLevel.LandscapeStreamingProxy_1.LandscapeSplinesComponent_0.LandscapeSplineSegment_14"
+    ],
+    "maxApproachMeters": 150
+  },
+  {
+    "name": "Central-East Highway Bridge",
+    "provenance": "Existing MiniMap surveyed highway bridge curve; not landscape-spline telemetry. Railway and generic water links are excluded.",
+    "pointsUV": [
+      [
+        0.64554,
+        0.72757
+      ],
+      [
+        0.64409,
+        0.73448
+      ],
+      [
+        0.6425,
+        0.74139
+      ],
+      [
+        0.64105,
+        0.74829
+      ],
+      [
+        0.63953,
+        0.7552
+      ],
+      [
+        0.63794,
+        0.7621
+      ],
+      [
+        0.63614,
+        0.76901
+      ],
+      [
+        0.63366,
+        0.77591
+      ],
+      [
+        0.6311,
+        0.78282
+      ],
+      [
+        0.62848,
+        0.78972
+      ]
+    ],
+    "sourceSegments": [
+      "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_A_1_2d.Landscape_A_1_2d:PersistentLevel.LandscapeStreamingProxy_A_1_2d.LandscapeSplinesComponent_0.LandscapeSplineSegment_0",
+      "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_A_1_2b.Landscape_A_1_2b:PersistentLevel.LandscapeStreamingProxy_A_1_2b.LandscapeSplinesComponent_0.LandscapeSplineSegment_7"
+    ],
+    "maxApproachMeters": 150
+  }
+]

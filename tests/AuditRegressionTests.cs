@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -174,7 +174,7 @@ static class AuditRegressionTests {
             }
 
             Reject(()=>RoadRouter.Instance.LoadBinary(new BinaryReader(new MemoryStream(new byte[]{1}))),"Truncated road header rejected");
-            byte[] badRoad=Binary(w=> { w.Write(Encoding.ASCII.GetBytes("ROAD")); w.Write(1u); w.Write(int.MaxValue); w.Write(1); w.Write(128); });
+            byte[] badRoad=Binary(w=> { w.Write(Encoding.ASCII.GetBytes("ROAD")); w.Write(2u); w.Write(int.MaxValue); w.Write(1); w.Write(128); });
             Reject(()=>RoadRouter.Instance.LoadBinary(new BinaryReader(new MemoryStream(badRoad))),"Oversized road counts rejected before allocation");
             byte[] badPoi=Binary(w=> { w.Write(Encoding.ASCII.GetBytes("SCMP")); w.Write((ushort)1); w.Write((ushort)0); w.Write(-1); });
             Reject(()=>new ScumMapStore().ReadBinary(new MemoryStream(badPoi)),"Negative POI count rejected");

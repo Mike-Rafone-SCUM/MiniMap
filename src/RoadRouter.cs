@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -188,7 +188,7 @@ namespace ScumMiniMap {
             if (magic.Length!=4) throw new InvalidDataException("Truncated road header.");
             if (magic[0] != 'R' || magic[1] != 'O' || magic[2] != 'A' || magic[3] != 'D') throw new InvalidDataException("Invalid road header.");
             uint version = br.ReadUInt32();
-            if (version != 1) throw new InvalidDataException("Unsupported road version.");
+            if (version != 2 && version != 3) throw new InvalidDataException("Unsupported road version.");
 
             int nodeCount = br.ReadInt32();
             int edgeCount = br.ReadInt32();
@@ -212,6 +212,8 @@ namespace ScumMiniMap {
                 float lengthM = br.ReadSingle();
                 if(u<0 || v<0 || u>=nodeCount || v>=nodeCount || float.IsNaN(lengthM) || float.IsInfinity(lengthM) || lengthM<=0 || lengthM>100000)
                     throw new InvalidDataException("Invalid road edge.");
+                byte flags = version >= 3 ? br.ReadByte() : (byte)0;
+                if(flags > 1) throw new InvalidDataException("Invalid road surface flags.");
                 ushort ptCount = br.ReadUInt16();
                 totalPoints+=ptCount;
                 if(ptCount<2 || totalPoints>4000000) throw new InvalidDataException("Road geometry exceeds supported limits.");
@@ -219,7 +221,7 @@ namespace ScumMiniMap {
                 for (int p = 0; p < ptCount; p++) {
                     pts[p] = new PointF(ReadCoordinate(br), ReadCoordinate(br));
                 }
-                edgesList.Add(new RoadEdge { U = u, V = v, LengthMeters = lengthM, Points = pts, IsBridge = false });
+                edgesList.Add(new RoadEdge { U = u, V = v, LengthMeters = lengthM, Points = pts, IsBridge = flags == 1 });
                 adj[u].Add(new HalfEdge { TargetNode = v, Weight = lengthM, EdgeIndex = i, Forward = true });
                 adj[v].Add(new HalfEdge { TargetNode = u, Weight = lengthM, EdgeIndex = i, Forward = false });
             }
@@ -235,12 +237,9 @@ namespace ScumMiniMap {
                 spatialGridList[i] = list;
             }
 
-            // Synthesize major bridges across water
+            // Topology is compiled from classified roads, audited dry/3D seams and
+            // named surveyed highway bridges. Never synthesize links at runtime.
             waterMask.Load();
-            AddBridges();
-
-            // Stitch digitized micro-gaps at intersections (<= 35m)
-            HealMicroGaps(35.0);
 
             // Commit final arrays for high-performance direct indexing
             nodes = nodesList.ToArray();
@@ -262,309 +261,6 @@ namespace ScumMiniMap {
             pq = new MinHeap(1024);
 
             IsLoaded = true;
-        }
-
-        private void AddBridgeEdge(int u, int v, PointF[] curvePts, string name) {
-            if (u < 0 || u >= nodesList.Count || v < 0 || v >= nodesList.Count) return;
-            PointF pU = new PointF(nodesList[u].U, nodesList[u].V);
-            PointF pV = new PointF(nodesList[v].U, nodesList[v].V);
-
-            List<PointF> pts = new List<PointF>();
-            pts.Add(pU);
-            if (curvePts != null && curvePts.Length > 0) {
-                for (int i = 0; i < curvePts.Length; i++) pts.Add(curvePts[i]);
-            }
-            pts.Add(pV);
-
-            double totalLen = 0;
-            for (int i = 0; i < pts.Count - 1; i++) {
-                totalLen += DistanceMeters(pts[i], pts[i + 1]);
-            }
-
-            int edgeIdx = edgesList.Count;
-            if (edgeIdx >= ushort.MaxValue) return; // Grid uses ushort indices
-
-            RoadEdge bridgeEdge = new RoadEdge {
-                U = u,
-                V = v,
-                LengthMeters = (float)totalLen,
-                Points = pts.ToArray(),
-                IsBridge = true
-            };
-            edgesList.Add(bridgeEdge);
-
-            adj[u].Add(new HalfEdge { TargetNode = v, Weight = (float)totalLen, EdgeIndex = edgeIdx, Forward = true });
-            adj[v].Add(new HalfEdge { TargetNode = u, Weight = (float)totalLen, EdgeIndex = edgeIdx, Forward = false });
-
-            // Insert into spatial grid
-            IndexEdgeInGrid(edgeIdx, bridgeEdge.Points);
-        }
-
-        private void AddBridges() {
-            // 1. East Highway Suspension Bridge (A0 <-> Z0)
-            // Connects mainland eastern highway (Node 9026) to south island (Node 8991)
-            PointF[] eastBridgeCurve = new PointF[] {
-                new PointF(0.91458f, 0.73791f),
-                new PointF(0.91506f, 0.74176f),
-                new PointF(0.91554f, 0.74561f),
-                new PointF(0.91603f, 0.74945f),
-                new PointF(0.91644f, 0.75330f),
-                new PointF(0.91720f, 0.75715f)
-            };
-            AddBridgeEdge(9026, 8991, eastBridgeCurve, "East Suspension Bridge");
-
-            // Approaches
-            AddBridgeEdge(9030, 9026, null, "East North Approach");
-            AddBridgeEdge(8991, 8992, null, "East South Approach");
-
-            // 2. West Highway Suspension Bridge (A3 <-> Z3 Rogoznica)
-            // Connects mainland highway (Node 10927) to south island Rogoznica (Node 9916)
-            PointF[] westBridgeCurve = new PointF[] {
-                new PointF(0.28624f, 0.75685f),
-                new PointF(0.29611f, 0.76082f),
-                new PointF(0.29687f, 0.76874f),
-                new PointF(0.29687f, 0.77666f),
-                new PointF(0.29660f, 0.78459f),
-                new PointF(0.29611f, 0.79251f),
-                new PointF(0.29577f, 0.80043f),
-                new PointF(0.29521f, 0.80836f),
-                new PointF(0.29459f, 0.81628f),
-                new PointF(0.29411f, 0.82420f),
-                new PointF(0.29397f, 0.82816f)
-            };
-            AddBridgeEdge(10927, 9916, westBridgeCurve, "West Rogoznica Bridge");
-            AddBridgeEdge(8520, 10927, null, "West North Approach");
-            AddBridgeEdge(9916, 9922, null, "West South Approach");
-
-            // 3. Central Diagonal Railway Bridge (A2 <-> Z2)
-            // Connects mainland railway abutment (Node 8182) to south island railway abutment (Node 10858)
-            // High-precision straight diagonal deck following the physical railway tracks on the master map
-            PointF[] diagBridgeCurve = new PointF[] {
-                new PointF(0.47155f, 0.75171f),
-                new PointF(0.47686f, 0.75694f),
-                new PointF(0.48216f, 0.76218f),
-                new PointF(0.48747f, 0.76741f)
-            };
-            AddBridgeEdge(8182, 10858, diagBridgeCurve, "Central Diagonal Railway Bridge");
-            AddBridgeEdge(8183, 8182, null, "Central Diagonal North Approach");
-            AddBridgeEdge(10858, 8151, null, "Central Diagonal South Approach");
-            AddBridgeEdge(8151, 8150, null, "Central Diagonal Rail Continuation");
-
-            // 4. Central-East Highway Bridge (A1 <-> Z1)
-            // Connects mainland highway (Node 9409) across central-east channel to south island (Node 9407)
-            PointF[] centralEastHighwayCurve = new PointF[] {
-                new PointF(0.64554f, 0.72757f),
-                new PointF(0.64409f, 0.73448f),
-                new PointF(0.64250f, 0.74139f),
-                new PointF(0.64105f, 0.74829f),
-                new PointF(0.63953f, 0.75520f),
-                new PointF(0.63794f, 0.76210f),
-                new PointF(0.63614f, 0.76901f),
-                new PointF(0.63366f, 0.77591f),
-                new PointF(0.63110f, 0.78282f),
-                new PointF(0.62848f, 0.78972f)
-            };
-            AddBridgeEdge(9409, 9407, centralEastHighwayCurve, "Central-East Highway Bridge");
-            AddBridgeEdge(9434, 9409, null, "Central-East North Approach");
-            AddBridgeEdge(9407, 9408, null, "Central-East South Approach");
-
-            // 5. C2 Dam Crest Crossing
-            // Connects dam crest road (Node 3007) to west facilities (Node 2986)
-            PointF[] damCurve = new PointF[] {
-                new PointF(0.4180f, 0.2325f)
-            };
-            AddBridgeEdge(3007, 2986, damCurve, "C2 Dam Crossing");
-        }
-
-        private void IndexEdgeInGrid(int edgeIdx, PointF[] pts) {
-            if(edgeIdx<0 || edgeIdx>ushort.MaxValue) throw new InvalidDataException("Too many synthesized road edges.");
-            ushort eVal = (ushort)edgeIdx;
-            HashSet<int> touchedCells = new HashSet<int>();
-            for (int i = 0; i < pts.Length - 1; i++) {
-                PointF a = pts[i];
-                PointF b = pts[i + 1];
-                int gx1 = Math.Max(0, Math.Min(gridRes - 1, (int)Math.Floor(Math.Min(a.X, b.X) * gridRes)));
-                int gx2 = Math.Max(0, Math.Min(gridRes - 1, (int)Math.Floor(Math.Max(a.X, b.X) * gridRes)));
-                int gy1 = Math.Max(0, Math.Min(gridRes - 1, (int)Math.Floor(Math.Min(a.Y, b.Y) * gridRes)));
-                int gy2 = Math.Max(0, Math.Min(gridRes - 1, (int)Math.Floor(Math.Max(a.Y, b.Y) * gridRes)));
-
-                for (int cy = gy1; cy <= gy2; cy++) {
-                    for (int cx = gx1; cx <= gx2; cx++) {
-                        int cell = cy * gridRes + cx;
-                        if (!touchedCells.Contains(cell)) {
-                            touchedCells.Add(cell);
-                            spatialGridList[cell].Add(eVal);
-                        }
-                    }
-                }
-            }
-        }
-
-        private void HealMicroGaps(double maxDistanceMeters) {
-            int nodeCount = nodesList.Count;
-            List<int> termini = new List<int>();
-            for (int i = 0; i < nodeCount; i++) {
-                if (adj[i].Count > 0 && adj[i].Count <= 2) termini.Add(i);
-            }
-
-            int healRes = 128;
-            List<int>[] healGrid = new List<int>[healRes * healRes];
-            for (int i = 0; i < healGrid.Length; i++) healGrid[i] = new List<int>();
-
-            for (int i = 0; i < termini.Count; i++) {
-                int n = termini[i];
-                int gx = Math.Max(0, Math.Min(healRes - 1, (int)Math.Floor(nodesList[n].U * healRes)));
-                int gy = Math.Max(0, Math.Min(healRes - 1, (int)Math.Floor(nodesList[n].V * healRes)));
-                healGrid[gy * healRes + gx].Add(n);
-            }
-
-            double cellMeters = 15220.0 / healRes;
-            int radiusCells = Math.Max(1, (int)Math.Ceiling(maxDistanceMeters / cellMeters));
-
-            // Pass 1: Standard micro-gap stitch <= 35m
-            for (int i = 0; i < termini.Count; i++) {
-                int u = termini[i];
-                float uX = nodesList[u].U, uY = nodesList[u].V;
-                int gx = Math.Max(0, Math.Min(healRes - 1, (int)Math.Floor(uX * healRes)));
-                int gy = Math.Max(0, Math.Min(healRes - 1, (int)Math.Floor(uY * healRes)));
-
-                int bestV = -1;
-                double bestDist = maxDistanceMeters;
-
-                for (int dy = -radiusCells; dy <= radiusCells; dy++) {
-                    int cy = gy + dy;
-                    if (cy < 0 || cy >= healRes) continue;
-                    for (int dx = -radiusCells; dx <= radiusCells; dx++) {
-                        int cx = gx + dx;
-                        if (cx < 0 || cx >= healRes) continue;
-
-                        List<int> cellNodes = healGrid[cy * healRes + cx];
-                        for (int k = 0; k < cellNodes.Count; k++) {
-                            int v = cellNodes[k];
-                            if (v <= u) continue;
-
-                            bool alreadyLinked = false;
-                            for (int a = 0; a < adj[u].Count; a++) {
-                                if (adj[u][a].TargetNode == v) { alreadyLinked = true; break; }
-                            }
-                            if (alreadyLinked) continue;
-
-                            double d = DistanceMeters(uX, uY, nodesList[v].U, nodesList[v].V);
-                            if (d <= bestDist && waterMask.AllowsConnector(new PointF(uX,uY),new PointF(nodesList[v].U,nodesList[v].V))) {
-                                bestDist = d;
-                                bestV = v;
-                            }
-                        }
-                    }
-                }
-
-                if (bestV >= 0 && edgesList.Count < ushort.MaxValue) {
-                    int edgeIdx = edgesList.Count;
-                    PointF[] stitchPts = new PointF[] {
-                        new PointF(nodesList[u].U, nodesList[u].V),
-                        new PointF(nodesList[bestV].U, nodesList[bestV].V)
-                    };
-                    RoadEdge stitchEdge = new RoadEdge {
-                        U = u,
-                        V = bestV,
-                        LengthMeters = (float)bestDist,
-                        Points = stitchPts,
-                        IsBridge = false
-                    };
-                    edgesList.Add(stitchEdge);
-                    adj[u].Add(new HalfEdge { TargetNode = bestV, Weight = (float)bestDist, EdgeIndex = edgeIdx, Forward = true });
-                    adj[bestV].Add(new HalfEdge { TargetNode = u, Weight = (float)bestDist, EdgeIndex = edgeIdx, Forward = false });
-                    IndexEdgeInGrid(edgeIdx, stitchPts);
-                }
-            }
-
-            // Pass 2: Cross-component healing <= 65m
-            int[] tempComp = new int[nodeCount];
-            for (int i = 0; i < nodeCount; i++) tempComp[i] = -1;
-            int cCount = 0;
-            Queue<int> q = new Queue<int>();
-            for (int i = 0; i < nodeCount; i++) {
-                if (tempComp[i] >= 0) continue;
-                int c = cCount++;
-                tempComp[i] = c;
-                q.Enqueue(i);
-                while (q.Count > 0) {
-                    int curr = q.Dequeue();
-                    List<HalfEdge> outgoing = adj[curr];
-                    for (int k = 0; k < outgoing.Count; k++) {
-                        int nbr = outgoing[k].TargetNode;
-                        if (tempComp[nbr] < 0) {
-                            tempComp[nbr] = c;
-                            q.Enqueue(nbr);
-                        }
-                    }
-                }
-            }
-
-            double crossDistLimit = 65.0;
-            int crossRadiusCells = Math.Max(1, (int)Math.Ceiling(crossDistLimit / cellMeters));
-
-            for (int i = 0; i < termini.Count; i++) {
-                int u = termini[i];
-                float uX = nodesList[u].U, uY = nodesList[u].V;
-                int gx = Math.Max(0, Math.Min(healRes - 1, (int)Math.Floor(uX * healRes)));
-                int gy = Math.Max(0, Math.Min(healRes - 1, (int)Math.Floor(uY * healRes)));
-
-                int bestV = -1;
-                double bestDist = crossDistLimit;
-
-                for (int dy = -crossRadiusCells; dy <= crossRadiusCells; dy++) {
-                    int cy = gy + dy;
-                    if (cy < 0 || cy >= healRes) continue;
-                    for (int dx = -crossRadiusCells; dx <= crossRadiusCells; dx++) {
-                        int cx = gx + dx;
-                        if (cx < 0 || cx >= healRes) continue;
-
-                        List<int> cellNodes = healGrid[cy * healRes + cx];
-                        for (int k = 0; k < cellNodes.Count; k++) {
-                            int v = cellNodes[k];
-                            if (tempComp[u] == tempComp[v]) continue; // ONLY cross-component!
-
-                            bool alreadyLinked = false;
-                            for (int a = 0; a < adj[u].Count; a++) {
-                                if (adj[u][a].TargetNode == v) { alreadyLinked = true; break; }
-                            }
-                            if (alreadyLinked) continue;
-
-                            double d = DistanceMeters(uX, uY, nodesList[v].U, nodesList[v].V);
-                            if (d <= bestDist && waterMask.AllowsConnector(new PointF(uX,uY),new PointF(nodesList[v].U,nodesList[v].V))) {
-                                bestDist = d;
-                                bestV = v;
-                            }
-                        }
-                    }
-                }
-
-                if (bestV >= 0 && edgesList.Count < ushort.MaxValue) {
-                    int edgeIdx = edgesList.Count;
-                    PointF[] stitchPts = new PointF[] {
-                        new PointF(nodesList[u].U, nodesList[u].V),
-                        new PointF(nodesList[bestV].U, nodesList[bestV].V)
-                    };
-                    RoadEdge stitchEdge = new RoadEdge {
-                        U = u,
-                        V = bestV,
-                        LengthMeters = (float)bestDist,
-                        Points = stitchPts,
-                        IsBridge = false
-                    };
-                    edgesList.Add(stitchEdge);
-                    adj[u].Add(new HalfEdge { TargetNode = bestV, Weight = (float)bestDist, EdgeIndex = edgeIdx, Forward = true });
-                    adj[bestV].Add(new HalfEdge { TargetNode = u, Weight = (float)bestDist, EdgeIndex = edgeIdx, Forward = false });
-                    IndexEdgeInGrid(edgeIdx, stitchPts);
-
-                    int oldComp = tempComp[bestV];
-                    int newComp = tempComp[u];
-                    for (int n = 0; n < nodeCount; n++) {
-                        if (tempComp[n] == oldComp) tempComp[n] = newComp;
-                    }
-                }
-            }
         }
 
         private void ComputeConnectedComponents() {
@@ -618,6 +314,13 @@ namespace ScumMiniMap {
             public double SegmentT;
         }
 
+        private bool AllowsRoadApproach(PointF point, PointF projected, int edgeIndex, double distance) {
+            // A map water pixel beneath a known bridge must not reject a player
+            // already on its deck. The exemption is confined to the deck width.
+            return waterMask.IsLoaded && (waterMask.AllowsConnector(point,projected) ||
+                (edges[edgeIndex].IsBridge && distance <= 8.0));
+        }
+
         public SnapResult SnapToComponent(PointF pt, int targetComponent, double maxSearchMeters = 3500.0) {
             if (!IsLoaded || edges == null || edges.Length == 0)
                 return new SnapResult { EdgeIndex = -1, DistanceMeters = double.MaxValue };
@@ -664,7 +367,7 @@ namespace ScumMiniMap {
                                 }
                                 PointF proj = new PointF((float)(a.X + t * ldx), (float)(a.Y + t * ldy));
                                 double d = DistanceMeters(pt, proj);
-                                if (d < bestDist && waterMask.AllowsConnector(pt,proj)) {
+                                if (d <= maxSearchMeters && d < bestDist && AllowsRoadApproach(pt,proj,eid,d)) {
                                     bestDist = d;
                                     bestSnap = new SnapResult {
                                         EdgeIndex = eid,
@@ -730,7 +433,7 @@ namespace ScumMiniMap {
                                 }
                                 PointF proj = new PointF((float)(a.X + t * ldx), (float)(a.Y + t * ldy));
                                 double d = DistanceMeters(pt, proj);
-                                if (d < bestEdgeDist && waterMask.AllowsConnector(pt,proj)) {
+                                if (d < bestEdgeDist && AllowsRoadApproach(pt,proj,eid,d)) {
                                     bestEdgeDist = d;
                                     bestEdgeSnap = new SnapResult {
                                         EdgeIndex = eid,
@@ -754,21 +457,21 @@ namespace ScumMiniMap {
                         }
                     }
                 }
-                if (foundInRing && results.Count >= maxCandidates && r >= 2) break;
+                if (foundInRing && results.Count >= maxCandidates && r >= 2 &&
+                    results[results.Count-1].DistanceMeters <= (r-1)*(15216.18/gridRes)) break;
             }
 
-            // Guarantee that if a road on mainComponentId is within search radius, it is represented
-            bool hasMain = false;
-            for (int i = 0; i < results.Count; i++) {
-                if (nodeComponent[edges[results[i].EdgeIndex].U] == mainComponentId) {
-                    hasMain = true;
-                    break;
-                }
-            }
-            if (!hasMain) {
-                SnapResult mainSnap = SnapToComponent(pt, mainComponentId, maxSearchMeters);
-                if (mainSnap.EdgeIndex >= 0) {
-                    results.Add(mainSnap);
+            // Stay on the nearest road when already on it. From open ground,
+            // allow nearby alternatives on the same bank to reach a connected road.
+            if (results.Count > 0) {
+                double nearest = results[0].DistanceMeters;
+                double tolerance = nearest <= 5.0 ? 2.0 : 100.0;
+                results.RemoveAll(candidate => candidate.DistanceMeters > nearest + tolerance);
+                // Dense isolated service roads can fill every candidate slot.
+                // From open ground, retain a dry approach to the main road too.
+                if(maxCandidates > 1 && nearest > 15.0 && !results.Any(candidate => nodeComponent[edges[candidate.EdgeIndex].U] == mainComponentId)) {
+                    SnapResult main = SnapToComponent(pt,mainComponentId,maxSearchMeters);
+                    if(main.EdgeIndex >= 0) results.Add(main);
                 }
             }
 
@@ -841,18 +544,10 @@ namespace ScumMiniMap {
 
             if (!IsLoaded || !waterMask.IsLoaded) return result;
 
-            // Direct distance threshold: if < 35m, direct line is sufficient
-            if (result.TotalDistanceMeters < 35.0 && waterMask.AllowsConnector(playerPt,targetPt)) {
-                result.Polyline = new PointF[] { playerPt, targetPt };
-                result.Success = true;
-                return result;
-            }
-
-            List<SnapResult> startCands = SnapToRoadCandidates(playerPt, 3500.0, 8);
-            List<SnapResult> endCands = SnapToRoadCandidates(targetPt, 3500.0, 8);
+            List<SnapResult> startCands = SnapToRoadCandidates(playerPt, 1000.0, 8);
+            List<SnapResult> endCands = SnapToRoadCandidates(targetPt, 1000.0, 8);
 
             if (startCands.Count == 0 || endCands.Count == 0) {
-                result.Polyline = new PointF[] { playerPt, targetPt };
                 return result;
             }
 
@@ -884,17 +579,6 @@ namespace ScumMiniMap {
                 return bestConnectedRoute;
             }
 
-            // 2. Both endpoints on main landmass fallback (pure land/bridge route, zero water)
-            SnapResult snapStartMain = SnapToComponent(playerPt, mainComponentId, 4000.0);
-            SnapResult snapEndMain = SnapToComponent(targetPt, mainComponentId, 4000.0);
-
-            if (snapStartMain.EdgeIndex >= 0 && snapEndMain.EdgeIndex >= 0) {
-                RoadRoute mainRoute = ComputeConnectedRoute(playerPt, targetPt, snapStartMain, snapEndMain);
-                if (mainRoute != null && mainRoute.Success) {
-                    return mainRoute;
-                }
-            }
-
             // Road navigation must never invent a swimming/boat crossing.
             return result;
         }
@@ -910,16 +594,7 @@ namespace ScumMiniMap {
                 ExitDistanceMeters = snapEnd.DistanceMeters
             };
 
-            if(!waterMask.AllowsConnector(playerPt,snapStart.Projected) || !waterMask.AllowsConnector(snapEnd.Projected,targetPt)) return result;
-
-            // Direct walk optimization: if direct walk is shorter than driving off-road to road and back
-            double directDist = DistanceMeters(playerPt, targetPt);
-            if (directDist < 60.0 && snapStart.DistanceMeters + snapEnd.DistanceMeters > directDist * 1.5 && waterMask.AllowsConnector(playerPt,targetPt)) {
-                result.Polyline = new PointF[] { playerPt, targetPt };
-                result.TotalDistanceMeters = directDist;
-                result.Success = true;
-                return result;
-            }
+            if(!AllowsRoadApproach(playerPt,snapStart.Projected,snapStart.EdgeIndex,snapStart.DistanceMeters) || !AllowsRoadApproach(targetPt,snapEnd.Projected,snapEnd.EdgeIndex,snapEnd.DistanceMeters)) return result;
 
             // Case 1: Start and end snap to the exact same edge
             if (snapStart.EdgeIndex == snapEnd.EdgeIndex) {
@@ -940,6 +615,7 @@ namespace ScumMiniMap {
 
                 double subLen = 0;
                 for (int i = 0; i < subPath.Count - 1; i++) subLen += DistanceMeters(subPath[i], subPath[i + 1]);
+                if(subLen < 1.0 && DistanceMeters(playerPt,targetPt) > 35.0) return result;
                 result.RoadDistanceMeters = subLen;
                 result.TotalDistanceMeters = snapStart.DistanceMeters + subLen + snapEnd.DistanceMeters;
                 result.Polyline = subPath.ToArray();
@@ -1066,6 +742,7 @@ namespace ScumMiniMap {
 
                 double roadLen = 0;
                 for (int i = 0; i < polyline.Count - 1; i++) roadLen += DistanceMeters(polyline[i], polyline[i + 1]);
+                if(roadLen < 1.0 && DistanceMeters(playerPt,targetPt) > 35.0) return result;
 
                 result.Polyline = polyline.ToArray();
                 result.JunctionIndices = junctions.ToArray();

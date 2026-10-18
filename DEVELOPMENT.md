@@ -2,6 +2,57 @@
 
 `ScumMiniMap-Dev` is the canonical local project. The sibling server, companion bot and native bridge are independent projects.
 
+## Captured road routing (local WPF test)
+
+The WPF network uses the original road allowlist plus explicitly listed asphalt
+barrier variants and bridge decks in `resources/routing-road-meshes.json`: 12,720
+captured road segments. Rivers, railway and standalone wall/fence splines remain
+excluded. Captured endpoint identities are preserved. Degree-one endpoints may
+join nearby road curves within five metres, including T-junctions at spline
+interiors, after height/grade and water checks. True mid-spline intersections
+connect only at matching heights (within 30 cm) on dry mapped ground. Cycles are
+retained so valid junctions cannot be lost merely because a longer route exists.
+Every inferred seam and intersection is recorded.
+Vertically separated crossings remain separate; runtime gap healing is disabled.
+
+Three existing surveyed highway bridge curves are retained in
+`resources/routing-bridges.json`, attached to stable source-segment identities
+with bounded approaches. These static spans were not exported as landscape
+splines. They are explicitly distinguished from captured bridge geometry; no
+railway bridge or generic swimming/boat links are included.
+
+Owner-provided map sections registered on 18 October add 59 reviewed road curves
+in `resources/routing-map-links.json`. Image hashes, registration transforms and
+source-road anchors are retained with each survey. These close visible gaps,
+including the connection from the Rogoznica bridge approaches into the wider
+Z3/Z4 road network and junction continuity on both approaches. Each survey is bounded to 500 metres, must attach within
+three metres of its specified captured road and must pass the entire water mask.
+The compiler never uses a map survey to add a new water crossing.
+
+Regenerate from the SCUM workspace root:
+
+```powershell
+python ScumMiniMap-Dev/WPF-Test-Version/scripts/Build-RoadNetwork.py research/autonomous-driving/road-graph.json research/autonomous-driving/road-surface-allowlist.json
+python ScumMiniMap-Dev/WPF-Test-Version/tests/test_road_network.py
+```
+
+The deterministic version-3 `resources/roads.bin` includes bridge surface flags
+and a companion provenance JSON with input/output hashes, source identities and
+all 1,976 inferred seams and 48 at-grade intersections. Its largest component
+contains 98.33% of compiled nodes after the 59 map-surveyed gaps are included.
+Ordinary builds consume this asset without needing the server capture or Python.
+Road approaches are limited to 1,000 metres and checked against the water mask.
+On-road starts stay on their nearest road; open-ground positions may consider
+other nearby roads and a dry approach to the main network. Bridge snapping over
+a water pixel is limited to eight metres from a flagged deck. Failed routes
+remain unverified, and long two-feeder paths with no road travel are rejected.
+Regressions cover the original approximately 2.1 km server-test route, ordinary
+mainland/island journeys, 63 distributed map cells, all 15 combinations of three
+northern-B2 approaches and captured Z0-Z4 island road destinations, shoreline safety, overpasses,
+T-junctions, actual bridge-deck starts and rejected lake/swimmer shortcuts.
+Coordinates use the existing map calibration; the snapshot does not prove current
+collision clearance or distinguish stacked roads when the caller supplies only XY.
+
 ## Layout
 
 - `src/`: application source. `MiniMap.cs` contains the authoritative `VersionString`.

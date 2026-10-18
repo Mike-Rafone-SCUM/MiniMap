@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to **SkynettMiniMap** are documented in this file.
 
@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ---
 
 ## [Unreleased]
+
+## [2.3.8] - 2026-10-18
+
+- Rebuild road navigation from classified server-captured roads, height-checked junctions and surveyed highway bridges. Exclude river and railway splines.
+- Fill 59 map-confirmed road and junction gaps, including Rogoznica approaches and the western Z-island network. Verify northern B2 routes to all five Z-sector islands.
+- Preserve water avoidance on road approaches, permit navigation from known bridge decks, and reject long direct-only shortcuts reported as road routes.
+- Add compiler, map-survey, packaged-route and island-routing regressions.
 
 ## [2.3.7] - 2026-10-18
 

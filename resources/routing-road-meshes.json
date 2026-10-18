@@ -1,0 +1,20 @@
+[
+  "StaticMesh /Game/ConZ_Files/Models/Buildings/Dam/SM_Dam_Road_Snow.SM_Dam_Road_Snow",
+  "StaticMesh /Game/ConZ_Files/Models/Road/Asphalt_Road/SM_Asphalt_Road_Gravel_Border_01_Barrier.SM_Asphalt_Road_Gravel_Border_01_Barrier",
+  "StaticMesh /Game/ConZ_Files/Models/Road/Asphalt_Road/SM_Asphalt_Road_Gravel_Border_01_Barrier_A.SM_Asphalt_Road_Gravel_Border_01_Barrier_A",
+  "StaticMesh /Game/ConZ_Files/Models/Road/Asphalt_Road/SM_Asphalt_Road_Gravel_Border_01_Barrier_B.SM_Asphalt_Road_Gravel_Border_01_Barrier_B",
+  "StaticMesh /Game/ConZ_Files/Models/Road/KrkBridge/KB_Meshes/SM_KrkBridge_Base.SM_KrkBridge_Base",
+  "StaticMesh /Game/ConZ_Files/Models/Road/KrkBridge/KB_Meshes/SM_KrkBridge_Fill.SM_KrkBridge_Fill",
+  "StaticMesh /Game/ConZ_Files/Models/Road/RiverBridge/SM_RiverBridge_01.SM_RiverBridge_01",
+  "StaticMesh /Game/ConZ_Files/Models/Road/RiverBridge/SM_RiverBridge_02.SM_RiverBridge_02",
+  "StaticMesh /Game/ConZ_Files/Models/Road/RiverBridge/SM_RiverBridge_03.SM_RiverBridge_03",
+  "StaticMesh /Game/ConZ_Files/Models/Road/RiverBridge_02/RB_02_Meshes/SM_RiverBridge_02_DoubleLane_01.SM_RiverBridge_02_DoubleLane_01",
+  "StaticMesh /Game/ConZ_Files/Models/Road/RiverBridge_02/RB_02_Meshes/SM_RiverBridge_02_End_01.SM_RiverBridge_02_End_01",
+  "StaticMesh /Game/ConZ_Files/Models/Road/RiverBridge_02/RB_02_Meshes/SM_RiverBridge_02_SingleLane_01.SM_RiverBridge_02_SingleLane_01",
+  "StaticMesh /Game/ConZ_Files/Models/Road/RiverBridge_03/RB_03_Meshes/SM_RiverBridge_03_DoubleLane.SM_RiverBridge_03_DoubleLane",
+  "StaticMesh /Game/ConZ_Files/Models/Road/RiverBridge_03/RB_03_Meshes/SM_RiverBridge_03_DoubleLane_Grates.SM_RiverBridge_03_DoubleLane_Grates",
+  "StaticMesh /Game/ConZ_Files/Models/Road/RiverBridge_03/RB_03_Meshes/SM_RiverBridge_03_SingleLane.SM_RiverBridge_03_SingleLane",
+  "StaticMesh /Game/ConZ_Files/Models/Road/RiverBridge_03/RB_03_Meshes/SM_RiverBridge_03_SingleLane_Grates.SM_RiverBridge_03_SingleLane_Grates",
+  "StaticMesh /Game/ConZ_Files/Models/Road/SkradinBridge/SK_B_Meshes/SM_SkradinBridge_DoubleLane.SM_SkradinBridge_DoubleLane",
+  "StaticMesh /Game/ConZ_Files/Models/Road/SkradinBridge/SK_B_Meshes/SM_SkradinBridge_SingleLane.SM_SkradinBridge_SingleLane"
+]

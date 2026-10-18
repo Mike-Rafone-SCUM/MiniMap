@@ -1,0 +1,2664 @@
+{
+  "schemaVersion": 1,
+  "description": "Road gaps surveyed against the two owner-provided map sections; curves follow visible road strokes and captured road anchors. No new water crossings.",
+  "images": [
+    {
+      "sha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "size": [
+        2589,
+        1033
+      ],
+      "normalizedTransform": [
+        [
+          0.00039043253263248664,
+          2.5459837933978926e-09,
+          -0.0109148324654167
+        ],
+        [
+          -2.5459837933978926e-09,
+          0.00039043253263248664,
+          -0.004296766334301225
+        ]
+      ],
+      "inliers": 3445,
+      "medianRegistrationErrorPixels": 0.22827142477035522
+    },
+    {
+      "sha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "size": [
+        2587,
+        1564
+      ],
+      "normalizedTransform": [
+        [
+          0.0003904391751102859,
+          -1.0385164752031384e-09,
+          -0.007411227119711876
+        ],
+        [
+          1.0385164752031384e-09,
+          0.0003904391751102859,
+          0.3962959830070921
+        ]
+      ],
+      "inliers": 1972,
+      "medianRegistrationErrorPixels": 0.23152440786361694
+    }
+  ],
+  "links": [
+    {
+      "name": "Map-confirmed road gap 16",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_2_3d.Landscape_Z_2_3d:PersistentLevel.LandscapeStreamingProxy_Z_2_3d.LandscapeSplinesComponent_0.LandscapeSplineSegment_18",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_2_3d.Landscape_Z_2_3d:PersistentLevel.LandscapeStreamingProxy_Z_2_3d.LandscapeSplinesComponent_0.LandscapeSplineSegment_6"
+      ],
+      "pointsUV": [
+        [
+          0.5131513815556861,
+          0.8386795840558461
+        ],
+        [
+          0.5131852322330572,
+          0.8378306449516875
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 16
+    },
+    {
+      "name": "Map-confirmed road gap 18",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_0_2c.Landscape_C_0_2c:PersistentLevel.LandscapeStreamingProxy_C_0_2c.LandscapeSplinesComponent_0.LandscapeSplineSegment_1733",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_0_2c.Landscape_C_0_2c:PersistentLevel.LandscapeStreamingProxy_C_0_2c.LandscapeSplinesComponent_0.LandscapeSplineSegment_1722"
+      ],
+      "pointsUV": [
+        [
+          0.8971125431941526,
+          0.3274706980358594
+        ],
+        [
+          0.8976162672042847,
+          0.32747167348861694
+        ],
+        [
+          0.8980070352554321,
+          0.3270809054374695
+        ],
+        [
+          0.8978252935414196,
+          0.3269871570614716
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 18
+    },
+    {
+      "name": "Map-confirmed road gap 26",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_4_1.Landscape_D_4_1:PersistentLevel.LandscapeStreamingProxy_D_4_1a.LandscapeSplinesComponent_0.LandscapeSplineSegment_814",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_4_1.Landscape_D_4_1:PersistentLevel.LandscapeStreamingProxy_D_4_1a.LandscapeSplinesComponent_0.LandscapeSplineSegment_840"
+      ],
+      "pointsUV": [
+        [
+          0.16289235373135702,
+          0.19041821834606837
+        ],
+        [
+          0.16295428574085236,
+          0.19030871987342834
+        ],
+        [
+          0.1625635027885437,
+          0.19030871987342834
+        ],
+        [
+          0.16217271983623505,
+          0.1906994879245758
+        ],
+        [
+          0.16199869152441676,
+          0.19066565569585028
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 26
+    },
+    {
+      "name": "Map-confirmed road gap 76",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_4b.Landscape_B_2_4b:PersistentLevel.LandscapeStreamingProxy_B_2_4b.LandscapeSplinesComponent_0.LandscapeSplineSegment_30",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_4b.Landscape_B_2_4b:PersistentLevel.LandscapeStreamingProxy_B_2_4b.LandscapeSplinesComponent_0.LandscapeSplineSegment_31"
+      ],
+      "pointsUV": [
+        [
+          0.4419822905617573,
+          0.46267948849383506
+        ],
+        [
+          0.4431418478488922,
+          0.46268072724342346
+        ],
+        [
+          0.4435326159000397,
+          0.462289959192276
+        ],
+        [
+          0.4439234137535095,
+          0.462289959192276
+        ],
+        [
+          0.4437388557903495,
+          0.4623255637567947
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 76
+    },
+    {
+      "name": "Map-confirmed road gap 143",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_2_2.Landscape_D_2_2:PersistentLevel.LandscapeProxy_D_2_2a.LandscapeSplinesComponent_0.LandscapeSplineSegment_260",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_2_2.Landscape_D_2_2:PersistentLevel.LandscapeProxy_D_2_2a.LandscapeSplinesComponent_0.LandscapeSplineSegment_506"
+      ],
+      "pointsUV": [
+        [
+          0.47282717738617713,
+          0.18804601350207206
+        ],
+        [
+          0.47362250089645386,
+          0.1879640519618988
+        ],
+        [
+          0.4740132987499237,
+          0.18835482001304626
+        ],
+        [
+          0.47479483485221863,
+          0.18835482001304626
+        ],
+        [
+          0.4751856327056885,
+          0.18874560296535492
+        ],
+        [
+          0.4753590835544795,
+          0.18862498848136475
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 143
+    },
+    {
+      "name": "Map-confirmed road gap 147",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_3_2d.Landscape_D_3_2d:PersistentLevel.LandscapeStreamingProxy_D_3_2_d.LandscapeSplinesComponent_0.LandscapeSplineSegment_5",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_3_2d.Landscape_D_3_2d:PersistentLevel.LandscapeStreamingProxy_D_3_2_d.LandscapeSplinesComponent_0.LandscapeSplineSegment_723"
+      ],
+      "pointsUV": [
+        [
+          0.22652066031027498,
+          0.1476543153927034
+        ],
+        [
+          0.22665104269981384,
+          0.14771394431591034
+        ],
+        [
+          0.22665104269981384,
+          0.145369291305542
+        ],
+        [
+          0.22626344535882198,
+          0.1450527830794858
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 147
+    },
+    {
+      "name": "Map-confirmed road gap 187",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_2.Landscape_Z_3_2:PersistentLevel.LandscapeStreamingProxy_Z_3_2a.LandscapeSplinesComponent_0.LandscapeSplineSegment_76",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_2.Landscape_Z_3_2:PersistentLevel.LandscapeStreamingProxy_Z_3_2a.LandscapeSplinesComponent_0.LandscapeSplineSegment_74"
+      ],
+      "pointsUV": [
+        [
+          0.27634537301740647,
+          0.9540894600877647
+        ],
+        [
+          0.2762798070907593,
+          0.9542790055274963
+        ],
+        [
+          0.27667057514190674,
+          0.9538882374763489
+        ],
+        [
+          0.2778429090976715,
+          0.9538882374763489
+        ],
+        [
+          0.27823367714881897,
+          0.9542790055274963
+        ],
+        [
+          0.2790152430534363,
+          0.9542790055274963
+        ],
+        [
+          0.2794519448376662,
+          0.9548560102991694
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 187
+    },
+    {
+      "name": "Map-confirmed road gap 199",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_4_3.Landscape_C_4_3:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_9",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_4_3.Landscape_C_4_3:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_633"
+      ],
+      "pointsUV": [
+        [
+          0.17570219917219698,
+          0.2992137632431489
+        ],
+        [
+          0.1762407124042511,
+          0.2997264564037323
+        ],
+        [
+          0.17584994435310364,
+          0.30011722445487976
+        ],
+        [
+          0.1742868274450302,
+          0.30011722445487976
+        ],
+        [
+          0.17389605939388275,
+          0.2997264564037323
+        ],
+        [
+          0.17389605939388275,
+          0.2977725565433502
+        ],
+        [
+          0.17311449348926544,
+          0.2969910204410553
+        ],
+        [
+          0.17304922293243113,
+          0.29715287941596913
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 199
+    },
+    {
+      "name": "Map-confirmed road gap 208",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_1_4c.Landscape_Z_1_4c:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_39",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_1_3d.Landscape_Z_1_3d:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_0"
+      ],
+      "pointsUV": [
+        [
+          0.696736980799386,
+          0.8448235907491248
+        ],
+        [
+          0.7002735733985901,
+          0.8448612689971924
+        ],
+        [
+          0.7002767366710961,
+          0.8453223726747779
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 208
+    },
+    {
+      "name": "Map-confirmed road gap 233",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_1_3b.Landscape_B_1_3b:PersistentLevel.LandscapeStreamingProxy_B_1_3b.LandscapeSplinesComponent_0.LandscapeSplineSegment_114",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_1_3b.Landscape_B_1_3b:PersistentLevel.LandscapeStreamingProxy_B_1_3b.LandscapeSplinesComponent_0.LandscapeSplineSegment_147"
+      ],
+      "pointsUV": [
+        [
+          0.717732682447237,
+          0.4764592993781906
+        ],
+        [
+          0.7178585529327393,
+          0.47635796666145325
+        ],
+        [
+          0.7174677848815918,
+          0.4759671688079834
+        ],
+        [
+          0.7162954211235046,
+          0.4759671688079834
+        ],
+        [
+          0.7159046530723572,
+          0.47557640075683594
+        ],
+        [
+          0.71473228931427,
+          0.47557640075683594
+        ],
+        [
+          0.7139507532119751,
+          0.47479483485221863
+        ],
+        [
+          0.7155021825451592,
+          0.47315946214864885
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 233
+    },
+    {
+      "name": "Map-confirmed road gap 239",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_1_4c.Landscape_Z_1_4c:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_43",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_1_4c.Landscape_Z_1_4c:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_38"
+      ],
+      "pointsUV": [
+        [
+          0.6967879750370987,
+          0.8414710495019093
+        ],
+        [
+          0.6967565417289734,
+          0.8401719331741333
+        ],
+        [
+          0.6963657736778259,
+          0.8397811651229858
+        ],
+        [
+          0.6920672059059143,
+          0.8397811651229858
+        ],
+        [
+          0.6916764378547668,
+          0.8401719331741333
+        ],
+        [
+          0.6920672059059143,
+          0.8405627012252808
+        ],
+        [
+          0.6926586410721663,
+          0.8418934449964545
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 239
+    },
+    {
+      "name": "Map-confirmed road gap 247",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_3_2b.Landscape_D_3_2b:PersistentLevel.LandscapeStreamingProxy_D_3_2b.LandscapeSplinesComponent_0.LandscapeSplineSegment_0",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_3_2b.Landscape_D_3_2b:PersistentLevel.LandscapeStreamingProxy_D_3_2b.LandscapeSplinesComponent_0.LandscapeSplineSegment_838"
+      ],
+      "pointsUV": [
+        [
+          0.23706532467412977,
+          0.15952920889619315
+        ],
+        [
+          0.23837436735630035,
+          0.16060961782932281
+        ],
+        [
+          0.23837436735630035,
+          0.16178195178508759
+        ],
+        [
+          0.23720203340053558,
+          0.16295428574085236
+        ],
+        [
+          0.2360296994447708,
+          0.16295428574085236
+        ],
+        [
+          0.23329424858093262,
+          0.16021883487701416
+        ],
+        [
+          0.23329424858093262,
+          0.15865571796894073
+        ],
+        [
+          0.23368503153324127,
+          0.15826494991779327
+        ],
+        [
+          0.23368503153324127,
+          0.15787416696548462
+        ],
+        [
+          0.23337054478383912,
+          0.15743243536160173
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 247
+    },
+    {
+      "name": "Map-confirmed road gap 249",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_1",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_4.Landscape_Z_3_4:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_5"
+      ],
+      "pointsUV": [
+        [
+          0.29936528708256605,
+          0.85531510667372
+        ],
+        [
+          0.30011722445487976,
+          0.8561938405036926
+        ],
+        [
+          0.30011722445487976,
+          0.8565846085548401
+        ],
+        [
+          0.30089879035949707,
+          0.8577569127082825
+        ],
+        [
+          0.30089879035949707,
+          0.8585385084152222
+        ],
+        [
+          0.2997264564037323,
+          0.8597108125686646
+        ],
+        [
+          0.29738178849220276,
+          0.857366144657135
+        ],
+        [
+          0.2969910204410553,
+          0.857366144657135
+        ],
+        [
+          0.2958186864852905,
+          0.8565846085548401
+        ],
+        [
+          0.2952755066514723,
+          0.8565119545712903
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 249
+    },
+    {
+      "name": "Map-confirmed road gap 255",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_1_4.Landscape_Z_1_4:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_25",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_1_4.Landscape_Z_1_4:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_57"
+      ],
+      "pointsUV": [
+        [
+          0.6880443590966984,
+          0.8547625157355715
+        ],
+        [
+          0.6877686381340027,
+          0.8554122447967529
+        ],
+        [
+          0.6873778700828552,
+          0.8558030724525452
+        ],
+        [
+          0.6865963339805603,
+          0.8558030724525452
+        ],
+        [
+          0.6862055659294128,
+          0.8554122447967529
+        ],
+        [
+          0.6862055659294128,
+          0.8534584045410156
+        ],
+        [
+          0.6877686381340027,
+          0.8511137366294861
+        ],
+        [
+          0.6869399901289286,
+          0.8504796693134369
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 255
+    },
+    {
+      "name": "Map-confirmed road gap 256",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_3_2b.Landscape_D_3_2b:PersistentLevel.LandscapeStreamingProxy_D_3_2b.LandscapeSplinesComponent_0.LandscapeSplineSegment_751",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_3_2b.Landscape_D_3_2b:PersistentLevel.LandscapeStreamingProxy_D_3_2b.LandscapeSplinesComponent_0.LandscapeSplineSegment_838"
+      ],
+      "pointsUV": [
+        [
+          0.2316080645733686,
+          0.15306761806437044
+        ],
+        [
+          0.23173114657402039,
+          0.15318483114242554
+        ],
+        [
+          0.2297772616147995,
+          0.15318483114242554
+        ],
+        [
+          0.22938647866249084,
+          0.1535756140947342
+        ],
+        [
+          0.22938647866249084,
+          0.15513873100280762
+        ],
+        [
+          0.23016802966594696,
+          0.1563110649585724
+        ],
+        [
+          0.23016802966594696,
+          0.1570926159620285
+        ],
+        [
+          0.23173114657402039,
+          0.15865571796894073
+        ],
+        [
+          0.23212192952632904,
+          0.15865571796894073
+        ],
+        [
+          0.2325126975774765,
+          0.1590465009212494
+        ],
+        [
+          0.23329424858093262,
+          0.1590465009212494
+        ],
+        [
+          0.23329424858093262,
+          0.15865571796894073
+        ],
+        [
+          0.23368503153324127,
+          0.15826494991779327
+        ],
+        [
+          0.23357098332170098,
+          0.15707730710716203
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 256
+    },
+    {
+      "name": "Map-confirmed road gap 263",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_0_3b.Landscape_C_0_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_2312",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_0_3b.Landscape_C_0_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_2349"
+      ],
+      "pointsUV": [
+        [
+          0.922176762958903,
+          0.2943484064050175
+        ],
+        [
+          0.921844482421875,
+          0.29386478662490845
+        ],
+        [
+          0.9214537143707275,
+          0.29386478662490845
+        ],
+        [
+          0.9210628867149353,
+          0.2942555546760559
+        ],
+        [
+          0.9202813506126404,
+          0.2942555546760559
+        ],
+        [
+          0.9194998145103455,
+          0.293474018573761
+        ],
+        [
+          0.919109046459198,
+          0.293474018573761
+        ],
+        [
+          0.9179366827011108,
+          0.2923016846179962
+        ],
+        [
+          0.9180924207652643,
+          0.2922147316453337
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 263
+    },
+    {
+      "name": "Map-confirmed road gap 270",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_1_4.Landscape_Z_1_4:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_56",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_1_4.Landscape_Z_1_4:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_63"
+      ],
+      "pointsUV": [
+        [
+          0.6919654075464406,
+          0.8625771411206746
+        ],
+        [
+          0.6920672059059143,
+          0.8624462485313416
+        ],
+        [
+          0.6951934099197388,
+          0.8655725121498108
+        ],
+        [
+          0.6955741246488935,
+          0.8655133112105527
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 270
+    },
+    {
+      "name": "Map-confirmed road gap 274",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_4_1.Landscape_D_4_1:PersistentLevel.LandscapeStreamingProxy_D_4_1a.LandscapeSplinesComponent_0.LandscapeSplineSegment_810",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_4_1.Landscape_D_4_1:PersistentLevel.LandscapeStreamingProxy_D_4_1a.LandscapeSplinesComponent_0.LandscapeSplineSegment_803"
+      ],
+      "pointsUV": [
+        [
+          0.16789981125354722,
+          0.19067271127014776
+        ],
+        [
+          0.16842517256736755,
+          0.19109027087688446
+        ],
+        [
+          0.16842517256736755,
+          0.19148105382919312
+        ],
+        [
+          0.16920672357082367,
+          0.19226260483264923
+        ],
+        [
+          0.1715513914823532,
+          0.19226260483264923
+        ],
+        [
+          0.17194215953350067,
+          0.19187182188034058
+        ],
+        [
+          0.17249912266598316,
+          0.19185437431512786
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 274
+    },
+    {
+      "name": "Map-confirmed road gap 276",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_19",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_34"
+      ],
+      "pointsUV": [
+        [
+          0.32426850687886183,
+          0.8860550953060413
+        ],
+        [
+          0.3243454396724701,
+          0.885892927646637
+        ],
+        [
+          0.32473623752593994,
+          0.885892927646637
+        ],
+        [
+          0.3251270055770874,
+          0.8862836956977844
+        ],
+        [
+          0.32551777362823486,
+          0.8862836956977844
+        ],
+        [
+          0.3259085714817047,
+          0.8866744637489319
+        ],
+        [
+          0.3262993395328522,
+          0.8866744637489319
+        ],
+        [
+          0.32669010758399963,
+          0.8870652318000793
+        ],
+        [
+          0.3270809054374695,
+          0.8870652318000793
+        ],
+        [
+          0.32747167348861694,
+          0.8874560594558716
+        ],
+        [
+          0.32825320959091187,
+          0.8874560594558716
+        ],
+        [
+          0.32868836002202917,
+          0.8877983195262854
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 276
+    },
+    {
+      "name": "Map-confirmed road gap 287",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_4_4c.Landscape_Z_4_4c:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_1",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_4_4.Landscape_Z_4_4:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_9"
+      ],
+      "pointsUV": [
+        [
+          0.05394888966876045,
+          0.8498439954150581
+        ],
+        [
+          0.05431809276342392,
+          0.8503321409225464
+        ],
+        [
+          0.05431809276342392,
+          0.8526768088340759
+        ],
+        [
+          0.054708871990442276,
+          0.8530675768852234
+        ],
+        [
+          0.054708871990442276,
+          0.854630708694458
+        ],
+        [
+          0.05417906715088809,
+          0.8547598647429999
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 287
+    },
+    {
+      "name": "Map-confirmed road gap 322",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_3_2b.Landscape_D_3_2b:PersistentLevel.LandscapeStreamingProxy_D_3_2b.LandscapeSplinesComponent_0.LandscapeSplineSegment_732",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_3_2b.Landscape_D_3_2b:PersistentLevel.LandscapeStreamingProxy_D_3_2b.LandscapeSplinesComponent_0.LandscapeSplineSegment_834"
+      ],
+      "pointsUV": [
+        [
+          0.23820367529826802,
+          0.1680221103321174
+        ],
+        [
+          0.23837436735630035,
+          0.1680343896150589
+        ],
+        [
+          0.23837436735630035,
+          0.16764360666275024
+        ],
+        [
+          0.23759281635284424,
+          0.16686205565929413
+        ],
+        [
+          0.23759281635284424,
+          0.16647127270698547
+        ],
+        [
+          0.23720203340053558,
+          0.166080504655838
+        ],
+        [
+          0.23720203340053558,
+          0.16568972170352936
+        ],
+        [
+          0.23642048239707947,
+          0.16490817070007324
+        ],
+        [
+          0.23642048239707947,
+          0.1645173877477646
+        ],
+        [
+          0.2360296994447708,
+          0.16412660479545593
+        ],
+        [
+          0.2360296994447708,
+          0.16373583674430847
+        ],
+        [
+          0.23563891649246216,
+          0.16334505379199982
+        ],
+        [
+          0.23578335127476147,
+          0.16334395950953587
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 322
+    },
+    {
+      "name": "Map-confirmed road gap 350",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_0_2d.Landscape_B_0_2d:PersistentLevel.LandscapeStreamingProxy_B_0_2d.LandscapeSplinesComponent_0.LandscapeSplineSegment_109",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_0_2d.Landscape_B_0_2d:PersistentLevel.LandscapeStreamingProxy_B_0_2d.LandscapeSplinesComponent_0.LandscapeSplineSegment_148"
+      ],
+      "pointsUV": [
+        [
+          0.8116865823748143,
+          0.503220003111016
+        ],
+        [
+          0.8112543821334839,
+          0.5037124156951904
+        ],
+        [
+          0.8112543821334839,
+          0.508792519569397
+        ],
+        [
+          0.8116451501846313,
+          0.5091832876205444
+        ],
+        [
+          0.8120359778404236,
+          0.508792519569397
+        ],
+        [
+          0.8118752076408139,
+          0.5087283453595324
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 350
+    },
+    {
+      "name": "Map-confirmed road gap 408",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_1.Landscape_C_2_1:PersistentLevel.LandscapeProxy_C_2_1a.LandscapeSplinesComponent_0.LandscapeSplineSegment_320",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_1.Landscape_C_2_1:PersistentLevel.LandscapeProxy_C_2_1a.LandscapeSplinesComponent_0.LandscapeSplineSegment_7"
+      ],
+      "pointsUV": [
+        [
+          0.559048379929927,
+          0.35295744501302573
+        ],
+        [
+          0.5592027902603149,
+          0.35287222266197205
+        ],
+        [
+          0.5595936179161072,
+          0.3532629907131195
+        ],
+        [
+          0.5599843859672546,
+          0.3532629907131195
+        ],
+        [
+          0.5603751540184021,
+          0.35365375876426697
+        ],
+        [
+          0.563892126083374,
+          0.35365375876426697
+        ],
+        [
+          0.5642828941345215,
+          0.3532629907131195
+        ],
+        [
+          0.5650644898414612,
+          0.3532629907131195
+        ],
+        [
+          0.5654017618980216,
+          0.35281480863385495
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 408
+    },
+    {
+      "name": "Map-confirmed road gap 430",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_2_3d.Landscape_Z_2_3d:PersistentLevel.LandscapeStreamingProxy_Z_2_3d.LandscapeSplinesComponent_0.LandscapeSplineSegment_5",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_2_3d.Landscape_Z_2_3d:PersistentLevel.LandscapeStreamingProxy_Z_2_3d.LandscapeSplinesComponent_0.LandscapeSplineSegment_6"
+      ],
+      "pointsUV": [
+        [
+          0.5070615210256451,
+          0.834579150679501
+        ],
+        [
+          0.5072293877601624,
+          0.8347010612487793
+        ],
+        [
+          0.5068386197090149,
+          0.8343102931976318
+        ],
+        [
+          0.5052754878997803,
+          0.8343102931976318
+        ],
+        [
+          0.5048847198486328,
+          0.8339195251464844
+        ],
+        [
+          0.5037124156951904,
+          0.8339195251464844
+        ],
+        [
+          0.5033215880393982,
+          0.8343102931976318
+        ],
+        [
+          0.5033215880393982,
+          0.8358733654022217
+        ],
+        [
+          0.5037124156951904,
+          0.8362641930580139
+        ],
+        [
+          0.5037124156951904,
+          0.8366549611091614
+        ],
+        [
+          0.5041031837463379,
+          0.8370457291603088
+        ],
+        [
+          0.5041031837463379,
+          0.8374364972114563
+        ],
+        [
+          0.5044939517974854,
+          0.8378272652626038
+        ],
+        [
+          0.5044939517974854,
+          0.8382180333137512
+        ],
+        [
+          0.5056662559509277,
+          0.8393903970718384
+        ],
+        [
+          0.5056662559509277,
+          0.8397811651229858
+        ],
+        [
+          0.5060570240020752,
+          0.8401719331741333
+        ],
+        [
+          0.5080109238624573,
+          0.8401719331741333
+        ],
+        [
+          0.5084016919136047,
+          0.8397811651229858
+        ],
+        [
+          0.5091832876205444,
+          0.8397811651229858
+        ],
+        [
+          0.5095740556716919,
+          0.8393903970718384
+        ],
+        [
+          0.5099648237228394,
+          0.8393903970718384
+        ],
+        [
+          0.5107463598251343,
+          0.8386088609695435
+        ],
+        [
+          0.511527955532074,
+          0.8386088609695435
+        ],
+        [
+          0.5119187235832214,
+          0.8382180333137512
+        ],
+        [
+          0.5127002596855164,
+          0.8382180333137512
+        ],
+        [
+          0.5131852322330572,
+          0.8378306449516875
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 430
+    },
+    {
+      "name": "Map-confirmed road gap 444",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_27",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_4"
+      ],
+      "pointsUV": [
+        [
+          0.3155579291254441,
+          0.8803290096336484
+        ],
+        [
+          0.3161391019821167,
+          0.8808128237724304
+        ],
+        [
+          0.3161391019821167,
+          0.8812035918235779
+        ],
+        [
+          0.316920667886734,
+          0.8819851279258728
+        ],
+        [
+          0.316920667886734,
+          0.882375955581665
+        ],
+        [
+          0.31848376989364624,
+          0.8839390277862549
+        ],
+        [
+          0.32004690170288086,
+          0.8839390277862549
+        ],
+        [
+          0.3204376697540283,
+          0.8843297958374023
+        ],
+        [
+          0.32121923565864563,
+          0.8843297958374023
+        ],
+        [
+          0.3216100037097931,
+          0.8847206234931946
+        ],
+        [
+          0.3216100037097931,
+          0.8855021595954895
+        ],
+        [
+          0.3208284378051758,
+          0.8862836956977844
+        ],
+        [
+          0.3194999474901059,
+          0.8862647794263391
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 444
+    },
+    {
+      "name": "Map-confirmed road gap 456",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_94",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_9"
+      ],
+      "pointsUV": [
+        [
+          0.3123968922554807,
+          0.8770289288391184
+        ],
+        [
+          0.3122313320636749,
+          0.8769050240516663
+        ],
+        [
+          0.3126221299171448,
+          0.8765142560005188
+        ],
+        [
+          0.3126221299171448,
+          0.8741695880889893
+        ],
+        [
+          0.3122313320636749,
+          0.8737788200378418
+        ],
+        [
+          0.3122313320636749,
+          0.8733880519866943
+        ],
+        [
+          0.31144979596138,
+          0.8726065158843994
+        ],
+        [
+          0.31144979596138,
+          0.8722156882286072
+        ],
+        [
+          0.3106682300567627,
+          0.8714341521263123
+        ],
+        [
+          0.3106682300567627,
+          0.8710433840751648
+        ],
+        [
+          0.3094958961009979,
+          0.8698710203170776
+        ],
+        [
+          0.3094958961009979,
+          0.8694802522659302
+        ],
+        [
+          0.30832356214523315,
+          0.8683079481124878
+        ],
+        [
+          0.30832356214523315,
+          0.8679171800613403
+        ],
+        [
+          0.3079327940940857,
+          0.8675263524055481
+        ],
+        [
+          0.3079327940940857,
+          0.8667448163032532
+        ],
+        [
+          0.30832356214523315,
+          0.8663540482521057
+        ],
+        [
+          0.30910512804985046,
+          0.8663540482521057
+        ],
+        [
+          0.3098866641521454,
+          0.8671355843544006
+        ],
+        [
+          0.31027746200561523,
+          0.8671355843544006
+        ],
+        [
+          0.31144979596138,
+          0.8683079481124878
+        ],
+        [
+          0.31184056401252747,
+          0.8683079481124878
+        ],
+        [
+          0.3126221299171448,
+          0.8690894842147827
+        ],
+        [
+          0.31301289796829224,
+          0.8690894842147827
+        ],
+        [
+          0.3134036660194397,
+          0.8694802522659302
+        ],
+        [
+          0.314185231924057,
+          0.8694802522659302
+        ],
+        [
+          0.31457599997520447,
+          0.8698710203170776
+        ],
+        [
+          0.31447693547263506,
+          0.8700371828765477
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 456
+    },
+    {
+      "name": "Map-confirmed road gap 458",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_2_3d.Landscape_Z_2_3d:PersistentLevel.LandscapeStreamingProxy_Z_2_3d.LandscapeSplinesComponent_0.LandscapeSplineSegment_5",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_2_3d.Landscape_Z_2_3d:PersistentLevel.LandscapeStreamingProxy_Z_2_3d.LandscapeSplinesComponent_0.LandscapeSplineSegment_18"
+      ],
+      "pointsUV": [
+        [
+          0.5070615210256451,
+          0.834579150679501
+        ],
+        [
+          0.5072293877601624,
+          0.8347010612487793
+        ],
+        [
+          0.5068386197090149,
+          0.8343102931976318
+        ],
+        [
+          0.5052754878997803,
+          0.8343102931976318
+        ],
+        [
+          0.5048847198486328,
+          0.8339195251464844
+        ],
+        [
+          0.5037124156951904,
+          0.8339195251464844
+        ],
+        [
+          0.5033215880393982,
+          0.8343102931976318
+        ],
+        [
+          0.5033215880393982,
+          0.8358733654022217
+        ],
+        [
+          0.5037124156951904,
+          0.8362641930580139
+        ],
+        [
+          0.5037124156951904,
+          0.8366549611091614
+        ],
+        [
+          0.5041031837463379,
+          0.8370457291603088
+        ],
+        [
+          0.5041031837463379,
+          0.8374364972114563
+        ],
+        [
+          0.5044939517974854,
+          0.8378272652626038
+        ],
+        [
+          0.5044939517974854,
+          0.8382180333137512
+        ],
+        [
+          0.5056662559509277,
+          0.8393903970718384
+        ],
+        [
+          0.5056662559509277,
+          0.8397811651229858
+        ],
+        [
+          0.5060570240020752,
+          0.8401719331741333
+        ],
+        [
+          0.5091832876205444,
+          0.8401719331741333
+        ],
+        [
+          0.5107463598251343,
+          0.8386088609695435
+        ],
+        [
+          0.5131513815556861,
+          0.8386795840558461
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 458
+    },
+    {
+      "name": "Map-confirmed road gap 463",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_3_2b.Landscape_D_3_2b:PersistentLevel.LandscapeStreamingProxy_D_3_2b.LandscapeSplinesComponent_0.LandscapeSplineSegment_743",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_3_2b.Landscape_D_3_2b:PersistentLevel.LandscapeStreamingProxy_D_3_2b.LandscapeSplinesComponent_0.LandscapeSplineSegment_0"
+      ],
+      "pointsUV": [
+        [
+          0.23279036893622446,
+          0.15336524437227705
+        ],
+        [
+          0.23290348052978516,
+          0.15318483114242554
+        ],
+        [
+          0.2297772616147995,
+          0.15318483114242554
+        ],
+        [
+          0.22938647866249084,
+          0.1535756140947342
+        ],
+        [
+          0.22938647866249084,
+          0.15513873100280762
+        ],
+        [
+          0.23016802966594696,
+          0.1563110649585724
+        ],
+        [
+          0.23016802966594696,
+          0.1570926159620285
+        ],
+        [
+          0.23173114657402039,
+          0.15865571796894073
+        ],
+        [
+          0.23212192952632904,
+          0.15865571796894073
+        ],
+        [
+          0.23329424858093262,
+          0.1598280519247055
+        ],
+        [
+          0.23329424858093262,
+          0.16021883487701416
+        ],
+        [
+          0.2360296994447708,
+          0.16295428574085236
+        ],
+        [
+          0.23720203340053558,
+          0.16295428574085236
+        ],
+        [
+          0.23837436735630035,
+          0.16178195178508759
+        ],
+        [
+          0.23837436735630035,
+          0.16060961782932281
+        ],
+        [
+          0.23706532467412977,
+          0.15952920889619315
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 463
+    },
+    {
+      "name": "Map-confirmed road gap 520",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_1b.Landscape_C_2_1b:PersistentLevel.LandscapeStreamingProxyC_2_1b.LandscapeSplinesComponent_0.LandscapeSplineSegment_35",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_1b.Landscape_C_2_1b:PersistentLevel.LandscapeStreamingProxyC_2_1b.LandscapeSplinesComponent_0.LandscapeSplineSegment_37"
+      ],
+      "pointsUV": [
+        [
+          0.5385401215834031,
+          0.3581571528154646
+        ],
+        [
+          0.5384916067123413,
+          0.35834309458732605
+        ],
+        [
+          0.5388823747634888,
+          0.35834309458732605
+        ],
+        [
+          0.5400547385215759,
+          0.3571707606315613
+        ],
+        [
+          0.5412270426750183,
+          0.3571707606315613
+        ],
+        [
+          0.5423993468284607,
+          0.3559984266757965
+        ],
+        [
+          0.5439624786376953,
+          0.3559984266757965
+        ],
+        [
+          0.5451348423957825,
+          0.3552168905735016
+        ],
+        [
+          0.5459163784980774,
+          0.3552168905735016
+        ],
+        [
+          0.5462840477897917,
+          0.35482291717477743
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 520
+    },
+    {
+      "name": "Map-confirmed road gap 602",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_1_1b.Landscape_Z_1_1b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_57",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_1_1b.Landscape_Z_1_1b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_79"
+      ],
+      "pointsUV": [
+        [
+          0.7294939806837195,
+          0.9817242448566504
+        ],
+        [
+          0.729581892490387,
+          0.9816334247589111
+        ],
+        [
+          0.7291910648345947,
+          0.9816334247589111
+        ],
+        [
+          0.7288002967834473,
+          0.9812426567077637
+        ],
+        [
+          0.7280187606811523,
+          0.9812426567077637
+        ],
+        [
+          0.7272372245788574,
+          0.9804611206054688
+        ],
+        [
+          0.7241109609603882,
+          0.9804611206054688
+        ],
+        [
+          0.7237201929092407,
+          0.9808518886566162
+        ],
+        [
+          0.7229386568069458,
+          0.9808518886566162
+        ],
+        [
+          0.7225478887557983,
+          0.9812426567077637
+        ],
+        [
+          0.7221571207046509,
+          0.9812426567077637
+        ],
+        [
+          0.7202032208442688,
+          0.9831965565681458
+        ],
+        [
+          0.7198124527931213,
+          0.9831965565681458
+        ],
+        [
+          0.7198124527931213,
+          0.9835873246192932
+        ],
+        [
+          0.7196531710324141,
+          0.9834958605766013
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 602
+    },
+    {
+      "name": "Map-confirmed road gap 657",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_2_2.Landscape_D_2_2:PersistentLevel.LandscapeProxy_D_2_2a.LandscapeSplinesComponent_0.LandscapeSplineSegment_285",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_2_2.Landscape_D_2_2:PersistentLevel.LandscapeProxy_D_2_2a.LandscapeSplinesComponent_0.LandscapeSplineSegment_279"
+      ],
+      "pointsUV": [
+        [
+          0.49792312985256487,
+          0.15388414694496913
+        ],
+        [
+          0.5001953840255737,
+          0.15396639704704285
+        ],
+        [
+          0.5005861520767212,
+          0.1543571650981903
+        ],
+        [
+          0.5005861520767212,
+          0.15552949905395508
+        ],
+        [
+          0.5001953840255737,
+          0.15592028200626373
+        ],
+        [
+          0.5001953840255737,
+          0.15670183300971985
+        ],
+        [
+          0.49550604820251465,
+          0.16139116883277893
+        ],
+        [
+          0.4951152801513672,
+          0.16139116883277893
+        ],
+        [
+          0.4943337142467499,
+          0.16217271983623505
+        ],
+        [
+          0.4939429461956024,
+          0.16217271983623505
+        ],
+        [
+          0.49277061223983765,
+          0.16334505379199982
+        ],
+        [
+          0.4923798441886902,
+          0.16334505379199982
+        ],
+        [
+          0.49198904633522034,
+          0.16373583674430847
+        ],
+        [
+          0.4918601449246789,
+          0.16362044981091062
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 657
+    },
+    {
+      "name": "Map-confirmed road gap 683",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_2_1d.Landscape_D_2_1d:PersistentLevel.LandscapeStreamingProxy_D_2_1d.LandscapeSplinesComponent_0.LandscapeSplineSegment_352",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_D_2_3b.Landscape_D_2_3b:PersistentLevel.LandscapeStreamingProxy_D_2_3b.LandscapeSplinesComponent_0.LandscapeSplineSegment_8"
+      ],
+      "pointsUV": [
+        [
+          0.5033171926199611,
+          0.10017807941360629
+        ],
+        [
+          0.5033215880393982,
+          0.10003907978534698
+        ],
+        [
+          0.5041031837463379,
+          0.10003907978534698
+        ],
+        [
+          0.5060570240020752,
+          0.0980851873755455
+        ],
+        [
+          0.5084016919136047,
+          0.0980851873755455
+        ],
+        [
+          0.5095740556716919,
+          0.09730363637208939
+        ],
+        [
+          0.5146541595458984,
+          0.09730363637208939
+        ],
+        [
+          0.5150449275970459,
+          0.09691285341978073
+        ],
+        [
+          0.5148871803566992,
+          0.09673060967381587
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 683
+    },
+    {
+      "name": "Map-confirmed junction 38",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_2b.Landscape_C_2_2b:PersistentLevel.LandscapeStreamingProxy_C_2_2b.LandscapeSplinesComponent_0.LandscapeSplineSegment_70",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_2b.Landscape_C_2_2b:PersistentLevel.LandscapeStreamingProxy_C_2_2b.LandscapeSplinesComponent_0.LandscapeSplineSegment_84"
+      ],
+      "pointsUV": [
+        [
+          0.41709602048608785,
+          0.3628394715735834
+        ],
+        [
+          0.4169597625732422,
+          0.36303243041038513
+        ],
+        [
+          0.4177412986755371,
+          0.36303243041038513
+        ],
+        [
+          0.4175626803836443,
+          0.3629050227813008
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 38,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 147",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_1b.Landscape_C_2_1b:PersistentLevel.LandscapeStreamingProxyC_2_1b.LandscapeSplinesComponent_0.LandscapeSplineSegment_3",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_1b.Landscape_C_2_1b:PersistentLevel.LandscapeStreamingProxyC_2_1b.LandscapeSplinesComponent_0.LandscapeSplineSegment_43"
+      ],
+      "pointsUV": [
+        [
+          0.527712330098794,
+          0.3527132412269506
+        ],
+        [
+          0.5275498032569885,
+          0.35287222266197205
+        ],
+        [
+          0.5283674118518248,
+          0.35295355296384506
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 147,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 203",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_20",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_104"
+      ],
+      "pointsUV": [
+        [
+          0.3076180846966847,
+          0.8682484255896162
+        ],
+        [
+          0.30754199624061584,
+          0.8679171800613403
+        ],
+        [
+          0.3071257711199526,
+          0.8676062324677183
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 203,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 205",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_4b.Landscape_B_2_4b:PersistentLevel.LandscapeStreamingProxy_B_2_4b.LandscapeSplinesComponent_0.LandscapeSplineSegment_28",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_4b.Landscape_B_2_4b:PersistentLevel.LandscapeStreamingProxy_B_2_4b.LandscapeSplinesComponent_0.LandscapeSplineSegment_9"
+      ],
+      "pointsUV": [
+        [
+          0.42848738461295804,
+          0.4626240386369812
+        ],
+        [
+          0.42829230427742004,
+          0.46268072724342346
+        ],
+        [
+          0.4286830723285675,
+          0.46268072724342346
+        ],
+        [
+          0.42906326982199205,
+          0.46319695540483247
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 205,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 206",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_4c.Landscape_Z_3_4c:PersistentLevel.LandscapeStreamingProxy_1.LandscapeSplinesComponent_0.LandscapeSplineSegment_5",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_4c.Landscape_Z_3_4c:PersistentLevel.LandscapeStreamingProxy_1.LandscapeSplinesComponent_0.LandscapeSplineSegment_3"
+      ],
+      "pointsUV": [
+        [
+          0.29673728488359097,
+          0.8498568658665754
+        ],
+        [
+          0.296209454536438,
+          0.8499413728713989
+        ],
+        [
+          0.2958186864852905,
+          0.8495506048202515
+        ],
+        [
+          0.295962742186278,
+          0.8495953979901787
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 206,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 208",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_4b.Landscape_B_2_4b:PersistentLevel.LandscapeStreamingProxy_B_2_4b.LandscapeSplinesComponent_0.LandscapeSplineSegment_3",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_4b.Landscape_B_2_4b:PersistentLevel.LandscapeStreamingProxy_B_2_4b.LandscapeSplinesComponent_0.LandscapeSplineSegment_21"
+      ],
+      "pointsUV": [
+        [
+          0.43983317508073644,
+          0.4638272807225958
+        ],
+        [
+          0.44001564383506775,
+          0.46385306119918823
+        ],
+        [
+          0.4396248459815979,
+          0.46385306119918823
+        ],
+        [
+          0.43923407793045044,
+          0.4642438590526581
+        ],
+        [
+          0.4390871609694417,
+          0.464167096870738
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 208,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 235",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_4.Landscape_Z_3_4:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_0",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_4.Landscape_Z_3_4:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_46"
+      ],
+      "pointsUV": [
+        [
+          0.2995802913398764,
+          0.8612367025067963
+        ],
+        [
+          0.2997264564037323,
+          0.8612739443778992
+        ],
+        [
+          0.2997264564037323,
+          0.8608831763267517
+        ],
+        [
+          0.2991740446557546,
+          0.860447031933201
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 235,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 255",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_4c.Landscape_Z_3_4c:PersistentLevel.LandscapeStreamingProxy_1.LandscapeSplinesComponent_0.LandscapeSplineSegment_0",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_4c.Landscape_Z_3_4c:PersistentLevel.LandscapeStreamingProxy_1.LandscapeSplinesComponent_0.LandscapeSplineSegment_19"
+      ],
+      "pointsUV": [
+        [
+          0.270952845326488,
+          0.8451625845585967
+        ],
+        [
+          0.2708089053630829,
+          0.8452520370483398
+        ],
+        [
+          0.2708089053630829,
+          0.8448612689971924
+        ],
+        [
+          0.27048490948450926,
+          0.8443640535291654
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 255,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 290",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_4b.Landscape_B_2_4b:PersistentLevel.LandscapeStreamingProxy_B_2_4b.LandscapeSplinesComponent_0.LandscapeSplineSegment_8",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_4b.Landscape_B_2_4b:PersistentLevel.LandscapeStreamingProxy_B_2_4b.LandscapeSplinesComponent_0.LandscapeSplineSegment_39"
+      ],
+      "pointsUV": [
+        [
+          0.42772053025135087,
+          0.46228080240585234
+        ],
+        [
+          0.4279015362262726,
+          0.462289959192276
+        ],
+        [
+          0.4271199703216553,
+          0.462289959192276
+        ],
+        [
+          0.4267292022705078,
+          0.46189919114112854
+        ],
+        [
+          0.42671795076030905,
+          0.462019599991599
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 290,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 309",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_4b.Landscape_B_2_4b:PersistentLevel.LandscapeStreamingProxy_B_2_4b.LandscapeSplinesComponent_0.LandscapeSplineSegment_0",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_4b.Landscape_B_2_4b:PersistentLevel.LandscapeStreamingProxy_B_2_4b.LandscapeSplinesComponent_0.LandscapeSplineSegment_313"
+      ],
+      "pointsUV": [
+        [
+          0.4461831167349492,
+          0.4592906643266226
+        ],
+        [
+          0.44626808166503906,
+          0.4587729573249817
+        ],
+        [
+          0.4458772838115692,
+          0.45838218927383423
+        ],
+        [
+          0.4460216612190098,
+          0.4582170707902392
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 309,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 438",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_1b.Landscape_C_2_1b:PersistentLevel.LandscapeStreamingProxyC_2_1b.LandscapeSplinesComponent_0.LandscapeSplineSegment_32",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_1b.Landscape_C_2_1b:PersistentLevel.LandscapeStreamingProxyC_2_1b.LandscapeSplinesComponent_0.LandscapeSplineSegment_326"
+      ],
+      "pointsUV": [
+        [
+          0.536830761406853,
+          0.36029312951683434
+        ],
+        [
+          0.5357561707496643,
+          0.36029699444770813
+        ],
+        [
+          0.5354166185823721,
+          0.36070526790329965
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 438,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 449",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_A_3_4.Landscape_A_3_4:PersistentLevel.LandscapeProxy_A_3_4.LandscapeSplinesComponent_0.LandscapeSplineSegment_474",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_A_3_4.Landscape_A_3_4:PersistentLevel.LandscapeProxy_A_3_4.LandscapeSplinesComponent_0.LandscapeSplineSegment_473"
+      ],
+      "pointsUV": [
+        [
+          0.2535180584088779,
+          0.6994780167994865
+        ],
+        [
+          0.2520033260647548,
+          0.6994707767957585
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 449,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 456",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_4.Landscape_Z_3_4:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_17",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_4c.Landscape_Z_3_4c:PersistentLevel.LandscapeStreamingProxy_1.LandscapeSplinesComponent_0.LandscapeSplineSegment_5"
+      ],
+      "pointsUV": [
+        [
+          0.297423924835274,
+          0.8512469322362954
+        ],
+        [
+          0.29738178849220276,
+          0.8507229089736938
+        ],
+        [
+          0.29660022258758545,
+          0.8499413728713989
+        ],
+        [
+          0.29673728488359097,
+          0.8498568658665754
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 456,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 531",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_4b.Landscape_B_2_4b:PersistentLevel.LandscapeStreamingProxy_B_2_4b.LandscapeSplinesComponent_0.LandscapeSplineSegment_30",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_4b.Landscape_B_2_4b:PersistentLevel.LandscapeStreamingProxy_B_2_4b.LandscapeSplinesComponent_0.LandscapeSplineSegment_3"
+      ],
+      "pointsUV": [
+        [
+          0.4413316814732738,
+          0.46283786460910803
+        ],
+        [
+          0.4411879777908325,
+          0.46268072724342346
+        ],
+        [
+          0.44001564383506775,
+          0.46385306119918823
+        ],
+        [
+          0.43983317508073644,
+          0.4638272807225958
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 531,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 546",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_A_3_2c.Landscape_A_3_2c:PersistentLevel.LandscapeStreamingProxy_A_3_2c.LandscapeSplinesComponent_0.LandscapeSplineSegment_5",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_A_3_2c.Landscape_A_3_2c:PersistentLevel.LandscapeStreamingProxy_A_3_2c.LandscapeSplinesComponent_0.LandscapeSplineSegment_6"
+      ],
+      "pointsUV": [
+        [
+          0.2709460231133926,
+          0.7403819624197141
+        ],
+        [
+          0.2708089053630829,
+          0.740523636341095
+        ],
+        [
+          0.2708089053630829,
+          0.7393513321876526
+        ],
+        [
+          0.27119967341423035,
+          0.7389605045318604
+        ],
+        [
+          0.2723720073699951,
+          0.7389605045318604
+        ],
+        [
+          0.27276280522346497,
+          0.7393513321876526
+        ],
+        [
+          0.27276280522346497,
+          0.7397421002388
+        ],
+        [
+          0.27263277313522916,
+          0.739593318339283
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 546,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 555",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_19",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_46"
+      ],
+      "pointsUV": [
+        [
+          0.3220731104653073,
+          0.8849602096457249
+        ],
+        [
+          0.32200077176094055,
+          0.885111391544342
+        ],
+        [
+          0.3223915696144104,
+          0.8855021595954895
+        ],
+        [
+          0.3231731057167053,
+          0.8855021595954895
+        ],
+        [
+          0.32367905926454604,
+          0.886020019978761
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 555,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 585",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_1.Landscape_C_2_1:PersistentLevel.LandscapeProxy_C_2_1a.LandscapeSplinesComponent_0.LandscapeSplineSegment_313",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_1.Landscape_C_2_1:PersistentLevel.LandscapeProxy_C_2_1a.LandscapeSplinesComponent_0.LandscapeSplineSegment_476"
+      ],
+      "pointsUV": [
+        [
+          0.574046281739631,
+          0.3552730196632046
+        ],
+        [
+          0.5756154656410217,
+          0.3552168905735016
+        ],
+        [
+          0.5760329484908819,
+          0.3547891502662132
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 585,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 722",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_53",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_39"
+      ],
+      "pointsUV": [
+        [
+          0.33113651212065054,
+          0.8752802283118208
+        ],
+        [
+          0.33098867535591125,
+          0.8753419518470764
+        ],
+        [
+          0.3313794434070587,
+          0.8749511241912842
+        ],
+        [
+          0.3313794434070587,
+          0.8745603561401367
+        ],
+        [
+          0.3305978775024414,
+          0.8737788200378418
+        ],
+        [
+          0.3305978775024414,
+          0.8729972839355469
+        ],
+        [
+          0.33020710945129395,
+          0.8726065158843994
+        ],
+        [
+          0.3301422926779258,
+          0.8727773351325595
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 722,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 735",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_4b.Landscape_B_2_4b:PersistentLevel.LandscapeStreamingProxy_B_2_4b.LandscapeSplinesComponent_0.LandscapeSplineSegment_31",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_4b.Landscape_B_2_4b:PersistentLevel.LandscapeStreamingProxy_B_2_4b.LandscapeSplinesComponent_0.LandscapeSplineSegment_30"
+      ],
+      "pointsUV": [
+        [
+          0.44459854216367056,
+          0.4617398664888443
+        ],
+        [
+          0.44470494985580444,
+          0.46189919114112854
+        ],
+        [
+          0.4435326159000397,
+          0.46189919114112854
+        ],
+        [
+          0.4431418478488922,
+          0.462289959192276
+        ],
+        [
+          0.4423603117465973,
+          0.462289959192276
+        ],
+        [
+          0.4419822905617573,
+          0.46267948849383506
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 735,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 748",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_1b.Landscape_C_2_1b:PersistentLevel.LandscapeStreamingProxyC_2_1b.LandscapeSplinesComponent_0.LandscapeSplineSegment_9",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_1b.Landscape_C_2_1b:PersistentLevel.LandscapeStreamingProxyC_2_1b.LandscapeSplinesComponent_0.LandscapeSplineSegment_333"
+      ],
+      "pointsUV": [
+        [
+          0.5164941619434131,
+          0.37416436864240865
+        ],
+        [
+          0.516998827457428,
+          0.37358343601226807
+        ],
+        [
+          0.516998827457428,
+          0.3731926679611206
+        ],
+        [
+          0.5182919449174217,
+          0.37184243033396364
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 748,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 768",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_3.Landscape_B_2_3:PersistentLevel.LandscapeStreamingProxy_B_2_3a.LandscapeSplinesComponent_0.LandscapeSplineSegment_437",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_B_2_3b.Landscape_B_2_3b:PersistentLevel.LandscapeStreamingProxy_B_2_3b.LandscapeSplinesComponent_0.LandscapeSplineSegment_419"
+      ],
+      "pointsUV": [
+        [
+          0.551796734660079,
+          0.48165419416152866
+        ],
+        [
+          0.5513872504234314,
+          0.4822196066379547
+        ],
+        [
+          0.5513872504234314,
+          0.48261040449142456
+        ],
+        [
+          0.5498903603351827,
+          0.4841357052752068
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 768,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 787",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_A_3_2.Landscape_A_3_2:PersistentLevel.LandscapeProxy_A_3_2.LandscapeSplinesComponent_0.LandscapeSplineSegment_10",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_A_3_2.Landscape_A_3_2:PersistentLevel.LandscapeProxy_A_3_2.LandscapeSplinesComponent_0.LandscapeSplineSegment_9"
+      ],
+      "pointsUV": [
+        [
+          0.29677069665289013,
+          0.7727207031066567
+        ],
+        [
+          0.29660022258758545,
+          0.7725673913955688
+        ],
+        [
+          0.29660022258758545,
+          0.771004319190979
+        ],
+        [
+          0.2969910204410553,
+          0.7706134915351868
+        ],
+        [
+          0.2969494008885818,
+          0.7694442430348942
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 787,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 797",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_1.Landscape_C_2_1:PersistentLevel.LandscapeProxy_C_2_1a.LandscapeSplinesComponent_0.LandscapeSplineSegment_13",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_C_2_1.Landscape_C_2_1:PersistentLevel.LandscapeProxy_C_2_1a.LandscapeSplinesComponent_0.LandscapeSplineSegment_306"
+      ],
+      "pointsUV": [
+        [
+          0.5854204337588549,
+          0.35952729222630564
+        ],
+        [
+          0.5873388051986694,
+          0.3595154285430908
+        ],
+        [
+          0.5885111093521118,
+          0.3587338924407959
+        ],
+        [
+          0.588901937007904,
+          0.3587338924407959
+        ],
+        [
+          0.5887117699187285,
+          0.3586900572931749
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "ed9bc47d937ba32c85a94f922374e4aebe2a0e5bc0dc783ec0356a14450a0803",
+      "reviewCandidate": 797,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 806",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_0",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_3b.Landscape_Z_3_3b:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_17"
+      ],
+      "pointsUV": [
+        [
+          0.32613595514774407,
+          0.8998439213050823
+        ],
+        [
+          0.3270809054374695,
+          0.8999609351158142
+        ],
+        [
+          0.32747167348861694,
+          0.8995701670646667
+        ],
+        [
+          0.3278624415397644,
+          0.8995701670646667
+        ],
+        [
+          0.3286440074443817,
+          0.898788571357727
+        ],
+        [
+          0.32942554354667664,
+          0.898788571357727
+        ],
+        [
+          0.32945248800947413,
+          0.8986327486614099
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 806,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 854",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_4.Landscape_Z_3_4:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_49",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_4.Landscape_Z_3_4:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_14"
+      ],
+      "pointsUV": [
+        [
+          0.2878466786670505,
+          0.8539042789596867
+        ],
+        [
+          0.2880031168460846,
+          0.8538491725921631
+        ],
+        [
+          0.28839391469955444,
+          0.8542399406433105
+        ],
+        [
+          0.2887846827507019,
+          0.8542399406433105
+        ],
+        [
+          0.2899570167064667,
+          0.8554122447967529
+        ],
+        [
+          0.29034778475761414,
+          0.8554122447967529
+        ],
+        [
+          0.290738582611084,
+          0.8558030724525452
+        ],
+        [
+          0.2915201187133789,
+          0.8558030724525452
+        ],
+        [
+          0.29191091656684875,
+          0.8561938405036926
+        ],
+        [
+          0.2918946800050999,
+          0.8560134752280427
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 854,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 875",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_4c.Landscape_Z_3_4c:PersistentLevel.LandscapeStreamingProxy_1.LandscapeSplinesComponent_0.LandscapeSplineSegment_1",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_4c.Landscape_Z_3_4c:PersistentLevel.LandscapeStreamingProxy_1.LandscapeSplinesComponent_0.LandscapeSplineSegment_8"
+      ],
+      "pointsUV": [
+        [
+          0.29330569345262736,
+          0.8263540354603319
+        ],
+        [
+          0.293474018573761,
+          0.8264947533607483
+        ],
+        [
+          0.293474018573761,
+          0.8304024934768677
+        ],
+        [
+          0.29386478662490845,
+          0.8307932615280151
+        ],
+        [
+          0.29386478662490845,
+          0.8315748572349548
+        ],
+        [
+          0.2937657480392582,
+          0.8314923856242181
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 875,
+      "reviewSeries": "junction continuity audit"
+    },
+    {
+      "name": "Map-confirmed junction 877",
+      "sourceSegments": [
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_1d.Landscape_Z_3_1d:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_20",
+        "LandscapeSplineSegment /Game/ConZ_Files/Maps/The_Island/Landscape_Z_3_1d.Landscape_Z_3_1d:PersistentLevel.LandscapeStreamingProxy_0.LandscapeSplinesComponent_0.LandscapeSplineSegment_0"
+      ],
+      "pointsUV": [
+        [
+          0.31986330708495825,
+          0.9025179806224395
+        ],
+        [
+          0.32004690170288086,
+          0.9026963710784912
+        ],
+        [
+          0.319656103849411,
+          0.9030871391296387
+        ],
+        [
+          0.31926533579826355,
+          0.9030871391296387
+        ],
+        [
+          0.3180930018424988,
+          0.9042595028877258
+        ],
+        [
+          0.3177022337913513,
+          0.9042595028877258
+        ],
+        [
+          0.31731143593788147,
+          0.9046502709388733
+        ],
+        [
+          0.316920667886734,
+          0.9046502709388733
+        ],
+        [
+          0.31652989983558655,
+          0.9050410389900208
+        ],
+        [
+          0.31574833393096924,
+          0.9050410389900208
+        ],
+        [
+          0.3153575658798218,
+          0.9054318070411682
+        ],
+        [
+          0.31552415547134693,
+          0.9053599413370018
+        ]
+      ],
+      "maxApproachMeters": 3,
+      "maxLengthMeters": 500,
+      "imageSha256": "e0185106fbaf305b3271578f2a1ac923c9f534989e1d1975fd438f2ba4abad18",
+      "reviewCandidate": 877,
+      "reviewSeries": "junction continuity audit"
+    }
+  ]
+}
