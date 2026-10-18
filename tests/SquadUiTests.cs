@@ -25,6 +25,91 @@ class SquadUiTests {
         IDisposable host=null,friend=null;
         try {
             var engine=Get(runtime,"engine");Call(engine,"WpfPreviewPosition","{X=-336602.375 Y=-270302.625 Z=18853.264|P=0 Y=135 R=0}");
+            var needsWizard=engine.GetType().GetProperty("WpfNeedsOnboarding",F);
+            Check((bool)needsWizard.GetValue(engine,null),"Existing profiles without a completed-version marker require the update wizard");
+            Set(engine,"wpfOnboardingVersion","0.0.1");
+            Check(Path.GetFullPath((string)Get(engine,"settingsPath")).StartsWith(folder+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase),"Wizard persistence fixture writes only its isolated test profile");
+            Set(engine,"diagnosticMode",false);try { Call(engine,"WpfSave"); }finally { Set(engine,"diagnosticMode",true); }
+            Check((bool)needsWizard.GetValue(engine,null)&&File.ReadAllText(Path.Combine(folder,"settings.ini")).Contains("OnboardingVersion=0.0.1"),"Ordinary settings saves do not mark an updated wizard completed");
+            var incompleteWizard=(Window)Call(runtime,"BuildOnboarding",0);incompleteWizard.Close();
+            Check((bool)needsWizard.GetValue(engine,null),"Closing an incomplete wizard leaves it required at the next launch");
+            int savedCopy=(int)Get(engine,"scumCopyKey");
+            Set(engine,"diagnosticMode",false);try { Call(engine,"WpfCompleteOnboarding"); }finally { Set(engine,"diagnosticMode",true); }
+            string completedVersion=(string)Get(engine,"wpfOnboardingVersion");
+            Check(!(bool)needsWizard.GetValue(engine,null)&&File.ReadAllText(Path.Combine(folder,"settings.ini")).Contains("OnboardingVersion="+completedVersion)&&(int)Get(engine,"scumCopyKey")==savedCopy,"Completing the wizard persists this version without resetting the copy binding");
+            Set(engine,"wpfOnboardingVersion","");Call(engine,"LoadSettings");
+            Check(!(bool)needsWizard.GetValue(engine,null)&&(string)Get(engine,"wpfOnboardingVersion")==completedVersion,"Reloading the completed version does not repeat setup on ordinary restarts");
+            Set(engine,"wpfOnboardingVersion","0.0.1");Check((bool)needsWizard.GetValue(engine,null),"A different app version requires onboarding again");Set(engine,"wpfOnboardingVersion",completedVersion);
+            var tutorial=(Window)Call(runtime,"BuildFirstTimeGuide");
+            try {
+                var tutorialText=Children(tutorial).OfType<TextBlock>().Single(t=>t.Tag as string=="first-time-guide-text");
+                Check(tutorialText.Text.Contains("Extract All")&&tutorialText.Text.Contains("COPY LOCATION")&&tutorialText.Text.Contains("BOTH SCUM AND MINIMAP")&&tutorialText.TextWrapping==TextWrapping.Wrap,"In-app guide includes extraction, exact Copy Location path and matching-key requirement in readable wrapped text");
+                tutorial.Show();tutorial.UpdateLayout();Capture(tutorial,Path.Combine(folder,"first-time-guide.png"));
+            }finally { tutorial.Close(); }
+            var tutorialWizard=(Window)Call(runtime,"BuildOnboarding",0);try { Check(Children(tutorialWizard).OfType<TextBlock>().Any(t=>t.Tag as string=="first-time-guide-text"),"First-time and update wizard includes the same setup tutorial on its first page"); }finally { tutorialWizard.Close(); }
+            var adminAction=Enum.Parse(asm.GetType("ScumMiniMap.AppControlAction"),"AdminCommands");
+            var trayAdmin=((System.Windows.Forms.ContextMenuStrip)Get(engine,"trayMenu")).Items.Cast<System.Windows.Forms.ToolStripItem>().Single(item=>item.Text=="Admin commands");
+            trayAdmin.PerformClick();Pump();
+            Check((bool)Get(engine,"adminToolsEnabled")&&((System.Windows.Forms.Form)Get(engine,"adminCommandsPanel")).Visible,"Actual tray Admin commands enables and opens tools from their default disabled state");
+            Call(engine,"DismissAdminControls");Call(engine,"SetAdminToolsEnabled",false);
+            var adminSettings=(Window)Call(runtime,"BuildSettings",0);
+            try {
+                Check(Children(adminSettings).OfType<Button>().Any(b=>b.Tag as string=="first-time-guide"),"Settings exposes the first-time setup guide for reopening later");
+                var adminCheck=Children(adminSettings).OfType<CheckBox>().Single(c=>c.Tag as string=="admin-tools-enabled");
+                Check(adminCheck.IsChecked==false,"WPF Settings shows the actual disabled admin-tools state");
+                var openAdmin=Children(adminSettings).OfType<Button>().Single(b=>b.Tag as string=="open-admin-commands");
+                openAdmin.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Pump();
+                Check(adminCheck.IsChecked==true&&((System.Windows.Forms.Form)Get(engine,"adminCommandsPanel")).Visible,"Actual Settings Admin commands button enables and opens the palette");
+                adminCheck.IsChecked=false;adminCheck.RaiseEvent(new RoutedEventArgs(CheckBox.ClickEvent));
+                Check(!(bool)Get(engine,"adminToolsEnabled")&&!((System.Windows.Forms.Form)Get(engine,"adminCommandsPanel")).Visible,"Settings checkbox disables admin tools and hides the palette");
+                openAdmin.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Pump();
+                Check(adminCheck.IsChecked==true&&((System.Windows.Forms.Form)Get(engine,"adminCommandsPanel")).Visible,"Settings Open button works again after disabling admin tools");
+            }finally { adminSettings.Close();Call(engine,"DismissAdminControls"); }
+            trayAdmin.PerformClick();Pump();
+            var modalAdminSettings=(Window)Call(runtime,"BuildSettings",0);
+            modalAdminSettings.ContentRendered+=(s,e)=>Children(modalAdminSettings).OfType<Button>().Single(b=>b.Tag as string=="open-admin-commands").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Call(runtime,"Modal",modalAdminSettings);Pump();
+            Check(!modalAdminSettings.IsVisible&&((System.Windows.Forms.Form)Get(engine,"adminCommandsPanel")).Visible&&((System.Windows.Forms.Form)Get(engine,"adminCommandsPanel")).Enabled,"Real modal Settings closes before reopening an enabled interactive admin palette");
+            Call(engine,"DismissAdminControls");
+            var dockingMap=(Window)Get(runtime,"tactical");dockingMap.Show();dockingMap.UpdateLayout();
+            trayAdmin.PerformClick();Pump();
+            var dockedAdmin=(System.Windows.Forms.Form)Get(engine,"adminCommandsPanel");
+            var dockMapBounds=(System.Drawing.Rectangle)type.GetProperty("AdminMapBounds",F).GetValue(runtime,null);
+            var dockWork=System.Windows.Forms.Screen.FromControl(dockedAdmin).WorkingArea;
+            Check(dockedAdmin.Left==Math.Max(dockWork.Left,Math.Min(dockMapBounds.Left+4,dockWork.Right-dockedAdmin.Width)),"Admin palette docks snugly against the actual WPF map's left edge");
+            dockingMap.Hide();
+            var dragHeader=dockedAdmin.Controls.Find("AdminControlsTitle",true).Single();
+            var beforeDrag=dockedAdmin.Location;
+            typeof(System.Windows.Forms.Control).GetMethod("OnMouseDown",F).Invoke(dragHeader,new object[]{new System.Windows.Forms.MouseEventArgs(System.Windows.Forms.MouseButtons.Left,1,10,10,0)});
+            typeof(System.Windows.Forms.Control).GetMethod("OnMouseMove",F).Invoke(dragHeader,new object[]{new System.Windows.Forms.MouseEventArgs(System.Windows.Forms.MouseButtons.Left,0,80,90,0)});
+            typeof(System.Windows.Forms.Control).GetMethod("OnMouseUp",F).Invoke(dragHeader,new object[]{new System.Windows.Forms.MouseEventArgs(System.Windows.Forms.MouseButtons.Left,1,80,90,0)});
+            var afterDrag=dockedAdmin.Location;
+            Check(afterDrag!=beforeDrag&&Get(engine,"wpfAdminControlsLocation")!=null&&!dragHeader.Capture,"Dragging the real admin header moves the panel and releases mouse capture");
+            Call(engine,"DismissAdminControls");trayAdmin.PerformClick();Pump();
+            Check(dockedAdmin.Location==afterDrag,"Reopening admin commands preserves the dragged location");
+            Call(engine,"SetAdminControlsExpanded",false);Call(engine,"SetAdminControlsExpanded",true);
+            Check(dockedAdmin.Location==afterDrag,"Collapsing and expanding admin controls preserves the dragged location");
+            Call(engine,"DismissAdminControls");
+            foreach(bool tacticalOpen in new[]{false,true}) {
+                Call(engine,"WpfTactical",tacticalOpen);Call(runtime,"Handle",adminAction);Pump();
+                var admin=(System.Windows.Forms.Form)Get(engine,"adminCommandsPanel");
+                Check(admin!=null&&admin.Visible&&(bool)Get(engine,"adminPanelExpanded"),"WPF Admin commands opens expanded with tactical map "+tacticalOpen);
+                Check(!((System.Windows.Forms.Form)Get(engine,"overlay")).Visible,"Opening WPF admin tools does not show the legacy map");
+                Check(System.Windows.Forms.Screen.FromControl(admin).WorkingArea.Contains(admin.Bounds),"WPF admin controls fit on screen");
+                Check(admin.Controls.Find("AdminCommandCard",true).Length>0&&admin.Controls.Find("AddAdminCommand",true).Single().Visible,"Opened WPF admin palette contains command cards and its editor action");
+                using(var adminPreview=new System.Drawing.Bitmap(admin.Width,admin.Height)) { admin.DrawToBitmap(adminPreview,new System.Drawing.Rectangle(0,0,admin.Width,admin.Height));adminPreview.Save(Path.Combine(folder,"admin-commands-"+tacticalOpen+".png")); }
+                Call(engine,"SyncFullMapAdminControls",true,true);
+                Check(admin.Visible,"WPF admin controls remain open while WPF settings suppress map input");
+                Call(engine,"SyncFullMapAdminControls",false,false);Check(!admin.Visible,"WPF admin tools hide when another application has focus");
+                Call(engine,"SyncFullMapAdminControls",true,false);Check(admin.Visible,"Requested WPF admin tools return with application focus");
+                Call(engine,"DismissAdminControls");Call(engine,"SyncFullMapAdminControls",true,false);
+                Check(!admin.Visible,"Dismissed WPF admin controls stay closed across refreshes");
+                Call(runtime,"Handle",adminAction);Check(Object.ReferenceEquals(admin,Get(engine,"adminCommandsPanel"))&&admin.Visible,"Repeated WPF admin action reuses and reopens the controls");
+                Call(engine,"DismissAdminControls");
+            }
+            Call(runtime,"Handle",adminAction);Call(engine,"SetAdminToolsEnabled",false);Call(engine,"SetAdminToolsEnabled",true);Call(engine,"SyncFullMapAdminControls",true,false);
+            Check(!((System.Windows.Forms.Form)Get(engine,"adminCommandsPanel")).Visible,"Re-enabling admin tools does not resurrect a closed palette");
+            Call(engine,"SetAdminToolsEnabled",false);Call(engine,"WpfTactical",false);
             var hud=(Window)Get(runtime,"hud");hud.Left=-32000;hud.Top=-32000;
             var surface=asm.GetType("ScumMiniMap.WpfMapSurface");var arrow=surface.GetMethod("DrawPlayer",BindingFlags.NonPublic|BindingFlags.Static);var pixels=new List<byte[]>();
             foreach(int yaw in new[]{0,90}) { var visual=new DrawingVisual();using(var dc=visual.RenderOpen())arrow.Invoke(null,new object[]{dc,new Point(32,32),(double)yaw,Brushes.Cyan,true});var image=new RenderTargetBitmap(64,64,96,96,PixelFormats.Pbgra32);image.Render(visual);var bytes=new byte[64*64*4];image.CopyPixels(bytes,64*4,0);pixels.Add(bytes);var png=new PngBitmapEncoder();png.Frames.Add(BitmapFrame.Create(image));using(var stream=File.Create(Path.Combine(folder,"player-arrow-"+yaw+".png")))png.Save(stream); }
@@ -164,6 +249,12 @@ class SquadUiTests {
             bool inspected=false;var timer=new DispatcherTimer { Interval=TimeSpan.FromMilliseconds(250) };timer.Tick+=(s,e)=> {
                 timer.Stop();try { var dialog=Application.Current.Windows.OfType<Window>().Single(w=>w.Title=="Squad tools");dialog.Left=-32000;dialog.Top=-32000;dialog.UpdateLayout();var labels=Children(dialog).OfType<Button>().Select(b=>b.Content as string).ToArray();Check(labels.Contains("Danger")&&labels.Contains("Loot")&&labels.Contains("Pick me up")&&labels.Contains("Save current map preset"),"Squad panel exposes pings, route controls and presets");var bitmap=new RenderTargetBitmap((int)dialog.ActualWidth,(int)dialog.ActualHeight,96,96,PixelFormats.Pbgra32);bitmap.Render(dialog);var encoder=new PngBitmapEncoder();encoder.Frames.Add(BitmapFrame.Create(bitmap));using(var file=File.Create(Path.Combine(folder,"squad-tools.png")))encoder.Save(file);inspected=true;dialog.Close(); }catch { foreach(var w in Application.Current.Windows.OfType<Window>().ToArray())if(w!=tactical)w.Close();throw; }
             };timer.Start();Call(runtime,"ShowSquadTools");Check(inspected,"Actual squad panel rendered and closed successfully");
+            trayAdmin.PerformClick();Pump();
+            Check(((System.Windows.Forms.Form)Get(engine,"adminCommandsPanel")).Visible,"Tray Exit regression starts with admin commands still open");
+            ((System.Windows.Forms.ContextMenuStrip)Get(engine,"trayMenu")).Items.Cast<System.Windows.Forms.ToolStripItem>().Last().PerformClick();
+            Check((bool)Get(engine,"closing")&&!((System.Windows.Forms.Form)Get(engine,"adminCommandsPanel")).Visible,"Actual tray Exit closes admin windows without requiring a separate close");
+            var exitingApplication=Application.Current;exitingApplication.Run();
+            Check(exitingApplication.Dispatcher.HasShutdownFinished,"Tray Exit finishes the WPF application loop while admin controls were open");
         }finally { type.GetField("Active",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,null);Set(runtime,"privatePositions",null);if(friend!=null)friend.Dispose();if(host!=null)host.Dispose();((IDisposable)runtime).Dispose(); }
     }
 }

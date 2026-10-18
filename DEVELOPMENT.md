@@ -55,6 +55,18 @@ collision clearance or distinguish stacked roads when the caller supplies only X
 
 ## Layout
 
+The WPF setup wizard is required when `OnboardingVersion` in the active profile
+does not equal `VersionString`, including older profiles without the marker.
+Only completing its final page records the current version. Settings saves and
+closing an unfinished wizard preserve the pending requirement and existing key
+bindings. The localized first-time guide is available in Settings and on the
+wizard's opening page; its English text matches the Discord installation guide.
+
+Admin controls open independently of the retired map window. They dock just
+inside the WPF map's left edge until the user drags the Admin Controls header.
+The dragged position is retained for reopen/expand operations during that app
+session and clamped to the monitor working area.
+
 - `src/`: application source. `MiniMap.cs` contains the authoritative `VersionString`.
 - `resources/`: required map, road, water-mask, icon and voice assets.
 - User map data lives in `maps/<map-id>/` beneath the active data folder: `map.png`, `zones.tsv` and `customwaypoints.tsv`. Successful imports are retained in separate `imports/<import-id>/` folders with the original `source` image/file, `zones.tsv`, and (for screenshot detection) `source-zones.tsv` and `detection.json`. Import IDs prevent repeated filenames or layer names from overwriting earlier imports. The main `zones.tsv` contains the edited annotations saved from the zone editor; import TSVs preserve the initial detection.

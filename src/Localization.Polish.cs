@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace ScumMiniMap {
@@ -14,7 +14,9 @@ namespace ScumMiniMap {
             }
             return result;
         }
-        const string PolishUi = @"SoloRoute|Trasa solo
+        const string PolishUi = @"FirstTimeGuideTitle|Instrukcja pierwszego uruchomienia
+FirstTimeGuideBody|1. Pobierz pełny ZIP z kanału pobierania. Wybierz Wyodrębnij wszystkie i uruchom SkynettMiniMap.exe z rozpakowanego folderu. Pozostaw assets obok EXE. Nie uruchamiaj wewnątrz ZIP. Wymagane są Windows 64-bit i .NET Framework 4.8.\n\n2. Ustaw SCUM w oknie lub oknie bez ramek i wczytaj postać.\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num / to DZIELENIE na klawiaturze numerycznej, a nie / na głównej.\n\n4. MiniMap: NumPad / jako pojedynczy klawisz bez Ctrl, Shift ani Alt. Klawisze mapy i czatu też muszą odpowiadać SCUM. Brak klawiatury numerycznej? Wybierz wolny klawisz, zastosuj go w SCUM i ustaw TEN SAM KLAWISZ W SCUM I MINIMAP. Zmiana tylko jednej aplikacji nie wystarczy.\n\n5. Na każdej stronie przytrzymaj Dalej przez sekundę i puść. Ustaw rozmiar, położenie i wygląd oraz ukończ ostatnią stronę. Grupy są opcjonalne.\n\n6. Zamknij ustawienia, czat i ekwipunek. W SCUM naciśnij Copy Location: współrzędne muszą się skopiować. Rusz się i sprawdź ruch znacznika. Domyślnie Home otwiera ustawienia, a ? kreator. Jeśli nadal nie działa, otwórz zgłoszenie z wersją i zdjęciami obu przypisań.
+SoloRoute|Trasa solo
 OwnRoute|Twoja trasa
 RouteList|Trasy
 RouteAutoHelp|Trasy przeliczają się po zmianie przystanków. Bursztynowy oznacza solo, turkusowy wspólną trasę. Linie przerywane to bezpośrednie wskazanie bez trasy drogowej. Twoją trasę solo widzą połączone grupy. Podążanie wspólną trasą nie rozsyła jej ponownie.

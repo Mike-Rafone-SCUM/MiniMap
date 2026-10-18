@@ -1,4 +1,4 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to **SkynettMiniMap** are documented in this file.
 
@@ -7,6 +7,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ---
 
 ## [Unreleased]
+
+## [2.3.9] - 2026-10-18
+
+- Fix tray Exit while admin controls are open: mark shutdown before closing native tools, then end the WPF message loop after the tray callback completes.
+
+- Include the first-time setup guide in the app's Settings and the opening setup-wizard page, in all 19 languages. Explain full-ZIP extraction, SCUM display mode, Num /, matching replacement keys, wizard completion and a tracking check.
+
+- Show the setup wizard after each application version update. Record completion only on its final page; retain saved settings and key bindings, and retry unfinished setup on the next launch.
+
+- Dock admin controls just inside the WPF map's left edge by default. Drag the Admin Controls header to reposition the panel; retain its chosen position when reopening or expanding it, and keep it within the monitor's working area.
+
+- Make the tray's explicit Admin commands action enable and open the controls. Replace the ambiguous WPF Settings toggle button with a checked enable setting and a separate Admin commands opener.
+
+- Fix Admin commands silently doing nothing in the WPF interface. Open the existing command and teleport controls independently of the retired map window, whether the tactical map is open or closed.
+- Keep the admin palette on screen, reuse it when reopened, and preserve dismissal, focus hiding and the admin-tools enable/disable setting.
 
 ## [2.3.8] - 2026-10-18
 

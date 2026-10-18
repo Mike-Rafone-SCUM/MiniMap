@@ -194,7 +194,9 @@ namespace ScumMiniMap {
             SettingsChanged();
         }
         internal void WpfAppearance(string shape,int opacity) { overlayShape=shape=="Circle"?"Circle":"Square";mapOpacity=Math.Max(30,Math.Min(100,opacity));SettingsChanged();SaveSettings(); }
-        internal bool WpfNeedsOnboarding { get { return isFirstLaunch; } }
+        string wpfOnboardingVersion="";
+        internal bool WpfNeedsOnboarding { get { return isFirstLaunch || wpfOnboardingVersion!=VersionString; } }
+        internal void WpfCompleteOnboarding() { wpfOnboardingVersion=VersionString;isFirstLaunch=false;SaveSettings(); }
         internal void WpfPreviewPosition(string value) { if(!diagnosticMode)throw new InvalidOperationException("Preview requires diagnostic mode.");Accept(value);zoom=targetZoom=4f;autoZoom=false; }
         internal void WpfTactical(bool active) { fullMapActive=active;Native.CancelActiveCopy();inputGeneration++;fallbackKeysArmed=false; }
         internal void WpfZoom(bool tactical,int direction) {
@@ -244,6 +246,13 @@ namespace ScumMiniMap {
             switch(action) { case AppControlAction.DeathMarker:TriggerDeathMarker();break;case AppControlAction.ZoneEditor:OpenZoneImport(null);break;case AppControlAction.AdminCommands:ShowAdminCommands();break;case AppControlAction.AdminPlayers:ShowAdminPlayers();break;case AppControlAction.ResetZoom:fullMapZoom=zoom=targetZoom=1;SettingsChanged();break; }
         }
         internal void WpfExit() { ExitApp(); }
+        internal void WpfPrepareExit() {
+            WpfVerifyAccess();if(closing)return;
+            closing=true;wpfAdminControlsRequested=false;adminControlsCommandReturn=false;
+            Native.CancelActiveCopy();timer.Stop();SaveSettings();
+            foreach(var tool in new System.Windows.Forms.Form[]{adminCommandsPanel,adminPlayersPanel,spawnCartDialog}.Concat(adminProfileWindows).ToArray())
+                if(tool!=null&&!tool.IsDisposed)tool.Close();
+        }
         internal string WpfDataFolder { get { return dataFolder; } }
     }
 }

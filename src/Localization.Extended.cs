@@ -1,10 +1,13 @@
-﻿// Offline translation drafts: native terminology review pending.
+// Offline translation drafts: native terminology review pending.
 using System;
 using System.Collections.Generic;
 
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsPtPt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "FirstTimeGuideTitle", "Guia da primeira utilização" },
+            { "FirstTimeGuideBody", "1. Transfira o ZIP completo em Transferências. Escolha Extrair tudo e execute SkynettMiniMap.exe na pasta extraída. Mantenha assets junto do EXE. Não execute dentro do ZIP. Requer Windows de 64 bits e .NET Framework 4.8.\n\n2. Utilize o SCUM em janela ou janela sem margens e carregue a personagem.\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num / é a DIVISÃO do teclado numérico, não / do teclado principal.\n\n4. MiniMap: NumPad / e uma tecla sem Ctrl, Shift ou Alt. As teclas do mapa e da conversa também devem corresponder ao SCUM. Sem teclado numérico? Escolha uma tecla livre, aplique no SCUM e configure A MESMA TECLA NO SCUM E NO MINIMAP. Alterar apenas uma aplicação não funciona.\n\n5. Mantenha Seguinte premido durante um segundo e solte em cada página. Ajuste tamanho, posição e aspeto e conclua a última página. Os grupos são opcionais.\n\n6. Feche definições, conversa e inventário. No SCUM, prima Copy Location: as coordenadas devem ser copiadas. Mova-se e verifique o marcador. Home abre as definições por predefinição; ? reabre o assistente. Se falhar, abra um pedido de apoio com a versão e capturas das duas configurações de teclas." },
+
             { "NavigationNext", "Próxima paragem" },
             { "NavigationRemaining", "Percurso restante" },
             { "NavigationEta", "Tempo estimado" },

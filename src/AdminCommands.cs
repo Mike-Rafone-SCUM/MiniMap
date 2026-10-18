@@ -421,10 +421,14 @@ namespace ScumMiniMap {
         bool adminControlsCommandReturn;
         bool adminPanelDismissedForFullMap;
         bool adminToolsEnabled;
+        internal bool AdminToolsEnabled { get { return adminToolsEnabled; } }
+        bool wpfAdminControlsRequested;
+        Point? wpfAdminControlsLocation;
+        bool WpfAdminControls { get { return WpfFieldConsoleRuntime.Active!=null; } }
         internal void SetAdminToolsEnabled(bool enabled) {
             if(adminCommandBusy || relativeTeleportBusy)return;
             adminToolsEnabled=enabled;
-            if(!enabled)adminControlsCommandReturn=false;
+            if(!enabled) { adminControlsCommandReturn=false;wpfAdminControlsRequested=false; }
             if(!enabled) {
                 foreach(var panel in new[]{adminCommandsPanel,adminPlayersPanel,(Form)spawnCartDialog})if(panel!=null && !panel.IsDisposed)panel.Hide();
                 foreach(var profile in adminProfileWindows.ToArray())if(!profile.IsDisposed)profile.Hide();
@@ -559,6 +563,11 @@ namespace ScumMiniMap {
             if(adminCommandsPanel==null || adminCommandsPanel.IsDisposed)return;
             adminControlsCommandReturn=false;
             bool returnFocus=adminCommandsPanel.ContainsFocus;
+            if(WpfAdminControls) {
+                wpfAdminControlsRequested=false;
+                adminCommandsPanel.Hide();
+                return;
+            }
             // Closing the controls returns to the attached tab; the same form and
             // its command/teleport choices remain available for the next click.
             adminPanelDismissedForFullMap=false;
@@ -578,6 +587,18 @@ namespace ScumMiniMap {
             // must not reorder an expanded palette or its popup mid-handoff.
             if(adminCommandBusy && adminFocusHandoffPending)return;
             if(!adminToolsEnabled) { if(adminCommandsPanel!=null && !adminCommandsPanel.IsDisposed)adminCommandsPanel.Hide();return; }
+            // The WPF map never displays the legacy overlay HWND. Explicitly
+            // opened admin tools are independent of that map and its settings.
+            if(WpfAdminControls) {
+                if(adminCommandsPanel==null || adminCommandsPanel.IsDisposed)return;
+                PositionFullMapAdminControls();
+                bool show=wpfAdminControlsRequested && focused && !chat.Paused && !inventoryInputLocked
+                    && !ToolWindowVisible && !adminCommandBusy && !relativeTeleportBusy && !closing;
+                if(adminCommandsPanel.TopMost!=show)adminCommandsPanel.TopMost=show;
+                if(show && !adminCommandsPanel.Visible)adminCommandsPanel.Show();
+                else if(!show && adminCommandsPanel.Visible)adminCommandsPanel.Hide();
+                return;
+            }
             if(ToolWindowVisible) {
                 if(adminCommandsPanel!=null && !adminCommandsPanel.IsDisposed && adminCommandsPanel.Visible)adminCommandsPanel.Hide();
                 return;
@@ -600,6 +621,19 @@ namespace ScumMiniMap {
         }
         void PositionFullMapAdminControls() {
             if(adminCommandsPanel==null || adminCommandsPanel.IsDisposed)return;
+            if(WpfAdminControls) {
+                Rectangle mapBounds=WpfFieldConsoleRuntime.Active.AdminMapBounds;
+                Point anchor=wpfAdminControlsLocation ?? (mapBounds.IsEmpty?Cursor.Position:mapBounds.Location);
+                Rectangle work=Screen.FromPoint(anchor).WorkingArea;
+                int width=Math.Min(work.Width,adminPanelExpanded?AdminControlsExpandedWidth:AdminControlsCollapsedWidth);
+                int height=Math.Min(work.Height,adminPanelExpanded?660:AdminControlsCollapsedHeight);
+                // Dock just inside the map's left edge, even when the map fills
+                // the monitor and there is no outside margin for the palette.
+                Point location=wpfAdminControlsLocation ?? new Point((mapBounds.IsEmpty?work.Left:mapBounds.Left)+AdminControlsGap,(mapBounds.IsEmpty?work.Top:mapBounds.Top)+AdminControlsGap);
+                adminCommandsPanel.Bounds=new Rectangle(Math.Max(work.Left,Math.Min(location.X,work.Right-width)),Math.Max(work.Top,Math.Min(location.Y,work.Bottom-height)),width,height);
+                adminPanelFitsBesideMap=true;
+                return;
+            }
             Rectangle area=Screen.FromControl(overlay).WorkingArea;
             Rectangle bounds=OverlayWindow.AdminPanelBounds(area,overlay.Bounds,adminPanelExpanded?AdminControlsExpandedWidth:AdminControlsCollapsedWidth,
                 adminPanelExpanded?660:AdminControlsCollapsedHeight,out adminPanelDockedLeft);
@@ -623,6 +657,10 @@ namespace ScumMiniMap {
             FocusAdminControls(true);
         }
         void ShowAdminCommands() {
+            if(closing || adminCommandBusy || relativeTeleportBusy)return;
+            // An explicit Open action is also consent to enable admin tools.
+            // Otherwise the tray offers a permanently inert command to new users.
+            if(!adminToolsEnabled)SetAdminToolsEnabled(true);
             ShowAdminControls(true,true,true);
             adminCommandsSectionExpanded=true;
             SetAdminControlsExpanded(true);
@@ -642,10 +680,15 @@ namespace ScumMiniMap {
         }
         void ShowAdminControls(bool activate,bool attachToMap,bool userRequested=false) {
             if(!adminToolsEnabled || closing || adminCommandBusy || relativeTeleportBusy)return;
-            if(!fullMapActive) { if(adminCommandsPanel!=null && !adminCommandsPanel.IsDisposed)adminCommandsPanel.Hide();return; }
-            attachToMap=true;
+            bool wpf=WpfAdminControls;
+            if(!wpf && !fullMapActive) { if(adminCommandsPanel!=null && !adminCommandsPanel.IsDisposed)adminCommandsPanel.Hide();return; }
+            if(wpf) {
+                if(!userRequested)return;
+                wpfAdminControlsRequested=true;
+            }
+            attachToMap=!wpf;
             adminPanelDismissedForFullMap=false;
-            if(userRequested && !overlay.Visible)overlay.Show();
+            if(userRequested && !wpf && !overlay.Visible)overlay.Show();
             if(adminCommandsPanel!=null && !adminCommandsPanel.IsDisposed) {
                 if(refreshAdminCommands!=null)refreshAdminCommands();
                 var palette=adminCommandsPanel as AdminControlsWindow;
@@ -653,7 +696,7 @@ namespace ScumMiniMap {
                 adminCommandsPanel.TopMost=true;
                 adminCommandsPanel.WindowState=FormWindowState.Normal;
                 PositionFullMapAdminControls();
-                if(userRequested && overlay.Visible && adminPanelFitsBesideMap)adminCommandsPanel.Show();
+                if(userRequested && (wpf || overlay.Visible) && adminPanelFitsBesideMap)adminCommandsPanel.Show();
                 FocusAdminControls(activate);
                 return;
             }
@@ -881,6 +924,20 @@ namespace ScumMiniMap {
             var content=new Panel { Dock=DockStyle.Fill,Visible=false };
             var contentHeader=new Label { Name="AdminControlsTitle",Dock=DockStyle.Top,Height=38,Padding=new Padding(10,0,8,0),Text=Localization.Get("AdminFloatingTitle").ToUpperInvariant(),
                 Font=new Font("Segoe UI",9.5f,FontStyle.Bold),TextAlign=ContentAlignment.MiddleLeft };
+            Point? dragOrigin=null;Point dragLocation=Point.Empty;
+            contentHeader.Cursor=Cursors.SizeAll;
+            contentHeader.MouseDown+=(s,e)=> {
+                if(!WpfAdminControls || e.Button!=MouseButtons.Left)return;
+                dragOrigin=contentHeader.PointToScreen(e.Location);dragLocation=form.Location;contentHeader.Capture=true;
+            };
+            contentHeader.MouseMove+=(s,e)=> {
+                if(!dragOrigin.HasValue)return;
+                Point mouse=contentHeader.PointToScreen(e.Location);
+                wpfAdminControlsLocation=new Point(dragLocation.X+mouse.X-dragOrigin.Value.X,dragLocation.Y+mouse.Y-dragOrigin.Value.Y);
+                PositionFullMapAdminControls();
+            };
+            contentHeader.MouseUp+=(s,e)=> { if(e.Button==MouseButtons.Left) { dragOrigin=null;contentHeader.Capture=false; } };
+            contentHeader.MouseCaptureChanged+=(s,e)=> { if(!contentHeader.Capture)dragOrigin=null; };
             content.Controls.Add(body);content.Controls.Add(footer);content.Controls.Add(contentHeader);
             var rail=new Panel { Name="AdminControlsRail",Dock=DockStyle.Right,Width=AdminControlsCollapsedWidth-2 };
             var header=new Panel { Name="AdminControlsHeader",Dock=DockStyle.Top,Height=112 };
@@ -966,7 +1023,7 @@ namespace ScumMiniMap {
             teleportToggle.Click+=(s,e)=>toggleSection(true);teleportHeader.Click+=(s,e)=>toggleSection(true);
             refreshAdminCommands();refreshAdminControlsLayout();teleportTimer.Start();
             PositionFullMapAdminControls();
-            if(userRequested && overlay.Visible && adminPanelFitsBesideMap)form.Show();
+            if(userRequested && (wpf || overlay.Visible) && adminPanelFitsBesideMap)form.Show();
             FocusAdminControls(activate);
         }
         bool adminFocusHandoffPending;

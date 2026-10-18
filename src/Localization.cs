@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -961,6 +961,9 @@ private static readonly Dictionary<string, string> CategoryNamesAr = new Diction
 
 
 public static readonly Dictionary<string, string> StringsEn = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "FirstTimeGuideTitle", "First-time setup guide" },
+            { "FirstTimeGuideBody", "Follow these steps in order. Your Copy Location key must match in SCUM and MiniMap.\n\n1. Download and extract\nDownload the complete application ZIP from Discord → Downloads. Right-click it → Extract All. Open the extracted folder and run SkynettMiniMap.exe. Keep the assets folder beside it. Do not run the app inside the ZIP. Requires 64-bit Windows and .NET Framework 4.8.\n\n2. Set SCUM’s display mode\nUse Borderless Window or Windowed mode. Join your game and load your character.\n\n3. Set COPY LOCATION in SCUM\nOPTIONS → MOUSE & KEYBOARD → CONTROLS → SUBCATEGORY: UI → COPY LOCATION\nSet it to Num / and click APPLY.\nThis is the DIVIDE key on the NUMBER PAD, not the / beside the letters.\nScreenshots: Discord → FAQ → Copy Location.\n\n4. Match it in MiniMap\nOn the setup wizard’s game-key bindings page, set Copy Location to NumPad / and Single key without modifier. No Ctrl, Shift or Alt. Check that the map and chat bindings match SCUM too.\n\n❗ NO NUMBER PAD? CHANGE THE KEY IN BOTH SCUM AND MINIMAP.\nChoose an unused single key in SCUM, Apply, then capture that same physical key in MiniMap. Changing only one app will not work.\n\n5. Finish the wizard\nHold the Next/forward button for one second, then release, on each page. Set your map size, position and appearance, and finish the final page. Groups are optional for solo use.\n\n6. Check tracking\nClose MiniMap Settings. Return to your character and close chat/inventory. Press your Copy Location key: SCUM must copy coordinates. Move your character and check that your marker moves.\n\nNeed help? Check BOTH key bindings first. Home opens Settings by default; ? on the big map reopens setup. If tracking still fails, open a ticket in Discord → Make a ticket with your app version and screenshots of both bindings." },
+
             { "NavigationNext", "Next stop" },
             { "NavigationRemaining", "Remaining route" },
             { "NavigationEta", "ETA" },
@@ -1730,6 +1733,9 @@ public static readonly Dictionary<string, string> StringsEn = new Dictionary<str
         };
 
 public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "FirstTimeGuideTitle", "Guía de primera instalación" },
+            { "FirstTimeGuideBody", "1. Descargá el ZIP completo de Descargas. Usá Extraer todo y ejecutá SkynettMiniMap.exe desde la carpeta extraída. Conservá assets junto al EXE. No lo ejecutes dentro del ZIP. Windows de 64 bits y .NET Framework 4.8.\n\n2. Usá SCUM en ventana o ventana sin bordes y cargá tu personaje.\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num / es DIVIDIR del teclado numérico, no / del teclado principal.\n\n4. En MiniMap, configurá Copy Location como NumPad /, una tecla sin Ctrl, Shift ni Alt. Las teclas del mapa y chat también deben coincidir con SCUM. ¿No tenés teclado numérico? Elegí otra tecla libre, aplicala en SCUM y capturá LA MISMA TECLA EN SCUM Y MINIMAP. Cambiar solo una aplicación no funciona.\n\n5. Mantené pulsado Siguiente un segundo y soltá en cada página. Ajustá tamaño, posición y apariencia; terminá la última página. Los grupos son opcionales.\n\n6. Cerrá Ajustes y el chat/inventario. Volvé a SCUM, pulsá Copy Location y comprobá que copie coordenadas. Movete y verificá que el marcador se mueva. Home abre Ajustes por defecto; ? reabre la configuración. Si falla, abrí un ticket con tu versión y capturas de ambas teclas." },
+
             { "NavigationNext", "Próxima parada" },
             { "NavigationRemaining", "Ruta restante" },
             { "NavigationEta", "Llegada estimada" },
@@ -2499,6 +2505,9 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsFr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "FirstTimeGuideTitle", "Guide de première utilisation" },
+            { "FirstTimeGuideBody", "1. Téléchargez le ZIP complet dans Téléchargements. Choisissez Extraire tout puis lancez SkynettMiniMap.exe dans le dossier extrait. Gardez assets à côté du fichier EXE. Ne lancez rien dans le ZIP. Windows 64 bits et .NET Framework 4.8 requis.\n\n2. Lancez SCUM en mode fenêtré ou sans bordures et chargez votre personnage.\n\n3. SCUM : OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num / est la touche DIVISION du pavé numérique, pas / du clavier principal.\n\n4. Dans MiniMap, choisissez NumPad / et une touche sans Ctrl, Maj ni Alt. Les touches de carte et de chat doivent aussi correspondre à SCUM. Sans pavé numérique ? Choisissez une autre touche libre, appliquez-la dans SCUM et capturez LA MÊME TOUCHE DANS SCUM ET MINIMAP. Modifier une seule application ne suffit pas.\n\n5. Maintenez Suivant une seconde puis relâchez à chaque page. Réglez taille, position et apparence, puis terminez la dernière page. Les groupes sont facultatifs.\n\n6. Fermez les paramètres, le chat et l’inventaire. Dans SCUM, appuyez sur Copy Location : des coordonnées doivent être copiées. Déplacez-vous et vérifiez le marqueur. Home ouvre les paramètres par défaut ; ? relance la configuration. En cas de problème, ouvrez un ticket avec la version et les captures des deux raccourcis." },
+
             { "NavigationNext", "Prochaine étape" },
             { "NavigationRemaining", "Trajet restant" },
             { "NavigationEta", "Arrivée estimée" },
@@ -3268,6 +3277,9 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsDe = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "FirstTimeGuideTitle", "Anleitung für den ersten Start" },
+            { "FirstTimeGuideBody", "1. Vollständige ZIP unter Downloads herunterladen, Alle extrahieren wählen und SkynettMiniMap.exe im entpackten Ordner starten. assets muss neben der EXE bleiben. Nicht aus der ZIP starten. Windows 64 Bit und .NET Framework 4.8 erforderlich.\n\n2. SCUM im Fenster oder randlosen Fenster starten und den Charakter laden.\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num / ist DIVISION auf dem Nummernblock, nicht / auf der Haupttastatur.\n\n4. MiniMap: NumPad / als einzelne Taste ohne Strg, Umschalt oder Alt einstellen. Karten- und Chat-Taste müssen ebenfalls zu SCUM passen. Kein Nummernblock? Eine andere freie Taste in SCUM zuweisen und anwenden, dann DIESELBE TASTE IN SCUM UND MINIMAP erfassen. Nur eine App zu ändern reicht nicht.\n\n5. Auf jeder Seite Weiter eine Sekunde halten und loslassen. Größe, Position und Aussehen einstellen und die letzte Seite abschließen. Gruppen sind optional.\n\n6. Einstellungen, Chat und Inventar schließen. In SCUM Copy Location drücken: Koordinaten müssen kopiert werden. Bewegen und prüfen, ob der Marker folgt. Home öffnet standardmäßig Einstellungen; ? startet die Einrichtung erneut. Bei Problemen ein Ticket mit Version und Bildern beider Belegungen öffnen." },
+
             { "NavigationNext", "Nächster Halt" },
             { "NavigationRemaining", "Verbleibende Route" },
             { "NavigationEta", "Ankunft geschätzt" },
@@ -4037,6 +4049,9 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsNl = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "FirstTimeGuideTitle", "Handleiding voor de eerste start" },
+            { "FirstTimeGuideBody", "1. Download de volledige ZIP via Downloads. Kies Alles uitpakken en start SkynettMiniMap.exe vanuit de uitgepakte map. Houd assets naast de EXE. Start niet vanuit de ZIP. Windows 64-bit en .NET Framework 4.8 vereist.\n\n2. Gebruik SCUM in venstermodus of randloos venster en laad je personage.\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num / is DELEN op het numerieke toetsenbord, niet / op het hoofdtoetsenbord.\n\n4. MiniMap: NumPad /, één toets zonder Ctrl, Shift of Alt. Kaart- en chattoets moeten ook overeenkomen met SCUM. Geen numeriek toetsenbord? Kies een andere vrije toets, pas die toe in SCUM en leg DEZELFDE TOETS IN SCUM EN MINIMAP vast. Alleen één app wijzigen werkt niet.\n\n5. Houd Volgende op elke pagina één seconde vast en laat los. Stel formaat, positie en uiterlijk in en voltooi de laatste pagina. Groepen zijn optioneel.\n\n6. Sluit instellingen, chat en inventaris. Druk in SCUM op Copy Location: coördinaten moeten worden gekopieerd. Beweeg en controleer de marker. Home opent standaard Instellingen; ? heropent de wizard. Open bij problemen een ticket met je versie en afbeeldingen van beide toetsinstellingen." },
+
             { "NavigationNext", "Volgende stop" },
             { "NavigationRemaining", "Resterende route" },
             { "NavigationEta", "Geschatte aankomst" },
@@ -4806,6 +4821,9 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsRu = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "FirstTimeGuideTitle", "Руководство первого запуска" },
+            { "FirstTimeGuideBody", "1. Скачайте полный ZIP в канале загрузок. Выберите «Извлечь всё» и запустите SkynettMiniMap.exe из распакованной папки. Оставьте assets рядом с EXE. Не запускайте приложение внутри ZIP. Нужны 64-разрядная Windows и .NET Framework 4.8.\n\n2. Включите оконный или безрамочный режим SCUM и загрузите персонажа.\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num / — ДЕЛЕНИЕ на цифровом блоке, а не / основной клавиатуры.\n\n4. MiniMap: NumPad /, одна клавиша без Ctrl, Shift и Alt. Клавиши карты и чата тоже должны совпадать со SCUM. Нет цифрового блока? Выберите свободную клавишу, примените её в SCUM и задайте ОДНУ И ТУ ЖЕ КЛАВИШУ В SCUM И MINIMAP. Изменения только в одном приложении недостаточно.\n\n5. На каждой странице удерживайте «Далее» секунду и отпускайте. Настройте размер, положение и вид, завершите последнюю страницу. Группы необязательны.\n\n6. Закройте настройки, чат и инвентарь. В SCUM нажмите Copy Location: координаты должны скопироваться. Пройдите немного и проверьте движение метки. Home по умолчанию открывает настройки, ? — мастер. При проблемах откройте тикет с версией и снимками обеих привязок." },
+
             { "NavigationNext", "Следующая остановка" },
             { "NavigationRemaining", "Оставшийся маршрут" },
             { "NavigationEta", "Время в пути" },
@@ -5575,6 +5593,9 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsZh = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "FirstTimeGuideTitle", "首次使用指南" },
+            { "FirstTimeGuideBody", "1. 从下载频道获取完整 ZIP，选择“全部解压”，在解压后的文件夹中运行 SkynettMiniMap.exe。assets 文件夹必须保留在 EXE 旁边。不要在 ZIP 内运行。需要 64 位 Windows 和 .NET Framework 4.8。\n\n2. 将 SCUM 设为窗口或无边框窗口模式，进入游戏并载入角色。\n\n3. SCUM：OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY。Num / 是数字小键盘的除号，不是主键盘的 /。\n\n4. MiniMap：Copy Location 设为 NumPad /，选择无修饰键的单键，不加 Ctrl、Shift 或 Alt。地图和聊天按键也必须与 SCUM 一致。没有小键盘？选择一个未占用的单键，在 SCUM 应用，再在 MINIMAP 设置相同的实体按键。必须同时修改两个应用，只改一边无效。\n\n5. 每一页按住“下一步”一秒后松开。设置地图大小、位置和外观，并完成最后一页。单人使用无需加入群组。\n\n6. 关闭设置、聊天和背包，返回角色。按 Copy Location，确认 SCUM 复制坐标；移动角色，检查地图标记是否跟随。默认 Home 打开设置，大地图 ? 重新打开向导。如仍失败，请提交工单并附版本及两个应用的按键截图。" },
+
             { "NavigationNext", "下一站" },
             { "NavigationRemaining", "剩余路线" },
             { "NavigationEta", "预计用时" },
@@ -6344,6 +6365,9 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsTr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "FirstTimeGuideTitle", "İlk kullanım kılavuzu" },
+            { "FirstTimeGuideBody", "1. İndirmeler kanalından tam ZIP dosyasını indirin. Tümünü ayıkla ile çıkarın ve klasörde SkynettMiniMap.exe çalıştırın. assets klasörünü EXE yanında tutun. ZIP içinden çalıştırmayın. 64 bit Windows ve .NET Framework 4.8 gerekir.\n\n2. SCUM’u pencereli veya kenarlıksız pencereli kullanın, karakterinizi yükleyin.\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num / sayısal tuş takımındaki BÖLME tuşudur, ana klavyedeki / değildir.\n\n4. MiniMap: NumPad /, Ctrl, Shift veya Alt olmadan tek tuş. Harita ve sohbet tuşları da SCUM ile eşleşmeli. Sayısal tuş takımı yok mu? Boş bir tek tuş seçin, SCUM’da uygulayın ve AYNI TUŞU HEM SCUM HEM MINIMAP’TE ayarlayın. Yalnızca birini değiştirmek işe yaramaz.\n\n5. Her sayfada İleri düğmesini bir saniye basılı tutup bırakın. Boyut, konum ve görünümü ayarlayıp son sayfayı tamamlayın. Gruplar isteğe bağlıdır.\n\n6. Ayarları, sohbeti ve envanteri kapatın. SCUM’da Copy Location’a basın: koordinatlar kopyalanmalı. Hareket edip işaretin sizi izlediğini kontrol edin. Varsayılan Home ayarları, ? kurulumu açar. Sorun sürerse sürümünüz ve iki tuş ayarının görüntüleriyle destek talebi açın." },
+
             { "NavigationNext", "Sonraki durak" },
             { "NavigationRemaining", "Kalan rota" },
             { "NavigationEta", "Tahmini süre" },
@@ -7113,6 +7137,9 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsAr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "FirstTimeGuideTitle", "دليل الاستخدام لأول مرة" },
+            { "FirstTimeGuideBody", "1. نزّل ملف ZIP الكامل من قناة التنزيلات. اختر استخراج الكل وشغّل SkynettMiniMap.exe من المجلد المستخرج. أبقِ مجلد assets بجانب EXE. لا تشغّله داخل ZIP. يلزم Windows ‏64 بت و.NET Framework 4.8.\n\n2. استخدم SCUM في وضع النافذة أو النافذة بلا حدود وحمّل شخصيتك.\n\n3. في SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. المفتاح Num / هو القسمة في لوحة الأرقام، وليس / في لوحة المفاتيح الرئيسية.\n\n4. في MiniMap اختر NumPad / ومفتاحًا واحدًا بلا Ctrl أو Shift أو Alt. يجب أيضًا مطابقة مفتاحي الخريطة والدردشة مع SCUM. لا توجد لوحة أرقام؟ اختر مفتاحًا غير مستخدم، طبّقه في SCUM ثم عيّن المفتاح نفسه في SCUM وMINIMAP معًا. تغيير تطبيق واحد لا يكفي.\n\n5. اضغط مطولًا على التالي ثانية واحدة ثم اتركه في كل صفحة. اضبط الحجم والموقع والمظهر وأكمل الصفحة الأخيرة. المجموعات اختيارية.\n\n6. أغلق الإعدادات والدردشة والمخزون. ارجع للشخصية واضغط Copy Location: يجب نسخ الإحداثيات. تحرك وتحقق من حركة العلامة. يفتح Home الإعدادات افتراضيًا، وتعيد ? فتح المعالج. إذا استمرت المشكلة افتح تذكرة مع رقم الإصدار وصور إعداد المفتاح في التطبيقين." },
+
             { "NavigationNext", "المحطة التالية" },
             { "NavigationRemaining", "المسار المتبقي" },
             { "NavigationEta", "المدة المقدرة" },
@@ -7882,6 +7909,9 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsPt = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "FirstTimeGuideTitle", "Guia de primeira utilização" },
+            { "FirstTimeGuideBody", "1. Baixe o ZIP completo em Downloads. Use Extrair tudo e execute SkynettMiniMap.exe na pasta extraída. Mantenha assets ao lado do EXE. Não execute dentro do ZIP. Requer Windows 64 bits e .NET Framework 4.8.\n\n2. Use SCUM em janela ou janela sem bordas e carregue seu personagem.\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num / é DIVISÃO no teclado numérico, não / no teclado principal.\n\n4. MiniMap: NumPad / e tecla única sem Ctrl, Shift ou Alt. As teclas de mapa e chat também devem corresponder ao SCUM. Sem teclado numérico? Escolha outra tecla livre, aplique no SCUM e configure A MESMA TECLA NO SCUM E NO MINIMAP. Mudar apenas um não funciona.\n\n5. Segure Avançar por um segundo e solte em cada página. Ajuste tamanho, posição e aparência e conclua a última página. Grupos são opcionais.\n\n6. Feche configurações, chat e inventário. No SCUM, pressione Copy Location: as coordenadas devem ser copiadas. Mova-se e confira o marcador. Home abre Configurações por padrão; ? reabre o assistente. Se falhar, abra um ticket com versão e capturas das duas configurações de tecla." },
+
             { "NavigationNext", "Próxima parada" },
             { "NavigationRemaining", "Rota restante" },
             { "NavigationEta", "Tempo estimado" },
@@ -8651,6 +8681,9 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
 
 
         public static readonly Dictionary<string, string> StringsKo = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "FirstTimeGuideTitle", "처음 사용자 설정 안내" },
+            { "FirstTimeGuideBody", "1. 다운로드 채널에서 전체 ZIP을 받으세요. 모두 압축 풀기를 선택하고 압축을 푼 폴더에서 SkynettMiniMap.exe를 실행하세요. assets 폴더는 EXE 옆에 두세요. ZIP 안에서 실행하지 마세요. 64비트 Windows와 .NET Framework 4.8이 필요합니다.\n\n2. SCUM을 창 모드 또는 테두리 없는 창 모드로 설정하고 캐릭터를 불러오세요.\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num /는 숫자 키패드 나누기 키이며 일반 키보드의 /와 다릅니다.\n\n4. MiniMap: NumPad /, Ctrl·Shift·Alt 없는 단일 키로 설정하세요. 지도와 채팅 키도 SCUM과 일치해야 합니다. 숫자 키패드가 없나요? 사용하지 않는 단일 키를 골라 SCUM에서 적용하고 SCUM과 MINIMAP 모두 같은 물리 키로 변경하세요. 한쪽만 바꾸면 작동하지 않습니다.\n\n5. 각 페이지에서 다음 버튼을 1초간 누른 뒤 놓으세요. 크기·위치·모양을 설정하고 마지막 페이지까지 완료하세요. 그룹은 선택 사항입니다.\n\n6. 설정·채팅·인벤토리를 닫고 캐릭터로 돌아가세요. Copy Location 키로 좌표가 복사되는지 확인하세요. 움직여 지도 표시가 따라오는지 확인하세요. 기본 Home은 설정, 큰 지도의 ?는 설정 마법사를 엽니다. 계속 실패하면 버전과 두 앱의 키 설정 화면을 첨부해 지원 티켓을 여세요." },
+
             { "NavigationNext", "다음 경유지" },
             { "NavigationRemaining", "남은 경로" },
             { "NavigationEta", "예상 소요 시간" },
