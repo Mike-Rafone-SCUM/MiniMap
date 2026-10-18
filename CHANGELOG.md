@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.3.7] - 2026-10-18
+
+- Audit UI, hook, routing, group, clipboard, audio and shutdown ownership. Keep protected group writes and router cleanup outside locks used by the UI; publish stable group views and synchronized input activity.
+- Decode tactical terrain details on one bounded worker, with an immediate overview fallback. Reuse map-label layouts and POI sidebar controls; publish clicks, scrolling and filter changes immediately.
+- Remove edge fading and its setting. Keep map shapes, make 100% opacity solid, and use 16 as the default UI and map-label font size. Zoomed tactical terrain remains fully opaque.
+- Add slow-storage, router-renewal, late-shutdown, worker-access and terrain-loading regressions using synthetic profiles and loopback networking.
+- Finish navigation voice clips when the decoder reaches their end even if Windows continues reporting "playing", avoiding a timeout and delayed following cues.
+
 ## [2.3.6] - 2026-10-17
 
 - Automatically start GPS navigation, background route calculation and the distance/ETA display when route stops are placed or edited. Keep the current stop when editing an active route; clear navigation when its final stop is removed.

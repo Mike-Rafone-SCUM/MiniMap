@@ -335,7 +335,7 @@ namespace ScumMiniMap {
             try { return EmptyClipboard(); } finally { CloseClipboard(); }
         }
         internal static Task<IDataObject> CaptureClipboardAsync() {
-            var completion=new TaskCompletionSource<IDataObject>();
+            var completion=new TaskCompletionSource<IDataObject>(TaskCreationOptions.RunContinuationsAsynchronously);
             var worker=new Thread(()=> {
                 try {
                     IDataObject original=Clipboard.GetDataObject();

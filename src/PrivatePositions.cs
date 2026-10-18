@@ -25,6 +25,7 @@ namespace ScumMiniMap {
         static readonly object lifecycle=new object();static System.Threading.Tasks.Task cleanup=System.Threading.Tasks.Task.FromResult(0);
         static readonly System.Collections.Concurrent.ConcurrentDictionary<int,PeerRouter> owners=new System.Collections.Concurrent.ConcurrentDictionary<int,PeerRouter>();
         readonly object gate=new object();readonly System.Net.IPAddress gateway;readonly int port;readonly Timer renewal;readonly Func<System.Net.IPAddress,byte[],byte[]> exchange;
+        System.Threading.Tasks.TaskCompletionSource<bool> renewalFinished;
         bool stopped;volatile bool ready;volatile string address;internal bool Ready { get { return ready; }private set { ready=value; } }internal string Address { get { return address; }private set { address=value; } }
         internal static System.Net.IPAddress[] Gateways() {
             return System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces()
@@ -64,7 +65,12 @@ namespace ScumMiniMap {
         internal static PeerRouter Open(int port,System.Net.IPAddress[] gateways,Func<System.Net.IPAddress,byte[],byte[]> exchange) {
             // Finish an older host's deletion before a rapid restart can create
             // a replacement lease for the same internal port.
-            lock(lifecycle) { cleanup.Wait();return OpenCore(port,gateways,exchange); }
+            System.Threading.Tasks.Task<PeerRouter> opening;
+            lock(lifecycle) {
+                opening=cleanup.ContinueWith(previous=>OpenCore(port,gateways,exchange),System.Threading.Tasks.TaskScheduler.Default);
+                cleanup=opening.ContinueWith(previous=> { },System.Threading.Tasks.TaskScheduler.Default);
+            }
+            return opening.GetAwaiter().GetResult();
         }
         static PeerRouter OpenCore(int port,System.Net.IPAddress[] gateways,Func<System.Net.IPAddress,byte[],byte[]> exchange) {
             foreach(var gateway in gateways)try {
@@ -78,16 +84,23 @@ namespace ScumMiniMap {
             return null;
         }
         void Renew(object unused) {
-            lock(gate) { if(stopped)return;try { Address=PublicAddress(exchange(gateway,new byte[]{0,0}));Ready=MappingAccepted(exchange(gateway,Request(port,false)),port); }catch(Exception) { Ready=false; } }
+            System.Threading.Tasks.TaskCompletionSource<bool> finished;
+            lock(gate) { if(stopped||renewalFinished!=null&&!renewalFinished.Task.IsCompleted)return;renewalFinished=finished=new System.Threading.Tasks.TaskCompletionSource<bool>(System.Threading.Tasks.TaskCreationOptions.RunContinuationsAsynchronously); }
+            try {
+                string value=PublicAddress(exchange(gateway,new byte[]{0,0}));bool accepted=MappingAccepted(exchange(gateway,Request(port,false)),port);
+                lock(gate)if(!stopped) { Address=value;Ready=accepted; }
+            }catch(Exception) { lock(gate)if(!stopped)Ready=false; }
+            finally { finished.TrySetResult(true); }
         }
         public void Dispose() {
-            lock(gate) { if(stopped)return;stopped=true;Ready=false;renewal.Dispose(); }
-            lock(lifecycle)cleanup=cleanup.ContinueWith(previous=> {
+            System.Threading.Tasks.Task renewing;
+            lock(gate) { if(stopped)return;stopped=true;Ready=false;renewal.Dispose();renewing=renewalFinished==null?System.Threading.Tasks.Task.FromResult(true):renewalFinished.Task; }
+            lock(lifecycle)cleanup=System.Threading.Tasks.Task.WhenAll(cleanup,renewing).ContinueWith(previous=> {
                 // A stopped session may finish discovery after a replacement
                 // host starts. It must not remove the replacement host's lease.
                 PeerRouter owner;if(!owners.TryGetValue(port,out owner)||owner!=this)return;
                 try { exchange(gateway,Request(port,true)); }catch(Exception) {}
-            });
+            },System.Threading.Tasks.TaskScheduler.Default);
         }
     }
     // Opt-in, session-only sharing over a user-controlled private folder.

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -335,7 +335,7 @@ namespace ScumMiniMap {
 
 
 
-                            switch(key) { case "LocationHistory":locationHistory=b;break;case "LocationHistoryTimestamps":locationHistoryTimestamps=b;break;case "GridLabels":gridLabels=b;break;case "GridBorders":gridBorders=b;break;case "EdgeFade":edgeFade=b;break;case "ShowStatus":showStatus=b;break;case "ShowZones":showZones=b;break;case "AutoZoom":autoZoom=b;break;case "ShowHeading":showHeading=b;break;case "ShowCompass":showCompass=b;break;case "ZoneChime":zoneChime=b;break;case "ShowCustomWaypoints":showCustomWaypoints=b;break;case "ShowScumMap":showScumMap=b;break;case "ShowZoneLabels":showZoneLabels=b;break;case "SmartLabelLod":smartLabelLod=b;break;case "SidebarWildlifeExpanded":sidebarWildlifeExpanded=b;break;case "SidebarZonesExpanded":sidebarZonesExpanded=b;break; }
+                            switch(key) { case "LocationHistory":locationHistory=b;break;case "LocationHistoryTimestamps":locationHistoryTimestamps=b;break;case "GridLabels":gridLabels=b;break;case "GridBorders":gridBorders=b;break;case "ShowStatus":showStatus=b;break;case "ShowZones":showZones=b;break;case "AutoZoom":autoZoom=b;break;case "ShowHeading":showHeading=b;break;case "ShowCompass":showCompass=b;break;case "ZoneChime":zoneChime=b;break;case "ShowCustomWaypoints":showCustomWaypoints=b;break;case "ShowScumMap":showScumMap=b;break;case "ShowZoneLabels":showZoneLabels=b;break;case "SmartLabelLod":smartLabelLod=b;break;case "SidebarWildlifeExpanded":sidebarWildlifeExpanded=b;break;case "SidebarZonesExpanded":sidebarZonesExpanded=b;break; }
                         }
                         if(key=="DisabledZoneLayers") {
                             disabledZoneLayers.Clear();
@@ -530,22 +530,23 @@ namespace ScumMiniMap {
 
 
 
-            try { File.WriteAllLines(settingsPath+".tmp",new string[]{"Welcomed=True","TrackingRevision=1","LocationHistory="+locationHistory,"LocationHistoryTimestamps="+locationHistoryTimestamps,"LocationHistoryMinutes="+locationHistoryMinutes,"SuppressCopyKeyReminder="+suppressCopyKeyReminder,"VoiceEnabled="+voiceEnabled,"VoiceName="+voiceName,"VoiceVolume="+voiceVolume,"Language="+Localization.CurrentCode,"GridLabels="+gridLabels,"GridBorders="+gridBorders,"GridOpacity="+gridOpacity,"ShowZones="+showZones,"LabelSize="+labelSize,"EdgeFade="+edgeFade,"Shape="+overlayShape,"ShowHeading="+showHeading,"ShowCompass="+showCompass,"ZoneChime="+zoneChime,"CopyIntervalMs="+copyIntervalMs,"AutoZoom="+autoZoom,"AutoZoomMin="+autoZoomMin,"AutoZoomMax="+autoZoomMax,"ShowStatus="+showStatus,"StatusPos="+statusPos,"Opacity="+mapOpacity,"FullMapOpacity="+fullMapOpacity,"Width="+minimapBounds.Width,"Height="+minimapBounds.Height,"Left="+minimapBounds.Left,"Top="+minimapBounds.Top,"Zoom="+zoom.ToString(CultureInfo.InvariantCulture),"MaxZoom="+maxZoom,"ZoomStep="+zoomStepPercent,"ScumMapKey="+scumMapKey,"ScumChatKey="+scumChatKey,"ScumCopyModifierKey="+scumCopyModifierKey,"ScumCopyKey="+scumCopyKey,"ShowCustomWaypoints="+showCustomWaypoints,"ShowScumMap="+showScumMap,"ScumMapDisabledCats="+(scumMap!=null?scumMap.GetDisabledCategoriesString():""),"ShowZoneLabels="+showZoneLabels,"SmartLabelLod="+smartLabelLod,"SidebarWildlifeExpanded="+sidebarWildlifeExpanded,"SidebarZonesExpanded="+sidebarZonesExpanded,"DisabledZoneLayers="+string.Join(";",disabledZoneLayers),"RouteColor="+ColorTranslator.ToHtml(routeGuidanceColor),"PlayerColor="+ColorTranslator.ToHtml(playerConeColor)});
+            try { var settingsLines=new List<string>(new string[]{"Welcomed=True","TrackingRevision=1","LocationHistory="+locationHistory,"LocationHistoryTimestamps="+locationHistoryTimestamps,"LocationHistoryMinutes="+locationHistoryMinutes,"SuppressCopyKeyReminder="+suppressCopyKeyReminder,"VoiceEnabled="+voiceEnabled,"VoiceName="+voiceName,"VoiceVolume="+voiceVolume,"Language="+Localization.CurrentCode,"GridLabels="+gridLabels,"GridBorders="+gridBorders,"GridOpacity="+gridOpacity,"ShowZones="+showZones,"LabelSize="+labelSize,"Shape="+overlayShape,"ShowHeading="+showHeading,"ShowCompass="+showCompass,"ZoneChime="+zoneChime,"CopyIntervalMs="+copyIntervalMs,"AutoZoom="+autoZoom,"AutoZoomMin="+autoZoomMin,"AutoZoomMax="+autoZoomMax,"ShowStatus="+showStatus,"StatusPos="+statusPos,"Opacity="+mapOpacity,"FullMapOpacity="+fullMapOpacity,"Width="+minimapBounds.Width,"Height="+minimapBounds.Height,"Left="+minimapBounds.Left,"Top="+minimapBounds.Top,"Zoom="+zoom.ToString(CultureInfo.InvariantCulture),"MaxZoom="+maxZoom,"ZoomStep="+zoomStepPercent,"ScumMapKey="+scumMapKey,"ScumChatKey="+scumChatKey,"ScumCopyModifierKey="+scumCopyModifierKey,"ScumCopyKey="+scumCopyKey,"ShowCustomWaypoints="+showCustomWaypoints,"ShowScumMap="+showScumMap,"ScumMapDisabledCats="+(scumMap!=null?scumMap.GetDisabledCategoriesString():""),"ShowZoneLabels="+showZoneLabels,"SmartLabelLod="+smartLabelLod,"SidebarWildlifeExpanded="+sidebarWildlifeExpanded,"SidebarZonesExpanded="+sidebarZonesExpanded,"DisabledZoneLayers="+string.Join(";",disabledZoneLayers),"RouteColor="+ColorTranslator.ToHtml(routeGuidanceColor),"PlayerColor="+ColorTranslator.ToHtml(playerConeColor)});
 
 
 
-                File.AppendAllText(settingsPath+".tmp","ScumCopyScanCode="+scumCopyScanCode+Environment.NewLine+"ScumMapScanCode="+scumMapScanCode+Environment.NewLine+"ScumChatScanCode="+scumChatScanCode+Environment.NewLine);
-                File.AppendAllText(settingsPath+".tmp","AutomaticDeathMarkers="+automaticDeathMarkers+Environment.NewLine);
-                File.AppendAllText(settingsPath+".tmp","RotateMinimap="+wpfRotateMap+Environment.NewLine);
-                File.AppendAllText(settingsPath+".tmp","PoiClustering="+wpfPoiClustering+Environment.NewLine);
-                File.AppendAllText(settingsPath+".tmp","AdminToolsEnabled="+adminToolsEnabled+Environment.NewLine+"AdminPanelDismissed="+adminPanelDismissedForFullMap+Environment.NewLine);
-                File.AppendAllLines(settingsPath+".tmp",new[]{"WpfDefaultsRevision="+wpfDefaultsRevision,"FullMapOpacity="+fullMapOpacity,"RouteHistoryColor="+ColorTranslator.ToHtml(routeHistoryColor),"SettingsShortcutKey="+settingsShortcutKey,"PinShortcutKey="+pinShortcutKey,"SearchShortcutKey="+searchShortcutKey,"SettingsShortcutScanCode="+settingsShortcutScanCode,"PinShortcutScanCode="+pinShortcutScanCode,"SearchShortcutScanCode="+searchShortcutScanCode});
-                File.AppendAllLines(settingsPath+".tmp",new[]{"DisabledWpfZones="+string.Join(";",disabledWpfZones)});
+                settingsLines.Add("ScumCopyScanCode="+scumCopyScanCode+Environment.NewLine+"ScumMapScanCode="+scumMapScanCode+Environment.NewLine+"ScumChatScanCode="+scumChatScanCode+Environment.NewLine);
+                settingsLines.Add("AutomaticDeathMarkers="+automaticDeathMarkers+Environment.NewLine);
+                settingsLines.Add("RotateMinimap="+wpfRotateMap+Environment.NewLine);
+                settingsLines.Add("PoiClustering="+wpfPoiClustering+Environment.NewLine);
+                settingsLines.Add("AdminToolsEnabled="+adminToolsEnabled+Environment.NewLine+"AdminPanelDismissed="+adminPanelDismissedForFullMap+Environment.NewLine);
+                settingsLines.AddRange(new[]{"WpfDefaultsRevision="+wpfDefaultsRevision,"FullMapOpacity="+fullMapOpacity,"RouteHistoryColor="+ColorTranslator.ToHtml(routeHistoryColor),"SettingsShortcutKey="+settingsShortcutKey,"PinShortcutKey="+pinShortcutKey,"SearchShortcutKey="+searchShortcutKey,"SettingsShortcutScanCode="+settingsShortcutScanCode,"PinShortcutScanCode="+pinShortcutScanCode,"SearchShortcutScanCode="+searchShortcutScanCode});
+                settingsLines.AddRange(new[]{"DisabledWpfZones="+string.Join(";",disabledWpfZones)});
                 foreach(var action in AppControlBindings.AllActions) {
                     // Preserve legacy keys for the first three actions; new actions have stable names.
                     if(action==AppControlAction.Settings || action==AppControlAction.AddWaypoint || action==AppControlAction.Search) continue;
-                    File.AppendAllLines(settingsPath+".tmp",new[]{"AppControl"+action+"Key="+AppControlKey(action),"AppControl"+action+"ScanCode="+AppControlScanCode(action)});
+                    settingsLines.AddRange(new[]{"AppControl"+action+"Key="+AppControlKey(action),"AppControl"+action+"ScanCode="+AppControlScanCode(action)});
                 }
+                File.WriteAllLines(settingsPath+".tmp",settingsLines);
                 if(File.Exists(settingsPath)) File.Replace(settingsPath+".tmp",settingsPath,settingsPath+".bak"); else File.Move(settingsPath+".tmp",settingsPath); File.WriteAllText(settingsPath+".version",VersionString); }
 
 

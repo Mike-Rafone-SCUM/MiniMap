@@ -710,26 +710,26 @@ namespace ScumMiniMap {
             0x10, 0xA0, 0xA1  // Shift, LShift, RShift
         };
         public bool IsDown(int key) {
-            return key>=0 && key<held.Length && held[key];
+            return key>=0 && key<held.Length && System.Threading.Volatile.Read(ref held[key]);
         }
         public bool ShortcutModifiersDown(bool includeShift) {
-            return held[0x11] || held[0xA2] || held[0xA3] ||
-                held[0x12] || held[0xA4] || held[0xA5] || held[0x5B] || held[0x5C] ||
-                (includeShift && (held[0x10] || held[0xA0] || held[0xA1]));
+            return IsDown(0x11) || IsDown(0xA2) || IsDown(0xA3) ||
+                IsDown(0x12) || IsDown(0xA4) || IsDown(0xA5) || IsDown(0x5B) || IsDown(0x5C) ||
+                (includeShift && (IsDown(0x10) || IsDown(0xA0) || IsDown(0xA1)));
         }
         public bool Update(int key,bool down) {
             if(key<0 || key>=held.Length) return false;
-            bool fresh=down && !held[key];
-            held[key]=down;
+            bool fresh=down && !IsDown(key);
+            System.Threading.Volatile.Write(ref held[key],down);
             return fresh;
         }
         public void Resync(Func<int,bool> isDown) {
             if(isDown==null) return;
             // A missed key-up must not leave M (or any other shortcut) permanently held.
-            for(int key=0;key<held.Length;key++) if(held[key] && !isDown(key)) held[key]=false;
+            for(int key=0;key<held.Length;key++) if(IsDown(key) && !isDown(key))System.Threading.Volatile.Write(ref held[key],false);
             for(int i=0; i<ModifierKeys.Length; i++) {
                 int key = ModifierKeys[i];
-                held[key] = isDown(key);
+                System.Threading.Volatile.Write(ref held[key],isDown(key));
             }
         }
     }
@@ -840,10 +840,11 @@ namespace ScumMiniMap {
         volatile bool wasFocused;
         IntPtr sampledGameWindow;
         readonly ChatKeyMonitor chatKeys=new ChatKeyMonitor();
-        static DateTime lastMouseAction=DateTime.MinValue;
-        public static DateTime LastUserInputTime = DateTime.MinValue;
+        static long lastMouseTicks,lastUserTicks,lastFreshKeyTicks;
+        static DateTime lastMouseAction { get { return new DateTime(System.Threading.Interlocked.Read(ref lastMouseTicks),DateTimeKind.Utc); }set { System.Threading.Interlocked.Exchange(ref lastMouseTicks,value.Ticks); } }
+        public static DateTime LastUserInputTime { get { return new DateTime(System.Threading.Interlocked.Read(ref lastUserTicks),DateTimeKind.Utc); }set { System.Threading.Interlocked.Exchange(ref lastUserTicks,value.Ticks); } }
         internal static long PhysicalInputRevision;
-        public static DateTime LastFreshKeyDownTime = DateTime.MinValue;
+        public static DateTime LastFreshKeyDownTime { get { return new DateTime(System.Threading.Interlocked.Read(ref lastFreshKeyTicks),DateTimeKind.Utc); }set { System.Threading.Interlocked.Exchange(ref lastFreshKeyTicks,value.Ticks); } }
         internal static bool UserActiveRecently(int windowMs = 90) {
             return (DateTime.UtcNow - LastFreshKeyDownTime).TotalMilliseconds < windowMs || (DateTime.UtcNow-lastMouseAction).TotalMilliseconds<400;
         }
@@ -1489,7 +1490,6 @@ namespace ScumMiniMap {
             for(int a=0;a<256;a++)for(int c=0;c<256;c++)table[(a<<8)|c]=(byte)((a*c+127)/255);
             return table;
         }
-        static bool cachedFade=true;
         static int cachedOpacity=94;
         static int cachedMapLeft=-1,cachedMapTop=-1,cachedMapRight=-1,cachedMapBottom=-1;
         static string cachedShape="Square";
@@ -1505,14 +1505,14 @@ namespace ScumMiniMap {
             return new RectangleF(cx-radius,cy-radius,radius*2,radius*2);
         }
         // Rebuild only when dimensions, shape, or appearance options change.
-        public static void Fade(Bitmap bitmap,bool fade=true,int opacity=94,int mapLeft=-1,int mapTop=-1,int mapRight=-1,int mapBottom=-1,string shape="Square",Rectangle? viewport=null) {
-            // A fully opaque, non-faded bitmap is already ready for UpdateLayeredWindow.
+        public static void ApplyOpacityAndShape(Bitmap bitmap,int opacity=94,int mapLeft=-1,int mapTop=-1,int mapRight=-1,int mapBottom=-1,string shape="Square",Rectangle? viewport=null) {
+            // A fully opaque rectangular bitmap is ready for UpdateLayeredWindow.
             // Avoid LockBits and a full per-pixel marshal/copy pass in full-map mode.
-            if(!fade && opacity>=100 && shape!="Circle") return;
-            if(fadeMask==null || fadeWidth!=bitmap.Width || fadeHeight!=bitmap.Height || cachedFade!=fade || cachedOpacity!=opacity
+            if(opacity>=100 && shape!="Circle") return;
+            if(fadeMask==null || fadeWidth!=bitmap.Width || fadeHeight!=bitmap.Height || cachedOpacity!=opacity
                 || cachedMapLeft!=mapLeft || cachedMapTop!=mapTop || cachedMapRight!=mapRight || cachedMapBottom!=mapBottom || cachedShape!=shape || cachedViewport!=viewport) {
                 cachedViewport=viewport;
-                cachedFade=fade; cachedOpacity=opacity;
+                cachedOpacity=opacity;
                 cachedMapLeft=mapLeft; cachedMapTop=mapTop; cachedMapRight=mapRight; cachedMapBottom=mapBottom; cachedShape=shape;
                 fadeWidth=bitmap.Width; fadeHeight=bitmap.Height;
                 fadeMask=new byte[fadeWidth*fadeHeight];
@@ -1532,16 +1532,13 @@ namespace ScumMiniMap {
                         double dist=Math.Sqrt(dx*dx+dy*dy);
                         double diff=maxRadius-dist;
                         if(diff<=0) t=0;
-                        else if(fade && diff<24) t=diff/24.0;
                         else t=1.0;
                     } else {
-                        double edge=Math.Min(Math.Min(x,fadeWidth-1-x),Math.Min(y,fadeHeight-1-y));
-                        t=fade?Math.Min(1,edge/28):1;
+                        t=1;
                     }
                     if(hasMapBounds && t>0) {
                         double mapEdge=Math.Min(Math.Min(x-mapLeft,mapRight-x),Math.Min(y-mapTop,mapBottom-y));
                         if(mapEdge<=0) t=0;
-                        else if(fade && mapEdge<28) t=Math.Min(t,mapEdge/28);
                     }
                     fadeMask[y*fadeWidth+x]=(byte)Math.Round(t*t*(3-2*t)*opacity/100*255);
                 }

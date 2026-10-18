@@ -164,7 +164,7 @@ namespace ScumMiniMap {
 
         // Keep sector lines opt-in. They are useful for grid searches but obscure the
         // terrain at normal zoom, especially on the full map and circular minimap.
-        bool gridLabels=true,gridBorders=false,edgeFade=true,showStatus=true,autoZoom=true;
+        bool gridLabels=true,gridBorders=false,showStatus=true,autoZoom=true;
 
 
 
@@ -208,7 +208,7 @@ namespace ScumMiniMap {
 
 
 
-        int labelSize=6;
+        int labelSize=16;
 
 
 
@@ -1646,7 +1646,7 @@ namespace ScumMiniMap {
             bar.Controls.Add(posRow);
 
             AddCheck(bar, Localization.Get("ShowStatus"), showStatus, value => showStatus = value);
-            AddCheck(bar, Localization.Get("FadeEdges"), edgeFade, value => edgeFade = value);
+
             AddCheck(bar, Localization.Get("ShowHeading"), showHeading, value => showHeading = value);
             AddCheck(bar, Localization.Get("ShowCompass"), showCompass, value => showCompass = value);
             AddCheck(bar, Localization.Get("ZoneChime"), zoneChime, value => zoneChime = value);
@@ -1712,7 +1712,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "2.3.6";
+        public const string VersionString = "2.3.7";
 
 
 
@@ -6739,7 +6739,7 @@ namespace ScumMiniMap {
 
 
 
-            OverlayWindow.Fade(bitmap,fullMapActive?false:edgeFade,fullMapActive?EffectiveFullMapOpacity:mapOpacity,zoom==1?mapLeft:-1,zoom==1?mapTop:-1,zoom==1?mapRight:-1,zoom==1?mapBottom:-1,fullMapActive?"Square":overlayShape,mapBounds);
+            OverlayWindow.ApplyOpacityAndShape(bitmap,fullMapActive?EffectiveFullMapOpacity:mapOpacity,zoom==1?mapLeft:-1,zoom==1?mapTop:-1,zoom==1?mapRight:-1,zoom==1?mapBottom:-1,fullMapActive?"Square":overlayShape,mapBounds);
 
             // Keep destination guidance crisp above the terrain's edge fade.
             using(Graphics g=Graphics.FromImage(bitmap)) {

@@ -708,11 +708,11 @@ public void SaveSettingsPreview(string path) {
 
 
 
-                OverlayWindow.Fade(fade);
+                OverlayWindow.ApplyOpacityAndShape(fade);
 
 
 
-                if(fade.GetPixel(0,30).A!=0 || fade.GetPixel(29,29).A<230 || fade.GetPixel(10,30).A>=fade.GetPixel(29,29).A)throw new Exception("Edge alpha fade failed.");
+                if(fade.GetPixel(0,30).A!=fade.GetPixel(29,29).A || fade.GetPixel(29,29).A<230)throw new Exception("Uniform map opacity failed.");
 
 
 

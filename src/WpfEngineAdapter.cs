@@ -22,7 +22,7 @@ namespace ScumMiniMap {
         internal SharedMapMarker[] LocalRoute=new SharedMapMarker[0];
         internal string ActiveSquadRoute,OwnRouteSummary;
         internal bool SquadPlanning,SquadNavigating,ActiveSquadShared;
-        internal bool GridLabels,EdgeFade,SmartLabels;
+        internal bool GridLabels,SmartLabels;
         internal int GridOpacity,LabelSize;
         internal int ZoneRevision;
         internal ScumMapStore Store;
@@ -40,6 +40,8 @@ namespace ScumMiniMap {
     internal sealed class WpfSettingDescriptor { internal string Group,GroupKey;internal int Tab;internal System.Windows.Forms.Control Control; }
     internal sealed class WpfZoneOption { internal MapZone Zone;internal string Key,Layer;internal bool Enabled,LayerEnabled; }
     public sealed partial class MapWindow {
+        readonly int wpfOwnerThread=System.Threading.Thread.CurrentThread.ManagedThreadId;
+        void WpfVerifyAccess() { if(System.Threading.Thread.CurrentThread.ManagedThreadId!=wpfOwnerThread)throw new InvalidOperationException("Map state belongs to the UI thread."); }
         readonly List<WpfSettingDescriptor> wpfSettings=new List<WpfSettingDescriptor>();
         int wpfDefaultsRevision;
         internal bool wpfRotateMap;
@@ -96,9 +98,10 @@ namespace ScumMiniMap {
         internal void WpfExpandZones() { sidebarZonesExpanded=!sidebarZonesExpanded;SettingsChanged();SaveSettings(); }
         internal void WpfInitializeDefaults() {
             if(scumMap!=null)foreach(var category in scumMap.Categories)category.DefaultEnabled=true;
-            if(wpfDefaultsRevision>=1)return;
-            showScumMap=true;if(scumMap!=null) { scumMap.MasterEnabled=true;scumMap.SetAllEnabled(true); }
-            fullMapOpacity=0;wpfDefaultsRevision=1;SettingsChanged();SaveSettings();
+            if(wpfDefaultsRevision>=2)return;
+            if(wpfDefaultsRevision<1) { showScumMap=true;if(scumMap!=null) { scumMap.MasterEnabled=true;scumMap.SetAllEnabled(true); }fullMapOpacity=0; }
+            if(labelSize==6)labelSize=16;
+            wpfDefaultsRevision=2;SettingsChanged();SaveSettings();
         }
         internal void WpfTacticalOpacity(int opacity) { fullMapOpacity=Math.Max(0,Math.Min(100,opacity));SettingsChanged();SaveSettings(); }
         void WpfCaptureSettings(IEnumerable<System.Windows.Forms.Control> controls) {
@@ -136,12 +139,13 @@ namespace ScumMiniMap {
             return markers.Take(128).ToArray();
         }
         internal WpfMapState WpfSnapshot(bool tactical) {
+            WpfVerifyAccess();
             WpfRefreshZoneCache();
             if(cachedTrailRevision!=locationHistoryRevision) { cachedTrail=locationHistoryPoints.Select(p=>p.MapPoint).ToArray();cachedTrailRevision=locationHistoryRevision; }
             if(tactical&&wpfFollowPlayer&&position!=null)fullMapPan=ToMap(position);
             return new WpfMapState { Position=position,Updated=updated,Target=searchTarget,Route=activeRoute,Calculating=routeCalculating,
                 RotateMap=wpfRotateMap,PoiClustering=wpfPoiClustering,ZoneRevision=wpfZoneRevision,CustomZonesExpanded=sidebarZonesExpanded,CustomZones=cachedZoneOptions,
-                Grid=gridBorders,GridLabels=gridLabels,GridOpacity=gridOpacity,LabelSize=labelSize,EdgeFade=!tactical&&edgeFade,SmartLabels=smartLabelLod,Zones=showZones,Waypoints=showCustomWaypoints,History=locationHistory,Labels=showZoneLabels,Tracking=TrackingEnabled,
+                Grid=gridBorders,GridLabels=gridLabels,GridOpacity=gridOpacity,LabelSize=labelSize,SmartLabels=smartLabelLod,Zones=showZones,Waypoints=showCustomWaypoints,History=locationHistory,Labels=showZoneLabels,Tracking=TrackingEnabled,
                 Heading=showHeading,Compass=showCompass,Status=showStatus,StatusAbove=statusPos=="Above",HudWidth=overlay.MinimapBounds.Width,HudHeight=overlay.MinimapBounds.Height,HudLeft=overlay.MinimapBounds.Left,HudTop=overlay.MinimapBounds.Top,PlayerColor=playerConeColor.ToArgb(),RouteColor=routeGuidanceColor.ToArgb(),Store=scumMap,Saved=cachedVisibleZones,Trail=cachedTrail,
                 HistoryColor=routeHistoryColor.ToArgb(),TrackingStatus=WpfTrackingStatus(),TrackingPaused=IntensiveWorkPaused||chat.Paused||inventoryInputLocked,
                 Location=position==null?WpfTrackingStatus():GetLocationDescription().Split(new[]{"  |  -> "},StringSplitOptions.None)[0],
@@ -180,9 +184,9 @@ namespace ScumMiniMap {
         MapZone wpfQueuedTarget;
         MapZone wpfUnsharedTarget;
         internal MapZone WpfCurrentTarget { get { return searchTarget; } }
-        internal void WpfSquadTarget(MapZone target) { wpfUnsharedTarget=target;WpfTarget(target); }
-        internal void WpfTarget(MapZone target) { searchTarget=target;pin=null;activeRoute=null;routeGeneration++;lastRouteTarget=null;lastFrameKey=null;saveAfter=DateTime.UtcNow.AddMilliseconds(700);if(position!=null) { if(routeCalculating)wpfQueuedTarget=target;else UpdateRouteAsync(ToMap(position),target); } }
-        internal void WpfClear() { ClearActiveWaypoint(); }
+        internal void WpfSquadTarget(MapZone target) { WpfVerifyAccess();wpfUnsharedTarget=target;WpfTarget(target); }
+        internal void WpfTarget(MapZone target) { WpfVerifyAccess();searchTarget=target;pin=null;activeRoute=null;routeGeneration++;lastRouteTarget=null;lastFrameKey=null;saveAfter=DateTime.UtcNow.AddMilliseconds(700);if(position!=null) { if(routeCalculating)wpfQueuedTarget=target;else UpdateRouteAsync(ToMap(position),target); } }
+        internal void WpfClear() { WpfVerifyAccess();ClearActiveWaypoint(); }
         internal void WpfModal(bool open) { panelOpening=open;shortcutCaptureOpen=open;Native.CancelActiveCopy();fallbackKeysArmed=false; }
         internal bool WpfSettingsKeyMatches(int key,int scan) { return MatchesAppControl(AppControlAction.Settings,key,scan); }
         internal void WpfLayer(string key,bool value) {
@@ -213,6 +217,7 @@ namespace ScumMiniMap {
             scumMapKey=gameKeys[0];scumChatKey=gameKeys[1];scumCopyKey=gameKeys[2];scumMapScanCode=scans[0];scumChatScanCode=scans[1];scumCopyScanCode=scans[2];inputGeneration++;SettingsChanged();SaveSettings();return null;
         }
         internal void WpfSave() { SaveSettings(); }
+        internal void WpfScheduleSave() { WpfVerifyAccess();saveAfter=DateTime.UtcNow.AddMilliseconds(700); }
         internal void WpfMoveHud(int left,int top) { overlay.SetMinimapLocation(new Point(left,top));SettingsChanged();SaveSettings(); }
         internal bool WpfDeleteWaypoint(MapZone marker) {
             if(marker==null||zones==null||!zones.Contains(marker)||marker.Points==null||marker.Points.Length!=1)return false;

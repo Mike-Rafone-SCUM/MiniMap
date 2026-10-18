@@ -29,10 +29,14 @@ namespace ScumMiniMap {
         }
     }
     internal sealed class RelayGroupStore:IDisposable {
-        readonly object gate=new object();readonly string file,address,certificate;readonly int port;
+        readonly object gate=new object(),operations=new object();readonly string file,address,certificate;readonly int port;
+        readonly Action<string,byte[]> persist;
+        int nameRevision,savedNameRevision;bool nameSaveWorker;DateTime nextNameSave;volatile string persistenceError;
+        internal string PersistenceError { get { return persistenceError; } }
         readonly List<RelayMembership> groups=new List<RelayMembership>();bool disposed;
         internal string DisplayName;
-        internal RelayGroupStore(string directory,string address=null,int port=0,string certificate=null) {
+        internal RelayGroupStore(string directory,string address=null,int port=0,string certificate=null,Action<string,byte[]> persist=null) {
+            this.persist=persist??WriteProtectedFile;
             file=Path.Combine(directory,"private-groups.dat");this.address=address??DirectPositions.RelayAddress;this.port=port==0?DirectPositions.RelayPort:port;this.certificate=certificate??DirectPositions.RelayCertificate;
             DisplayName=Localization.Get("PrivateGroupSurvivor")+" "+Guid.NewGuid().ToString("N").Substring(0,4);
             if(!File.Exists(file))return;
@@ -56,48 +60,65 @@ namespace ScumMiniMap {
         }
         static void ValidateName(string name) { if(string.IsNullOrWhiteSpace(name)||name.Length>32||name.Any(char.IsControl))throw new ArgumentException(); }
         void Save() {
-            Directory.CreateDirectory(Path.GetDirectoryName(file));
-            string text="2\n"+Base(DisplayName)+"\n"+string.Join("\n",groups.Select(g=>g.Code+"\t"+g.Owner+"\t"+g.Pending+"\t"+Base(g.Name)+"\t"+g.NameStamp+"\t1"));
+            string text;int revision;lock(gate) { text="2\n"+Base(DisplayName)+"\n"+string.Join("\n",groups.Select(g=>g.Code+"\t"+g.Owner+"\t"+g.Pending+"\t"+Base(g.Name)+"\t"+g.NameStamp+"\t1"));revision=nameRevision; }
             byte[] plain=Encoding.UTF8.GetBytes(text);byte[] encrypted;try { encrypted=Protect(plain,true); }finally { Array.Clear(plain,0,plain.Length); }
+            persist(file,encrypted);lock(gate)savedNameRevision=Math.Max(savedNameRevision,revision);persistenceError=null;
+        }
+        static void WriteProtectedFile(string file,byte[] encrypted) {
+            Directory.CreateDirectory(Path.GetDirectoryName(file));
             string temp=file+".tmp";using(var stream=new FileStream(temp,FileMode.Create,FileAccess.Write,FileShare.None)) { stream.Write(encrypted,0,encrypted.Length);stream.Flush(true); }
             if(File.Exists(file))File.Replace(temp,file,null);else File.Move(temp,file);
         }
         internal RelayMembership[] Groups { get { lock(gate)return groups.ToArray(); } }
+        internal sealed class View {
+            internal readonly RelayMembership Member;internal readonly string Id,Name,Pending,Label,Code;internal readonly bool IsOwner;internal readonly DirectPositions Session;
+            internal View(RelayMembership group) { Member=group;Id=group.Id;Name=group.Name;Pending=group.Pending;Label=group.Label;Code=group.Code;IsOwner=group.IsOwner;Session=group.Session; }
+        }
+        internal View[] GroupViews { get { lock(gate)return groups.Select(g=>new View(g)).ToArray(); } }
+        internal bool Connected(RelayMembership group) { lock(gate)return group.Session!=null&&group.Session.Error==null; }
         internal DirectPositions[] Sessions { get { lock(gate)return groups.Where(g=>g.Session!=null).Select(g=>g.Session).ToArray(); } }
-        internal void SetName(string name) { ValidateName(name);lock(gate) { if(disposed)throw new ObjectDisposedException("RelayGroupStore");DisplayName=name.Trim();Save(); } }
+        internal void SetName(string name) { ValidateName(name);lock(operations) { lock(gate) { if(disposed)throw new ObjectDisposedException("RelayGroupStore");DisplayName=name.Trim(); }Save(); } }
         internal RelayMembership Create(string name="") {
             var group=new RelayMembership { Id=Guid.NewGuid().ToString("N"),Key=PrivatePositions.NewKey(),Owner=BitConverter.ToString(Convert.FromBase64String(PrivatePositions.NewKey())).Replace("-","").ToLowerInvariant(),Pending="CREATE",Name="" };
             if(!string.IsNullOrWhiteSpace(name))group.Rename(name);
-            lock(gate) { if(disposed||groups.Count>=16)throw new InvalidOperationException();groups.Add(group);Save(); }
-            Complete(group);return group;
+            lock(operations) { lock(gate) { if(disposed||groups.Count>=16)throw new InvalidOperationException();groups.Add(group); }Save();Complete(group);return group; }
         }
         internal RelayMembership Join(string code) {
             var parsed=RelayMembership.Parse(code);RelayMembership group;
-            lock(gate) {
+            lock(operations) { lock(gate) {
                 if(disposed)throw new ObjectDisposedException("RelayGroupStore");group=groups.FirstOrDefault(g=>g.Id==parsed.Id);
                 if(group==null) { if(groups.Count>=16)throw new InvalidOperationException();groups.Add(parsed);group=parsed; }
                 else if(group.Key!=parsed.Key) { if(group.Pending!="")throw new InvalidOperationException();if(group.Session!=null)group.Session.Dispose();group.Session=null;group.Key=parsed.Key; }
-                Save();
-            }
-            Connect(group);return group;
+            }Save();Connect(group);return group; }
         }
         internal void Connect(RelayMembership group) {
+            lock(operations) {
             if(group.Pending!="") { Complete(group);return; }
             lock(gate) {
                 if(disposed||!groups.Contains(group))throw new InvalidOperationException();if(group.Session!=null)group.Session.Dispose();
                 group.Session=new DirectPositions(false,address,port,group.Key,DisplayName,false,null,true,certificate,group.Id);
             }
+            }
         }
         internal void Leave(RelayMembership group) { lock(gate) { if(group.Session!=null)group.Session.Dispose();group.Session=null; } }
-        internal void Rename(RelayMembership group,string name) { lock(gate) { if(disposed||!groups.Contains(group))throw new InvalidOperationException();group.Rename(name);Save(); } }
+        internal void Rename(RelayMembership group,string name) { lock(operations) { lock(gate) { if(disposed||!groups.Contains(group))throw new InvalidOperationException();group.Rename(name); }Save(); } }
         internal void SynchronizeNames() {
             lock(gate) {
                 bool changed=false;foreach(var group in groups.Where(g=>g.Session!=null)) {
                     var latest=group.Session.SnapshotMarkers().Where(RelayMembership.IsNameMarker).Where(m=>m.Name.Length<=48).OrderByDescending(m=>m.Id,StringComparer.Ordinal).FirstOrDefault();
                     if(latest!=null&&string.CompareOrdinal(latest.Id,group.NameStamp)>0) { group.Name=latest.Name;group.NameStamp=latest.Id;changed=true; }
                 }
-                if(changed)Save();
+                if(changed)nameRevision++;
+                if(nameRevision!=savedNameRevision&&!nameSaveWorker&&DateTime.UtcNow>=nextNameSave) { nameSaveWorker=true;System.Threading.Tasks.Task.Run((Action)SaveSynchronizedNames); }
             }
+        }
+        void SaveSynchronizedNames() {
+            try {
+                while(true) {
+                    int revision;lock(operations) { lock(gate) { if(disposed) { nameSaveWorker=false;return; }revision=nameRevision; }Save(); }
+                    lock(gate)if(revision==nameRevision) { nameSaveWorker=false;return; }
+                }
+            }catch(Exception error) { lock(gate) { persistenceError=error.Message;nextNameSave=DateTime.UtcNow.AddSeconds(2);nameSaveWorker=false; } }
         }
         internal SharedMapMarker[] MarkersFor(DirectPositions session,SharedMapMarker[] markers) {
             lock(gate) {
@@ -106,27 +127,25 @@ namespace ScumMiniMap {
             }
         }
         internal void Rotate(RelayMembership group) {
-            lock(gate) {
+            lock(operations) { lock(gate) {
                 if(disposed||!groups.Contains(group)||!group.IsOwner||group.Pending=="DELETE")throw new InvalidOperationException();
-                if(group.Pending=="") { if(group.Session!=null)group.Session.Dispose();group.Session=null;group.Key=PrivatePositions.NewKey();group.Pending="ROTATE";Save(); }
-            }
-            Complete(group);
+                if(group.Pending=="") { if(group.Session!=null)group.Session.Dispose();group.Session=null;group.Key=PrivatePositions.NewKey();group.Pending="ROTATE"; }
+            }Save();Complete(group); }
         }
         internal void Delete(RelayMembership group) {
-            lock(gate) {
+            lock(operations) { lock(gate) {
                 if(disposed||!groups.Contains(group)||!group.IsOwner||group.Pending!=""&&group.Pending!="DELETE")throw new InvalidOperationException();
-                if(group.Session!=null)group.Session.Dispose();group.Session=null;group.Pending="DELETE";Save();
-            }
-            Complete(group);
+                if(group.Session!=null)group.Session.Dispose();group.Session=null;group.Pending="DELETE";
+            }Save();Complete(group); }
         }
         void Complete(RelayMembership group) {
             // A retry must durably journal its key and owner capability as well,
             // even if an earlier local save failed before any network request.
-            lock(gate) { if(disposed||!groups.Contains(group)||!group.IsOwner||group.Pending=="")throw new InvalidOperationException();Save(); }
+            lock(gate) { if(disposed||!groups.Contains(group)||!group.IsOwner||group.Pending=="")throw new InvalidOperationException(); }Save();
             string action=group.Pending;
             Manage(action,group.Id,DirectPositions.RelayRoom(Convert.FromBase64String(group.Key)),group.Owner);
-            if(action=="DELETE") { lock(gate) { int index=groups.IndexOf(group);groups.Remove(group);try { Save(); }catch { if(index>=0)groups.Insert(index,group);throw; } }return; }
-            lock(gate) { if(disposed)return;group.Pending="";Save(); }
+            if(action=="DELETE") { int index;lock(gate) { index=groups.IndexOf(group);groups.Remove(group); }try { Save(); }catch { lock(gate)if(index>=0)groups.Insert(index,group);throw; }return; }
+            lock(gate) { if(disposed)return;group.Pending=""; }Save();
             Connect(group);
         }
         void Manage(string action,string id,string room,string owner) {

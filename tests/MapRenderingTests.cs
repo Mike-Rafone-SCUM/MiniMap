@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -730,7 +730,7 @@ static class MapRenderingTests {
             var overlay=(OverlayWindow)typeof(MapWindow).GetField("overlay",Hidden).GetValue(window);
             var marker=(MapMotion)typeof(MapWindow).GetField("motion",Hidden).GetValue(window);
             var draw=(Func<Bitmap>)Delegate.CreateDelegate(typeof(Func<Bitmap>),window,typeof(MapWindow).GetMethod("OverlayBitmap",Hidden));
-            foreach(string flag in new[]{"autoZoom","showScumMap","showHeading","showCompass","showStatus","gridLabels","gridBorders","edgeFade"}) Set(window,flag,false);
+            foreach(string flag in new[]{"autoZoom","showScumMap","showHeading","showCompass","showStatus","gridLabels","gridBorders"}) Set(window,flag,false);
             Set(window,"zones",new List<MapZone>()); Set(window,"mapOpacity",100); Set(window,"overlayShape","Square");
             Set(window,"zoom",8f); Set(window,"position",new Position { X=-143091,Y=-142091 });
             // Cover the original buffer dimensions as well as the new compact default.
@@ -779,11 +779,11 @@ static class MapRenderingTests {
             Check(moved.GetPixel(348,300).ToArgb()==Color.Magenta.ToArgb() && moved.GetPixel(300,300).ToArgb()!=Color.Magenta.ToArgb(),"Full-map player marker moves to the new position over cached terrain");
             Set(window,"fullMapActive",false); overlay.SetMinimapSize(new Size(240,240));
             Set(window,"overlayShape","Circle"); Set(window,"showStatus",true); Set(window,"statusPos","Below");
-            Set(window,"edgeFade",true); Set(window,"routeGuidanceColor",Color.Cyan);
+            Set(window,"routeGuidanceColor",Color.Cyan);
             Set(window,"searchTarget",new MapZone { Name="Destination",Points=new[]{new PointF(.8f,.5f)} });
             marker.Point=new PointF(.5f,.5f);
             Bitmap indicated=draw();
-            Check(indicated.GetPixel(198,94).G>180 && indicated.GetPixel(198,94).B>180,"Destination edge arrow remains visible above the circular edge fade");
+            Check(indicated.GetPixel(198,94).G>180 && indicated.GetPixel(198,94).B>180,"Destination edge arrow remains visible at the circular map boundary");
             indicated.Save(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"DestinationIndicatorPreview.png"));
             Set(window,"statusPos","Above");
             Set(window,"searchTarget",new MapZone { Name="Destination",Points=new[]{new PointF(.5f,.2f)} });
@@ -795,8 +795,8 @@ static class MapRenderingTests {
             Check(cleared.GetPixel(123,70).ToArgb()!=indicatorPixel.ToArgb(),"Clearing navigation removes its edge marker");
             using(var opaqueCircle=new Bitmap(100,100)) {
                 using(var graphics=Graphics.FromImage(opaqueCircle)) graphics.Clear(Color.White);
-                OverlayWindow.Fade(opaqueCircle,false,100,shape:"Circle");
-                Check(opaqueCircle.GetPixel(0,0).A==0 && opaqueCircle.GetPixel(50,50).A==255,"Circular shape remains clipped with fade disabled at full opacity");
+                OverlayWindow.ApplyOpacityAndShape(opaqueCircle,100,shape:"Circle");
+                Check(opaqueCircle.GetPixel(0,0).A==0 && opaqueCircle.GetPixel(50,50).A==255,"Circular shape remains clipped at full opacity");
             }
         }
         Directory.Delete(testFolder,true);

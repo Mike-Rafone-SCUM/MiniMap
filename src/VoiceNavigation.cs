@@ -72,6 +72,10 @@ namespace ScumMiniMap {
             int error=mciSendString(command,null,0,IntPtr.Zero);
             if(error!=0) throw new InvalidOperationException("Audio playback error "+error+".");
         }
+        int PlaybackTime(string field) {
+            var value=new StringBuilder(32);int milliseconds;
+            return mciSendString("status "+alias+" "+field,value,value.Capacity,IntPtr.Zero)==0&&int.TryParse(value.ToString(),System.Globalization.NumberStyles.Integer,System.Globalization.CultureInfo.InvariantCulture,out milliseconds)?milliseconds:-1;
+        }
         bool Cancelled(int version) { lock(gate) return disposed || generation!=version; }
         internal void Speak(string directory,IEnumerable<string> clips) {
             string[] names=VoicePacks.Compose(Path.GetFileName(directory),clips);
@@ -102,6 +106,7 @@ namespace ScumMiniMap {
                                 if(!File.Exists(path)) throw new FileNotFoundException("Voice clip missing.",path);
                                 Command("open \""+path+"\" type mpegvideo alias "+alias); open=true;
                                 if(Cancelled(version)) break;
+                                Command("set "+alias+" time format milliseconds");int length=PlaybackTime("length");
                                 Command("setaudio "+alias+" volume to "+(Math.Max(0,Math.Min(100,volume))*10));
                                 Command("play "+alias);
                                 DateTime until=DateTime.UtcNow.AddSeconds(20);
@@ -111,6 +116,9 @@ namespace ScumMiniMap {
                                     if(mciSendString("status "+alias+" mode",mode,mode.Capacity,IntPtr.Zero)!=0)
                                         throw new InvalidOperationException("Voice playback status failed.");
                                     if(mode.ToString().Equals("stopped",StringComparison.OrdinalIgnoreCase)) break;
+                                    // Some MCI decoders keep reporting "playing" at EOF.
+                                    // The actual playback position still reaches the clip length.
+                                    if(length>0&&PlaybackTime("position")>=length)break;
                                     if(DateTime.UtcNow>until) throw new TimeoutException("Voice clip timed out.");
                                     // Do not consume the request signal here; the next outer iteration owns it.
                                     System.Threading.Thread.Sleep(20);
@@ -118,7 +126,8 @@ namespace ScumMiniMap {
                             } finally { if(open) mciSendString("close "+alias,null,0,IntPtr.Zero); }
                         }
                     } catch(Exception ex) {
-                        if(!Cancelled(version)) { lastError=ex.Message; Program.LogException("VoiceNavigation",ex); }
+                        bool report;lock(gate) { report=!disposed&&generation==version;if(report)lastError=ex.Message; }
+                        if(report)Program.LogException("VoiceNavigation",ex);
                     } finally { lock(gate) { if(generation==version) busy=false; } }
                 }
             } finally { wake.Dispose(); }

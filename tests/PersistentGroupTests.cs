@@ -10,10 +10,11 @@ class PersistentGroupTests {
     static void Await(Func<bool> condition,string message) { for(int i=0;i<150;i++) { if(condition()) { Check(true,message);return; }Thread.Sleep(100); }throw new Exception(message); }
     static void Main(string[] args) {
         string address=args.Length>0?args[0]:DirectPositions.RelayAddress;int port=args.Length>1?int.Parse(args[1]):DirectPositions.RelayPort;
+        string certificate=args.Length>2&&!string.IsNullOrEmpty(args[2])?args[2]:null;
         string root=Path.Combine(Path.GetTempPath(),"MiniMap-groups-"+Guid.NewGuid().ToString("N"));Directory.CreateDirectory(root);
         RelayGroupStore owner=null,member=null,outside=null;
         try {
-            owner=new RelayGroupStore(Path.Combine(root,"owner"),address,port);member=new RelayGroupStore(Path.Combine(root,"member"),address,port);outside=new RelayGroupStore(Path.Combine(root,"outside"),address,port);
+            owner=new RelayGroupStore(Path.Combine(root,"owner"),address,port,certificate);member=new RelayGroupStore(Path.Combine(root,"member"),address,port,certificate);outside=new RelayGroupStore(Path.Combine(root,"outside"),address,port,certificate);
             owner.SetName("Synthetic owner");member.SetName("Synthetic member");outside.SetName("Synthetic old-code check");
             var first=owner.Create("Bunker crew");string old=first.Code;var second=owner.Create("Trader run");
             using(var badPin=new DirectPositions(false,address,port,first.Key,"Synthetic bad pin",false,null,true,new string('0',64),first.Id))Await(()=>badPin.Error!=null&&!badPin.Ready,"Incorrect relay certificate pin fails closed");
@@ -34,7 +35,7 @@ class PersistentGroupTests {
             byte[] saved=File.ReadAllBytes(Path.Combine(root,"owner","private-groups.dat"));string bytes=System.Text.Encoding.UTF8.GetString(saved);
             Check(!bytes.Contains(first.Code)&&!bytes.Contains(first.Owner)&&!bytes.Contains("Synthetic owner"),"Saved codes, owner credentials and names are protected with Windows DPAPI");
             owner.Dispose();owner=null;
-            using(var reloaded=new RelayGroupStore(Path.Combine(root,"owner"),address,port)) {
+            using(var reloaded=new RelayGroupStore(Path.Combine(root,"owner"),address,port,certificate)) {
                 Check(reloaded.Groups.Length==2&&reloaded.Groups.Single(g=>g.Id==first.Id).Code==first.Code&&reloaded.Groups.All(g=>g.IsOwner)&&reloaded.Sessions.Length==0,"Codes and ownership survive app restart while sharing starts disabled");
                 Check(reloaded.Groups.Single(g=>g.Id==first.Id).Name=="Rescue crew","Shared group name survives rotation and Windows-protected profile reload");
                 bool memberDeleteDenied=false;try { member.Delete(joinedFirst); }catch(InvalidOperationException) { memberDeleteDenied=true; }Check(memberDeleteDenied,"Members cannot delete a group owned by someone else");
@@ -43,7 +44,7 @@ class PersistentGroupTests {
                     bool failed=false;try { offline.Delete(offline.Groups.Single(g=>g.Id==first.Id)); }catch { failed=true; }
                     Check(failed&&offline.Groups.Single(g=>g.Id==first.Id).Pending=="DELETE","Offline deletion preserves a durable retry instead of claiming success");
                 }
-                using(var retry=new RelayGroupStore(retryFolder,address,port)) {
+                using(var retry=new RelayGroupStore(retryFolder,address,port,certificate)) {
                     Check(retry.Groups.Single(g=>g.Id==first.Id).Pending=="DELETE","Pending deletion survives profile reload");
                     retry.Delete(retry.Groups.Single(g=>g.Id==first.Id));Check(retry.Groups.Length==1,"Retried owner deletion completes after connectivity returns");
                 }
@@ -53,7 +54,7 @@ class PersistentGroupTests {
                 Check(joinedSecond.Session.Ready,"Deleting a group preserves other active groups");
                 outside.Join(first.Code);Await(()=>retired.Session.Error!=null&&!retired.Session.Ready,"A deleted group code cannot reconnect");
             }
-            using(var afterDelete=new RelayGroupStore(Path.Combine(root,"owner"),address,port))Check(afterDelete.Groups.Length==1&&afterDelete.Groups[0].Id==second.Id,"Deleted group stays absent after profile reload");
+            using(var afterDelete=new RelayGroupStore(Path.Combine(root,"owner"),address,port,certificate))Check(afterDelete.Groups.Length==1&&afterDelete.Groups[0].Id==second.Id,"Deleted group stays absent after profile reload");
             var protect=typeof(RelayGroupStore).GetMethod("Protect",System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static);
             var legacyLines=System.Text.Encoding.UTF8.GetString((byte[])protect.Invoke(null,new object[]{saved,false})).Split('\n');legacyLines[0]="1";
             for(int i=2;i<legacyLines.Length;i++)if(legacyLines[i].Length>0) { var fields=legacyLines[i].Split('\t');legacyLines[i]=string.Join("\t",fields.Take(4).Concat(new[]{fields[5]})); }
