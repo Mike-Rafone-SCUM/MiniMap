@@ -265,7 +265,7 @@ class SquadUiTests {
     static void CheckCameraBurst(object runtime,string folder,bool verify) {
         var engine=Get(runtime,"engine");var map=(FrameworkElement)Get(runtime,"tacticalMap");var window=(Window)Get(runtime,"tactical");
         window.ShowActivated=false;window.Left=-32000;window.Top=-32000;window.Width=1920;window.Height=1080;window.Show();window.UpdateLayout();
-        Call(engine,"WpfPoiClustering",true);Call(engine,"WpfLayer","labels",true);Set(engine,"fullMapZoom",5f);Call(runtime,"Refresh");
+        Call(engine,"WpfPoiClustering",true);Call(engine,"WpfLayer","labels",true);Set(engine,"fullMapZoom",5f);Call(runtime,"Refresh");Call(runtime,"FilterAll",true);
         Action record=()=> {var group=new DrawingGroup();using(var dc=group.Open())Call(map,"OnRender",dc);};
         record();Await(()=> {record();return Get(map,"requestedPoiLayout")==null||Get(map,"drawnPoiLayout")!=null&&Object.ReferenceEquals(Get(map,"drawnPoiLayout"),Get(map,"requestedPoiLayout"));});
         var layout=Get(map,"requestedPoiLayout");var labels=Get(map,"labelLayout");int sceneBuilds=(int)Get(map,"PoiSceneBuilds");var elapsed=new List<double>();int layoutsChanged=0,labelLayoutsChanged=0;
