@@ -55,19 +55,21 @@ collision clearance or distinguish stacked roads when the caller supplies only X
 
 ## Layout
 
-The WPF getting-started checklist opens automatically when `OnboardingVersion`
-does not equal `VersionString`, including older profiles without the marker,
-unless the user saved `HideOnboardingGuide=True`. Its Done button requires six
-acknowledgements and records the completed version. The opt-out applies to future
-updates too; manual access remains in Settings. Ordinary saves do not mark setup
-completed, and existing bindings are preserved unless explicitly changed.
+The complete five-page WPF configuration opens whenever `OnboardingVersion`
+does not equal `VersionString`, including existing users updating and older
+profiles without the marker. Legacy `HideOnboardingGuide` values are ignored;
+the UI has no setup opt-out. Six checklist acknowledgements enable Next, then
+Appearance, Map options, Tracking/zoom and optional Sharing follow. Only final
+Done records the completed version. Ordinary saves and early closure do not
+complete setup. Existing settings and bindings are preserved unless changed.
 
 The checklist uses large text and separate number-pad/no-number-pad paths.
 Default Num / users need no MiniMap rebinding. Other users acknowledge changing
 SCUM first, then use the capture button in the guide to set MiniMap's matching
 key. The final lines explain what to test after closing the guide, since tracking
-pauses during modal setup. The detailed wizard retains the same checklist on its
-first page and uses ordinary Next buttons instead of timed holds.
+pauses while setup has focus. The wizard uses ordinary Next buttons instead of
+timed holds, short page introductions and collapsed More options for detail.
+It has no arrow overlay or walkthrough coach. Manual access remains in Settings.
 
 Automatic and manual setup windows are modeless, non-topmost, unowned Windows
 windows with a native draggable title bar, taskbar entry and minimize controls.
