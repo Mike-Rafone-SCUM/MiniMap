@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -538,7 +538,7 @@ static class AdminPlayerTests {
                 window.ShowAdminPlayers();
                 Check(panel.Visible && page.Value==lastPage && ReferenceEquals(bottomTile,tiles.Controls[0]),"Reopening players preserves the server, page and existing card controls");
                 measuredAction="Resize";
-                page.Value=1;Application.DoEvents();int smallPageCount=tiles.Controls.Count;
+                page.Value=1;Application.DoEvents();int smallPageCount=tiles.Controls.Count;var resizeFirstTile=tiles.Controls[0];
                 // Exercise the production viewport resize event independently of
                 // hosted Windows desktop/form layout limits.
                 var originalBounds=scroll.Bounds;var originalDock=scroll.Dock;
@@ -547,11 +547,11 @@ static class AdminPlayerTests {
                 Console.WriteLine("Resize fixture: viewport="+scroll.VisibleContentBounds+", initial cards="+smallPageCount);
                 WaitFor(()=>tiles.Controls.Count>smallPageCount);
                 Application.DoEvents();
-                Check(tiles.Controls.Count<=24,"Resizing the player viewport grows its bounded page without building unbounded cards");
+                Check(tiles.Controls.Count<=24,"Resizing the player viewport grows its bounded page without building unbounded cards");Check(ReferenceEquals(resizeFirstTile,tiles.Controls[0]),"Growing a player viewport reuses unchanged cards instead of rebuilding the whole page");
                 scroll.Bounds=originalBounds;scroll.Dock=originalDock;
                 WaitFor(()=>tiles.Controls.Count==smallPageCount);
                 Application.DoEvents();
-                Check(page.Value==1,"Restoring the window size recalculates pages and retains the visible player range");
+                Check(page.Value==1,"Restoring the window size recalculates pages and retains the visible player range");Check(ReferenceEquals(resizeFirstTile,tiles.Controls[0]),"Shrinking a player viewport preserves its unchanged cards");
                 measuredAction="Search";
                 ((TextBox)Controls(panel).Single(control=>control.Name=="SearchPlayers")).Text="Player 0999";
                 WaitFor(()=>list.Items.Count==1);

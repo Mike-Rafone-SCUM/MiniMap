@@ -368,15 +368,19 @@ namespace ScumMiniMap {
                     pageCount.Text="/ "+pages+"  ·  "+tilePlayers.Count;
                     previousPage.Enabled=currentPage>0;nextPage.Enabled=currentPage<pages-1;
                     if(displayedGeneration==tileGeneration && displayedPage==currentPage && displayedWidth==width && displayedPageSize==pageSize)return;
+                    int first=currentPage*pageSize,last=Math.Min(tilePlayers.Count,first+pageSize);
+                    // Height-only viewport changes retain the unchanged prefix
+                    // of cards. Rebuilding it on grow and shrink made a small
+                    // resize perform several complete pages of native layout.
+                    int keep=displayedGeneration==tileGeneration&&displayedWidth==width&&displayedPage*displayedPageSize==first?Math.Min(tiles.Controls.Count,last-first):0;
                     displayedGeneration=tileGeneration;displayedPage=currentPage;displayedWidth=width;displayedPageSize=pageSize;
                     // Each page contains only enough cards to fit the viewport.
                     // Navigation replaces only this bounded page of player controls.
                     tileScroll.ScrollBy(0,-int.MaxValue);
-                    foreach(Control old in tiles.Controls.Cast<Control>().ToArray())old.Dispose();tiles.Controls.Clear();
+                    while(tiles.Controls.Count>keep) {var old=tiles.Controls[tiles.Controls.Count-1];tiles.Controls.RemoveAt(tiles.Controls.Count-1);old.Dispose();}
                     tiles.Padding=new Padding(4);
-                    int first=currentPage*pageSize,last=Math.Min(tilePlayers.Count,first+pageSize);
                     tiles.Height=Math.Max(8,((last-first+columns-1)/columns)*268+8);
-                    for(int index=first;index<last;index++) {
+                    for(int index=first+keep;index<last;index++) {
                         var player=tilePlayers[index].Item1;var row=tilePlayers[index].Item2;
                         var tile=CreateAdminPlayerTile(player,PlayerDirectoryQuery.Count(cachedVehicles,player.Id),PlayerDirectoryQuery.Count(cachedFlags,player.Id),page=> {
                             if(busy)return;

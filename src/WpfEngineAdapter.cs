@@ -195,7 +195,10 @@ namespace ScumMiniMap {
         }
         internal void WpfAppearance(string shape,int opacity) { overlayShape=shape=="Circle"?"Circle":"Square";mapOpacity=Math.Max(30,Math.Min(100,opacity));SettingsChanged();SaveSettings(); }
         string wpfOnboardingVersion="";
-        internal bool WpfNeedsOnboarding { get { return isFirstLaunch || wpfOnboardingVersion!=VersionString; } }
+        bool hideOnboardingGuide;
+        internal bool WpfHideOnboardingGuide { get { return hideOnboardingGuide; } }
+        internal void WpfSetHideOnboardingGuide(bool hide) { hideOnboardingGuide=hide;SaveSettings(); }
+        internal bool WpfNeedsOnboarding { get { return isFirstLaunch || string.IsNullOrWhiteSpace(wpfOnboardingVersion) || (!hideOnboardingGuide && wpfOnboardingVersion!=VersionString); } }
         internal void WpfCompleteOnboarding() { wpfOnboardingVersion=VersionString;isFirstLaunch=false;SaveSettings(); }
         internal void WpfPreviewPosition(string value) { if(!diagnosticMode)throw new InvalidOperationException("Preview requires diagnostic mode.");Accept(value);zoom=targetZoom=4f;autoZoom=false; }
         internal void WpfTactical(bool active) { fullMapActive=active;Native.CancelActiveCopy();inputGeneration++;fallbackKeysArmed=false; }

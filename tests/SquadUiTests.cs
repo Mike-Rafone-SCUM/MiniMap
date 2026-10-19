@@ -40,13 +40,59 @@ class SquadUiTests {
             Set(engine,"wpfOnboardingVersion","");Call(engine,"LoadSettings");
             Check(!(bool)needsWizard.GetValue(engine,null)&&(string)Get(engine,"wpfOnboardingVersion")==completedVersion,"Reloading the completed version does not repeat setup on ordinary restarts");
             Set(engine,"wpfOnboardingVersion","0.0.1");Check((bool)needsWizard.GetValue(engine,null),"A different app version requires onboarding again");Set(engine,"wpfOnboardingVersion",completedVersion);
+            Set(engine,"wpfOnboardingVersion","0.0.1");
+            Set(engine,"diagnosticMode",false);try {Call(engine,"WpfSetHideOnboardingGuide",true);}finally {Set(engine,"diagnosticMode",true);}
+            Check(!(bool)needsWizard.GetValue(engine,null)&&File.ReadAllText(Path.Combine(folder,"settings.ini")).Contains("HideOnboardingGuide=True"),"Don't-show-again persists and suppresses the automatic guide after updates");
+            Set(engine,"hideOnboardingGuide",false);Call(engine,"LoadSettings");Check((bool)Get(engine,"hideOnboardingGuide")&&!(bool)needsWizard.GetValue(engine,null),"Guide opt-out survives a profile reload");
+            Set(engine,"wpfOnboardingVersion","");Check((bool)needsWizard.GetValue(engine,null),"An unfinished first configuration cannot be skipped with the update-guide opt-out");
+            Set(engine,"diagnosticMode",false);try {Call(engine,"WpfSave");}finally {Set(engine,"diagnosticMode",true);}Call(engine,"LoadSettings");Check((bool)needsWizard.GetValue(engine,null)&&File.ReadAllText(Path.Combine(folder,"settings.ini")).Contains("OnboardingVersion="),"Saving preferences before completing first setup still requires configuration after restart");
+            Set(engine,"wpfOnboardingVersion","0.0.1");Set(engine,"isFirstLaunch",true);Check((bool)needsWizard.GetValue(engine,null),"First install requires full configuration even when automatic update guidance is disabled");Set(engine,"isFirstLaunch",false);
+            Set(engine,"diagnosticMode",false);try {Call(engine,"WpfSetHideOnboardingGuide",false);}finally {Set(engine,"diagnosticMode",true);}Check((bool)needsWizard.GetValue(engine,null),"Turning automatic guidance back on restores the pending update prompt");Set(engine,"wpfOnboardingVersion",completedVersion);
             var tutorial=(Window)Call(runtime,"BuildFirstTimeGuide");
             try {
-                var tutorialText=Children(tutorial).OfType<TextBlock>().Single(t=>t.Tag as string=="first-time-guide-text");
-                Check(tutorialText.Text.Contains("Extract All")&&tutorialText.Text.Contains("COPY LOCATION")&&tutorialText.Text.Contains("BOTH SCUM AND MINIMAP")&&tutorialText.TextWrapping==TextWrapping.Wrap,"In-app guide includes extraction, exact Copy Location path and matching-key requirement in readable wrapped text");
-                tutorial.Show();tutorial.UpdateLayout();Capture(tutorial,Path.Combine(folder,"first-time-guide.png"));
+                Action<int,bool> mark=(index,value)=> {var box=Children(tutorial).OfType<CheckBox>().Single(c=>c.Tag as string=="guide-read-"+index);box.IsChecked=value;box.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));};
+                Func<Button> done=()=>Children(tutorial).OfType<Button>().Single(b=>b.Tag as string=="guide-done");
+                Check(Children(tutorial).OfType<CheckBox>().Count(c=>(c.Tag as string??"").StartsWith("guide-read-"))==6&&!done().IsEnabled,"Getting-started guide has six readable acknowledgements and waits for them");
+                Check(!Children(tutorial).OfType<Button>().Any(b=>b.Tag as string=="guide-capture-copy"||b.Tag as string=="guide-use-numpad"),"Default number-pad users have no rebinding action to perform");
+                Check(Children(tutorial).OfType<TextBlock>().Any(t=>t.Text.Contains("do not need to change"))&&Children(tutorial).OfType<TextBlock>().Where(t=>t.Text.Contains("Copy Location")).All(t=>t.TextWrapping==TextWrapping.Wrap||t.Tag as string=="guide-current-key"),"Number-pad instructions explicitly say to leave MiniMap's default key alone");
+                for(int i=0;i<6;i++)mark(i,true);Check(done().IsEnabled,"Reading every line enables Done");mark(0,false);Check(!done().IsEnabled,"Unchecking a line disables completion again");mark(0,true);
+                tutorial.ShowActivated=false;tutorial.WindowStartupLocation=WindowStartupLocation.Manual;tutorial.Left=-32000;tutorial.Top=-32000;tutorial.Show();tutorial.UpdateLayout();Capture(tutorial,Path.Combine(folder,"guide-numpad.png"));
+                int beforeKey=(int)Get(engine,"scumCopyKey");
+                Children(tutorial).OfType<RadioButton>().Single(b=>b.Tag as string=="guide-no-numpad").IsChecked=true;
+                Check(!done().IsEnabled&&(int)Get(engine,"scumCopyKey")==beforeKey,"Selecting no number pad resets key acknowledgements without silently changing bindings");
+                var captureCopy=Children(tutorial).OfType<Button>().Single(b=>b.Tag as string=="guide-capture-copy");Check(!captureCopy.IsEnabled,"No-number-pad path asks users to set SCUM first");mark(2,true);
+                captureCopy=Children(tutorial).OfType<Button>().Single(b=>b.Tag as string=="guide-capture-copy");Check(captureCopy.IsEnabled,"Acknowledging SCUM's key enables the in-guide MiniMap capture button");
+                var captureTimer=new DispatcherTimer {Interval=TimeSpan.FromMilliseconds(150)};bool captured=false;captureTimer.Tick+=(sender,e)=> {captureTimer.Stop();var captureWindow=Application.Current.Windows.OfType<Window>().Single(w=>w!=tutorial&&w.Title=="Copy Coordinate Key");Call(engine,"WpfGameBind",2,0x76,0);captured=true;captureWindow.Close();};captureTimer.Start();
+                captureCopy.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(captured&&Children(tutorial).OfType<TextBlock>().Any(t=>t.Tag as string=="guide-current-key"&&t.Text.Contains("F7")),"Actual guide capture button opens key capture and refreshes the chosen MiniMap key");
+                for(int i=0;i<6;i++)mark(i,true);Check(done().IsEnabled,"No-number-pad path completes after matching MiniMap and acknowledging each line");
+                var hide=Children(tutorial).OfType<CheckBox>().Single(c=>c.Tag as string=="guide-dont-show");hide.IsChecked=true;hide.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check((bool)Get(engine,"hideOnboardingGuide"),"Visible don't-show-again checkbox updates the saved preference");hide.IsChecked=false;hide.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                tutorial.UpdateLayout();Capture(tutorial,Path.Combine(folder,"guide-no-numpad.png"));Call(engine,"WpfGameBind",2,beforeKey,0);
             }finally { tutorial.Close(); }
-            var tutorialWizard=(Window)Call(runtime,"BuildOnboarding",0);try { Check(Children(tutorialWizard).OfType<TextBlock>().Any(t=>t.Tag as string=="first-time-guide-text"),"First-time and update wizard includes the same setup tutorial on its first page"); }finally { tutorialWizard.Close(); }
+            var tutorialWizard=(Window)Call(runtime,"BuildOnboarding",0);try { Check(Children(tutorialWizard).OfType<CheckBox>().Count(c=>(c.Tag as string??"").StartsWith("guide-read-"))==6,"Detailed first-time setup uses the same accessible checklist"); }finally { tutorialWizard.Close(); }
+            Set(engine,"wpfOnboardingVersion","");Set(engine,"isFirstLaunch",true);
+            var guideSettings=(Window)Call(runtime,"BuildSettings",0);guideSettings.ContentRendered+=(s,e)=>Children(guideSettings).OfType<Button>().Single(b=>b.Tag as string=="first-time-guide").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Call(runtime,"Modal",guideSettings);Pump();var switchingGuide=(Window)Get(runtime,"setupWindow");
+            Check(!guideSettings.IsVisible&&switchingGuide!=null&&switchingGuide.IsEnabled,"Actual Settings guide button closes its modal parent before showing interactive setup");
+            Check(switchingGuide.IsVisible&&!switchingGuide.Topmost&&switchingGuide.Owner==null&&switchingGuide.ShowInTaskbar&&switchingGuide.WindowStyle==WindowStyle.SingleBorderWindow,"Setup opens modeless with normal taskbar/minimize controls and no topmost map owner");
+            var rememberedTick=Children(switchingGuide).OfType<CheckBox>().Single(c=>c.Tag as string=="guide-read-0");rememberedTick.IsChecked=true;rememberedTick.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            double movedGuideLeft=switchingGuide.Left+40,movedGuideTop=switchingGuide.Top+30;switchingGuide.Left=movedGuideLeft;switchingGuide.Top=movedGuideTop;switchingGuide.WindowState=WindowState.Minimized;
+            Call(runtime,"SetSetupInputFocus",true);Check((bool)Get(engine,"panelOpening"),"Focused setup protects its own controls from game shortcuts");
+            Call(runtime,"SetSetupInputFocus",false);Check(!(bool)Get(engine,"panelOpening")&&!(bool)Get(engine,"shortcutCaptureOpen")&&switchingGuide.IsVisible,"Switching away leaves setup open and releases game input and coordinate tracking");
+            Call(runtime,"ShowSetupWindow",false);Check(Object.ReferenceEquals(switchingGuide,Get(runtime,"setupWindow"))&&rememberedTick.IsChecked==true,"Returning to setup reuses the same window and keeps checklist progress");
+            Check(switchingGuide.WindowState==WindowState.Normal&&switchingGuide.Left==movedGuideLeft&&switchingGuide.Top==movedGuideTop,"Setup can be moved aside, minimized and restored without resetting its position");
+            string beforeSetupVersion=(string)Get(engine,"wpfOnboardingVersion");
+            foreach(var read in Children(switchingGuide).OfType<CheckBox>().Where(c=>(c.Tag as string??"").StartsWith("guide-read-")).ToArray()) {read.IsChecked=true;read.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));}
+            for(int page=0;page<1;page++)Children(switchingGuide).OfType<Button>().Single(b=>b.Tag as string=="setup-next").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Check(switchingGuide.IsVisible&&Children(switchingGuide).OfType<FrameworkElement>().Any(c=>c.Tag as string=="setup-preview")&&Children(switchingGuide).OfType<ComboBox>().Any(c=>c.Tag as string=="minimap-shape"),"Actual first-time setup continues from the checklist into editable Appearance with a live preview");
+            Check(!Children(switchingGuide).OfType<FrameworkElement>().Any(c=>(c.Tag as string??"").StartsWith("setup-tour-")),"Full configuration has no arrow overlay or walkthrough coach");
+            switchingGuide.UpdateLayout();Capture(switchingGuide,Path.Combine(folder,"setup-appearance.png"));
+            Children(switchingGuide).OfType<Button>().Single(b=>b.Tag as string=="setup-next").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Check(Children(switchingGuide).OfType<Button>().Any(b=>b.Tag as string=="setup-default-colours"),"First-time setup includes map and zone settings after Appearance");
+            Children(switchingGuide).OfType<Button>().Single(b=>b.Tag as string=="setup-next").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Check(Children(switchingGuide).OfType<TextBox>().Any(c=>c.Tag as string=="setting-number"),"First-time setup includes tracking and zoom settings");
+            Children(switchingGuide).OfType<Button>().Single(b=>b.Tag as string=="setup-next").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Check(Children(switchingGuide).OfType<Button>().Any(b=>b.Tag as string=="setup-private-positions")&&(string)Get(engine,"wpfOnboardingVersion")==beforeSetupVersion,"First-time setup reaches sharing without marking completion before the final Done button");
+            Children(switchingGuide).OfType<Button>().Single(b=>b.Tag as string=="setup-next").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(!switchingGuide.IsVisible&&!(bool)needsWizard.GetValue(engine,null)&&!(bool)Get(engine,"isFirstLaunch"),"Only final Done completes the full first-install configuration");
             var adminAction=Enum.Parse(asm.GetType("ScumMiniMap.AppControlAction"),"AdminCommands");
             var trayAdmin=((System.Windows.Forms.ContextMenuStrip)Get(engine,"trayMenu")).Items.Cast<System.Windows.Forms.ToolStripItem>().Single(item=>item.Text=="Admin commands");
             trayAdmin.PerformClick();Pump();

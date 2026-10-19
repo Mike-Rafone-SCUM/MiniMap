@@ -14,7 +14,26 @@ namespace ScumMiniMap {
             }
             return result;
         }
-        const string PolishUi = @"FirstTimeGuideTitle|Instrukcja pierwszego uruchomienia
+        const string PolishUi = @"SetupMoreOptions|Więcej opcji
+SetupAppearanceHelp|Wybierz kształt, rozmiar i widoczność mapy. Sprawdź podgląd. Możesz zachować obecne ustawienia.
+SetupMapHelp|Wybierz, co ma być na mapie. Dodatkowe kolory i etykiety znajdziesz w Więcej opcji.
+SetupTrackingHelp|Wybierz, czy mapa ma automatycznie zmieniać przybliżenie podczas ruchu. Możesz zachować obecne ustawienia.
+SetupSharingHelp|Grasz sam? Wybierz Gotowe. Udostępnianie jest opcjonalne; połącz się przez Prywatne pozycje.
+GuideSwitchApps|Użyj Alt+Tab, aby przejść do SCUM i wrócić. Zaznaczenia w tym oknie pozostaną.
+GuideChecklistIntro|Zaznacz każdy wiersz po przeczytaniu i wykonaniu. Potem wybierz Dalej.
+GuideHaveNumpad|Mam klawiaturę numeryczną
+GuideNoNumpad|Nie mam klawiatury numerycznej lub używam innego klawisza
+GuideExtracted|Wybrałem Wyodrębnij wszystkie. Uruchamiam EXE z rozpakowanego folderu, z assets obok.
+GuideWindowed|SCUM działa w oknie lub bez ramek. Moja postać jest wczytana.
+GuideScumNumpad|W SCUM Copy Location to Num /, czyli dzielenie na klawiaturze numerycznej.
+GuideMiniNumpad|MiniMap już używa Num /. Nie muszę tutaj zmieniać ani przechwytywać klawisza.
+GuideScumOther|W SCUM wybrałem wolny klawisz dla Copy Location i kliknąłem Zastosuj.
+GuideMiniOther|Teraz muszę ustawić TEN SAM KLAWISZ w MiniMap. Używam przycisku poniżej i naciskam wybrany klawisz bez Ctrl, Shift ani Alt.
+GuideCloseSettings|Po zamknięciu instrukcji wrócę do postaci SCUM i zamknę czat oraz ekwipunek.
+GuideTrackingTest|Potem nacisnę Copy Location, sprawdzę kopiowanie współrzędnych i ruchem postaci sprawdzę ruch znacznika.
+GuideDontShow|Nie pokazuj tej instrukcji automatycznie, także po aktualizacjach. Mogę otworzyć ją w Ustawieniach.
+GuideUseNumpad|Użyj Num / w MiniMap
+FirstTimeGuideTitle|Instrukcja pierwszego uruchomienia
 FirstTimeGuideBody|1. Pobierz pełny ZIP z kanału pobierania. Wybierz Wyodrębnij wszystkie i uruchom SkynettMiniMap.exe z rozpakowanego folderu. Pozostaw assets obok EXE. Nie uruchamiaj wewnątrz ZIP. Wymagane są Windows 64-bit i .NET Framework 4.8.\n\n2. Ustaw SCUM w oknie lub oknie bez ramek i wczytaj postać.\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num / to DZIELENIE na klawiaturze numerycznej, a nie / na głównej.\n\n4. MiniMap: NumPad / jako pojedynczy klawisz bez Ctrl, Shift ani Alt. Klawisze mapy i czatu też muszą odpowiadać SCUM. Brak klawiatury numerycznej? Wybierz wolny klawisz, zastosuj go w SCUM i ustaw TEN SAM KLAWISZ W SCUM I MINIMAP. Zmiana tylko jednej aplikacji nie wystarczy.\n\n5. Na każdej stronie przytrzymaj Dalej przez sekundę i puść. Ustaw rozmiar, położenie i wygląd oraz ukończ ostatnią stronę. Grupy są opcjonalne.\n\n6. Zamknij ustawienia, czat i ekwipunek. W SCUM naciśnij Copy Location: współrzędne muszą się skopiować. Rusz się i sprawdź ruch znacznika. Domyślnie Home otwiera ustawienia, a ? kreator. Jeśli nadal nie działa, otwórz zgłoszenie z wersją i zdjęciami obu przypisań.
 SoloRoute|Trasa solo
 OwnRoute|Twoja trasa
@@ -59,7 +78,7 @@ PlayerLiveLocation|Bieżąca pozycja
 PlayerConnected|Połączono
 SharedPlayers|Gracze
 PrivatePositionGpsHelp|Aktywny cel GPS jest udostępniany bez zapisywania. Przeniesienie lub wyczyszczenie celu aktualizuje go w grupie.
-PoiClustering|Grupuj pobliskie punkty zainteresowania
+PoiClustering|Grupuj pobliskie ikony
 PrivatePositionMarkersHelp|Udostępnia też grupie do 128 zapisanych punktów i znaczników śmierci. Znaczniki znajomych pokazują właściciela, służą do nawigacji i pozostają tu tymczasowe, tylko do odczytu.
 PrivatePositionRouterManual|Automatyczne przekierowanie niedostępne lub wygasło. Przekieruj port TCP na ten komputer ręcznie. Wykrycie IP i konfiguracja zapory nie potwierdzają dostępu z internetu.
 PrivatePositionFirewallFailed|Nie można dodać lub zweryfikować reguły Windows. Zezwól aplikacji i portowi TCP ręcznie; zarządzane zasady mogą blokować zmiany.
@@ -88,7 +107,7 @@ WizardHoldNext|Przytrzymaj przez 1 sekundę, aby kontynuować
 PrivateGroupHelp|Utwórz grupę i udostępnij kod prywatnie albo wklej kod i połącz się. Kod działa, dopóki właściciel go nie odnowi. Możesz należeć do kilku grup. Zapisane kody są chronione na tym koncie Windows; udostępnianie zaczyna się wyłączone. Odnowienie rozłącza grupę i unieważnia stary kod. Twórca musi zachować zapisany profil, aby zachować własność.
 PrivatePositionJoin|Dołącz do grupy
 PrivatePositionHost|Utwórz grupę
-RotateMinimap|Obracaj minimapę zgodnie z kierunkiem
+RotateMinimap|Obracaj mapę wraz ze mną
 PrivatePositions|Prywatne pozycje
 PrivatePositionName|Twoja nazwa
 PrivatePositionFolder|Wybierz prywatny folder współdzielony
@@ -454,7 +473,7 @@ ClearAllCustomZones|Usuń wszystkie własne strefy i punkty trasy…
 ClearAllZonesConfirm|Trwale usunąć wszystkie własne strefy i punkty trasy ({0})?
 ClearWaypoint|Usuń punkt trasy
 Close|Zamknij
-ConfigurePoiFilters|Skonfiguruj filtry POI…
+ConfigurePoiFilters|Wybierz ikony mapy
 CustomWaypointsDescription|Osobiste znaczniki zapisane dla bieżącej mapy.
 CustomZonesDescription|Pokaż zapisane kontury własnych stref. Twórz lub importuj strefy za pomocą kreatora.
 DataFolderOpenError|Nie udało się otworzyć folderu danych: {0}
@@ -576,8 +595,8 @@ Settings|Ustawienia
 ShowCompass|Pokaż kierunki kompasu (N, S, E, W)
 ShowCustomWaypoints|Pokaż własne punkty trasy
 ShowHeading|Pokaż stożek / strzałkę kierunku gracza
-ShowSavedZones|WŁASNE STREFY MAPY
-ShowScumMap|Kategorie ScumMap
+ShowSavedZones|Pokaż własne strefy mapy
+ShowScumMap|Pokaż ikony mapy
 ShowStatus|Pokaż pasek informacji o pozycji
 ShowZoneLabels|Pokaż nazwy POI
 SidebarLayerGrid|Linie siatki

@@ -8,6 +8,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.3.10] - 2026-10-19
+
+- Keep unchanged admin player cards when the viewport grows or shrinks; create or remove only the changed portion instead of rebuilding the entire visible page.
+
+- Require the complete configuration wizard on first installation, including Appearance, map/zones and tracking settings. The update-guide opt-out cannot bypass unfinished initial configuration. Remove the experimental arrow overlays and walkthrough coach.
+
+- First-time and update setup now use five simpler pages: Getting started, Appearance with live preview, map/zone settings, tracking/zoom and optional sharing. Short explanations introduce the main choices; extra controls are collapsed under More options. Complete onboarding only with Done on the final page.
+
+- Make Settings easier to read and adjust: larger controls and wrapped labels, clear selected tabs, a movable Settings window and live Appearance preview. Label shape and colour choices, show slider values, and keep changing native labels synchronized.
+- Add increment/decrement buttons and visible valid ranges to numeric settings throughout Settings and detailed setup. Highlight invalid entries without silently replacing them or changing saved values. Disabled shared menu buttons cannot execute their actions.
+
+- Let setup stay open while users Alt-Tab to SCUM and back. Setup is a normal, non-topmost window with taskbar/minimize controls; it retains checklist progress, and releases tracking/input protection when it loses focus.
+
+- Replace the dense getting-started text with large, readable tick-box steps and separate number-pad/no-number-pad instructions. Default Num / users need no MiniMap rebinding; other users set SCUM first, then capture the same key directly in the guide.
+- Show the checklist during first-time setup and after version updates, with a saved option to stop automatic display. Manual access remains in Settings. Preserve existing custom keys unless the user explicitly changes them.
+- Use ordinary Next buttons instead of one-second holds in the setup wizard. Require acknowledgement of the checklist before continuing and show checked-step progress.
+
 ## [2.3.9] - 2026-10-18
 
 - Fix tray Exit while admin controls are open: mark shutdown before closing native tools, then end the WPF message loop after the tray callback completes.

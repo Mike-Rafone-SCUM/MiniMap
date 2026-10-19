@@ -55,12 +55,26 @@ collision clearance or distinguish stacked roads when the caller supplies only X
 
 ## Layout
 
-The WPF setup wizard is required when `OnboardingVersion` in the active profile
-does not equal `VersionString`, including older profiles without the marker.
-Only completing its final page records the current version. Settings saves and
-closing an unfinished wizard preserve the pending requirement and existing key
-bindings. The localized first-time guide is available in Settings and on the
-wizard's opening page; its English text matches the Discord installation guide.
+The WPF getting-started checklist opens automatically when `OnboardingVersion`
+does not equal `VersionString`, including older profiles without the marker,
+unless the user saved `HideOnboardingGuide=True`. Its Done button requires six
+acknowledgements and records the completed version. The opt-out applies to future
+updates too; manual access remains in Settings. Ordinary saves do not mark setup
+completed, and existing bindings are preserved unless explicitly changed.
+
+The checklist uses large text and separate number-pad/no-number-pad paths.
+Default Num / users need no MiniMap rebinding. Other users acknowledge changing
+SCUM first, then use the capture button in the guide to set MiniMap's matching
+key. The final lines explain what to test after closing the guide, since tracking
+pauses during modal setup. The detailed wizard retains the same checklist on its
+first page and uses ordinary Next buttons instead of timed holds.
+
+Automatic and manual setup windows are modeless, non-topmost, unowned Windows
+windows with a native draggable title bar, taskbar entry and minimize controls.
+They keep the same checklist instance while switching to SCUM and back. Input
+protection is enabled only while setup has focus (or a genuine child dialog is
+open); losing setup focus releases tracking/input protection. Settings closes
+before opening the guide so a modal parent cannot trap the user behind it.
 
 Admin controls open independently of the retired map window. They dock just
 inside the WPF map's left edge until the user drags the Admin Controls header.

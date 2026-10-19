@@ -4,6 +4,38 @@ using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsTh = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "SetupMoreOptions", "ตัวเลือกเพิ่มเติม" },
+            { "SetupAppearanceHelp", "เลือกรูปทรง ขนาด และความชัดของแผนที่ แล้วดูตัวอย่าง สามารถใช้ค่าเดิมได้" },
+            { "SetupMapHelp", "เลือกสิ่งที่แสดงบนแผนที่ สีและป้ายกำกับเพิ่มเติมอยู่ในตัวเลือกเพิ่มเติม" },
+            { "SetupTrackingHelp", "เลือกว่าจะให้แผนที่ปรับการซูมอัตโนมัติขณะเคลื่อนที่หรือไม่ สามารถใช้ค่าเดิมได้" },
+            { "SetupSharingHelp", "เล่นคนเดียวใช่ไหม? เลือกเสร็จสิ้น การแชร์กับเพื่อนเป็นทางเลือก ใช้ตำแหน่งส่วนตัวเพื่อเชื่อมต่อ" },
+
+
+
+
+
+
+
+
+
+
+
+            { "GuideSwitchApps", "ใช้ Alt+Tab สลับไป SCUM และกลับมาระหว่างทำตามขั้นตอน เครื่องหมายในหน้าต่างนี้จะยังอยู่" },
+
+            { "GuideChecklistIntro", "ทำเครื่องหมายแต่ละบรรทัดหลังอ่านและทำแล้ว จากนั้นเลือกถัดไป" },
+            { "GuideHaveNumpad", "ฉันมีแป้นตัวเลข" },
+            { "GuideNoNumpad", "ฉันไม่มีแป้นตัวเลข หรือใช้ปุ่มอื่น" },
+            { "GuideExtracted", "ฉันแยก ZIP ทั้งหมดแล้ว เปิด EXE จากโฟลเดอร์ที่แตกไฟล์ โดยมี assets อยู่ข้างกัน" },
+            { "GuideWindowed", "SCUM อยู่ในโหมดหน้าต่างหรือไร้ขอบ และโหลดตัวละครแล้ว" },
+            { "GuideScumNumpad", "ใน SCUM ปุ่ม Copy Location คือ Num / ซึ่งเป็นปุ่มหารบนแป้นตัวเลข" },
+            { "GuideMiniNumpad", "MiniMap ใช้ Num / อยู่แล้ว ฉันไม่ต้องเปลี่ยนหรือตั้งปุ่มตรงนี้" },
+            { "GuideScumOther", "ใน SCUM ฉันเลือกปุ่มว่างให้ Copy Location แล้วกดใช้" },
+            { "GuideMiniOther", "ตอนนี้ต้องตั้งปุ่มเดียวกันใน MiniMap กดปุ่มด้านล่างแล้วกดปุ่มที่เลือก โดยไม่กด Ctrl, Shift หรือ Alt" },
+            { "GuideCloseSettings", "หลังปิดคู่มือนี้ ฉันจะกลับไปที่ตัวละคร SCUM และปิดแชตกับช่องเก็บของ" },
+            { "GuideTrackingTest", "จากนั้นจะกด Copy Location เพื่อตรวจว่าคัดลอกพิกัดได้ แล้วขยับตัวละครเพื่อดูว่าเครื่องหมายขยับตามหรือไม่" },
+            { "GuideDontShow", "ไม่แสดงคู่มือนี้อัตโนมัติอีก รวมถึงหลังอัปเดต เปิดอีกครั้งได้ในการตั้งค่า" },
+            { "GuideUseNumpad", "ใช้ Num / ใน MiniMap" },
+
             { "FirstTimeGuideTitle", "คู่มือผู้ใช้ครั้งแรก" },
             { "FirstTimeGuideBody", "1. ดาวน์โหลด ZIP ฉบับเต็มจากช่องดาวน์โหลด เลือกแยกทั้งหมด แล้วเปิด SkynettMiniMap.exe ในโฟลเดอร์ที่แตกไฟล์ เก็บโฟลเดอร์ assets ไว้ข้าง EXE อย่าเปิดจากใน ZIP ต้องใช้ Windows 64 บิตและ .NET Framework 4.8\n\n2. ตั้ง SCUM เป็นหน้าต่างหรือหน้าต่างไร้ขอบ แล้วเข้าเกมให้ตัวละครโหลดเสร็จ\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY ปุ่ม Num / คือปุ่มหารบนแป้นตัวเลข ไม่ใช่ / บนแป้นหลัก\n\n4. MiniMap: ตั้งเป็น NumPad / แบบปุ่มเดียว ไม่มี Ctrl, Shift หรือ Alt ปุ่มแผนที่และแชตต้องตรงกับ SCUM ด้วย ไม่มีแป้นตัวเลข? เลือกปุ่มว่างหนึ่งปุ่ม กดใช้ใน SCUM แล้วตั้งปุ่มเดียวกันทั้ง SCUM และ MINIMAP เปลี่ยนแค่แอปเดียวจะไม่ทำงาน\n\n5. กดปุ่มถัดไปค้างหนึ่งวินาทีแล้วปล่อยทุกหน้า ตั้งขนาด ตำแหน่ง และหน้าตา แล้วทำหน้าสุดท้ายให้เสร็จ ไม่จำเป็นต้องเข้ากลุ่มเพื่อเล่นคนเดียว\n\n6. ปิดการตั้งค่า แชต และช่องเก็บของ กลับไปที่ตัวละคร กด Copy Location แล้วตรวจว่าคัดลอกพิกัดได้ เดินแล้วดูว่าเครื่องหมายขยับตามหรือไม่ ค่าเริ่มต้น Home เปิดการตั้งค่า และ ? เปิดตัวช่วยอีกครั้ง หากยังไม่ได้ ให้เปิดตั๋วพร้อมเวอร์ชันและภาพปุ่มในทั้งสองแอป" },
 
@@ -74,7 +106,7 @@ namespace ScumMiniMap {
             { "PlayerConnected", "เชื่อมต่อแล้ว" },
             { "SharedPlayers", "ผู้เล่น" },
             { "PrivatePositionGpsHelp", "แชร์จุดหมาย GPS ที่ใช้อยู่โดยไม่ต้องบันทึก เมื่อย้ายหรือล้างจุดหมายจะอัปเดตให้กลุ่มด้วย" },
-            { "PoiClustering", "จัดกลุ่มจุดน่าสนใจใกล้กัน" },
+            { "PoiClustering", "รวมไอคอนแผนที่ที่อยู่ใกล้กัน" },
             { "PrivatePositionMarkersHelp", "แชร์จุดที่บันทึกและเครื่องหมายเสียชีวิตให้กลุ่มสูงสุด 128 จุด เครื่องหมายของเพื่อนแสดงเจ้าของ ใช้นำทางได้ และอยู่ที่นี่ชั่วคราวแบบอ่านอย่างเดียว" },
             { "PrivatePositionRouterManual", "ส่งต่อพอร์ตอัตโนมัติไม่ได้หรือหมดอายุ ส่งต่อพอร์ต TCP นี้มายังพีซีเอง การค้นหา IP และตั้งค่าไฟร์วอลล์ไม่รับประกันการเข้าถึงจากอินเทอร์เน็ต" },
             { "PrivatePositionFirewallFailed", "เพิ่มหรือตรวจสอบกฎ Windows Firewall ไม่ได้ อนุญาตแอปและพอร์ต TCP เอง นโยบายที่จัดการอาจห้ามแก้ไข" },
@@ -90,7 +122,7 @@ namespace ScumMiniMap {
             { "PrivatePositionAddress", "ที่อยู่ / IP โฮสต์" },
             { "PrivatePositionJoin", "เข้าร่วมกลุ่ม" },
             { "PrivatePositionHost", "โฮสต์กลุ่ม" },
-            { "RotateMinimap", "หมุนมินิแมปตามทิศทาง" },
+            { "RotateMinimap", "หมุนแผนที่ตามการหันของฉัน" },
             { "PrivatePositions", "ตำแหน่งส่วนตัว" },
             { "PrivatePositionName", "ชื่อของคุณ" },
             { "PrivatePositionFolder", "เลือกโฟลเดอร์แชร์ส่วนตัว" },
@@ -457,7 +489,7 @@ namespace ScumMiniMap {
             { "ClearAllZonesConfirm", "ลบโซนและจุดอ้างอิงที่กำหนดเองของ {0} ทั้งหมดอย่างถาวรหรือไม่" },
             { "ClearWaypoint", "ล้างจุดอ้างอิง" },
             { "Close", "ปิด" },
-            { "ConfigurePoiFilters", "กำหนดค่าตัวกรอง POI..." },
+            { "ConfigurePoiFilters", "เลือกไอคอนแผนที่" },
             { "CustomWaypointsDescription", "เครื่องหมายส่วนตัวที่บันทึกไว้สำหรับแผนที่ปัจจุบัน" },
             { "CustomZonesDescription", "แสดงโครงร่างโซนแบบกำหนดเองที่บันทึกไว้ ใช้ตัวช่วยสร้างโซนเพื่อสร้างหรือนำเข้าโซน" },
             { "DataFolderOpenError", "ไม่สามารถเปิดโฟลเดอร์ข้อมูล: {0}" },
@@ -576,8 +608,8 @@ namespace ScumMiniMap {
             { "ShowCompass", "แสดงตัวบ่งชี้เข็มทิศพระคาร์ดินัล (N, S, E, W)" },
             { "ShowCustomWaypoints", "แสดงเวย์พอยท์แบบกำหนดเอง" },
             { "ShowHeading", "แสดงกรวย / ลูกศรส่วนหัวของผู้เล่น" },
-            { "ShowSavedZones", "CUSTOM MAP ZONES" },
-            { "ShowScumMap", "หมวดหมู่แผนที่ขยะ" },
+            { "ShowSavedZones", "แสดงพื้นที่แผนที่ที่กำหนดเอง" },
+            { "ShowScumMap", "แสดงไอคอนแผนที่" },
             { "ShowStatus", "แสดงแถบข้อมูลตำแหน่ง" },
             { "ShowZoneLabels", "แสดงชื่อ POI" },
             { "SidebarLayerGrid", "เส้นตาราง" },
@@ -1082,6 +1114,38 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "จุดกิจกรรมซีเดนเท็กซ์" },
         };
         public static readonly Dictionary<string,string> StringsZhTw = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "SetupMoreOptions", "更多選項" },
+            { "SetupAppearanceHelp", "選擇地圖的形狀、大小和可見度，並查看預覽。也可以保留目前設定。" },
+            { "SetupMapHelp", "選擇地圖上顯示的內容。更多顏色和標籤設定位於更多選項中。" },
+            { "SetupTrackingHelp", "選擇地圖是否在移動時自動縮放。也可以保留目前設定。" },
+            { "SetupSharingHelp", "獨自遊玩？選擇完成。與好友分享是選用功能；可透過私人位置連線。" },
+
+
+
+
+
+
+
+
+
+
+
+            { "GuideSwitchApps", "操作過程中可用 Alt+Tab 切換到 SCUM 再返回。此視窗會保留已勾選的項目。" },
+
+            { "GuideChecklistIntro", "讀完並完成每一項後勾選，再選擇「下一步」。" },
+            { "GuideHaveNumpad", "我有數字鍵盤" },
+            { "GuideNoNumpad", "我沒有數字鍵盤，或使用其他按鍵" },
+            { "GuideExtracted", "我已全部解壓縮 ZIP，從解壓縮資料夾執行 EXE，assets 資料夾在旁邊。" },
+            { "GuideWindowed", "SCUM 使用視窗或無邊框模式，角色已載入。" },
+            { "GuideScumNumpad", "SCUM 的 Copy Location 已設為 Num /（數字鍵盤除號）。" },
+            { "GuideMiniNumpad", "MiniMap 已經使用 Num /。我不需要在這裡修改或擷取按鍵。" },
+            { "GuideScumOther", "我已在 SCUM 為 Copy Location 選擇未使用的按鍵，並點擊套用。" },
+            { "GuideMiniOther", "現在必須在 MiniMap 設定同一個按鍵。按下方按鈕，再按選定的鍵，不加 Ctrl、Shift 或 Alt。" },
+            { "GuideCloseSettings", "關閉指南後，我會返回 SCUM 角色，並關閉聊天與背包。" },
+            { "GuideTrackingTest", "接著按 Copy Location 檢查座標是否複製，再移動角色，確認地圖標記是否跟隨。" },
+            { "GuideDontShow", "不再自動顯示此指南，包括更新後。仍可在設定中開啟。" },
+            { "GuideUseNumpad", "在 MiniMap 使用 Num /" },
+
             { "FirstTimeGuideTitle", "首次使用指南" },
             { "FirstTimeGuideBody", "1. 從下載頻道取得完整 ZIP，選擇「全部解壓縮」，在解壓縮後的資料夾執行 SkynettMiniMap.exe。assets 資料夾必須保留在 EXE 旁。不要在 ZIP 內執行。需要 64 位元 Windows 和 .NET Framework 4.8。\n\n2. 將 SCUM 設為視窗或無邊框視窗模式，進入遊戲並載入角色。\n\n3. SCUM：OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY。Num / 是數字鍵盤的除號，不是主鍵盤的 /。\n\n4. MiniMap：Copy Location 設為 NumPad /，選擇無修飾鍵的單鍵，不加 Ctrl、Shift 或 Alt。地圖與聊天按鍵也要與 SCUM 一致。沒有數字鍵盤？選擇未使用的單鍵，在 SCUM 套用，再於 MINIMAP 設定相同的實體按鍵。必須同時修改兩個應用程式，只改一邊無效。\n\n5. 每頁按住「下一步」一秒後放開。設定地圖大小、位置與外觀，並完成最後一頁。單人使用不需加入群組。\n\n6. 關閉設定、聊天及背包，返回角色。按 Copy Location，確認 SCUM 複製座標；移動角色，檢查地圖標記是否跟隨。預設 Home 開啟設定，大地圖 ? 重新開啟精靈。若仍失敗，請提交支援工單並附版本與兩邊的按鍵截圖。" },
 
@@ -1152,7 +1216,7 @@ namespace ScumMiniMap {
             { "PlayerConnected", "已連線" },
             { "SharedPlayers", "玩家" },
             { "PrivatePositionGpsHelp", "目前GPS目的地無需儲存即可分享。移動或清除目的地時，群組中的目標也會更新。" },
-            { "PoiClustering", "群組附近興趣點" },
+            { "PoiClustering", "合併附近的地圖圖示" },
             { "PrivatePositionMarkersHelp", "同時向群組分享最多128個已儲存的路點及死亡標記。好友的標記顯示所屬玩家，可用於導航，在本機僅暫時顯示且無法編輯。" },
             { "PrivatePositionRouterManual", "自動路由器轉送無法使用或已過期。請手動將此TCP連接埠轉送至本電腦。IP偵測和防火牆設定不代表網際網路可達。" },
             { "PrivatePositionFirewallFailed", "無法新增或驗證Windows防火牆規則。請手動允許本應用程式及TCP連接埠；受管理原則可能禁止變更。" },
@@ -1168,7 +1232,7 @@ namespace ScumMiniMap {
             { "PrivatePositionAddress", "主機位址 / IP" },
             { "PrivatePositionJoin", "加入群組" },
             { "PrivatePositionHost", "建立群組" },
-            { "RotateMinimap", "依朝向旋轉小地圖" },
+            { "RotateMinimap", "地圖隨我的轉向旋轉" },
             { "PrivatePositions", "私密位置" },
             { "PrivatePositionName", "你的名字" },
             { "PrivatePositionFolder", "選擇私密共用資料夾" },
@@ -1535,7 +1599,7 @@ namespace ScumMiniMap {
             { "ClearAllZonesConfirm", "永久刪除所有 {0} 自訂區域和航點？" },
             { "ClearWaypoint", "清晰的航路點" },
             { "Close", "關閉" },
-            { "ConfigurePoiFilters", "配置 POI 過濾器..." },
+            { "ConfigurePoiFilters", "選擇地圖圖示" },
             { "CustomWaypointsDescription", "為目前地圖保存的個人標記。" },
             { "CustomZonesDescription", "顯示已儲存的自訂區域輪廓。使用區域建立精靈建立或匯入區域。" },
             { "DataFolderOpenError", "無法開啟資料資料夾：{0}" },
@@ -1654,8 +1718,8 @@ namespace ScumMiniMap {
             { "ShowCompass", "顯示基本羅盤指示器（N、S、E、W）" },
             { "ShowCustomWaypoints", "顯示自訂航點" },
             { "ShowHeading", "顯示玩家航向錐體/箭頭" },
-            { "ShowSavedZones", "CUSTOM MAP ZONES" },
-            { "ShowScumMap", "渣圖分類" },
+            { "ShowSavedZones", "顯示自訂地圖區域" },
+            { "ShowScumMap", "顯示地圖圖示" },
             { "ShowStatus", "顯示位置資訊欄" },
             { "ShowZoneLabels", "顯示 POI 名稱" },
             { "SidebarLayerGrid", "網格線" },
@@ -2160,6 +2224,38 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex活動點" },
         };
         public static readonly Dictionary<string,string> StringsJa = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "SetupMoreOptions", "その他の設定" },
+            { "SetupAppearanceHelp", "地図の形、大きさ、見やすさを選び、プレビューで確認します。現在の設定のままでも構いません。" },
+            { "SetupMapHelp", "地図に表示するものを選びます。追加の色やラベルはその他の設定にあります。" },
+            { "SetupTrackingHelp", "移動に合わせて自動でズームするか選びます。現在の設定のままでも構いません。" },
+            { "SetupSharingHelp", "一人で遊びますか？完了を選んでください。友達との共有は任意です。接続する場合はプライベート位置を使います。" },
+
+
+
+
+
+
+
+
+
+
+
+            { "GuideSwitchApps", "Alt+TabでSCUMへ移動し、このウィンドウに戻れます。チェックはそのまま残ります。" },
+
+            { "GuideChecklistIntro", "各行を読んで実行したらチェックし、次へを選んでください。" },
+            { "GuideHaveNumpad", "テンキーがあります" },
+            { "GuideNoNumpad", "テンキーがない、または別のキーを使います" },
+            { "GuideExtracted", "ZIPをすべて展開しました。展開先のEXEを実行し、assetsは隣にあります。" },
+            { "GuideWindowed", "SCUMはウィンドウかボーダーレスで、キャラクターを読み込みました。" },
+            { "GuideScumNumpad", "SCUMのCopy LocationはNum /、つまりテンキーの除算です。" },
+            { "GuideMiniNumpad", "MiniMapはすでにNum /を使っています。ここでキー変更や取得は不要です。" },
+            { "GuideScumOther", "SCUMでCopy Locationに未使用のキーを選び、適用を押しました。" },
+            { "GuideMiniOther", "次にMiniMapにも同じキーを設定します。下のボタンを押し、Ctrl・Shift・Altなしで選んだキーだけを押します。" },
+            { "GuideCloseSettings", "このガイドを閉じたらSCUMのキャラクターに戻り、チャットと持ち物を閉じます。" },
+            { "GuideTrackingTest", "次にCopy Locationで座標がコピーされることと、移動するとマーカーが動くことを確認します。" },
+            { "GuideDontShow", "更新後もこのガイドを自動表示しません。設定から再度開けます。" },
+            { "GuideUseNumpad", "MiniMapでNum /を使う" },
+
             { "FirstTimeGuideTitle", "初めて使う方向けガイド" },
             { "FirstTimeGuideBody", "1. ダウンロードチャンネルから完全版 ZIP を取得し、「すべて展開」を選び、展開先で SkynettMiniMap.exe を実行します。assets フォルダーを EXE の隣に置いてください。ZIP 内から起動しないでください。64 ビット Windows と .NET Framework 4.8 が必要です。\n\n2. SCUM をウィンドウまたはボーダーレスにし、キャラクターを読み込みます。\n\n3. SCUM：OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY。Num / はテンキーの除算キーで、メインキーボードの / とは別です。\n\n4. MiniMap：NumPad / を Ctrl・Shift・Alt なしの単一キーに設定します。マップとチャットのキーも SCUM に合わせます。テンキーがない場合、未使用のキーを SCUM で適用し、SCUM と MINIMAP の両方を同じ物理キーに変更してください。片方だけでは動きません。\n\n5. 各ページで「次へ」を 1 秒押してから離します。サイズ・位置・外観を設定し、最終ページまで完了してください。グループ参加は任意です。\n\n6. 設定・チャット・インベントリを閉じ、キャラクターに戻ります。Copy Location キーで座標がコピーされることを確認し、移動してマーカーが追従するか見てください。標準では Home で設定、大きなマップの ? で設定ウィザードを開けます。解決しない場合はバージョンと両方のキー設定画像を添えてチケットを作成してください。" },
 
@@ -2230,7 +2326,7 @@ namespace ScumMiniMap {
             { "PlayerConnected", "接続済み" },
             { "SharedPlayers", "プレイヤー" },
             { "PrivatePositionGpsHelp", "現在のGPS目的地は保存せずに共有されます。目的地の移動や解除もグループに反映されます。" },
-            { "PoiClustering", "近くの注目地点をまとめる" },
+            { "PoiClustering", "近くの地図アイコンをまとめる" },
             { "PrivatePositionMarkersHelp", "保存した経由地と死亡マーカーも最大128件までグループに共有します。友達のマーカーは所有者を表示し、ナビに使えますが、ここでは一時的な読み取り専用です。" },
             { "PrivatePositionRouterManual", "自動ポート転送が利用不可または期限切れです。このTCPポートをPCに手動転送してください。IP取得とファイアウォール設定はインターネット到達性を保証しません。" },
             { "PrivatePositionFirewallFailed", "Windows規則の追加または確認ができません。このアプリとTCPポートを手動で許可してください。管理ポリシーが変更を禁止する場合があります。" },
@@ -2246,7 +2342,7 @@ namespace ScumMiniMap {
             { "PrivatePositionAddress", "ホストのアドレス / IP" },
             { "PrivatePositionJoin", "グループに参加" },
             { "PrivatePositionHost", "グループをホスト" },
-            { "RotateMinimap", "向きに合わせてミニマップを回転" },
+            { "RotateMinimap", "自分の向きに合わせて地図を回転" },
             { "PrivatePositions", "非公開の位置" },
             { "PrivatePositionName", "自分の名前" },
             { "PrivatePositionFolder", "非公開の共有フォルダーを選択" },
@@ -2613,7 +2709,7 @@ namespace ScumMiniMap {
             { "ClearAllZonesConfirm", "すべての {0} カスタム ゾーンとウェイポイントを完全に削除しますか?" },
             { "ClearWaypoint", "ウェイポイントをクリアする" },
             { "Close", "閉じる" },
-            { "ConfigurePoiFilters", "POI フィルターを構成します..." },
+            { "ConfigurePoiFilters", "地図アイコンを選ぶ" },
             { "CustomWaypointsDescription", "現在のマップ用に保存された個人マーカー。" },
             { "CustomZonesDescription", "保存されたカスタム ゾーンのアウトラインを表示します。 Zone Creator ウィザードを使用して、ゾーンを作成またはインポートします。" },
             { "DataFolderOpenError", "データフォルダーを開けませんでした: {0}" },
@@ -2732,8 +2828,8 @@ namespace ScumMiniMap {
             { "ShowCompass", "方位磁針の表示 (N、S、E、W)" },
             { "ShowCustomWaypoints", "カスタムウェイポイントを表示" },
             { "ShowHeading", "プレーヤーのヘディングコーン/矢印を表示" },
-            { "ShowSavedZones", "CUSTOM MAP ZONES" },
-            { "ShowScumMap", "スカムマップのカテゴリ" },
+            { "ShowSavedZones", "カスタム地図エリアを表示" },
+            { "ShowScumMap", "地図アイコンを表示" },
             { "ShowStatus", "位置情報バーを表示する" },
             { "ShowZoneLabels", "POI 名を表示" },
             { "SidebarLayerGrid", "グリッド線" },
@@ -3238,6 +3334,38 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "シーデンテックスアクティビティスポット" },
         };
         public static readonly Dictionary<string,string> StringsCs = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "SetupMoreOptions", "Další možnosti" },
+            { "SetupAppearanceHelp", "Vyberte tvar, velikost a viditelnost mapy. Sledujte náhled. Aktuální nastavení můžete ponechat." },
+            { "SetupMapHelp", "Vyberte, co se na mapě zobrazí. Další barvy a popisky najdete v Dalších možnostech." },
+            { "SetupTrackingHelp", "Vyberte, zda se mapa při pohybu automaticky přibližuje. Aktuální nastavení můžete ponechat." },
+            { "SetupSharingHelp", "Hrajete sami? Zvolte Hotovo. Sdílení s přáteli je volitelné; připojíte se přes Soukromé polohy." },
+
+
+
+
+
+
+
+
+
+
+
+            { "GuideSwitchApps", "Pomocí Alt+Tab přejděte do SCUM a zpět. Zaškrtnutí v tomto okně zůstanou zachována." },
+
+            { "GuideChecklistIntro", "Po přečtení a provedení zaškrtněte každý řádek. Pak zvolte Další." },
+            { "GuideHaveNumpad", "Mám numerickou klávesnici" },
+            { "GuideNoNumpad", "Nemám numerickou klávesnici nebo používám jinou klávesu" },
+            { "GuideExtracted", "Použil jsem Extrahovat vše. Spouštím EXE z rozbalené složky, assets je vedle něj." },
+            { "GuideWindowed", "SCUM je v okně nebo bez okrajů. Postava je načtená." },
+            { "GuideScumNumpad", "Ve SCUM je Copy Location Num / (dělení na numerické klávesnici)." },
+            { "GuideMiniNumpad", "MiniMap už používá Num /. Nemusím zde měnit ani zachytit klávesu." },
+            { "GuideScumOther", "Ve SCUM jsem pro Copy Location vybral volnou klávesu a stiskl Použít." },
+            { "GuideMiniOther", "Teď musím nastavit STEJNOU KLÁVESU v MiniMap. Použiji tlačítko níže a stisknu svou klávesu bez Ctrl, Shift či Alt." },
+            { "GuideCloseSettings", "Po zavření návodu se vrátím k postavě SCUM a zavřu chat a inventář." },
+            { "GuideTrackingTest", "Pak klávesou Copy Location ověřím kopírování souřadnic a pohybem postavy zkontroluji pohyb značky." },
+            { "GuideDontShow", "Tento návod automaticky nezobrazovat ani po aktualizaci. Lze jej otevřít v Nastavení." },
+            { "GuideUseNumpad", "Použít Num / v MiniMap" },
+
             { "FirstTimeGuideTitle", "Průvodce prvním spuštěním" },
             { "FirstTimeGuideBody", "1. Stáhněte celý ZIP z kanálu pro stahování. Zvolte Extrahovat vše a spusťte SkynettMiniMap.exe z rozbalené složky. Složku assets ponechte vedle EXE. Nespouštějte aplikaci uvnitř ZIP. Je třeba 64bitový Windows a .NET Framework 4.8.\n\n2. SCUM nastavte do okna nebo okna bez okrajů a načtěte postavu.\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num / je DĚLENÍ na numerické klávesnici, nikoli / na hlavní klávesnici.\n\n4. MiniMap: NumPad / jako samostatná klávesa bez Ctrl, Shift či Alt. Také klávesy mapy a chatu musí odpovídat SCUM. Nemáte numerickou klávesnici? Vyberte volnou klávesu, použijte ji ve SCUM a nastavte STEJNOU KLÁVESU VE SCUM I MINIMAP. Změnit jen jednu aplikaci nestačí.\n\n5. Na každé stránce podržte Další jednu sekundu a pusťte. Nastavte velikost, polohu a vzhled a dokončete poslední stránku. Skupiny jsou volitelné.\n\n6. Zavřete nastavení, chat a inventář. Ve SCUM stiskněte Copy Location: souřadnice se musí zkopírovat. Pohněte se a ověřte pohyb značky. Výchozí Home otevře nastavení, ? průvodce. Při problémech otevřete tiket s verzí a snímky obou přiřazení." },
 
@@ -3308,7 +3436,7 @@ namespace ScumMiniMap {
             { "PlayerConnected", "Připojeno" },
             { "SharedPlayers", "Hráči" },
             { "PrivatePositionGpsHelp", "Aktivní cíl GPS se sdílí i bez uložení. Přesunutí nebo vymazání cíle se projeví ve skupině." },
-            { "PoiClustering", "Seskupovat blízké body zájmu" },
+            { "PoiClustering", "Seskupovat blízké ikony" },
             { "PrivatePositionMarkersHelp", "Sdílí se skupinou také až 128 uložených bodů a značek úmrtí. Značky přátel ukazují vlastníka, slouží k navigaci a zůstávají zde dočasné a pouze pro čtení." },
             { "PrivatePositionRouterManual", "Automatické přesměrování nedostupné nebo vypršelo. Přesměrujte TCP port na tento počítač ručně. Zjištění IP a nastavení firewallu nepotvrzuje přístup z internetu." },
             { "PrivatePositionFirewallFailed", "Pravidlo Windows nelze přidat nebo ověřit. Povolte aplikaci a TCP port ručně; spravované zásady mohou blokovat změny." },
@@ -3324,7 +3452,7 @@ namespace ScumMiniMap {
             { "PrivatePositionAddress", "Adresa / IP hostitele" },
             { "PrivatePositionJoin", "Připojit se ke skupině" },
             { "PrivatePositionHost", "Hostovat skupinu" },
-            { "RotateMinimap", "Otáčet minimapu podle směru" },
+            { "RotateMinimap", "Otáčet mapu podle mého směru" },
             { "PrivatePositions", "Soukromé pozice" },
             { "PrivatePositionName", "Vaše jméno" },
             { "PrivatePositionFolder", "Vybrat soukromou sdílenou složku" },
@@ -3691,7 +3819,7 @@ namespace ScumMiniMap {
             { "ClearAllZonesConfirm", "Trvale odstranit všechny vlastní zóny a trasové body {0}?" },
             { "ClearWaypoint", "Jasný průjezdní bod" },
             { "Close", "Zavřít" },
-            { "ConfigurePoiFilters", "Konfigurace filtrů POI..." },
+            { "ConfigurePoiFilters", "Vybrat ikony na mapě" },
             { "CustomWaypointsDescription", "Osobní značky uložené pro aktuální mapu." },
             { "CustomZonesDescription", "Zobrazit uložené obrysy vlastní zóny. K vytvoření nebo importu zón použijte Průvodce vytvořením zóny." },
             { "DataFolderOpenError", "Nelze otevřít datovou složku: {0}" },
@@ -3810,8 +3938,8 @@ namespace ScumMiniMap {
             { "ShowCompass", "Zobrazit hlavní ukazatele kompasu (S, S, E, W)" },
             { "ShowCustomWaypoints", "Zobrazit vlastní trasové body" },
             { "ShowHeading", "Ukažte hráč směrovací kužel / šipku" },
-            { "ShowSavedZones", "CUSTOM MAP ZONES" },
-            { "ShowScumMap", "Kategorie map spodiny" },
+            { "ShowSavedZones", "Zobrazit vlastní oblasti mapy" },
+            { "ShowScumMap", "Zobrazit ikony na mapě" },
             { "ShowStatus", "Zobrazit informační panel o poloze" },
             { "ShowZoneLabels", "Zobrazit názvy POI" },
             { "SidebarLayerGrid", "Mřížkové čáry" },
@@ -4316,6 +4444,38 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex Activity Spot" },
         };
         public static readonly Dictionary<string,string> StringsIt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "SetupMoreOptions", "Altre opzioni" },
+            { "SetupAppearanceHelp", "Scegli forma, dimensioni e visibilità della mappa. Guarda l’anteprima. Puoi mantenere le impostazioni attuali." },
+            { "SetupMapHelp", "Scegli cosa mostrare sulla mappa. Colori ed etichette aggiuntivi sono in Altre opzioni." },
+            { "SetupTrackingHelp", "Scegli se lo zoom cambia automaticamente mentre ti muovi. Puoi mantenere le impostazioni attuali." },
+            { "SetupSharingHelp", "Giochi da solo? Seleziona Fine. La condivisione è facoltativa; usa Posizioni private per connetterti." },
+
+
+
+
+
+
+
+
+
+
+
+            { "GuideSwitchApps", "Usa Alt+Tab per passare a SCUM e tornare durante i passaggi. Le spunte restano in questa finestra." },
+
+            { "GuideChecklistIntro", "Spunta ogni riga dopo averla letta ed eseguita. Poi scegli Avanti." },
+            { "GuideHaveNumpad", "Ho un tastierino numerico" },
+            { "GuideNoNumpad", "Non ho il tastierino numerico o uso un altro tasto" },
+            { "GuideExtracted", "Ho usato Estrai tutto. Avvio l’EXE dalla cartella estratta, con assets accanto." },
+            { "GuideWindowed", "SCUM è in finestra o senza bordi. Il personaggio è caricato." },
+            { "GuideScumNumpad", "In SCUM Copy Location è Num /, cioè divisione sul tastierino numerico." },
+            { "GuideMiniNumpad", "MiniMap usa già Num /. Non devo cambiare o acquisire un tasto qui." },
+            { "GuideScumOther", "In SCUM ho scelto un tasto libero per Copy Location e premuto Applica." },
+            { "GuideMiniOther", "Ora devo impostare LO STESSO TASTO in MiniMap. Uso il pulsante sotto e premo il tasto scelto, senza Ctrl, Maiusc o Alt." },
+            { "GuideCloseSettings", "Dopo aver chiuso la guida tornerò al personaggio SCUM e chiuderò chat e inventario." },
+            { "GuideTrackingTest", "Poi premerò Copy Location per verificare le coordinate copiate e mi muoverò per controllare il segnalino." },
+            { "GuideDontShow", "Non mostrare automaticamente questa guida, neanche dopo aggiornamenti. Resta disponibile in Impostazioni." },
+            { "GuideUseNumpad", "Usa Num / in MiniMap" },
+
             { "FirstTimeGuideTitle", "Guida al primo utilizzo" },
             { "FirstTimeGuideBody", "1. Scarica lo ZIP completo dal canale download. Scegli Estrai tutto e avvia SkynettMiniMap.exe dalla cartella estratta. Tieni assets accanto all’EXE. Non avviare dentro lo ZIP. Servono Windows a 64 bit e .NET Framework 4.8.\n\n2. Imposta SCUM in finestra o finestra senza bordi e carica il personaggio.\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num / è DIVISIONE sul tastierino numerico, non / sulla tastiera principale.\n\n4. MiniMap: NumPad /, tasto singolo senza Ctrl, Maiusc o Alt. Anche i tasti di mappa e chat devono corrispondere a SCUM. Niente tastierino? Scegli un tasto libero, applicalo in SCUM e imposta LO STESSO TASTO IN SCUM E MINIMAP. Cambiare una sola app non basta.\n\n5. Tieni premuto Avanti per un secondo e rilascia a ogni pagina. Regola dimensioni, posizione e aspetto e completa l’ultima pagina. I gruppi sono facoltativi.\n\n6. Chiudi impostazioni, chat e inventario. In SCUM premi Copy Location: le coordinate devono essere copiate. Muoviti e verifica che il segnalino ti segua. Home apre le impostazioni per impostazione predefinita; ? riapre la procedura. Se non funziona, apri un ticket con versione e immagini dei due tasti configurati." },
 
@@ -4386,7 +4546,7 @@ namespace ScumMiniMap {
             { "PlayerConnected", "Connesso" },
             { "SharedPlayers", "Giocatori" },
             { "PrivatePositionGpsHelp", "La destinazione GPS attiva viene condivisa senza salvarla. Spostarla o cancellarla la aggiorna per il gruppo." },
-            { "PoiClustering", "Raggruppa i punti di interesse vicini" },
+            { "PoiClustering", "Raggruppa le icone vicine" },
             { "PrivatePositionMarkersHelp", "Condivide con il gruppo anche fino a 128 punti salvati e marcatori di morte. Quelli degli amici mostrano il proprietario, servono per navigare e restano qui temporanei e di sola lettura." },
             { "PrivatePositionRouterManual", "Inoltro automatico non disponibile o scaduto. Inoltra questa porta TCP al PC manualmente. Rilevamento IP e firewall non provano l’accessibilità da internet." },
             { "PrivatePositionFirewallFailed", "Impossibile aggiungere o verificare la regola Windows. Consenti manualmente app e porta TCP; criteri gestiti possono impedire modifiche." },
@@ -4402,7 +4562,7 @@ namespace ScumMiniMap {
             { "PrivatePositionAddress", "Indirizzo / IP host" },
             { "PrivatePositionJoin", "Unisciti al gruppo" },
             { "PrivatePositionHost", "Ospita gruppo" },
-            { "RotateMinimap", "Ruota minimappa secondo la direzione" },
+            { "RotateMinimap", "Ruota la mappa quando mi giro" },
             { "PrivatePositions", "Posizioni private" },
             { "PrivatePositionName", "Il tuo nome" },
             { "PrivatePositionFolder", "Scegli cartella condivisa privata" },
@@ -4769,7 +4929,7 @@ namespace ScumMiniMap {
             { "ClearAllZonesConfirm", "Eliminare definitivamente tutte le zone personalizzate e i waypoint {0}?" },
             { "ClearWaypoint", "Punto di passaggio chiaro" },
             { "Close", "Chiudi" },
-            { "ConfigurePoiFilters", "Configura i filtri POI..." },
+            { "ConfigurePoiFilters", "Scegli icone della mappa" },
             { "CustomWaypointsDescription", "Indicatori personali salvati per la mappa corrente." },
             { "CustomZonesDescription", "Mostra i contorni delle zone personalizzate salvate. Utilizzare la procedura guidata per la creazione di zone per creare o importare zone." },
             { "DataFolderOpenError", "Impossibile aprire la cartella dati: {0}" },
@@ -4888,8 +5048,8 @@ namespace ScumMiniMap {
             { "ShowCompass", "Mostra gli indicatori cardinali della bussola (N, S, E, W)" },
             { "ShowCustomWaypoints", "Mostra waypoint personalizzati" },
             { "ShowHeading", "Mostra il cono/freccia di direzione del giocatore" },
-            { "ShowSavedZones", "CUSTOM MAP ZONES" },
-            { "ShowScumMap", "Categorie della mappa feccia" },
+            { "ShowSavedZones", "Mostra zone personalizzate" },
+            { "ShowScumMap", "Mostra icone della mappa" },
             { "ShowStatus", "Mostra la barra delle informazioni sulla posizione" },
             { "ShowZoneLabels", "Mostra i nomi POI" },
             { "SidebarLayerGrid", "Linee della griglia" },
@@ -5394,6 +5554,38 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Punto di attività del dentice marino" },
         };
         public static readonly Dictionary<string,string> StringsUk = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "SetupMoreOptions", "Інші параметри" },
+            { "SetupAppearanceHelp", "Виберіть форму, розмір і видимість карти. Перегляньте результат. Можна залишити поточні налаштування." },
+            { "SetupMapHelp", "Виберіть, що показувати на карті. Додаткові кольори й підписи містяться в Інших параметрах." },
+            { "SetupTrackingHelp", "Виберіть, чи карта автоматично змінюватиме масштаб під час руху. Можна залишити поточні налаштування." },
+            { "SetupSharingHelp", "Граєте самі? Натисніть Готово. Спільний доступ необов’язковий; підключення — через приватні позиції." },
+
+
+
+
+
+
+
+
+
+
+
+            { "GuideSwitchApps", "Перемикайтеся до SCUM і назад через Alt+Tab. Позначки в цьому вікні збережуться." },
+
+            { "GuideChecklistIntro", "Позначте кожен рядок після прочитання й виконання. Потім виберіть «Далі»." },
+            { "GuideHaveNumpad", "У мене є цифровий блок" },
+            { "GuideNoNumpad", "У мене немає цифрового блока або я використовую іншу клавішу" },
+            { "GuideExtracted", "Я вибрав «Видобути все». Запускаю EXE з розпакованої папки, assets розташована поруч." },
+            { "GuideWindowed", "SCUM працює у вікні або без рамки. Персонаж завантажений." },
+            { "GuideScumNumpad", "У SCUM Copy Location призначено на Num /, тобто ділення на цифровому блоці." },
+            { "GuideMiniNumpad", "MiniMap уже використовує Num /. Тут не потрібно змінювати чи записувати клавішу." },
+            { "GuideScumOther", "У SCUM я вибрав вільну клавішу для Copy Location та натиснув «Застосувати»." },
+            { "GuideMiniOther", "Тепер треба задати ТУ САМУ КЛАВІШУ в MiniMap. Натискаю кнопку нижче та вибрану клавішу без Ctrl, Shift і Alt." },
+            { "GuideCloseSettings", "Закривши посібник, я повернуся до персонажа SCUM і закрию чат та інвентар." },
+            { "GuideTrackingTest", "Потім натисну Copy Location, перевірю копіювання координат і рух позначки під час руху персонажа." },
+            { "GuideDontShow", "Не показувати посібник автоматично, зокрема після оновлень. Його можна відкрити в налаштуваннях." },
+            { "GuideUseNumpad", "Використовувати Num / у MiniMap" },
+
             { "FirstTimeGuideTitle", "Посібник першого запуску" },
             { "FirstTimeGuideBody", "1. Завантажте повний ZIP із каналу завантажень. Виберіть «Видобути все» та запустіть SkynettMiniMap.exe з розпакованої папки. Залиште assets поруч з EXE. Не запускайте всередині ZIP. Потрібні 64-бітна Windows і .NET Framework 4.8.\n\n2. Увімкніть віконний або безрамковий режим SCUM і завантажте персонажа.\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num / — ДІЛЕННЯ на цифровому блоці, а не / основної клавіатури.\n\n4. MiniMap: NumPad /, одна клавіша без Ctrl, Shift і Alt. Клавіші карти й чату теж мають збігатися зі SCUM. Немає цифрового блока? Виберіть вільну клавішу, застосуйте у SCUM та задайте ОДНАКОВУ КЛАВІШУ І В SCUM, І В MINIMAP. Зміни лише в одній програмі недостатньо.\n\n5. На кожній сторінці утримуйте «Далі» секунду й відпускайте. Налаштуйте розмір, положення й вигляд та завершіть останню сторінку. Групи необов’язкові.\n\n6. Закрийте налаштування, чат та інвентар. У SCUM натисніть Copy Location: координати мають скопіюватися. Рухайтесь і перевірте рух позначки. Типово Home відкриває налаштування, ? — майстер. Якщо не працює, відкрийте тікет із версією та знімками обох прив’язок." },
 
@@ -5464,7 +5656,7 @@ namespace ScumMiniMap {
             { "PlayerConnected", "Підключено" },
             { "SharedPlayers", "Гравці" },
             { "PrivatePositionGpsHelp", "Активна GPS-ціль передається без збереження. Переміщення чи очищення цілі оновлює її для групи." },
-            { "PoiClustering", "Групувати близькі точки інтересу" },
+            { "PoiClustering", "Групувати близькі значки" },
             { "PrivatePositionMarkersHelp", "Також передає групі до 128 збережених точок і позначок смерті. Позначки друзів показують власника, доступні для навігації та залишаються тут тимчасовими, лише для читання." },
             { "PrivatePositionRouterManual", "Автоперенаправлення недоступне або термін сплив. Перенаправте TCP-порт на цей ПК вручну. Визначення IP й налаштування брандмауера не гарантують доступ з інтернету." },
             { "PrivatePositionFirewallFailed", "Не вдалося додати або перевірити правило Windows. Дозвольте застосунок і TCP-порт вручну; керована політика може забороняти зміни." },
@@ -5480,7 +5672,7 @@ namespace ScumMiniMap {
             { "PrivatePositionAddress", "Адреса / IP хоста" },
             { "PrivatePositionJoin", "Приєднатися до групи" },
             { "PrivatePositionHost", "Створити групу" },
-            { "RotateMinimap", "Обертати мінікарту за напрямком" },
+            { "RotateMinimap", "Повертати карту разом зі мною" },
             { "PrivatePositions", "Приватні позиції" },
             { "PrivatePositionName", "Ваше ім’я" },
             { "PrivatePositionFolder", "Вибрати спільну приватну папку" },
@@ -5847,7 +6039,7 @@ namespace ScumMiniMap {
             { "ClearAllZonesConfirm", "Назавжди видалити всі призначені для користувача зони та маршрутні точки {0}?" },
             { "ClearWaypoint", "Очистити маршрутну точку" },
             { "Close", "Закрити" },
-            { "ConfigurePoiFilters", "Налаштувати фільтри POI..." },
+            { "ConfigurePoiFilters", "Вибрати значки на карті" },
             { "CustomWaypointsDescription", "Персональні маркери, збережені для поточної карти." },
             { "CustomZonesDescription", "Показати контури збережених спеціальних зон. Скористайтеся майстром створення зон, щоб створити або імпортувати зони." },
             { "DataFolderOpenError", "Не вдалося відкрити папку даних: {0}" },
@@ -5966,8 +6158,8 @@ namespace ScumMiniMap {
             { "ShowCompass", "Показати кардинальні індикатори компаса (N, S, E, W)" },
             { "ShowCustomWaypoints", "Показати спеціальні маршрутні точки" },
             { "ShowHeading", "Показати конус/стрілку напряму гравця" },
-            { "ShowSavedZones", "CUSTOM MAP ZONES" },
-            { "ShowScumMap", "Категорії Scum-Map" },
+            { "ShowSavedZones", "Показувати власні зони" },
+            { "ShowScumMap", "Показувати значки на карті" },
             { "ShowStatus", "Показати панель інформації про місцезнаходження" },
             { "ShowZoneLabels", "Показати імена POI" },
             { "SidebarLayerGrid", "Лінії сітки" },

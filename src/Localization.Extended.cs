@@ -5,6 +5,38 @@ using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsPtPt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "SetupMoreOptions", "Mais opções" },
+            { "SetupAppearanceHelp", "Escolha a forma, o tamanho e a visibilidade do mapa. Veja a pré-visualização. Pode manter as definições atuais." },
+            { "SetupMapHelp", "Escolha o que aparece no mapa. Cores e etiquetas adicionais estão em Mais opções." },
+            { "SetupTrackingHelp", "Escolha se o mapa ajusta o zoom automaticamente ao mover-se. Pode manter as definições atuais." },
+            { "SetupSharingHelp", "Joga sozinho? Selecione Concluído. A partilha é opcional; use Posições privadas para estabelecer ligação." },
+
+
+
+
+
+
+
+
+
+
+
+            { "GuideSwitchApps", "Use Alt+Tab para ir ao SCUM e voltar durante os passos. As marcas ficam nesta janela." },
+
+            { "GuideChecklistIntro", "Assinale cada linha depois de ler e executar. Depois escolha Seguinte." },
+            { "GuideHaveNumpad", "Tenho teclado numérico" },
+            { "GuideNoNumpad", "Não tenho teclado numérico ou uso outra tecla" },
+            { "GuideExtracted", "Usei Extrair tudo. Executo o EXE da pasta extraída, com assets ao lado." },
+            { "GuideWindowed", "O SCUM está em janela ou sem margens. A personagem está carregada." },
+            { "GuideScumNumpad", "No SCUM, Copy Location é Num / (divisão no teclado numérico)." },
+            { "GuideMiniNumpad", "O MiniMap já usa Num /. Não preciso de alterar nem capturar uma tecla aqui." },
+            { "GuideScumOther", "No SCUM, escolhi uma tecla livre para Copy Location e cliquei em Aplicar." },
+            { "GuideMiniOther", "Agora tenho de configurar ESSA MESMA TECLA no MiniMap. Uso o botão abaixo e primo a tecla, sem Ctrl, Shift ou Alt." },
+            { "GuideCloseSettings", "Depois de fechar este guia, voltarei à personagem no SCUM e fecharei a conversa e o inventário." },
+            { "GuideTrackingTest", "Depois premirei Copy Location para verificar as coordenadas copiadas e moverei a personagem para verificar o marcador." },
+            { "GuideDontShow", "Não mostrar este guia automaticamente, incluindo após atualizações. Posso abri-lo nas Definições." },
+            { "GuideUseNumpad", "Usar Num / no MiniMap" },
+
             { "FirstTimeGuideTitle", "Guia da primeira utilização" },
             { "FirstTimeGuideBody", "1. Transfira o ZIP completo em Transferências. Escolha Extrair tudo e execute SkynettMiniMap.exe na pasta extraída. Mantenha assets junto do EXE. Não execute dentro do ZIP. Requer Windows de 64 bits e .NET Framework 4.8.\n\n2. Utilize o SCUM em janela ou janela sem margens e carregue a personagem.\n\n3. SCUM: OPTIONS → MOUSE & KEYBOARD → CONTROLS → UI → COPY LOCATION → Num / → APPLY. Num / é a DIVISÃO do teclado numérico, não / do teclado principal.\n\n4. MiniMap: NumPad / e uma tecla sem Ctrl, Shift ou Alt. As teclas do mapa e da conversa também devem corresponder ao SCUM. Sem teclado numérico? Escolha uma tecla livre, aplique no SCUM e configure A MESMA TECLA NO SCUM E NO MINIMAP. Alterar apenas uma aplicação não funciona.\n\n5. Mantenha Seguinte premido durante um segundo e solte em cada página. Ajuste tamanho, posição e aspeto e conclua a última página. Os grupos são opcionais.\n\n6. Feche definições, conversa e inventário. No SCUM, prima Copy Location: as coordenadas devem ser copiadas. Mova-se e verifique o marcador. Home abre as definições por predefinição; ? reabre o assistente. Se falhar, abra um pedido de apoio com a versão e capturas das duas configurações de teclas." },
 
@@ -75,7 +107,7 @@ namespace ScumMiniMap {
             { "PlayerConnected", "Ligado" },
             { "SharedPlayers", "Jogadores" },
             { "PrivatePositionGpsHelp", "O destino GPS ativo é partilhado sem guardar. Mover ou limpar o destino atualiza-o para o grupo." },
-            { "PoiClustering", "Agrupar pontos de interesse próximos" },
+            { "PoiClustering", "Agrupar ícones próximos" },
             { "PrivatePositionMarkersHelp", "Também partilha até 128 pontos guardados e marcadores de morte com o grupo. Os dos amigos mostram o proprietário, servem para navegação e ficam aqui temporariamente, sem edição." },
             { "PrivatePositionRouterManual", "Reencaminhamento automático indisponível ou expirado. Encaminhe esta porta TCP ao PC manualmente. Detetar IP e configurar a firewall não comprova acesso pela internet." },
             { "PrivatePositionFirewallFailed", "Não foi possível adicionar ou verificar a regra do Windows. Permita esta aplicação e porta TCP manualmente; uma política gerida pode impedir alterações." },
@@ -91,7 +123,7 @@ namespace ScumMiniMap {
             { "PrivatePositionAddress", "Endereço / IP do anfitrião" },
             { "PrivatePositionJoin", "Entrar no grupo" },
             { "PrivatePositionHost", "Alojar grupo" },
-            { "RotateMinimap", "Rodar minimapa conforme a direção" },
+            { "RotateMinimap", "Rodar o mapa quando eu viro" },
             { "PrivatePositions", "Posições privadas" },
             { "PrivatePositionName", "O seu nome" },
             { "PrivatePositionFolder", "Escolher pasta partilhada privada" },
@@ -457,9 +489,9 @@ namespace ScumMiniMap {
             { "CustomWaypointsDescription", "Marcadores pessoais guardados para o mapa atual." },
             { "RouteGuidanceColor", "Cor de Orientação de Rota..." },
             { "PlayerMarkerColor", "Cor do Marcador do Jogador..." },
-            { "ShowScumMap", "Mostrar POIs do ScumMap" },
-            { "ConfigurePoiFilters", "Configurar Filtros de POI..." },
-            { "ShowSavedZones", "Mostrar Zonas Personalizadas" },
+            { "ShowScumMap", "Mostrar ícones do mapa" },
+            { "ConfigurePoiFilters", "Escolher ícones do mapa" },
+            { "ShowSavedZones", "Mostrar zonas personalizadas" },
             { "CustomZonesDescription", "Mostra áreas guardadas. Use o Criador de Zonas para criar ou importar áreas." },
             { "MapZonesScreenshot", "Assistente do Criador de Zonas..." },
             { "ClearAllCustomZones", "Excluir TODAS as zonas personalizadas..." },

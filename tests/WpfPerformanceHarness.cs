@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -27,7 +27,7 @@ class WpfPreviewHarness {
  static IEnumerable<DependencyObject> Children(DependencyObject root) { foreach(object child in LogicalTreeHelper.GetChildren(root)) { var item=child as DependencyObject;if(item==null)continue;yield return item;foreach(var nested in Children(item))yield return nested; } }
  static string DrawingText(Drawing drawing) { var glyph=drawing as GlyphRunDrawing;if(glyph!=null)return glyph.GlyphRun.Characters==null?"":new string(glyph.GlyphRun.Characters.ToArray());var group=drawing as DrawingGroup;return group==null?"":string.Concat(group.Children.Select(DrawingText)); }
  static Action<T> CaptureShared<T>(Action<object> capture) { return target=>capture(target); }
- static TextBox SettingInput(Window window,string label) { return Children(window).OfType<StackPanel>().First(panel=>panel.Children.OfType<TextBlock>().Any(text=>text.Text==label)&&panel.Children.OfType<TextBox>().Any()).Children.OfType<TextBox>().First(); }
+ static TextBox SettingInput(Window window,string label) { return Children(window).OfType<StackPanel>().First(panel=>panel.Children.OfType<TextBlock>().Any(text=>text.Text==label)&&Children(panel).OfType<TextBox>().Any()).Children.OfType<FrameworkElement>().SelectMany(element=>Children(element).Concat(new[]{element})).OfType<TextBox>().First(); }
  static void EditNumber(TextBox input,string value) { input.Text=value;input.RaiseEvent(new System.Windows.Input.KeyboardFocusChangedEventArgs(System.Windows.Input.Keyboard.PrimaryDevice,0,input,null) { RoutedEvent=System.Windows.Input.Keyboard.LostKeyboardFocusEvent }); }
  [STAThread]static void Main(string[] args) {
   var assembly=Assembly.LoadFrom(args[0]);var type=assembly.GetType("ScumMiniMap.WpfFieldConsoleRuntime");
@@ -236,7 +236,7 @@ class WpfPreviewHarness {
    var localization=assembly.GetType("ScumMiniMap.Localization");var languageProperty=localization.GetProperty("Current");var originalLanguage=languageProperty.GetValue(null,null);var getLocalized=localization.GetMethod("Get");
    foreach(var languageValue in Enum.GetValues(assembly.GetType("ScumMiniMap.AppLanguage"))) {
     languageProperty.SetValue(null,languageValue,null);Call(runtime,"Refresh");Check((string)floatingSettings.ToolTip==(string)getLocalized.Invoke(null,new object[]{"Settings"})&&(string)floatingHelp.ToolTip==(string)getLocalized.Invoke(null,new object[]{"OpenStartupGuide"})&&(string)floatingDeaths.ToolTip==(string)getLocalized.Invoke(null,new object[]{"ClearDeathMarkers"}),"Floating tooltip language updates immediately: "+languageValue);
-    var guide=(Window)Call(runtime,"BuildOnboarding",0);try {var languageSelector=Children(guide).OfType<ComboBox>().Single();languageSelector.SelectedIndex=0;languageSelector.SelectedIndex=Convert.ToInt32(languageValue);Check(Children(guide).OfType<TextBlock>().Any(t=>t.Text==(string)getLocalized.Invoke(null,new object[]{"WpfGettingStarted"}))&&Children(guide).OfType<TextBlock>().Any(t=>t.Text==(string)getLocalized.Invoke(null,new object[]{"WpfTutorialFilters"})),"Setup guide refreshes translated headings and current POI defaults: "+languageValue); }finally {guide.Close();}
+    var guide=(Window)Call(runtime,"BuildOnboarding",0);try {var languageSelector=Children(guide).OfType<ComboBox>().Single();languageSelector.SelectedIndex=0;languageSelector.SelectedIndex=Convert.ToInt32(languageValue);Check(Children(guide).OfType<TextBlock>().Any(t=>t.Text==(string)getLocalized.Invoke(null,new object[]{"WpfGettingStarted"}))&&Children(guide).OfType<TextBlock>().Any(t=>t.Text==(string)getLocalized.Invoke(null,new object[]{"GuideChecklistIntro"})),"Setup guide refreshes translated headings and current POI defaults: "+languageValue); }finally {guide.Close();}
    }
    languageProperty.SetValue(null,originalLanguage,null);Call(runtime,"Refresh");
    var foregroundBeforeMap=(IntPtr)foregroundMethod.Invoke(null,null);
@@ -266,43 +266,39 @@ class WpfPreviewHarness {
    double toolbarLeft=toolbar.Margin.Left;moveHandle.RaiseEvent(new System.Windows.Controls.Primitives.DragDeltaEventArgs(40,20));Check(toolbar.Margin.Left>toolbarLeft,"Toolbar move handle changes its position within the map");
    var resizeHandle=Children(mapWindow).OfType<System.Windows.Controls.Primitives.Thumb>().Single(t=>(t.ToolTip as string)=="Drag to resize controls");resizeHandle.RaiseEvent(new System.Windows.Controls.Primitives.DragDeltaEventArgs(80,0));Check(((ScaleTransform)toolbar.LayoutTransform).ScaleX>1,"Toolbar resize handle scales the controls");
    ((MenuItem)toolbar.ContextMenu.Items[0]).RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));Check(toolbar.LayoutTransform.Value.IsIdentity&&toolbar.Margin.Left==24,"Toolbar reset restores its original size and position");
-   for(int i=0;i<9;i++) { var w=(Window)Call(runtime,"BuildOnboarding",i);Capture(type,w,Path.Combine(args[1],"onboarding-"+(i+1)+".png"));w.Close(); }
-   var setup=(Window)Call(runtime,"BuildOnboarding",5);
+   for(int i=0;i<5;i++) { var w=(Window)Call(runtime,"BuildOnboarding",i);Capture(type,w,Path.Combine(args[1],"onboarding-"+(i+1)+".png"));w.Close(); }
+   var setup=(Window)Call(runtime,"BuildOnboarding",1);
    try {
-    Check(Children(setup).OfType<Button>().Count(button=>(button.Content as string??"").StartsWith("9    "))==1,"Setup exposes all nine pages in its navigation rail");
+    var extraAppearance=Children(setup).OfType<Expander>().Single();Check(!extraAppearance.IsExpanded&&!Children(extraAppearance).Contains(SettingInput(setup,(string)getLocalized.Invoke(null,new object[]{"MapWidth"}))),"Simple Appearance keeps size controls visible and extra settings collapsed");
+    var extraHeader=extraAppearance.Header as TextBlock;Check(extraHeader!=null&&((SolidColorBrush)extraHeader.Foreground).Color.R>180,"More options headings remain readable against the dark setup background");
+    Check(Children(setup).OfType<Button>().Count(button=>(button.Content as string??"").StartsWith("5    "))==1,"Setup exposes five focused configuration pages in its navigation rail");
     var setupState=Call(engine,"WpfSnapshot",false);int originalWidth=(int)Field(setupState,"HudWidth"),originalHeight=(int)Field(setupState,"HudHeight"),originalOpacity=(int)Field(setupState,"Opacity");string originalShape=(string)Field(setupState,"Shape");bool originalRotate=(bool)Field(setupState,"RotateMap"),originalCluster=(bool)Field(setupState,"PoiClustering");
     EditNumber(SettingInput(setup,(string)getLocalized.Invoke(null,new object[]{"MapWidth"})),"360");EditNumber(SettingInput(setup,(string)getLocalized.Invoke(null,new object[]{"MapHeight"})),"280");EditNumber(SettingInput(setup,(string)getLocalized.Invoke(null,new object[]{"MapOpacity"})),"83");
     var setupShape=Children(setup).OfType<ComboBox>().Single(combo=>(combo.Tag as string)=="minimap-shape");setupShape.SelectedIndex=setupShape.SelectedIndex==1?0:1;var changedSetup=Call(engine,"WpfSnapshot",false);Check((int)Field(changedSetup,"HudWidth")==360&&(int)Field(changedSetup,"HudHeight")==280&&(int)Field(changedSetup,"Opacity")==83,"Setup size, height and opacity edit live HUD settings; shape preserves opacity");
     var setupRotate=Children(setup).OfType<CheckBox>().Single(check=>(check.Tag as string)=="rotate-minimap");setupRotate.IsChecked=!originalRotate;var setupCluster=Children(setup).OfType<CheckBox>().Single(check=>(check.Tag as string)=="poi-clustering");setupCluster.IsChecked=!originalCluster;Call(runtime,"Refresh");
     var setupSurface=Children(setup).OfType<FrameworkElement>().Single(element=>(element.Tag as string)=="setup-preview");Check((bool)Field(Call(engine,"WpfSnapshot",false),"RotateMap")==!originalRotate&&(bool)Field(Call(engine,"WpfSnapshot",true),"PoiClustering")==!originalCluster&&Math.Abs(setupSurface.Width/setupSurface.Height-360d/280)<.01,"Setup rotation and clustering affect map state and preview retains configured proportions");
-    var invalidWidth=SettingInput(setup,(string)getLocalized.Invoke(null,new object[]{"MapWidth"}));EditNumber(invalidWidth,"99999");Check((int)Field(Call(engine,"WpfSnapshot",false),"HudWidth")==360&&invalidWidth.Text=="360","Setup rejects out-of-range minimap dimensions");
+    var invalidWidth=SettingInput(setup,(string)getLocalized.Invoke(null,new object[]{"MapWidth"}));EditNumber(invalidWidth,"99999");Check((int)Field(Call(engine,"WpfSnapshot",false),"HudWidth")==360&&invalidWidth.Text=="99999"&&invalidWidth.BorderBrush==Brushes.OrangeRed,"Setup rejects out-of-range minimap dimensions");
     engine.GetType().GetField("diagnosticMode",Hidden).SetValue(engine,false);try {Call(engine,"WpfSave");}finally {engine.GetType().GetField("diagnosticMode",Hidden).SetValue(engine,true);}string setupIni=File.ReadAllText(Path.Combine(args[1],"isolated-profile/settings.ini"));Check(setupIni.Contains("Width=360")&&setupIni.Contains("Height=280")&&setupIni.Contains("Opacity=83")&&setupIni.Contains("PoiClustering="+!originalCluster),"Setup configuration persists through the real settings writer");
     EditNumber(SettingInput(setup,(string)getLocalized.Invoke(null,new object[]{"MapWidth"})),originalWidth.ToString());EditNumber(SettingInput(setup,(string)getLocalized.Invoke(null,new object[]{"MapHeight"})),originalHeight.ToString());Call(engine,"WpfAppearance",originalShape,originalOpacity);Call(engine,"WpfRotate",originalRotate);Call(engine,"WpfPoiClustering",originalCluster);
    }finally {setup.Close();}
-   var colourSetup=(Window)Call(runtime,"BuildOnboarding",6);try {
+   var colourSetup=(Window)Call(runtime,"BuildOnboarding",2);try {
     Check(Children(colourSetup).OfType<TextBlock>().Any(text=>text.Text==(string)getLocalized.Invoke(null,new object[]{"PlayerMarkerColor"}))&&Children(colourSetup).OfType<TextBlock>().Any(text=>text.Text==(string)getLocalized.Invoke(null,new object[]{"RouteGuidanceColor"}))&&Children(colourSetup).OfType<TextBlock>().Any(text=>text.Text==(string)getLocalized.Invoke(null,new object[]{"RouteHistoryColor"})),"Setup provides player, route and history colour controls");
     engine.GetType().GetField("routeHistoryColor",Hidden).SetValue(engine,System.Drawing.Color.Magenta);Children(colourSetup).OfType<Button>().Single(button=>(button.Tag as string)=="setup-default-colours").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check((int)Field(Call(engine,"WpfSnapshot",false),"HistoryColor")==System.Drawing.Color.FromArgb(164,177,188).ToArgb(),"Setup restores the actual default history colour");
    }finally {colourSetup.Close();}
-   var sharingSetup=(Window)Call(runtime,"BuildOnboarding",8);try {Check(Children(sharingSetup).OfType<Button>().Any(button=>(button.Tag as string)=="setup-private-positions")&&Children(sharingSetup).OfType<TextBlock>().Any(text=>text.Text==(string)getLocalized.Invoke(null,new object[]{"SetupSharingVisibility"})),"Setup offers private Host/Join configuration and explains player visibility pills");}finally {sharingSetup.Close();}
-   var groupSetup=(Window)Call(runtime,"BuildOnboarding",8);try {Check(Children(groupSetup).OfType<TextBlock>().Any(text=>text.Text==(string)getLocalized.Invoke(null,new object[]{"PrivateGroupHelp"})),"First-time setup explains persistent codes, owner refresh and multiple groups");}finally {groupSetup.Close();}
-   var holdSetup=(Window)Call(runtime,"BuildOnboarding",0);try {
-    var before=string.Join("|",Children(holdSetup).OfType<TextBlock>().Select(t=>t.Text));var nextHold=Children(holdSetup).OfType<Button>().Single(b=>(b.Tag as string)=="setup-next-hold");
-    for(int click=0;click<50;click++)nextHold.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-    Check(before==string.Join("|",Children(holdSetup).OfType<TextBlock>().Select(t=>t.Text)),"Rapid Next clicks cannot skip setup pages");
-    var future=Children(holdSetup).OfType<Button>().Single(b=>(b.Content as string??"").StartsWith("9    "));Check(!future.IsEnabled,"Unvisited setup pages stay locked until sequential progression");for(int click=0;click<20;click++)future.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-    Check(before==string.Join("|",Children(holdSetup).OfType<TextBlock>().Select(t=>t.Text)),"Forward sidebar clicks cannot bypass the setup hold requirement");
-    Check(!Children(holdSetup).OfType<Button>().Any(b=>(b.Content as string)==(string)getLocalized.Invoke(null,new object[]{"WizardBtnSkip"})),"Setup has no instant Skip shortcut around the hold gate");
-    var holdType=assembly.GetType("ScumMiniMap.HoldAdvance");var gesture=Activator.CreateInstance(holdType,true);
-    Check((bool)Call(gesture,"Press")&&!(bool)Call(gesture,"Tick",999L)&&(bool)Call(gesture,"Tick",1000L)&&!(bool)Call(gesture,"Tick",5000L)&&!(bool)Call(gesture,"Press"),"A continuous one-second hold advances exactly once and cannot repeat while held");
-    Call(gesture,"Release");Check((bool)Call(gesture,"Press")&&!(bool)Call(gesture,"Tick",500L),"Each subsequent setup page requires a fresh full hold");Call(gesture,"Release");Check(!(bool)Call(gesture,"Tick",2000L),"Releasing early cancels setup progression");
-    holdSetup.ShowActivated=false;holdSetup.Left=-32000;holdSetup.Top=-32000;holdSetup.Show();holdSetup.UpdateLayout();
-    var inputSource=PresentationSource.FromVisual(holdSetup);
-    Action<Button,bool> space=(button,down)=>button.RaiseEvent(new System.Windows.Input.KeyEventArgs(System.Windows.Input.Keyboard.PrimaryDevice,inputSource,Environment.TickCount,System.Windows.Input.Key.Space) { RoutedEvent=down?System.Windows.Input.Keyboard.PreviewKeyDownEvent:System.Windows.Input.Keyboard.PreviewKeyUpEvent });
-    Action<int> pump=milliseconds=> {var end=DateTime.UtcNow.AddMilliseconds(milliseconds);while(DateTime.UtcNow<end) {System.Windows.Forms.Application.DoEvents();System.Threading.Thread.Sleep(10);} };
-    space(nextHold,true);pump(250);space(nextHold,false);pump(1100);Check(Children(holdSetup).Contains(nextHold),"Actual setup button cancels a short keyboard hold without advancing");
-    var held=System.Diagnostics.Stopwatch.StartNew();space(nextHold,true);Until(()=>!Children(holdSetup).Contains(nextHold));Check(held.ElapsedMilliseconds>=950,"Actual setup button advances only after its full one-second hold");
-    var nextPage=Children(holdSetup).OfType<Button>().Single(b=>(b.Tag as string)=="setup-next-hold");pump(1200);Check(Children(holdSetup).Contains(nextPage),"Keeping the original press held does not advance the next setup page");space(nextHold,false);
-   }finally {holdSetup.Close();}
+   var sharingSetup=(Window)Call(runtime,"BuildOnboarding",4);try {Check(Children(sharingSetup).OfType<Button>().Any(button=>(button.Tag as string)=="setup-private-positions")&&Children(sharingSetup).OfType<TextBlock>().Any(text=>text.Text==(string)getLocalized.Invoke(null,new object[]{"SetupSharingVisibility"})),"Setup offers private Host/Join configuration and explains player visibility pills");}finally {sharingSetup.Close();}
+   var trackingSetup=(Window)Call(runtime,"BuildOnboarding",3);try {Check(Children(trackingSetup).OfType<Expander>().All(e=>!e.IsExpanded)&&!Children(trackingSetup).OfType<Button>().Any(b=>(b.Tag as string)=="open-admin-commands")&&Children(trackingSetup).OfType<TextBlock>().Any(t=>t.Text==(string)getLocalized.Invoke(null,new object[]{"SetupTrackingHelp"})),"Simple tracking has a short explanation and collapsed detailed controls without unrelated admin tools");}finally {trackingSetup.Close();}
+   var groupSetup=(Window)Call(runtime,"BuildOnboarding",4);try {Check(Children(groupSetup).OfType<TextBlock>().Any(text=>text.Text==(string)getLocalized.Invoke(null,new object[]{"PrivateGroupHelp"})),"First-time setup explains persistent codes, owner refresh and multiple groups");}finally {groupSetup.Close();}
+   var checklistSetup=(Window)Call(runtime,"BuildOnboarding",0);try {
+    var next=Children(checklistSetup).OfType<Button>().Single(b=>(b.Tag as string)=="setup-next");
+    Check(!next.IsEnabled,"Setup Next stays disabled until all checklist lines are acknowledged");
+    var future=Children(checklistSetup).OfType<Button>().Single(b=>(b.Content as string??"").StartsWith("5    "));future.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+    Check(Children(checklistSetup).Contains(next),"Unvisited sidebar pages cannot bypass the checklist");
+    foreach(var check in Children(checklistSetup).OfType<CheckBox>().Where(c=>(c.Tag as string??"").StartsWith("guide-read-")).ToArray()) {check.IsChecked=true;check.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));}
+    Check(next.IsEnabled,"Acknowledging all setup checklist lines enables a normal Next button");
+    next.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));var after=string.Join("|",Children(checklistSetup).OfType<TextBlock>().Select(t=>t.Text));
+    Check(!Children(checklistSetup).Contains(next),"One normal Next click advances setup without a timed hold");
+    next.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(after==string.Join("|",Children(checklistSetup).OfType<TextBlock>().Select(t=>t.Text)),"A stale queued Next click cannot skip another setup page");
+   }finally {checklistSetup.Close();}
    var groupsWindow=(Window)Call(runtime,"BuildRelayGroups");try {
     Capture(type,groupsWindow,Path.Combine(args[1],"persistent-groups.png"));
     Check(Children(groupsWindow).OfType<PasswordBox>().Single().MaxLength==128&&Children(groupsWindow).OfType<Button>().Any(b=>(b.Tag as string)=="group-connect")&&Children(groupsWindow).OfType<Button>().Any(b=>(b.Tag as string)=="group-create"),"Group setup offers paste-code Connect and one-click create-and-copy");
@@ -484,6 +480,14 @@ var movedGps=Call(activeGpsFixture,"Clone");movedGps.GetType().GetField("Name").
     finally { parentSettings.Close(); }
    }),System.Windows.Threading.DispatcherPriority.ApplicationIdle);
    Call(runtime,"Modal",parentSettings);Check(!((System.Collections.IEnumerable)Field(runtime,"dialogs")).Cast<Window>().Any(),"Nested private position dialogs release modal input gates on close");
+   using(var number=new System.Windows.Forms.NumericUpDown {Minimum=1,Maximum=10,Increment=2,Value=5}) {
+    var editor=(FrameworkElement)Call(runtime,"ConvertSetting",number,new Action(()=>{}));var numericInput=Children(editor).OfType<TextBox>().Single();
+    Children(editor).OfType<Button>().Single(b=>(b.Content as string)=="+").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(number.Value==7&&numericInput.Text=="7","Settings number buttons apply the declared increment and display the saved value");
+    numericInput.Text="999";numericInput.RaiseEvent(new System.Windows.Input.KeyboardFocusChangedEventArgs(System.Windows.Input.Keyboard.PrimaryDevice,0,numericInput,null) {RoutedEvent=UIElement.LostKeyboardFocusEvent});Check(number.Value==7&&numericInput.Text=="999"&&numericInput.BorderBrush==Brushes.OrangeRed,"Invalid settings values remain visible with a highlighted range and do not overwrite saved settings");
+    numericInput.Text="8";numericInput.RaiseEvent(new System.Windows.Input.KeyboardFocusChangedEventArgs(System.Windows.Input.Keyboard.PrimaryDevice,0,numericInput,null) {RoutedEvent=UIElement.LostKeyboardFocusEvent});Check(number.Value==8,"Correcting an invalid number applies the new value");
+   }
+   var appearanceUx=(Window)Call(runtime,"BuildSettings",2);Check(appearanceUx.WindowStyle==WindowStyle.SingleBorderWindow&&Children(appearanceUx).OfType<FrameworkElement>().Any(c=>(c.Tag as string)=="settings-preview"),"Settings has a native movable title bar and a live Appearance preview");appearanceUx.Close();
+   int disabledActions=0;var disabledButton=(Button)type.Assembly.GetType("ScumMiniMap.WpfFieldTheme").GetMethod("Button",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{"disabled",new Action(()=>disabledActions++),false});disabledButton.IsEnabled=false;disabledButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(disabledActions==0,"Disabled shared menu buttons cannot execute their action");
    using(var nativeSwatch=new System.Windows.Forms.Button { Tag="swatch",BackColor=System.Drawing.Color.Turquoise }) {
     nativeSwatch.Click+=(s,e)=>nativeSwatch.BackColor=System.Drawing.Color.Crimson;
     var swatch=(Button)Call(runtime,"ConvertSetting",nativeSwatch,new Action(()=>{}));swatch.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
@@ -511,7 +515,7 @@ var movedGps=Call(activeGpsFixture,"Clone");movedGps.GetType().GetField("Name").
    Children(moveEditor).OfType<Button>().Single(b=>(b.Content as string)=="Done").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
    var movedHud=Call(engine,"WpfSnapshot",false);Check((int)Field(movedHud,"HudLeft")==(int)Math.Round(expectedHudLocation.X)&&(int)Field(movedHud,"HudTop")==(int)Math.Round(expectedHudLocation.Y),"Minimap positioning commits the dragged location through the saved backend bounds");
    var cancelEditor=(Window)Call(runtime,"BuildHudMoveEditor");cancelEditor.Left=-31700;cancelEditor.Top=-31600;cancelEditor.Close();var cancelledHud=Call(engine,"WpfSnapshot",false);Check((int)Field(cancelledHud,"HudLeft")== (int)Field(movedHud,"HudLeft")&&(int)Field(cancelledHud,"HudTop")== (int)Field(movedHud,"HudTop"),"Cancelling minimap positioning preserves the last saved location");
-   Check(Directory.GetFiles(args[1],"*.png").Length==19,"All nine setup pages, settings, search, tactical map, both HUD shapes, rotating HUD, persistent groups and direct connection setup were rendered");
+   Check(Directory.GetFiles(args[1],"*.png").Length==15&&Directory.GetFiles(args[1],"onboarding-*.png").Length==5,"All five setup pages, settings, search, tactical map, both HUD shapes, rotating HUD, persistent groups and direct connection setup were rendered");
    Check(Call(engine,"WpfGameBind",0,0x0D,0)!=null,"The WPF game-key adapter rejects Enter as a reserved binding");
    var sample=Call(engine,"WpfSnapshot",false);
    Check((int)Field(sample,"HudWidth")>=240&&(int)Field(sample,"HudHeight")>=240,"The new HUD reads its saved size from the controller");
