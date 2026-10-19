@@ -198,7 +198,7 @@ namespace ScumMiniMap {
         bool hideOnboardingGuide;
         internal bool WpfHideOnboardingGuide { get { return hideOnboardingGuide; } }
         internal void WpfSetHideOnboardingGuide(bool hide) { hideOnboardingGuide=hide;SaveSettings(); }
-        internal bool WpfNeedsOnboarding { get { return isFirstLaunch || string.IsNullOrWhiteSpace(wpfOnboardingVersion) || (!hideOnboardingGuide && wpfOnboardingVersion!=VersionString); } }
+        internal bool WpfNeedsOnboarding { get { return isFirstLaunch || wpfOnboardingVersion!=VersionString; } }
         internal void WpfCompleteOnboarding() { wpfOnboardingVersion=VersionString;isFirstLaunch=false;SaveSettings(); }
         internal void WpfPreviewPosition(string value) { if(!diagnosticMode)throw new InvalidOperationException("Preview requires diagnostic mode.");Accept(value);zoom=targetZoom=4f;autoZoom=false; }
         internal void WpfTactical(bool active) { fullMapActive=active;Native.CancelActiveCopy();inputGeneration++;fallbackKeysArmed=false; }

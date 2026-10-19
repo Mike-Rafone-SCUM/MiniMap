@@ -1513,11 +1513,6 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
 <Trigger Property='IsKeyboardFocused' Value='True'><Setter TargetName='box' Property='BorderBrush' Value='#38DDD2'/></Trigger><Trigger Property='IsEnabled' Value='False'><Setter TargetName='outer' Property='Opacity' Value='0.55'/></Trigger></ControlTemplate.Triggers>
 </ControlTemplate></Setter.Value></Setter></Style>".Replace("INPUT",type).Replace("RADIUS",choice?"14":"4"));
         }
-        FrameworkElement GuidePreference() {
-            var text=WpfFieldTheme.Text(Localization.Get("GuideDontShow"),18,WpfFieldTheme.Muted);text.TextWrapping=TextWrapping.Wrap;
-            var hide=new CheckBox { Style=GuideInputStyle(),Content=text,IsChecked=engine.WpfHideOnboardingGuide,Tag="guide-dont-show",Padding=new Thickness(8),Margin=new Thickness(0,8,0,8) };
-            hide.Click+=(s,e)=>engine.WpfSetHideOnboardingGuide(hide.IsChecked==true);return hide;
-        }
         FrameworkElement BuildGuideChecklist(GuideChecklistState state,Action<bool> readyChanged,bool showPreference=true) {
             var root=new StackPanel();Action draw=null;
             draw=()=> {
@@ -1559,14 +1554,14 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
                         }
                     }
                 }
-                if(showPreference) {root.Children.Add(progress);root.Children.Add(GuidePreference());}sync();
+                if(showPreference) {root.Children.Add(progress);}sync();
             };draw();return root;
         }
         Window BuildFirstTimeGuide() {
             var window=Window(Localization.Get("FirstTimeGuideTitle"),860,800);
             var body=new DockPanel { Margin=new Thickness(24) };
             var done=WpfFieldTheme.Button(Localization.Get("Done"),()=> {engine.WpfCompleteOnboarding();window.Close();},true);done.Tag="guide-done";done.IsEnabled=false;done.MinWidth=160;
-            var footer=new StackPanel();footer.Children.Add(GuidePreference());var actions=new DockPanel();DockPanel.SetDock(done,Dock.Right);actions.Children.Add(done);var progress=WpfFieldTheme.Text("",22,WpfFieldTheme.Cyan,true);progress.Tag="guide-progress";actions.Children.Add(progress);footer.Children.Add(actions);DockPanel.SetDock(footer,Dock.Bottom);body.Children.Add(footer);
+            var footer=new StackPanel();var actions=new DockPanel();DockPanel.SetDock(done,Dock.Right);actions.Children.Add(done);var progress=WpfFieldTheme.Text("",22,WpfFieldTheme.Cyan,true);progress.Tag="guide-progress";actions.Children.Add(progress);footer.Children.Add(actions);DockPanel.SetDock(footer,Dock.Bottom);body.Children.Add(footer);
             var state=new GuideChecklistState();var content=new StackPanel();content.Children.Add(WpfFieldTheme.Text(Localization.Get("FirstTimeGuideTitle"),30,null,true));content.Children.Add(BuildGuideChecklist(state,ready=> {done.IsEnabled=ready;progress.Text=state.Read.Count(value=>value)+" / "+state.Read.Length;},false));
             body.Children.Add(new ScrollViewer { Content=content,VerticalScrollBarVisibility=ScrollBarVisibility.Auto });window.Content=body;return window;
         }
