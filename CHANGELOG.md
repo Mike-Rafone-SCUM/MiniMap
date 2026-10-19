@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.3.12] - 2026-10-20
+
+- Coalesce rapid camera updates into one pending background redraw. During zoom/pan, transform the retained POI scene and label layout instead of rebuilding them on the input thread; refresh current-zoom clustering and labels when movement settles. Skip hover searches during camera movement. Filter actions immediately leave gesture mode.
+- Rasterize frozen movement frames on a bounded background worker, capped at 1600 pixels on the longest side. Reproject the last completed image at the latest camera position while work is pending; discard obsolete frames and restore full-quality map drawing after movement stops.
+
+- Keep compact minimap guidance clear: show route/GPS symbols and edge arrows without repeated destination/owner labels. Full names remain on the tactical map and in Routes; teammate edge names stay on one line.
+
 ## [2.3.11] - 2026-10-19
 
 - Further reduce map drawing work by clipping grid segments to the viewport and rejecting off-screen text before formatting or composition, while preserving labels that cross viewport edges.
