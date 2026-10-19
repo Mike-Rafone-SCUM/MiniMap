@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using System.Windows.Input;
 using System.Collections.Generic;
 class SquadUiTests {
     const BindingFlags F=BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Instance;
@@ -14,10 +15,251 @@ class SquadUiTests {
     static void Set(object o,string n,object v) { o.GetType().GetField(n,F).SetValue(o,v); }
     static object Call(object o,string n,params object[] a) { return o.GetType().GetMethod(n,F).Invoke(o,a); }
     static void Check(bool v,string n) { if(!v)throw new Exception(n);Console.WriteLine("PASS: "+n); }
+    static bool Overlap(Rect[] bounds) { for(int i=0;i<bounds.Length;i++)for(int j=i+1;j<bounds.Length;j++) { var shared=Rect.Intersect(bounds[i],bounds[j]);if(!shared.IsEmpty&&shared.Width>0&&shared.Height>0)return true; }return false; }
     static void Pump() { System.Windows.Forms.Application.DoEvents();System.Threading.Thread.Sleep(20); }
     static void Await(Func<bool> test) { var end=DateTime.UtcNow.AddSeconds(8);while(DateTime.UtcNow<end) { if(test())return;Pump(); }throw new Exception("UI fixture timed out"); }
     static void Capture(Window window,string path) { window.UpdateLayout();var image=new RenderTargetBitmap((int)window.ActualWidth,(int)window.ActualHeight,96,96,PixelFormats.Pbgra32);image.Render(window);var png=new PngBitmapEncoder();png.Frames.Add(BitmapFrame.Create(image));using(var file=File.Create(path))png.Save(file); }
     static IEnumerable<DependencyObject> Children(DependencyObject p) { foreach(object c in LogicalTreeHelper.GetChildren(p))if(c is DependencyObject) { yield return (DependencyObject)c;foreach(var d in Children((DependencyObject)c))yield return d; } }
+    static void PressKey(UIElement target,Key key) { target.RaiseEvent(new KeyEventArgs(Keyboard.PrimaryDevice,PresentationSource.FromVisual(target),Environment.TickCount,key) { RoutedEvent=Keyboard.PreviewKeyDownEvent });Pump(); }
+    static void CheckViewportPixels(object runtime,string folder) {
+        var assembly=runtime.GetType().Assembly;var surfaceType=assembly.GetType("ScumMiniMap.WpfMapSurface");var stateType=assembly.GetType("ScumMiniMap.WpfMapState");
+        foreach(bool compact in new[]{false,true})foreach(float zoom in new[]{1f,4f,16f}) {
+            var state=Activator.CreateInstance(stateType,true);Set(state,"Saved",Array.CreateInstance(assembly.GetType("ScumMiniMap.MapZone"),0));Set(state,"Trail",new System.Drawing.PointF[0]);Set(state,"Grid",true);Set(state,"GridLabels",true);Set(state,"GridOpacity",100);Set(state,"LabelSize",16);Set(state,"Pan",new System.Drawing.PointF(.42f,.47f));Set(state,"Zoom",zoom);Set(state,"Shape","Square");
+            if(compact) {var position=Activator.CreateInstance(assembly.GetType("ScumMiniMap.Position"));Set(position,"X",-143091d);Set(position,"Y",-142091d);Set(position,"Yaw",45d);Set(state,"Position",position);Set(state,"RotateMap",true);}
+            var surface=(FrameworkElement)Activator.CreateInstance(surfaceType,true);Set(surface,"State",state);Set(surface,"Compact",compact);surface.Measure(new Size(640,360));surface.Arrange(new Rect(0,0,640,360));
+            var drawing=new DrawingVisual();using(var dc=drawing.RenderOpen()) {Call(surface,"OnRender",dc);dc.PushClip(new RectangleGeometry(new Rect(0,0,640,360)));Set(surface,"renderRotation",0d);foreach(var at in new[]{new Point(-200,60),new Point(-20,100),new Point(630,120),new Point(120,-8),new Point(120,355),new Point(300,180)})Call(surface,"Label",dc,"Viewport edge fixture",at,Brushes.White,16d);dc.Pop();}
+            var bitmap=new RenderTargetBitmap(640,360,96,96,PixelFormats.Pbgra32);bitmap.Render(drawing);var pixels=new byte[640*360*4];bitmap.CopyPixels(pixels,640*4,0);
+            string key=(compact?"rotated":"tactical")+"-"+zoom;File.WriteAllBytes(Path.Combine(folder,key+".pixels"),pixels);
+            string reference=Environment.GetEnvironmentVariable("MINIMAP_CAMERA_PIXEL_REFERENCE");if(!string.IsNullOrEmpty(reference)) {var before=File.ReadAllBytes(Path.Combine(reference,key+".pixels"));Check(before.SequenceEqual(pixels),"Grid, rotation and partially visible labels retain identical pixels: "+key);}
+        }
+    }
+    static void CheckCameraInteraction(object runtime,string folder,bool verify) {
+        var engine=Get(runtime,"engine");var map=(FrameworkElement)Get(runtime,"tacticalMap");var window=(Window)Get(runtime,"tactical");
+        window.WindowState=WindowState.Normal;window.WindowStartupLocation=WindowStartupLocation.Manual;window.Left=-32000;window.Top=-32000;window.Width=1280;window.Height=760;window.ShowActivated=false;window.Show();window.UpdateLayout();
+        Call(engine,"WpfPoiClustering",false);Set(engine,"fullMapZoom",8f);Set(engine,"fullMapOpacity",100);Call(runtime,"Refresh");
+        Action render=()=> {map.UpdateLayout();var bitmap=new RenderTargetBitmap((int)map.ActualWidth,(int)map.ActualHeight,96,96,PixelFormats.Pbgra32);bitmap.Render(map);};
+        render();Await(()=> {render();return (int)Get(map,"PoiSceneBuilds")>0;});
+        var options=Get(engine,"cachedZoneOptions");var anchors=Get(engine,"cachedLocationAnchors");var revision=Get(engine,"wpfZoneRevision");
+        var pan=(Action<System.Drawing.PointF>)Get(map,"PanChanged");var eventTimes=new List<double>();var renderTimes=new List<double>();
+        for(int i=0;i<24;i++) { var clock=System.Diagnostics.Stopwatch.StartNew();pan(new System.Drawing.PointF(.40f+i*.002f,.45f));clock.Stop();eventTimes.Add(clock.Elapsed.TotalMilliseconds);clock.Restart();render();clock.Stop();renderTimes.Add(clock.Elapsed.TotalMilliseconds);Pump(); }
+        eventTimes.Sort();renderTimes.Sort();Console.WriteLine("CAMERA pan event median="+eventTimes[12].ToString("F2")+" ms, p95="+eventTimes[22].ToString("F2")+" ms; composition median="+renderTimes[12].ToString("F2")+" ms, p95="+renderTimes[22].ToString("F2")+" ms; zone revision change="+(!object.Equals(revision,Get(engine,"wpfZoneRevision"))));
+        var blankVisual=new DrawingVisual();using(var dc=blankVisual.RenderOpen())dc.DrawRectangle(Brushes.Black,null,new Rect(0,0,map.ActualWidth,map.ActualHeight));var blankTimes=new List<double>();
+        for(int i=0;i<12;i++) {var clock=System.Diagnostics.Stopwatch.StartNew();var bitmap=new RenderTargetBitmap((int)map.ActualWidth,(int)map.ActualHeight,96,96,PixelFormats.Pbgra32);bitmap.Render(blankVisual);clock.Stop();blankTimes.Add(clock.Elapsed.TotalMilliseconds);}blankTimes.Sort();
+        Console.WriteLine("CAMERA blank bitmap median="+blankTimes[6].ToString("F2")+" ms; scene overhead="+(renderTimes[12]-blankTimes[6]).ToString("F2")+" ms");
+        if(Environment.GetEnvironmentVariable("MINIMAP_CAMERA_LAYERS")=="1") {
+            Func<double> measure=()=> {var times=new List<double>();for(int i=0;i<10;i++) {map.InvalidateVisual();var clock=System.Diagnostics.Stopwatch.StartNew();render();clock.Stop();times.Add(clock.Elapsed.TotalMilliseconds);}times.Sort();return times[5];};
+            var layerState=Get(map,"State");var store=Get(layerState,"Store");var terrain=Get(map,"Terrain");var background=Get(map,"BaseMap");
+            Console.WriteLine("LAYERS all="+measure().ToString("F2"));
+            var overview=Get(terrain,"overview");Set(terrain,"overview",null);Console.WriteLine("LAYERS without overview="+measure().ToString("F2"));Set(terrain,"overview",overview);
+            var recordClock=System.Diagnostics.Stopwatch.StartNew();for(int i=0;i<12;i++) {var drawing=new DrawingGroup();using(var dc=drawing.Open())Call(map,"OnRender",dc);}recordClock.Stop();Console.WriteLine("LAYERS recording="+(recordClock.Elapsed.TotalMilliseconds/12).ToString("F2")+" ms; saved="+((Array)Get(layerState,"Saved")).Length);
+            Set(map,"Terrain",null);Set(map,"BaseMap",null);Console.WriteLine("LAYERS without terrain="+measure().ToString("F2"));Set(map,"Terrain",terrain);Set(map,"BaseMap",background);
+            var zones=Get(layerState,"Zones");Set(layerState,"Zones",false);Console.WriteLine("LAYERS without zones="+measure().ToString("F2"));Set(layerState,"Zones",zones);
+            var labels=Get(layerState,"Labels");Set(layerState,"Labels",false);Console.WriteLine("LAYERS without labels="+measure().ToString("F2"));Set(layerState,"Labels",labels);
+            var master=Get(store,"MasterEnabled");Set(store,"MasterEnabled",false);Console.WriteLine("LAYERS without catalogue="+measure().ToString("F2"));Set(store,"MasterEnabled",master);
+            var waypoints=Get(layerState,"Waypoints");Set(layerState,"Waypoints",false);Console.WriteLine("LAYERS without waypoints="+measure().ToString("F2"));Set(layerState,"Waypoints",waypoints);
+            RenderOptions.SetBitmapScalingMode(map,BitmapScalingMode.NearestNeighbor);Console.WriteLine("LAYERS nearest sampling="+measure().ToString("F2"));
+            return;
+        }
+        File.WriteAllText(Path.Combine(folder,"camera-performance.csv"),"event_median_ms,event_p95_ms,composition_median_ms,composition_p95_ms\n"+string.Join(",",new[]{eventTimes[12],eventTimes[22],renderTimes[12],renderTimes[22]}.Select(n=>n.ToString("F3",System.Globalization.CultureInfo.InvariantCulture))));
+        var slider=(Slider)Get(runtime,"tacticalOpacity");Console.WriteLine("CAMERA opacity enabled at 8x="+slider.IsEnabled);
+        if(!verify)return;
+        var tiles=(Array)Get(map,"poiSceneTiles");Check(tiles!=null&&tiles.Length>(int)Get(map,"PoiTilesDrawn")&&(int)Get(map,"PoiTilesDrawn")>0,"Large-zoom POI composition submits only visible spatial groups");
+        var state=Get(map,"State");double width=map.ActualWidth,height=map.ActualHeight;
+        double side=(double)map.GetType().GetMethod("MapSide",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{state,width,height,false});
+        var centre=(System.Drawing.PointF)map.GetType().GetMethod("CameraCentre",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{state,width,height,false});
+        double left=width/2-side*centre.X,top=height/2-side*centre.Y,scale=side/(double)Get(map,"drawnPoiSide");
+        Func<bool,byte[]> poiPixels=culled=> { var visual=new DrawingVisual();using(var dc=visual.RenderOpen()) { dc.PushClip(new RectangleGeometry(new Rect(0,0,width,height)));if(culled)Call(map,"DrawRetainedPois",dc,side,left,top,width,height);else { dc.PushTransform(new TranslateTransform(left,top));dc.PushTransform(new ScaleTransform(scale,scale));foreach(var tile in tiles)dc.DrawDrawing((DrawingGroup)Get(tile,"Drawing"));dc.Pop();dc.Pop(); }dc.Pop(); }var bitmap=new RenderTargetBitmap((int)width,(int)height,96,96,PixelFormats.Pbgra32);bitmap.Render(visual);var pixels=new byte[(int)width*(int)height*4];bitmap.CopyPixels(pixels,(int)width*4,0);return pixels; };
+        Check(poiPixels(true).SequenceEqual(poiPixels(false)),"Visible POI pixels match the complete drawing with no missing edge icons");
+        Check(object.Equals(revision,Get(engine,"wpfZoneRevision"))&&object.ReferenceEquals(options,Get(engine,"cachedZoneOptions"))&&object.ReferenceEquals(anchors,Get(engine,"cachedLocationAnchors")),"Panning preserves zone controls and location caches");
+        Check(slider.IsEnabled,"Opacity stays adjustable while zoomed in");slider.Value=35;Pump();Call(runtime,"Refresh");
+        Check((int)Get(Get(map,"State"),"Opacity")==35&&(int)Get(engine,"fullMapOpacity")==35&&((TextBlock)Get(runtime,"tacticalOpacityValue")).Text=="35%","Zoomed opacity updates the actual terrain state, saved preference and percentage together");
+        var zoom=(Action<int>)Get(map,"ZoomRequested");zoom(-1);zoom(1);Pump();
+        Check((int)Get(Get(map,"State"),"Opacity")==35&&slider.IsEnabled,"Zooming preserves the player's selected transparency");
+        Check(object.Equals(revision,Get(engine,"wpfZoneRevision")),"Zoom and opacity changes preserve unrelated zone caches");
+        Await(()=>RenderOptions.GetBitmapScalingMode(map)==BitmapScalingMode.Unspecified);Check(true,"Smooth bitmap sampling returns after camera interaction settles");
+        bool wasDiagnostic=(bool)Get(engine,"diagnosticMode");try {Set(engine,"diagnosticMode",false);Call(engine,"WpfSave");Set(engine,"fullMapOpacity",99);Set(engine,"wpfTacticalOpacityOverride",false);Call(engine,"LoadSettings");Check((int)Get(Call(engine,"WpfSnapshot",true),"Opacity")==35&&(bool)Get(engine,"wpfTacticalOpacityOverride"),"Explicit zoomed transparency survives saving and reloading the isolated profile");}finally {Set(engine,"diagnosticMode",wasDiagnostic);}
+        Capture(window,Path.Combine(folder,"zoomed-opacity.png"));
+    }
+    static void CheckSquadIntegration(object runtime,string folder) {
+        var engine=Get(runtime,"engine");var squad=Get(runtime,"squad");var map=Get(runtime,"tacticalMap");
+        Func<Array> stops=()=>(Array)squad.GetType().GetProperty("Stops",F).GetValue(squad,null);
+        var search=(Window)Call(runtime,"BuildSearch");
+        try {
+            search.Show();Pump();var input=Children(search).OfType<TextBox>().Single(c=>c.Tag as string=="search-query");
+            var add=Children(search).OfType<Button>().Single(c=>c.Tag as string=="search-add-stop");input.Text="zzzz_no_such_location_987654321";
+            Check(!add.IsEnabled,"Search cannot add a route stop without a result");input.Text="grid D4";Pump();
+            var selected=(ListBoxItem)Children(search).OfType<ListBox>().Single().SelectedItem;var destination=selected.Tag;
+            add.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Check(!search.IsVisible&&stops().Length==1&&(string)Get(stops().GetValue(0),"Name")== (string)destination.GetType().GetProperty("DisplayName").GetValue(destination,null),"Search adds its selected named location directly to the active route");
+            Check(Get(engine,"searchTarget")!=null&&((Array)Get(runtime,"activeStops")).Length==1,"A stop added from search uses the existing automatic GPS navigation");
+            Call(runtime,"NavigateDestination",destination);Call(runtime,"UpdateSquad");
+            Check(object.ReferenceEquals(Get(engine,"searchTarget"),destination)&&((Array)Get(runtime,"activeStops")).Length==0&&stops().Length==1,"Ordinary GPS navigation immediately replaces route navigation and retains its editable stops");
+        }finally {search.Close();}
+        var tools=(Window)Call(runtime,"BuildSquadTools",0);
+        try {
+            tools.Show();Pump();
+            Check(Children(tools).OfType<Button>().Any(b=>b.Tag as string=="route-remove:"+(string)Get(stops().GetValue(0),"Id")),"Routes exposes removal of an individual named stop");
+            var remove=Children(tools).OfType<Button>().Single(b=>(b.Tag as string??"").StartsWith("route-remove:"));remove.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Check(stops().Length==0&&Get(engine,"searchTarget")!=null,"Removing an inactive local stop preserves the current manual GPS destination");
+            Children(tools).OfType<Button>().Single(b=>b.Tag as string=="squad-tab-1").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Check(Children(tools).OfType<Button>().Where(b=>(b.Tag as string??"").StartsWith("squad-ping-")).All(b=>!b.IsEnabled),"Squad pings are visibly unavailable without a connected group");
+            Children(tools).OfType<Button>().Single(b=>b.Tag as string=="squad-tab-2").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            var name=Children(tools).OfType<TextBox>().Single();name.Text="Synthetic retained preset";name.Focus();
+            var end=DateTime.UtcNow.AddSeconds(2.2);while(DateTime.UtcNow<end)Pump();
+            Check(name.IsKeyboardFocused&&name.Text=="Synthetic retained preset","Live route refresh preserves preset text and keyboard focus");
+            Capture(tools,Path.Combine(folder,"integrated-presets.png"));
+            Children(tools).OfType<Button>().Single(b=>b.Tag as string=="squad-tab-0").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            var addTarget=Children(tools).OfType<Button>().Single(b=>b.Tag as string=="route-add-target");addTarget.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Check(stops().Length==1&&((Array)Get(runtime,"activeStops")).Length==1&&!addTarget.IsEnabled,"Routes turns the current manual GPS destination into an active stop and prevents re-adding its own navigation target");
+            Capture(tools,Path.Combine(folder,"integrated-routes.png"));
+        }finally {tools.Close();Call(runtime,"ClearMapRoute");}
+        for(int i=0;i<16;i++)Call(squad,"AddStop","Synthetic limit "+i,.2d+i*.001,.3d);
+        search=(Window)Call(runtime,"BuildSearch");
+        try { Check(!Children(search).OfType<Button>().Single(b=>b.Tag as string=="search-add-stop").IsEnabled,"Search disables Add route stop at the sixteen-stop limit"); }
+        finally {search.Close();Call(runtime,"ClearMapRoute");}
+        bool wasDiagnostic=(bool)Get(engine,"diagnosticMode"),wasPanel=(bool)Get(engine,"panelOpening"),wasCapture=(bool)Get(engine,"shortcutCaptureOpen");var wasUpdated=Get(engine,"updated");
+        try {
+            Set(engine,"diagnosticMode",false);Set(engine,"panelOpening",true);Set(engine,"shortcutCaptureOpen",true);Set(engine,"updated",DateTime.UtcNow);
+            Check(!(bool)Call(engine,"WpfCanPing",false)&&(bool)Call(engine,"WpfCanPing",true),"Only explicit squad-dialog pings may use a fresh position while dialog input protection is active");
+            Check((bool)Get(engine,"panelOpening")&&(bool)Get(engine,"shortcutCaptureOpen"),"Ping eligibility never resumes coordinate capture or releases dialog input protection");
+            Set(engine,"updated",DateTime.UtcNow.AddMinutes(-1));Check(!(bool)Call(engine,"WpfCanPing",true),"Squad-dialog pings reject stale positions");Set(engine,"updated",DateTime.UtcNow);
+            Set(engine,"inventoryInputLocked",true);try {Check(!(bool)Call(engine,"WpfCanPing",true),"Squad-dialog pings retain inventory pause protection");}finally {Set(engine,"inventoryInputLocked",false);}
+        }finally {Set(engine,"diagnosticMode",wasDiagnostic);Set(engine,"panelOpening",wasPanel);Set(engine,"shortcutCaptureOpen",wasCapture);Set(engine,"updated",wasUpdated);}
+    }
+    static void CheckSaveLocation(object runtime,string folder) {
+        var engine=Get(runtime,"engine");var point=new System.Drawing.PointF(.41f,.42f);int before=((System.Collections.IList)Get(engine,"zones")).Count;
+        var window=(Window)Call(runtime,"BuildAddWaypoint",point);
+        try {
+            window.Show();Pump();
+            var name=Children(window).OfType<TextBox>().Single(c=>c.Tag as string=="waypoint-name");
+            var save=Children(window).OfType<Button>().Single(c=>c.Tag as string=="waypoint-save");
+            Check(name.IsKeyboardFocused&&!save.IsEnabled,"Save location starts in the name field with Save disabled");
+            var namePeer=new System.Windows.Automation.Peers.TextBoxAutomationPeer(name);
+            Check(!string.IsNullOrWhiteSpace(namePeer.GetName())&&namePeer.GetPattern(System.Windows.Automation.Peers.PatternInterface.Value)!=null,"Save location name exposes its label and editable value to assistive tools");
+            var savePeer=new System.Windows.Automation.Peers.ButtonAutomationPeer(save);
+            Check(savePeer.GetPattern(System.Windows.Automation.Peers.PatternInterface.Invoke)!=null,"Save location exposes a native automation Invoke action");
+            name.Text="   ";PressKey(name,Key.Enter);
+            Check(!save.IsEnabled&&window.IsVisible&&((System.Collections.IList)Get(engine,"zones")).Count==before,"Whitespace and Enter cannot save an empty location");
+            name.Text="  Synthetic keyboard location  ";Check(save.IsEnabled,"A nonempty location name enables Save");
+            Capture(window,Path.Combine(folder,"save-location.png"));PressKey(name,Key.Enter);
+            var saved=(System.Collections.IList)Get(engine,"zones");var marker=saved[saved.Count-1];
+            Check(!window.IsVisible&&saved.Count==before+1&&(string)Get(marker,"Name")=="Synthetic keyboard location","Enter saves one trimmed location and closes the dialog");
+            var points=(System.Drawing.PointF[])Get(marker,"Points");Check(points.Length==1&&points[0]==point,"Save location preserves the original clicked coordinates");
+            Check((bool)Call(engine,"WpfDeleteWaypoint",marker),"Save-location fixture cleans its persisted synthetic marker");
+        }finally {window.Close();}
+        window=(Window)Call(runtime,"BuildAddWaypoint",point);bool loadFailed=(bool)Get(engine,"zonesLoadFailed");
+        try {
+            window.Show();Pump();var name=Children(window).OfType<TextBox>().Single();name.Text="Synthetic retry";Set(engine,"zonesLoadFailed",true);PressKey(name,Key.Enter);
+            Check(window.IsVisible&&name.Text=="Synthetic retry"&&((System.Collections.IList)Get(engine,"zones")).Count==before,"A failed location save retains the name and dialog without committing a marker");
+            Set(engine,"zonesLoadFailed",loadFailed);Children(window).OfType<Button>().Single(c=>c.Tag as string=="waypoint-cancel").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Check(!window.IsVisible&&((System.Collections.IList)Get(engine,"zones")).Count==before,"Cancel after a failed save leaves saved locations unchanged");
+        }finally {Set(engine,"zonesLoadFailed",loadFailed);window.Close();}
+        window=(Window)Call(runtime,"BuildAddWaypoint",point);
+        try {
+            window.Show();Pump();var name=Children(window).OfType<TextBox>().Single();name.Text="Synthetic cancelled";PressKey(name,Key.Escape);
+            Check(!window.IsVisible&&((System.Collections.IList)Get(engine,"zones")).Count==before,"Escape cancels a typed location without saving");
+        }finally {window.Close();}
+        var position=Get(engine,"position");Set(engine,"position",null);
+        try {
+            window=(Window)Call(runtime,"BuildAddWaypoint",new object[]{null});window.Show();Pump();Children(window).OfType<TextBox>().Single().Text="Unavailable location";
+            Check(!Children(window).OfType<Button>().Single(c=>c.Tag as string=="waypoint-save").IsEnabled,"Saving current location stays disabled until a position is available");
+        }finally {window.Close();Set(engine,"position",position);}
+        bool modalFocused=false,modalProtected=false;
+        Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,new Action(()=> {
+            var actual=((System.Collections.IEnumerable)Get(runtime,"dialogs")).Cast<Window>().Single();var name=Children(actual).OfType<TextBox>().Single();
+            modalFocused=name.IsKeyboardFocused;modalProtected=(bool)Get(engine,"panelOpening");name.Text="Synthetic modal location";
+            Children(actual).OfType<Button>().Single(b=>b.Tag as string=="waypoint-save").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        }));
+        Call(runtime,"ShowAddWaypoint",point);
+        var modalMarkers=(System.Collections.IList)Get(engine,"zones");var modalMarker=modalMarkers[modalMarkers.Count-1];
+        Check(modalFocused&&modalProtected&&modalMarkers.Count==before+1&&!(bool)Get(engine,"panelOpening"),"Actual Save location modal focuses the field, protects game input, saves on click and releases input protection");
+        Check((bool)Call(engine,"WpfDeleteWaypoint",modalMarker),"Actual-modal fixture removes its saved synthetic marker");
+        foreach(double scale in new[]{1.5,2.0}) {
+            window=(Window)Call(runtime,"BuildAddWaypoint",point);
+            try {
+                window.Width=720;window.Height=520;((FrameworkElement)window.Content).LayoutTransform=new ScaleTransform(scale,scale);window.Show();Pump();window.UpdateLayout();
+                var editors=Children(window).OfType<FrameworkElement>().Where(e=>e is Button||e is TextBox).ToArray();
+                Check(editors.All(e=> {var rect=e.TransformToAncestor(window).TransformBounds(new Rect(e.RenderSize));return rect.Left>=0&&rect.Top>=0&&rect.Right<=window.ActualWidth&&rect.Bottom<=window.ActualHeight;}),"Save location controls fit with simulated UI magnification: "+scale);
+                Capture(window,Path.Combine(folder,"save-location-scale-"+(int)(scale*100)+".png"));
+            }finally {window.Close();}
+        }
+    }
+    static void CheckUsability(object runtime,string folder) {
+        var search=(Window)Call(runtime,"BuildSearch");
+        try {
+            search.Show();Pump();
+            var input=Children(search).OfType<TextBox>().Single(c=>c.Tag as string=="search-query");
+            var results=Children(search).OfType<ListBox>().Single(c=>c.Tag as string=="search-results");
+            Check(!string.IsNullOrWhiteSpace(System.Windows.Automation.AutomationProperties.GetName(input)),"Search query has a descriptive accessible name");
+            input.Text="zzzz_no_such_location_987654321";Pump();
+            Check(results.Items.Count==0,"Unmatched search shows an empty results list");
+            PressKey(input,Key.Down);PressKey(input,Key.Up);PressKey(input,Key.Enter);
+            Check(search.IsVisible&&results.SelectedIndex==-1,"Arrow keys and Enter on empty search preserve the dialog without selecting a result");
+            input.Text="grid D4";Pump();PressKey(input,Key.Down);
+            Check(results.SelectedItem!=null,"Search keyboard selection recovers when results return");
+            Check(System.Windows.Automation.AutomationProperties.GetName((ListBoxItem)results.SelectedItem).Contains("D4"),"Search result announces its destination and detail instead of a panel type");
+            Capture(search,Path.Combine(folder,"search-accessible.png"));
+        }finally { search.Close(); }
+        var settings=(Window)Call(runtime,"BuildSettings",2);
+        try {
+            settings.Show();Pump();
+            var combo=Children(settings).OfType<ComboBox>().First();combo.Focus();combo.IsDropDownOpen=true;Pump();
+            PressKey(combo,Key.Escape);
+            Check(settings.IsVisible&&!combo.IsDropDownOpen,"First Escape dismisses a settings dropdown and keeps Settings open");
+            combo.ApplyTemplate();var outline=(Border)combo.Template.FindName("outline",combo);
+            Check(outline!=null&&outline.BorderThickness.Left==2,"Focused dropdown has a visible focus outline");
+            var slider=Children(settings).OfType<Slider>().First();slider.Focus();Pump();slider.ApplyTemplate();
+            var focus=(Border)slider.Template.FindName("focus",slider);
+            Check(focus!=null&&((SolidColorBrush)focus.BorderBrush).Color.A!=0,"Focused slider has a visible focus outline");
+            Capture(settings,Path.Combine(folder,"settings-keyboard-focus.png"));
+            PressKey(slider,Key.Escape);Check(!settings.IsVisible,"Escape closes Settings after its dropdown has been dismissed");
+        }finally { settings.Close(); }
+        settings=(Window)Call(runtime,"BuildSettings",0);
+        try {
+            settings.Show();Pump();var numbers=Children(settings).OfType<TextBox>().Where(c=>c.Tag as string=="setting-number").ToArray();
+            Check(numbers.Length>0&&numbers.All(c=>!string.IsNullOrWhiteSpace(System.Windows.Automation.AutomationProperties.GetName(c))),"Numeric settings expose their existing labels to assistive tools");
+            Check(numbers.All(c=>!string.IsNullOrWhiteSpace(System.Windows.Automation.AutomationProperties.GetHelpText(c))),"Numeric settings expose their valid ranges to assistive tools");
+        }finally { settings.Close(); }
+        settings=(Window)Call(runtime,"BuildSettings",1);
+        try {
+            settings.Show();Pump();var keys=Children(settings).OfType<Button>().Where(c=>c.MinWidth==88).ToArray();
+            Check(keys.Length>0&&keys.All(c=>System.Windows.Automation.AutomationProperties.GetName(c).Contains(": ")),"Shortcut buttons identify both the action and its current binding");
+        }finally { settings.Close(); }
+        using(var parent=new System.Windows.Forms.FlowLayoutPanel())using(var combo=new System.Windows.Forms.ComboBox()) {
+            parent.Controls.Add(new System.Windows.Forms.Label {Text="Synthetic setting"});parent.Controls.Add(combo);combo.Enabled=false;
+            var converted=(ComboBox)Call(runtime,"ConvertSetting",combo,(Action)(()=>{}));
+            Check(!converted.IsEnabled&&System.Windows.Automation.AutomationProperties.GetName(converted)=="Synthetic setting","Converted dropdown retains its disabled state and associated label");
+        }
+        var currentLanguage=runtime.GetType().Assembly.GetType("ScumMiniMap.Localization").GetProperty("Current");var savedLanguage=currentLanguage.GetValue(null,null);
+        try {
+            foreach(var language in Enum.GetValues(currentLanguage.PropertyType)) {
+                currentLanguage.SetValue(null,language,null);search=(Window)Call(runtime,"BuildSearch");
+                try {
+                    search.ShowActivated=false;search.Left=-32000;search.Top=-32000;search.Show();Pump();search.UpdateLayout();
+                    var buttons=Children(search).OfType<Button>().Where(b=>b.Tag as string=="search-clear-route"||b.Tag as string=="search-navigate"||b.Tag as string=="search-add-stop").ToArray();
+                    var bounds=buttons.Select(b=>b.TransformToAncestor(search).TransformBounds(new Rect(b.RenderSize))).ToArray();
+                    Check(bounds.Length==3&&bounds.All(r=>r.Left>=0&&r.Right<=search.ActualWidth&&r.Top>=0&&r.Bottom<=search.ActualHeight)&&!Overlap(bounds),"Search actions fit without overlap: "+language);
+                    var direct=(string)runtime.GetType().Assembly.GetType("ScumMiniMap.Localization").GetMethod("Get").Invoke(null,new object[]{"FieldDirect"});
+                    Check(Children(search).OfType<ListBoxItem>().Any(item=>System.Windows.Automation.AutomationProperties.GetName(item).Contains(direct+": ")),"Search distances explicitly identify direct distance: "+language);
+                    if(language.ToString()=="Arabic"||language.ToString()=="German")Capture(search,Path.Combine(folder,"search-"+language+".png"));
+                }finally {search.Close();}
+                var saveWindow=(Window)Call(runtime,"BuildAddWaypoint",new System.Drawing.PointF(.41f,.42f));
+                try {
+                    saveWindow.ShowActivated=false;saveWindow.Left=-32000;saveWindow.Top=-32000;saveWindow.Show();Pump();saveWindow.UpdateLayout();
+                    var saveButtons=Children(saveWindow).OfType<Button>().ToArray();var saveBounds=saveButtons.Select(b=>b.TransformToAncestor(saveWindow).TransformBounds(new Rect(b.RenderSize))).ToArray();
+                    Check(saveBounds.Length==2&&saveBounds.All(r=>r.Left>=0&&r.Right<=saveWindow.ActualWidth&&r.Top>=0&&r.Bottom<=saveWindow.ActualHeight)&&!saveBounds[0].IntersectsWith(saveBounds[1]),"Save location actions fit without overlap: "+language);
+                }finally {saveWindow.Close();}
+                var squadWindow=(Window)Call(runtime,"BuildSquadTools",2);
+                try {
+                    squadWindow.ShowActivated=false;squadWindow.Left=-32000;squadWindow.Top=-32000;squadWindow.Width=420;squadWindow.Show();Pump();squadWindow.UpdateLayout();
+                    var tabs=Children(squadWindow).OfType<Button>().Where(b=>(b.Tag as string??"").StartsWith("squad-tab-")).ToArray();
+                    var tabBounds=tabs.Select(b=>b.TransformToAncestor(squadWindow).TransformBounds(new Rect(b.RenderSize))).ToArray();
+                    Check(tabs.Length==3&&tabBounds.All(r=>r.Left>=0&&r.Right<=squadWindow.ActualWidth)&&!Overlap(tabBounds),"Linked squad/navigation tabs fit the minimum window width: "+language);
+                    if(language.ToString()=="Arabic"||language.ToString()=="German")Capture(squadWindow,Path.Combine(folder,"squad-navigation-"+language+".png"));
+                }finally {squadWindow.Close();}
+            }
+        }finally {currentLanguage.SetValue(null,savedLanguage,null);}
+    }
     [STAThread]static void Main(string[] args) {
         var asm=Assembly.LoadFrom(Path.GetFullPath(args[0]));string folder=Path.GetFullPath(args[1]);Directory.CreateDirectory(folder);File.WriteAllText(Path.Combine(folder,"settings.ini"),"Welcomed=True\nLanguage=en\nWpfDefaultsRevision=1\n");
         var type=asm.GetType("ScumMiniMap.WpfFieldConsoleRuntime");object runtime=Activator.CreateInstance(type,F,null,new object[]{folder,true},null);type.GetField("Active",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,runtime);
@@ -25,6 +267,11 @@ class SquadUiTests {
         IDisposable host=null,friend=null;
         try {
             var engine=Get(runtime,"engine");Call(engine,"WpfPreviewPosition","{X=-336602.375 Y=-270302.625 Z=18853.264|P=0 Y=135 R=0}");
+            if(Environment.GetEnvironmentVariable("MINIMAP_CAMERA_LABELS_ONLY")=="1") {CheckViewportPixels(runtime,folder);return;}
+            if(Environment.GetEnvironmentVariable("MINIMAP_CAMERA_PROBE_ONLY")=="1") {CheckCameraInteraction(runtime,folder,Environment.GetEnvironmentVariable("MINIMAP_CAMERA_BASELINE")!="1");return;}
+            CheckSaveLocation(runtime,folder);
+            CheckUsability(runtime,folder);
+            CheckSquadIntegration(runtime,folder);
             var needsWizard=engine.GetType().GetProperty("WpfNeedsOnboarding",F);
             Check((bool)needsWizard.GetValue(engine,null),"Existing profiles without a completed-version marker require the update wizard");
             Set(engine,"wpfOnboardingVersion","0.0.1");
@@ -172,6 +419,8 @@ class SquadUiTests {
             }finally { groups.Close();memberships.Clear(); }
             var tactical=(Window)Get(runtime,"tactical");Call(runtime,"ToggleTactical",false);tactical.Left=-32000;tactical.Top=-32000;Check(tactical.IsVisible&&(bool)Get(engine,"fullMapActive"),"Opening map synchronizes visible window and engine flag");
             var contextMap=Get(runtime,"tacticalMap");tactical.UpdateLayout();
+            var opacityControl=(Slider)Get(runtime,"tacticalOpacity");var opacityValue=(TextBlock)Get(runtime,"tacticalOpacityValue");
+            Check(opacityValue.Text==opacityControl.Value.ToString("0",System.Globalization.CultureInfo.CurrentCulture)+"%","Map toolbar shows the current opacity percentage beside its slider");
             var tacticalHandle=new System.Windows.Interop.WindowInteropHelper(tactical).Handle;Check(System.Threading.Tasks.Task.Run(()=> (bool)Call(runtime,"OwnsForeground",tacticalHandle)).Result,"Keyboard-hook ownership reads a UI-published snapshot safely from a worker");
             bool wrongThreadRejected=false;System.Threading.Tasks.Task.Run(()=> { try { Call(runtime,"Refresh"); }catch(TargetInvocationException e) { wrongThreadRejected=e.InnerException is InvalidOperationException; } }).Wait();Check(wrongThreadRejected,"Control refresh fails fast on a worker instead of touching UI across threads");
             bool snapshotRejected=false;System.Threading.Tasks.Task.Run(()=> { try { Call(engine,"WpfSnapshot",false); }catch(TargetInvocationException e) { snapshotRejected=e.InnerException is InvalidOperationException; } }).Wait();Check(snapshotRejected,"Map snapshots reject worker access before reading UI-owned caches");
@@ -223,7 +472,7 @@ class SquadUiTests {
             try {
                 Call(contextMap,"NavigateTo",new System.Drawing.PointF(.46f,.53f));Check((long)Get(runtime,"lastRefresh")!=long.MaxValue,"A real click bypasses production refresh throttling even immediately after another refresh");
                 Set(engine,"fullMapZoom",1f);Set(engine,"fullMapOpacity",0);Set(runtime,"lastRefresh",long.MaxValue);((Action<int>)Get(contextMap,"ZoomRequested"))(1);
-                Check((long)Get(runtime,"lastRefresh")!=long.MaxValue,"Wheel zoom bypasses production refresh throttling");
+                Check(Convert.ToDouble(Get(Get(contextMap,"State"),"Zoom"))>1,"Wheel zoom updates the camera even while a full refresh is throttled");
                 var wheelSnapshot=Call(engine,"WpfSnapshot",true);
                 Check((int)Get(wheelSnapshot,"Opacity")==100&&Convert.ToDouble(Get(wheelSnapshot,"Zoom"))>1,"Wheel zoom retains opaque full-map terrain independent of foreground visibility");
                 // Production focus handling may hide this off-screen fixture when
@@ -235,18 +484,27 @@ class SquadUiTests {
             finally { Set(runtime,"diagnostic",true);Call(engine,"WpfClear");if(!tactical.IsVisible)Call(runtime,"ToggleTactical",false);Call(runtime,"Refresh"); }
             Call(engine,"WpfPoiClustering",true);Call(runtime,"Refresh");
             Call(contextMap,"OpenContextMenu",clickPoint);Pump();
-            var inline=(Border)Get(contextMap,"openContext");var expandSquad=Children(inline).OfType<Button>().Single(b=>(b.Content as string)=="▸ Squad tools");expandSquad.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Pump();
+            var inline=(Border)Get(contextMap,"openContext");var expandSquad=Children(inline).OfType<Button>().Single(b=>(b.Content as string)=="▸ Routes");expandSquad.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Pump();
             Check(Canvas.GetLeft(inline)>=0&&Canvas.GetTop(inline)>=0&&Canvas.GetLeft(inline)+inline.ActualWidth<=((FrameworkElement)contextMap).ActualWidth&&Canvas.GetTop(inline)+inline.ActualHeight<=((FrameworkElement)contextMap).ActualHeight,"Expanded squad menu stays within the map edges");
             var menuImage=new RenderTargetBitmap((int)tactical.ActualWidth,(int)tactical.ActualHeight,96,96,PixelFormats.Pbgra32);menuImage.Render(tactical);var menuPng=new PngBitmapEncoder();menuPng.Frames.Add(BitmapFrame.Create(menuImage));using(var file=File.Create(Path.Combine(folder,"map-context-menu.png")))menuPng.Save(file);
             var inlineStop=Children(inline).OfType<Button>().Single(b=>b.Content is TextBlock&&((TextBlock)b.Content).Text=="Add route stop");inlineStop.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Check(Get(contextMap,"openContext")==null&&((Array)Get(runtime,"squad").GetType().GetProperty("Stops",F).GetValue(Get(runtime,"squad"),null)).Length==1,"Clicking an actual nested in-map route action adds its stop and dismisses the menu");
             Check(((Array)Get(runtime,"activeStops")).Length==1&&Get(engine,"searchTarget")!=null&&((Border)Get(runtime,"targetCard")).Visibility==Visibility.Visible,"The first placed stop automatically starts and displays GPS navigation");
-            var clearMenu=(ContextMenu)Call(contextMap,"BuildContextMenu",new System.Drawing.PointF(.5f,.5f));var stopMenu=clearMenu.Items.OfType<MenuItem>().Single(m=>(string)m.Header=="Squad tools").Items.OfType<MenuItem>().Single(m=>(string)m.Header=="Stop navigation");stopMenu.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            var clearMenu=(ContextMenu)Call(contextMap,"BuildContextMenu",new System.Drawing.PointF(.5f,.5f));var stopMenu=clearMenu.Items.OfType<MenuItem>().Single(m=>(string)m.Header=="Routes").Items.OfType<MenuItem>().Single(m=>(string)m.Header=="Stop navigation");stopMenu.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             Check(Get(engine,"searchTarget")==null&&((Array)Get(runtime,"squad").GetType().GetProperty("Stops",F).GetValue(Get(runtime,"squad"),null)).Length==1,"Stop navigation preserves the route for manual resumption");
             clearMenu=(ContextMenu)Call(contextMap,"BuildContextMenu",new System.Drawing.PointF(.5f,.5f));var clearMapMenu=clearMenu.Items.OfType<MenuItem>().Single(m=>(string)m.Header=="Clear route");Check(clearMapMenu.IsEnabled,"The primary Clear route action remains enabled for a stopped solo route");clearMapMenu.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             Check(Get(engine,"searchTarget")==null&&((Array)Get(runtime,"activeStops")).Length==0&&((Array)Call(runtime,"OwnSquadPublication")).Length==0&&((Array)Get(Get(contextMap,"State"),"LocalRoute")).Length==0,"Primary Clear route removes the solo route, navigation, drawing stops and group publication together");
             Call(runtime,"AddSquadStop",new System.Drawing.PointF(.51f,.52f));Children((Border)Get(runtime,"targetCard")).OfType<Button>().Single(b=>(string)b.Tag=="text:WpfClearRoute").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Check(((Array)Get(Get(contextMap,"State"),"LocalRoute")).Length==0&&Get(engine,"searchTarget")==null,"The GPS card Clear route button removes the complete solo route");
+            Call(runtime,"AddSquadStop",new System.Drawing.PointF(.51f,.52f));Call(runtime,"StopSquadNavigation");
+            var searchClear=(Window)Call(runtime,"BuildSearch");
+            try {
+                var clearFromSearch=Children(searchClear).OfType<Button>().Single(b=>b.Tag as string=="search-clear-route");
+                Check(clearFromSearch.IsEnabled,"Search can clear a stopped route with no active GPS destination");
+                clearFromSearch.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                for(int tick=0;tick<3;tick++) {Pump();Call(runtime,"Refresh");}
+                Check(((Array)Get(Get(contextMap,"State"),"LocalRoute")).Length==0&&Get(engine,"searchTarget")==null&&((Array)Call(runtime,"OwnSquadPublication")).Length==0,"Search Clear route removes stops, navigation and publication across refreshes");
+            }finally {searchClear.Close();}
             Call(runtime,"AddSquadStop",new System.Drawing.PointF(.52f,.53f));Call(runtime,"Handle",Enum.Parse(asm.GetType("ScumMiniMap.AppControlAction"),"ClearWaypoint"));
             Check(((Array)Get(Get(contextMap,"State"),"LocalRoute")).Length==0&&Get(engine,"searchTarget")==null,"The clear shortcut removes route stops as well as its GPS target");
             Check(!(bool)Call(contextMap,"OpenContextMenu",new Point(-1,-1)),"Clicks outside the map cannot open its context menu");
@@ -269,6 +527,9 @@ class SquadUiTests {
             Call(runtime,"StopSquadNavigation");Check(Get(runtime,"followingPeer")==null,"Explicit stop cancels follow even while the teammate is stale");
             var squad=Get(runtime,"squad");var toMap=engine.GetType().GetMethod("ToMap",BindingFlags.Public|BindingFlags.Static);var firstPoint=(System.Drawing.PointF)toMap.Invoke(null,new[]{pos});var secondPoint=(System.Drawing.PointF)toMap.Invoke(null,new[]{moved});var finalPos=Activator.CreateInstance(pos.GetType());foreach(string n in new[]{"X","Y","Z","Yaw"})Set(finalPos,n,Get(pos,n));Set(finalPos,"X",Convert.ToDouble(Get(pos,"X"))+40000);var finalPoint=(System.Drawing.PointF)toMap.Invoke(null,new[]{finalPos});
             Call(squad,"AddStop","Bunker",(double)firstPoint.X,(double)firstPoint.Y);Call(squad,"AddStop","Fuel",(double)secondPoint.X,(double)secondPoint.Y);Call(squad,"AddStop","Trader",(double)finalPoint.X,(double)finalPoint.Y);
+            // Arrival requires a fresh sample, independent of time spent in
+            // the preceding layout, rendering and network fixtures.
+            Set(engine,"updated",DateTime.UtcNow);
             Set(engine,"diagnosticMode",false);
             try { var stops=squad.GetType().GetProperty("Stops",F).GetValue(squad,null);Call(runtime,"StartSquadRoute",stops);Check((int)Get(runtime,"activeStop")==1,"Starting at the first stop advances to the second stop");string trip=(string)Get(Get(contextMap,"State"),"RouteSummary");Check(trip.Contains("Next stop:")&&trip.Contains("Remaining route:")&&trip.Contains("ETA"),"Multi-stop GPS displays next-leg and remaining-journey distance and ETA");Set(engine,"position",moved);Set(engine,"updated",DateTime.UtcNow);Call(runtime,"UpdateSquad");Check((int)Get(runtime,"activeStop")==2&&((string)Get(Get(engine,"searchTarget"),"Name")).StartsWith("3/3"),"Arrival advances ordered route navigation to the next stop");Set(engine,"position",finalPos);Call(runtime,"UpdateSquad");Check(Get(engine,"searchTarget")==null&&((Array)Get(runtime,"activeStops")).Length==0,"Completing the final route stop clears navigation"); }
             finally { Set(engine,"diagnosticMode",true); }
@@ -279,11 +540,11 @@ class SquadUiTests {
             Call(runtime,"StopSquadNavigation");Call(runtime,"Refresh");Check(((Border)Get(runtime,"routePreviewCard")).Visibility==Visibility.Visible&&((TextBlock)Get(runtime,"routePreviewDetail")).Text.Contains("ETA"),"Stopping navigation keeps the route preview available without automatically restarting");
             Capture(tactical,Path.Combine(folder,"route-gps-preview.png"));
             Children((Border)Get(runtime,"routePreviewCard")).OfType<Button>().Single(b=>(string)b.Tag=="text:SquadStartRoute").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(((Array)Get(runtime,"activeStops")).Length==4&&((Border)Get(runtime,"routePreviewCard")).Visibility==Visibility.Collapsed,"The full-map route card starts GPS navigation without opening squad tools");Call(runtime,"StopSquadNavigation");Call(runtime,"Refresh");
-            Call(runtime,"Refresh");var map=Get(runtime,"tacticalMap");var menu=(ContextMenu)Call(map,"BuildContextMenu",new System.Drawing.PointF(finalPoint.X+.01f,finalPoint.Y+.01f));var squadMenu=menu.Items.OfType<MenuItem>().Single(item=>(string)item.Header=="Squad tools");
+            Call(runtime,"Refresh");var map=Get(runtime,"tacticalMap");var menu=(ContextMenu)Call(map,"BuildContextMenu",new System.Drawing.PointF(finalPoint.X+.01f,finalPoint.Y+.01f));var squadMenu=menu.Items.OfType<MenuItem>().Single(item=>(string)item.Header=="Routes");
             Check(menu.Items.OfType<MenuItem>().Any(item=>(string)item.Header=="Add route stop")&&squadMenu.Items.OfType<MenuItem>().Any(item=>(string)item.Header=="Start route")&&squadMenu.Items.OfType<MenuItem>().Any(item=>(string)item.Header=="Remove last stop"),"Right-click exposes Add route stop directly, with start and undo actions in squad tools");
             Check(menu.Items.OfType<MenuItem>().Any(item=>(string)item.Header=="Navigate here (GPS)")&&menu.Items.OfType<MenuItem>().Any(item=>(string)item.Header=="Save location"),"Temporary GPS navigation and saved locations have distinct labels");
             var kindMenu=squadMenu.Items.OfType<MenuItem>().Single(item=>(string)item.Header=="Your route");var shared=kindMenu.Items.OfType<MenuItem>().Single(item=>(string)item.Header=="Shared route");shared.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));Check((bool)squad.GetType().GetProperty("Shared",F).GetValue(squad,null),"Right-click switches your route to explicitly shared mode");
-            Call(runtime,"Refresh");menu=(ContextMenu)Call(map,"BuildContextMenu",new System.Drawing.PointF(finalPoint.X+.01f,finalPoint.Y+.01f));squadMenu=menu.Items.OfType<MenuItem>().Single(item=>(string)item.Header=="Squad tools");var remove=squadMenu.Items.OfType<MenuItem>().Single(item=>((string)item.Header).StartsWith("Delete:"));remove.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));Await(()=>ownPlanner.GetType().GetProperty("Plan",F).GetValue(ownPlanner,null)!=null);Check(((Array)squad.GetType().GetProperty("Stops",F).GetValue(squad,null)).Length==3,"Right-click removes a placed stop and recalculates the remaining stages");
+            Call(runtime,"Refresh");menu=(ContextMenu)Call(map,"BuildContextMenu",new System.Drawing.PointF(finalPoint.X+.01f,finalPoint.Y+.01f));squadMenu=menu.Items.OfType<MenuItem>().Single(item=>(string)item.Header=="Routes");var remove=squadMenu.Items.OfType<MenuItem>().Single(item=>((string)item.Header).StartsWith("Delete:"));remove.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));Await(()=>ownPlanner.GetType().GetProperty("Plan",F).GetValue(ownPlanner,null)!=null);Check(((Array)squad.GetType().GetProperty("Stops",F).GetValue(squad,null)).Length==3,"Right-click removes a placed stop and recalculates the remaining stages");
             Call(friend,"Update",moved,DateTime.UtcNow);var friendMarkers=Array.CreateInstance(asm.GetType("ScumMiniMap.SharedMapMarker"),1);var gps=Activator.CreateInstance(friendMarkers.GetType().GetElementType(),true);Set(gps,"Id",new string('F',64));Set(gps,"Name","Friend destination");Set(gps,"X",.4d);Set(gps,"Y",.5d);friendMarkers.SetValue(gps,0);Call(friend,"UpdateMarkers",friendMarkers);Await(()=>((Array)Call(host,"SnapshotMarkers")).Length==1);Await(()=> { Call(runtime,"Refresh");return ((Array)Get(Get(map,"State"),"OtherRoutePlans")).Length==1; });Check(true,"Another player's solo GPS route is calculated and displayed automatically");
             var remoteSquad=Activator.CreateInstance(squad.GetType(),F,null,new object[]{null},null);Call(remoteSquad,"SetShared",true);Call(remoteSquad,"AddStop","Shared bunker",.2d,.3d);Call(remoteSquad,"AddStop","Shared trader",.4d,.5d);Call(friend,"UpdateMarkers",Call(remoteSquad,"Local"));Await(()=>((Array)Call(host,"SnapshotMarkers")).Length==2);Call(runtime,"StartSquadRoute",Call(host,"SnapshotMarkers"));Check(!((Array)Call(runtime,"OwnSquadPublication")).Cast<object>().Any(m=>((string)Get(m,"Id")).StartsWith("534F4C4F")||((string)Get(m,"Id")).StartsWith("53485244")),"Following a shared route suppresses duplicate personal route publications");
             Call(remoteSquad,"AddStop","Shared fuel",.5d,.6d);Call(friend,"UpdateMarkers",Call(remoteSquad,"Local"));Await(()=>((Array)Call(host,"SnapshotMarkers")).Length==3);Call(runtime,"Refresh");Check(((Array)Get(runtime,"activeStops")).Length==3,"A followed shared route updates when its owner places another stage");Call(runtime,"StopSquadNavigation");
@@ -293,8 +554,15 @@ class SquadUiTests {
             Call(runtime,"Refresh");menu=(ContextMenu)Call(map,"BuildContextMenu",secondPoint);Check(menu.Items.OfType<MenuItem>().Any(item=>((string)item.Header).StartsWith("Follow teammate:")),"Right-click on a teammate exposes moving-teammate navigation");
             var preset=Call(engine,"WpfCapturePreset","Driving");Call(engine,"WpfLayer","grid",!(bool)Get(preset,"Grid"));Call(engine,"WpfApplyPreset",preset);Check((bool)Get(Call(engine,"WpfSnapshot",false),"Grid")== (bool)Get(preset,"Grid"),"Applying preset restores actual map layers");
             bool inspected=false;var timer=new DispatcherTimer { Interval=TimeSpan.FromMilliseconds(250) };timer.Tick+=(s,e)=> {
-                timer.Stop();try { var dialog=Application.Current.Windows.OfType<Window>().Single(w=>w.Title=="Squad tools");dialog.Left=-32000;dialog.Top=-32000;dialog.UpdateLayout();var labels=Children(dialog).OfType<Button>().Select(b=>b.Content as string).ToArray();Check(labels.Contains("Danger")&&labels.Contains("Loot")&&labels.Contains("Pick me up")&&labels.Contains("Save current map preset"),"Squad panel exposes pings, route controls and presets");var bitmap=new RenderTargetBitmap((int)dialog.ActualWidth,(int)dialog.ActualHeight,96,96,PixelFormats.Pbgra32);bitmap.Render(dialog);var encoder=new PngBitmapEncoder();encoder.Frames.Add(BitmapFrame.Create(bitmap));using(var file=File.Create(Path.Combine(folder,"squad-tools.png")))encoder.Save(file);inspected=true;dialog.Close(); }catch { foreach(var w in Application.Current.Windows.OfType<Window>().ToArray())if(w!=tactical)w.Close();throw; }
+                timer.Stop();try { var dialog=Application.Current.Windows.OfType<Window>().Single(w=>w.Title=="Squad tools");dialog.Left=-32000;dialog.Top=-32000;dialog.UpdateLayout();var labels=Children(dialog).OfType<Button>().Select(b=>b.Content as string).ToArray();Check(labels.Contains("Danger")&&labels.Contains("Loot")&&labels.Contains("Pick me up")&&!labels.Contains("Save current map preset")&&labels.Contains("Routes")&&labels.Contains("Map presets"),"Squad panel groups pings and sharing with navigation to routes and map presets");var bitmap=new RenderTargetBitmap((int)dialog.ActualWidth,(int)dialog.ActualHeight,96,96,PixelFormats.Pbgra32);bitmap.Render(dialog);var encoder=new PngBitmapEncoder();encoder.Frames.Add(BitmapFrame.Create(bitmap));using(var file=File.Create(Path.Combine(folder,"squad-tools.png")))encoder.Save(file);inspected=true;dialog.Close(); }catch { foreach(var w in Application.Current.Windows.OfType<Window>().ToArray())if(w!=tactical)w.Close();throw; }
             };timer.Start();Call(runtime,"ShowSquadTools");Check(inspected,"Actual squad panel rendered and closed successfully");
+            bool pingInspected=false;var pingTimer=new DispatcherTimer {Interval=TimeSpan.FromMilliseconds(200)};var previousUpdate=Get(engine,"updated");
+            Set(engine,"diagnosticMode",false);Set(engine,"updated",DateTime.UtcNow);
+            pingTimer.Tick+=(s,e)=> { pingTimer.Stop();var dialog=Application.Current.Windows.OfType<Window>().Single(w=>w.Tag as string=="squad-tools");try {
+                var danger=Children(dialog).OfType<Button>().Single(b=>b.Tag as string=="squad-ping-0");Check(danger.IsEnabled,"An actual connected Squad dialog enables explicit pings from a fresh captured position");danger.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                Check(((Array)Call(squad,"Local")).Cast<object>().Any(m=>((string)Get(m,"Id")).StartsWith("50494E47"))&&(bool)Get(engine,"panelOpening")&&(bool)Get(engine,"shortcutCaptureOpen"),"An actual Squad ping is created while game input and coordinate capture remain protected");pingInspected=true;
+            }finally {dialog.Close();} };
+            try {pingTimer.Start();Call(runtime,"ShowSquadTools");Check(pingInspected,"Explicit ping completes through the real modal path");}finally {pingTimer.Stop();Set(engine,"diagnosticMode",true);Set(engine,"updated",previousUpdate);}
             trayAdmin.PerformClick();Pump();
             Check(((System.Windows.Forms.Form)Get(engine,"adminCommandsPanel")).Visible,"Tray Exit regression starts with admin commands still open");
             ((System.Windows.Forms.ContextMenuStrip)Get(engine,"trayMenu")).Items.Cast<System.Windows.Forms.ToolStripItem>().Last().PerformClick();

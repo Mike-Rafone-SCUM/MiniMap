@@ -323,6 +323,7 @@ namespace ScumMiniMap {
                         if(key=="HideOnboardingGuide") { if(bool.TryParse(val,out b))hideOnboardingGuide=b;continue; }
                         if(key=="RotateMinimap") { if(bool.TryParse(val,out b))wpfRotateMap=b;continue; }
                         if(key=="PoiClustering") { if(bool.TryParse(val,out b))wpfPoiClustering=b;continue; }
+                        if(key=="WpfTacticalOpacityOverride") { if(bool.TryParse(val,out b))wpfTacticalOpacityOverride=b;continue; }
                         if(key=="AdminToolsEnabled") { if(bool.TryParse(val,out b))adminToolsEnabled=b;continue; }
                         if(key=="AdminPanelDismissed") { adminPanelDismissedForFullMap=false;continue; }
 
@@ -542,6 +543,7 @@ namespace ScumMiniMap {
                 settingsLines.Add("OnboardingVersion="+wpfOnboardingVersion);
                 settingsLines.Add("HideOnboardingGuide="+hideOnboardingGuide);
                 settingsLines.Add("PoiClustering="+wpfPoiClustering+Environment.NewLine);
+                settingsLines.Add("WpfTacticalOpacityOverride="+wpfTacticalOpacityOverride);
                 settingsLines.Add("AdminToolsEnabled="+adminToolsEnabled+Environment.NewLine+"AdminPanelDismissed="+adminPanelDismissedForFullMap+Environment.NewLine);
                 settingsLines.AddRange(new[]{"WpfDefaultsRevision="+wpfDefaultsRevision,"FullMapOpacity="+fullMapOpacity,"RouteHistoryColor="+ColorTranslator.ToHtml(routeHistoryColor),"SettingsShortcutKey="+settingsShortcutKey,"PinShortcutKey="+pinShortcutKey,"SearchShortcutKey="+searchShortcutKey,"SettingsShortcutScanCode="+settingsShortcutScanCode,"PinShortcutScanCode="+pinShortcutScanCode,"SearchShortcutScanCode="+searchShortcutScanCode});
                 settingsLines.AddRange(new[]{"DisabledWpfZones="+string.Join(";",disabledWpfZones)});

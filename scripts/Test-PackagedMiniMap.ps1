@@ -7,7 +7,7 @@ if ([Threading.Thread]::CurrentThread.GetApartmentState() -ne [Threading.Apartme
 }
 $packagedPath = [IO.Path]::GetFullPath($AssemblyPath)
 if (-not (Test-Path -LiteralPath $packagedPath -PathType Leaf)) { throw 'Packaged executable is missing.' }
-Add-Type -AssemblyName System.Windows.Forms,System.Drawing
+Add-Type -AssemblyName System.Windows.Forms,System.Drawing,PresentationFramework
 
 # Loading the compiled assembly does not launch its executable or request elevation.
 # The fixed -Check argument returns before the normal app creates windows or hooks.
@@ -15,6 +15,12 @@ $assembly = [Reflection.Assembly]::LoadFile($packagedPath)
 $assetType=$assembly.GetType('ScumMiniMap.InstallationAssets',$true)
 try { $null=$assetType.GetMethod('Validate',[Reflection.BindingFlags]'NonPublic,Static').Invoke($null,@()) }
 catch [Reflection.TargetInvocationException] { throw $_.Exception.InnerException }
+# Parse the real WPF theme too: -Check alone never creates the frontend and
+# therefore cannot detect invalid control-template names or triggers.
+$themeType=$assembly.GetType('ScumMiniMap.WpfFieldTheme',$true)
+try { $theme=$themeType.GetMethod('Resources',[Reflection.BindingFlags]'NonPublic,Static').Invoke($null,@()) }
+catch [Reflection.TargetInvocationException] { throw $_.Exception.InnerException }
+if ($null -eq $theme -or $theme.Count -eq 0) { throw 'Packaged WPF theme is empty.' }
 $entry = $assembly.EntryPoint
 if ($null -eq $entry -or $entry.DeclaringType.FullName -ne 'ScumMiniMap.Program' -or
     $entry.Name -ne 'Main' -or -not $entry.IsStatic -or $entry.GetParameters().Count -ne 1 -or

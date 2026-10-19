@@ -46,6 +46,8 @@ namespace ScumMiniMap {
         int wpfDefaultsRevision;
         internal bool wpfRotateMap;
         internal bool wpfPoiClustering=true;
+        bool wpfTacticalOpacityOverride;
+        int WpfTacticalOpacityValue { get { return fullMapZoom>1&&!wpfTacticalOpacityOverride?100:fullMapOpacity; } }
         internal void WpfRotate(bool enabled) { wpfRotateMap=enabled;SaveSettings(); }
         internal void WpfPoiClustering(bool enabled) { wpfPoiClustering=enabled;SaveSettings(); }
         internal void WpfDefaultColours() { routeGuidanceColor=OverlayTheme.Route;playerConeColor=OverlayTheme.Accent;routeHistoryColor=Color.FromArgb(164,177,188);SettingsChanged();SaveSettings();WpfRebuildSettings(); }
@@ -103,7 +105,12 @@ namespace ScumMiniMap {
             if(labelSize==6)labelSize=16;
             wpfDefaultsRevision=2;SettingsChanged();SaveSettings();
         }
-        internal void WpfTacticalOpacity(int opacity) { fullMapOpacity=Math.Max(0,Math.Min(100,opacity));SettingsChanged();SaveSettings(); }
+        internal void WpfTacticalOpacity(int opacity) { WpfVerifyAccess();wpfTacticalOpacityOverride=true;fullMapOpacity=Math.Max(0,Math.Min(100,opacity));WpfCameraChanged(); }
+        void WpfCameraChanged() { WpfVerifyAccess();terrainKey=null;lastFrameKey=null;saveAfter=DateTime.UtcNow.AddMilliseconds(700); }
+        internal void WpfUpdateCamera(WpfMapState state,bool tactical) {
+            WpfVerifyAccess();if(tactical&&wpfFollowPlayer&&position!=null)fullMapPan=ToMap(position);
+            state.Zoom=tactical?fullMapZoom:zoom;state.Opacity=tactical?WpfTacticalOpacityValue:mapOpacity;state.Pan=fullMapPan;
+        }
         void WpfCaptureSettings(IEnumerable<System.Windows.Forms.Control> controls) {
             WpfSettingsRevision++;wpfSettings.Clear();string group="",groupKey=null;int tab=0;
             foreach(var control in controls) {
@@ -149,8 +156,14 @@ namespace ScumMiniMap {
                 Heading=showHeading,Compass=showCompass,Status=showStatus,StatusAbove=statusPos=="Above",HudWidth=overlay.MinimapBounds.Width,HudHeight=overlay.MinimapBounds.Height,HudLeft=overlay.MinimapBounds.Left,HudTop=overlay.MinimapBounds.Top,PlayerColor=playerConeColor.ToArgb(),RouteColor=routeGuidanceColor.ToArgb(),Store=scumMap,Saved=cachedVisibleZones,Trail=cachedTrail,
                 HistoryColor=routeHistoryColor.ToArgb(),TrackingStatus=WpfTrackingStatus(),TrackingPaused=IntensiveWorkPaused||chat.Paused||inventoryInputLocked,
                 Location=position==null?WpfTrackingStatus():GetLocationDescription().Split(new[]{"  |  -> "},StringSplitOptions.None)[0],
-                Shape=overlayShape,RouteSummary=FieldConsoleRouteSummary(),Opacity=tactical?(fullMapZoom>1?100:fullMapOpacity):mapOpacity,Zoom=tactical?fullMapZoom:zoom,Pan=fullMapPan,
+                Shape=overlayShape,RouteSummary=FieldConsoleRouteSummary(),Opacity=tactical?WpfTacticalOpacityValue:mapOpacity,Zoom=tactical?fullMapZoom:zoom,Pan=fullMapPan,
                 MapKey=scumMapKey,MapScan=scumMapScanCode,ChatKey=scumChatKey,CopyKey=scumCopyKey,CopyModifier=scumCopyModifierKey,Bindings=CurrentAppControls() };
+        }
+        internal bool WpfCanPing(bool fromSquadTools) {
+            WpfVerifyAccess();
+            // An explicit ping may use a fresh captured position while this
+            // dialog protects game input. It never resumes coordinate capture.
+            return (!shortcutCaptureOpen||fromSquadTools&&panelOpening)&&!IntensiveWorkPaused&&!diagnosticMode&&!closing&&!adminCommandBusy&&!chat.Paused&&!inventoryInputLocked&&position!=null&&PrivatePositions.Fresh(updated,DateTime.UtcNow);
         }
         internal List<MapZone> WpfSearch(string text) {
             PointF? origin=position==null?(PointF?)null:ToMap(position);var matches=DestinationSearch.Find(WpfAllZones().ToList(),text,origin);
@@ -203,12 +216,13 @@ namespace ScumMiniMap {
         internal void WpfPreviewPosition(string value) { if(!diagnosticMode)throw new InvalidOperationException("Preview requires diagnostic mode.");Accept(value);zoom=targetZoom=4f;autoZoom=false; }
         internal void WpfTactical(bool active) { fullMapActive=active;Native.CancelActiveCopy();inputGeneration++;fallbackKeysArmed=false; }
         internal void WpfZoom(bool tactical,int direction) {
+            WpfVerifyAccess();
             float step=1f+zoomStepPercent/100f;
             if(tactical)fullMapZoom=Math.Max(1,Math.Min(maxZoom,fullMapZoom*(float)Math.Pow(step,direction)));
             else { autoZoom=false;zoom=Math.Max(1,Math.Min(maxZoom,zoom*(float)Math.Pow(step,direction)));targetZoom=zoom; }
-            SettingsChanged();
+            WpfCameraChanged();
         }
-        internal void WpfPan(PointF point) { wpfFollowPlayer=false;fullMapPan=point;SettingsChanged(); }
+        internal void WpfPan(PointF point) { WpfVerifyAccess();wpfFollowPlayer=false;fullMapPan=point;WpfCameraChanged(); }
         internal string WpfBind(AppControlAction action,int key,int scan) {
             string error=AppControlBindingError(action,key,scan);if(error!=null)return error;
             var bindings=CurrentAppControls();bindings.Set(action,key,scan);ApplyAppControls(bindings);return null;
@@ -240,10 +254,12 @@ namespace ScumMiniMap {
                 SettingsChanged();
             },waypoints) { WpfMode=true };
         }
-        internal void WpfWaypoint(string name,PointF? point) {
-            if(!point.HasValue&&position==null)return;PointF destination=point.HasValue?point.Value:ToMap(position);
+        internal bool WpfWaypoint(string name,PointF? point) {
+            WpfVerifyAccess();
+            if(string.IsNullOrWhiteSpace(name)||!point.HasValue&&position==null)return false;PointF destination=point.HasValue?point.Value:ToMap(position);
             var next=new List<MapZone>(zones??new List<MapZone>());next.Add(new MapZone { Name=name,Category=ZoneCategory.Custom,Argb=OverlayTheme.Route.ToArgb(),Points=new[]{destination},Layer="Custom Waypoints" });
-            if(TryCommitZones(next,this))SettingsChanged();
+            if(!TryCommitZones(next,this))return false;
+            SettingsChanged();return true;
         }
         internal void WpfNativeTool(AppControlAction action) {
             switch(action) { case AppControlAction.DeathMarker:TriggerDeathMarker();break;case AppControlAction.ZoneEditor:OpenZoneImport(null);break;case AppControlAction.AdminCommands:ShowAdminCommands();break;case AppControlAction.AdminPlayers:ShowAdminPlayers();break;case AppControlAction.ResetZoom:fullMapZoom=zoom=targetZoom=1;SettingsChanged();break; }

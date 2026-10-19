@@ -388,8 +388,8 @@ class WpfPreviewHarness {
    var search=(Window)Call(runtime,"BuildSearch");var input=Children(search).OfType<TextBox>().Single();var results=Children(search).OfType<ListBox>().Single();
    input.Text="zzzzzzzzzz";Check(results.Items.Count==0,"The new WPF search displays no results for an unknown place");
    input.Text="grid D4";Check(results.Items.Count>0&&results.SelectedIndex==0,"WPF search selects the calibrated grid result");
-   var go=Children(search).OfType<Button>().Single(b=>(string)b.Content=="Set waypoint");Check(go.IsEnabled,"A valid WPF selection enables the navigation action");
-   go.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));state=Call(engine,"WpfSnapshot",true);Check(((string)Field(Field(state,"Target"),"Name"))=="Grid D4","The WPF Set waypoint action updates the shared navigation state");
+   var go=Children(search).OfType<Button>().Single(b=>b.Tag as string=="search-navigate");Check(go.IsEnabled&&(string)go.Content=="Navigate here (GPS)","A valid WPF selection enables the explicitly named GPS navigation action");
+   go.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));state=Call(engine,"WpfSnapshot",true);Check(((string)Field(Field(state,"Target"),"Name"))=="Grid D4","The WPF Navigate here action updates the shared navigation state");
    var actionType=assembly.GetType("ScumMiniMap.AppControlAction");Call(runtime,"Handle",Enum.Parse(actionType,"ClearWaypoint"));state=Call(engine,"WpfSnapshot",true);Check(Field(state,"Target")==null&&Field(state,"Route")==null,"WPF Clear removes the target and route through shared cleanup");
    mapWindow.Hide();bool settingsHotkeyOpened=false;
    System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(new Action(()=> {

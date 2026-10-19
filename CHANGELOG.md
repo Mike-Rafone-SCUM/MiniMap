@@ -8,6 +8,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.3.11] - 2026-10-19
+
+- Further reduce map drawing work by clipping grid segments to the viewport and rejecting off-screen text before formatting or composition, while preserving labels that cross viewport edges.
+
+- Fix ticket #1022: keep the map opacity slider usable at every zoom level, apply the chosen transparency immediately and retain it across zoom changes and restarts. Keep the automatic opaque zoom default until the player explicitly adjusts opacity.
+- Pan, zoom and opacity updates retain zone/location caches and avoid polling groups, rebuilding sidebar controls or writing settings for every pointer movement. Partition large-zoom POI drawings into reusable spatial groups and submit only visible groups to composition.
+- Avoid drawing the terrain overview beneath a complete set of loaded tiles, bound world clipping to the visible viewport, and use faster bitmap sampling during camera movement before restoring smooth sampling after it settles.
+
+- Connect route editing to search, map context menus and GPS cards. Search results and GPS destinations can become named route stops; stopping navigation retains the route for resumption.
+- Organize routes, squad sharing/pings and map presets into linked pages. Add direct Routes and Map presets entries to the map sidebar and Settings, individual stop removal, and visibly unavailable pings when sharing or live tracking is unavailable. Retain preset text and focus during live updates.
+
 ## [2.3.10] - 2026-10-19
 
 - Keep unchanged admin player cards when the viewport grows or shrinks; create or remove only the changed portion instead of rebuilding the entire visible page.
