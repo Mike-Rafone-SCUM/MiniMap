@@ -268,6 +268,7 @@ class SquadUiTests {
         Call(engine,"WpfPoiClustering",true);Call(engine,"WpfLayer","labels",true);Set(engine,"fullMapZoom",5f);Call(runtime,"Refresh");Call(runtime,"FilterAll",true);
         Action record=()=> {var group=new DrawingGroup();using(var dc=group.Open())Call(map,"OnRender",dc);};
         record();Await(()=> {record();return Get(map,"requestedPoiLayout")==null||Get(map,"drawnPoiLayout")!=null&&Object.ReferenceEquals(Get(map,"drawnPoiLayout"),Get(map,"requestedPoiLayout"));});
+        if(verify) {Await(()=> {record();return Get(map,"idleCameraScene")!=null;});Check(true,"A completed stationary map prepares a worker frame before the first camera input");}
         var layout=Get(map,"requestedPoiLayout");var labels=Get(map,"labelLayout");int sceneBuilds=(int)Get(map,"PoiSceneBuilds");var elapsed=new List<double>();int layoutsChanged=0,labelLayoutsChanged=0;
         var pan=(Action<System.Drawing.PointF>)Get(map,"PanChanged");var zoom=(Action<int>)Get(map,"ZoomRequested");var cpu=System.Diagnostics.Stopwatch.StartNew();
         for(int i=0;i<48;i++) {
@@ -280,6 +281,7 @@ class SquadUiTests {
         Check(layoutsChanged==0&&labelLayoutsChanged==0&&(int)Get(map,"PoiSceneBuilds")==sceneBuilds,"A rapid zoom/pan burst reprojects existing POIs and labels without rebuilding either layout");
         Check(elapsed[45]<100,"Warm clustered camera recording stays under 100 ms at p95 on this test machine");
         Check((bool)Get(map,"CameraInteracting")&&((DispatcherTimer)Get(map,"cameraFrame")).IsEnabled,"Camera input keeps one background redraw timer pending");
+        Check(Get(map,"cameraScene")!=null,"The first camera burst immediately reuses the stationary frame");
         var timer=(DispatcherTimer)Get(map,"cameraFrame");for(int i=0;i<100;i++)pan(new System.Drawing.PointF(.5f+i*.0001f,.5f));
         Check(Object.ReferenceEquals(timer,Get(map,"cameraFrame"))&&Math.Abs(((System.Drawing.PointF)Get(Get(map,"State"),"Pan")).X-.5099)<.00001,"A hundred pending pan requests share one frame and retain the latest camera position");
         Call(map,"UpdateHover",new Point(500,400));Check(Get(map,"hoverText")==null,"Camera movement skips expensive hover searches and hides stale tooltips");zoom(1);

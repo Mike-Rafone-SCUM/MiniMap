@@ -131,14 +131,15 @@ namespace ScumMiniMap {
             internal DrawingGroup Drawing;internal BitmapSource Image;internal double Width,Height,Side;internal DrawingPoint Centre;internal int Generation,Opacity;
         }
         readonly object cameraGate=new object();
-        CameraScene pendingCameraScene,completedCameraScene,cameraScene;
+        CameraScene pendingCameraScene,completedCameraScene,cameraScene,idleCameraScene;
         bool cameraWorker,cameraApplyPosted;
         int cameraGeneration;
         internal int CameraSceneBuilds;
+        internal void BeginCameraFrames() { if(!CameraInteracting)cameraScene=idleCameraScene;CameraInteracting=true; }
         internal void EndCameraFrames() {
             CameraInteracting=false;if(cameraFrame!=null)cameraFrame.Stop();
             lock(cameraGate) { cameraGeneration++;pendingCameraScene=null;completedCameraScene=null; }
-            cameraScene=null;
+            cameraScene=null;idleCameraScene=null;
         }
         void QueueCameraScene(DrawingGroup drawing,double width,double height) {
             drawing.Freeze();var scene=new CameraScene { Drawing=drawing,Width=width,Height=height,Side=MapSide(State,width,height,false),Centre=CameraCentre(State,width,height,false),Opacity=State.Opacity };
@@ -162,8 +163,9 @@ namespace ScumMiniMap {
                             bool post=false;lock(cameraGate) { if(next.Generation!=cameraGeneration)continue;completedCameraScene=next;if(!cameraApplyPosted) { cameraApplyPosted=true;post=true; } }
                             if(post&&!dispatcher.HasShutdownStarted)dispatcher.BeginInvoke(new Action(()=> {
                                 CameraScene completed;lock(cameraGate) { completed=completedCameraScene;completedCameraScene=null;cameraApplyPosted=false; }
-                                if(completed==null||completed.Generation!=cameraGeneration||!CameraInteracting)return;
-                                cameraScene=completed;CameraSceneBuilds++;RequestRedraw();
+                                if(completed==null||completed.Generation!=cameraGeneration)return;
+                                CameraSceneBuilds++;
+                                if(CameraInteracting) { cameraScene=completed;RequestRedraw(); }else idleCameraScene=completed;
                             }),DispatcherPriority.Background);
                         }catch(Exception error) { Program.LogException("CameraScene",error); }
                     }
@@ -525,9 +527,11 @@ namespace ScumMiniMap {
             Unloaded+=(s,e)=> { EndCameraFrames();if(poiBuild!=null)poiBuild.Cancel();System.Threading.Interlocked.Increment(ref poiGeneration);requestedPoiLayout=null; };
         }
         protected override void OnRender(DrawingContext dc) {
-            if(!Compact&&CameraInteracting&&State!=null&&ActualWidth>=1&&ActualHeight>=1) {
+            bool warm=false;if(!Compact&&!CameraInteracting)lock(cameraGate)warm=idleCameraScene==null&&!cameraWorker;
+            if(!Compact&&(CameraInteracting||warm)&&State!=null&&ActualWidth>=1&&ActualHeight>=1) {
                 var drawing=new DrawingGroup();using(var context=drawing.Open())DrawMap(context);
-                QueueCameraScene(drawing,ActualWidth,ActualHeight);DrawCameraScene(dc,drawing,ActualWidth,ActualHeight);return;
+                if(CameraInteracting||State.Store==null||!State.Store.MasterEnabled||object.ReferenceEquals(requestedPoiLayout,drawnPoiLayout))QueueCameraScene(drawing,ActualWidth,ActualHeight);
+                if(CameraInteracting)DrawCameraScene(dc,drawing,ActualWidth,ActualHeight);else dc.DrawDrawing(drawing);return;
             }
             DrawMap(dc);
         }
@@ -948,7 +952,7 @@ namespace ScumMiniMap {
             // Camera input does not poll groups, recalculate routes or rebuild
             // the sidebar. The regular refresh continues to publish live data.
             engine.WpfUpdateCamera(tacticalMap.State,true);tacticalVisualIdentity=null;
-            tacticalMap.CameraInteracting=true;tacticalMap.ClearHover();
+            tacticalMap.BeginCameraFrames();tacticalMap.ClearHover();
             RenderOptions.SetBitmapScalingMode(tacticalMap,BitmapScalingMode.NearestNeighbor);
             if(cameraSettle==null) { cameraSettle=new DispatcherTimer(DispatcherPriority.Background,application.Dispatcher) { Interval=TimeSpan.FromMilliseconds(120) };cameraSettle.Tick+=(s,e)=> { cameraSettle.Stop();if(disposed)return;EndCameraInteraction(); }; }
             cameraSettle.Stop();cameraSettle.Start();
