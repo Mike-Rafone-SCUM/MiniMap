@@ -172,11 +172,11 @@ namespace ScumMiniMap {
             if(position==null)return Localization.Get("WaitingForCoordinates");
             bool road=activeRoute!=null&&activeRoute.Success;
             double distance=road?activeRoute.TotalDistanceMeters:DestinationSearch.Metres(ToMap(position),searchTarget.Centroid);
-            return WpfTravelSummary(distance,road,routeCalculating);
+            return WpfTravelSummary(distance,road,routeCalculating,road?(double?)activeRoute.EstimatedSeconds:null);
         }
-        internal string WpfTravelSummary(double distance,bool road,bool calculating=false) {
+        internal string WpfTravelSummary(double distance,bool road,bool calculating=false,double? estimatedSeconds=null) {
             double speed=filteredSpeed>1.2?filteredSpeed:13.9;
-            int minutes=Math.Max(1,(int)Math.Round(distance/Math.Max(.5,speed)/60));
+            int minutes=Math.Max(1,(int)Math.Ceiling((road&&estimatedSeconds.HasValue?estimatedSeconds.Value:distance/Math.Max(.5,speed))/60));
             return DestinationSearch.Distance(distance)+(road?Localization.Get("RoadSuffix"):" ("+Localization.Get("FieldDirect")+")")+" · "+Localization.Get("NavigationEta")+" "+Localization.T("FieldMinutes",minutes)+(calculating?" · "+Localization.Get("FieldCalculating"):road?"":" · "+Localization.Get("FieldNoRoad"));
         }
         void DrawFieldConsoleSidebar(Graphics g,int x,int w,int h) {

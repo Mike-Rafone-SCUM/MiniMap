@@ -47,7 +47,15 @@ namespace ScumMiniMap {
             return true;
         }
     }
+    public enum RoadRouteMode { Quickest, Shortest, PavedOnly }
+    public enum RoadSurface { Unknown, Paved, Dirt }
+
     public class RoadRoute {
+        public RoadRouteMode Mode;
+        public double EstimatedSeconds;
+        public double PavedDistanceMeters;
+        public double DirtDistanceMeters;
+        public double UnknownDistanceMeters;
         public bool Success;
         public PointF PlayerPoint;
         public PointF RoadEntryPoint;
@@ -84,6 +92,7 @@ namespace ScumMiniMap {
             public float LengthMeters;
             public PointF[] Points;
             public bool IsBridge;
+            public RoadSurface Surface;
         }
 
         public struct HalfEdge {
@@ -97,6 +106,7 @@ namespace ScumMiniMap {
         private List<RoadEdge> edgesList;
         private List<HalfEdge>[] adj;
         private int gridRes;
+        private double heuristicDistanceFactor=1;
         private List<ushort>[] spatialGridList;
 
         // Fast lookup arrays
@@ -188,7 +198,7 @@ namespace ScumMiniMap {
             if (magic.Length!=4) throw new InvalidDataException("Truncated road header.");
             if (magic[0] != 'R' || magic[1] != 'O' || magic[2] != 'A' || magic[3] != 'D') throw new InvalidDataException("Invalid road header.");
             uint version = br.ReadUInt32();
-            if (version != 2 && version != 3) throw new InvalidDataException("Unsupported road version.");
+            if (version != 2 && version != 3 && version != 4) throw new InvalidDataException("Unsupported road version.");
 
             int nodeCount = br.ReadInt32();
             int edgeCount = br.ReadInt32();
@@ -196,6 +206,7 @@ namespace ScumMiniMap {
             if(nodeCount<1 || nodeCount>100000 || edgeCount<1 || edgeCount>60000 || gridRes<1 || gridRes>512)
                 throw new InvalidDataException("Road counts exceed supported limits.");
             long totalPoints=0, totalReferences=0;
+            heuristicDistanceFactor=1;
 
             nodesList = new List<RoadNode>(nodeCount + 64);
             for (int i = 0; i < nodeCount; i++) {
@@ -213,7 +224,7 @@ namespace ScumMiniMap {
                 if(u<0 || v<0 || u>=nodeCount || v>=nodeCount || float.IsNaN(lengthM) || float.IsInfinity(lengthM) || lengthM<=0 || lengthM>100000)
                     throw new InvalidDataException("Invalid road edge.");
                 byte flags = version >= 3 ? br.ReadByte() : (byte)0;
-                if(flags > 1) throw new InvalidDataException("Invalid road surface flags.");
+                if((version < 4 && flags > 1) || (version == 4 && flags > 7)) throw new InvalidDataException("Invalid road surface flags.");
                 ushort ptCount = br.ReadUInt16();
                 totalPoints+=ptCount;
                 if(ptCount<2 || totalPoints>4000000) throw new InvalidDataException("Road geometry exceeds supported limits.");
@@ -221,7 +232,10 @@ namespace ScumMiniMap {
                 for (int p = 0; p < ptCount; p++) {
                     pts[p] = new PointF(ReadCoordinate(br), ReadCoordinate(br));
                 }
-                edgesList.Add(new RoadEdge { U = u, V = v, LengthMeters = lengthM, Points = pts, IsBridge = flags == 1 });
+                double geometryLength=0;
+                for(int p=1;p<pts.Length;p++)geometryLength+=DistanceMeters(pts[p-1],pts[p]);
+                if(geometryLength>0)heuristicDistanceFactor=Math.Min(heuristicDistanceFactor,lengthM/geometryLength);
+                edgesList.Add(new RoadEdge { U = u, V = v, LengthMeters = lengthM, Points = pts, IsBridge = (flags & 1) != 0, Surface = version < 4 || (flags & 4) != 0 ? RoadSurface.Unknown : (flags & 2) != 0 ? RoadSurface.Dirt : RoadSurface.Paved });
                 adj[u].Add(new HalfEdge { TargetNode = v, Weight = lengthM, EdgeIndex = i, Forward = true });
                 adj[v].Add(new HalfEdge { TargetNode = u, Weight = lengthM, EdgeIndex = i, Forward = false });
             }
@@ -321,7 +335,7 @@ namespace ScumMiniMap {
                 (edges[edgeIndex].IsBridge && distance <= 8.0));
         }
 
-        public SnapResult SnapToComponent(PointF pt, int targetComponent, double maxSearchMeters = 3500.0) {
+        public SnapResult SnapToComponent(PointF pt, int targetComponent, double maxSearchMeters = 3500.0, RoadRouteMode mode = RoadRouteMode.Shortest) {
             if (!IsLoaded || edges == null || edges.Length == 0)
                 return new SnapResult { EdgeIndex = -1, DistanceMeters = double.MaxValue };
 
@@ -352,7 +366,7 @@ namespace ScumMiniMap {
                             if (inspected.Contains(eid)) continue;
                             inspected.Add(eid);
 
-                            if (nodeComponent[edges[eid].U] != targetComponent) continue;
+                            if (nodeComponent[edges[eid].U] != targetComponent || !AllowsSurface(edges[eid],mode)) continue;
 
                             PointF[] pts = edges[eid].Points;
                             for (int i = 0; i < pts.Length - 1; i++) {
@@ -388,7 +402,7 @@ namespace ScumMiniMap {
             return bestSnap;
         }
 
-        public List<SnapResult> SnapToRoadCandidates(PointF pt, double maxSearchMeters = 3000.0, int maxCandidates = 8) {
+        public List<SnapResult> SnapToRoadCandidates(PointF pt, double maxSearchMeters = 3000.0, int maxCandidates = 8, RoadRouteMode mode = RoadRouteMode.Shortest) {
             List<SnapResult> results = new List<SnapResult>(maxCandidates);
             if (!IsLoaded || edges == null || edges.Length == 0) return results;
 
@@ -417,6 +431,7 @@ namespace ScumMiniMap {
                             if (inspected.Contains(eid)) continue;
                             inspected.Add(eid);
 
+                            if(!AllowsSurface(edges[eid],mode)) continue;
                             PointF[] pts = edges[eid].Points;
                             double bestEdgeDist = double.MaxValue;
                             SnapResult bestEdgeSnap = default(SnapResult);
@@ -465,12 +480,12 @@ namespace ScumMiniMap {
             // allow nearby alternatives on the same bank to reach a connected road.
             if (results.Count > 0) {
                 double nearest = results[0].DistanceMeters;
-                double tolerance = nearest <= 5.0 ? 2.0 : 100.0;
+                double tolerance = nearest <= 5.0 ? 2.0 : nearest <= 50.0 ? 5.0 : 100.0;
                 results.RemoveAll(candidate => candidate.DistanceMeters > nearest + tolerance);
                 // Dense isolated service roads can fill every candidate slot.
                 // From open ground, retain a dry approach to the main road too.
                 if(maxCandidates > 1 && nearest > 15.0 && !results.Any(candidate => nodeComponent[edges[candidate.EdgeIndex].U] == mainComponentId)) {
-                    SnapResult main = SnapToComponent(pt,mainComponentId,maxSearchMeters);
+                    SnapResult main = SnapToComponent(pt,mainComponentId,maxSearchMeters,mode);
                     if(main.EdgeIndex >= 0) results.Add(main);
                 }
             }
@@ -514,6 +529,7 @@ namespace ScumMiniMap {
                 }
             }
 
+            public double Minimum { get { return Count==0?double.PositiveInfinity:heap[0].Priority; } }
             public int Pop() {
                 int res = heap[0].Node;
                 Count--;
@@ -534,9 +550,11 @@ namespace ScumMiniMap {
             }
         }
 
-        public RoadRoute FindRoute(PointF playerPt, PointF targetPt) {
+        public RoadRoute FindRoute(PointF playerPt, PointF targetPt) { return FindRoute(playerPt,targetPt,RoadRouteMode.Shortest); }
+        public RoadRoute FindRoute(PointF playerPt, PointF targetPt, RoadRouteMode mode) {
+            if(!Enum.IsDefined(typeof(RoadRouteMode),mode)) throw new ArgumentOutOfRangeException("mode");
             RoadRoute result = new RoadRoute {
-                Success = false,
+                Success = false, Mode = mode,
                 PlayerPoint = playerPt,
                 TargetPoint = targetPt,
                 TotalDistanceMeters = DistanceMeters(playerPt, targetPt)
@@ -544,8 +562,8 @@ namespace ScumMiniMap {
 
             if (!IsLoaded || !waterMask.IsLoaded) return result;
 
-            List<SnapResult> startCands = SnapToRoadCandidates(playerPt, 1000.0, 8);
-            List<SnapResult> endCands = SnapToRoadCandidates(targetPt, 1000.0, 8);
+            List<SnapResult> startCands = SnapToRoadCandidates(playerPt, 1000.0, 8, mode);
+            List<SnapResult> endCands = SnapToRoadCandidates(targetPt, 1000.0, 8, mode);
 
             if (startCands.Count == 0 || endCands.Count == 0) {
                 return result;
@@ -564,10 +582,11 @@ namespace ScumMiniMap {
                     int compEnd = nodeComponent[edges[snapEnd.EdgeIndex].U];
 
                     if (compStart == compEnd) {
-                        RoadRoute candidateRoute = ComputeConnectedRoute(playerPt, targetPt, snapStart, snapEnd);
+                        RoadRoute candidateRoute = ComputeConnectedRoute(playerPt, targetPt, snapStart, snapEnd, mode);
                         if (candidateRoute != null && candidateRoute.Success) {
-                            if (candidateRoute.TotalDistanceMeters < bestTotalDist) {
-                                bestTotalDist = candidateRoute.TotalDistanceMeters;
+                            double cost=mode==RoadRouteMode.Quickest?candidateRoute.EstimatedSeconds:candidateRoute.TotalDistanceMeters;
+                            if (cost < bestTotalDist) {
+                                bestTotalDist = cost;
                                 bestConnectedRoute = candidateRoute;
                             }
                         }
@@ -583,175 +602,109 @@ namespace ScumMiniMap {
             return result;
         }
 
-        private RoadRoute ComputeConnectedRoute(PointF playerPt, PointF targetPt, SnapResult snapStart, SnapResult snapEnd) {
-            RoadRoute result = new RoadRoute {
-                Success = false,
-                PlayerPoint = playerPt,
-                TargetPoint = targetPt,
-                RoadEntryPoint = snapStart.Projected,
-                RoadExitPoint = snapEnd.Projected,
-                EntryDistanceMeters = snapStart.DistanceMeters,
-                ExitDistanceMeters = snapEnd.DistanceMeters
-            };
-
-            if(!AllowsRoadApproach(playerPt,snapStart.Projected,snapStart.EdgeIndex,snapStart.DistanceMeters) || !AllowsRoadApproach(targetPt,snapEnd.Projected,snapEnd.EdgeIndex,snapEnd.DistanceMeters)) return result;
-
-            // Case 1: Start and end snap to the exact same edge
-            if (snapStart.EdgeIndex == snapEnd.EdgeIndex) {
-                RoadEdge edge = edges[snapStart.EdgeIndex];
-                List<PointF> subPath = new List<PointF>();
-                subPath.Add(snapStart.Projected);
-
-                if (snapStart.SegmentIndex <= snapEnd.SegmentIndex) {
-                    for (int i = snapStart.SegmentIndex + 1; i <= snapEnd.SegmentIndex; i++) {
-                        subPath.Add(edge.Points[i]);
-                    }
-                } else {
-                    for (int i = snapStart.SegmentIndex; i > snapEnd.SegmentIndex; i--) {
-                        subPath.Add(edge.Points[i]);
-                    }
-                }
-                subPath.Add(snapEnd.Projected);
-
-                double subLen = 0;
-                for (int i = 0; i < subPath.Count - 1; i++) subLen += DistanceMeters(subPath[i], subPath[i + 1]);
-                if(subLen < 1.0 && DistanceMeters(playerPt,targetPt) > 35.0) return result;
-                result.RoadDistanceMeters = subLen;
-                result.TotalDistanceMeters = snapStart.DistanceMeters + subLen + snapEnd.DistanceMeters;
-                result.Polyline = subPath.ToArray();
-                result.Success = true;
-                return result;
+        static bool AllowsSurface(RoadEdge edge,RoadRouteMode mode) { return mode!=RoadRouteMode.PavedOnly || edge.Surface==RoadSurface.Paved; }
+        // Planning assumptions in metres/second: 60 km/h paved, 30 dirt, 20 unknown.
+        // Dry entry/exit approaches use 5 km/h. These are estimates, not live traffic.
+        static double Speed(RoadEdge edge) { return edge.Surface==RoadSurface.Paved?60/3.6:edge.Surface==RoadSurface.Dirt?30/3.6:20/3.6; }
+        static double Cost(RoadEdge edge,double length,RoadRouteMode mode) { return mode==RoadRouteMode.Quickest?length/Speed(edge):length; }
+        static double Along(RoadEdge edge,SnapResult snap) {
+            double total=0,before=0;
+            for(int i=0;i<edge.Points.Length-1;i++) {
+                double length=DistanceMeters(edge.Points[i],edge.Points[i+1]);total+=length;
+                if(i<snap.SegmentIndex)before+=length;
+                else if(i==snap.SegmentIndex)before+=length*snap.SegmentT;
             }
-
-            // Case 2: Zero-allocation A* search between endpoints
-            RoadEdge eStart = edges[snapStart.EdgeIndex];
-            RoadEdge eEnd = edges[snapEnd.EdgeIndex];
-
-            // Compute distance from start projected point to each start node
-            double distToU = 0;
-            for (int i = 0; i <= snapStart.SegmentIndex; i++) {
-                PointF p1 = (i == 0) ? eStart.Points[0] : eStart.Points[i];
-                PointF p2 = (i == snapStart.SegmentIndex) ? snapStart.Projected : eStart.Points[i + 1];
-                distToU += DistanceMeters(p1, p2);
-            }
-            double distToV = Math.Max(0.0, eStart.LengthMeters - distToU);
-
-            int targetNodeA = eEnd.U;
-            int targetNodeB = eEnd.V;
-            PointF targetPosA = new PointF(nodes[targetNodeA].U, nodes[targetNodeA].V);
-            PointF targetPosB = new PointF(nodes[targetNodeB].U, nodes[targetNodeB].V);
-
-            int reachedEndNode = -1;
-            int chosenStartNode = -1;
-
-            lock (searchLock) {
-                currentEpoch++;
-                if (currentEpoch == 0) {
-                    Array.Clear(visitedEpoch, 0, visitedEpoch.Length);
-                    currentEpoch = 1;
-                }
-                pq.Clear();
-
-                // Initialize start nodes
-                gScores[eStart.U] = distToU;
-                visitedEpoch[eStart.U] = currentEpoch;
-                double hU = Math.Min(DistanceMeters(nodes[eStart.U].U, nodes[eStart.U].V, targetPosA.X, targetPosA.Y),
-                                     DistanceMeters(nodes[eStart.U].U, nodes[eStart.U].V, targetPosB.X, targetPosB.Y));
-                pq.Push(distToU + hU, eStart.U);
-
-                gScores[eStart.V] = distToV;
-                visitedEpoch[eStart.V] = currentEpoch;
-                double hV = Math.Min(DistanceMeters(nodes[eStart.V].U, nodes[eStart.V].V, targetPosA.X, targetPosA.Y),
-                                     DistanceMeters(nodes[eStart.V].U, nodes[eStart.V].V, targetPosB.X, targetPosB.Y));
-                pq.Push(distToV + hV, eStart.V);
-
-                while (pq.Count > 0) {
-                    int current = pq.Pop();
-
-                    if (current == targetNodeA || current == targetNodeB) {
-                        reachedEndNode = current;
-                        break;
-                    }
-
-                    double curG = gScores[current];
-                    List<HalfEdge> outgoing = adj[current];
-                    for (int i = 0; i < outgoing.Count; i++) {
-                        HalfEdge edge = outgoing[i];
-                        int neighbor = edge.TargetNode;
-                        double tentG = curG + edge.Weight;
-
-                        if (visitedEpoch[neighbor] != currentEpoch || tentG < gScores[neighbor]) {
-                            gScores[neighbor] = tentG;
-                            visitedEpoch[neighbor] = currentEpoch;
-                            cameFrom[neighbor] = edge;
-
-                            double hN = Math.Min(DistanceMeters(nodes[neighbor].U, nodes[neighbor].V, targetPosA.X, targetPosA.Y),
-                                                 DistanceMeters(nodes[neighbor].U, nodes[neighbor].V, targetPosB.X, targetPosB.Y));
-                            pq.Push(tentG + hN, neighbor);
-                        }
-                    }
-                }
-
-                if (reachedEndNode < 0) return null;
-
-                // Trace back path
-                List<HalfEdge> edgePath = new List<HalfEdge>();
-                int trace = reachedEndNode;
-                while (trace != eStart.U && trace != eStart.V) {
-                    HalfEdge he = cameFrom[trace];
-                    edgePath.Add(he);
-                    trace = he.Forward ? edges[he.EdgeIndex].U : edges[he.EdgeIndex].V;
-                }
-                chosenStartNode = trace;
-                edgePath.Reverse();
-
-                // Construct smooth polyline
-                List<PointF> polyline = new List<PointF>();
-                List<int> junctions = new List<int>();
-
-                // 1. From entry projected point along start edge to chosen start node
-                if (chosenStartNode == eStart.U) {
-                    polyline.Add(snapStart.Projected);
-                    for (int i = snapStart.SegmentIndex; i >= 0; i--) polyline.Add(eStart.Points[i]);
-                } else {
-                    polyline.Add(snapStart.Projected);
-                    for (int i = snapStart.SegmentIndex + 1; i < eStart.Points.Length; i++) polyline.Add(eStart.Points[i]);
-                }
-
-                // 2. Intermediate edges
-                if(adj[chosenStartNode].Count>=3) junctions.Add(polyline.Count-1);
-                for (int e = 0; e < edgePath.Count; e++) {
-                    HalfEdge he = edgePath[e];
-                    PointF[] pts = edges[he.EdgeIndex].Points;
-                    if (he.Forward) {
-                        for (int i = 1; i < pts.Length; i++) polyline.Add(pts[i]);
-                    } else {
-                        for (int i = pts.Length - 2; i >= 0; i--) polyline.Add(pts[i]);
-                    }
-                    if(adj[he.TargetNode].Count>=3) junctions.Add(polyline.Count-1);
-                }
-
-                // 3. Along end edge from reachedEndNode to exit projected point
-                if (reachedEndNode == eEnd.U) {
-                    for (int i = 1; i <= snapEnd.SegmentIndex; i++) polyline.Add(eEnd.Points[i]);
-                    polyline.Add(snapEnd.Projected);
-                } else {
-                    for (int i = eEnd.Points.Length - 2; i > snapEnd.SegmentIndex; i--) polyline.Add(eEnd.Points[i]);
-                    polyline.Add(snapEnd.Projected);
-                }
-
-                double roadLen = 0;
-                for (int i = 0; i < polyline.Count - 1; i++) roadLen += DistanceMeters(polyline[i], polyline[i + 1]);
-                if(roadLen < 1.0 && DistanceMeters(playerPt,targetPt) > 35.0) return result;
-
-                result.Polyline = polyline.ToArray();
-                result.JunctionIndices = junctions.ToArray();
-                result.RoadDistanceMeters = roadLen;
-                result.TotalDistanceMeters = snapStart.DistanceMeters + roadLen + snapEnd.DistanceMeters;
-                result.Success = true;
-                return result;
+            return total>0?edge.LengthMeters*Math.Max(0,Math.Min(1,before/total)):0;
+        }
+        static void Measure(RoadRoute result,RoadEdge edge,double length) {
+            result.RoadDistanceMeters+=length;result.EstimatedSeconds+=length/Speed(edge);
+            if(edge.Surface==RoadSurface.Paved)result.PavedDistanceMeters+=length;
+            else if(edge.Surface==RoadSurface.Dirt)result.DirtDistanceMeters+=length;
+            else result.UnknownDistanceMeters+=length;
+        }
+        static void AppendSection(List<PointF> line,RoadEdge edge,SnapResult snap,bool toNode,bool atU) {
+            if(toNode) {
+                line.Add(snap.Projected);
+                if(atU)for(int i=snap.SegmentIndex;i>=0;i--)line.Add(edge.Points[i]);
+                else for(int i=snap.SegmentIndex+1;i<edge.Points.Length;i++)line.Add(edge.Points[i]);
+            } else {
+                if(atU)for(int i=1;i<=snap.SegmentIndex;i++)line.Add(edge.Points[i]);
+                else for(int i=edge.Points.Length-2;i>snap.SegmentIndex;i--)line.Add(edge.Points[i]);
+                line.Add(snap.Projected);
             }
         }
-
+        private RoadRoute ComputeConnectedRoute(PointF playerPt, PointF targetPt, SnapResult snapStart, SnapResult snapEnd,RoadRouteMode mode) {
+            var result=new RoadRoute { Mode=mode,PlayerPoint=playerPt,TargetPoint=targetPt,
+                RoadEntryPoint=snapStart.Projected,RoadExitPoint=snapEnd.Projected,
+                EntryDistanceMeters=snapStart.DistanceMeters,ExitDistanceMeters=snapEnd.DistanceMeters };
+            RoadEdge first=edges[snapStart.EdgeIndex],last=edges[snapEnd.EdgeIndex];
+            if(!AllowsSurface(first,mode)||!AllowsSurface(last,mode))return result;
+            double startU=Along(first,snapStart),startV=first.LengthMeters-startU;
+            double endU=Along(last,snapEnd),endV=last.LengthMeters-endU;
+            bool direct=snapStart.EdgeIndex==snapEnd.EdgeIndex;
+            double best=direct?Cost(first,Math.Abs(endU-startU),mode):double.PositiveInfinity;
+            int reached=-1;bool endAtU=true;
+            var line=new List<PointF>();var junctions=new List<int>();
+            lock(searchLock) {
+                currentEpoch++;if(currentEpoch==0) { Array.Clear(visitedEpoch,0,visitedEpoch.Length);currentEpoch=1; }
+                pq.Clear();
+                int[] roots={first.U,first.V};double[] rootLengths={startU,startV};
+                for(int i=0;i<2;i++) {
+                    int n=roots[i];double cost=Cost(first,rootLengths[i],mode);
+                    if(visitedEpoch[n]==currentEpoch&&gScores[n]<=cost)continue;
+                    visitedEpoch[n]=currentEpoch;gScores[n]=cost;cameFrom[n]=new HalfEdge { EdgeIndex=-1,Forward=i==0 };
+                    pq.Push(cost+Heuristic(n,snapEnd.Projected,mode),n);
+                }
+                // The destination is a virtual point inside its edge. Include its
+                // remaining edge cost before choosing which endpoint wins.
+                while(pq.Count>0&&pq.Minimum<best) {
+                    int current=pq.Pop();double currentCost=gScores[current];
+                    if(current==last.U||current==last.V) {
+                        bool atU=current==last.U&&(last.U!=last.V||endU<=endV);
+                        double cost=currentCost+Cost(last,atU?endU:endV,mode);
+                        if(cost<best) { best=cost;reached=current;endAtU=atU;direct=false; }
+                    }
+                    foreach(var half in adj[current]) {
+                        var edge=edges[half.EdgeIndex];if(!AllowsSurface(edge,mode))continue;
+                        int next=half.TargetNode;double cost=currentCost+Cost(edge,edge.LengthMeters,mode);
+                        if(visitedEpoch[next]==currentEpoch&&gScores[next]<=cost)continue;
+                        visitedEpoch[next]=currentEpoch;gScores[next]=cost;cameFrom[next]=half;
+                        pq.Push(cost+Heuristic(next,snapEnd.Projected,mode),next);
+                    }
+                }
+                if(direct) {
+                    line.Add(snapStart.Projected);
+                    if(startU<=endU)for(int i=snapStart.SegmentIndex+1;i<=snapEnd.SegmentIndex;i++)line.Add(first.Points[i]);
+                    else for(int i=snapStart.SegmentIndex;i>snapEnd.SegmentIndex;i--)line.Add(first.Points[i]);
+                    line.Add(snapEnd.Projected);Measure(result,first,Math.Abs(endU-startU));
+                } else {
+                    if(reached<0)return result;
+                    var path=new List<HalfEdge>();int trace=reached;
+                    while(cameFrom[trace].EdgeIndex>=0) {
+                        var half=cameFrom[trace];path.Add(half);trace=half.Forward?edges[half.EdgeIndex].U:edges[half.EdgeIndex].V;
+                        if(path.Count>nodes.Length)throw new InvalidDataException("Road predecessor cycle.");
+                    }
+                    path.Reverse();AppendSection(line,first,snapStart,true,cameFrom[trace].Forward);
+                    Measure(result,first,cameFrom[trace].Forward?startU:startV);
+                    if(adj[trace].Count>=3)junctions.Add(line.Count-1);
+                    foreach(var half in path) {
+                        var edge=edges[half.EdgeIndex];var points=edge.Points;
+                        if(half.Forward)for(int i=1;i<points.Length;i++)line.Add(points[i]);
+                        else for(int i=points.Length-2;i>=0;i--)line.Add(points[i]);
+                        Measure(result,edge,edge.LengthMeters);
+                        if(adj[half.TargetNode].Count>=3)junctions.Add(line.Count-1);
+                    }
+                    AppendSection(line,last,snapEnd,false,endAtU);Measure(result,last,endAtU?endU:endV);
+                }
+            }
+            if(result.RoadDistanceMeters<1&&DistanceMeters(playerPt,targetPt)>35)return result;
+            result.TotalDistanceMeters=result.EntryDistanceMeters+result.RoadDistanceMeters+result.ExitDistanceMeters;
+            result.EstimatedSeconds+=(result.EntryDistanceMeters+result.ExitDistanceMeters)/(5/3.6);
+            result.Polyline=line.ToArray();result.JunctionIndices=junctions.ToArray();result.Success=true;return result;
+        }
+        double Heuristic(int node,PointF target,RoadRouteMode mode) {
+            double distance=DistanceMeters(nodes[node].U,nodes[node].V,target.X,target.Y)*heuristicDistanceFactor;
+            return mode==RoadRouteMode.Quickest?distance/(60/3.6):distance;
+        }
     }
 }

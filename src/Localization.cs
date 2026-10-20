@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -961,6 +961,13 @@ private static readonly Dictionary<string, string> CategoryNamesAr = new Diction
 
 
 public static readonly Dictionary<string, string> StringsEn = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "AdminMapTeleportHere", "Teleport here" },
+            { "AdminMapTeleportHelp", "Send {0}. Map height is unavailable; Z is 0." },
+            { "RouteModeQuickest", "Quickest" },
+            { "RouteModeShortest", "Shortest" },
+            { "RouteModePavedOnly", "Paved roads only" },
+            { "RouteModeHelp", "Quickest estimates 60 km/h paved, 30 on dirt and 5 on approaches. Shortest minimizes distance. Paved only excludes dirt roads; dry approaches can be up to 1 km. Railways are excluded." },
+
             { "SetupMoreOptions", "More options" },
             { "SetupAppearanceHelp", "Choose your map’s shape, size and visibility. Watch the preview. You can keep the current settings." },
             { "SetupMapHelp", "Choose what appears on your map. Extra colours and labels are under More options." },
@@ -1765,6 +1772,13 @@ public static readonly Dictionary<string, string> StringsEn = new Dictionary<str
         };
 
 public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "AdminMapTeleportHere", "Teletransportar acá" },
+            { "AdminMapTeleportHelp", "Enviar {0}. No hay altura del mapa; Z es 0." },
+            { "RouteModeQuickest", "Más rápido" },
+            { "RouteModeShortest", "Más corto" },
+            { "RouteModePavedOnly", "Solo caminos pavimentados" },
+            { "RouteModeHelp", "Más rápido estima 60 km/h en asfalto, 30 en tierra y 5 en accesos. Más corto minimiza la distancia. Solo pavimento excluye caminos de tierra; los accesos secos pueden ser de hasta 1 km. Excluye trenes." },
+
             { "SetupMoreOptions", "Más opciones" },
             { "SetupAppearanceHelp", "Elegí la forma, el tamaño y la visibilidad del mapa. Mirá la vista previa. Podés dejar los ajustes actuales." },
             { "SetupMapHelp", "Elegí qué aparece en el mapa. Los colores y etiquetas extra están en Más opciones." },
@@ -2569,6 +2583,13 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsFr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "AdminMapTeleportHere", "Téléporter ici" },
+            { "AdminMapTeleportHelp", "Envoyer {0}. Altitude du terrain indisponible ; Z vaut 0." },
+            { "RouteModeQuickest", "Le plus rapide" },
+            { "RouteModeShortest", "Le plus court" },
+            { "RouteModePavedOnly", "Routes goudronnées uniquement" },
+            { "RouteModeHelp", "Rapide estime 60 km/h sur route, 30 sur piste et 5 sur les accès. Court minimise la distance. Le mode goudronné exclut les pistes ; accès secs jusqu’à 1 km. Voies ferrées exclues." },
+
             { "SetupMoreOptions", "Plus d’options" },
             { "SetupAppearanceHelp", "Choisissez la forme, la taille et la visibilité de la carte. Regardez l’aperçu. Vous pouvez conserver les réglages actuels." },
             { "SetupMapHelp", "Choisissez ce qui apparaît sur la carte. Les couleurs et étiquettes supplémentaires sont dans Plus d’options." },
@@ -3373,6 +3394,13 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsDe = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "AdminMapTeleportHere", "Hierher teleportieren" },
+            { "AdminMapTeleportHelp", "{0} senden. Die Geländehöhe ist unbekannt; Z ist 0." },
+            { "RouteModeQuickest", "Schnellste" },
+            { "RouteModeShortest", "Kürzeste" },
+            { "RouteModePavedOnly", "Nur asphaltierte Straßen" },
+            { "RouteModeHelp", "Schnellste schätzt 60 km/h auf Asphalt, 30 auf Schotter und 5 auf Zufahrten. Kürzeste minimiert die Strecke. Nur Asphalt schließt Feldwege aus; trockene Zufahrten bis 1 km. Keine Bahnstrecken." },
+
             { "SetupMoreOptions", "Weitere Optionen" },
             { "SetupAppearanceHelp", "Wähle Form, Größe und Sichtbarkeit der Karte. Prüfe die Vorschau. Du kannst die aktuellen Einstellungen behalten." },
             { "SetupMapHelp", "Wähle, was auf der Karte erscheint. Zusätzliche Farben und Beschriftungen stehen unter Weitere Optionen." },
@@ -4177,6 +4205,13 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsNl = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "AdminMapTeleportHere", "Hierheen teleporteren" },
+            { "AdminMapTeleportHelp", "Verstuur {0}. De terreinhoogte is onbekend; Z is 0." },
+            { "RouteModeQuickest", "Snelste" },
+            { "RouteModeShortest", "Kortste" },
+            { "RouteModePavedOnly", "Alleen verharde wegen" },
+            { "RouteModeHelp", "Snelste schat 60 km/u op asfalt, 30 op onverharde wegen en 5 op toegangen. Kortste beperkt de afstand. Alleen verhard sluit onverharde wegen uit; droge toegangen tot 1 km. Geen spoorwegen." },
+
             { "SetupMoreOptions", "Meer opties" },
             { "SetupAppearanceHelp", "Kies de vorm, grootte en zichtbaarheid van de kaart. Bekijk het voorbeeld. Je kunt de huidige instellingen behouden." },
             { "SetupMapHelp", "Kies wat op de kaart verschijnt. Extra kleuren en labels staan onder Meer opties." },
@@ -4981,6 +5016,13 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsRu = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "AdminMapTeleportHere", "Телепортироваться сюда" },
+            { "AdminMapTeleportHelp", "Отправить {0}. Высота карты неизвестна; Z равен 0." },
+            { "RouteModeQuickest", "Быстрейший" },
+            { "RouteModeShortest", "Кратчайший" },
+            { "RouteModePavedOnly", "Только асфальт" },
+            { "RouteModeHelp", "Оценка: 60 км/ч на асфальте, 30 на грунте и 5 на подъездах. Кратчайший сокращает расстояние. Только асфальт исключает грунтовые дороги; сухие подъезды до 1 км. Железные дороги исключены." },
+
             { "SetupMoreOptions", "Другие параметры" },
             { "SetupAppearanceHelp", "Выберите форму, размер и видимость карты. Смотрите предпросмотр. Можно оставить текущие настройки." },
             { "SetupMapHelp", "Выберите, что показывать на карте. Дополнительные цвета и подписи находятся в Других параметрах." },
@@ -5785,6 +5827,13 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsZh = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "AdminMapTeleportHere", "传送到这里" },
+            { "AdminMapTeleportHelp", "发送 {0}。无法获取地图高度；Z为0。" },
+            { "RouteModeQuickest", "最快路线" },
+            { "RouteModeShortest", "最短路线" },
+            { "RouteModePavedOnly", "仅铺装道路" },
+            { "RouteModeHelp", "最快路线按铺装路60公里/小时、土路30、接入路5估算。最短路线优先距离。仅铺装模式排除土路；允许最长1公里的无水接入路。不使用铁路。" },
+
             { "SetupMoreOptions", "更多选项" },
             { "SetupAppearanceHelp", "选择地图的形状、大小和可见度，并查看预览。也可以保留当前设置。" },
             { "SetupMapHelp", "选择地图上显示的内容。更多颜色和标签设置位于更多选项中。" },
@@ -6589,6 +6638,13 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsTr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "AdminMapTeleportHere", "Buraya ışınlan" },
+            { "AdminMapTeleportHelp", "{0} gönder. Harita yüksekliği bilinmiyor; Z 0’dır." },
+            { "RouteModeQuickest", "En hızlı" },
+            { "RouteModeShortest", "En kısa" },
+            { "RouteModePavedOnly", "Yalnızca asfalt yollar" },
+            { "RouteModeHelp", "En hızlı: asfaltta 60, toprakta 30, bağlantılarda 5 km/sa tahmini. En kısa mesafeyi azaltır. Yalnız asfalt toprak yolları dışlar; kuru bağlantılar en fazla 1 km olabilir. Demiryolları hariçtir." },
+
             { "SetupMoreOptions", "Diğer seçenekler" },
             { "SetupAppearanceHelp", "Haritanın şeklini, boyutunu ve görünürlüğünü seçin. Önizlemeyi izleyin. Mevcut ayarları koruyabilirsiniz." },
             { "SetupMapHelp", "Haritada nelerin görüneceğini seçin. Ek renkler ve etiketler Diğer seçenekler altındadır." },
@@ -7393,6 +7449,13 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsAr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "AdminMapTeleportHere", "انتقال إلى هنا" },
+            { "AdminMapTeleportHelp", "إرسال {0}. ارتفاع الخريطة غير متاح؛ Z يساوي 0." },
+            { "RouteModeQuickest", "الأسرع" },
+            { "RouteModeShortest", "الأقصر" },
+            { "RouteModePavedOnly", "طرق معبدة فقط" },
+            { "RouteModeHelp", "التقدير: 60 كم/س على المعبد و30 على الترابي و5 في الوصلات. الأقصر يقلل المسافة. وضع المعبد يستبعد الطرق الترابية؛ الوصلات الجافة حتى 1 كم. السكك مستبعدة." },
+
             { "SetupMoreOptions", "خيارات إضافية" },
             { "SetupAppearanceHelp", "اختر شكل الخريطة وحجمها ووضوحها وشاهد المعاينة. يمكنك الاحتفاظ بالإعدادات الحالية." },
             { "SetupMapHelp", "اختر ما يظهر على الخريطة. الألوان والتسميات الإضافية ضمن خيارات إضافية." },
@@ -8197,6 +8260,13 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsPt = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "AdminMapTeleportHere", "Teletransportar para cá" },
+            { "AdminMapTeleportHelp", "Enviar {0}. Altura do mapa indisponível; Z é 0." },
+            { "RouteModeQuickest", "Mais rápido" },
+            { "RouteModeShortest", "Mais curto" },
+            { "RouteModePavedOnly", "Somente vias pavimentadas" },
+            { "RouteModeHelp", "Mais rápido estima 60 km/h no asfalto, 30 na terra e 5 nos acessos. Mais curto minimiza a distância. Somente pavimento exclui estradas de terra; acessos secos até 1 km. Ferrovias excluídas." },
+
             { "SetupMoreOptions", "Mais opções" },
             { "SetupAppearanceHelp", "Escolha o formato, tamanho e visibilidade do mapa. Veja a prévia. Você pode manter os ajustes atuais." },
             { "SetupMapHelp", "Escolha o que aparece no mapa. Cores e rótulos extras ficam em Mais opções." },
@@ -9001,6 +9071,13 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
 
 
         public static readonly Dictionary<string, string> StringsKo = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "AdminMapTeleportHere", "여기로 순간이동" },
+            { "AdminMapTeleportHelp", "{0} 전송. 지도 높이를 알 수 없어 Z는 0입니다." },
+            { "RouteModeQuickest", "가장 빠르게" },
+            { "RouteModeShortest", "최단 거리" },
+            { "RouteModePavedOnly", "포장도로만" },
+            { "RouteModeHelp", "빠른 경로는 포장 60km/h, 비포장 30, 진입로 5로 추정합니다. 최단 경로는 거리를 최소화합니다. 포장 전용은 비포장도로를 제외하며 물을 건너지 않는 진입로는 최대 1km입니다. 철도는 제외합니다." },
+
             { "SetupMoreOptions", "추가 옵션" },
             { "SetupAppearanceHelp", "지도의 모양, 크기와 표시 정도를 선택하고 미리보기를 확인하세요. 현재 설정을 유지해도 됩니다." },
             { "SetupMapHelp", "지도에 표시할 항목을 선택하세요. 추가 색상과 이름표 설정은 추가 옵션에 있습니다." },

@@ -1,10 +1,17 @@
-// Offline translation drafts: native terminology review pending.
+﻿// Offline translation drafts: native terminology review pending.
 using System;
 using System.Collections.Generic;
 
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsPtPt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "AdminMapTeleportHere", "Teletransportar para aqui" },
+            { "AdminMapTeleportHelp", "Enviar {0}. Altura do mapa indisponível; Z é 0." },
+            { "RouteModeQuickest", "Mais rápido" },
+            { "RouteModeShortest", "Mais curto" },
+            { "RouteModePavedOnly", "Apenas estradas pavimentadas" },
+            { "RouteModeHelp", "Mais rápido estima 60 km/h no asfalto, 30 em terra e 5 nos acessos. Mais curto minimiza a distância. Apenas pavimento exclui estradas de terra; acessos secos até 1 km. Vias férreas excluídas." },
+
             { "SetupMoreOptions", "Mais opções" },
             { "SetupAppearanceHelp", "Escolha a forma, o tamanho e a visibilidade do mapa. Veja a pré-visualização. Pode manter as definições atuais." },
             { "SetupMapHelp", "Escolha o que aparece no mapa. Cores e etiquetas adicionais estão em Mais opções." },

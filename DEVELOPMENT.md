@@ -2,6 +2,51 @@
 
 `ScumMiniMap-Dev` is the canonical local project. The sibling server, companion bot and native bridge are independent projects.
 
+## Route choices (local Test candidate, 20 October 2026)
+
+Routes now offers Quickest, Shortest and Paved roads only. The selected mode is
+saved as RouteMode and applies to GPS, local multi-stop routes and locally
+calculated shared-route previews. Changing it invalidates obsolete calculations
+without removing stops. Shortest remains the default. Paved-only minimizes road
+distance within the paved subgraph. Dry entry/exit approaches use the same
+bounded 1 km search as other modes; the actual off-road access is included in
+distance and ETA. Dirt-road graph edges are excluded. Positions within 50 m of a
+road retain candidates within 5 m of the nearest approach, avoiding cross-country
+shortcuts to a farther road.
+
+Quickest uses explicit planning assumptions of 60 km/h paved, 30 dirt, 20 unknown
+and 5 on dry entry/exit approaches. Route ETA sums those surface-specific times;
+it is an estimate, not a measured driving guarantee. Unknown legacy surfaces
+cannot qualify for paved-only. Railways remain excluded.
+
+The exposed map is authoritative for surface classification: mesh names alone
+are insufficient. Some Gravel_road and Asphalt_Road_02 splines follow the thick
+white/yellow paved roads. Captured source-segment overrides and their geometry
+hash are recorded in resources/routing-road-surfaces.json. Changes in the capture
+hash require re-review. Map-survey curves have their own surface classification
+rather than inheriting dirt from an adjoining side road. Version 4 road flags
+retain bridge bit 1 and add dirt bit 2 / unknown bit 4; legacy version 2/3 roads
+load as unknown. The current network has 6,969 paved and 9,071 dirt edges.
+
+The B2 report at X=-35568.379 Y=-116703.766 reproduces against the bundled Z4
+lighthouse POI at UV .009955812,.8507351. It now passes all three modes. The Z3
+coastal paved junction has an explicit source-anchored, map-traced connector
+instead of a roughly 5.3 km detour. The source capture and map are snapshots;
+passing these tests does not establish live collision clearance or actual speed.
+
+Right-click Admin commands is restored in the WPF tactical map when admin tools
+are enabled. Teleport here uses the captured click, validated map calibration and
+the existing guarded admin-command sender. The map has no terrain-height source,
+so the preview explicitly shows Z=0. Disabled tools, closed map, busy/closing
+state and invalid coordinates reject submission; a sent command does not update
+the tracked position optimistically. Existing commands, explicit ON/OFF choices,
+relative teleport, player tools and spawn cart remain in that menu.
+
+Search now includes the cost from both destination-edge endpoints to the actual
+projected destination. A same-edge direct path is an incumbent rather than an
+early return, so shorter alternatives through other roads and closed splines
+remain eligible. Heuristics are bounded by loaded geometry/length ratios.
+
 ## Captured road routing (local WPF test)
 
 The WPF network uses the original road allowlist plus explicitly listed asphalt
@@ -21,7 +66,8 @@ with bounded approaches. These static spans were not exported as landscape
 splines. They are explicitly distinguished from captured bridge geometry; no
 railway bridge or generic swimming/boat links are included.
 
-Owner-provided map sections registered on 18 October add 59 reviewed road curves
+Owner-provided map sections registered on 18 October and the exposed map on
+20 October add 62 reviewed road curves
 in `resources/routing-map-links.json`. Image hashes, registration transforms and
 source-road anchors are retained with each survey. These close visible gaps,
 including the connection from the Rogoznica bridge approaches into the wider
@@ -36,10 +82,10 @@ python ScumMiniMap-Dev/WPF-Test-Version/scripts/Build-RoadNetwork.py research/au
 python ScumMiniMap-Dev/WPF-Test-Version/tests/test_road_network.py
 ```
 
-The deterministic version-3 `resources/roads.bin` includes bridge surface flags
+The deterministic version-4 `resources/roads.bin` includes bridge surface flags
 and a companion provenance JSON with input/output hashes, source identities and
 all 1,976 inferred seams and 48 at-grade intersections. Its largest component
-contains 98.33% of compiled nodes after the 59 map-surveyed gaps are included.
+contains 98.39% of compiled nodes after the 62 map-surveyed gaps are included.
 Ordinary builds consume this asset without needing the server capture or Python.
 Road approaches are limited to 1,000 metres and checked against the water mask.
 On-road starts stay on their nearest road; open-ground positions may consider

@@ -46,11 +46,22 @@ def project(p, a, b):
     return math.dist(p[:2], q[:2]), t, q
 
 
-def compile_network(graph, allowed, water=None, bridges=(), map_links=()):
+def compile_network(graph, allowed, water=None, bridges=(), map_links=(), dirt_meshes=(), surface_overrides=None):
     if graph.get('units') != 'cm' or graph.get('coordinateSpace') != 'world':
         raise ValueError('Expected world-space centimeters')
+    surface_overrides = surface_overrides or {}
+    if any(sid not in graph['segments'] or kind not in ('paved','dirt','unknown') for sid,kind in surface_overrides.items()):
+        raise ValueError('Invalid source surface override')
     nodes, edges, identities, world, selected, roads = [], [], {}, [], [], []
     bridge_edges = set()
+    surfaces = []
+    def surface(meshes):
+        if any(m in dirt_meshes or "/Gravel_road/" in m or m == "gravel" for m in meshes): return 2
+        if all("/Asphalt_Road" in m or "Bridge" in m or "/Dam/SM_Dam_Road" in m or m == "asphalt" for m in meshes): return 0
+        return 4
+    def add_edge(edge, kind):
+        surfaces.append(kind)
+        edges.append(edge)
     for sid, segment in graph['segments'].items():
         if not (segment['connectedGeometryValid'] and segment['meshes']
                 and set(segment['meshes']).issubset(allowed)):
@@ -76,7 +87,7 @@ def compile_network(graph, allowed, water=None, bridges=(), map_links=()):
             cumulative.append(cumulative[-1]+math.dist(a, b))
         u, v = (identities[n] for n in endpoints)
         roads.append(dict(points=points, cumulative=cumulative, u=u, v=v,
-                          bridge=any('Bridge' in m or '/Dam/' in m for m in segment['meshes']),
+                          surface={'paved':0,'dirt':2,'unknown':4}[surface_overrides[sid]] if sid in surface_overrides else surface(segment['meshes']), bridge=any('Bridge' in m or '/Dam/' in m for m in segment['meshes']),
                           cuts=[(0.0, u, points[0]), (cumulative[-1], v, points[-1])]))
         selected.append(sid)
 
@@ -87,6 +98,9 @@ def compile_network(graph, allowed, water=None, bridges=(), map_links=()):
             n = parent[n]
         return n
 
+    node_surfaces = [0]*len(nodes)
+    for road in roads:
+        for n in (road['u'],road['v']): node_surfaces[n] |= road['surface']
     degree = [0]*len(nodes)
     for road in roads:
         parent[root(road['u'])] = root(road['v'])
@@ -142,7 +156,7 @@ def compile_network(graph, allowed, water=None, bridges=(), map_links=()):
                     continue
                 seam_pairs.add(pair)
                 parent[root(node)] = root(other)
-                edges.append((node, other, max(.001, math.dist(p, point)/100), [uv(p), uv(point)]))
+                add_edge((node, other, max(.001, math.dist(p, point)/100), [uv(p), uv(point)]), node_surfaces[node] | roads[ri]['surface'])
                 seams.append(dict(fromNode=node, targetSegment=selected[ri], distanceCm=distance,
                                   heightDifferenceCm=abs(p[2]-point[2]), points=[p, point]))
 
@@ -178,7 +192,7 @@ def compile_network(graph, allowed, water=None, bridges=(), map_links=()):
                 if u == v or connection in seam_pairs:
                     continue
                 seam_pairs.add(connection)
-                edges.append((u, v, max(.001, math.dist(p1,p2)/100), [uv(p1), uv(p2)]))
+                add_edge((u, v, max(.001, math.dist(p1,p2)/100), [uv(p1), uv(p2)]), roads[ri]['surface'] | roads[rj]['surface'])
                 parent[root(u)] = root(v)
                 intersections.append(dict(sourceSegments=[selected[ri],selected[rj]], points=[p1,p2]))
 
@@ -202,7 +216,7 @@ def compile_network(graph, allowed, water=None, bridges=(), map_links=()):
         points = [uv(a)]+[tuple(p) for p in curve]+[uv(b)]
         length = sum(math.hypot((b[0]-a[0])*15216.18, (b[1]-a[1])*15236.18) for a, b in zip(points, points[1:]))
         bridge_edges.add(len(edges))
-        edges.append((u, v, length, points)); parent[root(u)] = root(v)
+        add_edge((u, v, length, points), 0); parent[root(u)] = root(v)
         bridge_report.append(bridge['name'])
 
     map_report = []
@@ -239,7 +253,13 @@ def compile_network(graph, allowed, water=None, bridges=(), map_links=()):
         world_curve = [[617718-p[0]*1521618,618618-p[1]*1523618,0] for p in points]
         if not all(water.allows(p,q) for p,q in zip(world_curve,world_curve[1:])):
             raise ValueError('Map survey crosses water: '+survey['name'])
-        edges.append((u,v,length,points)); parent[root(u)] = root(v)
+        if 'surface' in survey:
+            if survey['surface'] not in ('paved','dirt','unknown'): raise ValueError('Invalid map survey surface')
+            kind = {'paved':0,'dirt':2,'unknown':4}[survey['surface']]
+        else:
+            kind = 0
+            for sid in survey['sourceSegments']: kind |= roads[selected.index(sid)]['surface']
+        add_edge((u,v,length,points), kind); parent[root(u)] = root(v)
         map_report.append(dict(name=survey['name'],sourceSegments=survey['sourceSegments'],
                                imageSha256=survey['imageSha256'],lengthMeters=length))
 
@@ -251,7 +271,7 @@ def compile_network(graph, allowed, water=None, bridges=(), map_links=()):
             points = [a]+[p for at, p in zip(road['cumulative'], road['points']) if start < at < end]+[b]
             if road['bridge']:
                 bridge_edges.add(len(edges))
-            edges.append((u, v, (end-start)/100.0, [uv(p) for p in points]))
+            add_edge((u, v, (end-start)/100.0, [uv(p) for p in points]), road['surface'])
     if not edges or len(edges) > 60000 or len(nodes) > 100000:
         raise ValueError('Unsupported road counts')
     grid_res = 128
@@ -262,12 +282,12 @@ def compile_network(graph, allowed, water=None, bridges=(), map_links=()):
         for y in range(y0, y1+1):
             for x in range(x0, x1+1):
                 grid[y*128+x].append(index)
-    # Version 3 adds an explicit bridge flag. Only bridge decks may snap over water.
-    data = bytearray(b'ROAD'+struct.pack('<IIII', 3, len(nodes), len(edges), grid_res))
+    # Version 4 retains bridge flags and adds dirt (2) / unknown (4) surface bits.
+    data = bytearray(b'ROAD'+struct.pack('<IIII', 4, len(nodes), len(edges), grid_res))
     for point in nodes:
         data.extend(struct.pack('<ff', *point))
     for index, (u, v, length, points) in enumerate(edges):
-        data.extend(struct.pack('<iifBH', u, v, length, int(index in bridge_edges), len(points)))
+        data.extend(struct.pack('<iifBH', u, v, length, (int(index in bridge_edges) | surfaces[index]), len(points)))
         for point in points:
             data.extend(struct.pack('<ff', *point))
     for cell in range(grid_res*grid_res):
@@ -284,7 +304,7 @@ def compile_network(graph, allowed, water=None, bridges=(), map_links=()):
             'seamMaxDistanceCm': seam_cm, 'seams': seams, 'surveyedBridges': bridge_report,
             'atGradeIntersections': intersections,
             'mapSurveys': map_report,
-            'sourceSegments': selected}
+            'sourceSegments': selected, 'surfaceEdges': {name:surfaces.count(flag) for name,flag in [('paved',0),('dirt',2),('unknown',4),('mixedUnknown',6)]}}
 
 
 if __name__ == '__main__':
@@ -295,6 +315,7 @@ if __name__ == '__main__':
     resources = Path(__file__).resolve().parents[1]/'resources'
     parser.add_argument('--additional-allowlist', type=Path, default=resources/'routing-road-meshes.json')
     parser.add_argument('--water-mask', type=Path, default=resources/'water-mask.bin')
+    parser.add_argument('--surfaces', type=Path, default=resources/'routing-road-surfaces.json')
     parser.add_argument('--bridges', type=Path, default=resources/'routing-bridges.json')
     parser.add_argument('--map-links', type=Path, default=resources/'routing-map-links.json')
     args = parser.parse_args()
@@ -304,9 +325,14 @@ if __name__ == '__main__':
     image_hashes = {item['sha256'] for item in surveys['images']}
     if surveys['schemaVersion'] != 1 or any(link['imageSha256'] not in image_hashes for link in surveys['links']):
         raise ValueError('Invalid map survey evidence')
+    surfaces = json.loads(args.surfaces.read_text(encoding='utf-8'))
+    if surfaces['schemaVersion'] != 1 or not set(surfaces['dirtMeshes']).issubset(allowed):
+        raise ValueError('Invalid surface classification')
+    if surfaces.get('sourceOverrides') and surfaces['overrideEvidence']['sourceGeometrySha256'] != hashlib.sha256(args.graph.read_bytes()).hexdigest():
+        raise ValueError('Surface overrides need review against this capture')
     binary, report = compile_network(json.loads(args.graph.read_text(encoding='utf-8')),
                                      allowed, WaterMask(args.water_mask),
-                                     json.loads(args.bridges.read_text(encoding='utf-8')),surveys['links'])
+                                     json.loads(args.bridges.read_text(encoding='utf-8')),surveys['links'],surfaces['dirtMeshes'],surfaces.get('sourceOverrides',{}))
     args.output.write_bytes(binary)
     report.update(graphSha256=hashlib.sha256(args.graph.read_bytes()).hexdigest(),
                   allowlistSha256=hashlib.sha256(args.allowlist.read_bytes()).hexdigest(),
@@ -314,6 +340,7 @@ if __name__ == '__main__':
     report.update(additionalAllowlistSha256=hashlib.sha256(args.additional_allowlist.read_bytes()).hexdigest(),
                   waterMaskSha256=hashlib.sha256(args.water_mask.read_bytes()).hexdigest(),
                   bridgesSha256=hashlib.sha256(args.bridges.read_bytes()).hexdigest())
+    report['surfacesSha256'] = hashlib.sha256(args.surfaces.read_bytes()).hexdigest()
     report['mapLinksSha256'] = hashlib.sha256(args.map_links.read_bytes()).hexdigest()
     args.output.with_suffix('.provenance.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
     print(f"Compiled {report['sourceRoadCount']} source roads, {len(report['seams'])} dry/3D seams, {len(report['surveyedBridges'])} surveyed bridges, {len(report['mapSurveys'])} map-surveyed gaps; largest component {report['largestComponentPercent']}%")

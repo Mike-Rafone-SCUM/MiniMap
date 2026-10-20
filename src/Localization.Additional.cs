@@ -1,9 +1,16 @@
-// Offline authored localizations; no runtime translation service.
+﻿// Offline authored localizations; no runtime translation service.
 using System;
 using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsTh = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "AdminMapTeleportHere", "เทเลพอร์ตมาที่นี่" },
+            { "AdminMapTeleportHelp", "ส่ง {0} ไม่มีข้อมูลความสูงของแผนที่ จึงใช้ Z เป็น 0" },
+            { "RouteModeQuickest", "เร็วที่สุด" },
+            { "RouteModeShortest", "สั้นที่สุด" },
+            { "RouteModePavedOnly", "เฉพาะถนนลาดยาง" },
+            { "RouteModeHelp", "เร็วที่สุดประมาณ 60 กม./ชม. บนถนนลาดยาง 30 บนทางดิน และ 5 บนทางเข้า สั้นที่สุดลดระยะทาง โหมดลาดยางไม่ใช้ทางดิน แต่ใช้ทางเข้าที่ไม่ผ่านน้ำได้ไม่เกิน 1 กม. ไม่ใช้ทางรถไฟ" },
+
             { "SetupMoreOptions", "ตัวเลือกเพิ่มเติม" },
             { "SetupAppearanceHelp", "เลือกรูปทรง ขนาด และความชัดของแผนที่ แล้วดูตัวอย่าง สามารถใช้ค่าเดิมได้" },
             { "SetupMapHelp", "เลือกสิ่งที่แสดงบนแผนที่ สีและป้ายกำกับเพิ่มเติมอยู่ในตัวเลือกเพิ่มเติม" },
@@ -1114,6 +1121,13 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "จุดกิจกรรมซีเดนเท็กซ์" },
         };
         public static readonly Dictionary<string,string> StringsZhTw = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "AdminMapTeleportHere", "傳送到這裡" },
+            { "AdminMapTeleportHelp", "傳送 {0}。無法取得地圖高度；Z為0。" },
+            { "RouteModeQuickest", "最快路線" },
+            { "RouteModeShortest", "最短路線" },
+            { "RouteModePavedOnly", "僅鋪面道路" },
+            { "RouteModeHelp", "最快路線按鋪面道路60公里/小時、土路30、連接路5估算。最短路線優先距離。僅鋪面模式排除土路；允許最長1公里的不涉水連接路。不使用鐵路。" },
+
             { "SetupMoreOptions", "更多選項" },
             { "SetupAppearanceHelp", "選擇地圖的形狀、大小和可見度，並查看預覽。也可以保留目前設定。" },
             { "SetupMapHelp", "選擇地圖上顯示的內容。更多顏色和標籤設定位於更多選項中。" },
@@ -2224,6 +2238,13 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex活動點" },
         };
         public static readonly Dictionary<string,string> StringsJa = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "AdminMapTeleportHere", "ここにテレポート" },
+            { "AdminMapTeleportHelp", "{0} を送信。地形の高さは不明のため、Zは0です。" },
+            { "RouteModeQuickest", "最速" },
+            { "RouteModeShortest", "最短" },
+            { "RouteModePavedOnly", "舗装路のみ" },
+            { "RouteModeHelp", "最速は舗装路60km/h、未舗装路30、接続区間5で推定。最短は距離を優先。舗装路のみは未舗装路を除外しますが、水を渡らない接続区間は最大1kmです。鉄道は除外。" },
+
             { "SetupMoreOptions", "その他の設定" },
             { "SetupAppearanceHelp", "地図の形、大きさ、見やすさを選び、プレビューで確認します。現在の設定のままでも構いません。" },
             { "SetupMapHelp", "地図に表示するものを選びます。追加の色やラベルはその他の設定にあります。" },
@@ -3334,6 +3355,13 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "シーデンテックスアクティビティスポット" },
         };
         public static readonly Dictionary<string,string> StringsCs = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "AdminMapTeleportHere", "Teleportovat sem" },
+            { "AdminMapTeleportHelp", "Odeslat {0}. Výška mapy není k dispozici; Z je 0." },
+            { "RouteModeQuickest", "Nejrychlejší" },
+            { "RouteModeShortest", "Nejkratší" },
+            { "RouteModePavedOnly", "Pouze zpevněné silnice" },
+            { "RouteModeHelp", "Odhad: 60 km/h na asfaltu, 30 na polních cestách a 5 na příjezdech. Nejkratší minimalizuje vzdálenost. Pouze asfalt vylučuje polní cesty; suché příjezdy do 1 km. Železnice jsou vyloučeny." },
+
             { "SetupMoreOptions", "Další možnosti" },
             { "SetupAppearanceHelp", "Vyberte tvar, velikost a viditelnost mapy. Sledujte náhled. Aktuální nastavení můžete ponechat." },
             { "SetupMapHelp", "Vyberte, co se na mapě zobrazí. Další barvy a popisky najdete v Dalších možnostech." },
@@ -4444,6 +4472,13 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex Activity Spot" },
         };
         public static readonly Dictionary<string,string> StringsIt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "AdminMapTeleportHere", "Teletrasporta qui" },
+            { "AdminMapTeleportHelp", "Invia {0}. Altezza del terreno non disponibile; Z è 0." },
+            { "RouteModeQuickest", "Più veloce" },
+            { "RouteModeShortest", "Più breve" },
+            { "RouteModePavedOnly", "Solo strade asfaltate" },
+            { "RouteModeHelp", "Più veloce stima 60 km/h su asfalto, 30 su sterrato e 5 sugli accessi. Più breve minimizza la distanza. Solo asfalto esclude lo sterrato; accessi asciutti fino a 1 km. Ferrovie escluse." },
+
             { "SetupMoreOptions", "Altre opzioni" },
             { "SetupAppearanceHelp", "Scegli forma, dimensioni e visibilità della mappa. Guarda l’anteprima. Puoi mantenere le impostazioni attuali." },
             { "SetupMapHelp", "Scegli cosa mostrare sulla mappa. Colori ed etichette aggiuntivi sono in Altre opzioni." },
@@ -5554,6 +5589,13 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Punto di attività del dentice marino" },
         };
         public static readonly Dictionary<string,string> StringsUk = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "AdminMapTeleportHere", "Телепортуватися сюди" },
+            { "AdminMapTeleportHelp", "Надіслати {0}. Висота карти невідома; Z дорівнює 0." },
+            { "RouteModeQuickest", "Найшвидший" },
+            { "RouteModeShortest", "Найкоротший" },
+            { "RouteModePavedOnly", "Лише асфальт" },
+            { "RouteModeHelp", "Оцінка: 60 км/год на асфальті, 30 на ґрунті та 5 на під’їздах. Найкоротший мінімізує відстань. Лише асфальт виключає ґрунтові дороги; сухі під’їзди до 1 км. Залізниці виключено." },
+
             { "SetupMoreOptions", "Інші параметри" },
             { "SetupAppearanceHelp", "Виберіть форму, розмір і видимість карти. Перегляньте результат. Можна залишити поточні налаштування." },
             { "SetupMapHelp", "Виберіть, що показувати на карті. Додаткові кольори й підписи містяться в Інших параметрах." },

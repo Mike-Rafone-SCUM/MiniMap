@@ -22,13 +22,52 @@ class RoadCompilationTests(unittest.TestCase):
                               'river': segment(1, 2, 'river'),
                               'mixed': segment(1, 2, 'asphalt')})
 
+    def test_per_segment_surface_overrides_mesh_default(self):
+        graph = self.graph()
+        graph['segments'] = {'a':graph['segments']['a']}
+        graph['segments']['a']['meshes'] = ['gravel']
+        _,report = roads.compile_network(graph,{'gravel'},surface_overrides={'a':'paved'})
+        self.assertEqual(report['surfaceEdges']['paved'],1)
+        with self.assertRaises(ValueError):
+            roads.compile_network(graph,{'gravel'},surface_overrides={'a':'rail'})
+        with self.assertRaises(ValueError):
+            roads.compile_network(graph,{'gravel'},surface_overrides={'missing':'paved'})
+
+    def test_explicit_map_surface_overrides_asset_name(self):
+        graph = self.graph()
+        graph['segments'] = {'a':graph['segments']['a']}
+        mesh = 'StaticMesh /Game/ConZ_Files/Models/Road/Asphalt_Road_02/Asphalt_Road_02.Asphalt_Road_02'
+        graph['segments']['a']['meshes'] = [mesh]
+        blob,report = roads.compile_network(graph,{mesh},dirt_meshes={mesh})
+        self.assertEqual(report['surfaceEdges']['dirt'],1)
+        self.assertEqual(report['surfaceEdges']['paved'],0)
+
+    def test_surface_flags_preserve_dirt_on_split_roads_and_seams(self):
+        class Dry:
+            def allows(self,a,b): return True
+        graph = self.graph()
+        graph['segments'] = {k:graph['segments'][k] for k in ('a','b')}
+        graph['segments']['b']['meshes'] = ['gravel']
+        blob, report = roads.compile_network(graph, {'asphalt','gravel'}, Dry())
+        data = gzip.decompress(blob)
+        version,n,m,_ = struct.unpack_from('<4I',data,4)
+        offset = 20+8*n
+        flags = []
+        for i in range(m):
+            u,v,length,flag,count = struct.unpack_from('<iifBH',data,offset)
+            flags.append(flag); offset += 15+8*count
+        self.assertEqual(version,4)
+        self.assertIn(0,flags)
+        self.assertEqual(flags.count(2),2)  # dirt road and its conservative seam
+        self.assertEqual(report['surfaceEdges']['dirt'],2)
+
     def test_filter_and_preserve_distinct_coincident_endpoints(self):
         graph = self.graph()
         graph['segments']['mixed']['meshes'].append('river')
         binary, report = roads.compile_network(graph, {'asphalt'})
         self.assertEqual(report['sourceSegments'], ['a', 'b'])
         self.assertEqual(report['nodes'], 4)  # 1 cm gap must not create a junction
-        self.assertEqual(struct.unpack_from('<I', gzip.decompress(binary), 4)[0], 3)
+        self.assertEqual(struct.unpack_from('<I', gzip.decompress(binary), 4)[0], 4)
         self.assertEqual(binary, roads.compile_network(graph, {'asphalt'})[0])
 
     def test_shared_identity_connects_and_invalid_geometry_is_rejected(self):
@@ -125,6 +164,11 @@ class RoadCompilationTests(unittest.TestCase):
         report = roads.compile_network(graph, {'asphalt'}, Dry(), map_links=[survey])[1]
         self.assertEqual(report['components'], 1)
         self.assertEqual(len(report['mapSurveys']), 1)
+        graph['segments']['b']['meshes'] = ['gravel']
+        survey['surface'] = 'paved'
+        _,classified = roads.compile_network(graph,{'asphalt','gravel'},Dry(),map_links=[survey])
+        self.assertEqual(classified['surfaceEdges']['paved'],2)  # road a and surveyed curve
+        graph['segments']['b']['meshes'] = ['asphalt']
         with self.assertRaises(ValueError):
             roads.compile_network(graph, {'asphalt'}, Wet(), map_links=[survey])
         invalid = copy.deepcopy(survey)

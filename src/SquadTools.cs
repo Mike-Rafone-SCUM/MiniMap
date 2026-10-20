@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
@@ -91,10 +91,20 @@ namespace ScumMiniMap {
             var routePage=pages[0];routePage.Children.Add(SquadHelp("SquadRouteHelp"));routePage.Children.Add(SquadHelp("RouteAutoHelp"));
             var navigation=WpfFieldTheme.Text("",16);navigation.TextWrapping=TextWrapping.Wrap;navigation.TextTrimming=TextTrimming.None;routePage.Children.Add(navigation);
             Action redraw=null;
+            routePage.Children.Add(SquadHelp("RouteModeHelp"));
+            var modes=new WrapPanel();var modeButtons=new List<Button>();
+            foreach(RoadRouteMode mode in Enum.GetValues(typeof(RoadRouteMode))) {
+                var choice=mode;var button=WpfFieldTheme.Button(S("RouteMode"+mode),()=> {
+                    engine.WpfSetRouteMode(choice);ownRouteSignature=null;activeRouteSignature=null;
+                    UpdateRoutePreviews();filterIdentity=null;Refresh();redraw();
+                });button.Tag="route-mode-"+mode;modeButtons.Add(button);modes.Children.Add(button);
+            }
+            routePage.Children.Add(modes);
             var navActions=new WrapPanel();var addTarget=WpfFieldTheme.Button(S("SquadAddStop"),()=> { AddSquadDestination(engine.WpfSnapshot(true).Target);redraw(); });addTarget.Tag="route-add-target";addTarget.ToolTip=S("MapGpsSavedHelp");navActions.Children.Add(addTarget);
             var stopNavigation=WpfFieldTheme.Button(S("SquadStopNav"),()=> { StopSquadNavigation();filterIdentity=null;Refresh();redraw(); });stopNavigation.Tag="route-stop-navigation";navActions.Children.Add(stopNavigation);routePage.Children.Add(navActions);
             var routes=new StackPanel();routePage.Children.Add(routes);string routeIdentity=null;
             redraw=()=> {
+                foreach(var button in modeButtons) { bool active=(string)button.Tag=="route-mode-"+engine.WpfRouteMode;button.Background=active?WpfFieldTheme.Amber:WpfFieldTheme.Panel;button.Foreground=active?WpfFieldTheme.Ground:WpfFieldTheme.Ink; }
                 var state=engine.WpfSnapshot(true);navigation.Text=S("FieldTarget")+": "+(state.Target==null?S("KeyNone"):state.Target.DisplayName)+(state.Target==null?"":" · "+state.RouteSummary);
                 addTarget.IsEnabled=state.Target!=null&&activeStops.Length==0&&followingPeer==null&&squad.Stops.Length<SquadState.MaximumStops;
                 stopNavigation.IsEnabled=state.Target!=null||followingPeer!=null||activeStops.Length>0;

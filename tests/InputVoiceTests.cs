@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -179,6 +179,32 @@ static class InputVoiceTests {
             Check(!CompleteTeleportSubmission(window.SubmitRelativeTeleport((TeleportDirection)99,1,success))
                 && !CompleteTeleportSubmission(window.SubmitRelativeTeleport(TeleportDirection.Up,0,success)) && calls==5,
                 "Invalid relative teleport requests are rejected before invoking the chat sender");
+        }
+    }
+
+    static void TestMapTeleportSubmission(string testRoot) {
+        string profile=Path.Combine(testRoot,"map-teleport");Directory.CreateDirectory(profile);
+        File.WriteAllText(Path.Combine(profile,"settings.ini"),"Welcomed=True");
+        using(var bitmap=new Bitmap(32,32))bitmap.Save(Path.Combine(profile,"map.png"));
+        using(var window=new MapWindow(profile,true)) {
+            var target=new PointF(.2f,.3f);int calls=0;string sent=null;
+            Func<string,Task<bool>> sender=text=> { calls++;sent=text;return Task.FromResult(true); };
+            SetField(window,"fullMapActive",true);SetField(window,"adminToolsEnabled",false);
+            Check(!CompleteTeleportSubmission(window.SubmitMapTeleport(target,sender))&&calls==0&&window.WpfMapAdminActions(target).Length==0,"Map teleport and its context actions require enabled admin tools");
+            SetField(window,"adminToolsEnabled",true);SetField(window,"fullMapActive",false);
+            Check(!CompleteTeleportSubmission(window.SubmitMapTeleport(target,sender))&&calls==0,"A stale map teleport action cannot submit after the tactical map closes");
+            SetField(window,"fullMapActive",true);
+            Check(!CompleteTeleportSubmission(window.SubmitMapTeleport(new PointF(float.NaN,0),sender))&&calls==0,"Invalid map coordinates cannot reach the teleport sender");
+            foreach(string guard in new[]{"adminCommandBusy","relativeTeleportBusy","closing"}) {
+                SetField(window,guard,true);Check(!CompleteTeleportSubmission(window.SubmitMapTeleport(target,sender))&&calls==0,"Map teleport respects the "+guard+" gate");SetField(window,guard,false);
+            }
+            var deferred=new TaskCompletionSource<bool>();
+            var pending=window.SubmitMapTeleport(target,text=> { calls++;sent=text;return deferred.Task; });
+            Check(!pending.IsCompleted&&sent==MapWindow.BuildMapTeleportCommand(target)&&!CompleteTeleportSubmission(window.SubmitMapTeleport(new PointF(.4f,.5f),sender))&&calls==1,"Map teleport captures the clicked point and serializes pending submissions");
+            deferred.SetResult(false);Check(!CompleteTeleportSubmission(pending),"Cancelled map teleport releases its submission gate");
+            var sample=new Position { X=100,Y=200,Z=300 };SetField(window,"position",sample);
+            Check(CompleteTeleportSubmission(window.SubmitMapTeleport(target,sender))&&calls==2&&sent==MapWindow.BuildMapTeleportCommand(target)&&Object.ReferenceEquals(Field<Position>(window,"position"),sample),"Map teleport reuses the command sender without inventing a confirmed player position");
+            Check(window.BuildRelativeTeleportCommand(TeleportDirection.Up,1)==null,"After map teleport, relative teleport waits for a fresh position sample");
         }
     }
 
@@ -1336,6 +1362,7 @@ static class InputVoiceTests {
         Directory.CreateDirectory(root);
         try {
             TestRelativeTeleportSubmission(root);
+            TestMapTeleportSubmission(root);
             TestFullMapAdminControls(root);
             TestPersistedAdminDismissal(root);
             string packs=Path.Combine(root,"voice-navigation"); VoicePacks.InstallBundled(packs);

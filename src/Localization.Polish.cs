@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ScumMiniMap {
@@ -14,7 +14,13 @@ namespace ScumMiniMap {
             }
             return result;
         }
-        const string PolishUi = @"SetupMoreOptions|Więcej opcji
+        const string PolishUi = @"RouteModeQuickest|Najszybsza
+RouteModeShortest|Najkrótsza
+RouteModePavedOnly|Tylko drogi asfaltowe
+RouteModeHelp|Szacunek: 60 km/h na asfalcie, 30 na drogach gruntowych i 5 na dojazdach. Najkrótsza minimalizuje odległość. Tylko asfalt wyklucza drogi gruntowe; suche dojazdy do 1 km. Tory są wykluczone.
+AdminMapTeleportHere|Teleportuj tutaj
+AdminMapTeleportHelp|Wyślij {0}. Wysokość mapy jest niedostępna; Z wynosi 0.
+SetupMoreOptions|Więcej opcji
 SetupAppearanceHelp|Wybierz kształt, rozmiar i widoczność mapy. Sprawdź podgląd. Możesz zachować obecne ustawienia.
 SetupMapHelp|Wybierz, co ma być na mapie. Dodatkowe kolory i etykiety znajdziesz w Więcej opcji.
 SetupTrackingHelp|Wybierz, czy mapa ma automatycznie zmieniać przybliżenie podczas ruchu. Możesz zachować obecne ustawienia.

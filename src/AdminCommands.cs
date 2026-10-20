@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -503,22 +503,60 @@ namespace ScumMiniMap {
             return string.Format(CultureInfo.InvariantCulture,"#Teleport {0:0.##} {1:0.##} 0",
                 617718d-point.X*1521618d,618618d-point.Y*1523618d);
         }
+        internal sealed class AdminMapAction {
+            internal string Name,Help,Command;
+            internal bool Enabled=true,Checked;
+            internal Action Invoke;
+            internal AdminMapAction[] Children;
+        }
+        internal async Task<bool> SubmitMapTeleport(PointF target,Func<string,Task<bool>> send) {
+            string command=BuildMapTeleportCommand(target);
+            if(!adminToolsEnabled||!fullMapActive||adminCommandBusy||relativeTeleportBusy||closing||command==null||send==null)return false;
+            relativeTeleportBusy=true;RefreshAdminCommandsPanel();
+            try { bool sent=await send(command);if(sent)lastTeleportSource=position;return sent; }
+            finally { relativeTeleportBusy=false;RefreshAdminCommandsPanel(); }
+        }
+        void QueueMapTeleport(PointF target) {
+            overlay.CloseAdminContextMenu();
+            try { BeginInvoke(new Action(async()=> { if(!IsDisposed)await SubmitMapTeleport(target,text=>RunAdminCommand(text,null)); })); }
+            catch(InvalidOperationException) { }
+        }
+        internal AdminMapAction[] WpfMapAdminActions(PointF target) {
+            WpfVerifyAccess();if(!adminToolsEnabled)return new AdminMapAction[0];
+            bool ready=fullMapActive&&!adminCommandBusy&&!relativeTeleportBusy&&!closing;
+            string teleport=BuildMapTeleportCommand(target);
+            var actions=new List<AdminMapAction> {
+                new AdminMapAction { Name=Localization.Get("AdminMapTeleportHere"),Command=teleport,Help=Localization.T("AdminMapTeleportHelp",teleport??""),Enabled=ready&&teleport!=null,Invoke=()=>QueueMapTeleport(target) },
+                new AdminMapAction { Name=null }
+            };
+            try {
+                foreach(var command in AdminCommand.Load(Path.Combine(dataFolder,"admin-commands.tsv"))) {
+                    var captured=command;bool? state=LastAdminToggleState(command);
+                    var item=new AdminMapAction { Name=AdminCommandLabel(command),Enabled=ready };
+                    if(command.IsBoolean)item.Children=new[]{true,false}.Select(value=> {
+                        bool requested=value;return new AdminMapAction { Name=requested?"ON":"OFF",Enabled=ready,Checked=state.HasValue&&state.Value==requested,Invoke=()=>QueueAdminCommand(captured,requested) };
+                    }).ToArray();
+                    else item.Invoke=()=>QueueAdminCommand(captured,null);
+                    actions.Add(item);
+                }
+            } catch(Exception ex) { actions.Add(new AdminMapAction { Name=ex.Message,Enabled=false }); }
+            actions.Add(new AdminMapAction { Name=null });
+            actions.Add(new AdminMapAction { Name=Localization.Get("AdminTeleportMenu"),Enabled=ready,Invoke=()=> { if(adminToolsEnabled)ShowAdminControlsSection(true); } });
+            actions.Add(new AdminMapAction { Name=Localization.Get("ControlAdminCommands")+"…",Enabled=ready,Invoke=()=> { if(adminToolsEnabled)ShowAdminCommands(); } });
+            actions.Add(new AdminMapAction { Name=Localization.Get("PlayersTitle"),Enabled=ready,Invoke=()=> { if(adminToolsEnabled)ShowAdminPlayers(); } });
+            actions.Add(new AdminMapAction { Name=Localization.Get("SpawnCartOpen"),Enabled=ready,Invoke=()=> { if(adminToolsEnabled)ShowSpawnCart(); } });
+            return actions.ToArray();
+        }
         internal void PopulateFullMapAdminMenu(ToolStripMenuItem menu) {
             if(!adminToolsEnabled) { menu.DropDownItems.Clear();return; }
             PopulateAdminMenu(menu);
             PointF? target=pendingFullMapWaypointMapPoint;
             string command=target.HasValue?BuildMapTeleportCommand(target.Value):null;
-            var teleport=new ToolStripMenuItem("Teleport here") {
-                Enabled=fullMapActive && command!=null && !adminCommandBusy,
-                ToolTipText=command==null?"Right-click inside the map.":"Send "+command+". Map height is unavailable; Z is 0."
+            var teleport=new ToolStripMenuItem(Localization.Get("AdminMapTeleportHere")) {
+                Enabled=fullMapActive && command!=null && !adminCommandBusy && !relativeTeleportBusy && !closing,
+                ToolTipText=command==null?"Right-click inside the map.":Localization.T("AdminMapTeleportHelp",command)
             };
-            teleport.Click+=(s,e)=> {
-                if(!fullMapActive || command==null || closing)return;
-                // Close the context menu before changing game focus or sending keys.
-                overlay.CloseAdminContextMenu();
-                try { BeginInvoke(new Action(async()=> { if(fullMapActive && !closing)await RunAdminCommand(command,null); })); }
-                catch(InvalidOperationException) {}
-            };
+            teleport.Click+=(s,e)=> { if(target.HasValue)QueueMapTeleport(target.Value); };
             menu.DropDownItems.Insert(0,teleport);
             menu.DropDownItems.Insert(1,new ToolStripSeparator());
         }

@@ -321,6 +321,7 @@ namespace ScumMiniMap {
                         if(key=="Welcomed") { foundWelcomed=true; continue; }
                         if(key=="OnboardingVersion") { wpfOnboardingVersion=val;continue; }
                         if(key=="HideOnboardingGuide") { if(bool.TryParse(val,out b))hideOnboardingGuide=b;continue; }
+                        if(key=="RouteMode") { RoadRouteMode mode;if(Enum.TryParse(val,out mode)&&Enum.IsDefined(typeof(RoadRouteMode),mode))wpfRouteMode=mode;continue; }
                         if(key=="RotateMinimap") { if(bool.TryParse(val,out b))wpfRotateMap=b;continue; }
                         if(key=="PoiClustering") { if(bool.TryParse(val,out b))wpfPoiClustering=b;continue; }
                         if(key=="WpfTacticalOpacityOverride") { if(bool.TryParse(val,out b))wpfTacticalOpacityOverride=b;continue; }
@@ -539,6 +540,7 @@ namespace ScumMiniMap {
 
                 settingsLines.Add("ScumCopyScanCode="+scumCopyScanCode+Environment.NewLine+"ScumMapScanCode="+scumMapScanCode+Environment.NewLine+"ScumChatScanCode="+scumChatScanCode+Environment.NewLine);
                 settingsLines.Add("AutomaticDeathMarkers="+automaticDeathMarkers+Environment.NewLine);
+                settingsLines.Add("RouteMode="+wpfRouteMode);
                 settingsLines.Add("RotateMinimap="+wpfRotateMap+Environment.NewLine);
                 settingsLines.Add("OnboardingVersion="+wpfOnboardingVersion);
                 settingsLines.Add("HideOnboardingGuide="+hideOnboardingGuide);

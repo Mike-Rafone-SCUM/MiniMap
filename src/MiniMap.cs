@@ -1712,7 +1712,7 @@ namespace ScumMiniMap {
 
 
 
-        public const string VersionString = "2.3.14";
+        public const string VersionString = "2.3.15";
 
 
 
@@ -7586,9 +7586,10 @@ namespace ScumMiniMap {
             routeCalculating=true;
             long request=routeGeneration;
             PointF targetPoint=target.Centroid;
+            RoadRouteMode requestedMode=wpfRouteMode;
             ThreadPool.QueueUserWorkItem(state=> {
                 RoadRoute result=null; Exception failure=null;
-                try { result=RoadRouter.Instance.FindRoute(playerPt,targetPoint); }
+                try { result=RoadRouter.Instance.FindRoute(playerPt,targetPoint,requestedMode); }
                 catch(Exception ex) { failure=ex; }
                 try {
                     if(IsDisposed) return;

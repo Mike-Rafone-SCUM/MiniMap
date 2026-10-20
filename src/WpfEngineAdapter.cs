@@ -44,6 +44,17 @@ namespace ScumMiniMap {
         void WpfVerifyAccess() { if(System.Threading.Thread.CurrentThread.ManagedThreadId!=wpfOwnerThread)throw new InvalidOperationException("Map state belongs to the UI thread."); }
         readonly List<WpfSettingDescriptor> wpfSettings=new List<WpfSettingDescriptor>();
         int wpfDefaultsRevision;
+        internal RoadRouteMode wpfRouteMode=RoadRouteMode.Shortest;
+        internal RoadRouteMode WpfRouteMode { get { return wpfRouteMode; } }
+        internal void WpfSetRouteMode(RoadRouteMode mode) {
+            WpfVerifyAccess();if(!Enum.IsDefined(typeof(RoadRouteMode),mode)||mode==wpfRouteMode)return;
+            wpfRouteMode=mode;routeGeneration++;activeRoute=null;lastRouteTarget=null;
+            if(searchTarget!=null&&position!=null) {
+                if(routeCalculating)wpfQueuedTarget=searchTarget;
+                else UpdateRouteAsync(ToMap(position),searchTarget);
+            }
+            lastFrameKey=null;SaveSettings();
+        }
         internal bool wpfRotateMap;
         internal bool wpfPoiClustering=true;
         bool wpfTacticalOpacityOverride;

@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using DrawingPoint=System.Drawing.PointF;
 
 namespace ScumMiniMap {
     internal sealed partial class WpfFieldConsoleRuntime {
-        readonly SquadRoutePlanner ownRoutePlanner=new SquadRoutePlanner((a,b)=>RoadRouter.Instance.FindRoute(a,b));
-        readonly SquadRoutePlanner squadRoutePlanner=new SquadRoutePlanner((a,b)=>RoadRouter.Instance.FindRoute(a,b));
-        sealed class RemoteRoute { internal string Signature;internal DrawingPoint? Origin;internal DateTime Requested;internal readonly SquadRoutePlanner Planner=new SquadRoutePlanner((a,b)=>RoadRouter.Instance.FindRoute(a,b)); }
+        readonly SquadRoutePlanner ownRoutePlanner=new SquadRoutePlanner((a,b,mode)=>RoadRouter.Instance.FindRoute(a,b,mode));
+        readonly SquadRoutePlanner squadRoutePlanner=new SquadRoutePlanner((a,b,mode)=>RoadRouter.Instance.FindRoute(a,b,mode));
+        sealed class RemoteRoute { internal string Signature;internal DrawingPoint? Origin;internal DateTime Requested;internal readonly SquadRoutePlanner Planner=new SquadRoutePlanner((a,b,mode)=>RoadRouter.Instance.FindRoute(a,b,mode)); }
         readonly Dictionary<string,RemoteRoute> remoteRoutes=new Dictionary<string,RemoteRoute>(StringComparer.Ordinal);
         string ownRouteSignature,activeRouteSignature;DrawingPoint? ownPlanOrigin,activePlanOrigin;DateTime ownPlanRequested,activePlanRequested;
         static string StopSignature(SharedMapMarker[] stops) { return string.Join(";",stops.Select(m=>m.Id+":"+m.X.ToString("R",System.Globalization.CultureInfo.InvariantCulture)+":"+m.Y.ToString("R",System.Globalization.CultureInfo.InvariantCulture)+":"+m.Name)); }
@@ -53,16 +53,16 @@ namespace ScumMiniMap {
         }
         bool UsesOwnNavigationPlan { get { return activeStop==0&&activeStops.Length>0&&activeStops[0].OwnerId==null; } }
         void UpdateRoutePreviews() {
-            var now=DateTime.UtcNow;var origin=PlanningOrigin();var own=squad.Stops;string signature=StopSignature(own);
+            var now=DateTime.UtcNow;var origin=PlanningOrigin();var own=squad.Stops;string signature=engine.WpfRouteMode+":"+StopSignature(own);
             if(own.Length==0) { if(ownRouteSignature!="")ownRoutePlanner.Clear();ownRouteSignature=""; }
             else if(signature!=ownRouteSignature||now-ownPlanRequested>=TimeSpan.FromSeconds(2)&&OriginChanged(ownPlanOrigin,origin)) {
-                ownRouteSignature=signature;ownPlanOrigin=origin;ownPlanRequested=now;ownRoutePlanner.Update(origin,StopPoints(own));
+                ownRouteSignature=signature;ownPlanOrigin=origin;ownPlanRequested=now;ownRoutePlanner.Update(origin,StopPoints(own),engine.WpfRouteMode);
             }
             if(activeStops.Length==0||UsesOwnNavigationPlan) { if(activeRouteSignature!=null)squadRoutePlanner.Clear();activeRouteSignature=null; }
             else {
-                var remaining=activeStops.Skip(activeStop).ToArray();signature=StopSignature(remaining);
+                var remaining=activeStops.Skip(activeStop).ToArray();signature=engine.WpfRouteMode+":"+StopSignature(remaining);
                 if(remaining.Length>0&&(signature!=activeRouteSignature||now-activePlanRequested>=TimeSpan.FromSeconds(2)&&OriginChanged(activePlanOrigin,origin))) {
-                    activeRouteSignature=signature;activePlanOrigin=origin;activePlanRequested=now;squadRoutePlanner.Update(origin,StopPoints(remaining));
+                    activeRouteSignature=signature;activePlanOrigin=origin;activePlanRequested=now;squadRoutePlanner.Update(origin,StopPoints(remaining),engine.WpfRouteMode);
                 }
             }
             var markers=ReceivedSquadMarkers();var routes=SquadState.Routes(markers).ToList();
@@ -71,8 +71,8 @@ namespace ScumMiniMap {
                 string owner=route[0].OwnerId??"";if((PlayerVisibility(owner)&16)==0)continue;
                 string key=route[0].Id==SharedMapMarker.GpsId?owner+":gps":SquadState.RouteKey(route[0]);alive.Add(key);
                 var peer=playerRoster.FirstOrDefault(p=>p.Id==owner&&p.Position!=null);DrawingPoint? from=peer==null?(DrawingPoint?)null:PlanningPoint(peer.Position);
-                RemoteRoute remote;if(!remoteRoutes.TryGetValue(key,out remote))remoteRoutes[key]=remote=new RemoteRoute();signature=StopSignature(route);
-                if(signature!=remote.Signature||now-remote.Requested>=TimeSpan.FromSeconds(2)&&OriginChanged(remote.Origin,from)) { remote.Signature=signature;remote.Origin=from;remote.Requested=now;remote.Planner.Update(from,StopPoints(route)); }
+                RemoteRoute remote;if(!remoteRoutes.TryGetValue(key,out remote))remoteRoutes[key]=remote=new RemoteRoute();signature=engine.WpfRouteMode+":"+StopSignature(route);
+                if(signature!=remote.Signature||now-remote.Requested>=TimeSpan.FromSeconds(2)&&OriginChanged(remote.Origin,from)) { remote.Signature=signature;remote.Origin=from;remote.Requested=now;remote.Planner.Update(from,StopPoints(route),engine.WpfRouteMode); }
             }
             foreach(string key in remoteRoutes.Keys.Where(key=>!alive.Contains(key)).ToArray()) { remoteRoutes[key].Planner.Dispose();remoteRoutes.Remove(key); }
         }
@@ -91,7 +91,7 @@ namespace ScumMiniMap {
             if(state.LocalRoute.Length>0) {
                 var own=state.OwnRoutePlan;double distance=0;var from=state.Position==null?new DrawingPoint((float)state.LocalRoute[0].X,(float)state.LocalRoute[0].Y):MapWindow.ToMap(state.Position);
                 foreach(var stop in state.LocalRoute) { var to=new DrawingPoint((float)stop.X,(float)stop.Y);distance+=DestinationSearch.Metres(from,to);from=to; }
-                state.OwnRouteSummary=compact.OwnRouteSummary=engine.WpfTravelSummary(own==null?distance:own.Distance,own!=null&&own.MissingRoads==0,ownRoutePlanner.Busy);
+                state.OwnRouteSummary=compact.OwnRouteSummary=engine.WpfTravelSummary(own==null?distance:own.Distance,own!=null&&own.MissingRoads==0,ownRoutePlanner.Busy,own==null?(double?)null:own.EstimatedSeconds);
             }
             if(activeStops.Length>activeStop&&state.Target!=null&&state.Position!=null) {
                 var plan=state.SquadPlan;
@@ -99,7 +99,7 @@ namespace ScumMiniMap {
                 foreach(var stop in activeStops.Skip(activeStop)) { var to=new DrawingPoint((float)stop.X,(float)stop.Y);distance+=DestinationSearch.Metres(from,to);from=to; }
                 bool road=plan!=null&&plan.HasOrigin&&plan.MissingRoads==0;
                 if(plan!=null&&plan.HasOrigin)distance=plan.Distance;
-                state.RouteSummary=compact.RouteSummary=S("NavigationNext")+": "+state.RouteSummary+" · "+S("NavigationRemaining")+": "+engine.WpfTravelSummary(distance,road,state.SquadPlanning);
+                state.RouteSummary=compact.RouteSummary=S("NavigationNext")+": "+state.RouteSummary+" · "+S("NavigationRemaining")+": "+engine.WpfTravelSummary(distance,road,state.SquadPlanning,plan==null?(double?)null:plan.EstimatedSeconds);
             }
             var markers=ReceivedSquadMarkers();var descriptions=SquadState.Routes(markers).Select(r=>new { Key=SquadState.RouteKey(r[0]),Marker=r[0] }).Concat(markers.Where(m=>m.Id==SharedMapMarker.GpsId).Select(m=>new { Key=(m.OwnerId??"")+":gps",Marker=m })).ToArray();
             state.OtherRoutePlans=compact.OtherRoutePlans=remoteRoutes.Where(p=>p.Value.Planner.Plan!=null).Select(p=> {

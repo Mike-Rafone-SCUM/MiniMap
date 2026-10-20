@@ -26,6 +26,17 @@ class SquadRoutePlannerTests {
                 Check(calls==3,"Obsolete work stops between legs rather than finishing the old route");
             }
         }
+        using(var entered=new ManualResetEvent(false))using(var release=new ManualResetEvent(false)) {
+            int calls=0;
+            using(var planner=new SquadRoutePlanner((a,b,mode)=> {
+                if(Interlocked.Increment(ref calls)==1) { entered.Set();release.WaitOne(3000); }
+                var r=Route(a,b);r.Mode=mode;r.EstimatedSeconds=mode==RoadRouteMode.Quickest?12:24;return r;
+            })) {
+                planner.Update(stops[0],new[]{stops[1]},RoadRouteMode.Shortest);Check(entered.WaitOne(3000),"Mode-change fixture starts its old request");
+                planner.Update(stops[0],new[]{stops[1],stops[2]},RoadRouteMode.Quickest);release.Set();Await(()=>planner.Plan!=null);
+                Check(planner.Plan.Mode==RoadRouteMode.Quickest&&planner.Plan.EstimatedSeconds==24,"Mode changes discard old work and sum the selected mode ETA across legs");
+            }
+        }
         int searches=0;using(var planner=new SquadRoutePlanner((a,b)=> { Interlocked.Increment(ref searches);return Route(a,b); })) {
             for(int i=0;i<100;i++)planner.Update(null,new[]{new PointF(.1f,.1f),new PointF(.2f+i*.001f,.3f)});
             Await(()=>planner.Plan!=null);Check(searches<5&&Math.Abs(planner.Plan.Legs[0].Last().X-.299f)<.0001,"Rapid marker placement is coalesced without flooding the road router");

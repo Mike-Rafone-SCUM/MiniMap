@@ -25,6 +25,56 @@ public static class CapturedRoadTests {
             writer.Flush(); stream.Position=0; router.LoadBinary(new BinaryReader(stream));
         }
     }
+    static void LoadSurfaces(RoadRouter router,PointF[] nodes,int[][] links,byte[] flags,float[] lengths=null,PointF[][] geometry=null) {
+        using(var stream=new MemoryStream()) {
+            var w=new BinaryWriter(stream);w.Write(new byte[]{82,79,65,68});w.Write((uint)4);
+            w.Write(nodes.Length);w.Write(links.Length);w.Write(1);
+            foreach(var p in nodes) { w.Write(p.X);w.Write(p.Y); }
+            for(int i=0;i<links.Length;i++) {
+                var edge=links[i];var curve=geometry==null?new[]{nodes[edge[0]],nodes[edge[1]]}:geometry[i];w.Write(edge[0]);w.Write(edge[1]);w.Write(lengths==null?(float)RoadRouter.DistanceMeters(nodes[edge[0]],nodes[edge[1]]):lengths[i]);w.Write(flags[i]);w.Write((ushort)curve.Length);
+                foreach(var point in curve) { w.Write(point.X);w.Write(point.Y); }
+            }
+            w.Write((ushort)links.Length);for(int i=0;i<links.Length;i++)w.Write((ushort)i);
+            w.Flush();stream.Position=0;router.LoadBinary(new BinaryReader(stream));
+        }
+    }
+    static void SurfaceChecks(RoadRouter router,RoutingWaterMask water) {
+        PointF a=default(PointF);bool found=false;
+        for(float y=.1f;y<.7f&&!found;y+=.01f)for(float x=.1f;x<.9f&&!found;x+=.01f)
+            if(water.AllowsConnector(P(x,y),P(x+.02f,y))&&water.AllowsConnector(P(x,y+.01f),P(x+.02f,y+.01f))) { a=P(x,y);found=true; }
+        Check(found,"Surface fixture uses dry road endpoints");
+        var b=P(a.X+.01f,a.Y);var c=P(a.X,a.Y+.003f);var d=P(b.X,c.Y);
+        var links=new[]{new[]{0,1},new[]{0,2},new[]{2,3},new[]{3,1}};
+        LoadSurfaces(router,new[]{a,b,c,d},links,new byte[]{2,0,0,0});
+        var shortest=router.FindRoute(a,b,RoadRouteMode.Shortest);var fastest=router.FindRoute(a,b,RoadRouteMode.Quickest);var paved=router.FindRoute(a,b,RoadRouteMode.PavedOnly);
+        Check(shortest.Success&&shortest.DirtDistanceMeters>150&&shortest.PavedDistanceMeters<1,"Shortest uses the valid dirt shortcut");
+        Check(fastest.Success&&fastest.PavedDistanceMeters>200&&fastest.DirtDistanceMeters==0&&fastest.EstimatedSeconds<shortest.EstimatedSeconds,"Quickest accepts a longer paved route when its estimated time is lower");
+        Check(paved.Success&&paved.DirtDistanceMeters==0&&paved.UnknownDistanceMeters==0,"Paved-only excludes all dirt road travel");
+        Check(Math.Abs(shortest.TotalDistanceMeters-shortest.PavedDistanceMeters-shortest.DirtDistanceMeters-shortest.UnknownDistanceMeters-shortest.EntryDistanceMeters-shortest.ExitDistanceMeters)<.01,"Surface totals and dry approaches match route distance");
+        LoadSurfaces(router,new[]{a,b},new[]{new[]{0,1}},new byte[]{2});
+        Check(!router.FindRoute(a,b,RoadRouteMode.PavedOnly).Success,"Paved-only fails when only a dirt road exists");
+        LoadSurfaces(router,new[]{a,b},new[]{new[]{0,1}},new byte[]{4});
+        Check(!router.FindRoute(a,b,RoadRouteMode.PavedOnly).Success&&router.FindRoute(a,b,RoadRouteMode.Shortest).Success,"Unknown surfaces remain usable for shortest but cannot masquerade as paved");
+        // A destination close to the far end must include its remaining edge cost.
+        var start=P(a.X+.005f,a.Y+.007f);
+        LoadSurfaces(router,new[]{start,a,b},new[]{new[]{0,1},new[]{0,2},new[]{1,2}},new byte[]{0,0,0},new float[]{140,160,(float)RoadRouter.DistanceMeters(a,b)});
+        var target=P(b.X-.0001f,b.Y);var route=router.FindRoute(start,target,RoadRouteMode.Shortest);
+        Check(route.Success&&route.RoadDistanceMeters<170&&route.RoadDistanceMeters>150,"Search chooses the correct destination endpoint after counting the partial destination edge");
+        var reverse=router.FindRoute(target,start,RoadRouteMode.Shortest);
+        Check(reverse.Success&&Math.Abs(reverse.RoadDistanceMeters-route.RoadDistanceMeters)<.1,"Partial-edge optimization is symmetric in both directions");
+        // Both positions project onto one curved edge, but another road is shorter.
+        var upperA=P(a.X,a.Y+.01f);var upperB=P(b.X,a.Y+.01f);
+        float longLength=(float)(RoadRouter.DistanceMeters(a,upperA)+RoadRouter.DistanceMeters(upperA,upperB)+RoadRouter.DistanceMeters(upperB,b));
+        LoadSurfaces(router,new[]{a,b},new[]{new[]{0,1},new[]{0,1}},new byte[]{0,0},new[]{longLength,(float)RoadRouter.DistanceMeters(a,b)},new[]{new[]{a,upperA,upperB,b},new[]{a,b}});
+        var around=router.FindRoute(P(a.X,a.Y+.002f),P(b.X,a.Y+.002f),RoadRouteMode.Shortest);
+        Check(around.Success&&around.RoadDistanceMeters<230&&around.EntryDistanceMeters<1&&around.ExitDistanceMeters<1,"Same-edge routes still consider a shorter path through the wider network");
+        // A closed spline has identical endpoint node identities; retain the winning side.
+        LoadSurfaces(router,new[]{a},new[]{new[]{0,0}},new byte[]{0},new[]{(float)(longLength+RoadRouter.DistanceMeters(a,b))},new[]{new[]{a,upperA,upperB,b,a}});
+        var loop=router.FindRoute(P(a.X,a.Y+.001f),P(a.X+.001f,a.Y),RoadRouteMode.Shortest);
+        Check(loop.Success&&loop.RoadDistanceMeters<35,"Closed road splines choose the shorter direction around their shared endpoint");
+        LoadFixture(router,new[]{a,b},new[]{new[]{0,1}});
+        Check(!router.FindRoute(a,b,RoadRouteMode.PavedOnly).Success,"Legacy road assets fail closed for paved-only instead of guessing surfaces");
+    }
     public static int Main() {
         try {
             var router=RoadRouter.Instance; router.InitializeFromResource();
@@ -101,6 +151,19 @@ public static class CapturedRoadTests {
                 Check(router.FindRoute(from,to).Success,"Distributed map route "+(++sweep)+" across cells: "+from+" -> "+to);
             }
             Check(sweep>=40,"Coverage sweep spans at least 40 occupied map cells");
+            var dirtGap=router.FindRoute(P(.856265075f,.513190137f),P(.855178111f,.513699920f));
+            Check(dirtGap.Success&&dirtGap.TotalDistanceMeters<25&&dirtGap.DirtDistanceMeters>15,"B0 map-confirmed dirt gap avoids the former disconnected-track detour");
+            var pavedGap=router.FindRoute(P(.361318118f,.299527932f),P(.361265974f,.299055014f),RoadRouteMode.Shortest);
+            Check(pavedGap.Success&&pavedGap.TotalDistanceMeters<12,"C3 map-confirmed dirt-to-paved junction closes its visible road gap");
+            var reportedStart=P((float)((617718.0+35568.379)/1521618.0),(float)((618618.0+116703.766)/1523618.0));
+            var lighthouse=P(.009955812f,.8507351f);
+            foreach(RoadRouteMode mode in Enum.GetValues(typeof(RoadRouteMode))) {
+                var actual=router.FindRoute(reportedStart,lighthouse,mode);
+                Console.WriteLine("Reported B2-to-Z4 "+mode+": success="+actual.Success+" distance="+actual.TotalDistanceMeters+" entry="+actual.EntryDistanceMeters+" exit="+actual.ExitDistanceMeters+" dirt="+actual.DirtDistanceMeters+" seconds="+actual.EstimatedSeconds);
+                Check(actual.Success,"Reported Spickovina coordinates reach the Z4 yellow-road lighthouse in "+mode);
+                Check(actual.EntryDistanceMeters<35&&actual.ExitDistanceMeters<20,"Reported journey stays on the nearby road rather than cutting across to a farther one in "+mode);
+                if(mode==RoadRouteMode.PavedOnly)Check(actual.DirtDistanceMeters==0&&actual.UnknownDistanceMeters==0,"Reported paved-only journey never substitutes a dirt road");
+            }
             // Find a genuinely dry strip for isolated graph tests using the real mask.
             PointF origin=default(PointF); bool found=false;
             for(float y=.1f;y<.7f && !found;y+=.01f)
@@ -137,6 +200,7 @@ public static class CapturedRoadTests {
             Check(deckFound && router.FindRoute(deck,shoreB).Success,"Navigation starts on a bridge above a mapped water pixel");
             Check(!router.FindRoute(P(deck.X,deck.Y+.002f),shoreB).Success,"Bridge deck exemption cannot snap a distant swimmer onto a bridge");
             Check(!new RoutingWaterMask().AllowsConnector(a,a),"Missing water coverage fails closed");
+            SurfaceChecks(router,water);
             return 0;
         } catch(Exception error) { Console.Error.WriteLine(error); return 1; }
     }

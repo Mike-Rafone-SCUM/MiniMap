@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -103,6 +103,18 @@ class SquadUiTests {
         var tools=(Window)Call(runtime,"BuildSquadTools",0);
         try {
             tools.Show();Pump();
+            var modeButtons=Children(tools).OfType<Button>().Where(b=>(b.Tag as string??"").StartsWith("route-mode-")).ToArray();
+            Check(modeButtons.Length==3,"Routes exposes Quickest, Shortest and Paved roads only");
+            var stopsBefore=stops().Length;
+            modeButtons.Single(b=>b.Tag as string=="route-mode-Quickest").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Check(Get(engine,"wpfRouteMode").ToString()=="Quickest"&&stops().Length==stopsBefore,"Quickest changes the routing preference without removing stops");
+            modeButtons.Single(b=>b.Tag as string=="route-mode-PavedOnly").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Check(Get(engine,"wpfRouteMode").ToString()=="PavedOnly","Paved-only selection reaches the actual navigation engine");
+            bool modeDiagnostic=(bool)Get(engine,"diagnosticMode");
+            try { Set(engine,"diagnosticMode",false);Call(engine,"WpfSave");Set(engine,"wpfRouteMode",Enum.Parse(Get(engine,"wpfRouteMode").GetType(),"Quickest"));Call(engine,"LoadSettings");Check(Get(engine,"wpfRouteMode").ToString()=="PavedOnly","Routing preference survives saving and loading the isolated profile"); }
+            finally { Set(engine,"diagnosticMode",modeDiagnostic); }
+            Capture(tools,Path.Combine(folder,"road-route-modes.png"));
+            modeButtons.Single(b=>b.Tag as string=="route-mode-Shortest").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Check(Children(tools).OfType<Button>().Any(b=>b.Tag as string=="route-remove:"+(string)Get(stops().GetValue(0),"Id")),"Routes exposes removal of an individual named stop");
             var remove=Children(tools).OfType<Button>().Single(b=>(b.Tag as string??"").StartsWith("route-remove:"));remove.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Check(stops().Length==0&&Get(engine,"searchTarget")!=null,"Removing an inactive local stop preserves the current manual GPS destination");
@@ -545,6 +557,26 @@ class SquadUiTests {
             }finally { groups.Close();memberships.Clear(); }
             var tactical=(Window)Get(runtime,"tactical");Call(runtime,"ToggleTactical",false);tactical.Left=-32000;tactical.Top=-32000;Check(tactical.IsVisible&&(bool)Get(engine,"fullMapActive"),"Opening map synchronizes visible window and engine flag");
             var contextMap=Get(runtime,"tacticalMap");tactical.UpdateLayout();
+            var adminPoint=new System.Drawing.PointF(.2f,.3f);
+            var noAdmin=(ContextMenu)Call(contextMap,"BuildContextMenu",adminPoint);
+            Check(!noAdmin.Items.OfType<MenuItem>().Any(item=>(string)item.Header=="Admin commands"),"Map context omits admin actions when admin tools are disabled");
+            Call(engine,"SetAdminToolsEnabled",true);
+            var withAdmin=(ContextMenu)Call(contextMap,"BuildContextMenu",adminPoint);
+            var adminRoot=withAdmin.Items.OfType<MenuItem>().Single(item=>(string)item.Header=="Admin commands");
+            var teleportHere=adminRoot.Items.OfType<MenuItem>().Single(item=>(string)item.Header=="Teleport here");
+            var expectedTeleport=engine.GetType().GetMethod("BuildMapTeleportCommand",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{adminPoint});
+            Check(teleportHere.IsEnabled&&object.Equals(teleportHere.Tag,expectedTeleport)&&((string)teleportHere.ToolTip).Contains("Z is 0"),"Right-click teleport uses the clicked map coordinates and discloses unavailable height");
+            Check(adminRoot.Items.OfType<MenuItem>().Any(item=>item.Items.OfType<MenuItem>().Any(child=>(string)child.Header=="ON")),"Restored admin context preserves explicit ON/OFF commands");
+            Set(engine,"adminCommandBusy",true);
+            var busyAdmin=(ContextMenu)Call(contextMap,"BuildContextMenu",adminPoint);
+            Check(busyAdmin.Items.OfType<MenuItem>().Single(item=>(string)item.Header=="Admin commands").Items.OfType<MenuItem>().All(item=>!item.IsEnabled),"All restored admin context actions disable while an admin command is busy");
+            Set(engine,"adminCommandBusy",false);
+            Call(contextMap,"OpenContextMenu",new Point(((FrameworkElement)contextMap).ActualWidth/2,((FrameworkElement)contextMap).ActualHeight/2));Pump();
+            var adminPopup=(Border)Get(contextMap,"openContext");
+            var expandAdmin=Children(adminPopup).OfType<Button>().Single(button=>button.Content as string=="▸ Admin commands");expandAdmin.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Pump();
+            Check(Children(adminPopup).OfType<Button>().Any(button=>button.IsVisible&&button.Content is TextBlock&&((TextBlock)button.Content).Text=="Teleport here")&&PresentationSource.FromVisual(adminPopup)==PresentationSource.FromVisual((System.Windows.Media.Visual)contextMap),"Restored teleport actions expand inside the existing map window without a native popup");
+            Capture(tactical,Path.Combine(folder,"right-click-admin-teleport.png"));
+            Call(contextMap,"CloseContextMenu");Call(engine,"SetAdminToolsEnabled",false);
             var opacityControl=(Slider)Get(runtime,"tacticalOpacity");var opacityValue=(TextBlock)Get(runtime,"tacticalOpacityValue");
             Check(opacityValue.Text==opacityControl.Value.ToString("0",System.Globalization.CultureInfo.CurrentCulture)+"%","Map toolbar shows the current opacity percentage beside its slider");
             var tacticalHandle=new System.Windows.Interop.WindowInteropHelper(tactical).Handle;Check(System.Threading.Tasks.Task.Run(()=> (bool)Call(runtime,"OwnsForeground",tacticalHandle)).Result,"Keyboard-hook ownership reads a UI-published snapshot safely from a worker");

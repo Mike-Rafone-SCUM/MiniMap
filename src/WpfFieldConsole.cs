@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -485,8 +485,10 @@ namespace ScumMiniMap {
             menu.Items.Add(new Separator());var clear=new MenuItem { Header=Localization.Get("WpfClearRoute"),IsEnabled=State!=null&&(State.Target!=null||State.LocalRoute.Length>0) };clear.Click+=(s,e)=> { if(ClearRouteRequested!=null)ClearRouteRequested(); };menu.Items.Add(clear);
             var saved=State==null||State.Saved==null?null:State.Saved.Where(z=>z.Points!=null&&z.Points.Length==1&&MarkerDistance(target,z.Centroid)<=14/MapSide(State,ActualWidth,ActualHeight,Compact)).OrderByDescending(z=>z.IsDeathMarker).ThenBy(z=>MarkerDistance(target,z.Centroid)).FirstOrDefault();
             if(saved!=null&&MarkerDistance(target,saved.Centroid)<=14/MapSide(State,ActualWidth,ActualHeight,Compact)) { var delete=new MenuItem { Header=Localization.T("DeleteWaypointNamed",saved.DisplayName) };delete.Click+=(s,e)=> { if(DeleteWaypointRequested!=null)DeleteWaypointRequested(saved); };menu.Items.Add(delete); }
+            if(AdminMenuAt!=null) { var admin=AdminMenuAt(target);if(admin!=null) { menu.Items.Add(new Separator());menu.Items.Add(admin); } }
             return menu;
         }
+        internal Func<DrawingPoint,MenuItem> AdminMenuAt;
         internal Action<int> ZoomRequested;
         internal Action<DrawingPoint> NavigateAt,WaypointAt,RouteStopAt;
         internal Action<int,DrawingPoint> PingAt;
@@ -538,6 +540,15 @@ namespace ScumMiniMap {
                 }
             }
             return panel;
+        }
+        internal static void AddAdminContextItems(ItemCollection items,MapWindow.AdminMapAction[] actions) {
+            foreach(var action in actions) {
+                if(action.Name==null) { items.Add(new Separator());continue; }
+                var item=new MenuItem { Header=action.Name,ToolTip=action.Help,Tag=action.Command,IsEnabled=action.Enabled,IsChecked=action.Checked };
+                if(action.Children!=null)AddAdminContextItems(item.Items,action.Children);
+                else { var captured=action;item.Click+=(s,e)=> { e.Handled=true;if(captured.Invoke!=null)captured.Invoke(); }; }
+                items.Add(item);
+            }
         }
         void PositionContextMenu() {
             if(openContext==null)return;
@@ -1265,6 +1276,11 @@ namespace ScumMiniMap {
             tacticalMap.ClearRouteRequested=ClearMapRoute;tacticalMap.StopNavigationRequested=()=> { StopSquadNavigation();Refresh(); };tacticalMap.DeleteWaypointRequested=marker=> { engine.WpfDeleteWaypoint(marker);Refresh(); };
             tacticalMap.NavigateAt=p=>NavigateDestination(engine.WpfClickedTarget(p,(float)(8/Math.Max(1,Math.Min(tacticalMap.ActualWidth,tacticalMap.ActualHeight)*engine.WpfSnapshot(true).Zoom))));tacticalMap.WaypointAt=p=>ShowAddWaypoint(p);tacticalMap.ZoomRequested=d=> { engine.WpfZoom(true,d);RefreshCamera(); };tacticalMap.PanChanged=p=> { engine.WpfPan(p);RefreshCamera(); };
             tacticalMap.NavigateShared=NavigateDestination;
+            tacticalMap.AdminMenuAt=point=> {
+                var actions=engine.WpfMapAdminActions(point);if(actions.Length==0)return null;
+                var root=new MenuItem { Header=Localization.Get("ControlAdminCommands") };
+                WpfMapSurface.AddAdminContextItems(root.Items,actions);return root;
+            };
             // The sidebar overlays the full monitor viewport; toggling it must not move the camera.
             var scene=new Grid();Grid.SetColumnSpan(scene,2);scene.Children.Add(tacticalMap);
             var contextLayer=new Canvas();tacticalMap.ContextHost=contextLayer;Grid.SetColumnSpan(contextLayer,2);Panel.SetZIndex(contextLayer,200);grid.Children.Add(contextLayer);

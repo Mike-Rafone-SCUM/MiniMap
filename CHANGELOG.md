@@ -1,10 +1,20 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to **SkynettMiniMap** are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+
+## [2.3.15] — 2026-10-20
+
+- Add saved Quickest, Shortest and Paved roads only choices in Routes, with background recalculation for GPS and multi-stop previews.
+- Classify individual captured road segments against the exposed map: mesh names alone cannot distinguish paved roads and dirt tracks. Keep railway splines excluded.
+- Calculate estimated travel time from road surfaces and dry approaches. Quickest uses 60 km/h paved, 30 dirt and 5 on approaches; include bounded dry road approaches in every mode, with distances and estimated time shown.
+- Repair map-confirmed road gaps in B0, C3 and the Z3 coastal paved junction, retaining water, height and source-anchor checks. Reproduce the reported B2-to-Z4 lighthouse trip in all modes.
+- Keep near-road starts and destinations on their nearby road rather than choosing farther approaches to trim road distance.
+- Restore right-click Admin commands and Teleport here in the tactical map, using the current admin sender, busy/focus gates and clicked coordinates. Map teleport previews disclose that terrain height is unavailable (Z=0).
+- Fix destination partial-edge optimization, shorter alternatives on the same edge and direction selection on closed splines.
 
 ## [Unreleased]
 
