@@ -10,6 +10,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Retain Test-only solid/transparent launchers for renderer comparisons; normal releases continue to use the transparent tactical window.
 
+## [2.3.14] - 2026-10-20
+
+- Support virtual/software-generated keyboard input for MiniMap shortcuts, including remote play through Sunshine/Moonlight and on-screen keyboards. Route external key events through the existing focus, chat, inventory, modifier and repeat protections. Continue excluding MiniMap's own coordinate-copy and admin-command input, including late cleanup events.
+- Restore SCUM map, chat and coordinate-copy key capture in Settings > Shortcuts. The SCUM and MiniMap key rebinding button now opens the binding editor instead of repeating the startup guide. Validate conflicting keys and retain the chosen bindings.
+- Confirmed working by the reporting user after testing the TEST-branch package. Existing settings and bindings remain; complete all five setup pages after updating to this version.
+
 ## [2.3.13] - 2026-10-20
 
 - Make tactical-map dragging and zooming lighter by moving the prepared static map image throughout the gesture, without rebuilding terrain/annotation drawings or queuing new raster jobs for each movement. Keep GPS, route guidance and player markers live. Newly exposed areas use the overview; full detail returns after the drag is released and input pauses for 200 ms.

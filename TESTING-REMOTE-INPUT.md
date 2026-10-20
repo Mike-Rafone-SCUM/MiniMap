@@ -1,11 +1,11 @@
 # Remote keyboard and key rebinding test
 
-This TEST branch includes the v2.3.13 application with two pending fixes:
+This TEST branch includes the v2.3.13 application with the following fixes, confirmed working by the reporting player and promoted in v2.3.14:
 
 - Remote and accessibility keyboard input follows the normal shortcut handling path. MiniMap's own generated copy/admin input remains excluded. Existing focus, chat, inventory and modifier protections remain active.
 - Settings > Shortcuts exposes SCUM map, chat and copy key capture. The key rebinding button opens this editor.
 
-The local test package passed canonical build/package verification, 642 input/voice checks and 328 packaged UI checks. Actual Sunshine/Moonlight compatibility still needs confirmation on the affected player's PC.
+The local test package passed canonical build/package verification, 642 input/voice checks and 328 packaged UI checks. The reporting player confirmed the test package works.
 
 ## Download and test
 
