@@ -225,11 +225,31 @@ class SquadUiTests {
             settings.Show();Pump();var numbers=Children(settings).OfType<TextBox>().Where(c=>c.Tag as string=="setting-number").ToArray();
             Check(numbers.Length>0&&numbers.All(c=>!string.IsNullOrWhiteSpace(System.Windows.Automation.AutomationProperties.GetName(c))),"Numeric settings expose their existing labels to assistive tools");
             Check(numbers.All(c=>!string.IsNullOrWhiteSpace(System.Windows.Automation.AutomationProperties.GetHelpText(c))),"Numeric settings expose their valid ranges to assistive tools");
+            bool bindingEditor=false;var editorTimer=new DispatcherTimer {Interval=TimeSpan.FromMilliseconds(100)};
+            editorTimer.Tick+=(s,e)=> {editorTimer.Stop();var editor=Application.Current.Windows.OfType<Window>().Single(w=>w.IsVisible&&w!=settings&&Children(w).OfType<Button>().Any(b=>b.Tag as string=="game-binding-0"));bindingEditor=true;editor.Close();};
+            editorTimer.Start();try {
+                Children(settings).OfType<Button>().Single(b=>b.Content as string=="SCUM and MiniMap key rebinding wizard...").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                Check(bindingEditor,"Rebinding wizard opens the binding editor");
+            }finally {editorTimer.Stop();}
         }finally { settings.Close(); }
         settings=(Window)Call(runtime,"BuildSettings",1);
         try {
             settings.Show();Pump();var keys=Children(settings).OfType<Button>().Where(c=>c.MinWidth==88).ToArray();
             Check(keys.Length>0&&keys.All(c=>System.Windows.Automation.AutomationProperties.GetName(c).Contains(": ")),"Shortcut buttons identify both the action and its current binding");
+            Check(new[]{"game-binding-0","game-binding-1","game-binding-2"}.All(tag=>Children(settings).OfType<Button>().Any(c=>c.Tag as string==tag)),"Shortcuts expose editable SCUM map, chat and copy bindings");
+            Capture(settings,Path.Combine(folder,"settings-game-bindings.png"));
+            var engine=Get(runtime,"engine");var oldBinding=Call(engine,"WpfSnapshot",false);bool captured=false;
+            var captureTimer=new DispatcherTimer {Interval=TimeSpan.FromMilliseconds(100)};
+            captureTimer.Tick+=(s,e)=> {
+                captureTimer.Stop();var captureWindow=Application.Current.Windows.OfType<Window>().Single(w=>w!=settings&&w.Title=="SCUM map key");
+                runtime.GetType().Assembly.GetType("ScumMiniMap.PhysicalKeyCapture").GetMethod("Observe",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{0x79,0x44u,0x10u});
+                PressKey(captureWindow,Key.F10);captured=true;
+            };
+            captureTimer.Start();try {
+                Children(settings).OfType<Button>().Single(c=>c.Tag as string=="game-binding-0").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                Check(captured&&(int)Get(Call(engine,"WpfSnapshot",false),"MapKey")==0x79,"Map key capture applies the chosen binding through the settings UI");
+                Check(Children(settings).OfType<Button>().Single(c=>c.Tag as string=="game-binding-0").Content as string=="F10","Map binding label refreshes after capture");
+            }finally {captureTimer.Stop();Call(engine,"WpfGameBind",0,Get(oldBinding,"MapKey"),Get(oldBinding,"MapScan"));}
         }finally { settings.Close(); }
         using(var parent=new System.Windows.Forms.FlowLayoutPanel())using(var combo=new System.Windows.Forms.ComboBox()) {
             parent.Controls.Add(new System.Windows.Forms.Label {Text="Synthetic setting"});parent.Controls.Add(combo);combo.Enabled=false;

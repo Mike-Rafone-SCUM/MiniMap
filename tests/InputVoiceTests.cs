@@ -867,7 +867,49 @@ static class InputVoiceTests {
         while(player.Busy && DateTime.UtcNow<until) { Application.DoEvents(); Thread.Sleep(10); }
         Check(!player.Busy && player.LastError==null,"MP3 sequence completed without decoder errors");
     }
+    static void TestExternalInput() {
+        var chat=new ChatState();int maps=0,shortcuts=0;
+        using(var hooks=new GameKeys((key,scan)=> {if(key==0x4D)maps++;else shortcuts++;},(key,scan)=>key==0x4D||key==0x77,chat,()=>0x54,
+            sharedGameBinding:(key,scan)=>key==0x4D)) {
+            var dispatch=Field<Control>(hooks,"keyboardDispatch");var keyType=typeof(GameKeys).GetNestedType("KeyboardData",BindingFlags.NonPublic);
+            Exception failure=null;
+            using(var completed=new ManualResetEvent(false)) {
+                dispatch.BeginInvoke(new Action(()=> {
+                    IntPtr packet=Marshal.AllocHGlobal(Marshal.SizeOf(keyType));
+                    try {
+                        SetField(hooks,"sampledGameWindow",Native.GetForegroundWindow());SetField(hooks,"wasFocused",true);
+                        Func<int,uint,UIntPtr,bool,IntPtr> edge=(key,flags,tag,down)=> {
+                            object data=Activator.CreateInstance(keyType);keyType.GetField("key").SetValue(data,(uint)key);
+                            keyType.GetField("scan").SetValue(data,key==0x4D?0x32u:0x14u);keyType.GetField("flags").SetValue(data,flags);keyType.GetField("extra").SetValue(data,tag);
+                            Marshal.StructureToPtr(data,packet,false);return (IntPtr)Invoke(hooks,"OnKey",0,new IntPtr(down?0x100:0x101),packet);
+                        };
+                        foreach(uint flags in new[]{0x10u,0x12u}) {
+                            int before=maps;edge(0x4D,flags,UIntPtr.Zero,true);edge(0x4D,flags,UIntPtr.Zero,true);edge(0x4D,flags,UIntPtr.Zero,false);
+                            Check(maps==before+1,"External injected map input dispatches once per down/repeat/up, flags="+flags);
+                        }
+                        int prior=maps;edge(0x4D,0x10,new UIntPtr(123),true);edge(0x4D,0x10,new UIntPtr(123),false);
+                        Check(maps==prior+1,"External input with another application's tag remains usable");
+                        foreach(var tag in new[]{Native.AdminInputTag,Native.CopyInputTag}) {
+                            prior=maps;edge(0x4D,0x10,tag,true);edge(0x4D,0x10,tag,false);edge(0x54,0x10,tag,true);edge(0x54,0x10,tag,false);
+                            Check(maps==prior&&!chat.Paused&&!Field<PhysicalKeyTransitions>(hooks,"transitions").IsDown(0x4D),"Internal input never dispatches or changes held/chat state: "+tag);
+                        }
+                        edge(0x54,0x10,UIntPtr.Zero,true);edge(0x54,0x10,UIntPtr.Zero,false);prior=maps;
+                        edge(0x4D,0x10,UIntPtr.Zero,true);edge(0x4D,0x10,UIntPtr.Zero,false);
+                        Check(chat.Paused&&maps==prior,"Remote chat input protects typed map keys");
+                        edge(0x1B,0x10,UIntPtr.Zero,true);edge(0x1B,0x10,UIntPtr.Zero,false);
+                        Check(!chat.Paused,"Remote Escape releases chat protection");
+                        Check(edge(0x77,0x10,UIntPtr.Zero,true)==new IntPtr(1)&&edge(0x77,0x10,UIntPtr.Zero,false)==new IntPtr(1)&&shortcuts==1,
+                            "Remote app shortcut consumes both edges and dispatches once");
+                        prior=maps;Check(edge(0x4D,0x10,UIntPtr.Zero,true)!=new IntPtr(1)&&maps==prior+1,"Remote shared map key still reaches SCUM");edge(0x4D,0x10,UIntPtr.Zero,false);
+                    }catch(Exception error) {failure=error;}
+                    finally {Marshal.FreeHGlobal(packet);completed.Set();}
+                }));
+                Check(completed.WaitOne(5000)&&failure==null,"Remote input callback regression completes"+(failure==null?"":": "+failure));
+            }
+        }
+    }
     [STAThread] static void Main() {
+        TestExternalInput();
         TestDiagnosticProfileIsolation();
         TestRelativeTeleportCommands();
         TestFullMapAdminGeometry();

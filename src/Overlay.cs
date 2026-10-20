@@ -1022,10 +1022,12 @@ namespace ScumMiniMap {
                 bool traceKey=Native.InputTraceActive && key.extra!=Native.AdminInputTag && !Native.IsCoordinateCopyInput(key.extra) &&
                     (k==0x57 || k==0x10 || k==0xA0 || k==0xA1 || k==0x6F ||
                     (shouldDispatch!=null && shouldDispatch(k,eventScan)) || (getCopyKey!=null && k==getCopyKey()));
-                // Injected events must never alter physical held-key or chat state, even after copying ends.
-                if(injected) {
+                // Remote desktops and accessibility keyboards also inject input.
+                // Only our own copy/admin events must bypass user state and dispatch,
+                // including late cleanup after the operation has finished.
+                if(injected && (key.extra==Native.AdminInputTag || Native.IsCoordinateCopyInput(key.extra))) {
                     if(traceKey) Native.TraceInput("hook vk="+k+" scan="+eventScan+" flags="+key.flags+" message="+message.ToInt32()+
-                        " source=injected decision=ignored-injected fresh=not-observed chat="+(chatState!=null && chatState.Paused)+
+                        " source=internal decision=ignored-internal fresh=not-observed chat="+(chatState!=null && chatState.Paused)+
                         " inventory=not-queried modifiers="+transitions.ShortcutModifiersDown(true)+" dispatch=False suppressed=False");
                     return CallNextHookEx(hook,code,message,data);
                 }
@@ -1083,7 +1085,7 @@ namespace ScumMiniMap {
                     && !(transitions.ShortcutModifiersDown(true) || altDown || (Native.GetAsyncKeyState(0x5B)&0x8000)!=0 || (Native.GetAsyncKeyState(0x5C)&0x8000)!=0);
                 bool dispatched=fresh && isDown && !chatOwnsKey && !gameUiOwnsInput && !(k==0x09 && altDown) && watched;
                 if(traceKey) Native.TraceInput("hook vk="+k+" scan="+eventScan+" flags="+key.flags+" message="+message.ToInt32()+
-                    " source=physical fresh="+fresh+" down="+isDown+" focused="+gameFocused+" watched="+watched+
+                    " source="+(injected?"external-injected":"physical")+" fresh="+fresh+" down="+isDown+" focused="+gameFocused+" watched="+watched+
                     " chat_before="+chatWasPaused+" chat_after="+chatIsPaused+" chat_owns="+chatOwnsKey+
                     " inventory="+gameUiOwnsInput+" modifiers="+transitions.ShortcutModifiersDown(true)+" alt="+altDown+
                     " dispatch="+dispatched+" suppressed="+appShortcut+" copy_in_progress="+Native.CopyInProgress);

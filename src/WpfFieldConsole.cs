@@ -1672,7 +1672,16 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
                 window.Title=Localization.Get("Settings");((TextBlock)heading.Children[1]).Text=window.Title;version.Text="v"+MapWindow.VersionString+(Program.IsTestBuild?" "+Localization.Get("WpfTestBuild"):"");
                 string[] tabKeys={"FieldGeneral","FieldShortcuts","FieldAppearance"};for(int tab=0;tab<nav.Children.Count;tab++) {var tabButton=(Button)nav.Children[tab];tabButton.Content=Localization.Get(tabKeys[tab]);tabButton.Background=tab==index?WpfFieldTheme.Amber:WpfFieldTheme.Panel;tabButton.Foreground=tab==index?WpfFieldTheme.Ground:WpfFieldTheme.Ink;System.Windows.Automation.AutomationProperties.SetHelpText(tabButton,Localization.Get(tabKeys[tab]));}RefreshLocalizedChrome(root);
                 body.Children.Clear();var state=engine.WpfSnapshot(true);
-                if(index==1) { foreach(var action in AppControlBindings.AllActions) { var captured=action;var row=new DockPanel { Margin=new Thickness(0,3,0,3) };var key=WpfFieldTheme.Button(PhysicalKeyCapture.KeyName(state.Bindings.Key(action)),()=> { CaptureKey(Localization.Get(AppControlBindings.LabelKey(captured)),(vk,scan)=>engine.WpfBind(captured,vk,scan),true);page(1); });key.MinWidth=88;System.Windows.Automation.AutomationProperties.SetName(key,Localization.Get(AppControlBindings.LabelKey(action))+": "+PhysicalKeyCapture.KeyName(state.Bindings.Key(action)));DockPanel.SetDock(key,Dock.Right);row.Children.Add(key);row.Children.Add(WpfFieldTheme.Text(Localization.Get(AppControlBindings.LabelKey(action)),16));body.Children.Add(row);body.Children.Add(new Border { Height=1,Background=WpfFieldTheme.Line }); }
+                if(index==1) {
+                    var help=WpfFieldTheme.Text(Localization.Get("KeyWizardIntro"),16,WpfFieldTheme.Muted);help.TextWrapping=TextWrapping.Wrap;body.Children.Add(help);
+                    int[] gameKeys={state.MapKey,state.ChatKey,state.CopyKey};string[] gameLabels={"KeyWizardMapKey","KeyWizardChatKey","KeyWizardCopyKey"};
+                    for(int i=0;i<gameKeys.Length;i++) {
+                        int binding=i;string label=Localization.Get(gameLabels[i]);var row=new DockPanel { Margin=new Thickness(0,8,0,8) };
+                        string value=(i==2&&state.CopyModifier!=0?PhysicalKeyCapture.KeyName(state.CopyModifier)+" + ":"")+PhysicalKeyCapture.KeyName(gameKeys[i]);
+                        var key=WpfFieldTheme.Button(value,()=> { CaptureKey(label,(vk,scan)=>engine.WpfGameBind(binding,vk,scan),false);page(1); });
+                        key.Tag="game-binding-"+i;key.MinWidth=88;System.Windows.Automation.AutomationProperties.SetName(key,label+": "+value);DockPanel.SetDock(key,Dock.Right);row.Children.Add(key);row.Children.Add(WpfFieldTheme.Text(label,16));body.Children.Add(row);
+                    }
+                    foreach(var action in AppControlBindings.AllActions) { var captured=action;var row=new DockPanel { Margin=new Thickness(0,3,0,3) };var key=WpfFieldTheme.Button(PhysicalKeyCapture.KeyName(state.Bindings.Key(action)),()=> { CaptureKey(Localization.Get(AppControlBindings.LabelKey(captured)),(vk,scan)=>engine.WpfBind(captured,vk,scan),true);page(1); });key.MinWidth=88;System.Windows.Automation.AutomationProperties.SetName(key,Localization.Get(AppControlBindings.LabelKey(action))+": "+PhysicalKeyCapture.KeyName(state.Bindings.Key(action)));DockPanel.SetDock(key,Dock.Right);row.Children.Add(key);row.Children.Add(WpfFieldTheme.Text(Localization.Get(AppControlBindings.LabelKey(action)),16));body.Children.Add(row);body.Children.Add(new Border { Height=1,Background=WpfFieldTheme.Line }); }
                     foreach(var setting in engine.WpfSettings(1).Where(item=>item.Control is TacticalCheckBox))body.Children.Add(ConvertSetting(setting.Control,()=>page(1)));
                 }
                 else {
@@ -1754,7 +1763,8 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
             var button=source as System.Windows.Forms.Button;
             if(button!=null) {
                 Button b=null;b=WpfFieldTheme.Button(button.Text,()=> {
-                    if(button.Text==Localization.Get("OpenStartupGuide")||button.Text==Localization.Get("KeyRebindingWizard"))ShowOnboarding();
+                    if(button.Text==Localization.Get("OpenStartupGuide"))ShowOnboarding();
+                    else if(button.Text==Localization.Get("KeyRebindingWizard"))Modal(BuildSettings(1));
                     else if(button.Text==Localization.Get("MapZonesScreenshot"))ShowZoneWizard();
                     else if(button.Text==Localization.Get("ConfigurePoiFilters"))Modal(BuildPoiFilters());
                     else if(!button.IsDisposed)typeof(System.Windows.Forms.Control).GetMethod("OnClick",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).Invoke(button,new object[]{EventArgs.Empty});

@@ -1,0 +1,32 @@
+name: Build MiniMap TEST package
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [TEST]
+
+permissions:
+  contents: read
+
+jobs:
+  test-package:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    env:
+      TEMP: ${{ runner.temp }}
+      TMP: ${{ runner.temp }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Build and validate test package
+        shell: powershell
+        run: .\Build.ps1 -Configuration Test -OutputDirectory release/ci-test
+      - name: Verify packaged UI and key rebinding
+        shell: powershell
+        run: .\tests\Test-SquadUi.ps1 -Executable release/ci-test/SkynettMiniMap-Test.exe -OutputDirectory release/ci-ui
+      - uses: actions/upload-artifact@v7.0.1
+        with:
+          name: MiniMap-TEST-package
+          path: release/ci-test/SCUM-MiniMap-Test.zip
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
