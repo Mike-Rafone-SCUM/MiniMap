@@ -1,4 +1,4 @@
-# SCUM MiniMap v2.3.15
+# SCUM MiniMap v2.3.16
 
 SCUM MiniMap is an external map overlay and road-navigation utility for SCUM, made for the Skynett community. Version 2 uses WPF for the tactical map, compact minimap, Settings, setup guide and Zone Creator. The existing tracking and routing engine remains behind the new interface.
 
@@ -17,6 +17,14 @@ The first upgrade from an EXE-only release requires extracting the new complete 
 Release settings, zones and kits are kept in `%LOCALAPPDATA%\ScumMiniMap`. Test builds use the separate `%LOCALAPPDATA%\ScumMiniMap-ResponsivenessTest` profile. Back up your profile before a major upgrade. A post-update result is shown after restarting and its validated temporary helper is cleaned up; acknowledging the result prevents repeated notifications.
 
 MusicalScumbag users should use its corrected **F10** auto-walk build. Its older NumPad / shortcut conflicts with MiniMap's default Copy Location key.
+
+## Automatic launch with SCUM
+
+In **Settings > General**, enable **Start MiniMap with SCUM and close it when SCUM exits**. The option defaults to off. Enable it from the extracted application folder you intend to keep. Windows Task Scheduler runs a small hidden watcher at sign-in and immediately after enabling; it uses your existing Windows account, without storing a password. The app already requires administrator rights, so the task uses the highest rights available to that account.
+
+The watcher checks the local session's `SCUM.exe` and `SCUM-Win64-Shipping.exe` every two seconds. MiniMap saves and exits normally after ten seconds of confirmed game absence. It stays open through brief process handovers. Closing MiniMap yourself prevents another automatic launch during that game session; launching SCUM again starts it again. Opening MiniMap manually before SCUM is supported.
+
+Disable the option to remove the scheduled task and stop the watcher. This keeps the current MiniMap open. Disable it before moving/deleting the application folder, then enable it again from the new location. Release and Test settings are separate. Diagnostics never register tasks or run the watcher. If setup fails, the setting shows an error; watcher errors are recorded in `auto-launch/watcher.log` inside the active profile.
 
 ## Controls
 

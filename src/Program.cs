@@ -430,7 +430,7 @@ namespace ScumMiniMap {
                 if(args!=null&&args.Length==1&&args[0]=="--register-zone-files") { ZoneFileOpen.Register(Application.ExecutablePath);Localization.DetectSystemLanguage();MessageBox.Show(Localization.Get("ZoneAssociationInfo"),"SCUM MiniMap");return; }
                 zoneFile=ZoneFileOpen.ParseArguments(args);
             }catch(Exception error) { LogException("ZoneFileOpen",error);Localization.DetectSystemLanguage();MessageBox.Show(Localization.T("ZoneOpenError",error.Message),"SCUM MiniMap");return; }
-            if(zoneFile==null&&TryInstallDownloadedUpdate(args))return;
+            if(zoneFile==null&&Array.IndexOf(args,"--auto-scum")<0&&TryInstallDownloadedUpdate(args))return;
             try { InstallationAssets.Validate(); }
             catch(Exception error) {
                 LogException("InstallationAssets",error);

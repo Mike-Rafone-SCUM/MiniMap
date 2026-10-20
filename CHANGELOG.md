@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.3.16] — 2026-10-20
+
+- Add an opt-in Settings > General option to launch MiniMap when the local SCUM client starts and save/exit after the client has been absent for ten seconds.
+- Keep a small independent watcher at Windows sign-in using a per-user scheduled task. Avoid duplicate launches and respect manual MiniMap exits until the next game session. Disabling the setting removes the task and stops the watcher.
+- Translate the option and help into all 19 application languages. Keep saved settings, key bindings, existing input protections and the five-page setup after a version update.
+
 ## [2.3.15] — 2026-10-20
 
 - Add saved Quickest, Shortest and Paved roads only choices in Routes, with background recalculation for GPS and multi-stop previews.

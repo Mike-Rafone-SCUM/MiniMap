@@ -961,6 +961,8 @@ private static readonly Dictionary<string, string> CategoryNamesAr = new Diction
 
 
 public static readonly Dictionary<string, string> StringsEn = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "ScumAutoLaunchLabel", "Start MiniMap with SCUM and close it when SCUM exits" },
+            { "ScumAutoLaunchHelp", "A background watcher starts at Windows sign-in. MiniMap saves and closes 10 seconds after SCUM exits. A manual exit lasts until the next game session. Disable this before moving or deleting the app folder." },
             { "AdminMapTeleportHere", "Teleport here" },
             { "AdminMapTeleportHelp", "Send {0}. Map height is unavailable; Z is 0." },
             { "RouteModeQuickest", "Quickest" },
@@ -1772,6 +1774,8 @@ public static readonly Dictionary<string, string> StringsEn = new Dictionary<str
         };
 
 public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "ScumAutoLaunchLabel", "Abrir MiniMap con SCUM y cerrarlo al salir del juego" },
+            { "ScumAutoLaunchHelp", "Un monitor se inicia al entrar a Windows. MiniMap guarda y se cierra 10 segundos después de salir de SCUM. Si lo cerrás manualmente, espera a la próxima sesión. Desactivá esto antes de mover o borrar la carpeta de la aplicación." },
             { "AdminMapTeleportHere", "Teletransportar acá" },
             { "AdminMapTeleportHelp", "Enviar {0}. No hay altura del mapa; Z es 0." },
             { "RouteModeQuickest", "Más rápido" },
@@ -2583,6 +2587,8 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsFr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "ScumAutoLaunchLabel", "Ouvrir MiniMap avec SCUM et le fermer à la fin du jeu" },
+            { "ScumAutoLaunchHelp", "Un moniteur démarre à l’ouverture de session Windows. MiniMap enregistre et se ferme 10 secondes après SCUM. Une fermeture manuelle dure jusqu’à la prochaine session de jeu. Désactivez cette option avant de déplacer ou supprimer le dossier de l’application." },
             { "AdminMapTeleportHere", "Téléporter ici" },
             { "AdminMapTeleportHelp", "Envoyer {0}. Altitude du terrain indisponible ; Z vaut 0." },
             { "RouteModeQuickest", "Le plus rapide" },
@@ -3394,6 +3400,8 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsDe = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "ScumAutoLaunchLabel", "MiniMap mit SCUM starten und beim Spielende schließen" },
+            { "ScumAutoLaunchHelp", "Ein Hintergrundmonitor startet bei der Windows-Anmeldung. MiniMap speichert und schließt 10 Sekunden nach SCUM. Nach manuellem Schließen wartet es bis zur nächsten Spielsitzung. Vor dem Verschieben oder Löschen des App-Ordners deaktivieren." },
             { "AdminMapTeleportHere", "Hierher teleportieren" },
             { "AdminMapTeleportHelp", "{0} senden. Die Geländehöhe ist unbekannt; Z ist 0." },
             { "RouteModeQuickest", "Schnellste" },
@@ -4205,6 +4213,8 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsNl = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "ScumAutoLaunchLabel", "MiniMap met SCUM starten en sluiten als het spel stopt" },
+            { "ScumAutoLaunchHelp", "Een achtergrondmonitor start bij het aanmelden bij Windows. MiniMap slaat op en sluit 10 seconden nadat SCUM stopt. Na handmatig sluiten wacht het tot de volgende spelsessie. Schakel dit uit voordat je de appmap verplaatst of verwijdert." },
             { "AdminMapTeleportHere", "Hierheen teleporteren" },
             { "AdminMapTeleportHelp", "Verstuur {0}. De terreinhoogte is onbekend; Z is 0." },
             { "RouteModeQuickest", "Snelste" },
@@ -5016,6 +5026,8 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsRu = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "ScumAutoLaunchLabel", "Запускать MiniMap вместе со SCUM и закрывать после игры" },
+            { "ScumAutoLaunchHelp", "Фоновый монитор запускается при входе в Windows. MiniMap сохраняет данные и закрывается через 10 секунд после SCUM. После ручного закрытия ждёт следующего сеанса игры. Отключите перед переносом или удалением папки приложения." },
             { "AdminMapTeleportHere", "Телепортироваться сюда" },
             { "AdminMapTeleportHelp", "Отправить {0}. Высота карты неизвестна; Z равен 0." },
             { "RouteModeQuickest", "Быстрейший" },
@@ -5827,6 +5839,8 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsZh = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "ScumAutoLaunchLabel", "随 SCUM 启动 MiniMap，并在游戏结束后关闭" },
+            { "ScumAutoLaunchHelp", "后台监视程序会在登录 Windows 时启动。SCUM 退出 10 秒后，MiniMap 保存并关闭。手动关闭后将等待下次游戏会话。移动或删除应用文件夹前，请禁用此选项。" },
             { "AdminMapTeleportHere", "传送到这里" },
             { "AdminMapTeleportHelp", "发送 {0}。无法获取地图高度；Z为0。" },
             { "RouteModeQuickest", "最快路线" },
@@ -6638,6 +6652,8 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsTr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "ScumAutoLaunchLabel", "MiniMap’i SCUM ile başlat ve oyun bitince kapat" },
+            { "ScumAutoLaunchHelp", "Arka plan izleyicisi Windows oturumu açıldığında başlar. MiniMap, SCUM kapandıktan 10 saniye sonra kaydeder ve kapanır. Elle kapatılırsa sonraki oyun oturumunu bekler. Uygulama klasörünü taşımadan veya silmeden önce devre dışı bırakın." },
             { "AdminMapTeleportHere", "Buraya ışınlan" },
             { "AdminMapTeleportHelp", "{0} gönder. Harita yüksekliği bilinmiyor; Z 0’dır." },
             { "RouteModeQuickest", "En hızlı" },
@@ -7449,6 +7465,8 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsAr = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "ScumAutoLaunchLabel", "تشغيل MiniMap مع SCUM وإغلاقها عند انتهاء اللعبة" },
+            { "ScumAutoLaunchHelp", "تبدأ المراقبة في الخلفية عند تسجيل الدخول إلى Windows. تحفظ MiniMap البيانات وتغلق بعد 10 ثوانٍ من خروج SCUM. عند إغلاقها يدويًا تنتظر جلسة اللعب التالية. عطّل الخيار قبل نقل مجلد التطبيق أو حذفه." },
             { "AdminMapTeleportHere", "انتقال إلى هنا" },
             { "AdminMapTeleportHelp", "إرسال {0}. ارتفاع الخريطة غير متاح؛ Z يساوي 0." },
             { "RouteModeQuickest", "الأسرع" },
@@ -8260,6 +8278,8 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
         };
 
         public static readonly Dictionary<string, string> StringsPt = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "ScumAutoLaunchLabel", "Iniciar MiniMap com SCUM e fechar ao sair do jogo" },
+            { "ScumAutoLaunchHelp", "Um monitor em segundo plano inicia ao entrar no Windows. MiniMap salva e fecha 10 segundos após o SCUM. Ao fechar manualmente, aguarda a próxima sessão de jogo. Desative antes de mover ou excluir a pasta do aplicativo." },
             { "AdminMapTeleportHere", "Teletransportar para cá" },
             { "AdminMapTeleportHelp", "Enviar {0}. Altura do mapa indisponível; Z é 0." },
             { "RouteModeQuickest", "Mais rápido" },
@@ -9071,6 +9091,8 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
 
 
         public static readonly Dictionary<string, string> StringsKo = new Dictionary<string, string>(StringComparer.Ordinal) {
+            { "ScumAutoLaunchLabel", "SCUM과 함께 MiniMap을 시작하고 게임 종료 시 닫기" },
+            { "ScumAutoLaunchHelp", "Windows 로그인 시 백그라운드 감시가 시작됩니다. SCUM 종료 10초 후 MiniMap이 저장하고 닫힙니다. 수동으로 닫으면 다음 게임 세션까지 기다립니다. 앱 폴더를 이동하거나 삭제하기 전에 이 옵션을 끄세요." },
             { "AdminMapTeleportHere", "여기로 순간이동" },
             { "AdminMapTeleportHelp", "{0} 전송. 지도 높이를 알 수 없어 Z는 0입니다." },
             { "RouteModeQuickest", "가장 빠르게" },

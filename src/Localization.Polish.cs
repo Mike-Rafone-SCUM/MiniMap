@@ -14,7 +14,9 @@ namespace ScumMiniMap {
             }
             return result;
         }
-        const string PolishUi = @"RouteModeQuickest|Najszybsza
+        const string PolishUi = @"ScumAutoLaunchLabel|Uruchamiaj MiniMap wraz ze SCUM i zamykaj po zakończeniu gry
+ScumAutoLaunchHelp|Monitor w tle uruchamia się przy logowaniu do Windows. MiniMap zapisuje dane i zamyka się 10 sekund po SCUM. Po ręcznym zamknięciu czeka na następną sesję gry. Wyłącz przed przeniesieniem lub usunięciem folderu aplikacji.
+RouteModeQuickest|Najszybsza
 RouteModeShortest|Najkrótsza
 RouteModePavedOnly|Tylko drogi asfaltowe
 RouteModeHelp|Szacunek: 60 km/h na asfalcie, 30 na drogach gruntowych i 5 na dojazdach. Najkrótsza minimalizuje odległość. Tylko asfalt wyklucza drogi gruntowe; suche dojazdy do 1 km. Tory są wykluczone.

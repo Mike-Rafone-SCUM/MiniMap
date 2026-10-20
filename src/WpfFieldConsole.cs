@@ -998,6 +998,7 @@ namespace ScumMiniMap {
         readonly DrawingGroup geography;
         readonly WpfTerrainTiles terrain;
         readonly DispatcherTimer refresh;
+        ScumAutoLaunch autoLaunch;
         readonly bool diagnostic;
         readonly AppZoneFolder zoneFolder;
         System.Threading.Tasks.Task<string> zoneOpenRead;
@@ -1139,7 +1140,10 @@ namespace ScumMiniMap {
                 // DispatcherTimer does not schedule its next tick if its callback escapes.
                 try { Refresh(); }catch(Exception error) { if(refreshClock.ElapsedMilliseconds>=nextRefreshError) { nextRefreshError=refreshClock.ElapsedMilliseconds+10000;Program.LogException("WpfRefresh",error); } }
             };
-            if(!diagnostic)refresh.Start();
+            if(!diagnostic) {
+                refresh.Start();
+                autoLaunch=new ScumAutoLaunch(()=>application.Dispatcher.BeginInvoke(new Action(RequestExit)));
+            }
         }
         internal static void Run(string folder) {
             using(var runtime=new WpfFieldConsoleRuntime(folder)) {
@@ -1709,6 +1713,19 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
                     }
                     if(index==2) { AddAppearanceControls(body,state);settingsPreview=new WpfMapSurface { Compact=true,BaseMap=geography,Terrain=terrain,Width=210,Height=210,HorizontalAlignment=HorizontalAlignment.Left,Tag="settings-preview" };body.Children.Insert(0,settingsPreview);RefreshSetupPreview(); }else settingsPreview=null;
                     if(index==0) {
+                        var autoLabel=WpfFieldTheme.Text(ScumAutoLaunch.Label,16);autoLabel.TextWrapping=TextWrapping.Wrap;autoLabel.MaxWidth=480;
+                        var auto=new CheckBox { Content=autoLabel,IsChecked=ScumAutoLaunch.Enabled,Tag="auto-launch-scum",Margin=new Thickness(0,12,0,8),IsEnabled=!diagnostic };
+                        System.Windows.Automation.AutomationProperties.SetName(auto,ScumAutoLaunch.Label);
+                        auto.ToolTip=ScumAutoLaunch.Help;
+                        auto.Click+=async (s,e)=> {
+                            if(diagnostic)return;
+                            bool enable=auto.IsChecked==true;auto.IsEnabled=false;
+                            try { await System.Threading.Tasks.Task.Run(()=>ScumAutoLaunch.SetEnabled(enable)); }
+                            catch(Exception error) { Program.LogException("ScumAutoLaunchSettings",error);MessageBox.Show(window,error.Message,"SCUM MiniMap",MessageBoxButton.OK,MessageBoxImage.Error); }
+                            auto.IsChecked=ScumAutoLaunch.Enabled;auto.IsEnabled=true;
+                        };
+                        body.Children.Insert(0,auto);
+                        var autoHelp=WpfFieldTheme.Text(ScumAutoLaunch.Help,14,WpfFieldTheme.Muted);autoHelp.TextWrapping=TextWrapping.Wrap;body.Children.Insert(1,autoHelp);
                         Button firstTime=null;firstTime=WpfFieldTheme.Button(Localization.Get("FirstTimeGuideTitle"),()=> {var owner=System.Windows.Window.GetWindow(firstTime);if(owner!=null)owner.Close();application.Dispatcher.BeginInvoke(new Action(()=>ShowSetupWindow(false)));});firstTime.Tag="first-time-guide";
                         body.Children.Insert(0,firstTime);body.Children.Insert(1,WpfFieldTheme.Button(Localization.Get("PrivatePositions"),ShowPrivatePositions));body.Children.Insert(2,WpfFieldTheme.Button(S("RouteList"),ShowRoutes));body.Children.Insert(3,WpfFieldTheme.Button(S("SquadPresets"),ShowMapPresets));
                     }
@@ -2058,6 +2075,7 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
         sealed class WindowLifetime:IDisposable { internal static Window Current;readonly Window window;internal WindowLifetime(Window window) { this.window=window;Current=window; }public void Dispose() { window.Close(); } }
         public void Dispose() {
             application.Dispatcher.VerifyAccess();if(disposed)return;disposed=true;
+            if(autoLaunch!=null)autoLaunch.Dispose();
             if(zoneOpenRead!=null)zoneOpenRead.ContinueWith(task=>Program.LogException("ZoneOpenQueue",task.Exception),System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted);
             DisposeRoutePreviews();if(privatePositions!=null)privatePositions.Dispose();if(relayGroups!=null)relayGroups.Dispose();refresh.Stop();if(cameraSettle!=null)cameraSettle.Stop();if(setupWindow!=null)setupWindow.Close();hud.Close();tactical.Close();engine.WpfSave();engine.Dispose();terrain.Dispose();
         }

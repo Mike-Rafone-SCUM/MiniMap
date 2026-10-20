@@ -5,6 +5,8 @@ using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsPtPt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "ScumAutoLaunchLabel", "Iniciar o MiniMap com o SCUM e fechar ao sair do jogo" },
+            { "ScumAutoLaunchHelp", "Um monitor em segundo plano inicia ao entrar no Windows. O MiniMap guarda e fecha 10 segundos após o SCUM. Ao fechar manualmente, aguarda a próxima sessão de jogo. Desative antes de mover ou eliminar a pasta da aplicação." },
             { "AdminMapTeleportHere", "Teletransportar para aqui" },
             { "AdminMapTeleportHelp", "Enviar {0}. Altura do mapa indisponível; Z é 0." },
             { "RouteModeQuickest", "Mais rápido" },

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsTh = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "ScumAutoLaunchLabel", "เปิด MiniMap พร้อม SCUM และปิดเมื่อออกจากเกม" },
+            { "ScumAutoLaunchHelp", "ตัวตรวจสอบเบื้องหลังเริ่มเมื่อเข้าสู่ Windows โดย MiniMap จะบันทึกและปิดหลังออกจาก SCUM 10 วินาที หากปิดเองจะรอการเล่นครั้งถัดไป ปิดตัวเลือกนี้ก่อนย้ายหรือลบโฟลเดอร์แอป" },
             { "AdminMapTeleportHere", "เทเลพอร์ตมาที่นี่" },
             { "AdminMapTeleportHelp", "ส่ง {0} ไม่มีข้อมูลความสูงของแผนที่ จึงใช้ Z เป็น 0" },
             { "RouteModeQuickest", "เร็วที่สุด" },
@@ -1121,6 +1123,8 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "จุดกิจกรรมซีเดนเท็กซ์" },
         };
         public static readonly Dictionary<string,string> StringsZhTw = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "ScumAutoLaunchLabel", "隨 SCUM 啟動 MiniMap，並在遊戲結束後關閉" },
+            { "ScumAutoLaunchHelp", "背景監視程式會在登入 Windows 時啟動。SCUM 結束 10 秒後，MiniMap 儲存並關閉。手動關閉後將等待下次遊戲工作階段。移動或刪除應用程式資料夾前，請停用此選項。" },
             { "AdminMapTeleportHere", "傳送到這裡" },
             { "AdminMapTeleportHelp", "傳送 {0}。無法取得地圖高度；Z為0。" },
             { "RouteModeQuickest", "最快路線" },
@@ -2238,6 +2242,8 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex活動點" },
         };
         public static readonly Dictionary<string,string> StringsJa = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "ScumAutoLaunchLabel", "SCUMと同時にMiniMapを起動し、ゲーム終了時に閉じる" },
+            { "ScumAutoLaunchHelp", "Windowsへのサインイン時にバックグラウンド監視が始まります。SCUM終了の10秒後にMiniMapを保存して閉じます。手動で閉じた場合は次のゲームセッションまで待機します。アプリのフォルダーを移動または削除する前に無効にしてください。" },
             { "AdminMapTeleportHere", "ここにテレポート" },
             { "AdminMapTeleportHelp", "{0} を送信。地形の高さは不明のため、Zは0です。" },
             { "RouteModeQuickest", "最速" },
@@ -3355,6 +3361,8 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "シーデンテックスアクティビティスポット" },
         };
         public static readonly Dictionary<string,string> StringsCs = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "ScumAutoLaunchLabel", "Spustit MiniMap se SCUM a zavřít po ukončení hry" },
+            { "ScumAutoLaunchHelp", "Sledování na pozadí začne při přihlášení do Windows. MiniMap uloží data a zavře se 10 sekund po ukončení SCUM. Po ručním zavření čeká na další herní relaci. Před přesunutím nebo smazáním složky aplikace tuto možnost vypněte." },
             { "AdminMapTeleportHere", "Teleportovat sem" },
             { "AdminMapTeleportHelp", "Odeslat {0}. Výška mapy není k dispozici; Z je 0." },
             { "RouteModeQuickest", "Nejrychlejší" },
@@ -4472,6 +4480,8 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex Activity Spot" },
         };
         public static readonly Dictionary<string,string> StringsIt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "ScumAutoLaunchLabel", "Avvia MiniMap con SCUM e chiudilo al termine del gioco" },
+            { "ScumAutoLaunchHelp", "Un monitor in background si avvia all’accesso a Windows. MiniMap salva e si chiude 10 secondi dopo SCUM. Se chiuso manualmente, attende la prossima sessione di gioco. Disattiva prima di spostare o eliminare la cartella dell’app." },
             { "AdminMapTeleportHere", "Teletrasporta qui" },
             { "AdminMapTeleportHelp", "Invia {0}. Altezza del terreno non disponibile; Z è 0." },
             { "RouteModeQuickest", "Più veloce" },
@@ -5589,6 +5599,8 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Punto di attività del dentice marino" },
         };
         public static readonly Dictionary<string,string> StringsUk = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "ScumAutoLaunchLabel", "Запускати MiniMap разом зі SCUM і закривати після гри" },
+            { "ScumAutoLaunchHelp", "Фоновий монітор запускається під час входу у Windows. MiniMap зберігає дані й закривається через 10 секунд після SCUM. Після ручного закриття чекає наступного сеансу гри. Вимкніть перед переміщенням або видаленням папки застосунку." },
             { "AdminMapTeleportHere", "Телепортуватися сюди" },
             { "AdminMapTeleportHelp", "Надіслати {0}. Висота карти невідома; Z дорівнює 0." },
             { "RouteModeQuickest", "Найшвидший" },

@@ -137,6 +137,8 @@ class SquadUiTests {
         bool wasDiagnostic=(bool)Get(engine,"diagnosticMode"),wasPanel=(bool)Get(engine,"panelOpening"),wasCapture=(bool)Get(engine,"shortcutCaptureOpen");var wasUpdated=Get(engine,"updated");
         try {
             Set(engine,"diagnosticMode",false);Set(engine,"panelOpening",true);Set(engine,"shortcutCaptureOpen",true);Set(engine,"updated",DateTime.UtcNow);
+            var pingChat=Get(engine,"chat");
+            Console.WriteLine("PING PREFLIGHT: paused="+engine.GetType().GetProperty("IntensiveWorkPaused",F).GetValue(engine,null)+", closing="+Get(engine,"closing")+", busy="+Get(engine,"adminCommandBusy")+", chat="+pingChat.GetType().GetProperty("Paused",F).GetValue(pingChat,null)+", inventory="+Get(engine,"inventoryInputLocked")+", position="+(Get(engine,"position")!=null));
             Check(!(bool)Call(engine,"WpfCanPing",false)&&(bool)Call(engine,"WpfCanPing",true),"Only explicit squad-dialog pings may use a fresh position while dialog input protection is active");
             Check((bool)Get(engine,"panelOpening")&&(bool)Get(engine,"shortcutCaptureOpen"),"Ping eligibility never resumes coordinate capture or releases dialog input protection");
             Set(engine,"updated",DateTime.UtcNow.AddMinutes(-1));Check(!(bool)Call(engine,"WpfCanPing",true),"Squad-dialog pings reject stale positions");Set(engine,"updated",DateTime.UtcNow);
@@ -235,6 +237,11 @@ class SquadUiTests {
         settings=(Window)Call(runtime,"BuildSettings",0);
         try {
             settings.Show();Pump();var numbers=Children(settings).OfType<TextBox>().Where(c=>c.Tag as string=="setting-number").ToArray();
+            var auto=Children(settings).OfType<CheckBox>().Single(c=>c.Tag as string=="auto-launch-scum");
+            Check(!auto.IsEnabled,"Diagnostic settings cannot register an automatic startup task");
+            Check(!string.IsNullOrWhiteSpace(System.Windows.Automation.AutomationProperties.GetName(auto)),"Automatic launch has an accessible text label");
+            Check(auto.Content is TextBlock&&((TextBlock)auto.Content).TextWrapping==TextWrapping.Wrap,"Automatic launch label wraps in narrow settings windows");
+            Capture(settings,Path.Combine(folder,"settings-auto-launch.png"));
             Check(numbers.Length>0&&numbers.All(c=>!string.IsNullOrWhiteSpace(System.Windows.Automation.AutomationProperties.GetName(c))),"Numeric settings expose their existing labels to assistive tools");
             Check(numbers.All(c=>!string.IsNullOrWhiteSpace(System.Windows.Automation.AutomationProperties.GetHelpText(c))),"Numeric settings expose their valid ranges to assistive tools");
             bool bindingEditor=false;var editorTimer=new DispatcherTimer {Interval=TimeSpan.FromMilliseconds(100)};
@@ -295,6 +302,17 @@ class SquadUiTests {
                     Check(tabs.Length==3&&tabBounds.All(r=>r.Left>=0&&r.Right<=squadWindow.ActualWidth)&&!Overlap(tabBounds),"Linked squad/navigation tabs fit the minimum window width: "+language);
                     if(language.ToString()=="Arabic"||language.ToString()=="German")Capture(squadWindow,Path.Combine(folder,"squad-navigation-"+language+".png"));
                 }finally {squadWindow.Close();}
+                var autoSettings=(Window)Call(runtime,"BuildSettings",0);
+                try {
+                    autoSettings.ShowActivated=false;autoSettings.Left=-32000;autoSettings.Top=-32000;autoSettings.Width=420;autoSettings.Show();Pump();autoSettings.UpdateLayout();
+                    var auto=Children(autoSettings).OfType<CheckBox>().Single(c=>c.Tag as string=="auto-launch-scum");
+                    var label=(TextBlock)auto.Content;
+                    var translated=(string)runtime.GetType().Assembly.GetType("ScumMiniMap.Localization").GetMethod("Get").Invoke(null,new object[]{"ScumAutoLaunchLabel"});
+                    Check(label.Text==translated&&!auto.IsEnabled,"Automatic launch uses the selected language and remains safe in diagnostics: "+language);
+                    var labelBounds=label.TransformToAncestor(autoSettings).TransformBounds(new Rect(label.RenderSize));
+                    Check(labelBounds.Left>=0&&labelBounds.Right<=autoSettings.ActualWidth,"Automatic launch label fits narrow settings: "+language);
+                    if(language.ToString()=="Arabic"||language.ToString()=="German")Capture(autoSettings,Path.Combine(folder,"auto-launch-"+language+".png"));
+                }finally {autoSettings.Close();}
             }
         }finally {currentLanguage.SetValue(null,savedLanguage,null);}
     }

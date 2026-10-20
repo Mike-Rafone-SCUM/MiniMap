@@ -4,6 +4,7 @@ $checkRoot = Split-Path $PSScriptRoot -Parent
 foreach ($check in @(
     'tests\Test-Localization.ps1',
     'tests\Test-PrivatePositions.ps1',
+    'tests\Test-ScumAutoLaunch.ps1',
     'tests\Test-Threading.ps1',
     'tests\Test-SquadState.ps1',
     'tests\Test-SquadRoutePlanner.ps1',
