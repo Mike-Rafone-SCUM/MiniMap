@@ -12,16 +12,19 @@ jobs:
   test-package:
     runs-on: windows-latest
     timeout-minutes: 25
-    env:
-      TEMP: ${{ runner.temp }}
-      TMP: ${{ runner.temp }}
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Build and validate test package
         shell: powershell
+        env:
+          TEMP: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
         run: .\Build.ps1 -Configuration Test -OutputDirectory release/ci-test
       - name: Verify packaged UI and key rebinding
         shell: powershell
+        env:
+          TEMP: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
         run: .\tests\Test-SquadUi.ps1 -Executable release/ci-test/SkynettMiniMap-Test.exe -OutputDirectory release/ci-ui
       - uses: actions/upload-artifact@v7.0.1
         with:
