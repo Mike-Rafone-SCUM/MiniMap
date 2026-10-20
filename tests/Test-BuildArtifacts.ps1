@@ -73,7 +73,8 @@ if ($Configuration -eq 'Release') {
 } else {
     if ($version -notmatch '^\d+\.\d+\.\d+-test$') { throw 'Invalid test product version.' }
     if (Test-Path -LiteralPath (Join-Path $artifactRoot 'update.txt')) { throw 'Test packages must not include an updater manifest.' }
-    $expected = @($exeName,'TESTING.md','ATTRIBUTION.md','assets/map-tiles.bin','assets/roads.bin')
+    $expected = @($exeName,'TESTING.md','ATTRIBUTION.md','Start-Fast-Tac-Test.cmd','Start-Transparent-Tac-Test.cmd','assets/map-tiles.bin','assets/roads.bin')
+    if(-not [IO.File]::ReadAllText((Join-Path $artifactRoot 'Start-Fast-Tac-Test.cmd')).Contains('--fast-tac-test')) { throw 'Fast Tac must pass its mode as an argument that survives elevation.' }
 }
 $hash = (Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash.ToLowerInvariant()
 if ($Configuration -eq 'Release') {
@@ -89,6 +90,13 @@ try {
     $sha = [Security.Cryptography.SHA256]::Create()
     try { $zipHash = [BitConverter]::ToString($sha.ComputeHash($stream)).Replace('-','').ToLowerInvariant() } finally { $sha.Dispose(); $stream.Dispose() }
     if ($hash -ne $zipHash) { throw 'ZIP executable differs from standalone executable.' }
+    if ($Configuration -eq 'Test') {
+        foreach($launcher in @('Start-Fast-Tac-Test.cmd','Start-Transparent-Tac-Test.cmd')) {
+            $reader=[IO.StreamReader]::new($zip.GetEntry($launcher).Open())
+            try {$text=$reader.ReadToEnd()}finally{$reader.Dispose()}
+            if($text -cne [IO.File]::ReadAllText((Join-Path $artifactRoot $launcher))) { throw 'ZIP launcher differs from its standalone file.' }
+        }
+    }
     if ($Configuration -eq 'Release') {
         $zipManifestReader = [IO.StreamReader]::new($zip.GetEntry('package.txt').Open())
         try { $zipManifest = $zipManifestReader.ReadToEnd().Trim() } finally { $zipManifestReader.Dispose() }

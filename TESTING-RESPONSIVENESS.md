@@ -1,5 +1,9 @@
 # SCUM MiniMap input and voice navigation test
 
+For this gesture-preview test, extract the complete ZIP, close other MiniMap instances and run **Start-Transparent-Tac-Test.cmd**. The tactical map and compact HUD remain see-through. While dragging or zooming, the tactical map moves a cached static image and keeps navigation/player markers live. Newly exposed areas use the coarse overview; full terrain, marker detail and current-zoom labels return after the drag is released and camera input pauses for 200 ms. A held drag stays in preview even if the pointer briefly stops moving. Opacity and filter changes remain usable.
+
+**Start-Fast-Tac-Test.cmd** retains the earlier solid-window comparison. Both launchers use the same test profile and settings; exit before switching. Fast Tac submits the retained terrain directly to WPF when a graphics rendering tier is available and software-only rendering is not forced; otherwise it uses the bounded raster worker. Its opacity slider fades terrain over a dark backdrop rather than revealing the game. Neither launcher changes the release installation or its settings.
+
 Build the current source with `Build.ps1 -Configuration Test`. Exit the current MiniMap, run the resulting `SkynettMiniMap-Test.exe` and approve Windows' administrator prompt. The embedded Windows manifest requests elevation on every normal launch. Its product version follows the source version with a `-test` suffix. Updates are disabled in this build.
 
 Keep the packaged `assets` folder beside the test EXE. If moving the build to another PC, extract the entire test ZIP rather than copying only the executable. Map tiles and road data are loaded locally and verified before normal startup.

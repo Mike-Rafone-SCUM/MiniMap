@@ -27,7 +27,7 @@ class SquadUiTests {
             var state=Activator.CreateInstance(stateType,true);Set(state,"Saved",Array.CreateInstance(assembly.GetType("ScumMiniMap.MapZone"),0));Set(state,"Trail",new System.Drawing.PointF[0]);Set(state,"Grid",true);Set(state,"GridLabels",true);Set(state,"GridOpacity",100);Set(state,"LabelSize",16);Set(state,"Pan",new System.Drawing.PointF(.42f,.47f));Set(state,"Zoom",zoom);Set(state,"Shape","Square");
             if(compact) {var position=Activator.CreateInstance(assembly.GetType("ScumMiniMap.Position"));Set(position,"X",-143091d);Set(position,"Y",-142091d);Set(position,"Yaw",45d);Set(state,"Position",position);Set(state,"RotateMap",true);}
             var surface=(FrameworkElement)Activator.CreateInstance(surfaceType,true);Set(surface,"State",state);Set(surface,"Compact",compact);surface.Measure(new Size(640,360));surface.Arrange(new Rect(0,0,640,360));
-            var drawing=new DrawingVisual();using(var dc=drawing.RenderOpen()) {Call(surface,"OnRender",dc);dc.PushClip(new RectangleGeometry(new Rect(0,0,640,360)));Set(surface,"renderRotation",0d);foreach(var at in new[]{new Point(-200,60),new Point(-20,100),new Point(630,120),new Point(120,-8),new Point(120,355),new Point(300,180)})Call(surface,"Label",dc,"Viewport edge fixture",at,Brushes.White,16d);dc.Pop();}
+            var drawing=new DrawingVisual();using(var dc=drawing.RenderOpen()) {Call(surface,"DrawMap",dc);dc.PushClip(new RectangleGeometry(new Rect(0,0,640,360)));Set(surface,"renderRotation",0d);foreach(var at in new[]{new Point(-200,60),new Point(-20,100),new Point(630,120),new Point(120,-8),new Point(120,355),new Point(300,180)})Call(surface,"Label",dc,"Viewport edge fixture",at,Brushes.White,16d);dc.Pop();}
             var bitmap=new RenderTargetBitmap(640,360,96,96,PixelFormats.Pbgra32);bitmap.Render(drawing);var pixels=new byte[640*360*4];bitmap.CopyPixels(pixels,640*4,0);
             string key=(compact?"rotated":"tactical")+"-"+zoom;File.WriteAllBytes(Path.Combine(folder,key+".pixels"),pixels);
             string reference=Environment.GetEnvironmentVariable("MINIMAP_CAMERA_PIXEL_REFERENCE");if(!string.IsNullOrEmpty(reference)) {var before=File.ReadAllBytes(Path.Combine(reference,key+".pixels"));Check(before.SequenceEqual(pixels),"Grid, rotation and partially visible labels retain identical pixels: "+key);}
@@ -48,6 +48,7 @@ class SquadUiTests {
         for(int i=0;i<12;i++) {var clock=System.Diagnostics.Stopwatch.StartNew();var bitmap=new RenderTargetBitmap((int)map.ActualWidth,(int)map.ActualHeight,96,96,PixelFormats.Pbgra32);bitmap.Render(blankVisual);clock.Stop();blankTimes.Add(clock.Elapsed.TotalMilliseconds);}blankTimes.Sort();
         Console.WriteLine("CAMERA blank bitmap median="+blankTimes[6].ToString("F2")+" ms; scene overhead="+(renderTimes[12]-blankTimes[6]).ToString("F2")+" ms");
         if(Environment.GetEnvironmentVariable("MINIMAP_CAMERA_LAYERS")=="1") {
+            Call(runtime,"EndCameraInteraction");render();
             Func<double> measure=()=> {var times=new List<double>();for(int i=0;i<10;i++) {map.InvalidateVisual();var clock=System.Diagnostics.Stopwatch.StartNew();render();clock.Stop();times.Add(clock.Elapsed.TotalMilliseconds);}times.Sort();return times[5];};
             var layerState=Get(map,"State");var store=Get(layerState,"Store");var terrain=Get(map,"Terrain");var background=Get(map,"BaseMap");
             Console.WriteLine("LAYERS all="+measure().ToString("F2"));
@@ -64,6 +65,9 @@ class SquadUiTests {
         File.WriteAllText(Path.Combine(folder,"camera-performance.csv"),"event_median_ms,event_p95_ms,composition_median_ms,composition_p95_ms\n"+string.Join(",",new[]{eventTimes[12],eventTimes[22],renderTimes[12],renderTimes[22]}.Select(n=>n.ToString("F3",System.Globalization.CultureInfo.InvariantCulture))));
         var slider=(Slider)Get(runtime,"tacticalOpacity");Console.WriteLine("CAMERA opacity enabled at 8x="+slider.IsEnabled);
         if(!verify)return;
+        // Gesture previews deliberately reuse the original static scene. Check
+        // current-view spatial culling after the full-detail idle draw returns.
+        Call(runtime,"EndCameraInteraction");render();Await(()=> {render();return Object.ReferenceEquals(Get(map,"drawnPoiLayout"),Get(map,"requestedPoiLayout"));});
         var tiles=(Array)Get(map,"poiSceneTiles");Check(tiles!=null&&tiles.Length>(int)Get(map,"PoiTilesDrawn")&&(int)Get(map,"PoiTilesDrawn")>0,"Large-zoom POI composition submits only visible spatial groups");
         var state=Get(map,"State");double width=map.ActualWidth,height=map.ActualHeight;
         double side=(double)map.GetType().GetMethod("MapSide",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{state,width,height,false});
@@ -262,6 +266,29 @@ class SquadUiTests {
             }
         }finally {currentLanguage.SetValue(null,savedLanguage,null);}
     }
+    static void CheckTacticalLayers(object runtime,string folder) {
+        var assembly=runtime.GetType().Assembly;var engine=Get(runtime,"engine");var map=(FrameworkElement)Get(runtime,"tacticalMap");var window=(Window)Get(runtime,"tactical");
+        window.ShowActivated=false;window.Left=-32000;window.Top=-32000;window.Width=1280;window.Height=760;window.Show();window.UpdateLayout();Call(engine,"WpfPan",new System.Drawing.PointF(.5f,.5f));Set(engine,"fullMapZoom",4f);Call(runtime,"Refresh");
+        Func<byte[]> render=()=> {var bitmap=new RenderTargetBitmap((int)map.ActualWidth,(int)map.ActualHeight,96,96,PixelFormats.Pbgra32);bitmap.Render(map);var bytes=new byte[(int)map.ActualWidth*(int)map.ActualHeight*4];bitmap.CopyPixels(bytes,(int)map.ActualWidth*4,0);return bytes;};
+        render();Await(()=> {render();return Object.ReferenceEquals(Get(map,"drawnPoiLayout"),Get(map,"requestedPoiLayout"));});for(int i=0;i<12;i++)Pump();render();
+        var state=Get(map,"State");int terrain=(int)Get(map,"TerrainLayerBuilds"),annotations=(int)Get(map,"AnnotationLayerBuilds"),live=(int)Get(map,"LiveLayerBuilds");var pixels=render();
+        var target=Activator.CreateInstance(assembly.GetType("ScumMiniMap.MapZone"));Set(target,"Name","Synthetic live GPS");Set(target,"Points",new[]{new System.Drawing.PointF(.52f,.52f)});Set(state,"Target",target);Call(map,"PublishState",state);var updated=render();
+        Check(!pixels.SequenceEqual(updated),"A live GPS change updates the actual tactical pixels");
+        Check((int)Get(map,"TerrainLayerBuilds")==terrain&&(int)Get(map,"AnnotationLayerBuilds")==annotations&&(int)Get(map,"LiveLayerBuilds")>live,"Live GPS updates redraw their overlay without rebuilding terrain or annotations");
+        var position=Get(state,"Position");var copy=Activator.CreateInstance(position.GetType());foreach(string field in new[]{"X","Y","Z","Yaw"})Set(copy,field,Get(position,field));Set(copy,"Yaw",45d);Set(state,"Position",copy);
+        for(int i=0;i<60;i++) {Set(copy,"Yaw",(double)(i*6));Call(map,"PublishState",state);}
+        Check((int)Get(map,"TerrainLayerBuilds")==terrain&&(int)Get(map,"AnnotationLayerBuilds")==annotations,"Sixty player-heading updates retain the terrain and annotation visuals");
+        var reference=new DrawingVisual();using(var dc=reference.RenderOpen())Call(map,"DrawMap",dc);var referenceBitmap=new RenderTargetBitmap((int)map.ActualWidth,(int)map.ActualHeight,96,96,PixelFormats.Pbgra32);referenceBitmap.Render(reference);var referencePixels=new byte[updated.Length];referenceBitmap.CopyPixels(referencePixels,(int)map.ActualWidth*4,0);
+        // Separate alpha surfaces can round a channel by one 8-bit step during composition.
+        Check(render().Zip(referencePixels,(a,b)=>Math.Abs(a-b)).All(delta=>delta<=1),"Separated tactical layers match the combined renderer within one alpha-composition rounding step");
+        Set(state,"History",true);Set(state,"Trail",new[]{new System.Drawing.PointF(.49f,.49f),new System.Drawing.PointF(.51f,.51f)});Call(map,"PublishState",state);render();Check((int)Get(map,"TerrainLayerBuilds")==terrain&&(int)Get(map,"AnnotationLayerBuilds")==annotations,"A changed history trail keeps the expensive static layers");
+        Set(map,"TerrainRevision",(int)Get(map,"TerrainRevision")+1);Call(map,"PublishState",state);render();Check((int)Get(map,"TerrainLayerBuilds")>terrain&&(int)Get(map,"AnnotationLayerBuilds")==annotations,"A decoded terrain tile invalidates terrain without rebuilding annotation visuals");
+        annotations=(int)Get(map,"AnnotationLayerBuilds");Set(state,"Labels",!(bool)Get(state,"Labels"));Call(map,"PublishState",state);render();Check((int)Get(map,"AnnotationLayerBuilds")>annotations,"A label visibility change refreshes the annotation layer immediately");
+        Check(VisualTreeHelper.GetChildrenCount(map)==4,"The tactical map retains four independent visual layers");
+        bool opaque=Environment.GetEnvironmentVariable("SCUM_MINIMAP_TAC_OPAQUE")=="1"||Environment.GetCommandLineArgs().Contains("--fast-tac-test");Check(window.AllowsTransparency!=opaque,"The tactical window uses the requested transparent/solid test mode");Check(((Window)Get(runtime,"hud")).AllowsTransparency,"The compact HUD stays transparent in either tactical mode");
+        if(opaque&&(bool)Get(map,"DirectTerrain")) {int frames=(int)Get(map,"CameraSceneBuilds");((Action<System.Drawing.PointF>)Get(map,"PanChanged"))(new System.Drawing.PointF(.51f,.5f));render();for(int i=0;i<5;i++)Pump();Check((int)Get(map,"CameraSceneBuilds")==frames&&!(bool)Get(map,"cameraWorker")&&Get(map,"pendingCameraScene")==null,"Solid accelerated tactical movement bypasses the software terrain-frame worker");Call(runtime,"EndCameraInteraction");render();}
+        Capture(window,Path.Combine(folder,opaque?"tactical-solid.png":"tactical-transparent.png"));window.Hide();
+    }
     static void CheckCameraBurst(object runtime,string folder,bool verify) {
         var engine=Get(runtime,"engine");var map=(FrameworkElement)Get(runtime,"tacticalMap");var window=(Window)Get(runtime,"tactical");
         window.ShowActivated=false;window.Left=-32000;window.Top=-32000;window.Width=1920;window.Height=1080;window.Show();window.UpdateLayout();
@@ -270,6 +297,7 @@ class SquadUiTests {
         record();Await(()=> {record();return Get(map,"requestedPoiLayout")==null||Get(map,"drawnPoiLayout")!=null&&Object.ReferenceEquals(Get(map,"drawnPoiLayout"),Get(map,"requestedPoiLayout"));});
         if(verify) {Await(()=> {record();return Get(map,"idleCameraScene")!=null;});Check(true,"A completed stationary map prepares a worker frame before the first camera input");}
         var layout=Get(map,"requestedPoiLayout");var labels=Get(map,"labelLayout");int sceneBuilds=(int)Get(map,"PoiSceneBuilds");var elapsed=new List<double>();int layoutsChanged=0,labelLayoutsChanged=0;
+        int terrainBuilds=(int)Get(map,"TerrainLayerBuilds"),annotationBuilds=(int)Get(map,"AnnotationLayerBuilds");var snapshot=Get(map,"staticDrawing");var snapshotKey=Get(map,"queuedTerrainKey");
         var pan=(Action<System.Drawing.PointF>)Get(map,"PanChanged");var zoom=(Action<int>)Get(map,"ZoomRequested");var cpu=System.Diagnostics.Stopwatch.StartNew();
         for(int i=0;i<48;i++) {
             var clock=System.Diagnostics.Stopwatch.StartNew();pan(new System.Drawing.PointF(.4f+i*.0004f,.45f));zoom(i%2==0?1:-1);record();clock.Stop();elapsed.Add(clock.Elapsed.TotalMilliseconds);
@@ -279,8 +307,11 @@ class SquadUiTests {
         File.WriteAllText(Path.Combine(folder,"camera-burst.csv"),"median_ms,p95_ms,total_ms,poi_layout_changes,label_layout_changes\n"+string.Join(",",new[]{elapsed[24],elapsed[45],cpu.Elapsed.TotalMilliseconds,(double)layoutsChanged,(double)labelLayoutsChanged}.Select(n=>n.ToString("F3",System.Globalization.CultureInfo.InvariantCulture))));
         if(!verify)return;
         Check(layoutsChanged==0&&labelLayoutsChanged==0&&(int)Get(map,"PoiSceneBuilds")==sceneBuilds,"A rapid zoom/pan burst reprojects existing POIs and labels without rebuilding either layout");
+        Check((int)Get(map,"TerrainLayerBuilds")==terrainBuilds&&(int)Get(map,"AnnotationLayerBuilds")==annotationBuilds,"A prepared transparent gesture rebuilds neither terrain nor annotation drawings");
+        Check(Object.ReferenceEquals(snapshot,Get(map,"staticDrawing"))&&Object.Equals(snapshotKey,Get(map,"queuedTerrainKey")),"A prepared transparent gesture queues no replacement raster snapshots");
+        Set(map,"TerrainRevision",(int)Get(map,"TerrainRevision")+1);record();Check((int)Get(map,"TerrainLayerBuilds")==terrainBuilds,"A terrain completion during movement defers its drawing rebuild until idle");
         Check(elapsed[45]<100,"Warm clustered camera recording stays under 100 ms at p95 on this test machine");
-        Check((bool)Get(map,"CameraInteracting")&&((DispatcherTimer)Get(map,"cameraFrame")).IsEnabled,"Camera input keeps one background redraw timer pending");
+        Check((bool)Get(map,"CameraInteracting")&&((DispatcherTimer)Get(map,"cameraFrame")).IsEnabled,"Camera input keeps one coalesced redraw timer pending");
         Check(Get(map,"cameraScene")!=null,"The first camera burst immediately reuses the stationary frame");
         var timer=(DispatcherTimer)Get(map,"cameraFrame");for(int i=0;i<100;i++)pan(new System.Drawing.PointF(.5f+i*.0001f,.5f));
         Check(Object.ReferenceEquals(timer,Get(map,"cameraFrame"))&&Math.Abs(((System.Drawing.PointF)Get(Get(map,"State"),"Pan")).X-.5099)<.00001,"A hundred pending pan requests share one frame and retain the latest camera position");
@@ -291,13 +322,28 @@ class SquadUiTests {
         var cameraState=Get(map,"State");double cameraSide=(double)map.GetType().GetMethod("MapSide",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{cameraState,map.ActualWidth,map.ActualHeight,false});var cameraCentre=(System.Drawing.PointF)map.GetType().GetMethod("CameraCentre",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{cameraState,map.ActualWidth,map.ActualHeight,false});
         var syntheticVisual=new DrawingVisual();using(var dc=syntheticVisual.RenderOpen()) {dc.DrawRectangle(Brushes.Red,null,new Rect(0,0,100,100));dc.DrawRectangle(Brushes.Blue,null,new Rect(45,45,10,10));}var syntheticImage=new RenderTargetBitmap(100,100,96,96,PixelFormats.Pbgra32);syntheticImage.Render(syntheticVisual);syntheticImage.Freeze();var syntheticScene=Activator.CreateInstance(scene.GetType(),true);Set(syntheticScene,"Image",syntheticImage);Set(syntheticScene,"Width",map.ActualWidth);Set(syntheticScene,"Height",map.ActualHeight);Set(syntheticScene,"Side",cameraSide);Set(syntheticScene,"Centre",new System.Drawing.PointF(cameraCentre.X+.03f,cameraCentre.Y));Set(syntheticScene,"Opacity",(int)Get(cameraState,"Opacity"));Set(map,"cameraScene",syntheticScene);
         var projectedVisual=new DrawingVisual();using(var dc=projectedVisual.RenderOpen())Call(map,"DrawCameraScene",dc,new DrawingGroup(),map.ActualWidth,map.ActualHeight);var projectedImage=new RenderTargetBitmap((int)map.ActualWidth,(int)map.ActualHeight,96,96,PixelFormats.Pbgra32);projectedImage.Render(projectedVisual);var projectedPixels=new byte[(int)map.ActualWidth*(int)map.ActualHeight*4];projectedImage.CopyPixels(projectedPixels,(int)map.ActualWidth*4,0);int projectedIndex=((int)(map.ActualHeight/2)*(int)map.ActualWidth+(int)(map.ActualWidth/2+.03*cameraSide))*4;Check(projectedPixels[projectedIndex]>200&&projectedPixels[projectedIndex+2]<20,"A pending worker frame is projected at the current camera position rather than its captured position");Set(map,"cameraScene",scene);
+        Func<byte[]> previewPixels=()=> {record();var bitmap=new RenderTargetBitmap((int)map.ActualWidth,(int)map.ActualHeight,96,96,PixelFormats.Pbgra32);bitmap.Render(map);var pixels=new byte[(int)map.ActualWidth*(int)map.ActualHeight*4];bitmap.CopyPixels(pixels,(int)map.ActualWidth*4,0);return pixels;};
+        var previousTarget=Get(cameraState,"Target");var beforeNavigation=previewPixels();var liveTarget=Activator.CreateInstance(runtime.GetType().Assembly.GetType("ScumMiniMap.MapZone"));Set(liveTarget,"Name","Synthetic moving GPS");Set(liveTarget,"Points",new[]{new System.Drawing.PointF(cameraCentre.X+.01f,cameraCentre.Y)});Set(cameraState,"Target",liveTarget);Call(map,"PublishState",cameraState);
+        Check(!beforeNavigation.SequenceEqual(previewPixels())&&Object.ReferenceEquals(snapshot,Get(map,"staticDrawing")),"A new GPS destination changes actual preview pixels without replacing the static snapshot");Set(cameraState,"Target",previousTarget);Call(map,"PublishState",cameraState);
         var frameTimes=new List<double>();for(int i=0;i<12;i++) {pan(new System.Drawing.PointF(.5099f+i*.0001f,.5f));var frameClock=System.Diagnostics.Stopwatch.StartNew();var bitmap=new RenderTargetBitmap((int)map.ActualWidth,(int)map.ActualHeight,96,96,PixelFormats.Pbgra32);bitmap.Render(map);frameClock.Stop();frameTimes.Add(frameClock.Elapsed.TotalMilliseconds);Pump();}frameTimes.Sort();Console.WriteLine("BURST worker-frame composition median="+frameTimes[6].ToString("F3")+" ms, p95="+frameTimes[11].ToString("F3")+" ms");
+        bool frameDuringInput=false;var inputClock=System.Diagnostics.Stopwatch.StartNew();var inputFrame=new DispatcherFrame();int inputEvents=0;
+        EventHandler observedFrame=(s,e)=>frameDuringInput=inputFrame.Continue;timer.Tick+=observedFrame;
+        Action input=null;input=()=> {inputEvents++;if(inputClock.ElapsedMilliseconds>=250)inputFrame.Continue=false;else map.Dispatcher.BeginInvoke(input,DispatcherPriority.Input);};
+        try {pan(new System.Drawing.PointF(.51f,.5f));map.Dispatcher.BeginInvoke(input,DispatcherPriority.Input);Dispatcher.PushFrame(inputFrame);}finally {timer.Tick-=observedFrame;}
+        Check(frameDuringInput&&inputEvents>0,"A pending camera frame is serviced while synthetic input work is still queued");
+        Call(map,"BeginPointer",new Point(500,400));Call(map,"MovePointer",new Point(540,425));var held=System.Diagnostics.Stopwatch.StartNew();while(held.ElapsedMilliseconds<450)Pump();
+        Check((bool)Get(map,"CameraInteracting")&&(bool)map.GetType().GetProperty("PointerCameraActive",F).GetValue(map,null),"Holding a drag open keeps the lightweight preview active across settle ticks");Call(map,"CancelPointer");
         Await(()=>!(bool)Get(map,"CameraInteracting"));record();Await(()=> {record();return Object.ReferenceEquals(Get(map,"drawnPoiLayout"),Get(map,"requestedPoiLayout"));});
         Check(!Object.ReferenceEquals(labels,Get(map,"labelLayout"))&&!Object.ReferenceEquals(layout,Get(map,"requestedPoiLayout")),"Camera idle restores current-zoom clustering and a fresh label layout");
         Check(RenderOptions.GetBitmapScalingMode(map)==BitmapScalingMode.Unspecified&&!timer.IsEnabled,"Camera idle restores smooth sampling and stops pending gesture frames");
         var pending=Get(map,"pendingCameraScene");Check(Get(map,"cameraScene")==null&&(pending==null||(int)Get(pending,"Generation")== (int)Get(map,"cameraGeneration")),"Ending a gesture discards its image and rejects obsolete queued snapshots while allowing idle preparation");Await(()=>!(bool)Get(map,"cameraWorker")&&!(bool)Get(map,"cameraApplyPosted"));Check(Get(map,"cameraScene")==null,"An old worker completion cannot restore a gesture frame after idle");
         var store=Get(Get(map,"State"),"Store");var categories=(System.Collections.IList)Get(store,"Categories");int category=(int)Get(categories[0],"Id");pan(new System.Drawing.PointF(.51f,.51f));Call(runtime,"Category",category,false);
-        Check(!(bool)Get(map,"CameraInteracting"),"A POI filter action exits retained gesture mode immediately");Call(runtime,"Category",category,true);window.Hide();
+        Check(!(bool)Get(map,"CameraInteracting"),"A POI filter action exits retained gesture mode immediately");Call(runtime,"Category",category,true);
+        window.Show();window.UpdateLayout();Await(()=>map.IsVisible);
+        Call(map,"BeginPointer",new Point(500,400));Call(map,"MovePointer",new Point(540,425));window.Hide();
+        // Descendant IsVisibleChanged follows the window's visibility update.
+        Await(()=>!(bool)map.GetType().GetProperty("PointerCameraActive",F).GetValue(map,null));
+        Check(!(bool)map.GetType().GetProperty("PointerCameraActive",F).GetValue(map,null),"Hiding the map cancels a held drag so reopening cannot retain a stuck preview");
     }
     static void CheckCompactGuidance(object runtime,string folder) {
         var assembly=runtime.GetType().Assembly;var surfaceType=assembly.GetType("ScumMiniMap.WpfMapSurface");var stateType=assembly.GetType("ScumMiniMap.WpfMapState");var markerType=assembly.GetType("ScumMiniMap.SharedMapMarker");
@@ -327,6 +373,7 @@ class SquadUiTests {
             if(Environment.GetEnvironmentVariable("MINIMAP_CAMERA_PROBE_ONLY")=="1") {CheckCameraInteraction(runtime,folder,Environment.GetEnvironmentVariable("MINIMAP_CAMERA_BASELINE")!="1");return;}
             if(Environment.GetEnvironmentVariable("MINIMAP_COMPACT_GUIDANCE_ONLY")=="1") {CheckCompactGuidance(runtime,folder);return;}
             if(Environment.GetEnvironmentVariable("MINIMAP_CAMERA_BURST_ONLY")=="1") {CheckCameraBurst(runtime,folder,Environment.GetEnvironmentVariable("MINIMAP_CAMERA_BASELINE")!="1");return;}
+            if(Environment.GetEnvironmentVariable("MINIMAP_TAC_LAYERS_ONLY")=="1") {CheckTacticalLayers(runtime,folder);return;}
             CheckCompactGuidance(runtime,folder);
             CheckSaveLocation(runtime,folder);
             CheckUsability(runtime,folder);

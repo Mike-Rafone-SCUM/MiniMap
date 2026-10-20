@@ -8,6 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Retain Test-only solid/transparent launchers for renderer comparisons; normal releases continue to use the transparent tactical window.
+
+## [2.3.13] - 2026-10-20
+
+- Make tactical-map dragging and zooming lighter by moving the prepared static map image throughout the gesture, without rebuilding terrain/annotation drawings or queuing new raster jobs for each movement. Keep GPS, route guidance and player markers live. Newly exposed areas use the overview; full detail returns after the drag is released and input pauses for 200 ms.
+- Retain separate terrain/grid/habitat, history, annotation and live-guidance visuals. Player and navigation updates reuse the static layers; tile completions refresh terrain without rebuilding annotations.
+- Service the single coalesced camera frame at render priority so continuous queued input cannot postpone it. Keep lightweight preview active while a drag is held, and cancel held pointer state when the map is hidden.
+- Preserve the working opacity slider, saved settings, key bindings and transparent map/HUD. Every user must complete the five setup pages after updating.
+
 ## [2.3.12] - 2026-10-20
 
 - Coalesce rapid camera updates into one pending background redraw. During zoom/pan, transform the retained POI scene and label layout instead of rebuilding them on the input thread; refresh current-zoom clustering and labels when movement settles. Skip hover searches during camera movement. Filter actions immediately leave gesture mode.

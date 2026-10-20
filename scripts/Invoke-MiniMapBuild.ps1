@@ -103,7 +103,8 @@ try {
         [IO.File]::WriteAllText((Join-Path $stage 'release-notes.md'), $notes, [Text.UTF8Encoding]::new($false))
     } else {
         Copy-Item -LiteralPath (Join-Path $buildRoot 'TESTING-RESPONSIVENESS.md') -Destination (Join-Path $stage 'TESTING.md')
-        $packageNames = @($exeName,'TESTING.md','ATTRIBUTION.md','assets')
+        foreach($launcher in @('Start-Fast-Tac-Test.cmd','Start-Transparent-Tac-Test.cmd')) { Copy-Item -LiteralPath (Join-Path $pack $launcher) -Destination $stage }
+        $packageNames = @($exeName,'TESTING.md','ATTRIBUTION.md','Start-Fast-Tac-Test.cmd','Start-Transparent-Tac-Test.cmd','assets')
         $zipName = 'SCUM-MiniMap-Test.zip'
     }
     $packageFiles = @($packageNames | ForEach-Object { Join-Path $stage $_ })
