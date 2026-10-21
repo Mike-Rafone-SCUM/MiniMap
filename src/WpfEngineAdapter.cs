@@ -57,8 +57,7 @@ namespace ScumMiniMap {
         }
         internal bool wpfRotateMap;
         internal bool wpfPoiClustering=true;
-        bool wpfTacticalOpacityOverride;
-        int WpfTacticalOpacityValue { get { return fullMapZoom>1&&!wpfTacticalOpacityOverride?100:fullMapOpacity; } }
+        int WpfTacticalOpacityValue { get { return fullMapZoom>1?100:0; } }
         internal void WpfRotate(bool enabled) { wpfRotateMap=enabled;SaveSettings(); }
         internal void WpfPoiClustering(bool enabled) { wpfPoiClustering=enabled;SaveSettings(); }
         internal void WpfDefaultColours() { routeGuidanceColor=OverlayTheme.Route;playerConeColor=OverlayTheme.Accent;routeHistoryColor=Color.FromArgb(164,177,188);SettingsChanged();SaveSettings();WpfRebuildSettings(); }
@@ -116,7 +115,6 @@ namespace ScumMiniMap {
             if(labelSize==6)labelSize=16;
             wpfDefaultsRevision=2;SettingsChanged();SaveSettings();
         }
-        internal void WpfTacticalOpacity(int opacity) { WpfVerifyAccess();wpfTacticalOpacityOverride=true;fullMapOpacity=Math.Max(0,Math.Min(100,opacity));WpfCameraChanged(); }
         void WpfCameraChanged() { WpfVerifyAccess();terrainKey=null;lastFrameKey=null;saveAfter=DateTime.UtcNow.AddMilliseconds(700); }
         internal void WpfUpdateCamera(WpfMapState state,bool tactical) {
             WpfVerifyAccess();if(tactical&&wpfFollowPlayer&&position!=null)fullMapPan=ToMap(position);

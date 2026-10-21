@@ -1,7 +1,7 @@
 import * as tls from 'node:tls';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import {createHash, timingSafeEqual} from 'node:crypto';
+import {createHash, timingSafeEqual, randomBytes} from 'node:crypto';
 
 type Group = {room: string; owner: string; deleted?: boolean};
 export class GroupRegistry {
@@ -18,6 +18,11 @@ export class GroupRegistry {
     if (Object.keys(this.groups).length > 10000) throw Error('Too many registered groups');
   }
   allows(id: string, room: string): boolean { return this.groups[id]?.room === room && !this.groups[id]?.deleted; }
+  owns(id: string, room: string, token: string): boolean {
+    if (!this.allows(id, room) || !/^[a-f0-9]{64}$/.test(token)) return false;
+    const owner = createHash('sha256').update('MiniMap owner v1:' + id + ':' + token).digest();
+    return timingSafeEqual(Buffer.from(this.groups[id].owner, 'hex'), owner);
+  }
   change(action: string, id: string, room: string, token: string): boolean {
     if (!/^[a-f0-9]{32}$/.test(id) || !/^[a-f0-9]{64}$/.test(room) || !/^[a-f0-9]{64}$/.test(token)) return false;
     const owner = createHash('sha256').update('MiniMap owner v1:' + id + ':' + token).digest('hex');
@@ -81,6 +86,7 @@ export class Budget {
 
 export function createRelay(options: tls.TlsOptions, budget: {take(bytes: number): boolean}, registry?: GroupRegistry) {
   const rooms = new Map<string, Set<tls.TLSSocket>>();
+  const members = new Map<tls.TLSSocket, {id: string; label: string; host: boolean}>();
   const sockets = new Set<tls.TLSSocket>();
   const perIp = new Map<string, number>();
   let windowStart = Date.now(), output = 0;
@@ -97,6 +103,7 @@ export function createRelay(options: tls.TlsOptions, budget: {take(bytes: number
     socket.setNoDelay(true); socket.setTimeout(10000, () => socket.destroy());
     socket.on('error', () => socket.destroy());
     socket.on('close', () => {
+      members.delete(socket);
       if (room) { const group = rooms.get(room); group?.delete(socket); if (!group?.size) rooms.delete(room); }
     });
     socket.on('data', (chunk: Buffer) => {
@@ -106,9 +113,24 @@ export function createRelay(options: tls.TlsOptions, budget: {take(bytes: number
       buffer = Buffer.concat([buffer, chunk]);
       if (!room) {
         const end = buffer.indexOf(10);
-        if (end < 0) { if (buffer.length > 256) socket.destroy(); return; }
-        if (end > 256) { socket.destroy(); return; }
+        if (end < 0) { if (buffer.length > 1024) socket.destroy(); return; }
+        if (end > 1024) { socket.destroy(); return; }
         const hello = buffer.subarray(0, end).toString('utf8');
+        const control = /^SCUMMEMBERS2 (LIST|KICK) ([a-f0-9]{32}) ([a-f0-9]{64}) ([a-f0-9]{64}) ([a-f0-9]{64})$/.exec(hello);
+        if (control) {
+          const [, action, groupId, roomId, owner, target] = control;
+          if (!registry?.owns(groupId, roomId, owner) || !spend(16384)) { socket.destroy(); return; }
+          const group = rooms.get(groupId + ':' + roomId) ?? new Set<tls.TLSSocket>();
+          if (action === 'LIST') {
+            const rows = [...group].filter(peer => !peer.destroyed).map(peer => { const m = members.get(peer)!;return `${m.id} ${m.host ? '1' : '0'} ${m.label}`; });
+            socket.end(`OK\n${rows.join('\n')}${rows.length ? '\n' : ''}END\n`);
+          } else {
+            const peer = [...group].find(peer => members.get(peer)?.id === target && !members.get(peer)?.host && !peer.destroyed);
+            if (!peer) { socket.end('NO\n'); return; }
+            peer.destroy();socket.end('OK\n');
+          }
+          return;
+        }
         const management = /^SCUM(CREATE|ROTATE|DELETE)1 ([a-f0-9]{32}) ([a-f0-9]{64}) ([a-f0-9]{64})$/.exec(hello);
         if (management) {
           try {
@@ -119,12 +141,18 @@ export function createRelay(options: tls.TlsOptions, budget: {take(bytes: number
           return;
         }
         const persistent = /^SCUMGROUP1 ([a-f0-9]{32}) ([a-f0-9]{64})$/.exec(hello);
+        const memberJoin = /^SCUMGROUP2 ([a-f0-9]{32}) ([a-f0-9]{64}) ([a-f0-9]{64}) ([A-Za-z0-9+/=]{64,512})(?: ([a-f0-9]{64}))?$/.exec(hello);
         const legacy = /^SCUMRELAY1 ([a-f0-9]{64})$/.exec(hello);
-        if (persistent && registry?.allows(persistent[1], persistent[2])) room = persistent[1] + ':' + persistent[2];
+        if (memberJoin && registry?.allows(memberJoin[1], memberJoin[2]) && (memberJoin[5] === undefined || registry.owns(memberJoin[1], memberJoin[2], memberJoin[5]))) {
+          room = memberJoin[1] + ':' + memberJoin[2];members.set(socket, {id: memberJoin[3], label: memberJoin[4], host: memberJoin[5] !== undefined});
+        }
+        else if (persistent && registry?.allows(persistent[1], persistent[2])) room = persistent[1] + ':' + persistent[2];
         else if (legacy && !registry) room = legacy[1]; // Synthetic/legacy test server only.
         else { socket.destroy(); return; }
         const group = rooms.get(room) ?? new Set<tls.TLSSocket>();
         if (group.size >= 9 || (!rooms.has(room) && rooms.size >= 32)) { socket.destroy(); return; }
+        if (!members.has(socket)) members.set(socket, {id: randomBytes(32).toString('hex'),label: '-',host: false});
+        if ([...group].some(peer => members.get(peer)?.id === members.get(socket)?.id)) { socket.destroy(); return; }
         group.add(socket); rooms.set(room, group); buffer = buffer.subarray(end + 1);
         if (!spend(128)) { socket.destroy(); return; }
         socket.write('OK\n');

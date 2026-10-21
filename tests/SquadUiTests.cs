@@ -111,13 +111,13 @@ class SquadUiTests {
         Func<bool,byte[]> poiPixels=culled=> { var visual=new DrawingVisual();using(var dc=visual.RenderOpen()) { dc.PushClip(new RectangleGeometry(new Rect(0,0,width,height)));if(culled)Call(map,"DrawRetainedPois",dc,side,left,top,width,height);else { dc.PushTransform(new TranslateTransform(left,top));dc.PushTransform(new ScaleTransform(scale,scale));foreach(var tile in tiles)dc.DrawDrawing((DrawingGroup)Get(tile,"Drawing"));dc.Pop();dc.Pop(); }dc.Pop(); }var bitmap=new RenderTargetBitmap((int)width,(int)height,96,96,PixelFormats.Pbgra32);bitmap.Render(visual);var pixels=new byte[(int)width*(int)height*4];bitmap.CopyPixels(pixels,(int)width*4,0);return pixels; };
         Check(poiPixels(true).SequenceEqual(poiPixels(false)),"Visible POI pixels match the complete drawing with no missing edge icons");
         Check(object.Equals(revision,Get(engine,"wpfZoneRevision"))&&object.ReferenceEquals(options,Get(engine,"cachedZoneOptions"))&&object.ReferenceEquals(anchors,Get(engine,"cachedLocationAnchors")),"Panning preserves zone controls and location caches");
-        Check(slider.IsEnabled,"Opacity stays adjustable while zoomed in");slider.Value=35;Pump();Call(runtime,"Refresh");
-        Check((int)Get(Get(map,"State"),"Opacity")==35&&(int)Get(engine,"fullMapOpacity")==35&&((TextBlock)Get(runtime,"tacticalOpacityValue")).Text=="35%","Zoomed opacity updates the actual terrain state, saved preference and percentage together");
+        Check(!slider.IsEnabled,"Opacity is locked while zoomed in");slider.Value=35;Pump();Call(runtime,"Refresh");
+        Check((int)Get(Get(map,"State"),"Opacity")==100&&slider.Value==100&&((TextBlock)Get(runtime,"tacticalOpacityValue")).Text=="100%","Zoomed opacity rejects manual changes and keeps the actual terrain and percentage at 100%");
         var zoom=(Action<int>)Get(map,"ZoomRequested");zoom(-1);zoom(1);Pump();
-        Check((int)Get(Get(map,"State"),"Opacity")==35&&slider.IsEnabled,"Zooming preserves the player's selected transparency");
+        Check((int)Get(Get(map,"State"),"Opacity")==100&&!slider.IsEnabled,"Zooming retains the automatic opaque terrain lock");
         Check(object.Equals(revision,Get(engine,"wpfZoneRevision")),"Zoom and opacity changes preserve unrelated zone caches");
         Await(()=>RenderOptions.GetBitmapScalingMode(map)==BitmapScalingMode.Unspecified);Check(true,"Smooth bitmap sampling returns after camera interaction settles");
-        bool wasDiagnostic=(bool)Get(engine,"diagnosticMode");try {Set(engine,"diagnosticMode",false);Call(engine,"WpfSave");Set(engine,"fullMapOpacity",99);Set(engine,"wpfTacticalOpacityOverride",false);Call(engine,"LoadSettings");Check((int)Get(Call(engine,"WpfSnapshot",true),"Opacity")==35&&(bool)Get(engine,"wpfTacticalOpacityOverride"),"Explicit zoomed transparency survives saving and reloading the isolated profile");}finally {Set(engine,"diagnosticMode",wasDiagnostic);}
+        bool wasDiagnostic=(bool)Get(engine,"diagnosticMode");try {Set(engine,"diagnosticMode",false);Call(engine,"WpfSave");File.AppendAllText((string)Get(engine,"settingsPath"),"\nWpfTacticalOpacityOverride=True\nFullMapOpacity=35\n");Call(engine,"LoadSettings");bool zoomed=(int)Get(Call(engine,"WpfSnapshot",true),"Opacity")==100;Set(engine,"fullMapZoom",1f);Check(zoomed&&(int)Get(Call(engine,"WpfSnapshot",true),"Opacity")==0,"Saved legacy overrides cannot bypass the 100% zoomed and 0% overview policy");Set(engine,"fullMapZoom",8f);Call(runtime,"Refresh");}finally {Set(engine,"diagnosticMode",wasDiagnostic);}
         Capture(window,Path.Combine(folder,"zoomed-opacity.png"));
     }
     static void CheckSquadIntegration(object runtime,string folder) {
@@ -512,11 +512,11 @@ class SquadUiTests {
             var guideSettings=(Window)Call(runtime,"BuildSettings",0);guideSettings.ContentRendered+=(s,e)=>Children(guideSettings).OfType<Button>().Single(b=>b.Tag as string=="first-time-guide").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Call(runtime,"Modal",guideSettings);Pump();var switchingGuide=(Window)Get(runtime,"setupWindow");
             Check(!guideSettings.IsVisible&&switchingGuide!=null&&switchingGuide.IsEnabled,"Actual Settings guide button closes its modal parent before showing interactive setup");
-            Check(switchingGuide.IsVisible&&!switchingGuide.Topmost&&switchingGuide.Owner==null&&switchingGuide.ShowInTaskbar&&switchingGuide.WindowStyle==WindowStyle.SingleBorderWindow,"Setup opens modeless with normal taskbar/minimize controls and no topmost map owner");
+            Check(switchingGuide.IsVisible&&switchingGuide.Topmost&&switchingGuide.Owner==null&&switchingGuide.ShowInTaskbar&&switchingGuide.WindowStyle==WindowStyle.SingleBorderWindow,"Setup opens above the game while retaining modeless taskbar/minimize controls and no map owner");
             var rememberedTick=Children(switchingGuide).OfType<CheckBox>().Single(c=>c.Tag as string=="guide-read-0");rememberedTick.IsChecked=true;rememberedTick.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             double movedGuideLeft=switchingGuide.Left+40,movedGuideTop=switchingGuide.Top+30;switchingGuide.Left=movedGuideLeft;switchingGuide.Top=movedGuideTop;switchingGuide.WindowState=WindowState.Minimized;
             Call(runtime,"SetSetupInputFocus",true);Check((bool)Get(engine,"panelOpening"),"Focused setup protects its own controls from game shortcuts");
-            Call(runtime,"SetSetupInputFocus",false);Check(!(bool)Get(engine,"panelOpening")&&!(bool)Get(engine,"shortcutCaptureOpen")&&switchingGuide.IsVisible,"Switching away leaves setup open and releases game input and coordinate tracking");
+            Call(runtime,"SetSetupInputFocus",false);Check(!switchingGuide.Topmost&&!(bool)Get(engine,"panelOpening")&&!(bool)Get(engine,"shortcutCaptureOpen")&&switchingGuide.IsVisible,"Switching away leaves setup open and releases topmost status, game input and coordinate tracking");
             Call(runtime,"ShowSetupWindow",false);Check(Object.ReferenceEquals(switchingGuide,Get(runtime,"setupWindow"))&&rememberedTick.IsChecked==true,"Returning to setup reuses the same window and keeps checklist progress");
             Check(switchingGuide.WindowState==WindowState.Normal&&switchingGuide.Left==movedGuideLeft&&switchingGuide.Top==movedGuideTop,"Setup can be moved aside, minimized and restored without resetting its position");
             string beforeSetupVersion=(string)Get(engine,"wpfOnboardingVersion");
@@ -607,6 +607,7 @@ class SquadUiTests {
             groups=(Window)Call(runtime,"BuildRelayGroups");try {
                 var groupButtons=Children(groups).OfType<Button>().ToArray();
                 Check(groupButtons.Count(b=>(b.Tag as string??"").StartsWith("group-delete:"))==1&&groupButtons.Any(b=>(string)b.Tag=="group-delete:"+new string('a',32)),"Only group creators receive the Delete group control");
+                Check(groupButtons.Count(b=>(b.Tag as string??"").StartsWith("group-members:"))==1&&groupButtons.Any(b=>(string)b.Tag=="group-members:"+new string('a',32)),"Only the host receives Manage members for its own group");
                 Check(!groupButtons.Any(b=>(b.Content as string??"").Contains(" / ")),"Private groups no longer expose the direct IP Host/Join button");
             }finally { groups.Close();memberships.Clear(); }
             var tactical=(Window)Get(runtime,"tactical");Call(runtime,"ToggleTactical",false);tactical.Left=-32000;tactical.Top=-32000;Check(tactical.IsVisible&&(bool)Get(engine,"fullMapActive"),"Opening map synchronizes visible window and engine flag");

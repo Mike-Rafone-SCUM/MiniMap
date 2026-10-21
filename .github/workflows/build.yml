@@ -25,6 +25,9 @@ jobs:
       - name: Verify viewport streaming against the packaged executable
         shell: powershell
         run: .\tests\Test-MapStreaming.ps1 -Executable release/ci/SkynettMiniMap.exe -OutputDirectory release/streaming-checks
+      - name: Verify locked opacity and setup window ordering
+        shell: powershell
+        run: .\tests\Test-OpacitySetup.ps1 -Executable release/ci/SkynettMiniMap.exe -OutputDirectory release/opacity-setup-checks
       - uses: actions/upload-artifact@v7.0.1
         with:
           name: MiniMap-validated-package

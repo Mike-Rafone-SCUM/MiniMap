@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.3.19] — 2026-10-21
+
+- Add a host-only Manage members window with a live list and individual Disconnect controls. Disconnect ends only that connection; the member can rejoin with the same code and other members stay connected. Member names remain encrypted to the relay; older clients appear with a temporary connection identifier.
+- Lock tactical terrain to 0% at full overview and 100% at any zoom above 1×. Ignore legacy manual-opacity overrides and prevent saved presets or the toolbar from bypassing the rule.
+- Raise and focus the setup guide above an already-running game when opening or restoring it. Keep its normal taskbar and minimize controls, and release its topmost state and input protection when switching away.
+
 ## [2.3.18] — 2026-10-21
 
 - Stream tactical POI graphics for visible map cells in cancellable background batches, with bounded tile and pixel caches.

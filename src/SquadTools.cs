@@ -18,7 +18,7 @@ namespace ScumMiniMap {
             if(scumMap!=null) { scumMap.MasterEnabled=p.Poi;scumMap.ApplyDisabledCategoriesString(p.Categories); }
             disabledZoneLayers.Clear();foreach(string s in p.ZoneLayers.Split(';').Where(s=>s.Length>0))disabledZoneLayers.Add(s);
             disabledWpfZones.Clear();foreach(string s in p.Zones.Split(';').Where(s=>s.Length>0))disabledWpfZones.Add(s);
-            fullMapOpacity=p.TacticalOpacity;wpfTacticalOpacityOverride=true;fullMapZoom=Math.Max(1,Math.Min(maxZoom,p.TacticalZoom));wpfRotateMap=p.Rotate;wpfPoiClustering=p.Cluster;mapOpacity=p.Opacity;autoZoom=false;zoom=targetZoom=Math.Max(1,Math.Min(maxZoom,p.Zoom));SettingsChanged();SaveSettings();WpfRebuildSettings();return true;
+            fullMapOpacity=p.TacticalOpacity;fullMapZoom=Math.Max(1,Math.Min(maxZoom,p.TacticalZoom));wpfRotateMap=p.Rotate;wpfPoiClustering=p.Cluster;mapOpacity=p.Opacity;autoZoom=false;zoom=targetZoom=Math.Max(1,Math.Min(maxZoom,p.Zoom));SettingsChanged();SaveSettings();WpfRebuildSettings();return true;
         }
     }
     internal sealed partial class WpfFieldConsoleRuntime {

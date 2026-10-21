@@ -1019,7 +1019,7 @@ namespace ScumMiniMap {
             SyncCameraControls(tacticalMap.State);tacticalMap.RequestRedraw();
         }
         void SyncCameraControls(WpfMapState state) {
-            syncingOpacity=true;try { tacticalOpacity.Value=state.Opacity;tacticalOpacity.IsEnabled=true;tacticalOpacityValue.Text=state.Opacity.ToString("0",CultureInfo.CurrentCulture)+"%"; }finally { syncingOpacity=false; }
+            syncingOpacity=true;try { tacticalOpacity.Value=state.Opacity;tacticalOpacity.IsEnabled=false;tacticalOpacityValue.Text=state.Opacity.ToString("0",CultureInfo.CurrentCulture)+"%"; }finally { syncingOpacity=false; }
             if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.Amber:WpfFieldTheme.Panel;
             if(zoomResetButton!=null)zoomResetButton.Content=state.Zoom.ToString("0.0",CultureInfo.CurrentCulture)+"×";
         }
@@ -1046,7 +1046,7 @@ namespace ScumMiniMap {
         Window setupWindow;
         bool setupHasFocus;
         void SyncModalInput() { engine.WpfModal(dialogs.Count>0||(setupWindow!=null&&setupHasFocus)); }
-        void SetSetupInputFocus(bool focused) { setupHasFocus=focused;SyncModalInput();RefreshInputOwnership(); }
+        void SetSetupInputFocus(bool focused) { setupHasFocus=focused;if(setupWindow!=null)setupWindow.Topmost=focused;SyncModalInput();RefreshInputOwnership(); }
         void RefreshInputOwnership() {
             application.Dispatcher.VerifyAccess();
             System.Threading.Interlocked.Exchange(ref inputTacticalHandle,tactical==null?IntPtr.Zero:new WindowInteropHelper(tactical).Handle);
@@ -1285,7 +1285,7 @@ namespace ScumMiniMap {
             ((FrameworkElement)controls.Children[controls.Children.Count-1]).Tag="text:OpacityLabel";opacity.Tag="tooltip:MapOpacity";
             opacity.SmallChange=1;opacity.LargeChange=10;opacity.IsSnapToTickEnabled=true;opacity.TickFrequency=1;
             opacity.IsMoveToPointEnabled=true;
-            opacity.ValueChanged+=(s,e)=> { if(syncingOpacity)return;engine.WpfTacticalOpacity((int)opacity.Value);RefreshCamera(); };controls.Children.Add(opacity);
+            opacity.IsEnabled=false;opacity.ValueChanged+=(s,e)=> { if(!syncingOpacity)SyncCameraControls(engine.WpfSnapshot(true)); };controls.Children.Add(opacity);
             tacticalOpacityValue=WpfFieldTheme.Text(opacity.Value.ToString("0",CultureInfo.CurrentCulture)+"%",14,WpfFieldTheme.Muted);tacticalOpacityValue.Tag="map-opacity-value";tacticalOpacityValue.MinWidth=42;tacticalOpacityValue.Margin=new Thickness(8,0,0,0);controls.Children.Add(tacticalOpacityValue);
             foreach(var button in controls.Children.OfType<Button>()) { button.MinHeight=32;button.Padding=new Thickness(10,5,10,5);button.FontSize=14; }
             var toolbar=new DockPanel();var move=new Thumb { Width=18,Margin=new Thickness(0,0,4,0),Cursor=Cursors.SizeAll,Tag="tooltip:WpfMoveControls" };DockPanel.SetDock(move,Dock.Left);toolbar.Children.Add(move);
@@ -1486,7 +1486,7 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
         }
         void Modal(Window window) {
             // A dialog opened from the HUD has no topmost tactical owner to keep it above SCUM.
-            window.Topmost=setupWindow==null;window.ShowActivated=!diagnostic;
+            window.Topmost=true;window.ShowActivated=!diagnostic;
             if(diagnostic) { window.WindowStartupLocation=WindowStartupLocation.Manual;window.Left=-32000;window.Top=-32000; }
             if(dialogs.Count>0)window.Owner=dialogs[dialogs.Count-1];else if(setupWindow!=null)window.Owner=setupWindow;else if(tactical.IsVisible)window.Owner=tactical;
             if(window.Owner!=null&&!diagnostic&&window.WindowStartupLocation!=WindowStartupLocation.Manual)window.WindowStartupLocation=WindowStartupLocation.CenterOwner;
@@ -1577,6 +1577,7 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
                     });connect.Tag="group-toggle:"+group.Id;connect.IsEnabled=group.Pending!="DELETE";buttons.Children.Add(connect);
                     var copy=WpfFieldTheme.Button(Localization.Get("PrivateGroupCopy"),()=> { code.Password=group.Code;try { System.Windows.Clipboard.SetText(group.Code); }catch { } });copy.IsEnabled=group.Pending=="";buttons.Children.Add(copy);
                     if(group.IsOwner) {
+                        var manage=WpfFieldTheme.Button(Localization.Get("GroupManageMembers"),()=>Modal(BuildGroupMembers(captured)));manage.Tag="group-members:"+group.Id;manage.IsEnabled=group.Pending=="";buttons.Children.Add(manage);
                         var rotate=WpfFieldTheme.Button(Localization.Get("PrivateGroupRotate"),()=>run(()=> { relayGroups.Rotate(captured);return captured; },true));rotate.Tag="group-rotate:"+group.Id;rotate.IsEnabled=group.Pending!="DELETE";buttons.Children.Add(rotate);
                         var delete=WpfFieldTheme.Button(Localization.Get("PrivateGroupDelete"),()=> {
                             if(MessageBox.Show(window,Localization.T("PrivateGroupDeleteConfirm",group.Label),Localization.Get("PrivateGroupDelete"),MessageBoxButton.YesNo,MessageBoxImage.Warning,MessageBoxResult.No)!=MessageBoxResult.Yes)return;
@@ -1590,6 +1591,30 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
             var timer=new DispatcherTimer { Interval=TimeSpan.FromSeconds(1) };timer.Tick+=(s,e)=> { if(!busy)foreach(var label in ChildrenOf<TextBlock>(rows).Where(t=>(t.Tag as string??"").StartsWith("group-state:"))) {
                 string id=((string)label.Tag).Substring(12);var group=relayGroups.GroupViews.FirstOrDefault(g=>g.Id==id);if(group!=null)label.Text=group.Pending!=""||group.Session!=null&&group.Session.Error!=null?Localization.Get("PrivatePositionInvalid"):group.Session==null?Localization.Get("PrivateGroupLeave"):group.Session.Ready?Localization.Get("PlayerConnected")+" · "+group.Session.Connections:Localization.Get("PrivatePositionConnecting");
             } if(!busy)foreach(var title in ChildrenOf<TextBlock>(rows).Where(t=>(t.Tag as string??"" ).StartsWith("group-title:"))) { var group=relayGroups.GroupViews.FirstOrDefault(g=>g.Id==((string)title.Tag).Substring(12));if(group!=null)title.Text=group.Label+(group.IsOwner?" · "+Localization.Get("PrivateGroupOwner"):""); }if(relayGroups.PersistenceError!=null)status.Text=Localization.Get("PrivatePositionInvalid"); };timer.Start();window.Closed+=(s,e)=> { closed=true;timer.Stop();code.Clear(); };window.ContentRendered+=(s,e)=>code.Focus();window.Content=new ScrollViewer { Content=body,VerticalScrollBarVisibility=ScrollBarVisibility.Auto };return window;
+        }
+        Window BuildGroupMembers(RelayMembership group) {
+            var window=Window(Localization.Get("GroupManageMembers")+" · "+group.Label,620,580);window.Tag="group-members";
+            var body=new StackPanel { Margin=new Thickness(24) };var heading=WpfFieldTheme.Text(window.Title,23,null,true);heading.TextWrapping=TextWrapping.Wrap;heading.TextTrimming=TextTrimming.None;body.Children.Add(heading);body.Children.Add(SquadHelp("GroupMembersHelp"));
+            var rows=new StackPanel();var status=WpfFieldTheme.Text("",13,WpfFieldTheme.Amber);status.TextWrapping=TextWrapping.Wrap;body.Children.Add(status);body.Children.Add(rows);
+            bool busy=false,closed=false;Action<string> refresh=null;
+            refresh=target=> {
+                if(busy||closed)return;busy=true;rows.IsEnabled=false;
+                System.Threading.Tasks.Task.Run(()=> { if(target!=null)relayGroups.DisconnectMember(group,target);return relayGroups.ReadMembers(group); }).ContinueWith(task=> {
+                    if(task.IsFaulted)task.Exception.Handle(error=>true);PostUi(()=> {
+                        busy=false;if(closed)return;rows.IsEnabled=true;
+                        if(task.Status!=System.Threading.Tasks.TaskStatus.RanToCompletion) { status.Text=Localization.Get("GroupMembersFailed");return; }
+                        status.Text="";rows.Children.Clear();
+                        if(task.Result.Items.Length==0)rows.Children.Add(WpfFieldTheme.Text(Localization.Get("GroupMembersEmpty"),14,WpfFieldTheme.Muted));
+                        foreach(var member in task.Result.Items.OrderByDescending(m=>m.IsOwner).ThenBy(m=>m.Name,StringComparer.CurrentCultureIgnoreCase)) {
+                            var captured=member;var row=new DockPanel { Margin=new Thickness(0,4,0,4) };
+                            if(!member.IsOwner) { var disconnect=WpfFieldTheme.Button(Localization.Get("GroupDisconnect"),()=>refresh(captured.Id));disconnect.Tag="group-disconnect:"+member.Id;DockPanel.SetDock(disconnect,Dock.Right);row.Children.Add(disconnect); }
+                            var label=WpfFieldTheme.Text(member.Name+(member.IsOwner?" · "+Localization.Get("PrivateGroupOwner"):""),15);label.TextWrapping=TextWrapping.Wrap;label.TextTrimming=TextTrimming.None;row.Children.Add(label);rows.Children.Add(row);
+                        }
+                    });
+                });
+            };
+            var done=WpfFieldTheme.Button(Localization.Get("Done"),()=>window.Close());var layout=new DockPanel();DockPanel.SetDock(done,Dock.Bottom);layout.Children.Add(done);layout.Children.Add(new ScrollViewer { Content=body,VerticalScrollBarVisibility=ScrollBarVisibility.Auto });window.Content=layout;
+            var timer=new DispatcherTimer { Interval=TimeSpan.FromSeconds(3) };timer.Tick+=(s,e)=>refresh(null);window.Loaded+=(s,e)=> { refresh(null);timer.Start(); };window.Closed+=(s,e)=> { closed=true;timer.Stop(); };return window;
         }
         static IEnumerable<T> ChildrenOf<T>(DependencyObject root) where T:DependencyObject {
             for(int i=0;i<VisualTreeHelper.GetChildrenCount(root);i++) { var child=VisualTreeHelper.GetChild(root,i);var item=child as T;if(item!=null)yield return item;foreach(var nested in ChildrenOf<T>(child))yield return nested; }
@@ -1867,14 +1892,16 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
         }
         void ShowSetupWindow(bool detailed) {
             if(disposed)return;
-            if(setupWindow!=null) {setupWindow.WindowState=WindowState.Normal;setupWindow.Show();if(!diagnostic)setupWindow.Activate();return;}
+            if(setupWindow!=null) {setupWindow.WindowState=WindowState.Normal;setupWindow.Topmost=true;setupWindow.Show();FocusInteractive(setupWindow);return;}
             if(tactical.IsVisible) {tactical.Hide();engine.WpfTactical(false);}
             // Automatic setup and Settings use one complete flow: the checklist
             // leads into appearance, map layers, tracking and sharing settings.
             var window=BuildOnboarding(0);setupWindow=window;
-            window.Topmost=false;window.Owner=null;window.ShowInTaskbar=true;window.WindowStyle=WindowStyle.SingleBorderWindow;window.ResizeMode=ResizeMode.CanResize;window.ShowActivated=!diagnostic;
+            window.Topmost=true;window.Owner=null;window.ShowInTaskbar=true;window.WindowStyle=WindowStyle.SingleBorderWindow;window.ResizeMode=ResizeMode.CanResize;window.ShowActivated=!diagnostic;
             if(diagnostic) {window.WindowStartupLocation=WindowStartupLocation.Manual;window.Left=-32000;window.Top=-32000;}
             window.Activated+=(s,e)=>SetSetupInputFocus(true);window.Deactivated+=(s,e)=>SetSetupInputFocus(false);
+            window.Loaded+=(s,e)=>FocusInteractive(window);
+            window.ContentRendered+=(s,e)=>FocusInteractive(window);
             window.Closed+=(s,e)=> {setupWindow=null;setupHasFocus=false;SyncModalInput();RefreshInputOwnership();engine.WpfSave();if(!disposed)Refresh();};
             window.Show();RefreshInputOwnership();
         }

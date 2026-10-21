@@ -192,7 +192,7 @@ namespace ScumMiniMap {
         internal const int RelayPort=47832;
         internal const string RelayCertificate="53678a99647bc63a5f86791cff101a420a680a9dc22b7dfd0440b983a47f8099";
         internal bool Relay { get;private set; }
-        readonly string relayCertificate,relayGroup;
+        readonly string relayCertificate,relayGroup,memberToken,ownerToken;
         internal static string RelayRoom(byte[] secret) {
             using(var mac=new HMACSHA256(secret))return BitConverter.ToString(mac.ComputeHash(Encoding.UTF8.GetBytes("SCUM MiniMap opaque relay room v1"))).Replace("-","").ToLowerInvariant();
         }
@@ -204,7 +204,8 @@ namespace ScumMiniMap {
         internal int Connections { get { lock(gate)return host?links.Count(link=>link.Id!=null):Relay?(ready?publications.Values.Count(p=>p.Id!=id&&PrivatePositions.Fresh(p.Seen,clock())):0):(ready?links.Count:0); } }
         internal DirectPositions(bool host,string address,int port,string secret,string name,bool configureRouter=false,Func<DateTime> clock=null):this(host,address,port,secret,name,configureRouter,clock,false,null) {}
         internal DirectPositions(bool host,string address,int port,string secret,string name,bool configureRouter,Func<DateTime> clock,bool relay,string certificate=null):this(host,address,port,secret,name,configureRouter,clock,relay,certificate,null) {}
-        internal DirectPositions(bool host,string address,int port,string secret,string name,bool configureRouter,Func<DateTime> clock,bool relay,string certificate,string group,string colorSeed=null) {
+        internal DirectPositions(bool host,string address,int port,string secret,string name,bool configureRouter,Func<DateTime> clock,bool relay,string certificate,string group,string colorSeed=null,string memberToken=null,string ownerToken=null) {
+            if(memberToken!=null&&(memberToken.Length!=64||!memberToken.All(Uri.IsHexDigit)))throw new ArgumentException();this.memberToken=memberToken;this.ownerToken=ownerToken;
             if(colorSeed!=null) {
                 if(colorSeed.Length!=8||!colorSeed.All(Uri.IsHexDigit))throw new ArgumentException("Invalid member color seed");
                 // Retain a stable color prefix and fresh replay identity per connection.
@@ -243,7 +244,8 @@ namespace ScumMiniMap {
                         if(cert==null)return false;using(var sha=SHA256.Create())return string.Equals(BitConverter.ToString(sha.ComputeHash(cert.GetRawCertData())).Replace("-",""),relayCertificate,StringComparison.OrdinalIgnoreCase);
                     });
                     secure.AuthenticateAsClient("minimap-relay",null,System.Security.Authentication.SslProtocols.Tls12,false);
-                    byte[] hello=Encoding.ASCII.GetBytes(relayGroup==null?"SCUMRELAY1 "+RelayRoom(key)+"\n":"SCUMGROUP1 "+relayGroup+" "+RelayRoom(key)+"\n");secure.Write(hello,0,hello.Length);
+                    string line=relayGroup==null?"SCUMRELAY1 "+RelayRoom(key):memberToken==null?"SCUMGROUP1 "+relayGroup+" "+RelayRoom(key):"SCUMGROUP2 "+relayGroup+" "+RelayRoom(key)+" "+memberToken+" "+Convert.ToBase64String(PrivatePositions.Seal(key,"member-name-v1:"+name))+(string.IsNullOrEmpty(ownerToken)?"":" "+ownerToken);
+                    byte[] hello=Encoding.ASCII.GetBytes(line+"\n");secure.Write(hello,0,hello.Length);Array.Clear(hello,0,hello.Length);
                     byte[] reply=new byte[3];ReadExact(secure,reply);if(Encoding.ASCII.GetString(reply)!="OK\n")throw new InvalidDataException();stream=secure;
                 }
                 lock(gate) { if(stopped) { stream.Dispose();client.Close();return; }Attach(client,stream);if(Relay)ready=true; }

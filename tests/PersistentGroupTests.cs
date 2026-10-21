@@ -20,6 +20,15 @@ class PersistentGroupTests {
             using(var badPin=new DirectPositions(false,address,port,first.Key,"Synthetic bad pin",false,null,true,new string('0',64),first.Id))Await(()=>badPin.Error!=null&&!badPin.Ready,"Incorrect relay certificate pin fails closed");
             var joinedFirst=member.Join(old);var joinedSecond=member.Join(second.Code);
             Await(()=>owner.Sessions.All(s=>s.Ready)&&member.Sessions.All(s=>s.Ready),"One player joins two persistent groups at once over pinned TLS");
+            var roster=owner.ReadMembers(first);Check(roster.Items.Length==2&&roster.Items.Single(m=>m.IsOwner).Name=="Synthetic owner"&&roster.Items.Single(m=>!m.IsOwner).Name=="Synthetic member","Host reads decrypted names and owner status from its own live member list");
+            bool cannotManage=false;try { member.ReadMembers(joinedFirst); }catch(InvalidOperationException) { cannotManage=true; }Check(cannotManage,"A joining member cannot access host member management");
+            string disconnected=roster.Items.Single(m=>!m.IsOwner).Id;owner.DisconnectMember(first,disconnected);
+            Await(()=>!joinedFirst.Session.Ready&&joinedFirst.Session.Error!=null,"Host disconnects the selected member's current connection");
+            Check(joinedSecond.Session.Ready&&first.Session.Ready&&second.Session.Ready,"Disconnecting one member preserves the owner and other groups");
+            Check(owner.ReadMembers(first).Items.Length==1,"Disconnected member disappears from the host list");
+            member.Connect(joinedFirst);Await(()=>joinedFirst.Session.Ready,"Disconnected member can reconnect using the same saved code");
+            Check(owner.ReadMembers(first).Items.Single(m=>!m.IsOwner).Id!=disconnected,"Reconnected member receives a fresh connection identifier");
+            bool selfDenied=false;try { owner.DisconnectMember(first,owner.ReadMembers(first).Items.Single(m=>m.IsOwner).Id); }catch(IOException) { selfDenied=true; }Check(selfDenied&&first.Session.Ready,"Host cannot disconnect its own protected owner connection");
             foreach(var session in owner.Sessions) { session.Update(new Position { X=100,Y=200,Yaw=90 },DateTime.UtcNow);session.UpdateMarkers(owner.MarkersFor(session,new[]{new SharedMapMarker { Id=new string('A',64),Name="Synthetic group marker",X=.2,Y=.3 }})); }
             Await(()=>member.Roster(true).Length==2&&member.Markers().Length==2,"Multiple groups deliver positions and markers without mixing identities");
             member.SynchronizeNames();Check(joinedFirst.Name=="Bunker crew"&&joinedSecond.Name=="Trader run","Encrypted group names reach each joined group independently");

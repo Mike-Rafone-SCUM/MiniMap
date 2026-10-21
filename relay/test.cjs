@@ -93,3 +93,34 @@ test('registered TLS groups disconnect old-code members on owner rotation', {ski
     await connect(`SCUMRELAY1 ${room}`,false);
   }finally{for(const client of clients)client.destroy();await new Promise(resolve=>server.close(resolve));fs.rmSync(dir,{recursive:true});}
 });
+
+test('host disconnect is authenticated, scoped and permits rejoining', {skip:!process.env.TEST_KEY,timeout:20000},async()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'minimap-member-test-')),file=path.join(dir,'groups.json');
+  fs.writeFileSync(file,JSON.stringify({version:1,groups:{}}));const registry=new GroupRegistry(file);
+  const server=createRelay({key:fs.readFileSync(process.env.TEST_KEY),cert:fs.readFileSync(process.env.TEST_CERT)},{take:()=>true},registry);
+  const clients=[];
+  const connect=async(line,reply=true)=>{
+    const socket=tls.connect({host:'127.0.0.1',port:server.address().port,rejectUnauthorized:false});clients.push(socket);socket.on('error',()=>{});await once(socket,'secureConnect');
+    const result=once(socket,reply?'data':'close');socket.write(line+'\n');return [socket,await result];
+  };
+  try {
+    server.listen(0,'127.0.0.1');await once(server,'listening');
+    const id='a'.repeat(32),room='b'.repeat(64),owner='c'.repeat(64),hostId='d'.repeat(64),memberId='e'.repeat(64),label=Buffer.alloc(80,77).toString('base64');
+    await connect(`SCUMCREATE1 ${id} ${room} ${owner}`);
+    const before=fs.readFileSync(file,'utf8');
+    const [host]=await connect(`SCUMGROUP2 ${id} ${room} ${hostId} ${label} ${owner}`);
+    const [member]=await connect(`SCUMGROUP2 ${id} ${room} ${memberId} ${label}`);
+    const [,list]=await connect(`SCUMMEMBERS2 LIST ${id} ${room} ${owner} ${hostId}`);
+    assert.equal(list[0].toString(),`OK\n${hostId} 1 ${label}\n${memberId} 0 ${label}\nEND\n`);
+    await connect(`SCUMMEMBERS2 KICK ${id} ${room} ${hostId} ${memberId}`,false);assert.equal(member.destroyed,false);
+    const [,self]=await connect(`SCUMMEMBERS2 KICK ${id} ${room} ${owner} ${hostId}`);assert.equal(self[0].toString(),'NO\n');assert.equal(host.destroyed,false);
+    const otherId='1'.repeat(32);await connect(`SCUMCREATE1 ${otherId} ${room} ${owner}`);
+    const [other]=await connect(`SCUMGROUP2 ${otherId} ${room} ${memberId} ${label}`);
+    const closed=once(member,'close');const [,ack]=await connect(`SCUMMEMBERS2 KICK ${id} ${room} ${owner} ${memberId}`);assert.equal(ack[0].toString(),'OK\n');await closed;
+    assert.equal(host.destroyed,false);assert.equal(other.destroyed,false);
+    const [rejoined,rejoinAck]=await connect(`SCUMGROUP2 ${id} ${room} ${memberId} ${label}`);assert.equal(rejoinAck[0].toString(),'OK\n');assert.equal(rejoined.destroyed,false);
+    const [,missing]=await connect(`SCUMMEMBERS2 KICK ${id} ${room} ${owner} ${'0'.repeat(64)}`);assert.equal(missing[0].toString(),'NO\n');
+    const state=JSON.parse(fs.readFileSync(file,'utf8'));assert.deepEqual(state.groups[id],JSON.parse(before).groups[id]);
+    assert.equal(fs.readFileSync(file,'utf8').includes(label),false);
+  }finally{for(const client of clients)client.destroy();await new Promise(resolve=>server.close(resolve));fs.rmSync(dir,{recursive:true});}
+});

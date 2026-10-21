@@ -106,7 +106,8 @@ namespace ScumMiniMap {
             if(group.Pending!="") { Complete(group);return; }
             lock(gate) {
                 if(disposed||!groups.Contains(group))throw new InvalidOperationException();if(group.Session!=null)group.Session.Dispose();
-                group.Session=new DirectPositions(false,address,port,group.Key,DisplayName,false,null,true,certificate,group.Id,MemberColorSeed);
+                string token=BitConverter.ToString(Convert.FromBase64String(PrivatePositions.NewKey())).Replace("-","").ToLowerInvariant();
+                group.Session=new DirectPositions(false,address,port,group.Key,DisplayName,false,null,true,certificate,group.Id,MemberColorSeed,token,group.Owner);
             }
             }
         }
@@ -170,6 +171,40 @@ namespace ScumMiniMap {
                 }
             }
         }
+        internal sealed class Member {
+            internal string Id,Name;internal bool IsOwner;
+        }
+        internal sealed class Members {
+            internal Member[] Items;
+        }
+        internal Members ReadMembers(RelayMembership group) { return MemberControl(group,"LIST",new string('0',64)); }
+        internal void DisconnectMember(RelayMembership group,string id) { MemberControl(group,"KICK",id); }
+        Members MemberControl(RelayMembership group,string action,string id) {
+            lock(operations) {
+                lock(gate)if(disposed||!groups.Contains(group)||!group.IsOwner||group.Pending!=""||id==null||id.Length!=64||!id.All(Uri.IsHexDigit))throw new InvalidOperationException();
+                using(var client=new System.Net.Sockets.TcpClient()) {
+                    if(!client.ConnectAsync(address,port).Wait(5000))throw new TimeoutException();client.ReceiveTimeout=client.SendTimeout=5000;
+                    using(var stream=new System.Net.Security.SslStream(client.GetStream(),false,(sender,cert,chain,errors)=> {
+                        if(cert==null)return false;using(var sha=SHA256.Create())return string.Equals(BitConverter.ToString(sha.ComputeHash(cert.GetRawCertData())).Replace("-",""),certificate,StringComparison.OrdinalIgnoreCase);
+                    })) {
+                        stream.AuthenticateAsClient("minimap-relay",null,System.Security.Authentication.SslProtocols.Tls12,false);
+                        byte[] request=Encoding.ASCII.GetBytes("SCUMMEMBERS2 "+action+" "+group.Id+" "+DirectPositions.RelayRoom(Convert.FromBase64String(group.Key))+" "+group.Owner+" "+id.ToLowerInvariant()+"\n");stream.Write(request,0,request.Length);Array.Clear(request,0,request.Length);
+                        string response=ReadLine(stream);
+                        if(action!="LIST") { if(response!="OK")throw new IOException();return null; }
+                        if(response!="OK")throw new IOException();var members=new List<Member>();
+                        while(true) {
+                            string row=ReadLine(stream);if(row=="END")break;if(members.Count>=9)throw new InvalidDataException();var parts=row.Split(' ');
+                            if(parts.Length!=3||parts[0].Length!=64||!parts[0].All(Uri.IsHexDigit)||(parts[1]!="0"&&parts[1]!="1"))throw new InvalidDataException();
+                            string label=Localization.Get("GroupOlderClient")+" · "+parts[0].Substring(0,8);
+                            if(parts[2]!="-")try { string decoded=PrivatePositions.Open(Convert.FromBase64String(group.Key),Convert.FromBase64String(parts[2]));if(!decoded.StartsWith("member-name-v1:",StringComparison.Ordinal))throw new InvalidDataException();decoded=decoded.Substring(15);ValidateName(decoded);label=decoded; }catch { label=Localization.Get("PrivateGroupSurvivor")+" · "+parts[0].Substring(0,8); }
+                            members.Add(new Member { Id=parts[0],Name=label,IsOwner=parts[1]=="1" });
+                        }
+                        return new Members { Items=members.ToArray() };
+                    }
+                }
+            }
+        }
+        static string ReadLine(Stream stream) { var text=new StringBuilder();for(int i=0;i<1024;i++) { int value=stream.ReadByte();if(value<0)throw new EndOfStreamException();if(value==10)return text.ToString();if(value<32||value>126)throw new InvalidDataException();text.Append((char)value); }throw new InvalidDataException(); }
         internal PrivatePositions.Peer[] Roster(bool positionsOnly=false) {
             lock(gate)return groups.Where(g=>g.Session!=null).SelectMany(g=>(positionsOnly?g.Session.Snapshot():g.Session.Roster()).Select(p=>new PrivatePositions.Peer { Id=g.Id+":"+p.Id,Name=p.Name+" · "+g.Label,Position=p.Position,Updated=p.Updated })).ToArray();
         }
