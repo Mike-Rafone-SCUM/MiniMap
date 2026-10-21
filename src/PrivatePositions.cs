@@ -196,6 +196,7 @@ namespace ScumMiniMap {
         internal static string RelayRoom(byte[] secret) {
             using(var mac=new HMACSHA256(secret))return BitConverter.ToString(mac.ComputeHash(Encoding.UTF8.GetBytes("SCUM MiniMap opaque relay room v1"))).Replace("-","").ToLowerInvariant();
         }
+        internal string LocalId { get { return id; } }
         internal string Name { get { return name; } }
         internal string Address { get;private set; }
         internal void SetShareAddress(string value) { if(host&&value!=null&&value.Length<=253)Address=value.Trim(); }
@@ -203,7 +204,12 @@ namespace ScumMiniMap {
         internal int Connections { get { lock(gate)return host?links.Count(link=>link.Id!=null):Relay?(ready?publications.Values.Count(p=>p.Id!=id&&PrivatePositions.Fresh(p.Seen,clock())):0):(ready?links.Count:0); } }
         internal DirectPositions(bool host,string address,int port,string secret,string name,bool configureRouter=false,Func<DateTime> clock=null):this(host,address,port,secret,name,configureRouter,clock,false,null) {}
         internal DirectPositions(bool host,string address,int port,string secret,string name,bool configureRouter,Func<DateTime> clock,bool relay,string certificate=null):this(host,address,port,secret,name,configureRouter,clock,relay,certificate,null) {}
-        internal DirectPositions(bool host,string address,int port,string secret,string name,bool configureRouter,Func<DateTime> clock,bool relay,string certificate,string group) {
+        internal DirectPositions(bool host,string address,int port,string secret,string name,bool configureRouter,Func<DateTime> clock,bool relay,string certificate,string group,string colorSeed=null) {
+            if(colorSeed!=null) {
+                if(colorSeed.Length!=8||!colorSeed.All(Uri.IsHexDigit))throw new ArgumentException("Invalid member color seed");
+                // Retain a stable color prefix and fresh replay identity per connection.
+                id=colorSeed.ToLowerInvariant()+Guid.NewGuid().ToString("N").Substring(8);
+            }
             if(host&&relay)throw new ArgumentException();Relay=relay;relayCertificate=certificate??RelayCertificate;
             if(group!=null&&(group.Length!=32||!group.All(Uri.IsHexDigit)))throw new ArgumentException();relayGroup=group;
             key=Convert.FromBase64String(secret.Trim());if(key.Length!=32)throw new ArgumentException();

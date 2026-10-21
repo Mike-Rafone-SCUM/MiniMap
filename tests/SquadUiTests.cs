@@ -21,6 +21,41 @@ class SquadUiTests {
     static void Capture(Window window,string path) { window.UpdateLayout();var image=new RenderTargetBitmap((int)window.ActualWidth,(int)window.ActualHeight,96,96,PixelFormats.Pbgra32);image.Render(window);var png=new PngBitmapEncoder();png.Frames.Add(BitmapFrame.Create(image));using(var file=File.Create(path))png.Save(file); }
     static IEnumerable<DependencyObject> Children(DependencyObject p) { foreach(object c in LogicalTreeHelper.GetChildren(p))if(c is DependencyObject) { yield return (DependencyObject)c;foreach(var d in Children((DependencyObject)c))yield return d; } }
     static void PressKey(UIElement target,Key key) { target.RaiseEvent(new KeyEventArgs(Keyboard.PrimaryDevice,PresentationSource.FromVisual(target),Environment.TickCount,key) { RoutedEvent=Keyboard.PreviewKeyDownEvent });Pump(); }
+    static IEnumerable<GeometryDrawing> GeometryDrawings(Drawing drawing) {
+        var geometry=drawing as GeometryDrawing;if(geometry!=null)yield return geometry;
+        var group=drawing as DrawingGroup;if(group!=null)foreach(var child in group.Children)foreach(var item in GeometryDrawings(child))yield return item;
+    }
+    static void CheckRouteAppearance(object runtime,string folder) {
+        var assembly=runtime.GetType().Assembly;var surfaceType=assembly.GetType("ScumMiniMap.WpfMapSurface");
+        var memberInk=surfaceType.GetMethod("MemberInk",BindingFlags.Static|BindingFlags.NonPublic);
+        Func<string,Color> color=id=>((SolidColorBrush)memberInk.Invoke(null,new object[]{id})).Color;
+        string alice="11111111111111111111111111111111",bob="22222222222222222222222222222222";
+        Check(color(alice)==color("group:"+alice)&&color(alice)==color("other-group:"+alice),"Member colors agree across viewers and group prefixes");
+        Check(color(alice)!=color(bob),"Different synthetic members have different assigned colors");
+        Check(color(alice)==color("11111111abcdef0123456789abcdef01"),"Fresh connection identities retain the member's assigned color");
+        var storeType=assembly.GetType("ScumMiniMap.RelayGroupStore");string profile=Path.Combine(folder,"color-profile");
+        Func<string,object> store=path=>Activator.CreateInstance(storeType,F,null,new object[]{path,"127.0.0.1",47832,null,null},null);
+        string seed;using(var first=(IDisposable)store(profile))seed=(string)Get(first,"MemberColorSeed");
+        using(var reloaded=(IDisposable)store(profile))Check((string)Get(reloaded,"MemberColorSeed")==seed,"Assigned member color survives a profile reload without connecting to a relay");
+        using(var other=(IDisposable)store(Path.Combine(folder,"other-color-profile")))Check((string)Get(other,"MemberColorSeed")!=seed,"Different profiles receive separate persistent member colors");
+        foreach(bool compact in new[]{false,true}) {
+            var state=Activator.CreateInstance(assembly.GetType("ScumMiniMap.WpfMapState"),true);
+            Set(state,"Saved",Array.CreateInstance(assembly.GetType("ScumMiniMap.MapZone"),0));Set(state,"Trail",new System.Drawing.PointF[0]);Set(state,"Pan",new System.Drawing.PointF(.5f,.5f));Set(state,"Zoom",1f);Set(state,"Shape","Square");Set(state,"LocalPeerId",alice);Set(state,"RouteColor",System.Drawing.Color.Lime.ToArgb());
+            var position=Activator.CreateInstance(assembly.GetType("ScumMiniMap.Position"));Set(position,"X",0d);Set(position,"Y",0d);Set(state,"Position",position);
+            var road=Activator.CreateInstance(assembly.GetType("ScumMiniMap.RoadRoute"));Set(road,"Success",true);Set(road,"Polyline",new[]{new System.Drawing.PointF(.2f,.4f),new System.Drawing.PointF(.8f,.4f)});Set(state,"Route",road);
+            var plan=Activator.CreateInstance(assembly.GetType("ScumMiniMap.SquadRoutePlan"),true);Set(plan,"Legs",new[]{new[]{new System.Drawing.PointF(.2f,.6f),new System.Drawing.PointF(.8f,.6f)},new[]{new System.Drawing.PointF(.2f,.7f),new System.Drawing.PointF(.8f,.7f)}});Set(plan,"Verified",new[]{true,false});
+            var routeType=assembly.GetType("ScumMiniMap.SquadRouteDrawing");var remote=Activator.CreateInstance(routeType,true);Set(remote,"Key","group:"+bob+":route");Set(remote,"Plan",plan);var routes=Array.CreateInstance(routeType,1);routes.SetValue(remote,0);Set(state,"OtherRoutePlans",routes);
+            var markerType=assembly.GetType("ScumMiniMap.SharedMapMarker");var stops=Array.CreateInstance(markerType,2);
+            for(int i=0;i<2;i++) { var stop=Activator.CreateInstance(markerType,true);Set(stop,"Id","53485244"+new string('a',32)+i.ToString("X2")+new string('b',22));Set(stop,"Name","Pending stop");Set(stop,"Owner","Bob");Set(stop,"OwnerId","group:"+bob);Set(stop,"X",.2+i*.6);Set(stop,"Y",.8);stops.SetValue(stop,i); }Set(state,"SharedMarkers",stops);
+            var surface=(FrameworkElement)Activator.CreateInstance(surfaceType,true);Set(surface,"State",state);Set(surface,"Compact",compact);surface.Measure(new Size(640,640));surface.Arrange(new Rect(0,0,640,640));
+            var drawing=new DrawingGroup();using(var dc=drawing.Open())Call(surface,"DrawMap",dc);
+            var lines=GeometryDrawings(drawing).Where(g=>g.Pen!=null&&g.Geometry.Bounds.Width>100&&g.Pen.Brush is SolidColorBrush).ToArray();
+            var local=lines.Where(g=>((SolidColorBrush)g.Pen.Brush).Color==color(alice)).ToArray();var others=lines.Where(g=>((SolidColorBrush)g.Pen.Brush).Color==color(bob)).ToArray();
+            Check(local.Length==1&&others.Length==3&&local.Concat(others).All(g=>g.Pen.Thickness==4),"Personal GPS, verified, unverified and pending squad routes have equal thickness: "+compact);
+            Check(others.Any(g=>g.Pen.DashStyle.Dashes.Count>0),"Unverified squad routing retains dashed guidance: "+compact);
+            var visual=new DrawingVisual();using(var dc=visual.RenderOpen())dc.DrawDrawing(drawing);var bitmap=new RenderTargetBitmap(640,640,96,96,PixelFormats.Pbgra32);bitmap.Render(visual);var png=new PngBitmapEncoder();png.Frames.Add(BitmapFrame.Create(bitmap));using(var file=File.Create(Path.Combine(folder,compact?"route-colors-hud.png":"route-colors-tactical.png")))png.Save(file);
+        }
+    }
     static void CheckViewportPixels(object runtime,string folder) {
         var assembly=runtime.GetType().Assembly;var surfaceType=assembly.GetType("ScumMiniMap.WpfMapSurface");var stateType=assembly.GetType("ScumMiniMap.WpfMapState");
         foreach(bool compact in new[]{false,true})foreach(float zoom in new[]{1f,4f,16f}) {
@@ -424,6 +459,7 @@ class SquadUiTests {
             if(Environment.GetEnvironmentVariable("MINIMAP_COMPACT_GUIDANCE_ONLY")=="1") {CheckCompactGuidance(runtime,folder);return;}
             if(Environment.GetEnvironmentVariable("MINIMAP_CAMERA_BURST_ONLY")=="1") {CheckCameraBurst(runtime,folder,Environment.GetEnvironmentVariable("MINIMAP_CAMERA_BASELINE")!="1");return;}
             if(Environment.GetEnvironmentVariable("MINIMAP_TAC_LAYERS_ONLY")=="1") {CheckTacticalLayers(runtime,folder);return;}
+            CheckRouteAppearance(runtime,folder);
             CheckCompactGuidance(runtime,folder);
             CheckSaveLocation(runtime,folder);
             CheckUsability(runtime,folder);

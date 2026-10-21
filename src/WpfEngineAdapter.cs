@@ -20,7 +20,7 @@ namespace ScumMiniMap {
         internal SquadRoutePlan SquadPlan,OwnRoutePlan;
         internal SquadRouteDrawing[] OtherRoutePlans=new SquadRouteDrawing[0];
         internal SharedMapMarker[] LocalRoute=new SharedMapMarker[0];
-        internal string ActiveSquadRoute,OwnRouteSummary;
+        internal string ActiveSquadRoute,OwnRouteSummary,LocalPeerId;
         internal bool SquadPlanning,SquadNavigating,ActiveSquadShared;
         internal bool GridLabels,SmartLabels;
         internal int GridOpacity,LabelSize;

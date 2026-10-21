@@ -88,7 +88,8 @@ class PrivatePositionsTests {
         try {
             string secret=Convert.ToBase64String(key);now=DateTime.UtcNow;
             Func<DateTime> hostClock=()=>DateTime.UtcNow.AddHours(-2),friendClock=()=>DateTime.UtcNow.AddHours(-2).AddSeconds(10),secondClock=()=>DateTime.UtcNow.AddDays(1);
-            server=new DirectPositions(true,"",port,secret,"Host fixture",false,hostClock);friend=new DirectPositions(false,"127.0.0.1",port,secret,"Friend fixture",false,friendClock);second=new DirectPositions(false,"127.0.0.1",port,secret,"Second fixture",false,secondClock);
+            server=new DirectPositions(true,"",port,secret,"Host fixture",false,hostClock);friend=new DirectPositions(false,"127.0.0.1",port,secret,"Friend fixture",false,friendClock,false,null,null,"1234abcd");second=new DirectPositions(false,"127.0.0.1",port,secret,"Second fixture",false,secondClock,false,null,null,"1234abcd");
+            Check(friend.LocalId.StartsWith("1234abcd",StringComparison.Ordinal)&&second.LocalId.StartsWith("1234abcd",StringComparison.Ordinal)&&friend.LocalId!=second.LocalId,"Persistent member color prefixes preserve fresh per-connection replay identities");
             server.Update(new Position { X=100,Y=200,Yaw=90 },hostClock());friend.Update(new Position { X=300,Y=400,Yaw=45 },friendClock());second.Update(new Position { X=500,Y=600,Yaw=0 },secondClock());
             var rally=new SharedMapMarker { Id=new string('A',64),Name="Rally fixture",X=.2,Y=.3 };
             var death=new SharedMapMarker { Id=new string('B',64),Name="Death fixture",X=.4,Y=.5,Death=true };

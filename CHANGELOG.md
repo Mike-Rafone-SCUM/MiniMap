@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.3.17] — 2026-10-21
+
+- Use the same 4-pixel line thickness for personal GPS, solo and shared squad routes, including pending previews and unverified legs. Preserve dashed guidance for unverified paths.
+- Assign each group member a consistent color across live markers, names, saved waypoints, GPS destinations, route lines and edge arrows. Preserve warning colors for danger pings and death markers.
+- Retain each profile's member color across reconnects and app restarts through a Windows-protected color seed, while generating a fresh network identity for each connection.
+
 ## [2.3.16] — 2026-10-20
 
 - Add an opt-in Settings > General option to launch MiniMap when the local SCUM client starts and save/exit after the client has been absent for ten seconds.

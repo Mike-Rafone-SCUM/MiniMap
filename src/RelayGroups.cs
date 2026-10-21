@@ -35,9 +35,19 @@ namespace ScumMiniMap {
         internal string PersistenceError { get { return persistenceError; } }
         readonly List<RelayMembership> groups=new List<RelayMembership>();bool disposed;
         internal string DisplayName;
+        internal readonly string MemberColorSeed;
         internal RelayGroupStore(string directory,string address=null,int port=0,string certificate=null,Action<string,byte[]> persist=null) {
             this.persist=persist??WriteProtectedFile;
             file=Path.Combine(directory,"private-groups.dat");this.address=address??DirectPositions.RelayAddress;this.port=port==0?DirectPositions.RelayPort:port;this.certificate=certificate??DirectPositions.RelayCertificate;
+            string colorFile=Path.Combine(directory,"private-member-color.dat");
+            if(File.Exists(colorFile)) {
+                if(new FileInfo(colorFile).Length>4096)throw new InvalidDataException();
+                MemberColorSeed=Encoding.UTF8.GetString(Protect(File.ReadAllBytes(colorFile),false));
+                if(MemberColorSeed.Length!=8||!MemberColorSeed.All(Uri.IsHexDigit))throw new InvalidDataException();
+            }else {
+                MemberColorSeed=Guid.NewGuid().ToString("N").Substring(0,8);
+                WriteProtectedFile(colorFile,Protect(Encoding.UTF8.GetBytes(MemberColorSeed),true));
+            }
             DisplayName=Localization.Get("PrivateGroupSurvivor")+" "+Guid.NewGuid().ToString("N").Substring(0,4);
             if(!File.Exists(file))return;
             if(new FileInfo(file).Length>65536)throw new InvalidDataException();
@@ -96,7 +106,7 @@ namespace ScumMiniMap {
             if(group.Pending!="") { Complete(group);return; }
             lock(gate) {
                 if(disposed||!groups.Contains(group))throw new InvalidOperationException();if(group.Session!=null)group.Session.Dispose();
-                group.Session=new DirectPositions(false,address,port,group.Key,DisplayName,false,null,true,certificate,group.Id);
+                group.Session=new DirectPositions(false,address,port,group.Key,DisplayName,false,null,true,certificate,group.Id,MemberColorSeed);
             }
             }
         }

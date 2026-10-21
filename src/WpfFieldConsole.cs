@@ -443,8 +443,23 @@ namespace ScumMiniMap {
             var arrow=new StreamGeometry();using(var context=arrow.Open()) { context.BeginFigure(new Point(p.X,p.Y-13),true,true);context.LineTo(new Point(p.X+9,p.Y+10),true,false);context.LineTo(new Point(p.X,p.Y+5),true,false);context.LineTo(new Point(p.X-9,p.Y+10),true,false); }
             if(heading)dc.DrawGeometry(ink,new Pen(WpfFieldTheme.Ground,2),arrow);else dc.DrawEllipse(ink,new Pen(WpfFieldTheme.Ground,2),p,7,7);dc.Pop();
         }
-        static void DrawRoutePlan(DrawingContext dc,SquadRoutePlan plan,bool shared,Func<DrawingPoint,Point> point) {
-            for(int i=0;i<plan.Legs.Length;i++) { var pen=new Pen(shared?WpfFieldTheme.Cyan:WpfFieldTheme.Amber,shared?3:2);if(!plan.Verified[i])pen.DashStyle=DashStyles.Dash;DrawLine(dc,plan.Legs[i].Select(point),pen); }
+        internal const double RouteThickness=4;
+        internal static Brush MemberInk(string ownerId) {
+            if(string.IsNullOrEmpty(ownerId))return WpfFieldTheme.Amber;
+            // Relay rosters prefix the transport identity with the group ID.
+            // Hash only the member so every viewer uses the same color.
+            string member=ownerId.Substring(ownerId.LastIndexOf(':')+1);
+            if(member.Length==32&&member.All(Uri.IsHexDigit))member=member.Substring(0,8).ToLowerInvariant();
+            uint hash=2166136261;unchecked { foreach(char c in member)hash=(hash^c)*16777619; }
+            double hue=(hash%3600)/600.0,chroma=.68,x=chroma*(1-Math.Abs(hue%2-1)),m=.30;
+            double r=0,g=0,b=0;
+            if(hue<1) { r=chroma;g=x; }else if(hue<2) { r=x;g=chroma; }else if(hue<3) { g=chroma;b=x; }else if(hue<4) { g=x;b=chroma; }else if(hue<5) { r=x;b=chroma; }else { r=chroma;b=x; }
+            var ink=new SolidColorBrush(Color.FromRgb((byte)((r+m)*255),(byte)((g+m)*255),(byte)((b+m)*255)));ink.Freeze();return ink;
+        }
+        Brush OwnerInk(string ownerId) { return string.IsNullOrEmpty(ownerId)?(string.IsNullOrEmpty(State.LocalPeerId)?new SolidColorBrush(Color.FromArgb((byte)(State.RouteColor>>24),(byte)(State.RouteColor>>16),(byte)(State.RouteColor>>8),(byte)State.RouteColor)):MemberInk(State.LocalPeerId)):MemberInk(ownerId); }
+        Brush RouteInk(string key) { return OwnerInk(string.IsNullOrEmpty(key)?null:key.Substring(0,key.LastIndexOf(':'))); }
+        static void DrawRoutePlan(DrawingContext dc,SquadRoutePlan plan,Brush ink,Func<DrawingPoint,Point> point) {
+            for(int i=0;i<plan.Legs.Length;i++) { var pen=new Pen(ink,RouteThickness);if(!plan.Verified[i])pen.DashStyle=DashStyles.Dash;DrawLine(dc,plan.Legs[i].Select(point),pen); }
         }
         static string SharedMarkerLabel(SharedMapMarker marker) { int kind;string name=SquadState.IsPing(marker)&&int.TryParse(marker.Id.Substring(8,2),NumberStyles.HexNumber,CultureInfo.InvariantCulture,out kind)&&kind<3?Localization.Get(new[]{"PingDanger","PingLoot","PingPickup"}[kind]):marker.Death?Localization.Get("DeathName"):marker.Name;return (SquadState.IsStop(marker)?Localization.Get(SquadState.IsShared(marker)?"SquadRoute":"SoloRoute")+" · ":marker.Id==SharedMapMarker.GpsId?Localization.Get("SoloRoute")+" · ":"")+marker.Owner+" · "+(SquadState.IsStop(marker)?(SquadState.StopIndex(marker)+1)+". ":"")+name; }
         SharedMapMarker SharedMarkerAt(DrawingPoint at) { return State==null?null:State.SharedMarkers.Where(marker=>MarkerDistance(new DrawingPoint((float)marker.X,(float)marker.Y),at)<=14/MapSide(State,ActualWidth,ActualHeight,Compact)).OrderBy(marker=>MarkerDistance(new DrawingPoint((float)marker.X,(float)marker.Y),at)).FirstOrDefault(); }
@@ -682,26 +697,26 @@ namespace ScumMiniMap {
             foreach(var label in RetainedLabels(w,h))Label(dc,label.Text,RotatePoint(label.At,-rotation,w,h),label.Major?WpfFieldTheme.Ink:WpfFieldTheme.Muted,Math.Max(6,State.LabelSize)+(label.Major?2:0));
             }
             if(pass==MapPass.All||pass==MapPass.Live) {
-            if(State.Route!=null&&State.Route.Success&&State.Position!=null)DrawLine(dc,new[]{MapWindow.ToMap(State.Position)}.Concat(State.Route.Polyline??new DrawingPoint[0]).Concat(State.Target==null?new DrawingPoint[0]:new[]{State.Target.Centroid}).Select(point),new Pen(routeInk,4));
-            if(State.Target!=null) { var p=point(State.Target.Centroid);dc.DrawEllipse(null,new Pen(routeInk,3),p,9,9);if(!Compact)Label(dc,State.Target.DisplayName,p+new Vector(12,-30),WpfFieldTheme.Cyan,13); }
+            routeInk=(SolidColorBrush)RouteInk(State.ActiveSquadRoute);
+            if(State.Route!=null&&State.Route.Success&&State.Position!=null)DrawLine(dc,new[]{MapWindow.ToMap(State.Position)}.Concat(State.Route.Polyline??new DrawingPoint[0]).Concat(State.Target==null?new DrawingPoint[0]:new[]{State.Target.Centroid}).Select(point),new Pen(routeInk,RouteThickness));
+            if(State.Target!=null) { var p=point(State.Target.Centroid);dc.DrawEllipse(null,new Pen(routeInk,3),p,9,9);if(!Compact)Label(dc,State.Target.DisplayName,p+new Vector(12,-30),routeInk,13); }
             if(State.Position!=null) {
-                DrawPlayer(dc,point(MapWindow.ToMap(State.Position)),State.Position.Yaw,playerInk,State.Heading);
+                DrawPlayer(dc,point(MapWindow.ToMap(State.Position)),State.Position.Yaw,string.IsNullOrEmpty(State.LocalPeerId)?playerInk:MemberInk(State.LocalPeerId),State.Heading);
             }
             foreach(var peer in State.Peers) {
-                var p=point(MapWindow.ToMap(peer.Position));DrawPlayer(dc,p,peer.Position.Yaw,WpfFieldTheme.Cyan,State.Heading);
-                Label(dc,peer.Name,p+new Vector(11,-18),WpfFieldTheme.Cyan,12);
+                var p=point(MapWindow.ToMap(peer.Position));var ink=MemberInk(peer.Id);DrawPlayer(dc,p,peer.Position.Yaw,ink,State.Heading);
+                Label(dc,peer.Name,p+new Vector(11,-18),ink,12);
             }
             string ownKey=State.LocalRoute.Length>0?SquadState.RouteKey(State.LocalRoute[0]):null;
-            if(State.OwnRoutePlan!=null&&ownKey!=State.ActiveSquadRoute)DrawRoutePlan(dc,State.OwnRoutePlan,State.LocalRoute.Length>0&&SquadState.IsShared(State.LocalRoute[0]),point);
-            if(State.SquadPlan!=null)DrawRoutePlan(dc,State.SquadPlan,State.ActiveSquadShared,point);
-            foreach(var plan in State.OtherRoutePlans.Where(p=>p.Key!=State.ActiveSquadRoute))DrawRoutePlan(dc,plan.Plan,plan.Shared,point);
+            if(State.OwnRoutePlan!=null&&ownKey!=State.ActiveSquadRoute)DrawRoutePlan(dc,State.OwnRoutePlan,OwnerInk(null),point);
+            if(State.SquadPlan!=null)DrawRoutePlan(dc,State.SquadPlan,RouteInk(State.ActiveSquadRoute),point);
+            foreach(var plan in State.OtherRoutePlans.Where(p=>p.Key!=State.ActiveSquadRoute))DrawRoutePlan(dc,plan.Plan,RouteInk(plan.Key),point);
             foreach(var route in SquadState.Routes(State.SharedMarkers)) {
                 string key=SquadState.RouteKey(route[0]);bool ready=key==ownKey&&State.OwnRoutePlan!=null||key==State.ActiveSquadRoute&&State.SquadPlan!=null||State.OtherRoutePlans.Any(p=>p.Key==key);
-                if(!ready)for(int i=1;i<route.Length;i++) { var pen=new Pen(SquadState.IsShared(route[0])?WpfFieldTheme.Cyan:WpfFieldTheme.Amber,1) { DashStyle=DashStyles.Dot };dc.DrawLine(pen,point(new DrawingPoint((float)route[i-1].X,(float)route[i-1].Y)),point(new DrawingPoint((float)route[i].X,(float)route[i].Y))); }
+                if(!ready)for(int i=1;i<route.Length;i++) { var pen=new Pen(OwnerInk(route[0].OwnerId),RouteThickness) { DashStyle=DashStyles.Dot };dc.DrawLine(pen,point(new DrawingPoint((float)route[i-1].X,(float)route[i-1].Y)),point(new DrawingPoint((float)route[i].X,(float)route[i].Y))); }
             }
             foreach(var marker in State.SharedMarkers) {
-                var at=point(new DrawingPoint((float)marker.X,(float)marker.Y));var ink=marker.Death?WpfFieldTheme.ColorBrush("#FF654F"):WpfFieldTheme.Cyan;
-                if(SquadState.IsStop(marker)||marker.Id==SharedMapMarker.GpsId)ink=SquadState.IsShared(marker)?WpfFieldTheme.Cyan:WpfFieldTheme.Amber;
+                var at=point(new DrawingPoint((float)marker.X,(float)marker.Y));var ink=marker.Death?WpfFieldTheme.ColorBrush("#FF654F"):OwnerInk(marker.OwnerId);
                 if(SquadState.IsPing(marker))ink=marker.Id.Substring(8,2)=="00"?WpfFieldTheme.ColorBrush("#FF654F"):marker.Id.Substring(8,2)=="01"?WpfFieldTheme.Amber:WpfFieldTheme.Cyan;
                 if(marker.Death) { dc.DrawRoundedRectangle(WpfFieldTheme.Ground,new Pen(ink,2),new Rect(at.X-7,at.Y-10,14,19),3,3);dc.DrawLine(new Pen(ink,2),at+new Vector(0,-5),at+new Vector(0,4));dc.DrawLine(new Pen(ink,2),at+new Vector(-4,-1),at+new Vector(4,-1)); }
                 else { var diamond=new StreamGeometry();using(var shape=diamond.Open()) { shape.BeginFigure(at+new Vector(0,-8),true,true);shape.LineTo(at+new Vector(7,0),true,false);shape.LineTo(at+new Vector(0,8),true,false);shape.LineTo(at+new Vector(-7,0),true,false); }dc.DrawGeometry(WpfFieldTheme.Ground,new Pen(ink,2),diamond); }
@@ -729,8 +744,8 @@ namespace ScumMiniMap {
         }
         void DrawPeerEdges(DrawingContext dc,double width,double height,Func<DrawingPoint,Point> screen) {
             if(!Compact)return;
-            foreach(var peer in State.Peers)DrawEdgeArrow(dc,width,height,screen(MapWindow.ToMap(peer.Position)),WpfFieldTheme.Cyan,peer.Name);
-            foreach(var marker in State.SharedMarkers.Where(shared=>shared.Id==SharedMapMarker.GpsId))DrawEdgeArrow(dc,width,height,screen(new DrawingPoint((float)marker.X,(float)marker.Y)),WpfFieldTheme.Cyan,null);
+            foreach(var peer in State.Peers)DrawEdgeArrow(dc,width,height,screen(MapWindow.ToMap(peer.Position)),MemberInk(peer.Id),peer.Name);
+            foreach(var marker in State.SharedMarkers.Where(shared=>shared.Id==SharedMapMarker.GpsId))DrawEdgeArrow(dc,width,height,screen(new DrawingPoint((float)marker.X,(float)marker.Y)),OwnerInk(marker.OwnerId),null);
         }
         void DrawEdgeArrow(DrawingContext dc,double width,double height,Point destination,Brush ink,string name) {
             bool circle=Compact&&State.Shape=="Circle";
@@ -978,7 +993,7 @@ namespace ScumMiniMap {
             container.Children.Add(WpfFieldTheme.Text(Localization.Get("SharedPlayers"),11,WpfFieldTheme.Muted,true));
             if(playerRoster.Length==0)container.Children.Add(WpfFieldTheme.Text(Localization.Get("PlayerWaiting"),12,WpfFieldTheme.Muted));
             foreach(var player in playerRoster) {
-                string ownerId=player.Id;var body=new StackPanel();body.Children.Add(WpfFieldTheme.Text(player.Name,16,null,true));
+                string ownerId=player.Id;var body=new StackPanel();body.Children.Add(WpfFieldTheme.Text(player.Name,16,WpfMapSurface.MemberInk(ownerId),true));
                 var statusLabel=WpfFieldTheme.Text(PeerStatus(player),11,WpfFieldTheme.Muted);statusLabel.Tag=ownerId;statusLabel.TextWrapping=TextWrapping.Wrap;statusLabel.TextTrimming=TextTrimming.None;if(registerLabels)playerStatusLabels[ownerId]=statusLabel;body.Children.Add(statusLabel);
                 var follow=WpfFieldTheme.Button(S(followingPeer==ownerId?"SquadStopNav":"SquadFollow"),()=> { if(followingPeer==ownerId) { StopSquadNavigation();filterIdentity=null;Refresh(); }else FollowSquadPeer(ownerId); });follow.IsEnabled=player.Position!=null||followingPeer==ownerId;body.Children.Add(follow);
                 var pills=new WrapPanel { Margin=new Thickness(0,8,0,0) };
@@ -1434,6 +1449,7 @@ namespace ScumMiniMap {
                 state.SharedMarkers=compact.SharedMarkers=squad.Receive((privatePositions==null?new SharedMapMarker[0]:privatePositions.SnapshotMarkers()).Concat(relayGroups==null?new SharedMapMarker[0]:relayGroups.Markers()).Where(PlayerMarkerVisible)).Concat(squad.Local().Select(m=> { m.Owner=S("PrivateGroupSurvivor");return m; })).ToArray();
             }
             else state.SharedMarkers=compact.SharedMarkers=squad.Local();
+            state.LocalPeerId=compact.LocalPeerId=sharingSessions.Select(session=>session.LocalId).FirstOrDefault();
             AddRouteState(state,compact);
             deathRemovalButton.IsEnabled=state.Saved.Any(marker=>marker.IsDeathMarker);if(chromeLanguage!=Localization.CurrentCode) { chromeLanguage=Localization.CurrentCode;RefreshLocalizedChrome(tactical);if(settingsWindow!=null)RefreshLocalizedChrome(settingsWindow); }
             if(diagnostic||TacticalVisible) { string key=VisualIdentity(state);if(key!=tacticalVisualIdentity) { tacticalVisualIdentity=key;tacticalMap.PublishState(state); } }
@@ -1667,7 +1683,7 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
             Action<bool> inputs=active=> { name.IsEnabled=mode.IsEnabled=port.IsEnabled=secret.IsEnabled=generateKey.IsEnabled=!active;detectButton.IsEnabled=!active&&!lookupBusy;address.IsEnabled=true;address.IsReadOnly=active; };
             inputs(privatePositions!=null);
             enabled.Checked+=(s,e)=> {
-                try { int number;if(!int.TryParse(port.Text,out number))throw new ArgumentException();privatePositions=new DirectPositions(mode.SelectedIndex==0,address.Text,number,secret.Password,name.Text,!diagnostic);status.Text=Localization.Get("PrivatePositionConnecting");inputs(true);Refresh(); }
+                try { int number;if(!int.TryParse(port.Text,out number))throw new ArgumentException();privatePositions=new DirectPositions(mode.SelectedIndex==0,address.Text,number,secret.Password,name.Text,!diagnostic,null,false,null,null,relayGroups==null?null:relayGroups.MemberColorSeed);status.Text=Localization.Get("PrivatePositionConnecting");inputs(true);Refresh(); }
                 catch(Exception) { status.Text=Localization.Get("PrivatePositionInvalid");enabled.IsChecked=false; }
             };
             enabled.Unchecked+=(s,e)=> { if(privatePositions!=null) { privatePositions.Dispose();privatePositions=null; }inputs(false);Refresh(); };
