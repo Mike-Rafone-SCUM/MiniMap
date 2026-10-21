@@ -98,7 +98,7 @@ export function createRelay(options: tls.TlsOptions, budget: {take(bytes: number
     catch { server.close(); for (const socket of sockets) socket.destroy(); return false; }
   };
   const server = tls.createServer({...options, minVersion: 'TLSv1.2', handshakeTimeout: 5000}, socket => {
-    let buffer = Buffer.alloc(0), room: string | undefined;
+    let buffer = Buffer.alloc(0), room: string | undefined, controlSession = false;
     let receivedAt = Date.now(), frames = 0, incoming = 0;
     socket.setNoDelay(true); socket.setTimeout(10000, () => socket.destroy());
     socket.on('error', () => socket.destroy());
@@ -111,26 +111,29 @@ export function createRelay(options: tls.TlsOptions, budget: {take(bytes: number
       incoming += chunk.length;
       if (incoming > 262144 || buffer.length + chunk.length > 262144) { socket.destroy(); return; }
       buffer = Buffer.concat([buffer, chunk]);
-      if (!room) {
+      while (!room) {
         const end = buffer.indexOf(10);
         if (end < 0) { if (buffer.length > 1024) socket.destroy(); return; }
         if (end > 1024) { socket.destroy(); return; }
         const hello = buffer.subarray(0, end).toString('utf8');
         const control = /^SCUMMEMBERS2 (LIST|KICK) ([a-f0-9]{32}) ([a-f0-9]{64}) ([a-f0-9]{64}) ([a-f0-9]{64})$/.exec(hello);
         if (control) {
+          if (++frames > 16) { socket.destroy(); return; }
+          controlSession = true;buffer = buffer.subarray(end + 1);
           const [, action, groupId, roomId, owner, target] = control;
           if (!registry?.owns(groupId, roomId, owner) || !spend(16384)) { socket.destroy(); return; }
           const group = rooms.get(groupId + ':' + roomId) ?? new Set<tls.TLSSocket>();
           if (action === 'LIST') {
             const rows = [...group].filter(peer => !peer.destroyed).map(peer => { const m = members.get(peer)!;return `${m.id} ${m.host ? '1' : '0'} ${m.label}`; });
-            socket.end(`OK\n${rows.join('\n')}${rows.length ? '\n' : ''}END\n`);
+            socket.write(`OK\n${rows.join('\n')}${rows.length ? '\n' : ''}END\n`);
           } else {
             const peer = [...group].find(peer => members.get(peer)?.id === target && !members.get(peer)?.host && !peer.destroyed);
-            if (!peer) { socket.end('NO\n'); return; }
-            peer.destroy();socket.end('OK\n');
+            if (!peer) socket.write('NO\n');
+            else { peer.destroy();socket.write('OK\n'); }
           }
-          return;
+          continue;
         }
+        if (controlSession) { socket.destroy(); return; }
         const management = /^SCUM(CREATE|ROTATE|DELETE)1 ([a-f0-9]{32}) ([a-f0-9]{64}) ([a-f0-9]{64})$/.exec(hello);
         if (management) {
           try {

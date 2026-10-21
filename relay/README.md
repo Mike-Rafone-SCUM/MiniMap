@@ -17,7 +17,11 @@ disconnects that exact live connection and acknowledges `OK`. Missing targets
 and protected owner connections return `NO`. Other groups and connections stay
 connected. There is no ban, membership registry or code change: the member can
 rejoin with the same invite code. The UI polls this live list every three seconds
-only while the host opens Manage members. It does not claim success on a failed
+only while the host opens Manage members, reusing one authenticated TLS connection
+until that window closes. This preserves the firewall's ten-new-connections-per-minute
+limit. Control sessions allow at most sixteen commands per second, validate the
+owner on every command and keep the existing ten-second idle timeout.
+It does not claim success on a failed
 request. Existing clients retain GROUP1 support; their names cannot be associated
 by the opaque relay, so the host sees temporary connection IDs instead. The
 host and newer clients should update to display names and protect the host row.

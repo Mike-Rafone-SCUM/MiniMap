@@ -1614,7 +1614,7 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
                 });
             };
             var done=WpfFieldTheme.Button(Localization.Get("Done"),()=>window.Close());var layout=new DockPanel();DockPanel.SetDock(done,Dock.Bottom);layout.Children.Add(done);layout.Children.Add(new ScrollViewer { Content=body,VerticalScrollBarVisibility=ScrollBarVisibility.Auto });window.Content=layout;
-            var timer=new DispatcherTimer { Interval=TimeSpan.FromSeconds(3) };timer.Tick+=(s,e)=>refresh(null);window.Loaded+=(s,e)=> { refresh(null);timer.Start(); };window.Closed+=(s,e)=> { closed=true;timer.Stop(); };return window;
+            var timer=new DispatcherTimer { Interval=TimeSpan.FromSeconds(3) };timer.Tick+=(s,e)=>refresh(null);window.Loaded+=(s,e)=> { refresh(null);timer.Start(); };window.Closed+=(s,e)=> { closed=true;timer.Stop();relayGroups.CloseMemberManagement(group); };return window;
         }
         static IEnumerable<T> ChildrenOf<T>(DependencyObject root) where T:DependencyObject {
             for(int i=0;i<VisualTreeHelper.GetChildrenCount(root);i++) { var child=VisualTreeHelper.GetChild(root,i);var item=child as T;if(item!=null)yield return item;foreach(var nested in ChildrenOf<T>(child))yield return nested; }

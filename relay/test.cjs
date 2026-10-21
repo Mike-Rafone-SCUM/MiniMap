@@ -101,7 +101,7 @@ test('host disconnect is authenticated, scoped and permits rejoining', {skip:!pr
   const clients=[];
   const connect=async(line,reply=true)=>{
     const socket=tls.connect({host:'127.0.0.1',port:server.address().port,rejectUnauthorized:false});clients.push(socket);socket.on('error',()=>{});await once(socket,'secureConnect');
-    const result=once(socket,reply?'data':'close');socket.write(line+'\n');return [socket,await result];
+    const result=once(socket,reply?'data':'close');socket.write(line+'\n');const response=await result;if(line.startsWith('SCUMMEMBERS2 '))socket.destroy();return [socket,response];
   };
   try {
     server.listen(0,'127.0.0.1');await once(server,'listening');
@@ -122,5 +122,19 @@ test('host disconnect is authenticated, scoped and permits rejoining', {skip:!pr
     const [,missing]=await connect(`SCUMMEMBERS2 KICK ${id} ${room} ${owner} ${'0'.repeat(64)}`);assert.equal(missing[0].toString(),'NO\n');
     const state=JSON.parse(fs.readFileSync(file,'utf8'));assert.deepEqual(state.groups[id],JSON.parse(before).groups[id]);
     assert.equal(fs.readFileSync(file,'utf8').includes(label),false);
+  }finally{for(const client of clients)client.destroy();await new Promise(resolve=>server.close(resolve));fs.rmSync(dir,{recursive:true});}
+});
+
+test('member polling reuses one authenticated connection and rechecks owner authority', {skip:!process.env.TEST_KEY,timeout:20000},async()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'minimap-member-reuse-')),file=path.join(dir,'groups.json');
+  fs.writeFileSync(file,JSON.stringify({version:1,groups:{}}));const registry=new GroupRegistry(file);
+  const id='a'.repeat(32),room='b'.repeat(64),owner='c'.repeat(64),hostId='d'.repeat(64),label=Buffer.alloc(80,77).toString('base64');registry.change('CREATE',id,room,owner);
+  let connections=0;const server=createRelay({key:fs.readFileSync(process.env.TEST_KEY),cert:fs.readFileSync(process.env.TEST_CERT)},{take:size=>size!==32768||++connections<=2},registry),clients=[];
+  const open=async()=>{const socket=tls.connect({host:'127.0.0.1',port:server.address().port,rejectUnauthorized:false});clients.push(socket);socket.on('error',()=>{});await once(socket,'secureConnect');return socket;};
+  const request=(socket,line,end)=>new Promise((resolve,reject)=>{let text='';const collect=chunk=>{text+=chunk.toString();if(text.endsWith(end)){socket.off('data',collect);resolve(text);}};socket.on('data',collect);socket.write(line+'\n');});
+  try {
+    server.listen(0,'127.0.0.1');await once(server,'listening');const host=await open();assert.equal(await request(host,`SCUMGROUP2 ${id} ${room} ${hostId} ${label} ${owner}`,'\n'),'OK\n');const admin=await open();
+    for(let i=0;i<24;i++){assert.equal(await request(admin,`SCUMMEMBERS2 LIST ${id} ${room} ${owner} ${hostId}`,'END\n'),`OK\n${hostId} 1 ${label}\nEND\n`);await new Promise(resolve=>setTimeout(resolve,100));}
+    assert.equal(connections,2);const closed=once(admin,'close');admin.write(`SCUMMEMBERS2 LIST ${id} ${room} ${hostId} ${hostId}\n`);await closed;assert.equal(host.destroyed,false);
   }finally{for(const client of clients)client.destroy();await new Promise(resolve=>server.close(resolve));fs.rmSync(dir,{recursive:true});}
 });
