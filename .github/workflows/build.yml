@@ -22,6 +22,9 @@ jobs:
           TEMP: ${{ runner.temp }}
           TMP: ${{ runner.temp }}
         run: .\Build.ps1 -Configuration Release -OutputDirectory release/ci
+      - name: Verify viewport streaming against the packaged executable
+        shell: powershell
+        run: .\tests\Test-MapStreaming.ps1 -Executable release/ci/SkynettMiniMap.exe -OutputDirectory release/streaming-checks
       - uses: actions/upload-artifact@v7.0.1
         with:
           name: MiniMap-validated-package

@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.3.18] — 2026-10-21
+
+- Stream tactical POI graphics for visible map cells in cancellable background batches, with bounded tile and pixel caches.
+- Retain independent static and shared overlay layers on both maps, keeping player updates from rebuilding POIs, saved waypoints and route previews.
+- Query POIs and labels spatially, cull off-screen player/waypoint geometry, and project only visible chunks of long routes while retaining HUD edge guidance.
+- Keep the full POI catalogue searchable, existing member colors, settings and key bindings. Complete all five setup pages after updating.
+
 ## [2.3.17] — 2026-10-21
 
 - Use the same 4-pixel line thickness for personal GPS, solo and shared squad routes, including pending previews and unverified legs. Preserve dashed guidance for unverified paths.

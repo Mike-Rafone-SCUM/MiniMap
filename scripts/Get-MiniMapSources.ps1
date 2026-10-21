@@ -1,5 +1,6 @@
 ﻿$miniRoot = Split-Path $PSScriptRoot -Parent
 Join-Path (Join-Path $miniRoot 'src') 'InstallationAssets.cs'
+Join-Path (Join-Path $miniRoot 'src') 'WpfMapStreaming.cs'
 Join-Path (Join-Path $miniRoot 'src') 'ScumAutoLaunch.cs'
 Join-Path (Join-Path $miniRoot 'src') 'PrivatePositions.cs'
 Join-Path (Join-Path $miniRoot 'src') 'RelayGroups.cs'

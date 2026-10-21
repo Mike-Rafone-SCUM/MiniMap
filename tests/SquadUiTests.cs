@@ -51,7 +51,7 @@ class SquadUiTests {
             var drawing=new DrawingGroup();using(var dc=drawing.Open())Call(surface,"DrawMap",dc);
             var lines=GeometryDrawings(drawing).Where(g=>g.Pen!=null&&g.Geometry.Bounds.Width>100&&g.Pen.Brush is SolidColorBrush).ToArray();
             var local=lines.Where(g=>((SolidColorBrush)g.Pen.Brush).Color==color(alice)).ToArray();var others=lines.Where(g=>((SolidColorBrush)g.Pen.Brush).Color==color(bob)).ToArray();
-            Check(local.Length==1&&others.Length==3&&local.Concat(others).All(g=>g.Pen.Thickness==4),"Personal GPS, verified, unverified and pending squad routes have equal thickness: "+compact);
+            Check(local.Length==2&&others.Length==3&&local.Concat(others).All(g=>g.Pen.Thickness==4),"Personal GPS connector and retained path, verified, unverified and pending squad routes have equal thickness: "+compact);
             Check(others.Any(g=>g.Pen.DashStyle.Dashes.Count>0),"Unverified squad routing retains dashed guidance: "+compact);
             var visual=new DrawingVisual();using(var dc=visual.RenderOpen())dc.DrawDrawing(drawing);var bitmap=new RenderTargetBitmap(640,640,96,96,PixelFormats.Pbgra32);bitmap.Render(visual);var png=new PngBitmapEncoder();png.Frames.Add(BitmapFrame.Create(bitmap));using(var file=File.Create(Path.Combine(folder,compact?"route-colors-hud.png":"route-colors-tactical.png")))png.Save(file);
         }
@@ -102,8 +102,8 @@ class SquadUiTests {
         if(!verify)return;
         // Gesture previews deliberately reuse the original static scene. Check
         // current-view spatial culling after the full-detail idle draw returns.
-        Call(runtime,"EndCameraInteraction");render();Await(()=> {render();return Object.ReferenceEquals(Get(map,"drawnPoiLayout"),Get(map,"requestedPoiLayout"));});
-        var tiles=(Array)Get(map,"poiSceneTiles");Check(tiles!=null&&tiles.Length>(int)Get(map,"PoiTilesDrawn")&&(int)Get(map,"PoiTilesDrawn")>0,"Large-zoom POI composition submits only visible spatial groups");
+        Call(runtime,"EndCameraInteraction");render();Await(()=> {render();return (bool)Get(map,"PoiViewportReady");});
+        var tiles=(Array)Get(map,"poiSceneTiles");Check(tiles!=null&&tiles.Length>=(int)Get(map,"PoiTilesDrawn")&&tiles.Length<=48&&(int)Get(map,"PoiTilesDrawn")>0,"Large-zoom POI composition submits only visible spatial groups");
         var state=Get(map,"State");double width=map.ActualWidth,height=map.ActualHeight;
         double side=(double)map.GetType().GetMethod("MapSide",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{state,width,height,false});
         var centre=(System.Drawing.PointF)map.GetType().GetMethod("CameraCentre",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{state,width,height,false});
@@ -355,7 +355,7 @@ class SquadUiTests {
         var assembly=runtime.GetType().Assembly;var engine=Get(runtime,"engine");var map=(FrameworkElement)Get(runtime,"tacticalMap");var window=(Window)Get(runtime,"tactical");
         window.ShowActivated=false;window.Left=-32000;window.Top=-32000;window.Width=1280;window.Height=760;window.Show();window.UpdateLayout();Call(engine,"WpfPan",new System.Drawing.PointF(.5f,.5f));Set(engine,"fullMapZoom",4f);Call(runtime,"Refresh");
         Func<byte[]> render=()=> {var bitmap=new RenderTargetBitmap((int)map.ActualWidth,(int)map.ActualHeight,96,96,PixelFormats.Pbgra32);bitmap.Render(map);var bytes=new byte[(int)map.ActualWidth*(int)map.ActualHeight*4];bitmap.CopyPixels(bytes,(int)map.ActualWidth*4,0);return bytes;};
-        render();Await(()=> {render();return Object.ReferenceEquals(Get(map,"drawnPoiLayout"),Get(map,"requestedPoiLayout"));});for(int i=0;i<12;i++)Pump();render();
+        render();Await(()=> {render();return (bool)Get(map,"PoiViewportReady");});for(int i=0;i<12;i++)Pump();render();
         var state=Get(map,"State");int terrain=(int)Get(map,"TerrainLayerBuilds"),annotations=(int)Get(map,"AnnotationLayerBuilds"),live=(int)Get(map,"LiveLayerBuilds");var pixels=render();
         var target=Activator.CreateInstance(assembly.GetType("ScumMiniMap.MapZone"));Set(target,"Name","Synthetic live GPS");Set(target,"Points",new[]{new System.Drawing.PointF(.52f,.52f)});Set(state,"Target",target);Call(map,"PublishState",state);var updated=render();
         Check(!pixels.SequenceEqual(updated),"A live GPS change updates the actual tactical pixels");
@@ -369,7 +369,7 @@ class SquadUiTests {
         Set(state,"History",true);Set(state,"Trail",new[]{new System.Drawing.PointF(.49f,.49f),new System.Drawing.PointF(.51f,.51f)});Call(map,"PublishState",state);render();Check((int)Get(map,"TerrainLayerBuilds")==terrain&&(int)Get(map,"AnnotationLayerBuilds")==annotations,"A changed history trail keeps the expensive static layers");
         Set(map,"TerrainRevision",(int)Get(map,"TerrainRevision")+1);Call(map,"PublishState",state);render();Check((int)Get(map,"TerrainLayerBuilds")>terrain&&(int)Get(map,"AnnotationLayerBuilds")==annotations,"A decoded terrain tile invalidates terrain without rebuilding annotation visuals");
         annotations=(int)Get(map,"AnnotationLayerBuilds");Set(state,"Labels",!(bool)Get(state,"Labels"));Call(map,"PublishState",state);render();Check((int)Get(map,"AnnotationLayerBuilds")>annotations,"A label visibility change refreshes the annotation layer immediately");
-        Check(VisualTreeHelper.GetChildrenCount(map)==4,"The tactical map retains four independent visual layers");
+        Check(VisualTreeHelper.GetChildrenCount(map)==5,"The tactical map retains independent terrain, history, annotation, shared and live visual layers");
         bool opaque=Environment.GetEnvironmentVariable("SCUM_MINIMAP_TAC_OPAQUE")=="1"||Environment.GetCommandLineArgs().Contains("--fast-tac-test");Check(window.AllowsTransparency!=opaque,"The tactical window uses the requested transparent/solid test mode");Check(((Window)Get(runtime,"hud")).AllowsTransparency,"The compact HUD stays transparent in either tactical mode");
         if(opaque&&(bool)Get(map,"DirectTerrain")) {int frames=(int)Get(map,"CameraSceneBuilds");((Action<System.Drawing.PointF>)Get(map,"PanChanged"))(new System.Drawing.PointF(.51f,.5f));render();for(int i=0;i<5;i++)Pump();Check((int)Get(map,"CameraSceneBuilds")==frames&&!(bool)Get(map,"cameraWorker")&&Get(map,"pendingCameraScene")==null,"Solid accelerated tactical movement bypasses the software terrain-frame worker");Call(runtime,"EndCameraInteraction");render();}
         Capture(window,Path.Combine(folder,opaque?"tactical-solid.png":"tactical-transparent.png"));window.Hide();
@@ -655,8 +655,8 @@ class SquadUiTests {
             Check((bool)Call(runtime,"TryDismissTactical",0x1B,0,false)&&tactical.IsVisible&&Get(contextMap,"openContext")==null,"Escape closes only the in-map menu before closing the map");
             Call(contextMap,"OpenContextMenu",clickPoint);Check((bool)Call(contextMap,"DismissContextOutside",new Point(0,0))&&Get(contextMap,"openContext")==null,"Outside click dismisses the in-map menu");
             Call(engine,"WpfPoiClustering",false);Call(runtime,"Refresh");var draw=surface.GetMethod("OnRender",F);var frame=new DrawingGroup();using(var dc=frame.Open())draw.Invoke(contextMap,new object[]{dc});
-            Await(()=>Get(contextMap,"poiScene")!=null&&object.ReferenceEquals(Get(contextMap,"drawnPoiLayout"),Get(contextMap,"requestedPoiLayout"))&&(double)Get(contextMap,"drawnPoiSide")== (double)Get(contextMap,"requestedPoiSide"));Check(((DrawingGroup)Get(contextMap,"poiScene")).IsFrozen,"Dense POI worker publishes only a frozen drawing to the UI");
-            Check((bool)Get(contextMap,"PoiSceneRasterized"),"Dense full-map composition uses a bounded frozen image rather than replaying every icon");
+            Await(()=> { var pending=new DrawingGroup();using(var dc=pending.Open())draw.Invoke(contextMap,new object[]{dc});return (bool)Get(contextMap,"PoiViewportReady"); });Check(((Array)Get(contextMap,"poiSceneTiles")).Cast<object>().All(tile=>((DrawingGroup)Get(tile,"Drawing")).IsFrozen),"Dense POI workers publish only frozen visible-cell drawings to the UI");
+            Check((bool)Get(contextMap,"PoiSceneRasterized"),"Dense full-map composition uses bounded frozen tile images rather than replaying every icon");
             var terrainLoader=Get(runtime,"terrain");Await(()=>!(bool)Get(terrainLoader,"tileWorker")&&(int)Get(terrainLoader,"pendingTiles").GetType().GetProperty("Count").GetValue(Get(terrainLoader,"pendingTiles"),null)==0);
             var composition=System.Diagnostics.Stopwatch.StartNew();for(int i=0;i<3;i++) { var bitmap=new RenderTargetBitmap((int)((FrameworkElement)contextMap).ActualWidth,(int)((FrameworkElement)contextMap).ActualHeight,96,96,PixelFormats.Pbgra32);bitmap.Render((Visual)contextMap); }composition.Stop();Console.WriteLine("Full-map composition average="+(composition.Elapsed.TotalMilliseconds/3).ToString("F1")+" ms");
             if(Environment.GetEnvironmentVariable("MINIMAP_TEST_COMPONENT_TRACE")=="1") {
@@ -678,8 +678,8 @@ class SquadUiTests {
             var filterStore=Get(Get(contextMap,"State"),"Store");var filterCategory=((System.Collections.IEnumerable)Get(filterStore,"Categories")).Cast<object>().First(c=>Convert.ToInt32(Get(c,"MarkerCount"))>0);int filterId=Convert.ToInt32(Get(filterCategory,"Id"));
             var filterTiming=System.Diagnostics.Stopwatch.StartNew();Call(runtime,"Category",filterId,false);var filterFrame=new DrawingGroup();using(var dc=filterFrame.Open())draw.Invoke(contextMap,new object[]{dc});
             Check(filterTiming.ElapsedMilliseconds<300,"A POI toggle records its first updated map frame promptly: "+filterTiming.ElapsedMilliseconds+" ms");
-            Await(()=>object.ReferenceEquals(Get(contextMap,"drawnPoiLayout"),Get(contextMap,"requestedPoiLayout")));filterTiming.Stop();Console.WriteLine("POI toggle through completed scene="+filterTiming.ElapsedMilliseconds+" ms");Check(filterTiming.ElapsedMilliseconds<1000,"POI changes finish without the reported two-second delay");
-            Call(runtime,"Category",filterId,true);var restoredFrame=new DrawingGroup();using(var dc=restoredFrame.Open())draw.Invoke(contextMap,new object[]{dc});Await(()=>object.ReferenceEquals(Get(contextMap,"drawnPoiLayout"),Get(contextMap,"requestedPoiLayout")));
+            Await(()=> { var pending=new DrawingGroup();using(var dc=pending.Open())draw.Invoke(contextMap,new object[]{dc});return (bool)Get(contextMap,"PoiViewportReady"); });filterTiming.Stop();Console.WriteLine("POI toggle through completed scene="+filterTiming.ElapsedMilliseconds+" ms");Check(filterTiming.ElapsedMilliseconds<1000,"POI changes finish without the reported two-second delay");
+            Call(runtime,"Category",filterId,true);var restoredFrame=new DrawingGroup();using(var dc=restoredFrame.Open())draw.Invoke(contextMap,new object[]{dc});Await(()=> { var pending=new DrawingGroup();using(var dc=pending.Open())draw.Invoke(contextMap,new object[]{dc});return (bool)Get(contextMap,"PoiViewportReady"); });
             Set(runtime,"diagnostic",false);Set(runtime,"lastRefresh",long.MaxValue);
             try {
                 Call(contextMap,"NavigateTo",new System.Drawing.PointF(.46f,.53f));Check((long)Get(runtime,"lastRefresh")!=long.MaxValue,"A real click bypasses production refresh throttling even immediately after another refresh");
