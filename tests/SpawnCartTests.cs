@@ -2104,6 +2104,8 @@ static class SpawnCartTests {
             var suppressor=catalog.Items.First(item=>item.Name==".308 Suppressor");
             Check(suppressor.DisplayName.Contains("äänenvaimennin") && catalog.Search("aanenvaimennin",null).Contains(suppressor),"Finnish weapon terminology and accent-free search resolve the same canonical item");
             Check(Localization.GetSpawnModifierLabel("Health")=="Kunto (Health)" && Localization.GetSpawnModifierLabel("Weight")=="Paino (kg) (Weight)","Finnish modifier labels explain SCUM property tokens without changing them");
+            Check(catalog.Items.All(item=>item.DisplayName.IndexOf("Improvised",StringComparison.OrdinalIgnoreCase)<0)
+                && catalog.Find("WeaponSights_ImprovisedScope").DisplayName=="Omatekoinen kiikaritähtäin","Finnish improvised item descriptors are translated while raw IDs remain intact");
             Localization.SetLanguage("pt-PT");Check(Localization.Current==AppLanguage.PortuguesePortugal && Localization.CurrentCode=="pt-PT","European Portuguese has its own persisted language identity");
             Check(Localization.Get("Settings")=="Definições","European Portuguese uses European UI terminology");
             Localization.SetLanguage("pt-BR");Check(Localization.Current==AppLanguage.Portuguese && Localization.Get("Settings")=="Configurações","Existing Brazilian Portuguese settings retain their language identity and wording");

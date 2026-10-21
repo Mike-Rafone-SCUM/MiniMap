@@ -85,7 +85,7 @@ Weapon_DT11B_Sawed_Off	"The Mule" DT11B (lyhyt)
 12_Gauge_Buckshot	Kaliiperi 12, karkeahaulinen patruuna
 12_Gauge_Buckshot_Crafted	Kaliiperi 12, omatekoinen karkeahaulinen patruuna
 12_Gauge_Slug	Kaliiperi 12, täyteispatruuna
-WeaponSuppressor_12_Gauge	12 Gauge: äänenvaimennin
+WeaponSuppressor_12_Gauge	Kaliiperi 12: äänenvaimennin
 Cal_40x46	40x46-kranaatti
 Cal_5_45x39mm	5.45x39mm patruunat
 Cal_5_45x39mm_Ammobox	5.45x39mm patruunalaatikko
@@ -350,8 +350,8 @@ Beret_03	Baretti
 Beret_04	Baretti
 Beret_05	Baretti
 Beret_06	Baretti
-Big_Animal_Fat	Suuri eläinrasva
-Big_Animal_guts	Suuri eläimen sisälmykset
+Big_Animal_Fat	Suuren eläimen rasva
+Big_Animal_guts	Suuren eläimen sisälmykset
 Christmas_Present_03	Suuri joululahja
 Christmas_Present_AK15	Suuri joululahja
 Christmas_Present_AK15_01	Suuri joululahja
@@ -1026,9 +1026,9 @@ ImprovisedCal50Turret	Omatekoinen .50-kaliiperin tykkitorni
 Improvised_Backpack_Big	Omatekoinen reppu
 ImprovisedBasicTurret	Omatekoinen perustykkitorni
 Improvised_Shelter	Omatekoinen sänky
-Improvised_Shoes_01	Omatekoinen saappaat
-WeaponSuppressor_ImprovisedBottle_Grey	Improvised Bottle: äänenvaimennin
-WeaponSuppressor_ImprovisedBottle_White	Improvised Bottle: äänenvaimennin
+Improvised_Shoes_01	Omatekoiset saappaat
+WeaponSuppressor_ImprovisedBottle_Grey	Omatekoinen pulloäänenvaimennin
+WeaponSuppressor_ImprovisedBottle_White	Omatekoinen pulloäänenvaimennin
 Improvised_Bow	Omatekoinen jousi 20#
 Improvised_Bow_25	Omatekoinen jousi 25#
 Improvised_Bow_30	Omatekoinen jousi 30#
@@ -1036,8 +1036,8 @@ Improvised_Bow_35	Omatekoinen jousi 35#
 Bow_ImprovisedStabilizer	Omatekoinen jousen vakaaja
 Improvised_Bulletproof_Armor	Omatekoinen luodinkestävä suojavaruste
 AntiburnGel_Improvised	Omatekoinen palovammageeli
-WeaponSuppressor_ImprovisedCan_Grey	Improvised Can: äänenvaimennin
-WeaponSuppressor_ImprovisedCan_Red	Improvised Can: äänenvaimennin
+WeaponSuppressor_ImprovisedCan_Grey	Omatekoinen tölkkiäänenvaimennin
+WeaponSuppressor_ImprovisedCan_Red	Omatekoinen tölkkiäänenvaimennin
 Improvised_Chandelier_Light	Omatekoinen kattokruunu
 ImprovisedClaymore	Omatekoinen claymore-miina
 Improvised_compass	Omatekoinen kompassi
@@ -1050,11 +1050,11 @@ Improvised_FishingLine	Omatekoinen siima
 ImprovisedFishingRod	Omatekoinen onkivapa
 Weapon_Improvised_Flamethrower	Omatekoinen liekinheitin
 ImprovisedFlamethrowerTurret	Omatekoinen liekinheitintorni
-ImprovisedFlashlight	Improvised: taskulamppu
+ImprovisedFlashlight	Omatekoinen taskulamppu
 2H_Improvised_Gardening_Hoe	Omatekoinen puutarhakuokka
 Geiger_Counter_Improvised	Omatekoinen geigermittari
 Improvised_Ghillie_Jacket	Omatekoinen naamiotakki
-Improvised_Ghillie_Pants	Omatekoinen naamiohousut
+Improvised_Ghillie_Pants	Omatekoiset naamiohousut
 1H_Improvised_Glass_Shiv	Omatekoinen lasipuukko
 Weapon_ImprovisedGrenadeLauncher	Omatekoinen kranaatinheitin
 Weapon_Parts_ImprovisedGrenadeLauncher	Omatekoinen kranaatinheitin: aseen osat
@@ -1070,7 +1070,7 @@ Improvised_Metal_Spear	Omatekoinen metallikeihäs
 ImprovisedMine	Omatekoinen miina
 ImprovisedMinigunTurret	Omatekoinen minigun-torni
 Improvised_Motorcycle_Wheel	Omatekoinen moottoripyörän pyörä
-WeaponSuppressor_ImprovisedOilCan_01	Improvised Oil Can: äänenvaimennin
+WeaponSuppressor_ImprovisedOilCan_01	Omatekoinen öljytölkkiäänenvaimennin
 PaintSprayer	Omatekoinen maaliruisku
 Dish_Pasta_Improvised	Omatekoinen pastaruoka
 Weapon_Parts_Impro_Pistol	Omatekoinen pistooli: aseen osat
@@ -1084,7 +1084,7 @@ ImprovisedRocketTurret	Omatekoinen rakettitorni
 Improvised_rope	Omatekoinen köysi
 Dish_Salad_Improvised	Omatekoinen salaatti
 Dish_Sandwich_Improvised	Omatekoinen voileipä
-WeaponSights_ImprovisedScope	Improvised: kiikaritähtäin
+WeaponSights_ImprovisedScope	Omatekoinen kiikaritähtäin
 Improvised_Sewing_kit	Omatekoinen ompelusarja
 ImprovisedSmallPaddle	Omatekoinen lyhyt mela
 2H_Improvised_shovel	Omatekoinen lapio
@@ -1864,7 +1864,7 @@ Slouch_Camo_Hat_06	Leveälierinen maastohattu
 Slouch_Hat_01	Leveälierinen hattu
 Slouch_Hat_02	Leveälierinen hattu
 12_Gauge_Slug_Ammobox	Haulikon täyteispatruunoiden laatikko
-Small_Animal_guts	Pieni eläimen sisälmykset
+Small_Animal_guts	Pienen eläimen sisälmykset
 Mine_02	Pieni jalkaväkimiina
 1H_Small_Axe	Pieni kirves
 Battery_Charger_Small	Pieni akkulaturi
