@@ -1,0 +1,2329 @@
+# Finnish labels; game model names and scientific species names intentionally retained.
+Cal_22	.22 patruunat
+Cal_22_Ammobox	.22 patruunalaatikko
+Cal_22_Crafted	.22 omatekoiset patruunat
+Cal_22_TR	.22 valojuovapatruunat
+Cal_22_Ammobox_TR	.22 valojuovapatruunalaatikko
+Cal_30-06	.30-06 patruunat
+Cal_30-06_Ammobox	.30-06 patruunalaatikko
+Cal_30-06_AP	.30-06 panssarinläpäisevät patruunat
+Cal_30-06_AP_CR	.30-06 omatekoiset panssarinläpäisevät patruunat
+Cal_30-06_Ammobox_AP	.30-06 panssarinläpäisevien patruunoiden laatikko
+Cal_30-06_Crafted	.30-06 omatekoiset patruunat
+Cal_30-06_TR	.30-06 valojuovapatruunat
+Cal_30-06_Ammobox_TR	.30-06 valojuovapatruunalaatikko
+Cal_308	.308 patruunat
+Cal_308_Ammobox	.308 patruunalaatikko
+Cal_308_AP	.308 panssarinläpäisevät patruunat
+Cal_308_Ammobox_AP	.308 panssarinläpäisevien patruunoiden laatikko
+Cal_308_AP_CR	.308 omatekoiset panssarinläpäisevät patruunat
+Cal_308_Crafted	.308 omatekoiset patruunat
+WeaponSuppressor_308_Black	.308: äänenvaimennin
+Cal_308_TR	.308 valojuovapatruunat
+Cal_308_Ammobox_TR	.308 valojuovapatruunalaatikko
+Cal_338	.338 patruunat
+Cal_338_Ammobox	.338 patruunalaatikko
+Cal_338_AP	.338 panssarinläpäisevät patruunat
+Cal_338_Ammobox_AP	.338 panssarinläpäisevien patruunoiden laatikko
+Cal_338_AP_CR	.338 omatekoiset panssarinläpäisevät patruunat
+Cal_338_Crafted	.338 omatekoiset patruunat
+WeaponSuppressor_338_Black	.338: äänenvaimennin
+WeaponSuppressor_338_Green	.338: äänenvaimennin (vihreä)
+WeaponSuppressor_338_Tan	.338: äänenvaimennin (hiekanruskea)
+Cal_338_TR	.338 valojuovapatruunat
+Cal_338_Ammobox_TR	.338 valojuovapatruunalaatikko
+Cal_357_Viper	.357 patruunat
+Cal_357_Ammobox	.357 patruunalaatikko
+Cal_357_Viper_AP	.357 panssarinläpäisevät patruunat
+Cal_357_Viper_AP_CR	.357 omatekoiset panssarinläpäisevät patruunat
+Cal_357_Ammobox_AP	.357 panssarinläpäisevien patruunoiden laatikko
+Cal_357_Viper_Crafted	.357 omatekoiset patruunat
+Cal_357_Viper_TR	.357 valojuovapatruunat
+Cal_357_Ammobox_TR	.357 valojuovapatruunalaatikko
+Cal_38	.38 patruunat
+Cal_38_Ammobox	.38 patruunalaatikko
+Cal_38_Ammobox_AP	.38 panssarinläpäisevien patruunoiden laatikko
+Cal_38_Ammobox_TR	.38 valojuovapatruunalaatikko
+Cal_38_AP	.38 panssarinläpäisevät patruunat
+Cal_38_AP_CR	.38 omatekoiset panssarinläpäisevät patruunat
+Cal_38_Crafted	.38 omatekoiset patruunat
+Cal_38_TR	.38 valojuovapatruunat
+Cal_44_Viper	.44 patruunat
+Cal_44_Viper_Ammobox	.44 patruunalaatikko
+Cal_44_Viper_AP_CR	.44 omatekoiset panssarinläpäisevät patruunat
+Cal_44_Viper_Ammobox_AP	.44 panssarinläpäisevien patruunoiden laatikko
+Cal_44_Viper_AP	.44 panssarinläpäisevät patruunat
+Cal_44_Viper_Crafted	.44 omatekoiset patruunat
+Cal_44_Viper_TR	.44 valojuovapatruunat
+Cal_44_Viper_Ammobox_TR	.44 valojuovapatruunalaatikko
+Cal_45	.45 ACP patruunat
+Cal_45_Ammobox	.45 ACP patruunalaatikko
+Cal_45_AP_CR	.45 ACP omatekoiset panssarinläpäisevät patruunat
+Cal_45_AP	.45 ACP panssarinläpäisevät patruunat
+Cal_45_AP_Ammobox	.45 ACP panssarinläpäisevien patruunoiden laatikko
+Cal_45_Crafted	.45 ACP omatekoiset patruunat
+WeaponSuppressor_45ACP	.45 ACP: äänenvaimennin
+Cal_45_TR	.45 ACP valojuovapatruunat
+Cal_45_Ammobox_TR	.45 ACP valojuovapatruunalaatikko
+Cal_50_AE	.50 AE patruunat
+Cal_50_AE_Ammobox	.50 AE patruunalaatikko
+Cal_50_AE_AP	.50 AE panssarinläpäisevät patruunat
+Cal_50_AE_AP_CR	.50 AE omatekoiset panssarinläpäisevät patruunat
+Cal_50_AE_AP_Ammobox	.50 AE panssarinläpäisevien patruunoiden laatikko
+Cal_50_AE_Crafted	.50 AE omatekoiset patruunat
+Cal_50_AE_TR	.50 AE valojuovapatruunat
+Cal_50_AE_Ammobox_TR	.50 AE valojuovapatruunalaatikko
+Cal_50BMG	.50 BMG patruunat
+Cal_50BMG_Ammobox	.50 BMG patruunalaatikko
+Cal_50BMG_AP	.50 BMG panssarinläpäisevät patruunat
+Cal_50BMG_AP_Ammobox	.50 BMG panssarinläpäisevien patruunoiden laatikko
+Cal_50BMG_Crafted	.50 BMG omatekoiset patruunat
+Cal_50BMG_TR	.50 BMG valojuovapatruunat
+Cal_50BMG_Ammobox_TR	.50 BMG valojuovapatruunalaatikko
+Weapon_DT11B_Sawed_Off	"The Mule" DT11B (lyhyt)
+12_Gauge_Birdshot	Kaliiperi 12, pienihaulinen patruuna
+12_Gauge_Buckshot	Kaliiperi 12, karkeahaulinen patruuna
+12_Gauge_Buckshot_Crafted	Kaliiperi 12, omatekoinen karkeahaulinen patruuna
+12_Gauge_Slug	Kaliiperi 12, täyteispatruuna
+WeaponSuppressor_12_Gauge	12 Gauge: äänenvaimennin
+Cal_40x46	40x46-kranaatti
+Cal_5_45x39mm	5.45x39mm patruunat
+Cal_5_45x39mm_Ammobox	5.45x39mm patruunalaatikko
+Cal_5_45x39mm_AP	5.45x39mm panssarinläpäisevät patruunat
+Cal_5_45x39mm_AP_CR	5.45x39mm omatekoiset panssarinläpäisevät patruunat
+Cal_5_45x39mm_AP_Ammobox	5.45x39mm panssarinläpäisevien patruunoiden laatikko
+Cal_5_45x39mm_Crafted	5.45x39mm omatekoiset patruunat
+WeaponSuppressor_5_45x39	5.45x39mm: äänenvaimennin
+Cal_5_45x39mm_TR	5.45x39mm valojuovapatruunat
+Cal_5_45x39mm_Ammobox_TR	5.45x39mm valojuovapatruunalaatikko
+Cal_5_56x45mm	5.56x45mm patruunat
+Cal_5_56x45mm_Ammobox	5.56x45mm patruunalaatikko
+Cal_5_56x45mm_AP	5.56x45mm panssarinläpäisevät patruunat
+Cal_5_56x45mm_AP_CR	5.56x45mm omatekoiset panssarinläpäisevät patruunat
+Cal_5_56x45mm_AP_Ammobox	5.56x45mm panssarinläpäisevien patruunoiden laatikko
+Cal_5_56x45mm_Crafted	5.56x45mm omatekoiset patruunat
+Cal_5_56x45mm_TR	5.56x45mm valojuovapatruunat
+Cal_5_56x45mm_Ammobox_TR	5.56x45mm valojuovapatruunalaatikko
+Cal_7_62x39mm	7.62x39mm patruunat
+Cal_7_62x39mm_Ammobox	7.62x39mm patruunalaatikko
+Cal_7_62x39mm_AP	7.62x39mm panssarinläpäisevät patruunat
+Cal_7_62x39mm_AP_CR	7.62x39mm omatekoiset panssarinläpäisevät patruunat
+Cal_7_62x39mm_AP_Ammobox	7.62x39mm panssarinläpäisevien patruunoiden laatikko
+Cal_7_62x39mm_Crafted	7.62x39mm omatekoiset patruunat
+Cal_7_62x39mm_TR	7.62x39mm valojuovapatruunat
+Cal_7_62x39mm_Ammobox_TR	7.62x39mm valojuovapatruunalaatikko
+Cal_7_62x54mmR	7.62x54mmR patruunat
+Cal_7_62x54mmR_Ammobox	7.62x54mmR patruunalaatikko
+Cal_7_62x54mmR_AP	7.62x54mmR panssarinläpäisevät patruunat
+Cal_7_62x54mmR_AP_CR	7.62x54mmR omatekoiset panssarinläpäisevät patruunat
+Cal_7_62x54mmR_AP_Ammobox	7.62x54mmR panssarinläpäisevien patruunoiden laatikko
+Cal_7_62x54mmR_Crafted	7.62x54mmR omatekoiset patruunat
+Cal_7_62x54mmR_TR	7.62x54mmR valojuovapatruunat
+Cal_7_62x54mmR_Ammobox_TR	7.62x54mmR valojuovapatruunalaatikko
+Cal_7_92x57mm	7.92x57mm patruunat
+Cal_7_92x57mm_Ammobox	7.92x57mm patruunalaatikko
+Cal_7_92x57mm_AP	7.92x57mm panssarinläpäisevät patruunat
+Cal_7_92x57mm_AP_CR	7.92x57mm omatekoiset panssarinläpäisevät patruunat
+Cal_7_92x57mm_AP_Ammobox	7.92x57mm panssarinläpäisevien patruunoiden laatikko
+Cal_7_92x57mm_Crafted	7.92x57mm omatekoiset patruunat
+Cal_7_92x57mm_TR	7.92x57mm valojuovapatruunat
+Cal_7_92x57mm_Ammobox_TR	7.92x57mm valojuovapatruunalaatikko
+Cal_9mm	9mm patruunat
+Cal_9mm_Ammobox	9mm patruunalaatikko
+Cal_9mm_AP	9mm panssarinläpäisevät patruunat
+Cal_9mm_AP_CR	9mm omatekoiset panssarinläpäisevät patruunat
+Cal_9mm_AP_Ammobox	9mm panssarinläpäisevien patruunoiden laatikko
+Cal_9mm_Crafted	9mm omatekoiset patruunat
+Cal_9mm_TR	9mm valojuovapatruunat
+Cal_9mm_Ammobox_TR	9mm valojuovapatruunalaatikko
+Cal_9x39mm	9x39mm patruunat
+Cal_9x39mm_Ammobox	9x39mm patruunalaatikko
+Cal_9x39mm_AP	9x39mm panssarinläpäisevät patruunat
+Cal_9x39mm_AP_CR	9x39mm omatekoiset panssarinläpäisevät patruunat
+Cal_9x39mm_AP_Ammobox	9x39mm panssarinläpäisevien patruunoiden laatikko
+Cal_9x39mm_Crafted	9x39mm omatekoiset patruunat
+Cal_9x39mm_TR	9x39mm valojuovapatruunat
+Cal_9x39mm_Ammobox_TR	9x39mm valojuovapatruunalaatikko
+Absinthe	Absinthe Father
+WeaponScope_ACOG_01	ACOG
+ActivatedCharcoal_01	Lääkehiili (läpipainopakkaus)
+ActivatedCharcoal_02	Lääkehiili (laatikko)
+ActivatedCharcoal_03	Lääkehiili (purkki)
+Compass_Advanced	Tarkkuuskompassi
+Lock_Security_Lvl3	Edistynyt lukkosuoja
+Lockpick_Advanced_Item	Tarkkuustiirikka
+Aeroplane_Repair_Kit	Lentokoneen korjaussarja
+African_Biltong	Afrikkalainen kuivaliha
+Agaricus_Augustus	Agaricus Augustus
+Agaricus_Campestris	Agaricus Campestris
+Aloe_Vera	Agaaven lehti
+WeaponSights_AimPRO	AimPRO: punapistetähtäin
+Air_Pump	Ilmapumppu
+Weapon_AK15	AK-15
+Weapon_AK47	AK-47
+Magazine_AK15	AK15: lipas
+WeaponSuppressor_AK15	AK15: äänenvaimennin
+Weapon_Parts_AK15	AK15: aseen osat
+Weapon_AK47_Engraved	AK47 (kaiverrettu)
+Magazine_AK47	AK47: lipas
+Weapon_Parts_AK47	AK47: aseen osat
+Weapon_AKM	AKM
+Weapon_Parts_AKM	AKM: aseen osat
+Weapon_Parts_AKS_74U	AKS 74U: aseen osat
+Weapon_AKS_74U	AKS-74U
+Magazine_AKS_74U	AKS-74U: lipas
+Bag_of_Almonds	Mantelit
+Amanita_Muscaria	Amanita Muscaria
+Amanita_Pantherina	Amanita Pantherina
+Amanita_Phalloides	Amanita Phalloides
+Amanita_Virosa	Amanita Virosa
+ColorCan_AmberYellow	Maalipurkki (meripihkankeltainen)
+Fish_Amur	Ruohokarppi
+Amur_Fillet	Ruohokarppi (filee)
+WeaponCharm_Anchor	Ankkuri (asekoriste)
+Suite_Pants_01	Angelin lentohousut
+Monkfish_Fillet	Merikrotti (filee)
+WeaponCharm_Angry_Emoji	Vihainen emoji (asekoriste)
+Small_Animal_Fat	Eläinrasva
+Animal_skin	Eläimen nahka
+Bear_Improvised_Jacket	Eläimennahkatakki
+Bear_Improvised_Pants	Eläimennahkahousut
+Improvised_Quiver_01	Eläimennahkainen nuoliviini
+HH_Shoes_01_01	Nilkkurit
+HH_Shoes_01_02	Nilkkurit
+HH_Shoes_01_03	Nilkkurit
+HH_Shoes_01_04	Nilkkurit
+Anode_Plate	Anodilevy
+Mine_01	Jalkaväkimiina
+Antibiotic_Pill_Single	Antibiootit – 1000 mg
+Antibiotics_01	Antibiootit (läpipainopakkaus) – 1000 mg
+Antibiotics_02	Antibiootit (laatikko) – 1000 mg
+Antibiotics_03	Antibiootit (purkki) – 1000 mg
+Apple	Omena
+Apple_2	Omena
+Crab_Apple	Omena
+Apple_Seed_Bag	Omena (siemenpussi)
+Apple_Seeds	Omena (siemenet)
+RH_Arm_Guard	Käsivarsisuoja
+Armband_01	Käsivarsinauha
+Armillaria_Mellea	Armillaria Mellea
+Armor_Tactical_Vest_01_01	Taktinen suojaliivi
+Armor_Tactical_Vest_01_02	Taktinen suojaliivi
+Armor_Tactical_Vest_01_03	Taktinen suojaliivi
+Armor_Tactical_Vest_01_04	Taktinen suojaliivi
+Armor_Tactical_Vest_01_05	Taktinen suojaliivi
+Weapon_AS_Val	AS Val
+Weapon_Parts_AS_Val	AS Val: aseen osat
+WeaponFlashlight_AS_Val	AS Val/VSS: taskulamppu
+Magazine_AS_Val	AS Val/VSS: lipas
+Aspirin	Aspiriini
+Military_Backpack_01_01	Rynnäkköreppu
+Military_Backpack_01_02	Rynnäkköreppu
+Military_Backpack_01_03	Rynnäkköreppu
+Military_Backpack_01_04	Rynnäkköreppu
+Military_Backpack_01_05	Rynnäkköreppu
+Military_Backpack_01_06	Rynnäkköreppu
+Military_Backpack_01_07	Rynnäkköreppu
+Military_Backpack_01_08	Rynnäkköreppu
+Military_Backpack_01_09	Rynnäkköreppu
+Weapon_AT4_HEAT	AT4 HEAT
+AtropineInjection	Atropiiniruiske
+Weapon_AWM	AWM
+Weapon_AWM_Desert	AWM (aavikko)
+Weapon_AWM_Green	AWM (vihreä)
+Magazine_AWM	AWM: lipas
+Weapon_AWM_Snake	AWM (käärmekuvio)
+Weapon_Parts_AWM	AWM: aseen osat
+Weapon_AWP	AWP
+Weapon_AWP_Desert	AWP (aavikko)
+Weapon_AWP_Green	AWP (vihreä)
+Magazine_AWP	AWP: lipas
+Weapon_AWP_Snake	AWP (käärmekuvio)
+Weapon_Parts_AWP	AWP: aseen osat
+2H_Axe	Kirves
+WeaponCharm_Axe	Kirves (asekoriste)
+BabyFood	Vauvanruoka
+Backpack_02_01	Reppu
+Backpack_02_02	Reppu
+Backpack_02_03	Reppu
+Backpack_02_04	Reppu
+Backpack_02_05	Reppu
+Military_Backpack_03_01	Reppu
+Military_Backpack_03_02	Reppu
+Military_Backpack_03_03	Reppu
+Military_Backpack_03_04	Reppu
+Military_Backpack_03_05	Reppu
+Military_Backpack_03_06	Reppu
+Military_Backpack_03_07	Reppu
+Military_Backpack_03_08	Reppu
+AnimalBaitFeederItem	Syöttikori
+BakedBeans	Pavut tomaattikastikkeessa
+BakingSoda	Ruokasooda
+Military_Mask_01	Kypärähuppu
+Military_Mask_02	Kypärähuppu
+Military_Mask_03	Kypärähuppu
+Military_Mask_04	Kypärähuppu
+Military_Mask_05	Kypärähuppu
+Military_Mask_06	Kypärähuppu
+Military_Mask_07	Kypärähuppu
+Military_Mask_08	Kypärähuppu
+Police_Mask_01	Kypärähuppu
+Recurve_Bow_100	Ballista 100#
+Bamboo_Hat_01	Bambuhattu
+Bamboo_Hat_02	Bambuhattu
+Banana	Banaani
+Banjo	Banjo
+Barbed_Wire	Piikkilanka
+Barberry	Happomarja
+ColorCan_BaronBrown	Maalipurkki (paroninruskea)
+BaseExpansionKit_Lvl1	Tukikohdan laajennussarja, taso 1
+BaseExpansionKit_Lvl2	Tukikohdan laajennussarja, taso 2
+2H_Baseball_Bat	Baseballmaila
+2H_Baseball_Bat_with_spikes	Naulattu baseballmaila
+Baseball_Cap_01	Lippalakki
+Baseball_Cap_02	Lippalakki
+Baseball_Cap_03	Lippalakki
+Baseball_Cap_04	Lippalakki
+Baseball_Cap_05	Lippalakki
+Baseball_Cap_06	Lippalakki
+Baseball_Cap_07	Lippalakki
+Baseball_Cap_08	Lippalakki
+Baseball_Cap_09	Lippalakki
+Baseball_Cap_10	Lippalakki
+Compass_Basic	Peruskompassi
+Lock_Security	Peruslukkosuoja
+Fish_Bass	Isobassi
+Bass_Fillet	Isobassi (filee)
+1H_Police_Baton	Pamppu
+Batteries	Paristot
+Weapon_BayRifferBlock21	Bay Riffer Block21
+Book_Cooking_BBQ	Grillauskeittokirja
+BCU_Chip	BCU-siru
+BCULock_Item	BCU-lukko
+WeaponCharm_BCU	BCU (asekoriste)
+1H_Beam_Dildo	Beamasaurus-dildo
+Dish_Sandwich_Beans	Papuvoileipä
+Beenie_01	Pipo
+Beenie_02	Pipo
+Beenie_03	Pipo
+Beenie_04	Pipo
+Beenie_05	Pipo
+Beenie_06	Pipo
+Beenie_07	Pipo
+Beenie_08	Pipo
+Beenie_09	Pipo
+Military_Beanie_01	Pipo
+Military_Beanie_02	Pipo
+Military_Beanie_03	Pipo
+Military_Beanie_04	Pipo
+Military_Beanie_05	Pipo
+Military_Beanie_06	Pipo
+Military_Beanie_07	Pipo
+Military_Beanie_08	Pipo
+Bear_Head	Karhu (pää)
+Bear_Head_Hat_01	Karhu (päähattu)
+Bear_Left_Back_Leg	Karhu (jalka)
+Bear_Left_Front_Leg	Karhu (jalka)
+Bear_Right_Back_Leg	Karhu (jalka)
+Bear_Right_Front_Leg	Karhu (jalka)
+Bear_Back_Paws	Karhu (käpälät)
+Bear_Front_Paws	Karhu (käpälät)
+Bear_Steak	Karhu (pihvi)
+Bear_Torso	Karhu (ruho)
+Bear_Left_Torso_Half	Karhu (ruhon puolikas)
+Bear_Right_Torso_Half	Karhu (ruhon puolikas)
+Bedroll	Makuualusta
+BeefRavioli	Naudanliharavioli
+BeefStew	Naudanlihapata
+MRE_Stew	Naudanlihapata (MRE-kenttämuona)
+Beer	Olut
+Beet	Punajuuri
+Beijing_Shoes_01	Pekingiläiset kengät
+Beijing_Shoes_02	Pekingiläiset kengät
+Beijing_Shoes_03	Pekingiläiset kengät
+Beijing_Shoes_04	Pekingiläiset kengät
+Bell_Pepper	Paprika
+2H_Pitchfork_Bent	Vääntynyt talikko
+Beret_01	Baretti
+Beret_02	Baretti
+Beret_03	Baretti
+Beret_04	Baretti
+Beret_05	Baretti
+Beret_06	Baretti
+Big_Animal_Fat	Suuri eläinrasva
+Big_Animal_guts	Suuri eläimen sisälmykset
+Christmas_Present_03	Suuri joululahja
+Christmas_Present_AK15	Suuri joululahja
+Christmas_Present_AK15_01	Suuri joululahja
+Christmas_Present_AK15_02	Suuri joululahja
+Christmas_Present_AKS_74U	Suuri joululahja
+Christmas_Present_AKS_74U_01	Suuri joululahja
+Christmas_Present_AKS_74U_02	Suuri joululahja
+Christmas_Present_AS_Val	Suuri joululahja
+Christmas_Present_AS_Val_01	Suuri joululahja
+Christmas_Present_AS_Val_02	Suuri joululahja
+Christmas_Present_Ghillie	Suuri joululahja
+Christmas_Present_Ghillie_01	Suuri joululahja
+Christmas_Present_Ghillie_02	Suuri joululahja
+Christmas_Present_Kar98	Suuri joululahja
+Christmas_Present_Kar98_01	Suuri joululahja
+Christmas_Present_Kar98_02	Suuri joululahja
+Christmas_Present_Laika_Alternator	Suuri joululahja
+Christmas_Present_M1	Suuri joululahja
+Christmas_Present_M1_01	Suuri joululahja
+Christmas_Present_M1_02	Suuri joululahja
+Christmas_Present_M16A4	Suuri joululahja
+Christmas_Present_M16A4_01	Suuri joululahja
+Christmas_Present_M16A4_02	Suuri joululahja
+Christmas_Present_M1887	Suuri joululahja
+Christmas_Present_M249	Suuri joululahja
+Christmas_Present_M82A1	Suuri joululahja
+Christmas_Present_M82A1_01	Suuri joululahja
+Christmas_Present_M82A1_02	Suuri joululahja
+Christmas_Present_MAC10	Suuri joululahja
+Christmas_Present_MAC10_01	Suuri joululahja
+Christmas_Present_MAC10_02	Suuri joululahja
+Christmas_Present_MK18	Suuri joululahja
+Christmas_Present_MK18_01	Suuri joululahja
+Christmas_Present_MK18_02	Suuri joululahja
+Christmas_Present_MP5	Suuri joululahja
+Christmas_Present_MP5_01	Suuri joululahja
+Christmas_Present_MP5_02	Suuri joululahja
+Christmas_Present_Rager_Alternator	Suuri joululahja
+Christmas_Present_RPK	Suuri joululahja
+Christmas_Present_RPK_01	Suuri joululahja
+Christmas_Present_RPK_02	Suuri joululahja
+Christmas_Present_SCAR_DMR	Suuri joululahja
+Christmas_Present_SCAR_L	Suuri joululahja
+Christmas_Present_SCAR_L_01	Suuri joululahja
+Christmas_Present_SCAR_L_02	Suuri joululahja
+Christmas_Present_SVD	Suuri joululahja
+Christmas_Present_SVD_01	Suuri joululahja
+Christmas_Present_SVD_02	Suuri joululahja
+Christmas_Present_UMP	Suuri joululahja
+Christmas_Present_UMP_01	Suuri joululahja
+Christmas_Present_UMP_02	Suuri joululahja
+Christmas_Present_WW_Alternator	Suuri joululahja
+2H_Stone_Axe	Suuri kivikirves
+2H_Stone_Axe_Head	Suuri kivikirveen terä
+Big_Vehicle_StorageRack	Suuri ajoneuvon tavarateline
+Leather_Jacket	Moottoripyöräilijän nahkatakki
+Negan_Jacket	Moottoripyöräilijän nahkatakki
+Binoculars	Kiikarit
+12_Gauge_BirdShot_Ammobox	Pienihaulisten haulikonpatruunoiden laatikko
+Birthday_Cap_01	Syntymäpäivähattu
+Ghillie_Suit_Pants_02	Naamioasun alaosa (musta)
+Ghillie_Suit_Jacket_02	Naamioasun yläosa (musta)
+BlackOlives	Mustat oliivit
+ColorCan_Black	Maalipurkki (musta)
+BlackPepper	Mustapippuri
+Blackberry	Karhunvatukka
+Recurve_Bow_90	BlackHawk 90#
+Weapon_BlackHawk_Crossbow	Blackhawk-varsijousi
+BlankSign	Tyhjä kyltti
+Blast_Cap	Räjäytysnalli
+2H_Baseball_Bat_Blaze	Blaze-maila
+Fish_Bleak	Salakka
+Bleak_Fillet	Salakka (filee)
+FishingBait_Bleak	Salakka (kalansyötti)
+Weapon_Block21	Block 21
+Magazine_Block21	Block 21: lipas
+Weapon_Parts_Block21	Block 21: aseen osat
+MemoryModule_Level2	Muistimoduuli (sininen)
+Blueberries	Mustikat
+Boar_Head	Villisika (pää)
+Boar_Head_Hat_01	Villisika (päähattu)
+Boar_Hooves_Back	Villisika (sorkat)
+Boar_Hooves_front	Villisika (sorkat)
+Boar_Back_Leg	Villisika (jalka)
+Boar_Front_Leg	Villisika (jalka)
+Boar_Torso	Villisika (ruho)
+Bobby_pin	Hiuspinni
+Bobby_Pin_Package	Hiuspinnirasia
+FishingBait_BoiliesPrm1	Boilies-kalansyötti
+Boletus_Edulis	Boletus Edulis
+Bolts	Pultit
+Bone	Luu
+Bone_Needle	Luuneula
+BoomBox_01	Kasettiradio
+WeaponCharm_Bottle_Opener	Pullonavaaja (asekoriste)
+BowSilencer	Jousen vaimennin
+Bow_MicroStabilizer	Jousen vakaaja
+Bolts_Package_Box	Pulttilaatikko
+Nails_Package_Box	Naulalaatikko
+Boxer_Briefs_01	Bokserit
+F_Undershirt_Bra_01	Rintaliivit
+F_Undershirt_Bra_02	Rintaliivit
+F_Undershirt_Bra_03	Rintaliivit
+F_Undershirt_Bra_04	Rintaliivit
+F_Undershirt_Bra_05	Rintaliivit
+Brake_Oil	Jarruneste
+Improvised_Plant_rope	Oksaköysi
+1H_Brass_knuckles	Nyrkkirauta
+FishingBait_Bread	Leipä (kalansyötti)
+Breathing_Tube_01	Hengitysputki
+Brick	Tiili
+Carbon_BroadHead_Arrow	Leikkurikärkinen hiilikuitunuoli
+Metal_BroadHead_Arrow	Leikkurikärkinen metallinuoli
+Broccoli	Parsakaali
+Broccoli_Seed_Bag	Parsakaali (siemenpussi)
+Broccoli_Seeds	Parsakaali (siemenet)
+Kilt_Brogue_Shoe_01	Brogue-kenkä
+Can03	Bubbles
+Buck_Head	Urospeura (pää)
+Buck_Left_Back_Leg	Urospeura (jalka)
+Buck_Left_Front_Leg	Urospeura (jalka)
+Buck_Right_Back_Leg	Urospeura (jalka)
+Buck_Right_Front_Leg	Urospeura (jalka)
+Buck_Torso	Urospeura (ruho)
+12_Gauge_Buckshot_Ammobox	Karkeahaulisten haulikonpatruunoiden laatikko
+WeaponCharm_Bullet	Luoti (asekoriste)
+Bulletproof_Vest_01	Luotiliivi
+Bulletproof_Vest_01_02	Luotiliivi
+Bulletproof_Vest_01_03	Luotiliivi
+Bulletproof_Vest_01_04	Luotiliivi
+Bulletproof_Vest_01_05	Luotiliivi
+Bundle_Of_Bobby_Pins	Hiuspinninippu
+Bundle_Of_Bricks	Tiilinippu
+Bundle_Of_Improvised_Lockpicks	Omatekoisten tiirikoiden nippu
+Bundle_Of_Lockpicks	Tiirikkakimppu
+Bundle_Rag_Stripes	Kangassuikalenippu
+Bundle_Of_Rags	Rättinippu
+Bundle_Of_Safety_Pins	Hakaneulanippu
+Bundle_Wooden_Plank	Lankkunippu
+Wooden_Sticks_Bundle_Large	Keppinippu
+Bunny_Slippers	Pupupantofelit
+Cereal_BunnyStars	Bunny Stars -murot
+AntiburnGel	Palovammageeli
+1H_Bushman	Bushman
+Butter	Voi
+RH_Bycoket_01	Sulkapäähine
+C4	C4-pommi
+C4_Detonator	C4-sytytin
+C4_Keypad	C4-näppäimistön piirilevy
+C4_CircuitBoard	C4-ajastimen piirilevy
+Cabbage	Keräkaali
+Cabbage_Seed_Bag	Keräkaali (siemenpussi)
+Cabbage_Seeds	Keräkaali (siemenet)
+Book_Cooking_Cake	Kakkukeittokirja
+WeaponSuppressor_30_06	Cal .30-06: äänenvaimennin
+Camera_Lens	Kameran objektiivi
+Military_Backpack_02_01	Maastokuvioinen retkireppu
+Military_Backpack_02_02	Maastokuvioinen retkireppu
+Military_Backpack_02_03	Maastokuvioinen retkireppu
+Military_Backpack_02_04	Maastokuvioinen retkireppu
+Military_Backpack_02_05	Maastokuvioinen retkireppu
+Military_Backpack_02_06	Maastokuvioinen retkireppu
+Military_Backpack_02_07	Maastokuvioinen retkireppu
+Military_Backpack_02_08	Maastokuvioinen retkireppu
+Camouflage_Jacket_01	Maastotakki
+Camouflage_Jacket_02	Maastotakki
+Camouflage_Jacket_03	Maastotakki
+CanOpener	Tölkinavaaja
+Candle_01	Kynttilä
+Candy_Bob	Candy Bob
+WeaponCharm_Candy_Cane	Karkkikeppi (asekoriste)
+CandyCorn_01	Maissikarkki
+Cannabis_Bud	Kannabiskukinto
+Cannabis_Seed_Bag	Kannabis (siemenpussi)
+Cannabis_Seeds	Kannabis (siemenet)
+CannedGoulash	Naudanlihagulassisäilyke
+CannedSeafoodMix	Mereneläväsäilyke
+Canned_Tuna	Tonnikalasäilyke
+CantaloupeMelon	Cantaloupemeloni
+CantaloupeMelon_Slice	Cantaloupemeloni
+CantaloupeMelon_Seeds	Cantaloupemeloni (siemenet)
+Canteen	Kenttäpullo
+Cantharellus_Cibarius	Cantharellus Cibarius
+Car_Battery	Auton akku
+Car_Battery_Cables	Auton akkukaapelit
+Car_Jack	Autotunkki
+Car_Radio_Item	Autoradio
+Car_Repair_Kit	Auton korjaussarja
+PETBottle01	Karamellilimonadi
+PETBottle02	Karamellilimonadi
+Carbon_Arrow	Hiilikuitunuoli
+Ammo_Crossbow_Bolt_Carbon	Hiilikuituinen varsijousen nuoli
+Weapon_CarbonHunter	Carbon Hunter
+Weapon_CarbonBear	Carbon Hunter Ironpaw
+Magazine_CarbonHunter	Carbon Hunter: lipas
+Weapon_Parts_Carbon_Hunter	Carbon Hunter: aseen osat
+Fish_Carp	Karppi
+Carp_Fillet	Karppi (filee)
+Carp_Head	Karppi (pää)
+Carrot	Porkkana
+GlassBottle01	Porkkanamehu
+Carrot_Seed_Bag	Porkkana (siemenpussi)
+Carrot_Seeds	Porkkana (siemenet)
+CartridgeTrap	Patruuna-ansa
+Cash	Käteinen
+Book_Cooking_Casseroles	Laatikkoruokakeittokirja
+CannedCatfood	Kissanruoka
+Fish_Catfish	Monni
+Catfish_Fillet	Monni (filee)
+Catfish_Head	Monni (pää)
+Cauliflower	Kukkakaali
+CD_Player	CD-soitin
+Celery	Selleri
+CementBag	Sementtisäkki
+Chainsaw	Moottorisaha
+Charcoal	Puuhiili
+Cheese	Juusto
+FishingBait_Cheese	Juusto (kalansyötti)
+Dish_Sandwich_Cheese	Juustovoileipä
+CheesePacked	Juustoviipaleet
+MRE_Cheeseburger	Juustohampurilainen (MRE-kenttämuona)
+ColorCan_CherryRed	Maalipurkki (kirsikanpunainen)
+Cherry_Seed_Bag	Kirsikka (siemenpussi)
+Cherry_Seeds	Kirsikka (siemenet)
+ChickenDrumstick	Kanankoipi
+ChickenMeat	Kananliha
+Chili_Pepper	Chilipaprika
+ChilliPeppers_Seeds	Chilipaprika (siemenet)
+Chillipepper_Seed_Bag	Chili (siemenpussi)
+Chips	Tavalliset perunalastut
+ChocolateCandy_10	ChocCandy
+ChocolateCandy_11	ChocoBar
+ChocolateCandy_04	Suklaa
+ChocolateCandy_05	Suklaa
+ChocolateCandy_06	Suklaa
+ChocolateCandy_07	Suklaa
+ChocolateCandy_08	Suklaapatukka
+ChocolateCandy_09	Suklaapatukka
+ChocolateCandy_03	Suklaakakkukarkki
+ChocolateCandy_01	Suklaakarkkipatukka
+Chow_Mein	Chow mein
+Christmas_Beanie_02	Joulupipo
+Christmas_Decoration	Joulukoristeet
+Christmas_Present_02	Joululahja
+Christmas_Ball_01	Joulukuusenkoriste
+Christmas_Ball_02	Joulukuusenkoriste
+Christmas_Ball_03	Joulukuusenkoriste
+Christmas_Ball_04	Joulukuusenkoriste
+Christmas_Ball_05	Joulukuusenkoriste
+Christmas_Ball_06	Joulukuusenkoriste
+Christmas_Pants_01	Jouluhousut
+Christmas_Pants_02	Jouluhousut
+Christmas_Slippers	Joulupantofelit
+Christmas_Vest_01	Jouluneule
+Fish_Chub	Turpa
+Chub_Fillet	Turpa (filee)
+Credit_Card_Classic	Tavallinen pankkikortti
+Classic_Shirt_01	Klassinen paita
+Classic_Shirt_02	Klassinen paita
+Cigarette	Classics-savuke
+Cigarettes	Classics-savukeaski
+Claymore	Claymore-miina
+1H_Cleaver	Lihaveitsi
+Coal_01	Kivihiili
+CoalBag	Kivihiilisäkki
+Recurve_Bow_50	Cobra 50#
+Cocoa_Powder	Kaakaojauhe
+Coconut	Kookospähkinä
+Coffee	Kahvi
+Coffee_Cup	Kahvikuppi
+Can04	Koola
+ColorCan_ColdCyan	Maalipurkki (kylmä syaani)
+ColorCan_ColdGrey	Maalipurkki (kylmänharmaa)
+CombatBoots	Taistelukengät
+Combat_Helmet_01	Taistelukypärä
+Combat_Helmet_02	Taistelukypärä
+Combat_Helmet_03	Taistelukypärä
+Combat_Helmet_04	Taistelukypärä
+M1_Vietnam_Helmet	Taistelukypärä
+RH_Jacket	Yhdistelmätakki
+Compound_Bow	Taljajousi
+Compound_Bow_Desert	Taljajousi
+Compound_Bow_Digital	Taljajousi
+Compound_Bow_Snow	Taljajousi
+Compound_Bow_US_Scorpion	Taljajousi
+Compound_Bow_Woodland	Taljajousi
+CompoundBowSight_3_Pin	Taljajousen tähtäin
+CompoundBowSight_5_Pin	Taljajousen tähtäin
+Boots_06_01	Työkengät
+Boots_06_02	Työkengät
+Construction_Gloves_01_01	Työkäsineet
+Construction_Gloves_01_02	Työkäsineet
+Construction_Gloves_01_03	Työkäsineet
+Construction_Pants_01	Työhousut
+Construction_Pants_02	Työhousut
+Construction_Pants_03	Työhousut
+Boots_07_01	Työkumisaappaat
+Boots_07_02	Työkumisaappaat
+Boots_07_03	Työkumisaappaat
+Pot1	Kattila
+Copper_Coins	Kuparikolikot
+Coprinus_Comatus	Coprinus Comatus
+Corn	Maissi
+Corn_flakes	Maissihiutaleet
+FishingBait_Corn	Maissi (kalansyötti)
+Corn_Seed_Bag	Maissi (siemenpussi)
+Corn_Seeds	Maissi (siemenet)
+ColorCan_CottonCandy	Maalipurkki (hattaranpunainen)
+Hoodie_01	Puuvillahuppari
+Hoodie_02	Puuvillahuppari
+Hoodie_03	Puuvillahuppari
+Hoodie_04	Puuvillahuppari
+Hoodie_05	Puuvillahuppari
+Inmate_Hoodie_01	Puuvillahuppari
+Inmate_Shirt_01_Snow_DigitalDeluxe	Puuvillahuppari
+Shirt_01	Puuvillapaita
+Shirt_02	Puuvillapaita
+Shirt_03	Puuvillapaita
+Shirt_04	Puuvillapaita
+Backpack_DigitalDeluxe	Lähettireppu
+Cowboys_Boots_01	Cowboysaappaat
+Crackers	Suolakeksit
+Cream	Kerma
+Cricket	Sirkka
+FishingBait_Cricket	Sirkka (kalansyötti)
+1H_Crowbar	Sorkkarauta
+Fish_CrucianCarp	Ruutana
+Cruiser_Brakelight_Item	Cruiser-moottoripyörä: jarru, kevyt
+Cruiser_Fender_Front_Item	Cruiser-moottoripyörä: etuosa, lokasuoja
+Cruiser_Seat_Front_Item	Cruiser-moottoripyörä: etuosa, istuin
+Cruiser_Headlight_Item	Cruiser-moottoripyörä: ajovalo
+Cruiser_Fender_Rear_Item	Cruiser-moottoripyörä: takaosa, lokasuoja
+Cruiser_Seat_Rear_Item	Cruiser-moottoripyörä: takaosa, istuin
+Cruiser_Wind_Deflector_Item	Cruiser-moottoripyörä: tuuliohjain
+Crutch	Kainalosauva
+Cuban_Cigar	Kuubalainen sikari
+Cucumber	Kurkku
+Cucumber_Seed_Bag	Kurkku (siemenpussi)
+Cucumber_Seeds	Kurkku (siemenet)
+Currant	Herukka
+Zombie_Impersonator_Suit	Kirottu nukkeasu
+WeaponCharm_Ear	Irtileikattu korva (asekoriste)
+WeaponCharm_Finger	Irtileikattu sormi (asekoriste)
+Dentex_Fillet	Hammasahven (filee)
+ColorCan_DarkBrown	Maalipurkki (tummanruskea)
+ColorCan_DarkGreen	Maalipurkki (tummanvihreä)
+ColorCan_DarkGrey	Maalipurkki (tummanharmaa)
+ColorCan_DarkUrban	Maalipurkki (tumma kaupunkimaastokuvio)
+Date	Taateli
+Weapon_Deagle_357	DEagle .357
+Magazine_DEagle_357	DEagle .357: lipas
+Magazine_DEagle_50	DEagle .50: lipas
+Weapon_Parts_Deagle_357	DEagle 357: aseen osat
+Weapon_DEagle_50	DEagle 50
+Weapon_DEagle_50Gold	DEagle 50
+Weapon_Parts_DEagle_50	DEagle 50: aseen osat
+Christmas_Paper_01	Koristepaperi
+Christmas_Paper_02	Koristepaperi
+Christmas_Paper_03	Koristepaperi
+ColorCan_DeepOrange	Maalipurkki (syvänoranssi)
+Buck_Antlers	Peuran sarvet
+Deer_Steak	Peura (pihvi)
+Fish_Dentex	Hammasahven
+Dentex_Head	Hammasahven (pää)
+Depleted_Uranium	Köyhdytetty uraani
+Depleted_Uranium_Container	Köyhdytetyn uraanin säiliö
+WeaponFlashlight_DesertEagle	Desert Eagle: taskulamppu
+WeaponSights_Deagle_RedDot	Desert Eagle: punapistetähtäin
+Ghillie_Suit_Pants_03	Naamioasun alaosa (aavikko)
+Ghillie_Suit_Jacket_03	Naamioasun yläosa (aavikko)
+DialLock_Item	Numerolukko
+Diary	Päiväkirja
+1H_Dildo	Dildo
+Dildo_Spear	Dildokeihäs
+Dildo_Arrow	Dildolla varustettu puunuoli
+Ammo_Crossbow_Bolt_Dildo	Dildolla varustettu puinen varsijousen nuoli
+Dinghy_Item	Kumivenepussi
+Dirtbike_Body_Item	Maastomoottoripyörä: kori
+Dirtbike_Brakelight_Item	Maastomoottoripyörä: jarru, kevyt
+Dirtbike_Fender_Item	Maastomoottoripyörä: lokasuoja
+Dirtbike_Front_Shield_Item	Maastomoottoripyörä: etuosa, suojalevy
+Dirtbike_Front_Wheel_Cover_Item	Maastomoottoripyörä: etuosa, pyörä, suojus
+Dirtbike_Headlight_Item	Maastomoottoripyörä: ajovalot
+Dirtbike_Body_Hellrider_Item	Maastomoottoripyörä: Hellrider, kori
+Dirtbike_Hellrider_Skull_Item	Maastomoottoripyörä: Hellrider, pääkallo
+Disposable_Mask	Kertakäyttömaski
+Diving_Mask	Sukellusmaski
+Diving_Mask_With_Breathing_Tube	Sukellusmaski ja hengitysputki
+Doe_Head	Naaraspeura (pää)
+Doe_Left_Back_Leg	Naaraspeura (jalka)
+Doe_Left_Front_Leg	Naaraspeura (jalka)
+Doe_Right_Back_Leg	Naaraspeura (jalka)
+Doe_Right_Front_Leg	Naaraspeura (jalka)
+Doe_01_Steak	Naaraspeura (pihvi)
+Doe_Torso	Naaraspeura (ruho)
+CannedDogFood	Koiranruoka
+Donkey_Head	Aasi (pää)
+Donkey_Back_Leg	Aasi (jalka)
+Donkey_Front_Leg	Aasi (jalka)
+Donkey_Steak	Aasi (pihvi)
+Donkey_Torso	Aasi (ruho)
+FishingHook2	Kaksoiskoukku
+FishingHookPack3	Kaksoiskoukkupakkaus
+Double_Bang_Firecracker	Kaksoispamausraketti
+Christmas_tree	Douglaskuusi
+Baseball_Cap_11	Dreamreaper-lippalakki
+Drill	Porakone
+Book_Cooking_Drinks	Juomareseptikirja
+Driving_Gloves_01_01	Ajohansikkaat
+Driving_Gloves_01_02	Ajohansikkaat
+Driving_Gloves_01_03	Ajohansikkaat
+Driving_Gloves_01_04	Ajohansikkaat
+Weapon_DT11B	DT11B
+Weapon_Parts_DT11B	DT11B: aseen osat
+Duct_Tape	Ilmastointiteippi
+2_pieces_Ear_Necklace	Korvakaulakoru
+4_pieces_Ear_Necklace	Korvakaulakoru
+6_pieces_Ear_Necklace	Korvakaulakoru
+Ear_Plugs	Korvatulpat
+Construction_Earmuffs_01	Kuulosuojaimet
+Construction_Earmuffs_02	Kuulosuojaimet
+Construction_Earmuffs_03	Kuulosuojaimet
+Construction_Earmuffs_04	Kuulosuojaimet
+ColorCan_EarthGreen	Maalipurkki (maanvihreä)
+ColorCan_EarthGrey	Maalipurkki (maanharmaa)
+ColorCan_EarthRed	Maalipurkki (maanpunainen)
+ColorCan_EarthYellow	Maalipurkki (maankeltainen)
+Earthworm	Kastemato
+Egg	Kananmuna
+Electrical_Repair_Kit	Sähkölaitteiden korjaussarja
+Electrician_Tools	Sähköasentajan työkalut
+WeaponCharm_Elephant	Norsu (asekoriste)
+Emergency_bandage	Ensiapuside
+Emergency_bandage_Deluxe	Ensiapuside
+Emergency_bandage_Big	Ensiapusidepakkaus
+Emergency_bandage_Big_Deluxe	Ensiapusidepakkaus
+EMP_Grenade	EMP-kranaatti
+1H_EMpossible_Knife	EMpossible-veitsi
+EmptyBag	Tyhjä pussi
+Christmas_Box	Tyhjä laatikko
+Lock_Item_Advanced	Vahvistettu lukko
+EuropeanBass_Fillet	Meribassi (filee)
+WeaponCharm_EvilEye	Paha silmä (asekoriste)
+Explosive_Arrow_Carbon	Räjähtävä hiilikuitunuoli
+Explosive_Arrow_Metal	Räjähtävä metallinuoli
+Explosive_Arrow	Räjähtävä puunuoli
+Ammo_Crossbow_Bolt_Explosive	Räjähtävä puinen varsijousen nuoli
+Extreme_Helmet_01	Extreme-kypärä
+Faceroll_Smasher	Facerolls Face Smasher
+Fascinator_Hat_01	Hiuskoriste
+Fascinator_Hat_02	Hiuskoriste
+Fascinator_Hat_03	Hiuskoriste
+Fascinator_Hat_04	Hiuskoriste
+Fascinator_Hat_05	Hiuskoriste
+Zombie_Fat	Rasva
+Feather	Höyhen
+Medieval_Helmet_01	Feudalin kiillotettu kypärä
+Fig	Viikuna
+Fig_Seed_Bag	Viikuna (siemenpussi)
+Fig_Seeds	Viikuna (siemenet)
+Fire_deflector_shield	Lämpösuojakilpi
+Fire_Hand_Drill_new	Tulipora
+ColorCan_FireEngineRed	Maalipurkki (paloautonpunainen)
+Fireman_Helmet_01	Palokypärä
+Fireman_Helmet_02	Palokypärä
+Fireman_Helmet_03	Palokypärä
+Work_Jacket_01	Palomiehen takki
+Work_Jacket_02	Palomiehen takki
+Work_Jacket_03	Palomiehen takki
+Working_pants_01_01	Palomiehen housut
+Working_pants_01_02	Palomiehen housut
+Working_pants_01_03	Palomiehen housut
+Fireworks_Small	Pieni ilotulite
+Fireworks_Big	Pieni ilotulite / Suuri ilotulite
+Fish	Kala
+FishingHook	Kalastuskoukku
+FishItem	Kalaesine
+Dish_Salad_Fish	Kalasalaatti
+WeaponCharm_Fish_Bowl	Kalamalja (asekoriste)
+FishingFloater	Koho
+FishingFloater1	Koho
+FishingFloaterPack1	Kohopakkaus
+FishingFloaterPack2	Kohopakkaus
+Boonie_Hat_01	Kalastushattu
+Boonie_Hat_02	Kalastushattu
+Boonie_Hat_03	Kalastushattu
+Boonie_Hat_04	Kalastushattu
+Boonie_Hat_05	Kalastushattu
+Boonie_Hat_06	Kalastushattu
+Military_Boonie_Hat_01	Kalastushattu
+Military_Boonie_Hat_02	Kalastushattu
+Military_Boonie_Hat_03	Kalastushattu
+Military_Boonie_Hat_04	Kalastushattu
+Military_Boonie_Hat_05	Kalastushattu
+Military_Boonie_Hat_06	Kalastushattu
+Military_Boonie_Hat_07	Kalastushattu
+Military_Boonie_Hat_08	Kalastushattu
+Redneck_Hat_07	Kalastushattu
+Fishing_hook	Kalastuskoukku
+FishingReel	Kalastuskela
+ImprovisedFishingReel	Kalastuskela
+FishingReelPro	Ammattilaisen kalastuskela
+FishingRod	Onkivapa
+FishingRod_A	Onkivapa
+FishingRod_B	Onkivapa
+Fistula_Hepatica	Fistula Hepatica
+FlareItem	Valoraketti
+FlareItem_Blue	Valoraketti
+FlareItem_Green	Valoraketti
+FlareCartridge	Valorakettipatruuna
+Weapon_FlareGun	Valopistooli
+Weapon_Parts_FlareGun	Valopistooli: aseen osat
+FlareTrap	Valorakettiansa
+ColorCan_FlatBrown	Maalipurkki (mattaruskea)
+ColorCan_FlatGrey	Maalipurkki (mattaharmaa)
+ColorCan_FlatWhite	Maalipurkki (mattavalkoinen)
+Wooden_ArrowFeathers	Sulitettu puunuoli
+Flint_And_Steel	Tulukset
+Christmas_tree_Folded	Pakattu douglaskuusi
+ColorCan_ForestGreen	Maalipurkki (metsänvihreä)
+Steel_Fork	Haarukka
+CannedFruitCocktail	Hedelmäsekoitus
+Dish_Salad_Fruit	Hedelmäsalaatti
+Fungicide	Sienitautien torjunta-aine
+Fuse_1000A	Sulake 1000A
+Fuse_200A	Sulake 200A
+Fuse_400A	Sulake 400A
+Fuse_600A	Sulake 600A
+Fuse_800A	Sulake 800A
+ColorCan_GalaxyBlue	Maalipurkki (galaksinsininen)
+ColorCan_GalaxyGrey	Maalipurkki (galaksinharmaa)
+Garlic	Valkosipuli
+Garlic_Seed_Bag	Valkosipuli (siemenpussi)
+Garlic_Seeds	Valkosipuli (siemenet)
+Garrison_Cap_01	Suikka
+Garrison_Cap_02	Suikka
+Garrison_Cap_03	Suikka
+Garrison_Cap_04	Suikka
+Garrison_Cap_05	Suikka
+Gas_Mask_01	Kaasunaamari
+Gas_Mask_02	Kaasunaamari
+Gas_Mask_03	Kaasunaamari
+Gas_Mask_04	Kaasunaamari
+GasTank	Polttoainesäiliö
+Gasoline_Canister	Bensiinikanisteri
+Gear	Hammaspyörä
+Ghillie_Suit_Pants_01	Naamioasun alaosa
+Ghillie_Suit_Jacket_01	Naamioasun yläosa
+Glass	Lasi
+Glue	Liima
+Goat_Head	Vuohi (pää)
+Goat_Horns	Vuohen sarvet
+Goat_Back_Limb	Vuohi (jalka)
+Goat_Front_Limb	Vuohi (jalka)
+Goat_Skull_Hat_01	Vuohenkallohattu
+Goat_Steak	Vuohi (pihvi)
+Goat_Torso	Vuohi (ruho)
+Credit_Card_Gold	Kultainen pankkikortti
+MemoryModule_Level4	Muistimoduuli (kultainen)
+GrapeFruit	Greippi
+GlassBottle02	Greippimehu
+Graphite	Grafiitti
+Grasshopper	Heinäsirkka
+FishingBait_Grasshopper	Heinäsirkka (kalansyötti)
+GravelBag	Sorasäkki
+MemoryModule_Level1	Muistimoduuli (harmaa)
+CannedPeas	Vihreät herneet
+Frag_Grenade	Käsikranaatti
+Grinding_Stone_02	Hiomakivi
+GuavaHalves	Guava
+Guitar	Kitara
+Gun_Powder	Ruuti
+Zombie_guts	Sisälmykset
+Halloween_Anonymous_Mask_01	Guy Fawkes -naamio
+Halloween_Mask_BabyDoll_02	Halloween-naamio
+Halloween_Mask_Clown_03	Halloween-naamio
+Halloween_Mask_Greek	Halloween-naamio
+Halloween_Mask_Hockey_04	Halloween-naamio
+Halloween_Mask_JohnDoe_05	Halloween-naamio
+Halloween_Mask_Knife	Halloween-naamio
+Halloween_Mask_Lecter_06	Halloween-naamio
+Halloween_Mask_Plague_07	Halloween-naamio
+Halloween_Mask_Smiley_08	Halloween-naamio
+Halloween_Mask_Wooden_09	Halloween-naamio
+Hand_Drill	Käsipora
+Hand_Fan_01	Viuhka
+WeaponSuppressor_Handgun	Pistooli: äänenvaimennin
+WeaponCharm_Happy_Emoji	Iloinen emoji (asekoriste)
+Harmonica	Huuliharppu
+Hazelnuts	Pähkinäpensas
+ColorCan_HazyPurple	Maalipurkki (sameanvioletti)
+Head_Bags_01	Päähuppu
+Hemostatic_Dressing	Verenvuotoa tyrehdyttävä sidos
+HH_Shoes_03_01	Korkeakorkoiset nilkkurit
+HH_Shoes_03_02	Korkeakorkoiset nilkkurit
+HH_Shoes_03_03	Korkeakorkoiset nilkkurit
+HH_Shoes_03_04	Korkeakorkoiset nilkkurit
+HH_Shoes_03_05	Korkeakorkoiset nilkkurit
+HH_Shoes_03_06	Korkeakorkoiset nilkkurit
+HH_Shoes_03_07	Korkeakorkoiset nilkkurit
+HH_Shoes_04_01	Avokkaat
+HH_Shoes_04_02	Avokkaat
+HH_Shoes_04_03	Avokkaat
+HH_Shoes_04_04	Avokkaat
+HH_Shoes_02_01	Korkeakorkoiset sandaalit
+HH_Shoes_02_02	Korkeakorkoiset sandaalit
+HH_Shoes_02_03	Korkeakorkoiset sandaalit
+RH_Shoe_01	Korkeavartiset kengät
+Sneakers_02_01	Korkeavartiset kengät
+Sneakers_02_02	Korkeavartiset kengät
+Sneakers_02_03	Korkeavartiset kengät
+Sneakers_02_04	Korkeavartiset kengät
+Hiking_Backpack_01_01	Retkireppu
+Hiking_Backpack_01_02	Retkireppu
+Hiking_Backpack_01_03	Retkireppu
+Hiking_Backpack_01_04	Retkireppu
+Hiking_Backpack_01_05	Retkireppu
+Hiking_Boots_01	Vaelluskengät
+Hiking_Boots_02	Vaelluskengät
+Hiking_Boots_03	Vaelluskengät
+Hiking_Boots_04	Vaelluskengät
+Hip_Flask	Taskumatti
+Hippie_Pants_01	Hippihousut
+Hippie_Pants_02	Hippihousut
+Hippie_Pants_03	Hippihousut
+Hippie_Pants_04	Hippihousut
+Hippie_Pants_05	Hippihousut
+Hippie_Pants_06	Hippihousut
+Hippie_Pants_07	Hippihousut
+Hippie_Pants_08	Hippihousut
+Hippie_Shirt_01	Hippipaita
+Hippie_Shirt_02	Hippipaita
+Horse_Head	Hevonen (pää)
+Horse_Mask	Hevonen (päänaamio)
+Horse_Back_Limb	Hevonen (jalka)
+Horse_Front_Limb	Hevonen (jalka)
+Horse_Steak	Hevonen (pihvi)
+Horse_Torso	Hevonen (ruho)
+Horse_Torso_Half	Hevosen ruhon puolikas
+WeaponCharm_Horseshoe	Hevosenkenkä (asekoriste)
+Hose	Letku
+Hospital_Pants	Sairaalahousut
+Hospital_Shirt_01	Sairaalapaita
+Weapon_SF19	HS SF19
+Magazine_SF19	HS SF19: lipas
+Weapon_Parts_SF19	HS SF19: aseen osat
+Weapon_HS9	HS-9
+Weapon_Parts_HS9	HS-9: aseen osat
+Magazine_HS9	HS9: lipas
+Prisoner_Left_Arm	Ihmisen käsivarsi
+Prisoner_Right_Arm	Ihmisen käsivarsi
+Human_Ears	Ihmisen korvat
+Prisoner_Left_Foot	Ihmisen jalkaterä
+Prisoner_Right_Foot	Ihmisen jalkaterä
+Human_guts	Ihmisen sisälmykset
+Prisoner_Head	Ihmisen pää
+Prisoner_Head_No_Teeth	Ihmisen pää
+Prisoner_Left_Leg	Ihmisen jalka
+Prisoner_Right_Leg	Ihmisen jalka
+Human_Skin	Ihmisen nahka
+Human_Steak	Ihmisenlihapihvi
+Human_Teeth	Ihmisen hampaat
+Prisoner_Torso	Ihmisen torso
+1H_Hunter	Hunter
+Weapon_Hunter85_V2	Hunter 85
+Magazine_Hunter85_V2	Hunter 85: lipas
+Weapon_Parts_Hunter85	Hunter 85: aseen osat
+WeaponSuppressor_Hunter	Hunter: äänenvaimennin
+WeaponScope_HuntingScope	Metsästyskiikaritähtäin
+Icing_Sugar	Tomusokeri
+ImprovisedCal50Turret	Omatekoinen .50-kaliiperin tykkitorni
+Improvised_Backpack_Big	Omatekoinen reppu
+ImprovisedBasicTurret	Omatekoinen perustykkitorni
+Improvised_Shelter	Omatekoinen sänky
+Improvised_Shoes_01	Omatekoinen saappaat
+WeaponSuppressor_ImprovisedBottle_Grey	Improvised Bottle: äänenvaimennin
+WeaponSuppressor_ImprovisedBottle_White	Improvised Bottle: äänenvaimennin
+Improvised_Bow	Omatekoinen jousi 20#
+Improvised_Bow_25	Omatekoinen jousi 25#
+Improvised_Bow_30	Omatekoinen jousi 30#
+Improvised_Bow_35	Omatekoinen jousi 35#
+Bow_ImprovisedStabilizer	Omatekoinen jousen vakaaja
+Improvised_Bulletproof_Armor	Omatekoinen luodinkestävä suojavaruste
+AntiburnGel_Improvised	Omatekoinen palovammageeli
+WeaponSuppressor_ImprovisedCan_Grey	Improvised Can: äänenvaimennin
+WeaponSuppressor_ImprovisedCan_Red	Improvised Can: äänenvaimennin
+Improvised_Chandelier_Light	Omatekoinen kattokruunu
+ImprovisedClaymore	Omatekoinen claymore-miina
+Improvised_compass	Omatekoinen kompassi
+Improvised_Bag_Small_01	Omatekoinen lähettireppu
+Weapon_Improvised_Crossbow	Omatekoinen varsijousi
+Improvised_Electric_Lamp_Ceiling	Omatekoinen sähkölamppu
+ImprovisedFishingHook	Omatekoinen kalastuskoukku
+ImprovisedFishingFloater	Omatekoinen koho
+Improvised_FishingLine	Omatekoinen siima
+ImprovisedFishingRod	Omatekoinen onkivapa
+Weapon_Improvised_Flamethrower	Omatekoinen liekinheitin
+ImprovisedFlamethrowerTurret	Omatekoinen liekinheitintorni
+ImprovisedFlashlight	Improvised: taskulamppu
+2H_Improvised_Gardening_Hoe	Omatekoinen puutarhakuokka
+Geiger_Counter_Improvised	Omatekoinen geigermittari
+Improvised_Ghillie_Jacket	Omatekoinen naamiotakki
+Improvised_Ghillie_Pants	Omatekoinen naamiohousut
+1H_Improvised_Glass_Shiv	Omatekoinen lasipuukko
+Weapon_ImprovisedGrenadeLauncher	Omatekoinen kranaatinheitin
+Weapon_Parts_ImprovisedGrenadeLauncher	Omatekoinen kranaatinheitin: aseen osat
+1H_Improvised_Hammer	Omatekoinen vasara
+Weapon_Improvised_Handgun	Omatekoinen pistooli
+1H_Hatchet	Omatekoinen pikkukirves
+Improvised_Lockpick	Omatekoinen tiirikka
+Magnifying_Glass	Omatekoinen suurennuslasi
+Scary_Mask_01	Omatekoinen naamio
+ImprovisedMetalDetector	Omatekoinen metallinpaljastin
+2H_Improvised_metal_shovel	Omatekoinen metallilapio
+Improvised_Metal_Spear	Omatekoinen metallikeihäs
+ImprovisedMine	Omatekoinen miina
+ImprovisedMinigunTurret	Omatekoinen minigun-torni
+Improvised_Motorcycle_Wheel	Omatekoinen moottoripyörän pyörä
+WeaponSuppressor_ImprovisedOilCan_01	Improvised Oil Can: äänenvaimennin
+PaintSprayer	Omatekoinen maaliruisku
+Dish_Pasta_Improvised	Omatekoinen pastaruoka
+Weapon_Parts_Impro_Pistol	Omatekoinen pistooli: aseen osat
+Improvised_Quiver_02_Rags	Omatekoinen nuoliviini
+Raincoat_Improvised	Omatekoinen sadetakki
+Dish_Rice_Improvised	Omatekoinen riisiruoka
+Weapon_Improvised_Rifle	Omatekoinen kivääri
+ImprovisedRail_Side	Omatekoinen kivääri: kiinnityskisko
+Weapon_Parts_Impro_rifle	Omatekoinen kivääri: aseen osat
+ImprovisedRocketTurret	Omatekoinen rakettitorni
+Improvised_rope	Omatekoinen köysi
+Dish_Salad_Improvised	Omatekoinen salaatti
+Dish_Sandwich_Improvised	Omatekoinen voileipä
+WeaponSights_ImprovisedScope	Improvised: kiikaritähtäin
+Improvised_Sewing_kit	Omatekoinen ompelusarja
+ImprovisedSmallPaddle	Omatekoinen lyhyt mela
+2H_Improvised_shovel	Omatekoinen lapio
+Dish_Soup_Improvised	Omatekoinen keitto
+Improvised_Stabproof	Omatekoinen pistosuojaliivi
+Dish_Stew_Improvised	Omatekoinen pataruoka
+Improvised_Stone_Spear	Omatekoinen kivikeihäs
+Improvised_Tire_Repair_Kit	Omatekoinen renkaan korjaussarja
+1H_Improvised_Tomahawk	Omatekoinen tomahawk
+Improvised_Tool_Box	Omatekoinen työkalulaatikko
+Improvised_Water_container	Omatekoinen vesisäiliö
+Improvised_Wheel	Omatekoinen pyörä
+Improvised_Wooden_Spear	Omatekoinen puukeihäs
+Improvised_Workbench	Omatekoinen työpöytä
+Industrial_Fertilizer	Teollinen lannoite
+2H_Industrial_Gardening_Hoe	Teollinen puutarhakuokka
+Inonotus_Obliquus	Inonotus Obliquus
+Instant_OatMeal	Pikakaurapuuro
+Electrician_Glove_01_01	Eristävä kumikäsine
+Electrician_Glove_01_02	Eristävä kumikäsine
+Electrician_Glove_01_03	Eristävä kumikäsine
+IntEA_Level1	Älykkyyttä parantava ampulli, taso 1
+IntEA_Level2	Älykkyyttä parantava ampulli, taso 2
+IntEA_Level3	Älykkyyttä parantava ampulli, taso 3
+Lock_Item_Basic	Rautalukko
+Isopropyl_alcohol	Isopropyylialkoholi
+Jack_o_Lantern_01	Kurpitsalyhty
+Jack_o_Lantern_02	Kurpitsalyhty
+Jack_o_Lantern_03	Kurpitsalyhty
+Jeans_01_01	Farkut
+Jeans_01_02	Farkut
+Jeans_01_03	Farkut
+Jeans_01_04	Farkut
+Jeans_02_01_V2	Farkut
+Jeans_02_02	Farkut
+Jeans_02_03	Farkut
+Jeans_02_04	Farkut
+Jeans_02_05	Farkut
+Jeans_02_06	Farkut
+Jeans_02_07	Farkut
+Jeans_02_08	Farkut
+Jeans_02_09	Farkut
+Jersey_01	Trikoopaita
+Jersey_02	Trikoopaita
+Jersey_03	Trikoopaita
+Jersey_04	Trikoopaita
+Jersey_05	Trikoopaita
+Jersey_06	Trikoopaita
+Jersey_07	Trikoopaita
+Jersey_08	Trikoopaita
+Jersey_09	Trikoopaita
+Jock_Jacket_01	Urheilutakki
+Jock_Jacket_02	Urheilutakki
+Jock_Jacket_03	Urheilutakki
+Jock_Jacket_04	Urheilutakki
+Joint01	Kannabissätkä
+Weapon_Judge44	Judge 44
+Weapon_Parts_Judge44	Judge 44: aseen osat
+Baseball_Cap_12	JW-lippalakki
+K6-3_Helmet	K6-3-kypärä
+Weapon_98k_Karabiner	Kar98
+Kar98_Bayonet	Kar98: pistin
+WeaponSuppressor_Kar98k	Kar98k: äänenvaimennin
+Weapon_Parts_Kar98k	Kar98k: aseen osat
+2H_Katana	Katana
+Ketchup	Ketsuppi
+KeyCard	Avainkortti
+KeyCardBunker_Level01	Avainkortti
+KeyCardBunker_Level02	Avainkortti
+Keyhole_Shirt_01	Aukkokauluspaita
+Keyhole_Shirt_02	Aukkokauluspaita
+Keyhole_Shirt_03	Aukkokauluspaita
+Keyhole_Shirt_04	Aukkokauluspaita
+Keyhole_Shirt_05	Aukkokauluspaita
+Keyhole_Shirt_06	Aukkokauluspaita
+Keyhole_Shirt_07	Aukkokauluspaita
+Keyhole_Shirt_08	Aukkokauluspaita
+Kicmovaca	Kicmovaca
+Kilt_01	Kiltti
+Kilt_02	Kiltti
+Kilt_03	Kiltti
+Kilt_04	Kiltti
+Kilt_05	Kiltti
+Kilt_06	Kiltti
+Kitchen_Board_01	Leikkuulauta
+Kitchen_Board_02	Leikkuulauta
+1H_KitchenKnife	Keittiöveitsi
+1H_KitchenKnife_02	Keittiöveitsi
+1H_KitchenKnife_02_Deluxe	Keittiöveitsi
+1H_KitchenKnife_03	Keittiöveitsi
+1H_KitchenKnife_04	Keittiöveitsi
+1H_KitchenKnife_DigitalDeluxe	Keittiöveitsi
+Kiwi	Kiivi
+Socks_02	Polvisukat
+Recurve_Bow_60	Kodiak 60#
+Slippers_01	Kroks
+Weapon_Krueger	Krueger
+Magazine_Krueger	Krueger: lipas
+Weapon_Parts_Krueger	Krueger: aseen osat
+1H_Kunai	Kunai
+Laika_Engine_Alternator_Item	Laika: laturi
+Laika_Body_ArmorHeavy_Left	Laika: kori, panssari, raskas, vasen
+Laika_Body_ArmorHeavy_Right	Laika: kori, panssari, raskas, oikea
+Laika_Body_ArmorLight_Left	Laika: kori, panssari, kevyt, vasen
+Laika_Body_ArmorLight_Right	Laika: kori, panssari, kevyt, oikea
+Laika_Body_ArmorLight_Top	Laika: kori, panssari, kevyt, yläosa
+Laika_Body_Front	Laika: kori, etuosa
+Laika_Body_Left	Laika: kori, vasen
+Laika_Body_Right	Laika: kori, oikea
+Laika_Body_Top	Laika: kori, yläosa
+Laika_Bumper_Armor_Back_Item	Laika: puskuri, panssari, takaosa
+Laika_Bumper_Back_Item	Laika: puskuri, takaosa
+Laika_Bumper_Front_Item	Laika: puskuri, etuosa
+Laika_Door_ArmorHeavy_FrontLeft_Item	Laika: ovi, raskas, panssari, etuosa, vasen
+Laika_Door_ArmorHeavy_FrontRight_Item	Laika: ovi, raskas, panssari, etuosa, oikea
+Laika_Door_Left_Item	Laika: ovi, vasen
+Laika_Door_ArmorLight_FrontLeft_Item	Laika: ovi, kevyt, panssari, etuosa, vasen
+Laika_Door_ArmorLight_FrontRight_Item	Laika: ovi, kevyt, panssari, etuosa, oikea
+Laika_Door_Right_Item	Laika: ovi, oikea
+Laika_Body_ArmorHeavy_Top_Item	Laika: raskas, panssari, yläosa
+Laika_DoorHood_Item	Laika: konepelti
+Laika_Lights_FrontLeft	Laika: valot, etuosa, vasen
+Laika_Lights_FrontRight	Laika: valot, etuosa, oikea
+Laika_Lights_RearLeft	Laika: valot, takaosa, vasen
+Laika_Lights_RearRight	Laika: valot, takaosa, oikea
+Laika_Seat_FrontLeft_Item	Laika: istuin, etuosa, vasen
+Laika_Seat_FrontRight_Item	Laika: istuin, etuosa, oikea
+Laika_DoorTrunk_ArmorHeavy_Item	Laika: tavaratila, panssari, raskas
+Laika_DoorTrunk_ArmorLight_Item	Laika: tavaratila, panssari, kevyt
+Laika_DoorTrunk_Item	Laika: tavaratila, ovi
+Battery_Charger_Large	Suuri akkulaturi
+LogShed_1	Suuri halkovaja
+Stone_Large	Suuri kivi
+Larve	Toukka
+Laser_Detonator	Lasersytytin
+Lead_Plate	Lyijylevy
+Leather_Backpack_01	Nahkareppu
+Leather_Backpack_02	Nahkareppu
+Leather_Backpack_03	Nahkareppu
+Belt_Pistol_Holster	Nahkainen vyöasekotelo
+Leather_MiniSkirt_01	Nahkainen minihame
+Leather_MiniSkirt_02	Nahkainen minihame
+Leather_MiniSkirt_03	Nahkainen minihame
+Leather_Sheet	Nahkalevy
+Leather_Shoes_02	Nahkakenkä
+Lemon	Sitruuna
+Lemon_Seed_Bag	Sitruuna (siemenpussi)
+Lemon_Seeds	Sitruuna (siemenet)
+Lepiota_Procera	Lepiota Procera
+Lettuce	Lehtisalaatti
+Lettuce_Seed_Bag	Lehtisalaatti (siemenpussi)
+Lettuce_Seeds	Lehtisalaatti (siemenet)
+ColorCan_LightBrown	Maalipurkki (vaaleanruskea)
+ColorCan_LightUrban	Maalipurkki (vaalea kaupunkimaastokuvio)
+Lighter	Sytytin
+Lime	Limetti
+ColorCan_LimeGreen	Maalipurkki (limetinvihreä)
+GlassBottle03	Limettimehu
+PETBottle03	Limettilimonadi
+PETBottle04	Limettilimonadi
+Ganoderma_Lucidum	Lakkakääpä
+WeaponCharm_Emoji	LMAO-emoji (asekoriste)
+Lockpick_Item	Tiirikka
+LockpickingBoard	Tiirikoinnin harjoitusalusta
+ImprovisedRail_Long	Pitkä omatekoinen kiinnityskisko
+Long_Paddle	Pitkä mela
+Long_wooden_stick	Pitkä puukeppi
+Vest_01	Pitkähihainen paita
+Vest_02	Pitkähihainen paita
+Vest_03	Pitkähihainen paita
+Vest_04	Pitkähihainen paita
+Vest_05	Pitkähihainen paita
+Cigarettes1	Lucky Star -savukeaski
+Cigarette1	Lucky Stars -savuke
+Lycoperdon_Gigantea	Lycoperdon Gigantea
+M1_Bayonet	M1: pistin
+M1_Clip	M1: patruunakampa
+WeaponSights_M1_Experimental	M1-kokeilutähtäimet
+WeaponFlashHider	M1: liekinvaimennin
+M1_Medical_Helmet	M1-lääkintäkypärä
+Weapon_M1_Garand	M1-kivääri
+WeaponSights_M1_ScopeAndSights	M1: kiikaritähtäin
+WeaponSuppressor_M1	M1: äänenvaimennin
+Weapon_Parts_M1_Garand	M1: aseen osat
+Magazine_M16	M16: lipas
+Weapon_M16A4	M16A4
+WeaponSights_M16A4_FoldingSights	M16A4-taittotähtäimet
+Weapon_Parts_M16A4	M16A4: aseen osat
+Weapon_M1887	M1887
+Weapon_M1887_Sawed_off	M1887 (katkaistu)
+Weapon_Parts_M1887	M1887: aseen osat
+Weapon_MosinNagant	M1891
+Mosin_Bayonet	M1891: pistin
+WeaponSuppressor_M1891	M1891: äänenvaimennin
+Weapon_Parts_MosinNagant	M1891: aseen osat
+Weapon_M1911	M1911
+Weapon_M1911_Engraved	M1911 (kaiverrettu)
+Weapon_M1911_Gold	M1911 (kultainen)
+Weapon_M1911_JayW	M1911 JayW
+Magazine_M1911	M1911: lipas
+M1911_Rail	M1911: kiinnityskisko
+Weapon_Parts_M1911	M1911: aseen osat
+Weapon_M249	M249
+Magazine_M249	M249-patruunalaatikko
+Weapon_Parts_M249	M249: aseen osat
+M70_Bayonet	M70: pistin
+WeaponSuppressor_M82A1	M82 QDL: äänenvaimennin
+WeaponSuppressor_M82A1_Black	M82 QDL: äänenvaimennin
+WeaponSuppressor_M82A1_Desert	M82 QDL: äänenvaimennin
+WeaponSuppressor_M82A1_Snow	M82 QDL: äänenvaimennin
+WeaponScope_M82A1	M82: kiikaritähtäin
+WeaponScope_M82A1_Black	M82: kiikaritähtäin
+WeaponScope_M82A1_Desert	M82: kiikaritähtäin
+WeaponScope_M82A1_Snow	M82: kiikaritähtäin
+Weapon_M82A1	M82A1
+Weapon_M82A1_Black	M82A1
+Weapon_M82A1_Desert	M82A1
+Weapon_M82A1_Snow	M82A1
+Magazine_M82A1	M82A1: lipas
+Weapon_Parts_M82A1	M82A1: aseen osat
+Flashbang	M84-sokaisukranaatti
+WeaponFlashlight_M9	M9: taskulamppu
+Magazine_M9	M9: lipas
+Weapon_Parts_M9	M9: aseen osat
+Weapon_MAC10	MAC-10
+Magazine_MAC10	MAC-10: lipas
+WeaponSuppressor_MAC10	MAC-10: äänenvaimennin
+Weapon_Parts_MAC10	MAC-10: aseen osat
+Magnifying_Glass1	Suurennuslasi
+Vodka	Majestic Bear -vodka
+Manchu_Bow_50	Manchu-jousi
+Mango	Mango
+Marine_Cap_01	Merijalkaväen lakki
+Marine_Cap_02	Merijalkaväen lakki
+Marine_Cap_03	Merijalkaväen lakki
+Marine_Cap_04	Merijalkaväen lakki
+Marine_Cap_05	Merijalkaväen lakki
+Marine_Cap_06	Merijalkaväen lakki
+Marine_Cap_07	Merijalkaväen lakki
+Marine_Cap_08	Merijalkaväen lakki
+Matches	Tulitikut
+Mayonnaise	Majoneesi
+FishingBait_Meat	Liha (kalansyötti)
+MeatSnack_01	Mausteinen lihavälipala
+MeatSnack_02	Mausteinen lihavälipala
+Medical_Glove_01	Lääkintäkäsineet
+1H_Medieval_Sword	Keskiaikainen miekka
+Battery_Charger_Medium	Keskikokoinen akkulaturi
+FishingHookPack2	Keskikokoisten koukkujen pakkaus
+Lock_Security_Lvl2	Keskitason lukkosuoja
+Medium_Vehicle_StorageRack	Keskikokoinen ajoneuvon tavarateline
+FishingHook1	Keskikokoinen kalastuskoukku
+Knife_Sheath	Lähitaisteluaseen kotelo
+Metal_Arrow	Metallinuoli
+2H_Metal_Axe	Metallikirves
+2H_Metal_Baseball_Bat	Metallinen baseballmaila
+Ammo_Crossbow_Bolt_Metal	Metallinen varsijousen nuoli
+MetalDetector	Metallinpaljastin
+1H_Improvised_metal_knife	Metalliveitsi
+1H_Metal_Pipe	Metalliputki
+Saw	Metallisaha
+Metal_Scrap_01	Metalliromu
+Metal_Scrap_02	Metalliromu
+Metal_Scrap_03	Metalliromu
+Metal_Scrap_04	Metalliromu
+Metal_Scrap_05	Metalliromu
+1H_Metal_Sword	Metallimiekka
+Ammo_Crossbow_Bolt_WoodenMetalTip	Metallikärkinen varsijousen nuoli
+Wooden_ArrowMetalTip	Metallikärkinen puunuoli
+Bundle_Of_Metal_Tips	Metallikärjet
+HH_Shoes_05_01	Keskikorkeat sandaalit
+HH_Shoes_05_02	Keskikorkeat sandaalit
+HH_Shoes_05_03	Keskikorkeat sandaalit
+MilitaryBoots_JNA	Armeijan saappaat
+MilitaryBoots_Peace	Armeijan saappaat
+Military_Cap_01	Armeijan lakki
+Military_Cap_02	Armeijan lakki
+Military_Cap_03	Armeijan lakki
+Military_Cap_04	Armeijan lakki
+Military_Cap_05	Armeijan lakki
+Military_Cap_06	Armeijan lakki
+Military_Cap_07	Armeijan lakki
+Military_Cap_08	Armeijan lakki
+Compass	Sotilaskompassi
+Military_Goggles_01	Sotilassuojalasit
+Tactical_Sunglasses_01	Sotilassuojalasit
+Tactical_Sunglasses_02	Sotilassuojalasit
+Military_Helmet_01_01	Sotilaskypärä
+Military_Helmet_01_02	Sotilaskypärä
+Military_Helmet_01_03	Sotilaskypärä
+Military_Helmet_01_04	Sotilaskypärä
+Military_Helmet_01_05	Sotilaskypärä
+Military_Helmet_01_06	Sotilaskypärä
+Military_Helmet_01_07	Sotilaskypärä
+Military_Helmet_01_08	Sotilaskypärä
+Military_Helmet_01_09	Sotilaskypärä
+Military_Quiver_01	Armeijan nuoliviini
+Military_Quiver_02	Armeijan nuoliviini
+Military_Quiver_03	Armeijan nuoliviini
+Military_Quiver_04	Armeijan nuoliviini
+Military_Quiver_05	Armeijan nuoliviini
+Military_Quiver_06	Armeijan nuoliviini
+Military_Quiver_07	Armeijan nuoliviini
+Military_Quiver_08	Armeijan nuoliviini
+Military_Shirt_01	Armeijan paita
+Military_Shirt_02	Armeijan paita
+Military_Shirt_03	Armeijan paita
+Military_Shirt_04	Armeijan paita
+Military_Shirt_05	Armeijan paita
+Military_Shirt_06	Armeijan paita
+Military_Shirt_07	Armeijan paita
+Military_Shirt_08	Armeijan paita
+1H_Military_Shovel	Kenttälapio
+1H_Military_Survival_Knife	Armeijan selviytymisveitsi
+1H_Military_Tomahawk	Armeijan tomahawk
+Milk	Maito
+Leather_Shoes	Mirdas-kengät
+Weapon_MK18	MK18
+WeaponSuppressor_MK18	MK18: äänenvaimennin
+Weapon_Parts_MK18	MK18: aseen osat
+1H_MK5000_Black	MK5000
+1H_MK5000_Metal	MK5000
+MMA_Glove_01	Vapaaotteluhanskat
+Mobile_Phone	Matkapuhelin
+Hazmat_Suit_Modern	Moderni kemikaalisuojapuku
+Recurve_Bow_80	Mohawk 80#
+Sensor_Detonator	Liiketunnistinsytytin
+Motorbike_Battery	Moottoripyörän akku
+Motorcycle_Boots_01	Moottoripyöräsaappaat
+Motorcycle_Boots_02	Moottoripyöräsaappaat
+Motorcycle_Boots_03	Moottoripyöräsaappaat
+Motorcycle_Glasses_01	Moottoripyörälasit
+Motorcycle_Glasses_02	Moottoripyörälasit
+Motorcycle_Jacket_01	Moottoripyörätakki
+Motorcycle_Jacket_02	Moottoripyörätakki
+Motorcycle_Jacket_03	Moottoripyörätakki
+Motorcycle_Mask_01	Moottoripyöränaamio
+Motorcycle_Mask_02	Moottoripyöränaamio
+Motorcycle_Pants_01	Moottoripyörähousut
+Motorcycle_Pants_02	Moottoripyörähousut
+Motorcycle_Pants_03	Moottoripyörähousut
+Weapon_MP5	MP5
+Weapon_MP5_K	MP5 K
+Magazine_MP5	MP5: lipas
+MP5_Rail_Short	MP5: kiinnityskisko
+Weapon_MP5_SD	MP5 SD
+WeaponSuppressor_MP5	MP5: äänenvaimennin
+Weapon_Parts_MP5	MP5: aseen osat
+WeaponSights_MRO_Red_Dot	MRO: punapistetähtäin
+Mulberry	Mulperinmarja
+Mustard	Sinappi
+Mutant_Animal_Skin	Mutanttieläimen nahka
+Bear_Head_Mutant	Mutanttikarhu (pää)
+Mutant_Bear_Steak	Mutanttikarhu (pihvi)
+Boar_Head_Mutant	Mutanttivillisika (pää)
+Buck_Head_Mutant	Mutanttiurospeura (pää)
+Mutant_Buck_Steak	Mutanttipeura (pihvi)
+Wolf_Head_Mutant	Mutanttisusi (pää)
+Mutant_Wolf_Steak	Mutanttisusi (pihvi)
+1H_N9_Black	N9: pistin
+1H_N9_White	N9: pistin
+Nails	Naulat
+ColorCan_NavyBlue	Maalipurkki (laivastonsininen)
+ColorCan_NavyGrey	Maalipurkki (laivastonharmaa)
+Needle	Neula
+Night_Vision_Goggles_01	Pimeänäkölaitteet
+FishingLine_2	Nailonsiima (keskipaksu, 0.18 mm)
+FishingLinePiece_2	Nailonsiima (keskipaksu, 0.18 mm)
+FishingLine_3	Nailonsiima (paksu, 0.25 mm)
+FishingLinePiece_3	Nailonsiima (paksu, 0.25 mm)
+FishingLine_4	Nailonsiima (paksu, 0.5 mm)
+FishingLinePiece_4	Nailonsiima (paksu, 0.5 mm)
+FishingLine_1	Nailonsiima (ohut, 0.12 mm)
+FishingLinePiece_1	Nailonsiima (ohut, 0.12 mm)
+Oak_Nuts	Tammenterhot
+Cal_40_OG-7V	OG-7V
+WeaponCharm_Ogre	Jätti (asekoriste)
+Oil_Filter	Öljynsuodatin
+WeaponSights_OKP-7_Holographic	OKP: holografitähtäin
+Olives	Oliivi
+Onion	Sipuli
+Chips3	Sipulirenkaat
+Open_Finger_Gloves_01	Sormettomat käsineet
+Open_Finger_Gloves_02	Sormettomat käsineet
+Open_Finger_Gloves_03	Sormettomat käsineet
+Open_Finger_Gloves_04	Sormettomat käsineet
+Open_Finger_Gloves_05	Sormettomat käsineet
+Open_Finger_Gloves_06	Sormettomat käsineet
+Opuntia_Fig	Kaktusviikuna
+Orange	Appelsiini
+Can02	Appelsiinimehu
+GlassBottle04	Appelsiinimehu
+Orange_Seed_Bag	Appelsiini (siemenpussi)
+Orange_Seeds	Appelsiini (siemenet)
+Fish_Orata	Kultaotsa-ahven
+Orata_Fillet	Kultaotsa-ahven (filee)
+Organic_Fertilizer	Eloperäinen lannoite
+HH_Boots_01	Ylipolvensaappaat
+WeaponScope_Dragunov	P-223: kiikaritähtäin
+P17_Bayonet	P17: pistin
+C4_Pack	Pakattu C4
+Padlock	Riippulukko
+Painkillers_01	Kipulääkkeet (läpipainopakkaus)
+Painkillers_02	Kipulääkkeet (laatikko)
+PainKillers_03	Kipulääkkeet (purkki)
+Pajama_Pants	Pyjamahousut
+Pajama_Shirt_01	Pyjamapaita
+Pan	Paistinpannu
+Inmate_pants	Housut
+Inmate_Pants_01_Forest_DigitalDeluxe	Housut
+Inmate_Pants_01_Snow_DigitalDeluxe	Housut
+Inmate_Pants_01_South_DigitalDeluxe	Housut
+Pantyhose_01	Sukkahousut
+Paper	Paperi
+Parachute	Laskuvarjo
+Parking_Sensor	Pysäköintitutka
+Parsley	Palsternakka
+Party_Glasses_01	Juhlalasit
+Party_Glasses_02	Juhlalasit
+Pasta	Pasta
+Book_Cooking_Pasta	Pastakeittokirja
+Weapon_PeaceKeeper38	Peacekeeper 38
+Weapon_Parts_PeaceKeeper38	Peacekeeper 38: osat
+Peach	Persikka
+CannedPeach	Persikkakompotti
+Peach_Seed_Bag	Persikka (siemenpussi)
+Peach_Seeds	Persikka (siemenet)
+Pear	Päärynä
+CannedPear	Päärynäkompotti
+Pear_Seed_Bag	Päärynä (siemenpussi)
+Pear_Seeds	Päärynä (siemenet)
+Pen	Kynä
+Penicillin01	Penisilliini
+Peppers_Seeds	Paprika (siemenet)
+Peppers_Seed_Bag	Paprika (siemenpussi)
+Pesticide	Torjunta-aine
+Cal_40_PG-7M	PG-7M
+2H_Pickaxe	Hakku
+Rubber_sheet	Kuminpala
+Pike_Fillet	Hauki (filee)
+Fish_Pike	Hauki
+Pike_Head	Hauki (pää)
+Pilot_Glasses	Lentäjän lasit
+Pilot_Hat_01	Lentäjän lakki
+Pilot_Jacket	Lentäjän takki
+Pine_Cone	Käpy
+Pineapple	Ananas
+Ghillie_Suit_Pants_04	Naamioasun alaosa (vaaleanpunainen)
+Ghillie_Suit_Jacket_04	Naamioasun yläosa (vaaleanpunainen)
+PipeBomb	Putkipommi
+1H_Pipe_Wrench	Putkipihdit
+WeaponCharm_PirateCat	Merirosvokissa (asekoriste)
+Pirate_EyePatch	Merirosvon silmälappu
+Pirate_Hat_01	Merirosvon hattu
+Pirate_Hat_Sparrow_02	Merirosvon hattu
+2H_Pitchfork	Talikko
+Book_Cooking_Pizza	Pizzakeittokirja
+Scissors_Plastic	Muovisakset
+Hen_Torso	Kynitty kana
+Plum	Luumu
+Plum_Seed_Bag	Luumu (siemenpussi)
+Plum_Seeds	Luumu (siemenet)
+Police_Backpack_01	Poliisin rynnäkköreppu
+Police_Backpack_03	Poliisin reppu
+Police_Beanie_01	Poliisin pipo
+ColorCan_PoliceBlue	Maalipurkki (poliisinsininen)
+Police_Bulletproof_Vest_01	Poliisin luotiliivi
+Police_Cap_01	Poliisin lippalakki
+Police_Boonie_Hat_01	Poliisin lierihattu
+Police_Gloves_01	Poliisin käsineet
+Police_Cap_02	Poliisin hattu
+Police_Backpack_02	Poliisin retkireppu
+Police_Jacket_01	Poliisin takki
+Police_Open_Finger_Gloves_01	Poliisin sormettomat käsineet
+Police_Shirt_01	Poliisin paita
+pOLICE_Sweater_01	Poliisin neule
+Armor_Police_Vest_01	Poliisin taktinen liivi
+Pork_Steak	Porsaanpihvi
+Mutant_Pork_Steak	Porsaanpihvi / Mutanttiporsaan pihvi
+WeaponScope_POSP	POSP 4x24V
+PotassiumIodide_Pills_01	Kaliumjodiditabletit (läpipainopakkaus)
+PotassiumIodide_Pills_02	Kaliumjodiditabletit (laatikko)
+PotassiumIodide_Pills_03	Kaliumjodiditabletit (purkki)
+Potato	Peruna
+Chips4	Suolaiset perunalastut
+Potato_Seed_Bag	Peruna (siemenpussi)
+Potatoes_Seeds	Peruna (siemenet)
+PracticeTrap	Harjoituspommi
+Recurve_Bow_70	Predator 70#
+BlankSign_Premium	Laadukas tyhjä kyltti
+PremiumBoiliesPack	Laadukas boilies-syöttipakkaus
+Car_Lamp_Ceiling	Laadukas sähkölamppu
+PressureCookerBomb	Painekattilapommi
+Pressure_Dressing	Paineside
+Compass_Primitive	Alkeellinen kompassi
+PromTrap	PROM-1-miina
+Fish_PrussianCarp	Hopearuutana
+Psilocybe_Cyanescens	Psilocybe Cyanescens
+WeaponScope_PU	PU: kiikaritähtäin
+Pumpkin	Kurpitsa
+Pumpkin_Seed_Bag	Kurpitsa (siemenpussi)
+Pumpkin_Seeds	Kurpitsa (siemenet)
+Zombie_01_Left_Arm	Nuken käsivarsi
+Zombie_01_Right_Arm	Nuken käsivarsi
+Puppet_Eye	Nuken silmä
+Zombie_01_Left_Foot	Nuken jalkaterä
+Zombie_01_Right_Foot	Nuken jalkaterä
+Zombie_01_Head	Nuken pää
+Zombie_01_Head_No_teeth	Nuken pää
+Zombie_01_Left_Leg	Nuken jalka
+Zombie_01_Right_Leg	Nuken jalka
+ZombieMeat	Nuken liha
+Zombie_01_Torso	Nuken torso
+MemoryModule_Level3	Muistimoduuli (violetti)
+Qipao_Dress_01	Qipao-mekko
+Qipao_Dress_02	Qipao-mekko
+Qipao_Dress_03	Qipao-mekko
+Qipao_Dress_04	Qipao-mekko
+Qipao_Dress_05	Qipao-mekko
+Qipao_Dress_06	Qipao-mekko
+HH_Wedge_Heels_01_01	Qipao-kengät
+HH_Wedge_Heels_01_02	Qipao-kengät
+HH_Wedge_Heels_01_03	Qipao-kengät
+HH_Wedge_Heels_01_04	Qipao-kengät
+HH_Wedge_Heels_01_05	Qipao-kengät
+HH_Wedge_Heels_01_06	Qipao-kengät
+Rabbit_Left_Front	Kanin vasen etuneljännes
+Rabbit_Left_Back	Kanin vasen takaneljännes
+RabbitLeg	Kani (jalka)
+RabbitMeat	Kaninliha
+Rabbit_Right_Front	Kanin oikea etuneljännes
+Rabbit_Right_Back	Kanin oikea takaneljännes
+Racing_Helmet_01	Kilpakypärä
+Radio	Radio
+Improvised_Gloves	Rättikäsineet
+Improvised_Shoes_02	Rättikengät
+Rag_Stripes	Kangassuikaleet
+Rager_Engine_Alternator_Item	Rager: laturi
+Rager_Body_ArmorHeavy_Back_Item	Rager: kori, panssari, raskas, takaosa
+Rager_Body_ArmorHeavy_Left_Item	Rager: kori, panssari, raskas, vasen
+Rager_Body_ArmorHeavy_Right_Item	Rager: kori, panssari, raskas, oikea
+Rager_Body_ArmorHeavy_Top_Item	Rager: kori, panssari, raskas, yläosa
+Rager_Body_ArmorLight_Back_Item	Rager: kori, panssari, kevyt, takaosa
+Rager_Body_ArmorLight_Left_Item	Rager: kori, panssari, kevyt, vasen
+Rager_Body_ArmorLight_Right_Item	Rager: kori, panssari, kevyt, oikea
+Rager_Body_ArmorLight_Top_Item	Rager: kori, panssari, kevyt, yläosa
+Rager_Body_Front	Rager: kori, etuosa
+Rager_Body_Left	Rager: kori, vasen
+Rager_Body_Right	Rager: kori, oikea
+Rager_Body_Top	Rager: kori, yläosa
+Rager_Bumper_Back_Item	Rager: puskuri, takaosa
+Rager_Bumper_Front_Item	Rager: puskuri, etuosa
+Rager_Door_ArmorHeavy_BackLeft_Item	Rager: ovi, panssari, raskas, takaosa, vasen
+Rager_Door_ArmorHeavy_BackRight_Item	Rager: ovi, panssari, raskas, takaosa, oikea
+Rager_Door_ArmorHeavy_FrontLeft_Item	Rager: ovi, panssari, raskas, etuosa, vasen
+Rager_Door_ArmorHeavy_FrontRight_Item	Rager: ovi, panssari, raskas, etuosa, oikea
+Rager_Door_ArmorLight_BackLeft_Item	Rager: ovi, panssari, kevyt, takaosa, vasen
+Rager_Door_ArmorLight_BackRight_Item	Rager: ovi, panssari, kevyt, takaosa, oikea
+Rager_Door_ArmorLight_FrontLeft_Item	Rager: ovi, panssari, kevyt, etuosa, vasen
+Rager_Door_ArmorLight_FrontRight_Item	Rager: ovi, panssari, kevyt, etuosa, oikea
+Rager_Door_BackLeft_Item	Rager: ovi, takaosa, vasen
+Rager_Door_BackRight_Item	Rager: ovi, takaosa, oikea
+Rager_Door_FrontLeft_Item	Rager: ovi, etuosa, vasen
+Rager_Door_FrontRight_Item	Rager: ovi, etuosa, oikea
+Rager_DoorHood_Item	Rager: konepelti
+Rager_Lights_FrontLeft	Rager: valot, etuosa, vasen
+Rager_Lights_FrontRight	Rager: valot, etuosa, oikea
+Rager_Lights_RearLeft	Rager: valot, takaosa, vasen
+Rager_Lights_RearRight	Rager: valot, takaosa, oikea
+Rager_Lights_RearTop	Rager: valot, takaosa, yläosa
+Rager_Seat_FrontLeft_Item	Rager: istuin, etuosa, vasen
+Rager_Seat_FrontRight_Item	Rager: istuin, etuosa, oikea
+Rager_DoorTrunk_ArmorHeavy_Item	Rager: tavaratila, panssari, raskas
+Rager_DoorTrunk_ArmorLight_Item	Rager: tavaratila, panssari, kevyt
+Rager_DoorTrunk_Item	Rager: tavaratila, ovi
+Rager_Wheel_ArmorHeavy_FrontLeft_Item	Rager: pyörä, panssari, raskas, etuosa, vasen
+Rager_Wheel_ArmorHeavy_FrontRight_Item	Rager: pyörä, panssari, raskas, etuosa, oikea
+Rager_Wheel_ArmorLight_FrontLeft_Item	Rager: pyörä, panssari, kevyt, etuosa, vasen
+Rager_Wheel_ArmorLight_FrontRight_Item	Rager: pyörä, panssari, kevyt, etuosa, oikea
+Rags	Rätit
+Raincoat_01	Sadetakki
+Raincoat_02	Sadetakki
+Raincoat_03	Sadetakki
+Raincoat_04	Sadetakki
+Raincoat_05	Sadetakki
+Raincoat_06	Sadetakki
+Raisins	Rusinat
+Ramsons	Karhunlaukka
+Grapes_Raw	Tuoreet viinirypäleet
+RK_Beanie_01	Raykit-pipo
+RK_Hoodie_01	Raykit-huppari
+Razor_Blade	Partaterä
+Rebar_Cutter	Raudoitusleikkuri
+ColorCan_RedChocolate	Maalipurkki (punaruskea)
+WeaponSights_RedDot_CA401B	Punapistetähtäin
+Energy_Drink_Red_Ghoul	Red Ghoul -energiajuoma
+RedOnion_Seed_Bag	Punasipuli (siemenpussi)
+RedOnion_Seeds	Punasipuli (siemenet)
+FishingBait_RedWorm	Punainen mato (kalansyötti)
+Christmas_Headband_01	Poronkorvat
+Remote_Door_Key	Oven kauko-ohjain
+Remote_Door_Sensor	Oven kauko-ohjauksen anturi
+KeyCardApex	Tutkimuslaitoksen avainkortti
+Respirator_01	Hengityksensuojain
+Retro_Helmet_01	Retrokypärä
+Book_Cooking_Rice	Riisikeittokirja
+Richards_Cheese	Richardin juusto
+Rider_Helmet_01	Ajokypärä
+Rider_Helmet_02	Ajokypärä
+Rider_Helmet_03	Ajokypärä
+Riot_Helmet_02	Mellakkakypärä
+ScopeRail_AK47	RIS-sovitin
+RIS_Armor_Military_Front_Item	RIS: panssari, sotilasversio, etuosa
+RIS_Body_Military_Item	RIS: kori, sotilasversio
+RIS_BrakeLight_Center_Item	RIS: jarru, kevyt, keskiosa
+RIS_BrakeLight_Left_Item	RIS: jarru, kevyt, vasen
+RIS_BrakeLight_Right_Item	RIS: jarru, kevyt, oikea
+RIS_Headlight_Left_Item	RIS: ajovalo, vasen
+RIS_Headlight_Right_Item	RIS: ajovalo, oikea
+RIS_Plow_Civilian	RIS: aura, siviiliversio
+RIS_Spikes_Military	RIS: piikit, sotilasversio
+RIS_Wheel_Armor_Item	RIS: pyörä, panssari
+Tobacco_Rolled	Kääritty tupakka
+WeaponCharm_Roller_Skate	Rullaluistin (asekoriste)
+Rope1	Köysi 5 m
+Dog_Rose	Ruusunmarja
+Weapon_Parts_RPG	RPG: aseen osat
+Weapon_RPG7	RPG7
+Weapon_RPK-74	RPK
+Magazine_RPK	RPK: lipas
+Weapon_Parts_RPK-74	RPK: aseen osat
+Rubber_band	Kuminauha
+Fish_Ruffe	Kiiski
+Ruffe_Fillet	Kiiski (filee)
+Skirt_02_01	Röyhelöhame
+Skirt_02_02	Röyhelöhame
+Skirt_02_03	Röyhelöhame
+Skirt_02_04	Röyhelöhame
+Skirt_02_05	Röyhelöhame
+Skirt_02_06	Röyhelöhame
+Skirt_02_07	Röyhelöhame
+Safety_Goggles	Suojalasit
+Safety_pin	Hakaneula
+Salsify_roots	Kaurajuuret
+SaltBag	Suolapussi
+SaltGrain	Suolajyvä
+SandBag	Hiekkasäkki
+Santa_Hat_01	Joulupukin lakki
+Santa_Jacket	Joulupukin takki
+Santa_Pants	Joulupukin housut
+CannedSardine	Sardiini
+CannedSardine_Deluxe	Sardiini
+Sardine_Fillet	Sardiini (filee)
+FishingBait_Sardine	Sardiini (kalansyötti)
+1H_Scalpel	Leikkausveitsi
+Weapon_Parts_SCAR_L	SCAR L: aseen osat
+Weapon_SCAR_DMR	SCAR-DMR
+Magazine_SCAR_DMR	SCAR-DMR: lipas
+Weapon_Parts_SCAR_DMR	SCAR-DMR: aseen osat
+Weapon_SCAR_L	SCAR-L
+Rabbit_Mask_01	Pelottava kaninaamio
+School_Backpack_01	Koulureppu
+School_Backpack_Boy_02	Koulureppu
+School_Backpack_Boy_03	Koulureppu
+School_Backpack_Girl_04	Koulureppu
+School_Backpack_Girl_05	Koulureppu
+School_Backpack_Girl_06	Koulureppu
+Scissors_01	Sakset
+Recurve_Bow	Scorpion 40#
+1H_Scout_Black	Scout
+1H_Scout_White	Scout
+Screwdriver	Ruuvimeisseli
+Scum_Sunrise	SCUM Sunrise
+SCUMkin_Spice_Latte	SCUMkin Spice Latter
+Weapon_SDASS	SDASS 12M
+Weapon_Parts_SDASS	SDASS: aseen osat
+SeaSalt_01	Merisuola
+SeaSalt_02	Merisuola
+WeaponSights_Sentry_RDRS	Vartiotorni RDRS
+WeaponCharm_Sentry	Vartija (asekoriste)
+Weapon_Serpent357	Serpent 357
+Weapon_Parts_Serpent357	Serpent 357: aseen osat
+Sewing_kit	Ompelusarja
+Sexy_Jeans_Shorts_01	Lyhyet farkkushortsit
+Sexy_Jeans_Shorts_02	Lyhyet farkkushortsit
+Sexy_Jeans_Shorts_03	Lyhyet farkkushortsit
+Sexy_Jeans_Shorts_04	Lyhyet farkkushortsit
+Sexy_Jeans_Shorts_05	Lyhyet farkkushortsit
+Sexy_Jeans_Shorts_06	Lyhyet farkkushortsit
+Sexy_Jeans_Shorts_07	Lyhyet farkkushortsit
+WeaponSights_Shark	Shark: heijastintähtäin
+Shemagh_Scarf_01	Shemagh-huivi
+Shemagh_Scarf_02	Shemagh-huivi
+Shemagh_Scarf_03	Shemagh-huivi
+Shemagh_Scarf_04	Shemagh-huivi
+Shemagh_Scarf_05	Shemagh-huivi
+Shemagh_Scarf_06	Shemagh-huivi
+Shemagh_Scarf_07	Shemagh-huivi
+Shemagh_Scarf_08	Shemagh-huivi
+Shimoro_Vest	Shimoro-liivi
+Inmate_shirt_01	Paita
+Inmate_Shirt_01_Forest_DigitalDeluxe	Paita
+Inmate_Shirt_01_South_DigitalDeluxe	Paita
+ImprovisedRail_Short	Lyhyt omatekoinen kiinnityskisko
+Short_Paddle_A	Lyhyt mela
+Short_Paddle_B	Lyhyt mela
+Shorts_Pants_01_01	Shortsit
+Shorts_Pants_01_02	Shortsit
+Shorts_Pants_01_03	Shortsit
+Shorts_Pants_01_04	Shortsit
+Shorts_Pants_01_05	Shortsit
+Shorts_Pants_01_06	Shortsit
+Shorts_Pants_01_07	Shortsit
+Shorts_Pants_01_08	Shortsit
+Shorts_Pants_01_09	Shortsit
+Shorts_Pants_01_10	Shortsit
+Short_Trousers_01_01	Lyhyet housut
+Short_Trousers_01_02	Lyhyet housut
+Short_Trousers_01_03	Lyhyet housut
+Short_Trousers_01_04	Lyhyet housut
+Short_Trousers_01_05	Lyhyet housut
+2H_Shovel_02	Lapio
+1H_Shuriken	Heittotähti
+SidecarBike_Brakelight_Item	Sivuvaunullinen moottoripyörä: jarru, kevyt
+SidecarBike_Fender_Front_Item	Sivuvaunullinen moottoripyörä: lokasuoja, etuosa
+SidecarBike_Fender_Rear_Item	Sivuvaunullinen moottoripyörä: lokasuoja, takaosa
+SidecarBike_Fender_Sidecar_Item	Sivuvaunullinen moottoripyörä: lokasuoja, sivuvaunu
+SidecarBike_Headlight_Item	Sivuvaunullinen moottoripyörä: ajovalo
+SidecarBike_Seat_Back_Item	Sivuvaunullinen moottoripyörä: istuin, takaosa
+SidecarBike_Seat_Front_Item	Sivuvaunullinen moottoripyörä: istuin, etuosa
+SidecarBike_Sidecar_Brakelight_Item	Sivuvaunullinen moottoripyörä: sivuvaunu, jarru, kevyt
+SidecarBike_Sidecar_Headlight_Item	Sivuvaunullinen moottoripyörä: sivuvaunu, ajovalo
+SidecarBike_Sidecar_WeaponStation_Item	Sivuvaunullinen moottoripyörä: sivuvaunu, aseasema
+SidecarBike_Wheel_4x16_Item	Sivuvaunullinen moottoripyörä: pyörä
+SilentAlarm	Hiljainen hälytin
+Lock_Item_Medium	Hopealukko
+Skewer	Varras
+Skewer_02	Varras
+Bear_Skinned	Nyljetty karhu
+Boar_Skinned	Nyljetty villisika
+Buck_Skinned	Nyljetty urospeura
+Doe_Skinned	Nyljetty naaraspeura
+Donkey_skinned	Nyljetty aasi
+Goat_Skinned	Nyljetty vuohi
+Horse_Skinned	Nyljetty hevonen
+Rabbit_Skinned	Nyljetty kani
+Wolf_Skinned	Nyljetty susi
+Skirt_01_01	Hame
+Skirt_01_02	Hame
+Skirt_01_03	Hame
+Skirt_02_08	Hame
+Weapon_SKS	SKS
+SKS_Bayonet	SKS: pistin
+Magazine_Clip_SKS	SKS: patruunakampa
+Weapon_Parts_SKS	SKS: aseen osat
+Halloween_Mask_Scream	Pääkallonaamio
+WeaponCharm_Skull	Pääkallo (asekoriste)
+Slav_Reviver	Slav Reviver
+Slavic_Gent	Slavic Gent
+Sledgehammer	Leka
+Sleeveless_Camo_Shirt_01	Hihaton maastopaita
+Sleeveless_Camo_Shirt_02	Hihaton maastopaita
+Sleeveless_Camo_Shirt_03	Hihaton maastopaita
+Sleeveless_Camo_Shirt_04	Hihaton maastopaita
+Sleeveless_Camo_Shirt_05	Hihaton maastopaita
+Sleeveless_Camo_Shirt_06	Hihaton maastopaita
+Sleeveless_Shirt_01	Hihaton paita
+Sleeveless_Shirt_02	Hihaton paita
+BowSilencer_SlipOn	Pujotettava jousen vaimennin
+Slippers_03	Pantofelit
+Slouch_Camo_Hat_01	Leveälierinen maastohattu
+Slouch_Camo_Hat_02	Leveälierinen maastohattu
+Slouch_Camo_Hat_03	Leveälierinen maastohattu
+Slouch_Camo_Hat_04	Leveälierinen maastohattu
+Slouch_Camo_Hat_05	Leveälierinen maastohattu
+Slouch_Camo_Hat_06	Leveälierinen maastohattu
+Slouch_Hat_01	Leveälierinen hattu
+Slouch_Hat_02	Leveälierinen hattu
+12_Gauge_Slug_Ammobox	Haulikon täyteispatruunoiden laatikko
+Small_Animal_guts	Pieni eläimen sisälmykset
+Mine_02	Pieni jalkaväkimiina
+1H_Small_Axe	Pieni kirves
+Battery_Charger_Small	Pieni akkulaturi
+WeaponCharm_SmallBullet	Pieni luoti (asekoriste)
+Christmas_Present_01	Pieni joululahja
+FishingHookPack1	Pienten kalastuskoukkujen pakkaus
+Gasoline_Canister_Small	Pieni bensiinikanisteri
+Improvised_Bag_Small_02	Pieni omatekoinen reppu
+LogShed_2	Pieni halkovaja
+Screwdriver_Small	Pieni ruuvimeisseli
+1H_Little_Spade	Pieni lapio
+Wooden_Sticks_Bundle_Meduim	Pieni keppinippu
+Stone_Small	Pieni kivi
+1H_Stone_Axe_Head	Pieni kivikirveen terä
+Tool_Box_SMall	Pieni työkalulaatikko
+Small_Vehicle_StorageRack	Pieni ajoneuvon tavarateline
+Wooden_Log_Small_01	Pieni tukki
+Wooden_Log_Small_02	Pieni tukki
+Wooden_Log_Small_03	Pieni tukki
+Wooden_Stick	Pieni puukeppi
+Smartphone_Battery	Älypuhelimen akku
+Smoke_Grenade	Savukranaatti
+Smoke_Grenade_Green	Savukranaatti
+Smoke_Grenade_Red	Savukranaatti
+Smoke_Grenade_Violet	Savukranaatti
+Smoke_Grenade_Yellow	Savukranaatti
+Dish_Smoked_Drumstick	Savustettu kanankoipi
+Dish_Smoked_Fish	Savustettu kalafilee
+Dish_Smoked_RabbitLeg	Savustettu kaninjalka
+Dish_Smoked_Meat	Savustettu punainen liha
+WeaponSights_Snake	Snake: heijastintähtäin
+ColorCan_SnowWhite	Maalipurkki (lumivalkoinen)
+Snowballs_01	Lumipallo
+Soap	Saippua
+Kilt_Sock_01	Sukat
+Kilt_Socks_02	Sukat
+Kilt_Socks_03	Sukat
+Kilt_Socks_04	Sukat
+Kilt_Socks_05	Sukat
+Kilt_Socks_06	Sukat
+Sock_01	Sukat
+Can01	Limonadi
+Sodium_Hydroxide	Natriumhydroksidi
+Book_Cooking_Soup	Keittokeittokirja
+SoySauce	Soijakastike
+2H_Shovel_01	Pistolapio
+CannedSpaghetti	Spagetti ja lihapullat
+Snake_Skin_Bow	Specialist Archer -jousi
+WeaponScope_Spektral_DR	SpektralDR
+SpicesMix_01	Mausteseos
+SpicesMix_02	Mausteseos
+Chips2	Mausteiset nacholastut
+Spinach	Pinaatti
+Spinach_Seed_Bag	Pinaatti (siemenpussi)
+Spinach_Seeds	Pinaatti (siemenet)
+College_Jacket_01	Spitfire-takki
+College_Jacket_02	Spitfire-takki
+College_Jacket_03	Spitfire-takki
+College_Jacket_04	Spitfire-takki
+College_Jacket_05	Spitfire-takki
+College_Jacket_06	Spitfire-takki
+College_Jacket_07	Spitfire-takki
+College_Jacket_08	Spitfire-takki
+MA1_Spitfire_01	Spitfire-takki
+MA1_Spitfire_02	Spitfire-takki
+MA1_Spitfire_03	Spitfire-takki
+MA1_Spitfire_04	Spitfire-takki
+Spliff	Kannabis-tupakkasätkä
+Spon	SPON
+Dish_Sandwich_Spon	SPON-voileipä
+Spoon	Lusikka
+Scottish_Sporran_Bag_01	Sporran-laukku
+Sportbike_Seat_Brakelight_Item	Urheilumoottoripyörä: jarru, kevyt
+Sportbike_Fender_Item	Urheilumoottoripyörä: lokasuoja
+Sportbike_Wind_Deflector_Headlight_Item	Urheilumoottoripyörä: ajovalo
+Sportbike_Seat_Item	Urheilumoottoripyörä: istuin
+Sportbike_Body_Street_Item	Urheilumoottoripyörä: katuversio, kori
+Sportbike_Fender_Street_Item	Urheilumoottoripyörä: katuversio, lokasuoja
+Sportbike_Wind_Deflector_Street_Headlight_Item	Urheilumoottoripyörä: katuversio, ajovalo
+Sportbike_Seat_Street_Item	Urheilumoottoripyörä: katuversio, istuin
+Sportbike_Wind_Deflector_Street_Item	Urheilumoottoripyörä: katuversio, tuuliohjain
+Sportbike_Wind_Deflector_Item	Urheilumoottoripyörä: tuuliohjain
+Fish_Sardine	Täplikäs sardiini
+Spring	Jousi
+Stabproof_Vest_01_01	Pistosuojaliivi
+Stabproof_Vest_01_02	Pistosuojaliivi
+Stabproof_Vest_01_03	Pistosuojaliivi
+Stabproof_Vest_01_04	Pistosuojaliivi
+Stabproof_Vest_01_05	Pistosuojaliivi
+Stabproof_Vest_01_06	Pistosuojaliivi
+Stabproof_Vest_01_07	Pistosuojaliivi
+Stabproof_Vest_01_08	Pistosuojaliivi
+Stabproof_Vest_01_09	Pistosuojaliivi
+Credit_Card_Starter	Aloittelijan pankkikortti
+Book_Cooking_Stew	Pataruokakeittokirja
+Stinging_Nettle	Nokkonen
+Stockings_01	Pitkät sukat
+Stockings_02	Pitkät sukat
+Stockings_03	Pitkät sukat
+Stockings_04	Pitkät sukat
+Stockings_05	Pitkät sukat
+Stockings_06	Pitkät sukat
+Stockings_07	Pitkät sukat
+Stockings_08	Pitkät sukat
+Stone	Kivi
+1H_Stone_Axe	Kivikirves
+1H_ImprovisedKnife	Kiviveitsi
+Ammo_Crossbow_Bolt_WoodenStoneTip	Kivikärkinen varsijousen nuoli
+Wooden_ArrowStoneTip	Kivikärkinen puunuoli
+Bundle_Of_Stone_Tips	Kivikärjet
+Strait_Jacket	Pakkopaita
+Wild_Strawberry	Mansikka
+Sugar	Sokeri
+SugarBeet	Sokerijuurikas
+Round_Sunglasses	Aurinkolasit
+WeaponCharm_Sunglasses_Emoji	Aurinkolasiemoji (asekoriste)
+Super_Glue	Pikaliima
+Weapon_SVD_Dragunov	SVD
+Magazine_SVD_Dragunov	SVD: lipas
+WeaponSuppressor_SVD	SVD: äänenvaimennin
+Weapon_Parts_SVD	SVD: aseen osat
+Sweater_01	Neule
+Sweater_02	Neule
+Sweater_03	Neule
+Sweater_04	Neule
+Sweater_05	Neule
+Tracksuit_Pants_01_01	Verryttelyhousut
+Tracksuit_Pants_01_02	Verryttelyhousut
+Tracksuit_Pants_01_03	Verryttelyhousut
+Tracksuit_Pants_01_04	Verryttelyhousut
+Tracksuit_Pants_01_05	Verryttelyhousut
+Tracksuit_Pants_02_01	Verryttelyhousut
+Tracksuit_Pants_02_02	Verryttelyhousut
+Tracksuit_Pants_02_03	Verryttelyhousut
+Tracksuit_Pants_02_04	Verryttelyhousut
+Tracksuit_Pants_02_05	Verryttelyhousut
+Shimoro_Pants	Verryttelyhousut / Shimoro-housut
+Canned_Corn	Sokerimaissi
+CantaloupeMelon_Seed_Bag	Makea meloni (siemenpussi)
+WeaponCharm_Sword	Miekka (asekoriste)
+Syringe	Ruisku
+TC_Backpack	T0pCL4SS-reppu
+Baseball_Cap_13	T0pCL4SS-lippalakki
+Tactical_Gloves_01_01	Taktiset käsineet
+Tactical_Gloves_01_02	Taktiset käsineet
+Tactical_Gloves_01_03	Taktiset käsineet
+Tactical_Gloves_01_04	Taktiset käsineet
+Tactical_Gloves_01_05	Taktiset käsineet
+Tactical_Gloves_01_06	Taktiset käsineet
+Tactical_Gloves_01_07	Taktiset käsineet
+Tactical_Gloves_01_08	Taktiset käsineet
+Police_Handgun_Holster	Taktinen pistoolikotelo
+Tactical_Handgun_Holster_01	Taktinen pistoolikotelo
+Tactical_Handgun_Holster_02	Taktinen pistoolikotelo
+Tactical_Handgun_Holster_03	Taktinen pistoolikotelo
+Tactical_Handgun_Holster_04	Taktinen pistoolikotelo
+Tactical_Handgun_Holster_05	Taktinen pistoolikotelo
+Tactical_Handgun_Holster_06	Taktinen pistoolikotelo
+Tactical_Handgun_Holster_07	Taktinen pistoolikotelo
+Tactical_Jacket_01_01	Taktinen takki
+Tactical_Jacket_01_02	Taktinen takki
+Tactical_Jacket_01_03	Taktinen takki
+Tactical_Jacket_01_04	Taktinen takki
+Tactical_Jacket_01_05	Taktinen takki
+Tactical_Jacket_01_06	Taktinen takki
+Tactical_Jacket_01_07	Taktinen takki
+Tactical_Jacket_01_09	Taktinen takki
+MilitaryPants_01	Taktiset sotilashousut
+MilitaryPants_02	Taktiset sotilashousut
+MilitaryPants_03	Taktiset sotilashousut
+MilitaryPants_04	Taktiset sotilashousut
+MilitaryPants_05	Taktiset sotilashousut
+MilitaryPants_06	Taktiset sotilashousut
+MilitaryPants_07	Taktiset sotilashousut
+MilitaryPants_08	Taktiset sotilashousut
+MilitaryPants_09	Taktiset sotilashousut
+MilitaryPants_10	Taktiset sotilashousut
+Tactical_Sweater_01	Taktinen neule
+Tactical_Sweater_02	Taktinen neule
+Tactical_Sweater_03	Taktinen neule
+Tactical_Sweater_04	Taktinen neule
+Tactical_Sweater_05	Taktinen neule
+Tactical_Sweater_06	Taktinen neule
+Tactical_Sweater_07	Taktinen neule
+Tactical_Vest_01	Taktinen liivi
+Takedown_Bow	Purettava jousi
+2H_Tang_Dao	Tang Dao
+2H_Tang_Dao_Black_Dragon	Tang Dao (musta lohikäärme)
+2H_Tang_Dao_Damascus	Damaskiteräksinen Tang Dao
+Tang_pants_01	Tang-housut
+Tang_pants_02	Tang-housut
+Tang_pants_03	Tang-housut
+Tang_pants_04	Tang-housut
+Tang_pants_05	Tang-housut
+Tang_shirt_01	Tang-paita
+Tang_shirt_02	Tang-paita
+Tang_shirt_03	Tang-paita
+Tang_shirt_04	Tang-paita
+Tang_shirt_05	Tang-paita
+Tangerine	Mandariini
+Tangerine_Seed_Bag	Mandariini (siemenpussi)
+Tangerine_Seeds	Mandariini (siemenet)
+Tea_Pack	Teepakkaus
+TearGasGrenade	Kyynelkaasukranaatti
+Weapon_590A11	TEC01 490
+Weapon_Parts_590A11	TEC01 490: aseen osat
+Weapon_M9	TEC01 M9
+Weapon_M9_Silver	TEC01 M9
+WeaponCharm_TEC1	TEC1 (asekoriste)
+Tequila	Tequila
+The_Island_Special	Saaren erikoinen
+Thermometer	Lämpömittari
+Thread	Lanka
+WeaponCharm_Tiger	Tiikeri (asekoriste)
+RH_Tights	Trikoot
+Tinder	Sytyke
+Tire_Repair_Kit	Renkaan korjaussarja
+TNT	TNT
+Toaster_Pastries	Paahdettavat leivonnaiset
+Toaster_Pastries2	Paahdettavat leivonnaiset
+Tobacco	Tupakka
+Tobacco_Seed_Bag	Tupakka (siemenpussi)
+Tobacco_Seeds	Tupakka (siemenet)
+Tomato	Tomaatti
+TomatoPelate	Kuoritut tomaatit
+TomatoSauce	Tomaattikastike
+Tomato_Seed_Bag	Tomaatti (siemenpussi)
+Tomato_Seeds	Tomaatti (siemenet)
+Weapon_TommyGun	Tommy Gun
+Magazine_TommyGun	Tommy Gun: lipas
+Weapon_Parts_TommyGun	Tommy Gun: aseen osat
+Tool_Box	Työkalulaatikko
+05_Teeth_Necklace	Hammaskaulakoru
+10_Teeth_Necklace	Hammaskaulakoru
+15_Teeth_Necklace	Hammaskaulakoru
+WeaponCharm_Tooth	Hammas (asekoriste)
+Torch	Soihtu
+Tourniquet	Kiristysside
+Tracksuit_Top_01	Verryttelytakki
+Tracksuit_Top_02	Verryttelytakki
+Tracksuit_Top_03	Verryttelytakki
+Tracksuit_Top_04	Verryttelytakki
+Tracksuit_Top_05	Verryttelytakki
+Tractor_Engine_Alternator_Item	Traktori: laturi
+Tractor_Body_Left_ArmorHeavy_Item	Traktori: kori, panssari, raskas, vasen
+Tractor_Body_Right_ArmorHeavy_Item	Traktori: kori, panssari, raskas, oikea
+Tractor_Body_Top_ArmorHeavy_Back_Item	Traktori: kori, panssari, raskas, yläosa, takaosa
+Tractor_Body_Top_ArmorHeavy_Front_Item	Traktori: kori, panssari, raskas, yläosa, etuosa
+Tractor_Body_Top_ArmorHeavy_Left_Item	Traktori: kori, panssari, raskas, yläosa, vasen
+Tractor_Body_Top_ArmorHeavy_Right_Item	Traktori: kori, panssari, raskas, yläosa, oikea
+Tractor_Body_Left_Item	Traktori: kori, vasen
+Tractor_Body_Right_Item	Traktori: kori, oikea
+Tractor_Body_Left_Brakelight_Item	Traktori: jarru, kevyt, vasen
+Tractor_Body_Right_Brakelight_Item	Traktori: jarru, kevyt, oikea
+Tractor_Door_Left_ArmorHeavy_Item	Traktori: ovi, panssari, raskas, vasen
+Tractor_Door_Right_ArmorHeavy_Item	Traktori: ovi, panssari, raskas, oikea
+Tractor_Body_Top_Door_Left_Item	Traktori: ovi, vasen
+Tractor_Body_Top_Door_Right_Item	Traktori: ovi, oikea
+Tractor_Seat_Driver_Item	Traktori: kuljettaja, istuin
+Tractor_Door_Hood_Headlight_Left_Item	Traktori: ajovalo, vasen
+Tractor_Door_Hood_Headlight_Right_Item	Traktori: ajovalo, oikea
+Tractor_Door_Hood_Item	Traktori: konepelti
+Tractor_WheelArmorHeavy_Front_Item	Traktori: pyörä, panssari, raskas, etuosa
+HighTop_Shoes	Lenkkikengät
+1H_Traynors_Axe	Traynorin kirves
+FishingHookPack4	Kolmihaarakoukkupakkaus
+FishingHook3	Kolmihaarakoukku
+Tree_Bark	Puunkuori
+Tree_Branches	Puunoksa
+Weapon_Trench_Gun	Taisteluhaulikko
+Weapon_Parts_Trench_Gun	Taisteluhaulikko: aseen osat
+Fish_Carp_Trophy	Karppi (trofee)
+Fish_Catfish_Trophy	Monni (trofee)
+Fish_Dentex_Trophy	Hammasahven (trofee)
+Fish_Pike_Trophy	Hauki (trofee)
+Fish_Tuna_Trophy	Tonnikala (trofee)
+Jeans_Jersey_Jacket_01	Rekkamiehen takki
+Jeans_Jersey_Jacket_02	Rekkamiehen takki
+Trucker_Jacket_01	Rekkamiehen takki
+Trucker_Jacket_02	Rekkamiehen takki
+Trucker_Jacket_03	Rekkamiehen takki
+Trucker_Jacket_04	Rekkamiehen takki
+Fish_Tuna	Tonnikala
+Tuna_Fillet	Tonnikala (filee)
+Tuna_Head	Tonnikala (pää)
+MRE_TunaSalad	Tonnikalasalaatti (MRE-kenttämuona)
+Dish_Sandwich_Tuna	Tonnikalavoileipä
+Hiking_Backpack_Tyrone	Tyrone-retkireppu
+Tyrone_Shoelacez_Mask	Tyrone Shoelacez -naamio
+Weapon_Parts_UMP	UMP: aseen osat
+Weapon_UMP45	UMP-45
+Magazine_UMP45	UMP-45: lipas
+Rice	Uncle Pong -riisi
+Underpants_01	Alushousut
+Underpants_02	Alushousut
+Underpants_03	Alushousut
+Underpants_04	Alushousut
+Underpants_05	Alushousut
+F_Bra_Supporter_01	Aluspaita
+Scum_Shirt_Supporter_Pack_Black_01	Aluspaita
+Undershirt_01	Aluspaita
+Cereal_UpNGo	UpNGo-murot
+Utility_Belt_01	Varustevyö
+WeaponSights_V3_Holographic	V3: holografitähtäin
+WeaponScope_Vampyr	Vampyr: kiikaritähtäin
+VegetableOil	Kasviöljy
+ColorCan_VelvetBrown	Maalipurkki (sametinruskea)
+2H_Katana1	Vhendyan katana
+Weapon_VHS2_Rail	VHS 2
+Weapon_VHS2	VHS 2 CT
+Weapon_VHS_BG	VHS BG
+Weapon_Parts_VHSBG	VHS BG: aseen osat
+Magazine_VHS2	VHS: lipas
+Weapon_Parts_VHS	VHS2: aseen osat
+Vinegar	Etikka
+Hazmat_Suit_Vintage	Vanha kemikaalisuojapuku
+Vintage_Jail_Cap_01	Vanha vanginlakki
+Vintage_Jail_Pants_01	Vanhat vanginhousut
+Vintage_Jail_Shirt_01	Vanha vanginpaita
+Weapon_Viper_M357	Viper M357
+DW715_Rail	Viper M357: kiinnityskisko
+Weapon_Parts_Viper_M357	Viper M357: aseen osat
+Geek_Goggels	Silmälasit
+Vitamins_01	Vitamiinitabletit (läpipainopakkaus)
+Vitamins_02	Vitamiinitabletit (laatikko)
+Vitamins_03	Vitamiinitabletit (purkki)
+Weapon_VSS_VZ	VSS VZ
+Weapon_Parts_VSS_VZ	VSS VZ: aseen osat
+Waist_Bag_Small_01	Vyölaukku
+Waist_Bag_Small_02	Vyölaukku
+Waist_Bag_Small_03	Vyölaukku
+Dish_Salad_Waldorf	Waldorfin salaatti
+Walnut	Saksanpähkinä
+ColorCan_WarmGrey	Maalipurkki (lämpimänharmaa)
+WeaponSights_Wasp	Wasp: heijastintähtäin
+Water_05l	Vesipullo
+Water_Bucket	Vesiämpäri
+Watering_Can	Vesiämpäri / Kastelukannu
+Watermelon	Vesimeloni
+Watermelon_Seed_Bag	Vesimeloni (siemenpussi)
+Watermelon_Seeds	Vesimeloni (siemenet)
+Watermelon_slice	Vesimeloniviipale
+WeaponGhillie_Desert	Aseen naamiopäällyste
+WeaponGhillie_Winter	Aseen naamiopäällyste
+WeaponGhillie_Woodland	Aseen naamiopäällyste
+Herbicide	Rikkakasvien torjunta-aine
+WhiteFlour	Vehnäjauho
+Sportbike_Wheel_100_90_R18_Item	Pyörä 100 90 R18
+Dirtbike_Wheel_110_80_R19_Item	Pyörä 110 80 R19
+Cruiser_Wheel_155_66_R17	Pyörä 155 66 R17
+Cruiser_Wheel_188_53_R17	Pyörä 188 53 R17
+Wheel_155_R65_Item	Pyörä 205 55 R16
+Wheel_205_80_R12_Item	Pyörä 205 80 R12
+Wheel_255_55_R16_Item	Pyörä 215 65 R16
+Wheel_265_60_R18_Item	Pyörä 265 60 R18
+Bicycle_Wheel_54_622_Item	Pyörä 54 622
+Wheel_6x16_Item	Pyörä 6 16
+Bicycle_Wheel_60_622_Item	Pyörä 60 622
+Sportbike_Wheel_90_90_R18_Item	Pyörä 90 90 R18
+Dirtbike_Wheel_90_90_R21_Item	Pyörä 90 90 R21
+Whiskey	Viski
+Wild_Cherry	Villikirsikka
+PenisWarmer_01	Peniksenlämmitin
+PenisWarmer_02	Peniksenlämmitin
+PenisWarmer_03	Peniksenlämmitin
+Wine	Viini
+WineCork	Viinipullon korkki
+Ghillie_Suit_Pants_05	Naamioasun alaosa (talvimaastokuvio)
+Ghillie_Suit_Jacket_05	Naamioasun yläosa (talvimaastokuvio)
+Wire	Rautalanka 10 m
+2H_Baseball_Bat_with_wire	Piikkilangalla päällystetty baseballmaila
+Wire_Cutters_01	Sivuleikkurit
+1H_Wooden_club_with_wire	Piikkilangalla päällystetty puunuija
+Wolf_Head	Susi (pää)
+Wolf_Hat_01	Susi (päänaamio)
+Wolf_Left_Back_Leg	Susi (jalka)
+Wolf_Left_Front_Leg	Susi (jalka)
+Wolf_Right_Back_Leg	Susi (jalka)
+Wolf_Right_Front_Leg	Susi (jalka)
+Wolf_Steak	Susi (pihvi)
+Wolf_Torso	Susi (ruho)
+Woodcuters_Shirt_01	Metsurin paita
+Woodcuters_Shirt_02	Metsurin paita
+Woodcuters_Shirt_03	Metsurin paita
+Wooden_Arrow	Puunuoli
+Wooden_Arrows_6pc	Puunuoli
+1H_Wooden_club	Puunuija
+1H_Wooden_club_with_spikes	Naulattu puunuija
+Ammo_Crossbow_Bolt_Wooden	Puinen varsijousen nuoli
+Wooden_Fork	Puuhaarukka
+Wooden_Log_01	Tukki
+Wooden_Log_02	Tukki
+Wooden_Plank	Lankku
+Wooden_Spoon	Puulusikka
+2H_Wooden_Sword	Puumiekka
+Penobscot_Bow_40	Woodland Hunter -jousi
+Wool_Gloves_01_01	Villakäsineet
+Wool_Gloves_01_02	Villakäsineet
+Wool_Gloves_01_03	Villakäsineet
+Wool_Gloves_01_04	Villakäsineet
+Wool_Gloves_01_05	Villakäsineet
+Wool_Gloves_01_06	Villakäsineet
+Wool_Gloves_01_07	Villakäsineet
+Working_Helmet_01	Työkypärä
+Working_Helmet_02	Työkypärä
+Working_Helmet_03	Työkypärä
+Working_Helmet_04	Työkypärä
+FishingBait_Worm	Mato (kalansyötti)
+Wushu_Spear_Metal	Metallinen wushu-keihäs
+Wushu_Spear_Wooden	Metallinen wushu-keihäs / Puinen wushu-keihäs
+WW_Engine_Alternator_Item	WW: laturi
+WW_Bumper_Back_Item	WW: takaosa, puskuri
+WW_Body_Back	WW: kori, takaosa
+WW_Body_Front	WW: kori, etuosa
+WW_Body_Left	WW: kori, vasen
+WW_Body_Right	WW: kori, oikea
+WW_Body_Top	WW: kori, yläosa
+WW_Bumper_Armor_Back_Item	WW: puskuri, panssari, takaosa
+WW_Door_ArmorHeavy_BackLeft_Item	WW: ovi, panssari, raskas, takaosa, vasen
+WW_Door_ArmorHeavy_BackRight_Item	WW: ovi, panssari, raskas, takaosa, oikea
+WW_Door_ArmorHeavy_FrontLeft_Item	WW: ovi, panssari, raskas, etuosa, vasen
+WW_Door_ArmorHeavy_FrontRight_Item	WW: ovi, panssari, raskas, etuosa, oikea
+WW_Door_ArmorLight_BackLeft_Item	WW: ovi, panssari, kevyt, takaosa, vasen
+WW_Door_ArmorLight_BackRight_Item	WW: ovi, panssari, kevyt, takaosa, oikea
+WW_Door_ArmorLight_FrontLeft_Item	WW: ovi, panssari, kevyt, etuosa, vasen
+WW_Door_ArmorLight_FrontRight_Item	WW: ovi, panssari, kevyt, etuosa, oikea
+WW_Door_BackLeft_Item	WW: ovi, takaosa, vasen
+WW_Door_BackRight_Item	WW: ovi, takaosa, oikea
+WW_Door_FrontLeft_Item	WW: ovi, etuosa, vasen
+WW_Door_FrontRight_Item	WW: ovi, etuosa, oikea
+WW_Bumper_Front_Item	WW: etuosa, puskuri
+WW_Body_ArmorHeavy_Top_Item	WW: raskas, panssari, yläosa
+WW_DoorHood_Item	WW: konepelti
+WW_Lights_FrontLeft	WW: valot, etuosa, vasen
+WW_Lights_FrontRight	WW: valot, etuosa, oikea
+WW_Lights_RearLeft	WW: valot, takaosa, vasen
+WW_Lights_RearRight	WW: valot, takaosa, oikea
+WW_Seat_BackLeft_Item	WW: istuin, takaosa, vasen
+WW_Seat_BackRight_Item	WW: istuin, takaosa, oikea
+WW_Seat_FrontLeft_Item	WW: istuin, etuosa, vasen
+WW_Seat_FrontRight_Item	WW: istuin, etuosa, oikea
+WW_DoorTrunk_Item	WW: tavaratila
+WW_DoorTrunk_ArmorHeavy_Item	WW: tavaratila, panssari, raskas
+WW_DoorTrunk_ArmorLight_Item	WW: tavaratila, panssari, kevyt
+WW_Wheel_ArmorLight_FrontLeft_Item	WW: pyörä, panssari, etuosa, vasen
+WW_Wheel_ArmorLight_FrontRight_Item	WW: pyörä, panssari, etuosa, oikea
+WW2_German_Helmet_01	Saksalainen toisen maailmansodan kypärä
+WeaponSights_XPS300_Holographic	XPS: holografitähtäin
+Yeast	Hiiva
+Snowballs_02	Keltainen lumipallo
+WeaponCharm_Yingyang	Jin ja jang (asekoriste)
+Tights_01_01	Joogatrikoot
+Tights_01_02	Joogatrikoot
+Tights_01_03	Joogatrikoot
+Tights_01_04	Joogatrikoot
+Tights_01_05	Joogatrikoot
+Tights_01_06	Joogatrikoot
+WeaponScope_ZF39	ZF39
+2H_ZhanMaDao_Sword	Zhan Ma Dao
+Zucchini	Kesäkurpitsa
+Zucchini_Seed_Bag	Kesäkurpitsa (siemenpussi)
+Zucchini_Seeds	Kesäkurpitsa (siemenet)

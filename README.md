@@ -1,4 +1,4 @@
-# SCUM MiniMap v2.3.19
+# SCUM MiniMap v2.3.20
 
 SCUM MiniMap is an external map overlay and road-navigation utility for SCUM, made for the Skynett community. Version 2 uses WPF for the tactical map, compact minimap, Settings, setup guide and Zone Creator. The existing tracking and routing engine remains behind the new interface.
 
@@ -111,7 +111,7 @@ Launch `SkynettMiniMap.exe --legacy-ui` to use the original frontend. This remai
 
 Version 2 caches zone identities, visibility lists, trail snapshots and world geometry. It avoids repeated formatting/hashing of all vertices during idle refreshes, culls off-screen geometry and preserves sidebar controls during camera movement.
 
-Automated checks cover input ownership, rendering, routing, persistence, package integrity, all 19 language catalogues and a detailed-zone idle stress case. They do not certify every GPU, monitor, DPI, OBS setup or long-duration workload. Very large expanded custom-zone lists are not virtualized. Death-marker age text may remain stale while stationary. Toolbar layout and death-recovery progress are session-local.
+Automated checks cover input ownership, rendering, routing, persistence, package integrity, all 20 language catalogues and a detailed-zone idle stress case. They do not certify every GPU, monitor, DPI, OBS setup or long-duration workload. Very large expanded custom-zone lists are not virtualized. Death-marker age text may remain stale while stationary. Toolbar layout and death-recovery progress are session-local.
 
 SCUM MiniMap does not read game memory or inject DLLs. This statement is not an official anticheat certification. SCUM MiniMap is an independent community tool, not an official SCUM product.
 

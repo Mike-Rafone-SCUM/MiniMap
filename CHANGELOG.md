@@ -1,10 +1,17 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to **SkynettMiniMap** are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+
+## [2.3.20] - 2026-10-21
+
+- Add Finnish (Suomi) throughout setup, settings, maps, search, routes, groups, host member controls and admin tools. All 787 interface strings, 16 map sections, 48 categories and 242 map object types have explicit Finnish entries.
+- Add Finnish labels for all 2,328 item IDs and all 136 item categories and properties. Finnish, English and raw-ID searches resolve the same canonical items; display translations never change commands, saved IDs or personal names.
+- Bundle optional Noora (Suomi) Finnish voice navigation, including recalculation. Distance phrases include their Finnish postposition and omit the English prefix.
+- Add Finnish Discord rules, announcements, chat, voice, language management and FAQ controls. Preserve settings, keys and the mandatory five-page setup after updates.
 
 ## [2.3.19] — 2026-10-21
 

@@ -10,7 +10,7 @@ namespace ScumMiniMap {
         static readonly Dictionary<string,Lazy<Dictionary<string,string>>> SpawnCategoryNames = CreateSpawnTables("spawn-category-names");
         static Dictionary<string,Lazy<Dictionary<string,string>>> CreateSpawnTables(string prefix) {
             var result = new Dictionary<string,Lazy<Dictionary<string,string>>>(StringComparer.Ordinal);
-            foreach (string language in new[]{"es-AR","fr","de","nl","ru","zh-CN","tr","ar","pt-BR","pt-PT","ko","pl","th","zh-TW","ja","cs","it","uk"}) {
+            foreach (string language in new[]{"es-AR","fr","de","nl","ru","zh-CN","tr","ar","pt-BR","pt-PT","ko","pl","th","zh-TW","ja","cs","it","uk","fi"}) {
                 string resource = prefix + "-" + language + ".tsv";
                 result.Add(language,new Lazy<Dictionary<string,string>>(() => LoadSpawnNames(resource)));
             }

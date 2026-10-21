@@ -14,12 +14,14 @@ namespace ScumMiniMap {
         internal const string RussianName="Mira (Russian)";
         internal const string GermanName="Mila (German)";
         internal const string SpanishName="Isabel (Spanish Argentine)";
-        internal static readonly string[] BundledNames={DefaultName,RussianName,GermanName,SpanishName};
-        static bool DistanceOnly(string name) { return name==RussianName || name==GermanName; }
+        internal const string FinnishName="Noora (Suomi)";
+        internal static readonly string[] BundledNames={DefaultName,RussianName,GermanName,SpanishName,FinnishName};
+        static bool DistanceOnly(string name) { return name==RussianName || name==GermanName || name==FinnishName; }
         internal static string[] RequiredClips(string name) { return Clips.Where(clip=>clip!="11_in.mp3" || !DistanceOnly(name)).ToArray(); }
         internal static string[] Compose(string voiceName,IEnumerable<string> clips) {
             // Russian «В» and German north-specific examples are not reusable
-            // distance prefixes. Those voices say the distance followed by action.
+            // distance prefixes. Finnish distance clips already include "metrin päästä".
+            // Those voices say the distance followed by action.
             return clips.Where(clip=>!DistanceOnly(voiceName) || clip!="11_in.mp3").ToArray();
         }
         internal const string RecalculatingClip="13_recalculating.mp3";

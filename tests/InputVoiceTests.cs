@@ -1366,7 +1366,9 @@ static class InputVoiceTests {
             TestFullMapAdminControls(root);
             TestPersistedAdminDismissal(root);
             string packs=Path.Combine(root,"voice-navigation"); VoicePacks.InstallBundled(packs);
-            Check(VoicePacks.Discover(packs).SequenceEqual(VoicePacks.BundledNames.OrderBy(name=>name,StringComparer.CurrentCultureIgnoreCase)),"All four bundled voices install their required clips and are discovered");
+            Check(VoicePacks.Discover(packs).SequenceEqual(VoicePacks.BundledNames.OrderBy(name=>name,StringComparer.CurrentCultureIgnoreCase)),"All bundled voices install their required clips and are discovered");
+            Check(VoicePacks.Compose(VoicePacks.FinnishName,new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}).SequenceEqual(new[]{VoicePacks.Clips[0],VoicePacks.Clips[5]})
+                && VoicePacks.RequiredClips(VoicePacks.FinnishName).Length==11,"Finnish distance phrases include their own postposition and do not require an English In prefix");
             Check(VoicePacks.Compose(VoicePacks.RussianName,new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}).SequenceEqual(new[]{VoicePacks.Clips[0],VoicePacks.Clips[5]}),"Russian distance guidance uses distance then turn without an incorrect preposition");
             Check(VoicePacks.Compose(VoicePacks.DefaultName,new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}).SequenceEqual(new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}),"English navigation retains its In-distance-turn composition");
             Check(VoicePacks.Compose(VoicePacks.GermanName,new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}).SequenceEqual(new[]{VoicePacks.Clips[0],VoicePacks.Clips[5]}),"German cues use distance then action without announcing a fixed northern heading");
@@ -1375,10 +1377,10 @@ static class InputVoiceTests {
             string germanTurn=Path.Combine(packs,VoicePacks.GermanName,VoicePacks.Clips[5]);byte[] turnBytes=File.ReadAllBytes(germanTurn);File.Delete(germanTurn);
             Check(!VoicePacks.Discover(packs).Contains(VoicePacks.GermanName),"A missing real turn instruction makes the German pack unavailable");File.WriteAllBytes(germanTurn,turnBytes);
             Directory.CreateDirectory(Path.Combine(packs,"Incomplete"));
-            Check(VoicePacks.Discover(packs).Length==4,"Incomplete voice packs are excluded");
+            Check(VoicePacks.Discover(packs).Length==VoicePacks.BundledNames.Length,"Incomplete voice packs are excluded");
             string second=Path.Combine(packs,"Second voice"); Directory.CreateDirectory(second);
             foreach(string file in VoicePacks.Clips) File.Copy(Path.Combine(packs,VoicePacks.DefaultName,file),Path.Combine(second,file));
-            Check(VoicePacks.Discover(packs).Length==5,"Additional voice folders are discovered without code changes");
+            Check(VoicePacks.Discover(packs).Length==VoicePacks.BundledNames.Length+1,"Additional voice folders are discovered without code changes");
             using(var player=new VoicePlayer { Volume=0 }) {
                 // Hosted CI runners have no reliable audio endpoint for Windows MCI playback.
                 // Keep decoder playback covered on developer machines and verify queue behavior everywhere.

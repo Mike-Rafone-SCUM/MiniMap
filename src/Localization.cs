@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -22,7 +22,8 @@ namespace ScumMiniMap {
         Japanese = 15,
         Czech = 16,
         Italian = 17,
-        Ukrainian = 18
+        Ukrainian = 18,
+        Finnish = 19
     }
 
     public static partial class Localization {
@@ -30,7 +31,7 @@ namespace ScumMiniMap {
 
         private static AppLanguage currentLanguage = AppLanguage.English;
         public static string[] LanguageDisplayNames {
-            get { return new[]{"English","Español (Argentina)","Français","Deutsch","Nederlands","Русский","中文 (简体)","Türkçe","العربية","Português (Brasil)","한국어","Polski","Português (Portugal)","ไทย","中文（繁體）","日本語","Čeština","Italiano","Українська"}; }
+            get { return new[]{"English","Español (Argentina)","Français","Deutsch","Nederlands","Русский","中文 (简体)","Türkçe","العربية","Português (Brasil)","한국어","Polski","Português (Portugal)","ไทย","中文（繁體）","日本語","Čeština","Italiano","Українська","Suomi"}; }
         }
         public static AppLanguage LanguageAt(int index) {
             return index>=0 && index<LanguageDisplayNames.Length ? (AppLanguage)index : AppLanguage.English;
@@ -68,6 +69,7 @@ namespace ScumMiniMap {
                     case AppLanguage.Czech: return "cs";
                     case AppLanguage.Italian: return "it";
                     case AppLanguage.Ukrainian: return "uk";
+                    case AppLanguage.Finnish: return "fi";
                     default: return "en";
                 }
             }
@@ -112,6 +114,8 @@ namespace ScumMiniMap {
                 Current = AppLanguage.Italian;
             } else if (normalized.StartsWith("uk")) {
                 Current = AppLanguage.Ukrainian;
+            } else if (normalized=="fi" || normalized.StartsWith("fi-")) {
+                Current = AppLanguage.Finnish;
             } else {
                 Current = AppLanguage.English;
             }
@@ -143,6 +147,7 @@ namespace ScumMiniMap {
                 case AppLanguage.Czech: dict = StringsCs; break;
                 case AppLanguage.Italian: dict = StringsIt; break;
                 case AppLanguage.Ukrainian: dict = StringsUk; break;
+                case AppLanguage.Finnish: dict = StringsFi; break;
                 default: dict = StringsEn; break;
             }
             string value;
@@ -166,15 +171,15 @@ namespace ScumMiniMap {
         }
         // Indexed by AppLanguage, including distinct Brazilian/European Portuguese.
         static readonly Dictionary<string,string[]> MemberControlText=new Dictionary<string,string[]> {
-            {"GroupManageMembers", "Manage members|Administrar miembros|Gérer les membres|Mitglieder verwalten|Leden beheren|Управление участниками|管理成员|Üyeleri yönet|إدارة الأعضاء|Gerenciar membros|멤버 관리|Zarządzaj członkami|Gerir membros|จัดการสมาชิก|管理成員|メンバー管理|Spravovat členy|Gestisci membri|Керування учасниками".Split('|')},
-            {"GroupDisconnect", "Disconnect|Desconectar|Déconnecter|Trennen|Verbinding verbreken|Отключить|断开连接|Bağlantıyı kes|قطع الاتصال|Desconectar|연결 해제|Rozłącz|Desligar|ตัดการเชื่อมต่อ|中斷連線|接続を切断|Odpojit|Disconnetti|Від'єднати".Split('|')},
-            {"GroupMembersEmpty", "No connected members.|No hay miembros conectados.|Aucun membre connecté.|Keine Mitglieder verbunden.|Geen verbonden leden.|Нет подключённых участников.|没有已连接的成员。|Bağlı üye yok.|لا يوجد أعضاء متصلون.|Nenhum membro conectado.|연결된 멤버가 없습니다.|Brak połączonych członków.|Nenhum membro ligado.|ไม่มีสมาชิกที่เชื่อมต่อ|沒有已連線的成員。|接続中のメンバーはいません。|Žádní připojení členové.|Nessun membro connesso.|Немає підключених учасників.".Split('|')},
-            {"GroupOlderClient", "Older client (update to show name)|Cliente anterior (actualizá para ver el nombre)|Ancien client (mettre à jour pour voir le nom)|Älterer Client (Update zeigt Namen)|Oudere client (update voor naam)|Старая версия (обновите для показа имени)|旧版客户端（更新后显示名称）|Eski istemci (ad için güncelleyin)|عميل قديم (حدّث لإظهار الاسم)|Cliente antigo (atualize para mostrar o nome)|이전 버전 (이름을 보려면 업데이트)|Starszy klient (aktualizacja pokaże nazwę)|Cliente antigo (atualize para mostrar o nome)|ไคลเอนต์เก่า (อัปเดตเพื่อแสดงชื่อ)|舊版用戶端（更新後顯示名稱）|旧バージョン（更新すると名前を表示）|Starší klient (aktualizujte pro zobrazení jména)|Client precedente (aggiorna per vedere il nome)|Стара версія (оновіть для показу імені)".Split('|')},
-            {"GroupMembersFailed", "Could not refresh members or confirm the disconnect. Try again.|No se pudo actualizar la lista o confirmar la desconexión. Intentá de nuevo.|Impossible d'actualiser les membres ou de confirmer la déconnexion. Réessayez.|Mitglieder konnten nicht aktualisiert oder die Trennung bestätigt werden. Erneut versuchen.|Leden vernieuwen of verbreken bevestigen mislukt. Probeer opnieuw.|Не удалось обновить список или подтвердить отключение. Повторите попытку.|无法刷新成员或确认断开连接。请重试。|Üyeler yenilenemedi veya bağlantının kesildiği doğrulanamadı. Tekrar deneyin.|تعذر تحديث الأعضاء أو تأكيد قطع الاتصال. حاول مجددًا.|Não foi possível atualizar os membros ou confirmar a desconexão. Tente novamente.|멤버 새로 고침 또는 연결 해제를 확인하지 못했습니다. 다시 시도하세요.|Nie udało się odświeżyć członków lub potwierdzić rozłączenia. Spróbuj ponownie.|Não foi possível atualizar os membros ou confirmar a desconexão. Tente novamente.|ไม่สามารถรีเฟรชสมาชิกหรือยืนยันการตัดการเชื่อมต่อได้ โปรดลองอีกครั้ง|無法重新整理成員或確認中斷連線。請重試。|メンバーの更新または切断の確認ができませんでした。再試行してください。|Členy se nepodařilo obnovit nebo potvrdit odpojení. Zkuste to znovu.|Impossibile aggiornare i membri o confermare la disconnessione. Riprova.|Не вдалося оновити список або підтвердити від'єднання. Спробуйте ще раз.".Split('|')},
-            {"GroupMembersHelp", "Disconnect ends this member's current connection only. They can reconnect with the same group code. Other members stay connected.|Desconectar solo cierra la conexión actual de ese miembro. Puede volver con el mismo código. Los demás siguen conectados.|Déconnecter coupe uniquement la connexion actuelle de ce membre. Il peut revenir avec le même code. Les autres restent connectés.|Trennen beendet nur die aktuelle Verbindung dieses Mitglieds. Ein erneuter Beitritt mit demselben Code ist möglich. Andere bleiben verbunden.|Verbreken beëindigt alleen de huidige verbinding van dit lid. Opnieuw verbinden kan met dezelfde code. Andere leden blijven verbonden.|Отключение завершает только текущее соединение участника. Он может вернуться с тем же кодом. Остальные остаются подключёнными.|断开仅结束该成员当前的连接。他们可以使用相同群组码重新连接。其他成员保持连接。|Yalnızca bu üyenin mevcut bağlantısı kesilir. Aynı grup koduyla yeniden bağlanabilir. Diğer üyeler bağlı kalır.|ينهي القطع اتصال هذا العضو الحالي فقط. يمكنه إعادة الاتصال برمز المجموعة نفسه. يبقى الآخرون متصلين.|Desconectar encerra apenas a conexão atual deste membro. Ele pode voltar com o mesmo código. Os outros continuam conectados.|이 멤버의 현재 연결만 해제합니다. 같은 그룹 코드로 다시 연결할 수 있습니다. 다른 멤버는 연결을 유지합니다.|Rozłączenie kończy tylko bieżące połączenie tego członka. Może wrócić z tym samym kodem. Pozostali pozostają połączeni.|Desligar termina apenas a ligação atual deste membro. Pode voltar com o mesmo código. Os outros continuam ligados.|ตัดเฉพาะการเชื่อมต่อปัจจุบันของสมาชิกคนนี้ เขาสามารถเชื่อมต่อใหม่ด้วยรหัสเดิม สมาชิกอื่นยังเชื่อมต่ออยู่|中斷僅結束此成員目前的連線。他們可以使用相同群組碼重新連線。其他成員保持連線。|このメンバーの現在の接続だけを切断します。同じグループコードで再接続できます。他のメンバーは接続を維持します。|Odpojení ukončí jen aktuální připojení tohoto člena. Může se vrátit se stejným kódem. Ostatní zůstanou připojeni.|Disconnetti termina solo la connessione attuale di questo membro. Può rientrare con lo stesso codice. Gli altri restano connessi.|Від'єднання завершує лише поточне з'єднання цього учасника. Він може повернутися з тим самим кодом. Інші залишаються підключеними.".Split('|')}
+            {"GroupManageMembers", "Manage members|Administrar miembros|Gérer les membres|Mitglieder verwalten|Leden beheren|Управление участниками|管理成员|Üyeleri yönet|إدارة الأعضاء|Gerenciar membros|멤버 관리|Zarządzaj członkami|Gerir membros|จัดการสมาชิก|管理成員|メンバー管理|Spravovat členy|Gestisci membri|Керування учасниками|Hallitse jäseniä".Split('|')},
+            {"GroupDisconnect", "Disconnect|Desconectar|Déconnecter|Trennen|Verbinding verbreken|Отключить|断开连接|Bağlantıyı kes|قطع الاتصال|Desconectar|연결 해제|Rozłącz|Desligar|ตัดการเชื่อมต่อ|中斷連線|接続を切断|Odpojit|Disconnetti|Від'єднати|Katkaise yhteys".Split('|')},
+            {"GroupMembersEmpty", "No connected members.|No hay miembros conectados.|Aucun membre connecté.|Keine Mitglieder verbunden.|Geen verbonden leden.|Нет подключённых участников.|没有已连接的成员。|Bağlı üye yok.|لا يوجد أعضاء متصلون.|Nenhum membro conectado.|연결된 멤버가 없습니다.|Brak połączonych członków.|Nenhum membro ligado.|ไม่มีสมาชิกที่เชื่อมต่อ|沒有已連線的成員。|接続中のメンバーはいません。|Žádní připojení členové.|Nessun membro connesso.|Немає підключених учасників.|Ei yhdistettyjä jäseniä.".Split('|')},
+            {"GroupOlderClient", "Older client (update to show name)|Cliente anterior (actualizá para ver el nombre)|Ancien client (mettre à jour pour voir le nom)|Älterer Client (Update zeigt Namen)|Oudere client (update voor naam)|Старая версия (обновите для показа имени)|旧版客户端（更新后显示名称）|Eski istemci (ad için güncelleyin)|عميل قديم (حدّث لإظهار الاسم)|Cliente antigo (atualize para mostrar o nome)|이전 버전 (이름을 보려면 업데이트)|Starszy klient (aktualizacja pokaże nazwę)|Cliente antigo (atualize para mostrar o nome)|ไคลเอนต์เก่า (อัปเดตเพื่อแสดงชื่อ)|舊版用戶端（更新後顯示名稱）|旧バージョン（更新すると名前を表示）|Starší klient (aktualizujte pro zobrazení jména)|Client precedente (aggiorna per vedere il nome)|Стара версія (оновіть для показу імені)|Vanhempi versio (päivitä nimen näyttämiseksi)".Split('|')},
+            {"GroupMembersFailed", "Could not refresh members or confirm the disconnect. Try again.|No se pudo actualizar la lista o confirmar la desconexión. Intentá de nuevo.|Impossible d'actualiser les membres ou de confirmer la déconnexion. Réessayez.|Mitglieder konnten nicht aktualisiert oder die Trennung bestätigt werden. Erneut versuchen.|Leden vernieuwen of verbreken bevestigen mislukt. Probeer opnieuw.|Не удалось обновить список или подтвердить отключение. Повторите попытку.|无法刷新成员或确认断开连接。请重试。|Üyeler yenilenemedi veya bağlantının kesildiği doğrulanamadı. Tekrar deneyin.|تعذر تحديث الأعضاء أو تأكيد قطع الاتصال. حاول مجددًا.|Não foi possível atualizar os membros ou confirmar a desconexão. Tente novamente.|멤버 새로 고침 또는 연결 해제를 확인하지 못했습니다. 다시 시도하세요.|Nie udało się odświeżyć członków lub potwierdzić rozłączenia. Spróbuj ponownie.|Não foi possível atualizar os membros ou confirmar a desconexão. Tente novamente.|ไม่สามารถรีเฟรชสมาชิกหรือยืนยันการตัดการเชื่อมต่อได้ โปรดลองอีกครั้ง|無法重新整理成員或確認中斷連線。請重試。|メンバーの更新または切断の確認ができませんでした。再試行してください。|Členy se nepodařilo obnovit nebo potvrdit odpojení. Zkuste to znovu.|Impossibile aggiornare i membri o confermare la disconnessione. Riprova.|Не вдалося оновити список або підтвердити від'єднання. Спробуйте ще раз.|Jäsenluetteloa ei voitu päivittää tai yhteyden katkaisua varmistaa. Yritä uudelleen.".Split('|')},
+            {"GroupMembersHelp", "Disconnect ends this member's current connection only. They can reconnect with the same group code. Other members stay connected.|Desconectar solo cierra la conexión actual de ese miembro. Puede volver con el mismo código. Los demás siguen conectados.|Déconnecter coupe uniquement la connexion actuelle de ce membre. Il peut revenir avec le même code. Les autres restent connectés.|Trennen beendet nur die aktuelle Verbindung dieses Mitglieds. Ein erneuter Beitritt mit demselben Code ist möglich. Andere bleiben verbunden.|Verbreken beëindigt alleen de huidige verbinding van dit lid. Opnieuw verbinden kan met dezelfde code. Andere leden blijven verbonden.|Отключение завершает только текущее соединение участника. Он может вернуться с тем же кодом. Остальные остаются подключёнными.|断开仅结束该成员当前的连接。他们可以使用相同群组码重新连接。其他成员保持连接。|Yalnızca bu üyenin mevcut bağlantısı kesilir. Aynı grup koduyla yeniden bağlanabilir. Diğer üyeler bağlı kalır.|ينهي القطع اتصال هذا العضو الحالي فقط. يمكنه إعادة الاتصال برمز المجموعة نفسه. يبقى الآخرون متصلين.|Desconectar encerra apenas a conexão atual deste membro. Ele pode voltar com o mesmo código. Os outros continuam conectados.|이 멤버의 현재 연결만 해제합니다. 같은 그룹 코드로 다시 연결할 수 있습니다. 다른 멤버는 연결을 유지합니다.|Rozłączenie kończy tylko bieżące połączenie tego członka. Może wrócić z tym samym kodem. Pozostali pozostają połączeni.|Desligar termina apenas a ligação atual deste membro. Pode voltar com o mesmo código. Os outros continuam ligados.|ตัดเฉพาะการเชื่อมต่อปัจจุบันของสมาชิกคนนี้ เขาสามารถเชื่อมต่อใหม่ด้วยรหัสเดิม สมาชิกอื่นยังเชื่อมต่ออยู่|中斷僅結束此成員目前的連線。他們可以使用相同群組碼重新連線。其他成員保持連線。|このメンバーの現在の接続だけを切断します。同じグループコードで再接続できます。他のメンバーは接続を維持します。|Odpojení ukončí jen aktuální připojení tohoto člena. Může se vrátit se stejným kódem. Ostatní zůstanou připojeni.|Disconnetti termina solo la connessione attuale di questo membro. Può rientrare con lo stesso codice. Gli altri restano connessi.|Від'єднання завершує лише поточне з'єднання цього учасника. Він може повернутися з тим самим кодом. Інші залишаються підключеними.|Katkaisu sulkee vain tämän jäsenen nykyisen yhteyden. Hän voi liittyä uudelleen samalla ryhmäkoodilla. Muiden jäsenten yhteydet säilyvät.".Split('|')}
         };
         static Localization() {
-            var catalogues=new[]{StringsEn,StringsEsAr,StringsFr,StringsDe,StringsNl,StringsRu,StringsZh,StringsTr,StringsAr,StringsPt,StringsKo,StringsPl,StringsPtPt,StringsTh,StringsZhTw,StringsJa,StringsCs,StringsIt,StringsUk};
+            var catalogues=new[]{StringsEn,StringsEsAr,StringsFr,StringsDe,StringsNl,StringsRu,StringsZh,StringsTr,StringsAr,StringsPt,StringsKo,StringsPl,StringsPtPt,StringsTh,StringsZhTw,StringsJa,StringsCs,StringsIt,StringsUk,StringsFi};
             foreach(var entry in MemberControlText) { if(entry.Value.Length!=catalogues.Length)throw new InvalidOperationException(entry.Key);for(int i=0;i<catalogues.Length;i++)catalogues[i].Add(entry.Key,entry.Value[i]); }
         }
 
@@ -185,7 +190,7 @@ namespace ScumMiniMap {
                  currentLanguage==AppLanguage.Portuguese || currentLanguage==AppLanguage.PortuguesePortugal ||
                  currentLanguage==AppLanguage.Thai || currentLanguage==AppLanguage.ChineseTraditional ||
                  currentLanguage==AppLanguage.Japanese || currentLanguage==AppLanguage.Czech ||
-                 currentLanguage==AppLanguage.Italian || currentLanguage==AppLanguage.Ukrainian) &&
+                 currentLanguage==AppLanguage.Italian || currentLanguage==AppLanguage.Ukrainian || currentLanguage==AppLanguage.Finnish) &&
                 ZoneNamesEsAr.ContainsKey(englishName))
                 return TranslateMapObject(englishName,CurrentMapObjects,CurrentMapCategories);
             Dictionary<string,string> additionalZones = currentLanguage == AppLanguage.German ? GermanZoneNames.Value :
@@ -245,6 +250,7 @@ namespace ScumMiniMap {
                 case AppLanguage.Czech: dict = SectionNamesCs; break;
                 case AppLanguage.Italian: dict = SectionNamesIt; break;
                 case AppLanguage.Ukrainian: dict = SectionNamesUk; break;
+                case AppLanguage.Finnish: dict = SectionNamesFi; break;
             }
             if (dict != null) {
                 string loc;
@@ -277,6 +283,7 @@ namespace ScumMiniMap {
                 case AppLanguage.Czech: dict = CategoryNamesCs; break;
                 case AppLanguage.Italian: dict = CategoryNamesIt; break;
                 case AppLanguage.Ukrainian: dict = CategoryNamesUk; break;
+                case AppLanguage.Finnish: dict = CategoryNamesFi; break;
             }
             if (dict != null) {
                 string loc;
@@ -288,7 +295,7 @@ namespace ScumMiniMap {
         public static void SelfTest() {
             foreach(var entry in MemberControlText)if(entry.Value.Length!=LanguageDisplayNames.Length||Array.Exists(entry.Value,string.IsNullOrWhiteSpace))throw new InvalidOperationException("Incomplete member controls: "+entry.Key);
             // Inspect the actual catalogues: Get() intentionally falls back to English.
-            var catalogues=new[]{StringsEn,StringsEsAr,StringsFr,StringsDe,StringsNl,StringsRu,StringsZh,StringsTr,StringsAr,StringsPt,StringsKo,StringsPl,StringsPtPt,StringsTh,StringsZhTw,StringsJa,StringsCs,StringsIt,StringsUk};
+            var catalogues=new[]{StringsEn,StringsEsAr,StringsFr,StringsDe,StringsNl,StringsRu,StringsZh,StringsTr,StringsAr,StringsPt,StringsKo,StringsPl,StringsPtPt,StringsTh,StringsZhTw,StringsJa,StringsCs,StringsIt,StringsUk,StringsFi};
             if(catalogues.Length!=Enum.GetValues(typeof(AppLanguage)).Length || LanguageDisplayNames.Length!=catalogues.Length)
                 throw new Exception("Language selectors and catalogues differ.");
             for(int language=0;language<catalogues.Length;language++) {
@@ -320,11 +327,11 @@ namespace ScumMiniMap {
             ValidateNameCatalogue(CategoryNamesPt, CategoryNamesPtPt, "European Portuguese categories");
             foreach (var objects in new[]{MapObjectsFr,MapObjectsZh,MapObjectsTr,MapObjectsAr,MapObjectsPt,MapObjectsPtPt,MapObjectsKo})
                 ValidateNameCatalogue(MapObjectsEsAr, objects, "Expanded map objects");
-            foreach(var names in new[]{SectionNamesTh,SectionNamesZhTw,SectionNamesJa,SectionNamesCs,SectionNamesIt,SectionNamesUk})
+            foreach(var names in new[]{SectionNamesTh,SectionNamesZhTw,SectionNamesJa,SectionNamesCs,SectionNamesIt,SectionNamesUk,SectionNamesFi})
                 ValidateNameCatalogue(SectionNamesPt,names,"Added language sections");
-            foreach(var names in new[]{CategoryNamesTh,CategoryNamesZhTw,CategoryNamesJa,CategoryNamesCs,CategoryNamesIt,CategoryNamesUk})
+            foreach(var names in new[]{CategoryNamesTh,CategoryNamesZhTw,CategoryNamesJa,CategoryNamesCs,CategoryNamesIt,CategoryNamesUk,CategoryNamesFi})
                 ValidateNameCatalogue(CategoryNamesPt,names,"Added language categories");
-            foreach(var names in new[]{MapObjectsTh,MapObjectsZhTw,MapObjectsJa,MapObjectsCs,MapObjectsIt,MapObjectsUk})
+            foreach(var names in new[]{MapObjectsTh,MapObjectsZhTw,MapObjectsJa,MapObjectsCs,MapObjectsIt,MapObjectsUk,MapObjectsFi})
                 ValidateNameCatalogue(MapObjectsEsAr,names,"Added language map objects");
         }
 

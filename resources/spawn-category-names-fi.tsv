@@ -1,0 +1,137 @@
+# Finnish category and property labels. Canonical identifiers retained.
+weapons	Aseet
+clothing	Vaatteet ja suojavarusteet
+survival	Ruoka, terveys ja selviytyminen
+crafting	Varusteet ja valmistus
+vehicles	Ajoneuvojen osat
+other	Muut esineet
+weapon_ranged	Ampuma-aseet
+weapon_melee	Lähitaisteluaseet
+melee_weapon	Lähitaisteluaseet
+ammunition	Ammukset
+armor	Suojavarusteet
+attachment	Aseiden lisävarusteet
+book	Kirjat
+buildable	Tukikohdan laajennukset
+consumable	Ruoka, juomat ja lääkkeet
+equipment	Varusteet
+farming	Viljely
+fishing	Kalastus
+fishing_attachment	Kalastustarvikkeet
+fortification	Linnoitteet
+hunting	Metsästys
+magazine	Lippaat
+material	Materiaalit
+player_modification	Hahmon muokkaukset
+seasonal_event	Kausitapahtumien esineet
+throwable	Heittoaseet ja ansat
+vehicle_part	Ajoneuvojen osat
+weapon_part	Aseiden osat
+general	Yleiset
+Arrow	Nuolet
+Crossbow Bolt	Varsijousen nuolet
+Flare	Valoraketit
+12 Gauge	Kaliiperi 12
+accessories	Asusteet
+adhesive	Liimat
+alcoholic	Alkoholijuomat
+animal_part	Eläinten osat
+assault_rifle	Rynnäkkökiväärit
+axe	Kirveet
+backpack	Reput
+base_upgrades	Tukikohdan parannukset
+bayonet	Pistimet
+beverage	Juomat
+blunt	Lyömäaseet
+body	Korit
+body_armor	Vartalosuojat
+bow	Jouset
+bumper	Puskurit
+clip	Patruunakammat
+cookbook	Keittokirjat
+cosmetic	Ulkonäkö
+craft_station	Valmistusasemat
+crafting_material	Valmistusmateriaalit
+door	Ovet
+earmuffs	Kuulosuojaimet
+engine	Moottorit
+enhancement	Parannukset
+event	Tapahtumat
+eyewear	Silmälasit
+fender	Lokasuojat
+fire_starter	Tulentekovälineet
+fishing_catch	Kalasaalis
+flash_hider	Liekinvaimentimet
+flashlight	Taskulamput
+food	Ruoka
+footwear	Jalkineet
+fuel	Polttoaine
+ghillie	Naamiopäällysteet
+ghillie_jacket	Naamiotakit
+gloves	Käsineet
+hazmat_suit	Kemikaalisuojapuvut
+headwear	Päähineet
+heavy	Raskaat aseet
+holster	Asekotelot
+jacket	Takit
+knife	Veitset
+leggings	Säärisuojat
+light	Kevyet varusteet
+lmg	Kevyet konekiväärit
+lockpick	Tiirikointivälineet
+mask	Naamiot
+medical	Lääkintätarvikkeet
+miscellaneous	Sekalaiset
+organic	Eloperäiset materiaalit
+paint	Maalit
+pants	Housut
+pistol	Pistoolit
+pistol_parts	Pistoolien osat
+quiver	Nuoliviinet
+rail	Kiinnityskiskot
+raincoat	Sadetakit
+ranged_parts	Ampuma-aseiden osat
+repair_kit	Korjaussarjat
+repair_material	Korjausmateriaalit
+results	Tulokset
+revolver	Revolverit
+rifle_parts	Kiväärien osat
+scarf	Huivit
+scope	Kiikaritähtäimet
+seasonal_craft	Kausivalmistus
+seat	Istuimet
+security	Turvallisuus
+seed	Siemenet
+shirt	Paidat
+shotgun	Haulikot
+shotgun_parts	Haulikoiden osat
+sight	Tähtäimet
+single_shot	Kertalaukeavat kiväärit
+skirt	Hameet
+smg	Konepistoolit
+smg_parts	Konepistoolien osat
+sniper	Tarkkuuskiväärit
+socks	Sukat
+soft_drink	Virvoitusjuomat
+spear	Keihäät
+stabilizer	Vakaajat
+storage	Säilytys
+suppressor	Äänenvaimentimet
+sweater	Neuleet
+sword	Miekat
+tool	Työkalut
+undershirt	Aluspaidat
+underwear	Alusvaatteet
+unknown_parts	Tuntemattomat osat
+utility	Tarvikkeet
+vehicle_attachment	Ajoneuvojen lisävarusteet
+water	Vesi
+wheel	Pyörät
+Health	Kunto
+Uses	Käyttökertoja jäljellä
+Dirtiness	Likaisuus
+Location	Sijainti
+KeyCardSector	Avainkortin sektori
+StackCount	Pinon koko
+Radiation	Säteily
+Weight	Paino (kg)

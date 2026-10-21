@@ -2081,7 +2081,7 @@ static class SpawnCartTests {
     }
 
     static void TestExpandedLocalization(SpawnItemCatalog catalog,string directory) {
-        string[] languages={"es-AR","fr","de","nl","ru","zh-CN","tr","ar","pt-BR","pt-PT","ko","pl","th","zh-TW","ja","cs","it","uk"};
+        string[] languages={"es-AR","fr","de","nl","ru","zh-CN","tr","ar","pt-BR","pt-PT","ko","pl","th","zh-TW","ja","cs","it","uk","fi"};
         var boots=catalog.Find("Boots_06_01");
         try {
             foreach(string code in languages) {
@@ -2098,6 +2098,12 @@ static class SpawnCartTests {
                 Check(catalog.Items.Select(item=>item.Subcategory).Distinct().Where(key=>key.Length>0 && char.IsLetter(key[0])).All(key=>Localization.GetSpawnCategoryName(key,"").Length>0),code+": every named subtype has an explicit translation");
                 Check(SpawnModifiers.PropertyNames.All(key=>Localization.GetSpawnModifierLabel(key)!=key),code+": every modifier explains its original property token");
             }
+            Localization.SetLanguage("fi-FI");
+            Check(Localization.Current==AppLanguage.Finnish && Localization.CurrentCode=="fi" && Localization.Get("Settings")=="Asetukset","Finnish regional culture selects its persisted language identity");
+            Check(boots.DisplayName=="Työkengät" && catalog.Search("tyokengat",null).Contains(boots),"Finnish item search accepts missing ä and ö accents");
+            var suppressor=catalog.Items.First(item=>item.Name==".308 Suppressor");
+            Check(suppressor.DisplayName.Contains("äänenvaimennin") && catalog.Search("aanenvaimennin",null).Contains(suppressor),"Finnish weapon terminology and accent-free search resolve the same canonical item");
+            Check(Localization.GetSpawnModifierLabel("Health")=="Kunto (Health)" && Localization.GetSpawnModifierLabel("Weight")=="Paino (kg) (Weight)","Finnish modifier labels explain SCUM property tokens without changing them");
             Localization.SetLanguage("pt-PT");Check(Localization.Current==AppLanguage.PortuguesePortugal && Localization.CurrentCode=="pt-PT","European Portuguese has its own persisted language identity");
             Check(Localization.Get("Settings")=="Definições","European Portuguese uses European UI terminology");
             Localization.SetLanguage("pt-BR");Check(Localization.Current==AppLanguage.Portuguese && Localization.Get("Settings")=="Configurações","Existing Brazilian Portuguese settings retain their language identity and wording");

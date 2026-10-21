@@ -1,6 +1,6 @@
 ﻿$ErrorActionPreference = 'Stop'
 $miniRoot = Split-Path $PSScriptRoot -Parent
-Add-Type -Path @(('Localization.cs','Localization.MapObjects.cs','Localization.MapObjects.DeNlPl.cs','Localization.Polish.cs','Localization.SpawnItems.cs','Localization.Extended.cs','Localization.Additional.cs') | ForEach-Object { Join-Path $miniRoot "src\$_" })
+Add-Type -Path @(('Localization.cs','Localization.MapObjects.cs','Localization.MapObjects.DeNlPl.cs','Localization.Polish.cs','Localization.SpawnItems.cs','Localization.Extended.cs','Localization.Additional.cs','Localization.Finnish.cs') | ForEach-Object { Join-Path $miniRoot "src\$_" })
 [ScumMiniMap.Localization]::SelfTest()
 $english = [ScumMiniMap.Localization]::StringsEn
 $references = 0
@@ -54,6 +54,7 @@ $addedLanguageExpectations=@{
     'cs-CZ'=@('cs','Cs','Nastavení','Budovy')
     'it-IT'=@('it','It','Impostazioni','Edifici')
     'uk-UA'=@('uk','Uk','Налаштування','Будівлі')
+    'fi-FI'=@('fi','Fi','Asetukset','Rakennukset')
 }
 try {
     foreach($culture in $addedLanguageExpectations.Keys) {
