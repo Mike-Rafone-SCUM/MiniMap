@@ -1,10 +1,18 @@
-﻿// Offline translation drafts: native terminology review pending.
+// Offline translation drafts: native terminology review pending.
 using System;
 using System.Collections.Generic;
 
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsPtPt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "MapPlacement", "Posição e tamanho do mapa principal" },
+            { "MapFitGame", "Ajustar à janela do SCUM" },
+            { "MapManual", "Posição e tamanho manuais" },
+            { "MapFitMonitor", "Preencher o monitor" },
+            { "MapPlacementHelp", "O modo automático acompanha a janela do SCUM. O modo manual guarda a posição e o tamanho em píxeis do ecrã." },
+            { "MapMoveResize", "Mover e redimensionar a pré-visualização" },
+            { "MapBoundsInvalid", "Introduza valores válidos em píxeis. Tamanho mínimo: 640 × 420." },
+            { "MapPlacementDrag", "Arraste aqui para mover. Redimensione pelo canto inferior direito." },
             { "ScumAutoLaunchLabel", "Iniciar o MiniMap com o SCUM e fechar ao sair do jogo" },
             { "ScumAutoLaunchHelp", "Um monitor em segundo plano inicia ao entrar no Windows. O MiniMap guarda e fecha 10 segundos após o SCUM. Ao fechar manualmente, aguarda a próxima sessão de jogo. Desative antes de mover ou eliminar a pasta da aplicação." },
             { "AdminMapTeleportHere", "Teletransportar para aqui" },

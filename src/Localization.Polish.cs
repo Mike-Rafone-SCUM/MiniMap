@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace ScumMiniMap {
@@ -14,7 +14,15 @@ namespace ScumMiniMap {
             }
             return result;
         }
-        const string PolishUi = @"ScumAutoLaunchLabel|Uruchamiaj MiniMap wraz ze SCUM i zamykaj po zakończeniu gry
+        const string PolishUi = @"MapPlacement|Położenie i rozmiar głównej mapy
+MapFitGame|Dopasuj do okna SCUM
+MapManual|Ręczne położenie i rozmiar
+MapFitMonitor|Wypełnij monitor
+MapPlacementHelp|Tryb automatyczny śledzi okno SCUM. Tryb ręczny zapisuje położenie i rozmiar w pikselach ekranu.
+MapMoveResize|Przesuń podgląd i zmień rozmiar
+MapBoundsInvalid|Wpisz prawidłowe wartości w pikselach. Minimum: 640 × 420.
+MapPlacementDrag|Przeciągnij tutaj, aby przesunąć. Zmień rozmiar za prawy dolny róg.
+ScumAutoLaunchLabel|Uruchamiaj MiniMap wraz ze SCUM i zamykaj po zakończeniu gry
 ScumAutoLaunchHelp|Monitor w tle uruchamia się przy logowaniu do Windows. MiniMap zapisuje dane i zamyka się 10 sekund po SCUM. Po ręcznym zamknięciu czeka na następną sesję gry. Wyłącz przed przeniesieniem lub usunięciem folderu aplikacji.
 RouteModeQuickest|Najszybsza
 RouteModeShortest|Najkrótsza

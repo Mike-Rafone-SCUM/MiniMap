@@ -15,6 +15,7 @@ class SquadUiTests {
     static void Set(object o,string n,object v) { o.GetType().GetField(n,F).SetValue(o,v); }
     static object Call(object o,string n,params object[] a) { return o.GetType().GetMethod(n,F).Invoke(o,a); }
     static void Check(bool v,string n) { if(!v)throw new Exception(n);Console.WriteLine("PASS: "+n); }
+    static RenderingEventArgs CompositionAt(double seconds) { return (RenderingEventArgs)Activator.CreateInstance(typeof(RenderingEventArgs),BindingFlags.Instance|BindingFlags.NonPublic,null,new object[]{TimeSpan.FromSeconds(seconds)},null); }
     static bool Overlap(Rect[] bounds) { for(int i=0;i<bounds.Length;i++)for(int j=i+1;j<bounds.Length;j++) { var shared=Rect.Intersect(bounds[i],bounds[j]);if(!shared.IsEmpty&&shared.Width>0&&shared.Height>0)return true; }return false; }
     static void Pump() { System.Windows.Forms.Application.DoEvents();System.Threading.Thread.Sleep(20); }
     static void Await(Func<bool> test) { var end=DateTime.UtcNow.AddSeconds(8);while(DateTime.UtcNow<end) { if(test())return;Pump(); }throw new Exception("UI fixture timed out"); }
@@ -374,6 +375,53 @@ class SquadUiTests {
         if(opaque&&(bool)Get(map,"DirectTerrain")) {int frames=(int)Get(map,"CameraSceneBuilds");((Action<System.Drawing.PointF>)Get(map,"PanChanged"))(new System.Drawing.PointF(.51f,.5f));render();for(int i=0;i<5;i++)Pump();Check((int)Get(map,"CameraSceneBuilds")==frames&&!(bool)Get(map,"cameraWorker")&&Get(map,"pendingCameraScene")==null,"Solid accelerated tactical movement bypasses the software terrain-frame worker");Call(runtime,"EndCameraInteraction");render();}
         Capture(window,Path.Combine(folder,opaque?"tactical-solid.png":"tactical-transparent.png"));window.Hide();
     }
+    static void CheckDragCadence(object runtime,string folder) {
+        var engine=Get(runtime,"engine");var map=(FrameworkElement)Get(runtime,"tacticalMap");var window=(Window)Get(runtime,"tactical");
+        window.ShowActivated=false;window.Left=-32000;window.Top=-32000;window.Width=3840;window.Height=2160;window.Show();window.UpdateLayout();
+        Action record=()=> {var drawing=new DrawingGroup();using(var dc=drawing.Open())Call(map,"OnRender",dc);};
+        var rows=new List<string> { "zoom,input_events,rendered_frames,median_interval_ms,p95_interval_ms,terrain_rebuilds,annotation_rebuilds" };
+        foreach(float zoom in new[]{1.05f,1.25f,2f}) {
+            Call(runtime,"EndCameraInteraction");Call(engine,"WpfPan",new System.Drawing.PointF(.5f,.5f));Set(engine,"fullMapZoom",zoom);Call(runtime,"Refresh");record();
+            Await(()=> {record();var scene=Get(map,"idleCameraScene");return (bool)Get(map,"PoiViewportReady")&&scene!=null&&(double)Get(scene,"Width")==map.ActualWidth&&(double)Get(scene,"Height")==map.ActualHeight&&(int)Get(scene,"Opacity")== (int)Get(Get(map,"State"),"Opacity")&&!(bool)Get(map,"cameraWorker")&&!(bool)Get(map,"cameraApplyPosted");});
+            int terrain=(int)Get(map,"TerrainLayerBuilds"),annotations=(int)Get(map,"AnnotationLayerBuilds"),last=(int)Get(map,"LiveLayerBuilds"),inputs=0;
+            var times=new List<double>();var clock=System.Diagnostics.Stopwatch.StartNew();var loop=new DispatcherFrame();
+            Call(map,"BeginPointer",new Point(1500,900));
+            EventHandler observe=(s,e)=> {int current=(int)Get(map,"LiveLayerBuilds");if(current!=last) {times.Add(clock.Elapsed.TotalMilliseconds);last=current;}};
+            var input=new DispatcherTimer(DispatcherPriority.Input,map.Dispatcher) {Interval=TimeSpan.FromMilliseconds(1)};
+            input.Tick+=(s,e)=> {if(clock.ElapsedMilliseconds>=1200) {loop.Continue=false;return;}inputs++;Call(map,"MovePointer",new Point(1500+60*Math.Sin(inputs*.05),900+90*Math.Sin(inputs*.05)));};
+            // This fixture supplies synthetic pointer positions without pressing
+            // the operator's real mouse button. Ignore incidental desktop move
+            // events on this off-screen surface so they cannot cancel that drag.
+            MouseEventHandler desktopMove=(s,e)=>e.Handled=true;map.PreviewMouseMove+=desktopMove;
+            CompositionTarget.Rendering+=observe;input.Start();try {Dispatcher.PushFrame(loop);}finally {input.Stop();CompositionTarget.Rendering-=observe;map.PreviewMouseMove-=desktopMove;}
+            Check(inputs>0&&times.Count>2,"A 4K near-overview drag presents changing frames while pointer input is active at zoom "+zoom);
+            Check((bool)Get(map,"CameraInteracting")&&(bool)map.GetType().GetProperty("PointerCameraActive",F).GetValue(map,null),"The 4K drag keeps its retained preview through held-pointer settle ticks at zoom "+zoom);
+            int terrainDelta=(int)Get(map,"TerrainLayerBuilds")-terrain,annotationDelta=(int)Get(map,"AnnotationLayerBuilds")-annotations;
+            Check(terrainDelta==0&&annotationDelta==0,"A prepared 4K drag rebuilds no terrain or annotations at zoom "+zoom);
+            var intervals=times.Skip(1).Select((time,i)=>time-times[i]).OrderBy(n=>n).ToArray();
+            string row=string.Join(",",new[]{(double)zoom,inputs,times.Count,intervals[intervals.Length/2],intervals[(int)((intervals.Length-1)*.95)],terrainDelta,annotationDelta}.Select(n=>n.ToString("F3",System.Globalization.CultureInfo.InvariantCulture)));rows.Add(row);Console.WriteLine("DRAG_4K "+row);
+            Call(map,"CancelPointer");Call(runtime,"EndCameraInteraction");
+        }
+        File.WriteAllLines(Path.Combine(folder,"drag-cadence.csv"),rows);
+        if(map.GetType().GetField("CameraFramesPresented",F)!=null) {
+            Call(map,"BeginCameraFrames");int before=(int)Get(map,"CameraFramesPresented");
+            for(int i=0;i<100;i++)Call(map,"RequestRedraw");
+            Check((bool)Get(map,"cameraFramePending")&&(int)Get(map,"CameraFramesPresented")==before,"One hundred camera requests coalesce without presenting intermediate input states");
+            Call(map,"CameraCompositionFrame",null,CompositionAt(1));
+            Check((int)Get(map,"CameraFramesPresented")==before+1&&!(bool)Get(map,"cameraFramePending")&&!((DispatcherTimer)Get(map,"cameraFrame")).IsEnabled,"The next composition presents one frame and cancels the fallback timer");
+            Call(map,"RequestRedraw");Call(map,"CameraCompositionFrame",null,CompositionAt(1));
+            Check((int)Get(map,"CameraFramesPresented")==before+1&&(bool)Get(map,"cameraFramePending"),"A duplicate composition timestamp cannot present a second drag frame");
+            Call(map,"CameraCompositionFrame",null,CompositionAt(2));
+            Check((int)Get(map,"CameraFramesPresented")==before+2,"The next distinct composition timestamp services the latest pending camera input");
+            Call(map,"RequestRedraw");Call(map,"PresentCameraFrame");
+            Check((int)Get(map,"CameraFramesPresented")==before+3&&!(bool)Get(map,"cameraFramePending"),"Fallback presentation remains available when Windows composition is suspended");
+            Call(map,"RequestRedraw");window.Hide();Await(()=>!(bool)Get(map,"cameraFramePending")&&!(bool)Get(map,"CameraInteracting"));
+            Check(!(bool)Get(map,"cameraFramePending")&&!((DispatcherTimer)Get(map,"cameraFrame")).IsEnabled&&!(bool)Get(map,"CameraInteracting"),"Hiding the map immediately detaches pending composition work and stops its fallback timer");
+            Call(map,"CameraCompositionFrame",null,CompositionAt(3));
+            Check((int)Get(map,"CameraFramesPresented")==before+3,"A late composition callback cannot redraw a hidden map");
+        }
+        window.Hide();
+    }
     static void CheckCameraBurst(object runtime,string folder,bool verify) {
         var engine=Get(runtime,"engine");var map=(FrameworkElement)Get(runtime,"tacticalMap");var window=(Window)Get(runtime,"tactical");
         window.ShowActivated=false;window.Left=-32000;window.Top=-32000;window.Width=1920;window.Height=1080;window.Show();window.UpdateLayout();
@@ -412,12 +460,15 @@ class SquadUiTests {
         Check(!beforeNavigation.SequenceEqual(previewPixels())&&Object.ReferenceEquals(snapshot,Get(map,"staticDrawing")),"A new GPS destination changes actual preview pixels without replacing the static snapshot");Set(cameraState,"Target",previousTarget);Call(map,"PublishState",cameraState);
         var frameTimes=new List<double>();for(int i=0;i<12;i++) {pan(new System.Drawing.PointF(.5099f+i*.0001f,.5f));var frameClock=System.Diagnostics.Stopwatch.StartNew();var bitmap=new RenderTargetBitmap((int)map.ActualWidth,(int)map.ActualHeight,96,96,PixelFormats.Pbgra32);bitmap.Render(map);frameClock.Stop();frameTimes.Add(frameClock.Elapsed.TotalMilliseconds);Pump();}frameTimes.Sort();Console.WriteLine("BURST worker-frame composition median="+frameTimes[6].ToString("F3")+" ms, p95="+frameTimes[11].ToString("F3")+" ms");
         bool frameDuringInput=false;var inputClock=System.Diagnostics.Stopwatch.StartNew();var inputFrame=new DispatcherFrame();int inputEvents=0;
-        EventHandler observedFrame=(s,e)=>frameDuringInput=inputFrame.Continue;timer.Tick+=observedFrame;
-        Action input=null;input=()=> {inputEvents++;if(inputClock.ElapsedMilliseconds>=250)inputFrame.Continue=false;else map.Dispatcher.BeginInvoke(input,DispatcherPriority.Input);};
-        try {pan(new System.Drawing.PointF(.51f,.5f));map.Dispatcher.BeginInvoke(input,DispatcherPriority.Input);Dispatcher.PushFrame(inputFrame);}finally {timer.Tick-=observedFrame;}
+        int framesBeforeInput=(int)Get(map,"CameraFramesPresented");
+        Action input=null;input=()=> {inputEvents++;if((int)Get(map,"CameraFramesPresented")>framesBeforeInput)frameDuringInput=inputFrame.Continue;if(inputClock.ElapsedMilliseconds>=250)inputFrame.Continue=false;else map.Dispatcher.BeginInvoke(input,DispatcherPriority.Input);};
+        pan(new System.Drawing.PointF(.51f,.5f));map.Dispatcher.BeginInvoke(input,DispatcherPriority.Input);Dispatcher.PushFrame(inputFrame);
         Check(frameDuringInput&&inputEvents>0,"A pending camera frame is serviced while synthetic input work is still queued");
-        Call(map,"BeginPointer",new Point(500,400));Call(map,"MovePointer",new Point(540,425));var held=System.Diagnostics.Stopwatch.StartNew();while(held.ElapsedMilliseconds<450)Pump();
-        Check((bool)Get(map,"CameraInteracting")&&(bool)map.GetType().GetProperty("PointerCameraActive",F).GetValue(map,null),"Holding a drag open keeps the lightweight preview active across settle ticks");Call(map,"CancelPointer");
+        MouseEventHandler heldDesktopMove=(s,e)=>e.Handled=true;map.PreviewMouseMove+=heldDesktopMove;
+        try {
+            Call(map,"BeginPointer",new Point(500,400));Call(map,"MovePointer",new Point(540,425));var held=System.Diagnostics.Stopwatch.StartNew();while(held.ElapsedMilliseconds<450)Pump();
+            Check((bool)Get(map,"CameraInteracting")&&(bool)map.GetType().GetProperty("PointerCameraActive",F).GetValue(map,null),"Holding a drag open keeps the lightweight preview active across settle ticks");
+        }finally {map.PreviewMouseMove-=heldDesktopMove;Call(map,"CancelPointer");}
         Await(()=>!(bool)Get(map,"CameraInteracting"));record();Await(()=> {record();return Object.ReferenceEquals(Get(map,"drawnPoiLayout"),Get(map,"requestedPoiLayout"));});
         Check(!Object.ReferenceEquals(labels,Get(map,"labelLayout"))&&!Object.ReferenceEquals(layout,Get(map,"requestedPoiLayout")),"Camera idle restores current-zoom clustering and a fresh label layout");
         Check(RenderOptions.GetBitmapScalingMode(map)==BitmapScalingMode.Unspecified&&!timer.IsEnabled,"Camera idle restores smooth sampling and stops pending gesture frames");
@@ -454,6 +505,7 @@ class SquadUiTests {
         IDisposable host=null,friend=null;
         try {
             var engine=Get(runtime,"engine");Call(engine,"WpfPreviewPosition","{X=-336602.375 Y=-270302.625 Z=18853.264|P=0 Y=135 R=0}");
+            if(Environment.GetEnvironmentVariable("MINIMAP_DRAG_CADENCE_ONLY")=="1") {CheckDragCadence(runtime,folder);return;}
             if(Environment.GetEnvironmentVariable("MINIMAP_CAMERA_LABELS_ONLY")=="1") {CheckViewportPixels(runtime,folder);return;}
             if(Environment.GetEnvironmentVariable("MINIMAP_CAMERA_PROBE_ONLY")=="1") {CheckCameraInteraction(runtime,folder,Environment.GetEnvironmentVariable("MINIMAP_CAMERA_BASELINE")!="1");return;}
             if(Environment.GetEnvironmentVariable("MINIMAP_COMPACT_GUIDANCE_ONLY")=="1") {CheckCompactGuidance(runtime,folder);return;}

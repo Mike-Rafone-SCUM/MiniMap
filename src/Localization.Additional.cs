@@ -1,9 +1,17 @@
-﻿// Offline authored localizations; no runtime translation service.
+// Offline authored localizations; no runtime translation service.
 using System;
 using System.Collections.Generic;
 namespace ScumMiniMap {
     public static partial class Localization {
         public static readonly Dictionary<string,string> StringsTh = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "MapPlacement", "ตำแหน่งและขนาดแผนที่หลัก" },
+            { "MapFitGame", "ปรับให้พอดีกับหน้าต่าง SCUM" },
+            { "MapManual", "กำหนดตำแหน่งและขนาดเอง" },
+            { "MapFitMonitor", "เต็มจอภาพ" },
+            { "MapPlacementHelp", "โหมดอัตโนมัติติดตามหน้าต่าง SCUM โหมดกำหนดเองบันทึกตำแหน่งและขนาดเป็นพิกเซลหน้าจอ" },
+            { "MapMoveResize", "ย้ายและปรับขนาดตัวอย่าง" },
+            { "MapBoundsInvalid", "ป้อนค่าพิกเซลที่ถูกต้อง ขนาดขั้นต่ำ: 640 × 420" },
+            { "MapPlacementDrag", "ลากตรงนี้เพื่อย้าย ปรับขนาดจากมุมขวาล่าง" },
             { "ScumAutoLaunchLabel", "เปิด MiniMap พร้อม SCUM และปิดเมื่อออกจากเกม" },
             { "ScumAutoLaunchHelp", "ตัวตรวจสอบเบื้องหลังเริ่มเมื่อเข้าสู่ Windows โดย MiniMap จะบันทึกและปิดหลังออกจาก SCUM 10 วินาที หากปิดเองจะรอการเล่นครั้งถัดไป ปิดตัวเลือกนี้ก่อนย้ายหรือลบโฟลเดอร์แอป" },
             { "AdminMapTeleportHere", "เทเลพอร์ตมาที่นี่" },
@@ -1123,6 +1131,14 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "จุดกิจกรรมซีเดนเท็กซ์" },
         };
         public static readonly Dictionary<string,string> StringsZhTw = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "MapPlacement", "主地圖位置與大小" },
+            { "MapFitGame", "配合 SCUM 視窗" },
+            { "MapManual", "手動設定位置與大小" },
+            { "MapFitMonitor", "填滿螢幕" },
+            { "MapPlacementHelp", "自動模式會跟隨 SCUM 視窗。手動模式以螢幕像素儲存位置與大小。" },
+            { "MapMoveResize", "移動並調整預覽大小" },
+            { "MapBoundsInvalid", "請輸入有效的像素值。最小尺寸：640 × 420。" },
+            { "MapPlacementDrag", "拖曳此處以移動。從右下角調整大小。" },
             { "ScumAutoLaunchLabel", "隨 SCUM 啟動 MiniMap，並在遊戲結束後關閉" },
             { "ScumAutoLaunchHelp", "背景監視程式會在登入 Windows 時啟動。SCUM 結束 10 秒後，MiniMap 儲存並關閉。手動關閉後將等待下次遊戲工作階段。移動或刪除應用程式資料夾前，請停用此選項。" },
             { "AdminMapTeleportHere", "傳送到這裡" },
@@ -2242,6 +2258,14 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex活動點" },
         };
         public static readonly Dictionary<string,string> StringsJa = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "MapPlacement", "メインマップの位置とサイズ" },
+            { "MapFitGame", "SCUMのウィンドウに合わせる" },
+            { "MapManual", "位置とサイズを手動設定" },
+            { "MapFitMonitor", "モニター全体に表示" },
+            { "MapPlacementHelp", "自動モードはSCUMのウィンドウに追従します。手動モードは位置とサイズを画面のピクセル単位で保存します。" },
+            { "MapMoveResize", "プレビューを移動・サイズ変更" },
+            { "MapBoundsInvalid", "有効なピクセル値を入力してください。最小サイズ：640 × 420。" },
+            { "MapPlacementDrag", "ここをドラッグして移動。右下の隅でサイズを変更。" },
             { "ScumAutoLaunchLabel", "SCUMと同時にMiniMapを起動し、ゲーム終了時に閉じる" },
             { "ScumAutoLaunchHelp", "Windowsへのサインイン時にバックグラウンド監視が始まります。SCUM終了の10秒後にMiniMapを保存して閉じます。手動で閉じた場合は次のゲームセッションまで待機します。アプリのフォルダーを移動または削除する前に無効にしてください。" },
             { "AdminMapTeleportHere", "ここにテレポート" },
@@ -3361,6 +3385,14 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "シーデンテックスアクティビティスポット" },
         };
         public static readonly Dictionary<string,string> StringsCs = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "MapPlacement", "Poloha a velikost hlavní mapy" },
+            { "MapFitGame", "Přizpůsobit oknu SCUM" },
+            { "MapManual", "Ruční poloha a velikost" },
+            { "MapFitMonitor", "Vyplnit monitor" },
+            { "MapPlacementHelp", "Automatický režim sleduje okno SCUM. Ruční režim ukládá polohu a velikost v pixelech obrazovky." },
+            { "MapMoveResize", "Přesunout a změnit velikost náhledu" },
+            { "MapBoundsInvalid", "Zadejte platné hodnoty v pixelech. Minimum: 640 × 420." },
+            { "MapPlacementDrag", "Přetažením zde přesunete. Velikost změníte za pravý dolní roh." },
             { "ScumAutoLaunchLabel", "Spustit MiniMap se SCUM a zavřít po ukončení hry" },
             { "ScumAutoLaunchHelp", "Sledování na pozadí začne při přihlášení do Windows. MiniMap uloží data a zavře se 10 sekund po ukončení SCUM. Po ručním zavření čeká na další herní relaci. Před přesunutím nebo smazáním složky aplikace tuto možnost vypněte." },
             { "AdminMapTeleportHere", "Teleportovat sem" },
@@ -4480,6 +4512,14 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Sea Dentex Activity Spot" },
         };
         public static readonly Dictionary<string,string> StringsIt = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "MapPlacement", "Posizione e dimensioni della mappa principale" },
+            { "MapFitGame", "Adatta alla finestra di SCUM" },
+            { "MapManual", "Posizione e dimensioni manuali" },
+            { "MapFitMonitor", "Riempi il monitor" },
+            { "MapPlacementHelp", "La modalità automatica segue la finestra di SCUM. Quella manuale salva posizione e dimensioni in pixel dello schermo." },
+            { "MapMoveResize", "Sposta e ridimensiona l’anteprima" },
+            { "MapBoundsInvalid", "Inserisci valori validi in pixel. Dimensioni minime: 640 × 420." },
+            { "MapPlacementDrag", "Trascina qui per spostare. Ridimensiona dall’angolo in basso a destra." },
             { "ScumAutoLaunchLabel", "Avvia MiniMap con SCUM e chiudilo al termine del gioco" },
             { "ScumAutoLaunchHelp", "Un monitor in background si avvia all’accesso a Windows. MiniMap salva e si chiude 10 secondi dopo SCUM. Se chiuso manualmente, attende la prossima sessione di gioco. Disattiva prima di spostare o eliminare la cartella dell’app." },
             { "AdminMapTeleportHere", "Teletrasporta qui" },
@@ -5599,6 +5639,14 @@ namespace ScumMiniMap {
             { "Sea Dentex Activity Spot", "Punto di attività del dentice marino" },
         };
         public static readonly Dictionary<string,string> StringsUk = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase) {
+            { "MapPlacement", "Положення та розмір основної карти" },
+            { "MapFitGame", "За розміром вікна SCUM" },
+            { "MapManual", "Положення та розмір вручну" },
+            { "MapFitMonitor", "Заповнити монітор" },
+            { "MapPlacementHelp", "Автоматичний режим стежить за вікном SCUM. Ручний зберігає положення та розмір у пікселях екрана." },
+            { "MapMoveResize", "Перемістити та змінити розмір зразка" },
+            { "MapBoundsInvalid", "Введіть допустимі значення в пікселях. Мінімум: 640 × 420." },
+            { "MapPlacementDrag", "Перетягніть тут для переміщення. Змінюйте розмір за правий нижній кут." },
             { "ScumAutoLaunchLabel", "Запускати MiniMap разом зі SCUM і закривати після гри" },
             { "ScumAutoLaunchHelp", "Фоновий монітор запускається під час входу у Windows. MiniMap зберігає дані й закривається через 10 секунд після SCUM. Після ручного закриття чекає наступного сеансу гри. Вимкніть перед переміщенням або видаленням папки застосунку." },
             { "AdminMapTeleportHere", "Телепортуватися сюди" },

@@ -1,6 +1,12 @@
-# SCUM MiniMap v2.3.20
+# SCUM MiniMap v2.3.21
 
 SCUM MiniMap is an external map overlay and road-navigation utility for SCUM, made for the Skynett community. Version 2 uses WPF for the tactical map, compact minimap, Settings, setup guide and Zone Creator. The existing tracking and routing engine remains behind the new interface.
+
+## Main map position and size
+
+Open **Settings > Main map position and size**, or the same control in the main-map sidebar. **Fit to SCUM window** follows the game's playable window area, including window moves and resizes. **Manual position and size** saves screen-pixel bounds; use the exact fields or **Move and resize preview**, then Done. Negative monitor coordinates are supported. Escape cancels the preview; its Done saves immediately. **Fill monitor** fills the fields with the game monitor's bounds. Saved off-screen placements recover to a connected monitor. Compact minimap placement is separate.
+
+Transparent-map dragging now coalesces input until the next Windows composition frame, with a timer fallback. Local synthetic 4K tests showed steadier drag updates; results vary by PC and this is not a guaranteed game-FPS improvement. Existing settings and keys are preserved. Complete all five setup pages after updating.
 
 ## Install or update
 

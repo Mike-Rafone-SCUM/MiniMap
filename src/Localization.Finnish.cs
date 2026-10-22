@@ -16,7 +16,15 @@ namespace ScumMiniMap {
             }
             return result;
         }
-        const string FinnishUi=@"ScumAutoLaunchLabel|Käynnistä MiniMap SCUMin mukana ja sulje se pelin päättyessä
+        const string FinnishUi=@"MapPlacement|Pääkartan sijainti ja koko
+MapFitGame|Sovita SCUM-ikkunaan
+MapManual|Sijainti ja koko käsin
+MapFitMonitor|Täytä näyttö
+MapPlacementHelp|Automaattinen tila seuraa SCUM-ikkunaa. Käsin asetettu sijainti ja koko tallennetaan näytön pikseleinä.
+MapMoveResize|Siirrä esikatselua ja muuta sen kokoa
+MapBoundsInvalid|Anna kelvolliset pikseliarvot. Vähimmäiskoko: 640 × 420.
+MapPlacementDrag|Siirrä vetämällä tästä. Muuta kokoa oikeasta alakulmasta.
+ScumAutoLaunchLabel|Käynnistä MiniMap SCUMin mukana ja sulje se pelin päättyessä
 ScumAutoLaunchHelp|Taustalla toimiva valvonta käynnistyy Windowsiin kirjautuessa. MiniMap tallentaa ja sulkeutuu 10 sekuntia SCUMin sulkemisen jälkeen. Jos suljet MiniMapin itse, se käynnistyy vasta seuraavalla pelikerralla. Poista tämä käytöstä ennen sovelluskansion siirtämistä tai poistamista.
 AdminMapTeleportHere|Teleporttaa tähän
 AdminMapTeleportHelp|Lähetä {0}. Kartan korkeustietoa ei ole saatavilla, joten Z on 0.

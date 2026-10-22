@@ -322,6 +322,8 @@ namespace ScumMiniMap {
                         if(key=="OnboardingVersion") { wpfOnboardingVersion=val;continue; }
                         if(key=="HideOnboardingGuide") { if(bool.TryParse(val,out b))hideOnboardingGuide=b;continue; }
                         if(key=="RouteMode") { RoadRouteMode mode;if(Enum.TryParse(val,out mode)&&Enum.IsDefined(typeof(RoadRouteMode),mode))wpfRouteMode=mode;continue; }
+                        if(key=="ManualMapPlacement") { if(bool.TryParse(val,out b))WpfManualMap=b;continue; }
+                        if(key=="MapPlacementBounds") { var parts=val.Split(',');int x,y,w,h;if(parts.Length==4&&int.TryParse(parts[0],out x)&&int.TryParse(parts[1],out y)&&int.TryParse(parts[2],out w)&&int.TryParse(parts[3],out h)&&x>=-100000&&x<=100000&&y>=-100000&&y<=100000&&w>=640&&w<=32768&&h>=420&&h<=32768)WpfMapBounds=new Rectangle(x,y,w,h);continue; }
                         if(key=="RotateMinimap") { if(bool.TryParse(val,out b))wpfRotateMap=b;continue; }
                         if(key=="PoiClustering") { if(bool.TryParse(val,out b))wpfPoiClustering=b;continue; }
                         if(key=="AdminToolsEnabled") { if(bool.TryParse(val,out b))adminToolsEnabled=b;continue; }
@@ -540,6 +542,8 @@ namespace ScumMiniMap {
                 settingsLines.Add("ScumCopyScanCode="+scumCopyScanCode+Environment.NewLine+"ScumMapScanCode="+scumMapScanCode+Environment.NewLine+"ScumChatScanCode="+scumChatScanCode+Environment.NewLine);
                 settingsLines.Add("AutomaticDeathMarkers="+automaticDeathMarkers+Environment.NewLine);
                 settingsLines.Add("RouteMode="+wpfRouteMode);
+                settingsLines.Add("ManualMapPlacement="+WpfManualMap);
+                settingsLines.Add("MapPlacementBounds="+string.Join(",",new[]{WpfMapBounds.X,WpfMapBounds.Y,WpfMapBounds.Width,WpfMapBounds.Height}));
                 settingsLines.Add("RotateMinimap="+wpfRotateMap+Environment.NewLine);
                 settingsLines.Add("OnboardingVersion="+wpfOnboardingVersion);
                 settingsLines.Add("HideOnboardingGuide="+hideOnboardingGuide);

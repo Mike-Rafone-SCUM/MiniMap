@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.3.21] - 2026-10-22
+
+- Fit the main map overlay to SCUM's playable window area and follow window movement/resizing. Add saved manual position and size, exact pixel fields, a draggable/resizable preview, monitor fill and recovery when a saved display is disconnected. Find the controls in Settings or the main-map sidebar; compact minimap placement stays separate.
+- Present coalesced transparent-map camera input on the next Windows composition frame, retaining the previous timer as a fallback and cancelling pending work when the map hides. This improves drag pacing in local synthetic 4K checks; results on individual PCs can vary.
+- Translate the new positioning controls into all 20 application languages. Preserve existing settings, key bindings and the mandatory five-page setup after updates.
+
 ## [2.3.20] - 2026-10-21
 
 - Add Finnish (Suomi) throughout setup, settings, maps, search, routes, groups, host member controls and admin tools. All 787 interface strings, 16 map sections, 48 categories and 242 map object types have explicit Finnish entries.

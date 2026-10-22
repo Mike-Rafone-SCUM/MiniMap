@@ -1,5 +1,20 @@
 # SCUM MiniMap input and voice navigation test
 
+## Main map position and size (22 October 2026)
+
+This candidate also tests smoother transparent-map dragging. Pending camera input now presents on the next Windows composition frame, with the previous 33 ms timer retained only as a fallback. Multiple input updates still coalesce into one pending frame; hiding the map cancels both presentation paths. Terrain/annotation snapshots and the existing locked zoom-dependent opacity remain unchanged. Local 4K measurements are synthetic and do not establish the frame rate on another PC.
+
+For comparison, use **Start-Transparent-Tac-Test.cmd** at the same game resolution, map position/size, zoom and visible layers as the prior positioning candidate. Try dragging just above minimum zoom (for example 1.25x), both continuously and while briefly holding the pointer still. Compare the feel of the map with SCUM running. Check Escape/Alt-Tab and close/reopen behavior too. Keep using the normal transparent launcher for this comparison; the separate Fast Tac launcher changes the composition path.
+
+Extract the whole test ZIP, close your other MiniMap instance and run **Start-Transparent-Tac-Test.cmd**. Open **Settings > Main map position and size**, or use the same button in the main map sidebar.
+
+- **Fit to SCUM window** is the default. In SCUM's Windowed or Borderless Window mode, the main overlay fits the playable client area, excluding window borders. Move or resize the game and reopen the map; with the map visible it also follows changes automatically. If SCUM cannot be found, it falls back to the monitor.
+- **Manual position and size** enables X, Y, width and height in physical screen pixels. Negative X/Y values support monitors to the left of or above the primary monitor. Minimum size is 640 × 420. Choose **Done** to save.
+- **Move and resize preview** opens a separate placement preview. Drag its header and resize its bottom-right corner, then choose **Done**. Escape cancels that preview. The preview's Done saves immediately; the surrounding pixel fields then show the saved result.
+- **Fill monitor** fills the fields with the current game monitor's bounds. Choose **Done** to save, or switch back to **Fit to SCUM window** to reset to automatic fitting.
+
+Manual placement is retained after restart. If a display is disconnected, the map is fitted within a connected monitor. Compact minimap placement remains separate. This is a local test candidate with updates disabled; live SCUM alignment on the reporting 5120 × 1440 setup still needs player verification.
+
 For the automatic-launch test, extract the complete ZIP to a folder you intend to keep, close other MiniMap instances and run **Start-Transparent-Tac-Test.cmd**. Enable **Settings > General > Start MiniMap with SCUM and close it when SCUM exits**. This defaults to off and installs a per-user Windows logon task for a small hidden watcher. Launch SCUM and check that only one MiniMap opens. Exit SCUM and check that MiniMap saves and closes after ten seconds. Launch SCUM again, then close MiniMap manually: it should remain closed until the next game session. Sign out/in to verify automatic startup of the watcher. Disable the option before moving or deleting this test folder; disabling removes the task, stops the watcher and leaves the current MiniMap open. Test and Release settings are separate. Automated checks use synthetic observations and do not verify a live game or register an elevated task.
 
 The tactical map and compact HUD remain see-through. While dragging or zooming, the tactical map moves a cached static image and keeps navigation/player markers live. Newly exposed areas use the coarse overview; full terrain, marker detail and current-zoom labels return after the drag is released and camera input pauses for 200 ms. A held drag stays in preview even if the pointer briefly stops moving. Opacity and filter changes remain usable.

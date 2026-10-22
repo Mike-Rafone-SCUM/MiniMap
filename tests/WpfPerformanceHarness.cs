@@ -96,6 +96,54 @@ class WpfPreviewHarness {
    type.GetField("Active",BindingFlags.Static|BindingFlags.NonPublic).SetValue(null,runtime);try { var nativeEngine=Field(runtime,"engine");bool nativeBefore=(bool)nativeEngine.GetType().GetField("overlay",Hidden).GetValue(nativeEngine).GetType().GetProperty("Visible").GetValue(Field(nativeEngine,"overlay"),null);Call(nativeEngine,"ToggleOverlay");Check(!recoveryHud.IsVisible,"The existing tray show/hide action reaches the WPF HUD");Call(nativeEngine,"ToggleOverlay");Check(recoveryHud.IsVisible&&(bool)Field(nativeEngine,"overlay").GetType().GetProperty("Visible").GetValue(Field(nativeEngine,"overlay"),null)==nativeBefore,"Tray recovery restores WPF without opening the old native overlay"); }finally { type.GetField("Active",BindingFlags.Static|BindingFlags.NonPublic).SetValue(null,null);recoveryHud.Hide(); }
 
    var engine=Field(runtime,"engine");
+   var mapResolve=type.GetMethod("ResolveMapBounds",BindingFlags.Static|BindingFlags.NonPublic);
+   var mapRecover=type.GetMethod("RecoverMapBounds",BindingFlags.Static|BindingFlags.NonPublic);
+   var ultra=new System.Drawing.Rectangle(0,0,5120,1440);var gameClient=new System.Drawing.Rectangle(40,70,3360,1300);
+   Check(mapResolve.Invoke(null,new object[]{false,System.Drawing.Rectangle.Empty,gameClient,ultra,new[]{ultra}}).Equals(gameClient),"Automatic main map fits the SCUM client area within a 5120 by 1440 desktop");
+   var movedClient=new System.Drawing.Rectangle(-1800,100,1600,900);
+   Check(mapResolve.Invoke(null,new object[]{false,gameClient,movedClient,primaryBounds,new[]{primaryBounds,leftBounds}}).Equals(movedClient),"Automatic fitting follows resized game windows and negative desktop origins");
+   Check(mapResolve.Invoke(null,new object[]{false,gameClient,System.Drawing.Rectangle.Empty,ultra,new[]{ultra}}).Equals(ultra),"Unavailable game bounds safely fall back to the complete monitor");
+   var manualClient=new System.Drawing.Rectangle(120,80,1100,800);
+   Check(mapResolve.Invoke(null,new object[]{true,manualClient,gameClient,ultra,new[]{ultra}}).Equals(manualClient),"Manual placement overrides automatic fitting without using game-window coordinates");
+   var leftMap=new System.Drawing.Rectangle(-1200,50,1000,700);
+   Check(mapRecover.Invoke(null,new object[]{leftMap,new[]{primaryBounds,leftBounds}}).Equals(leftMap),"Manual map placement preserves valid negative monitor coordinates");
+   var recoveredMap=(System.Drawing.Rectangle)mapRecover.Invoke(null,new object[]{new System.Drawing.Rectangle(9000,9000,6000,3000),new[]{primaryBounds}});
+   Check(primaryBounds.Contains(recoveredMap)&&recoveredMap.Size==primaryBounds.Size,"Disconnected and oversized manual placement recovers all controls onto a connected monitor");
+   Check(mapResolve.Invoke(null,new object[]{true,System.Drawing.Rectangle.Empty,gameClient,ultra,new[]{ultra}}).Equals(gameClient),"Invalid saved manual geometry uses automatic fitting");
+   var nativeType=assembly.GetType("ScumMiniMap.Native");var gameBoundsReader=nativeType.GetMethod("TryGameClientBounds",BindingFlags.Static|BindingFlags.NonPublic);
+   object[] noGame={IntPtr.Zero,System.Drawing.Rectangle.Empty};Check(!(bool)gameBoundsReader.Invoke(null,noGame)&&noGame[1].Equals(System.Drawing.Rectangle.Empty),"Automatic fitting rejects a missing game handle");
+   object[] ownWindow={new System.Windows.Interop.WindowInteropHelper(recoveryHud).Handle,System.Drawing.Rectangle.Empty};Check(!(bool)gameBoundsReader.Invoke(null,ownWindow),"Automatic fitting never treats MiniMap's own window as SCUM");
+   var placementWindow=(Window)Call(runtime,"BuildMapPlacement");
+   var placementMode=Children(placementWindow).OfType<ComboBox>().Single(c=>(c.Tag as string)=="map-placement-mode");
+   var placementInputs=Children(placementWindow).OfType<TextBox>().Where(t=>(t.Tag as string??"").StartsWith("map-placement-")).OrderBy(t=>t.Tag as string).ToArray();
+   Check(placementMode.SelectedIndex==0&&placementInputs.Length==4&&!placementInputs[0].IsEnabled,"Main-map placement defaults to automatic and disables manual pixel fields");
+   placementMode.SelectedIndex=1;Check(placementInputs.All(t=>t.IsEnabled),"Manual main-map mode enables all four exact pixel fields");
+   placementInputs[2].Text="bad";var placementSave=Children(placementWindow).OfType<Button>().Single(b=>(b.Tag as string)=="map-placement-save");placementSave.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+   Check(Children(placementWindow).OfType<TextBlock>().Any(t=>t.Text.Contains("Minimum size: 640")),"Invalid manual placement remains editable with a clear minimum-size error");
+   var connected=System.Windows.Forms.Screen.PrimaryScreen.Bounds;var savedMap=new System.Drawing.Rectangle(connected.X+20,connected.Y+20,Math.Min(900,connected.Width-20),Math.Min(640,connected.Height-20));
+   int[] savedPixels={savedMap.X,savedMap.Y,savedMap.Width,savedMap.Height};for(int i=0;i<4;i++)placementInputs[i].Text=savedPixels[i].ToString(System.Globalization.CultureInfo.InvariantCulture);
+   placementMode.SelectedIndex=0;placementMode.SelectedIndex=1;
+   placementWindow.WindowStartupLocation=WindowStartupLocation.Manual;placementWindow.Left=-32000;placementWindow.Top=-32000;placementWindow.ShowActivated=false;placementWindow.Show();placementWindow.UpdateLayout();Capture(type,placementWindow,Path.Combine(args[1],"main-map-placement.png"));
+   placementSave.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+   Check((bool)Field(engine,"WpfManualMap")&&Field(engine,"WpfMapBounds").Equals(savedMap),"Saving placement applies exact physical pixel bounds");
+   // Diagnostic mode deliberately prevents settings writes. Exercise real
+   // persistence only against this fixture's explicitly isolated directory.
+   string oldPlacementPath=(string)Field(engine,"settingsPath"),placementFolder=Path.Combine(args[1],"placement-persistence");Directory.CreateDirectory(placementFolder);
+   engine.GetType().GetField("settingsPath",Hidden).SetValue(engine,Path.Combine(placementFolder,"settings.ini"));
+   try { engine.GetType().GetField("diagnosticMode",Hidden).SetValue(engine,false);Call(engine,"WpfSave");engine.GetType().GetField("WpfManualMap",Hidden).SetValue(engine,false);engine.GetType().GetField("WpfMapBounds",Hidden).SetValue(engine,System.Drawing.Rectangle.Empty);Call(engine,"LoadSettings"); }
+   finally { engine.GetType().GetField("diagnosticMode",Hidden).SetValue(engine,true);engine.GetType().GetField("settingsPath",Hidden).SetValue(engine,oldPlacementPath); }
+   Check((bool)Field(engine,"WpfManualMap")&&Field(engine,"WpfMapBounds").Equals(savedMap),"Manual main-map position, size and mode survive settings reload");
+   var placementPreview=(Window)Call(runtime,"BuildMapMoveEditor");placementPreview.ShowActivated=false;placementPreview.Show();placementPreview.UpdateLayout();
+   Check(placementPreview.ResizeMode==ResizeMode.CanResizeWithGrip&&Children(placementPreview).OfType<Border>().Any(b=>b.Cursor==System.Windows.Input.Cursors.SizeAll),"Main-map preview provides a draggable header and resize grip");
+   var previewBounds=(System.Drawing.Rectangle)nativeType.GetMethod("ReadWindowBounds",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{new System.Windows.Interop.WindowInteropHelper(placementPreview).Handle});
+   Check(Math.Abs(previewBounds.Width-savedMap.Width)<3&&Math.Abs(previewBounds.Height-savedMap.Height)<3,"Placement preview opens at the saved physical pixel size");placementPreview.Close();
+   Check(Field(engine,"WpfMapBounds").Equals(savedMap),"Cancelling the drag preview preserves the saved placement");
+   placementPreview=(Window)Call(runtime,"BuildMapMoveEditor");placementPreview.ShowActivated=false;placementPreview.Show();placementPreview.Width-=40;placementPreview.Height-=40;placementPreview.UpdateLayout();System.Windows.Forms.Application.DoEvents();
+   var resizedPhysical=(System.Drawing.Rectangle)nativeType.GetMethod("ReadWindowBounds",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{new System.Windows.Interop.WindowInteropHelper(placementPreview).Handle});
+   Children(placementPreview).OfType<Button>().Single(b=>(b.Tag as string)=="map-placement-preview-save").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+   Check(Field(engine,"WpfMapBounds").Equals(resizedPhysical)&&resizedPhysical.Width<savedMap.Width,"The preview Done button commits its resized native pixel bounds");
+   Call(engine,"WpfPlaceMap",false,savedMap);Call(runtime,"FitTacticalToMonitor");
+   Check(!(bool)Field(engine,"WpfManualMap"),"Automatic fitting can be restored without removing the saved manual rectangle");
    engine.GetType().GetField("labelSize",Hidden).SetValue(engine,6);engine.GetType().GetField("wpfDefaultsRevision",Hidden).SetValue(engine,1);Call(engine,"WpfInitializeDefaults");Check((int)Field(engine,"labelSize")==16,"Existing profiles migrate the former six-point label default to 16");
    engine.GetType().GetField("labelSize",Hidden).SetValue(engine,20);engine.GetType().GetField("wpfDefaultsRevision",Hidden).SetValue(engine,1);Call(engine,"WpfInitializeDefaults");Check((int)Field(engine,"labelSize")==20,"The font migration preserves customized label sizes");engine.GetType().GetField("labelSize",Hidden).SetValue(engine,16);
    var parity=Call(engine,"WpfSnapshot",false);
@@ -516,7 +564,7 @@ var movedGps=Call(activeGpsFixture,"Clone");movedGps.GetType().GetField("Name").
    Children(moveEditor).OfType<Button>().Single(b=>(b.Content as string)=="Done").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
    var movedHud=Call(engine,"WpfSnapshot",false);Check((int)Field(movedHud,"HudLeft")==(int)Math.Round(expectedHudLocation.X)&&(int)Field(movedHud,"HudTop")==(int)Math.Round(expectedHudLocation.Y),"Minimap positioning commits the dragged location through the saved backend bounds");
    var cancelEditor=(Window)Call(runtime,"BuildHudMoveEditor");cancelEditor.Left=-31700;cancelEditor.Top=-31600;cancelEditor.Close();var cancelledHud=Call(engine,"WpfSnapshot",false);Check((int)Field(cancelledHud,"HudLeft")== (int)Field(movedHud,"HudLeft")&&(int)Field(cancelledHud,"HudTop")== (int)Field(movedHud,"HudTop"),"Cancelling minimap positioning preserves the last saved location");
-   Check(Directory.GetFiles(args[1],"*.png").Length==15&&Directory.GetFiles(args[1],"onboarding-*.png").Length==5,"All five setup pages, settings, search, tactical map, both HUD shapes, rotating HUD, persistent groups and direct connection setup were rendered");
+   Check(Directory.GetFiles(args[1],"*.png").Length==16&&Directory.GetFiles(args[1],"onboarding-*.png").Length==5,"All five setup pages, main-map placement, settings, search, tactical map, both HUD shapes, rotating HUD, persistent groups and direct connection setup were rendered");
    Check(Call(engine,"WpfGameBind",0,0x0D,0)!=null,"The WPF game-key adapter rejects Enter as a reserved binding");
    var sample=Call(engine,"WpfSnapshot",false);
    Check((int)Field(sample,"HudWidth")>=240&&(int)Field(sample,"HudHeight")>=240,"The new HUD reads its saved size from the controller");

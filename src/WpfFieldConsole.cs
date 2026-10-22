@@ -203,6 +203,27 @@ namespace ScumMiniMap {
         }
         internal bool CameraInteracting;
         DispatcherTimer cameraFrame;
+        bool cameraFramePending;
+        TimeSpan lastCameraComposition=TimeSpan.MinValue;
+        internal int CameraFramesPresented;
+        void CancelCameraFrame() {
+            if(cameraFrame!=null)cameraFrame.Stop();
+            if(cameraFramePending)CompositionTarget.Rendering-=CameraCompositionFrame;
+            cameraFramePending=false;
+        }
+        void PresentCameraFrame() {
+            if(!cameraFramePending)return;
+            CancelCameraFrame();
+            if(!CameraInteracting)return;
+            CameraFramesPresented++;InvalidateVisual();
+        }
+        void CameraCompositionFrame(object sender,EventArgs args) {
+            var frame=args as RenderingEventArgs;
+            // WPF can raise Rendering more than once for the same composition
+            // timestamp. Keep one invalidation per distinct frame.
+            if(frame!=null) { if(lastCameraComposition==frame.RenderingTime)return;lastCameraComposition=frame.RenderingTime; }
+            PresentCameraFrame();
+        }
         sealed class CameraScene {
             internal DrawingGroup Drawing;internal BitmapSource Image;internal double Width,Height,Side;internal DrawingPoint Centre;internal int Generation,Opacity;
         }
@@ -213,7 +234,7 @@ namespace ScumMiniMap {
         internal int CameraSceneBuilds;
         internal void BeginCameraFrames() { if(!CameraInteracting)cameraScene=idleCameraScene;CameraInteracting=true; }
         internal void EndCameraFrames() {
-            CameraInteracting=false;if(cameraFrame!=null)cameraFrame.Stop();
+            CameraInteracting=false;CancelCameraFrame();lastCameraComposition=TimeSpan.MinValue;
             lock(cameraGate) { cameraGeneration++;pendingCameraScene=null;completedCameraScene=null; }
             cameraScene=null;idleCameraScene=null;queuedTerrainKey=null;
         }
@@ -262,11 +283,15 @@ namespace ScumMiniMap {
             dc.DrawImage(scene.Image,bounds);dc.Pop();
         }
         internal void RequestRedraw() {
-            if(!CameraInteracting) { if(cameraFrame!=null)cameraFrame.Stop();InvalidateVisual();return; }
+            if(!CameraInteracting) { CancelCameraFrame();InvalidateVisual();return; }
             // Input can arrive much faster than a transparent window can present.
-            // Keep one background frame pending, with the latest camera state.
-            if(cameraFrame==null) { cameraFrame=new DispatcherTimer(DispatcherPriority.Render,Dispatcher) { Interval=TimeSpan.FromMilliseconds(33) };cameraFrame.Tick+=(s,e)=> { cameraFrame.Stop();InvalidateVisual(); }; }
-            if(!cameraFrame.IsEnabled)cameraFrame.Start();
+            // Present the latest state on the next composition frame instead of
+            // waiting an additional 33 ms after every presented drag frame. Keep
+            // a render-priority timer as a fallback when composition is suspended.
+            if(cameraFramePending)return;
+            cameraFramePending=true;CompositionTarget.Rendering+=CameraCompositionFrame;
+            if(cameraFrame==null) { cameraFrame=new DispatcherTimer(DispatcherPriority.Render,Dispatcher) { Interval=TimeSpan.FromMilliseconds(33) };cameraFrame.Tick+=(s,e)=>PresentCameraFrame(); }
+            cameraFrame.Start();
         }
         sealed class PoiStamp { internal Point At;internal double Radius,Scale;internal DrawingGroup Icon;internal Pen Outline; }
         sealed class PoiSceneTile { internal Rect Bounds;internal DrawingGroup Drawing; }
@@ -563,7 +588,7 @@ namespace ScumMiniMap {
             ToolTipService.SetInitialShowDelay(this,250);ToolTipService.SetShowDuration(this,30000);
             MouseLeftButtonUp+=(s,e)=> { if(!drag.HasValue)return;EndPointer(e.GetPosition(this));ReleaseMouseCapture();e.Handled=true; };
             LostMouseCapture+=(s,e)=> { CancelPointer();contextPointer=null; };
-            IsVisibleChanged+=(s,e)=> { if(!IsVisible) { CloseContextMenu();CancelPointer(); } };
+            IsVisibleChanged+=(s,e)=> { if(!IsVisible) { CloseContextMenu();CancelPointer();EndCameraFrames(); } };
             Unloaded+=(s,e)=> { EndCameraFrames();ResetPoiStream();ClearTacticalLayers(); };
         }
         protected override void OnRender(DrawingContext dc) {
@@ -1160,18 +1185,41 @@ namespace ScumMiniMap {
         }
         internal void CloseTactical(bool closeGameMap=false) { tactical.Hide();tacticalMap.ClearHover();engine.WpfTactical(false);if(hudEnabled)hud.Show();if(closeGameMap&&!diagnostic&&gameMapWindow!=IntPtr.Zero) { var binding=engine.WpfSnapshot(false);if(!binding.TrackingPaused)Native.ReturnMapKey(gameMapWindow,binding.MapKey,binding.MapScan); }Refresh(); }
         internal System.Drawing.Rectangle LastMonitorBounds;
+        System.Drawing.Rectangle lastTacticalBounds;
+        internal static System.Drawing.Rectangle RecoverMapBounds(System.Drawing.Rectangle desired,System.Drawing.Rectangle[] monitors) {
+            if(monitors==null||monitors.Length==0)return desired;
+            // Recover a disconnected display and oversized saved windows so all
+            // placement controls remain reachable. Coordinates are physical pixels.
+            var monitor=monitors.OrderByDescending(m=> { var overlap=System.Drawing.Rectangle.Intersect(desired,m);return (long)Math.Max(0,overlap.Width)*Math.Max(0,overlap.Height); }).First();
+            int width=Math.Min(Math.Max(640,desired.Width),monitor.Width),height=Math.Min(Math.Max(420,desired.Height),monitor.Height);
+            return new System.Drawing.Rectangle(Math.Max(monitor.Left,Math.Min(desired.X,monitor.Right-width)),Math.Max(monitor.Top,Math.Min(desired.Y,monitor.Bottom-height)),width,height);
+        }
+        System.Drawing.Rectangle TacticalBounds() {
+            var monitor=System.Windows.Forms.Screen.FromHandle(gameMapWindow==IntPtr.Zero?new WindowInteropHelper(hud).EnsureHandle():gameMapWindow);
+            LastMonitorBounds=monitor.Bounds;
+            System.Drawing.Rectangle gameBounds;
+            Native.TryGameClientBounds(gameMapWindow,out gameBounds);
+            return ResolveMapBounds(engine.WpfManualMap,engine.WpfMapBounds,gameBounds,monitor.Bounds,System.Windows.Forms.Screen.AllScreens.Select(s=>s.Bounds).ToArray());
+        }
+        internal static System.Drawing.Rectangle ResolveMapBounds(bool manual,System.Drawing.Rectangle saved,System.Drawing.Rectangle game,System.Drawing.Rectangle monitor,System.Drawing.Rectangle[] monitors) {
+            if(manual&&saved.Width>=640&&saved.Height>=420)return RecoverMapBounds(saved,monitors);
+            return game.Width>0&&game.Height>0?game:monitor;
+        }
         internal void FitTacticalToMonitor() {
-            var monitor=System.Windows.Forms.Screen.FromHandle(gameMapWindow==IntPtr.Zero?Native.GetForegroundWindow():gameMapWindow);
-            var bounds=monitor.Bounds;LastMonitorBounds=bounds;tactical.WindowState=WindowState.Normal;tactical.ResizeMode=ResizeMode.NoResize;tactical.WindowStartupLocation=WindowStartupLocation.Manual;
+            var bounds=TacticalBounds();tactical.WindowState=WindowState.Normal;tactical.ResizeMode=ResizeMode.NoResize;tactical.WindowStartupLocation=WindowStartupLocation.Manual;
             if(diagnostic) { bounds.X=-32000;bounds.Y=-32000; }
+            ApplyTacticalBounds(bounds);
+        }
+        void ApplyTacticalBounds(System.Drawing.Rectangle bounds) {
             var handle=new WindowInteropHelper(tactical).EnsureHandle();
             if(IsIconic(handle))ShowNativeWindow(handle,4); // SW_SHOWNOACTIVATE clears native minimization.
             // WPF can retain the iconic window size after minimization. Update its
             // layout properties as well as the native bounds before rendering again.
             var source=HwndSource.FromHwnd(handle);var size=source.CompositionTarget.TransformFromDevice.Transform(new Point(bounds.Width,bounds.Height));
+            tactical.MinWidth=Math.Min(900,size.X);tactical.MinHeight=Math.Min(620,size.Y);
             tactical.Width=size.X;tactical.Height=size.Y;
             SetWindowPos(handle,new IntPtr(-1),bounds.X,bounds.Y,bounds.Width,bounds.Height,0x0010);
-            tactical.UpdateLayout();
+            tactical.UpdateLayout();lastTacticalBounds=bounds;
         }
         internal void StartViews() { tactical.Hide();engine.WpfTactical(false);if(hudEnabled)hud.Show();Refresh(); }
         internal static bool ShouldShowHud(bool enabled,bool tacticalVisible) { return enabled&&!tacticalVisible; }
@@ -1325,6 +1373,7 @@ namespace ScumMiniMap {
             var search=WpfFieldTheme.Button(Localization.Get("SearchTitle")+"  "+PhysicalKeyCapture.KeyName(state.Bindings.Key(AppControlAction.Search)),ShowSearch);search.Margin=new Thickness(0,18,0,22);sidebar.Children.Add(search);
             var routesButton=WpfFieldTheme.Button(S("RouteList"),ShowRoutes);routesButton.Tag="sidebar-routes";sidebar.Children.Add(routesButton);
             var squadButton=WpfFieldTheme.Button(S("SquadTools"),ShowSquadTools);squadButton.Tag="sidebar-squad";sidebar.Children.Add(squadButton);
+            var placement=WpfFieldTheme.Button(Localization.Get("MapPlacement"),()=>Modal(BuildMapPlacement()));placement.Tag="map-placement";sidebar.Children.Add(placement);
             AddPlayers(sidebar);
             sidebar.Children.Add(WpfFieldTheme.Text(Localization.Get("SidebarLayers"),11,WpfFieldTheme.Muted,true));
             var presetsButton=WpfFieldTheme.Button(S("SquadPresets"),ShowMapPresets);presetsButton.Tag="sidebar-presets";sidebar.Children.Add(presetsButton);
@@ -1369,6 +1418,7 @@ namespace ScumMiniMap {
             if(!diagnostic&&!targetChanged&&refreshClock.ElapsedMilliseconds-lastRefresh<100)return;
             lastRefresh=refreshClock.ElapsedMilliseconds;
             if(!diagnostic&&tactical.IsVisible) { var foreground=Native.GetForegroundWindow();SyncTacticalFocus(Native.IsGameWindow(foreground),Native.IsOurWindow(foreground)); }
+            if(!diagnostic&&TacticalVisible) { var bounds=TacticalBounds();if(bounds!=lastTacticalBounds)ApplyTacticalBounds(bounds); }
             List<MapZone> refreshedZones;
             if(zoneFolder!=null&&zoneFolder.Poll(out refreshedZones))engine.WpfRefreshFolderZones(refreshedZones);
             if(!diagnostic&&!zoneFileActive&&dialogs.Count==0) {
@@ -1459,7 +1509,7 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
                 tactical.Hide();tacticalMap.ClearHover();engine.WpfTactical(false);if(hudEnabled)hud.Show();
                 if(forward&&!diagnostic) { var binding=engine.WpfSnapshot(false);Native.ReturnMapKey(gameMapWindow,binding.MapKey,binding.MapScan); }
             } else {
-                gameMapWindow=Native.GameFocused()?Native.GetForegroundWindow():IntPtr.Zero;
+                gameMapWindow=diagnostic?IntPtr.Zero:Native.AdminGameWindow();
                 hud.Hide();engine.WpfTactical(true);engine.WpfFollow();tactical.WindowState=WindowState.Normal;tactical.Show();FitTacticalToMonitor();
             }
             Refresh();
@@ -1529,6 +1579,39 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
             if(settingsWindow!=null) { if(settingsToggleOpen)settingsWindow.Close();else if(dialogs.Count>0)FocusInteractive(dialogs[dialogs.Count-1]);return; }
             settingsWindow=BuildSettings(0);
             try { Modal(settingsWindow); }finally { settingsWindow=null;settingsToggleOpen=false; }
+        }
+        Window BuildMapPlacement() {
+            if(!diagnostic)gameMapWindow=Native.AdminGameWindow();
+            var window=Window(Localization.Get("MapPlacement"),580,650);window.Tag="map-placement-dialog";
+            var body=new StackPanel { Margin=new Thickness(24) };body.Children.Add(WpfFieldTheme.Text(window.Title,23,null,true));
+            var help=WpfFieldTheme.Text(Localization.Get("MapPlacementHelp"),14,WpfFieldTheme.Muted);help.TextWrapping=TextWrapping.Wrap;help.TextTrimming=TextTrimming.None;body.Children.Add(help);
+            var mode=new ComboBox { ItemsSource=new[]{Localization.Get("MapFitGame"),Localization.Get("MapManual")},SelectedIndex=engine.WpfManualMap?1:0,Margin=new Thickness(0,16,0,12),Tag="map-placement-mode" };body.Children.Add(mode);
+            var fields=new UniformGrid { Columns=2 };body.Children.Add(fields);var inputs=new TextBox[4];
+            string[] labels={"X (px)","Y (px)",Localization.Get("MapWidth"),Localization.Get("MapHeight")};
+            for(int i=0;i<4;i++) { var cell=new StackPanel { Margin=new Thickness(0,4,12,4) };cell.Children.Add(WpfFieldTheme.Text(labels[i],14));inputs[i]=new TextBox { MaxLength=7,Tag="map-placement-"+i };System.Windows.Automation.AutomationProperties.SetName(inputs[i],labels[i]);cell.Children.Add(inputs[i]);fields.Children.Add(cell); }
+            Action<System.Drawing.Rectangle> populate=b=> { int[] values={b.X,b.Y,b.Width,b.Height};for(int i=0;i<4;i++)inputs[i].Text=values[i].ToString(CultureInfo.InvariantCulture); };
+            populate(TacticalBounds());var error=WpfFieldTheme.Text("",14,WpfFieldTheme.Amber);error.TextWrapping=TextWrapping.Wrap;body.Children.Add(error);
+            var actions=new StackPanel { Margin=new Thickness(0,12,0,0) };body.Children.Add(actions);
+            var move=WpfFieldTheme.Button(Localization.Get("MapMoveResize"),()=> { Modal(BuildMapMoveEditor());if(engine.WpfManualMap)populate(engine.WpfMapBounds); });move.Tag="map-placement-drag";actions.Children.Add(move);
+            var monitor=WpfFieldTheme.Button(Localization.Get("MapFitMonitor"),()=> { mode.SelectedIndex=1;populate(LastMonitorBounds); });monitor.Tag="map-placement-monitor";actions.Children.Add(monitor);
+            Action enabled=()=> { fields.IsEnabled=mode.SelectedIndex==1;move.IsEnabled=mode.SelectedIndex==1;error.Text=""; };mode.SelectionChanged+=(s,e)=>enabled();enabled();
+            var apply=WpfFieldTheme.Button(Localization.Get("Done"),()=> {
+                if(mode.SelectedIndex==0) { engine.WpfPlaceMap(false,engine.WpfMapBounds);FitTacticalToMonitor();window.Close();return; }
+                int x,y,w,h;
+                if(!int.TryParse(inputs[0].Text,NumberStyles.Integer,CultureInfo.InvariantCulture,out x)||!int.TryParse(inputs[1].Text,NumberStyles.Integer,CultureInfo.InvariantCulture,out y)||!int.TryParse(inputs[2].Text,out w)||!int.TryParse(inputs[3].Text,out h)||x < -100000||x>100000||y < -100000||y>100000||w<640||w>32768||h<420||h>32768) { error.Text=Localization.Get("MapBoundsInvalid");return; }
+                engine.WpfPlaceMap(true,RecoverMapBounds(new System.Drawing.Rectangle(x,y,w,h),System.Windows.Forms.Screen.AllScreens.Select(s=>s.Bounds).ToArray()));FitTacticalToMonitor();window.Close();
+            },true);apply.Tag="map-placement-save";actions.Children.Add(apply);
+            window.Content=new ScrollViewer { Content=body,VerticalScrollBarVisibility=ScrollBarVisibility.Auto };return window;
+        }
+        Window BuildMapMoveEditor() {
+            var bounds=TacticalBounds();var window=Window(Localization.Get("MapMoveResize"),bounds.Width,bounds.Height);window.Tag="map-placement-preview";window.Topmost=true;
+            window.WindowStartupLocation=WindowStartupLocation.Manual;window.MinWidth=640;window.MinHeight=420;
+            var layout=new DockPanel { Background=WpfFieldTheme.Ground,Margin=new Thickness(4) };
+            var grip=new Border { Background=WpfFieldTheme.Raised,Padding=new Thickness(12),Cursor=Cursors.SizeAll,Child=WpfFieldTheme.Text(Localization.Get("MapPlacementDrag"),16,null,true) };DockPanel.SetDock(grip,Dock.Top);layout.Children.Add(grip);grip.MouseLeftButtonDown+=(s,e)=>window.DragMove();
+            var done=WpfFieldTheme.Button(Localization.Get("Done"),()=> { var actual=Native.ReadWindowBounds(new WindowInteropHelper(window).Handle);if(actual.Width>=640&&actual.Height>=420) { engine.WpfPlaceMap(true,RecoverMapBounds(actual,System.Windows.Forms.Screen.AllScreens.Select(s=>s.Bounds).ToArray()));FitTacticalToMonitor(); }window.Close(); },true);done.Tag="map-placement-preview-save";DockPanel.SetDock(done,Dock.Bottom);layout.Children.Add(done);
+            var preview=new WpfMapSurface { BaseMap=geography,Terrain=terrain,State=engine.WpfSnapshot(true),IsHitTestVisible=false };layout.Children.Add(preview);window.Content=layout;
+            window.SourceInitialized+=(s,e)=> { var handle=new WindowInteropHelper(window).Handle;var source=HwndSource.FromHwnd(handle);var size=source.CompositionTarget.TransformFromDevice.Transform(new Point(bounds.Width,bounds.Height));window.MinWidth=640*size.X/bounds.Width;window.MinHeight=420*size.Y/bounds.Height;window.Width=size.X;window.Height=size.Y;SetWindowPos(handle,new IntPtr(-1),bounds.X,bounds.Y,bounds.Width,bounds.Height,0x0010); };
+            return window;
         }
         void ShowMoveHud() {
             hudMoving=true;hud.Hide();
@@ -1678,6 +1761,7 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
             var nav=new UniformGrid { Columns=3,Margin=new Thickness(0,20,0,16) };DockPanel.SetDock(nav,Dock.Top);root.Children.Add(nav);
             var footer=new DockPanel { Margin=new Thickness(0,16,0,0) };var done=WpfFieldTheme.Button(Localization.Get("Done"),()=>window.Close(),true);DockPanel.SetDock(done,Dock.Right);footer.Children.Add(done);var moveHud=WpfFieldTheme.Button(Localization.Get("WpfMoveMinimap"),ShowMoveHud);DockPanel.SetDock(moveHud,Dock.Top);footer.Children.Add(moveHud);footer.Children.Add(WpfFieldTheme.Button(Localization.Get("OpenDataFolder"),()=>System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe","\""+engine.WpfDataFolder+"\"") { UseShellExecute=true })));DockPanel.SetDock(footer,Dock.Bottom);root.Children.Add(footer);
             done.Tag="text:Done";moveHud.Tag="text:WpfMoveMinimap";((FrameworkElement)footer.Children[2]).Tag="text:OpenDataFolder";
+            var placement=WpfFieldTheme.Button(Localization.Get("MapPlacement"),()=>Modal(BuildMapPlacement()));placement.Tag="text:MapPlacement";DockPanel.SetDock(placement,Dock.Top);footer.Children.Insert(2,placement);
             var body=new StackPanel();root.Children.Add(new ScrollViewer { Content=body,VerticalScrollBarVisibility=ScrollBarVisibility.Auto });
             int currentPage=initial,settingsRevision=-1;Action<int> page=null;page=index=> {
                 currentPage=index;settingsRevision=engine.WpfSettingsRevision;

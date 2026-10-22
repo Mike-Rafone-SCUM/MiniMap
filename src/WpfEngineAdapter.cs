@@ -244,6 +244,9 @@ namespace ScumMiniMap {
             string error=CurrentAppControls().BindingError(gameKeys[0],scans[0],gameKeys[1],scans[1],gameKeys[2],scans[2]);if(error!=null)return error;
             scumMapKey=gameKeys[0];scumChatKey=gameKeys[1];scumCopyKey=gameKeys[2];scumMapScanCode=scans[0];scumChatScanCode=scans[1];scumCopyScanCode=scans[2];inputGeneration++;SettingsChanged();SaveSettings();return null;
         }
+        internal bool WpfManualMap;
+        internal Rectangle WpfMapBounds;
+        internal void WpfPlaceMap(bool manual,Rectangle bounds) { WpfVerifyAccess();WpfManualMap=manual;WpfMapBounds=bounds;SaveSettings(); }
         internal void WpfSave() { SaveSettings(); }
         internal void WpfScheduleSave() { WpfVerifyAccess();saveAfter=DateTime.UtcNow.AddMilliseconds(700); }
         internal void WpfMoveHud(int left,int top) { overlay.SetMinimapLocation(new Point(left,top));SettingsChanged();SaveSettings(); }

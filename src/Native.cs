@@ -144,6 +144,17 @@ namespace ScumMiniMap {
 
         [StructLayout(LayoutKind.Sequential)] internal struct WindowRect { public int Left,Top,Right,Bottom; }
         [DllImport("user32.dll",SetLastError=true)] static extern bool GetWindowRect(IntPtr window,out WindowRect rect);
+        [DllImport("user32.dll")] static extern bool GetClientRect(IntPtr window,out WindowRect rect);
+        [DllImport("user32.dll")] static extern bool ClientToScreen(IntPtr window,ref System.Drawing.Point point);
+        internal static bool TryGameClientBounds(IntPtr window,out System.Drawing.Rectangle bounds) {
+            bounds=System.Drawing.Rectangle.Empty;WindowRect rect;var origin=System.Drawing.Point.Empty;
+            if(window==IntPtr.Zero||!IsGameWindow(window)||IsIconic(window)||!GetClientRect(window,out rect)||!ClientToScreen(window,ref origin))return false;
+            if(rect.Right<=rect.Left||rect.Bottom<=rect.Top)return false;
+            bounds=new System.Drawing.Rectangle(origin.X,origin.Y,rect.Right-rect.Left,rect.Bottom-rect.Top);return true;
+        }
+        internal static System.Drawing.Rectangle ReadWindowBounds(IntPtr window) {
+            WindowRect rect;return GetWindowRect(window,out rect)?System.Drawing.Rectangle.FromLTRB(rect.Left,rect.Top,rect.Right,rect.Bottom):System.Drawing.Rectangle.Empty;
+        }
 
         // SCUM's selected top navigation tab has a bright, rounded highlight
         // regardless of the language used for its label. Sample just that
