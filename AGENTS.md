@@ -8,3 +8,5 @@ Never publish secrets, user profiles, captured player reports, deployment toolin
 Tests use fabricated reports and isolated temporary data. Preserve input ownership and updater verification checks.
 
 Private memberships remember active groups across restarts. Preserve DPAPI legacy-profile compatibility, encrypted offline labels, fresh packet replay identities and stable member colours. Explicit Leave disables automatic rejoining; host Disconnect affects only the current connection. Keep group registry and traffic budget independent.
+
+Registry mutations must await the serialized durable worker before acknowledgement. Fatal storage errors must exit as failure. GROUP4 compact frames are negotiated and must never reach legacy peers; preserve full-refresh and marker-removal behavior. Private health data must contain no player or group identifiers. Keep existing traffic and connection limits.

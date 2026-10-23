@@ -11,7 +11,7 @@ namespace ScumMiniMap {
         internal string Id,Key,Owner,Pending,Name,NameStamp="";
         internal DirectPositions Session;
         internal bool AutoConnect;internal string MemberToken=Guid.NewGuid().ToString("N")+Guid.NewGuid().ToString("N");
-        internal DateTime RetryAt;internal RelayGroupStore.Member[] Roster=new RelayGroupStore.Member[0];
+        internal DateTime RetryAt,NextRosterAt;internal int RetryCount;internal RelayGroupStore.Member[] Roster=new RelayGroupStore.Member[0];
         internal string Code { get { return "MM1-"+Id+"-"+Key.TrimEnd('=').Replace('+','-').Replace('/','_'); } }
         internal bool IsOwner { get { return !string.IsNullOrEmpty(Owner); } }
         internal string Label { get { return string.IsNullOrWhiteSpace(Name)?Localization.Get("PrivateGroupLabel")+" "+Id.Substring(0,8):Name; } }
@@ -32,7 +32,7 @@ namespace ScumMiniMap {
     }
     internal sealed class RelayGroupStore:IDisposable {
         readonly object gate=new object(),operations=new object();readonly string file,address,certificate;readonly int port;
-        readonly Action<string,byte[]> persist;readonly Timer maintenance;
+        readonly Random retryRandom=new Random();readonly Action<string,byte[]> persist;readonly Timer maintenance;
         int nameRevision,savedNameRevision;bool nameSaveWorker;DateTime nextNameSave;volatile string persistenceError;
         internal string PersistenceError { get { return persistenceError; } }
         readonly List<RelayMembership> groups=new List<RelayMembership>();bool disposed;
@@ -51,7 +51,7 @@ namespace ScumMiniMap {
                 WriteProtectedFile(colorFile,Protect(Encoding.UTF8.GetBytes(MemberColorSeed),true));
             }
             DisplayName=Localization.Get("PrivateGroupSurvivor")+" "+Guid.NewGuid().ToString("N").Substring(0,4);
-            if(!File.Exists(file)) { maintenance=new Timer(Maintain,null,5000,5000);return; }
+            if(!File.Exists(file)) { maintenance=new Timer(Maintain,null,500,500);return; }
             if(new FileInfo(file).Length>65536)throw new InvalidDataException();
             var lines=Encoding.UTF8.GetString(Protect(File.ReadAllBytes(file),false)).Split('\n');
             if(lines.Length<2||lines[0]!="1"&&lines[0]!="2"&&lines[0]!="3")throw new InvalidDataException();bool version3=lines[0]=="3",version2=lines[0]!="1";DisplayName=Text(lines[1]);ValidateName(DisplayName);
@@ -64,7 +64,7 @@ namespace ScumMiniMap {
                 if(fields[version2?5:4]!="1"||group.Owner.Length!=0&&(group.Owner.Length!=64||!group.Owner.All(Uri.IsHexDigit))||group.Pending!=""&&group.Pending!="CREATE"&&group.Pending!="ROTATE"&&group.Pending!="DELETE"||groups.Any(g=>g.Id==group.Id)||groups.Count>=16)throw new InvalidDataException();groups.Add(group);
             }
             foreach(var group in groups.Where(g=>g.AutoConnect&&g.Pending==""))OpenSession(group);
-            maintenance=new Timer(Maintain,null,5000,5000);
+            maintenance=new Timer(Maintain,null,500,500);
         }
         static string Text(string value) { return new UTF8Encoding(false,true).GetString(Convert.FromBase64String(value)); }
         static string Base(string value) { return Convert.ToBase64String(Encoding.UTF8.GetBytes(value??"")); }
@@ -108,7 +108,7 @@ namespace ScumMiniMap {
         }
         internal void Connect(RelayMembership group) {
             lock(operations) {
-                bool previous;lock(gate) { if(disposed||!groups.Contains(group))throw new InvalidOperationException();previous=group.AutoConnect;group.AutoConnect=true; }
+                bool previous;lock(gate) { if(disposed||!groups.Contains(group))throw new InvalidOperationException();previous=group.AutoConnect;group.AutoConnect=true;group.RetryCount=0; }
                 try { Save(); }catch { lock(gate)group.AutoConnect=previous;throw; }if(group.Pending!="") { Complete(group);return; }
                 lock(gate)OpenSession(group);
             }
@@ -116,7 +116,7 @@ namespace ScumMiniMap {
         void OpenSession(RelayMembership group) {
             if(group.Session!=null)group.Session.Dispose();
             group.Session=new DirectPositions(false,address,port,group.Key,DisplayName,false,null,true,certificate,group.Id,MemberColorSeed,group.MemberToken,group.Owner,true);
-            group.RetryAt=DateTime.UtcNow.AddSeconds(30);
+            group.RetryAt=DateTime.MaxValue;group.NextRosterAt=DateTime.MinValue;
         }
         internal void Leave(RelayMembership group) {
             lock(operations) {
@@ -130,8 +130,12 @@ namespace ScumMiniMap {
                 foreach(var group in Groups) {
                     lock(gate) {
                         if(disposed)return;if(!group.AutoConnect||group.Pending!="")continue;
+                        if(group.Session!=null&&group.Session.Error!=null&&!group.Session.ReconnectBlocked&&group.RetryAt==DateTime.MaxValue) {
+                            double seconds=Math.Min(30,Math.Pow(2,Math.Min(group.RetryCount++,5)));group.RetryAt=DateTime.UtcNow.AddSeconds(seconds+retryRandom.NextDouble());
+                        }
                         if(group.Session==null||group.Session.Error!=null&&!group.Session.ReconnectBlocked&&DateTime.UtcNow>=group.RetryAt)OpenSession(group);
-                        if(!group.Session.Ready)continue;
+                        if(!group.Session.Ready)continue;group.RetryCount=0;
+                        if(DateTime.UtcNow<group.NextRosterAt)continue;group.NextRosterAt=DateTime.UtcNow.AddSeconds(5);
                     }
                     try { var roster=MemberControl(group,"ROSTER",new string('0',64));lock(gate)if(!disposed)group.Roster=roster.Items; }
                     catch { /* Keep known names offline while the relay is unavailable. */ }

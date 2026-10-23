@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.3.23] - 2026-10-23
+
+- Retry dropped private-group connections quickly, then use progressively longer randomized delays. Explicit Leave and host Disconnect retain their existing behavior.
+- Negotiate compact encrypted updates between current clients: retain unchanged routes and markers between full refreshes, while sending changes immediately. Automatically use full snapshots when an older client joins.
+- Move durable membership writes and full registry serialization onto a worker, acknowledge only after saving, and signal fatal storage errors for service recovery. Add private aggregate health statistics and verify existing connection limits under synthetic load.
+- Retain persistent offline groups, saved codes and ownership, settings and keys. Older saved groups need one Connect to enable automatic rejoining. Complete all five setup pages after updating.
+
 ## [2.3.22] - 2026-10-23
 
 - Keep private groups available when the creator closes MiniMap. Remember active memberships and automatically reconnect on startup or after a dropped connection. Explicit Leave disables automatic rejoining.

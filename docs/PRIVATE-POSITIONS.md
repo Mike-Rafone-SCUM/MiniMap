@@ -37,7 +37,7 @@ when membership changes. Creating or connecting to a group enables automatic rej
 Each room supports nine participants. The service has connection/rate limits and
 a conservative 50 GB monthly traffic budget with an automatic cutoff. Unused
 reserved traffic is forfeited on restart; restarting does not reset the budget.
-The allowance renews at the start of each UTC calendar month. Dropped network connections retry after 30 seconds. Host Disconnect stops automatic retries for the current app session; the member may still use Connect or restart MiniMap to rejoin. The direct-IP Host/Join button has been removed. No paid fallback is used.
+The allowance renews at the start of each UTC calendar month. Dropped network connections retry after roughly one to two seconds, then use progressively longer randomized delays if the service remains unavailable. Host Disconnect stops automatic retries for the current app session; the member may still use Connect or restart MiniMap to rejoin. The direct-IP Host/Join button has been removed. No paid fallback is used.
 
 The relay's budget limits this service only. It cannot guarantee a zero Oracle
 bill or account-wide availability: other workloads share the account's free
@@ -83,3 +83,5 @@ Settings > Appearance > Cluster nearby POIs turns clustering on or off for both 
 The active GPS navigation destination is shared automatically even if it has not been saved. Selecting a different destination updates its pin; clearing GPS removes that active-destination pin. The active GPS uses one slot of the 128-marker limit and is prioritised over saved markers. Off-screen shared GPS destinations have a cyan minimap edge arrow and owner label. If the same location is also a saved waypoint, that saved pin remains when GPS is cleared.
 
 The big-map sidebar lists connected and remembered offline members, including players without current coordinates. Each player has separate visibility pills for live location, active GPS waypoint, saved locations death markers and routes. These session-only controls apply to both maps and do not change outgoing sharing. All five start enabled; players with the same name retain separate controls. Connection cards show status and the age of the last captured position.
+
+Current clients reduce repeated encrypted route/marker traffic while retaining regular full refreshes. Mixing older clients automatically selects the compatible full-snapshot mode. Position updates, marker removals and end-to-end encryption are preserved.

@@ -172,13 +172,14 @@ namespace ScumMiniMap {
     // Direct TCP transport: a private group key authenticates and encrypts every
     // framed message. The host forwards only authenticated, fresh publications.
     internal sealed class DirectPositions:IDisposable {
-        sealed class Publication { internal string Id;internal PrivatePositions.Peer Peer;internal long Sequence;internal DateTime Seen;internal SharedMapMarker[] Markers; }
+        sealed class Publication { internal string Id;internal PrivatePositions.Peer Peer;internal long Sequence;internal DateTime Seen;internal SharedMapMarker[] Markers;internal bool Compact,IncludeMarkers=true; }
         sealed class Link { internal System.Net.Sockets.TcpClient Client;internal Stream Stream;internal string Id;internal readonly System.Collections.Generic.Dictionary<string,long> Sequences=new System.Collections.Generic.Dictionary<string,long>(); }
         readonly object gate=new object();readonly byte[] key;readonly string id=Guid.NewGuid().ToString("N"),name;
         readonly System.Collections.Generic.Dictionary<string,Publication> publications=new System.Collections.Generic.Dictionary<string,Publication>();
         readonly System.Collections.Generic.List<Link> links=new System.Collections.Generic.List<Link>();
         readonly System.Net.Sockets.TcpListener listener;readonly Timer timer;readonly bool host;
-        SharedMapMarker[] localMarkers=new SharedMapMarker[0];
+        SharedMapMarker[] localMarkers=new SharedMapMarker[0];long markerRevision,lastMarkerRevision=-1;DateTime nextFullMarkers;bool compactUpdates;
+        internal bool CompactUpdates { get { lock(gate)return compactUpdates; } }internal long SentBytes;
         Position local;DateTime updated;volatile bool stopped,ready;volatile string error;int ticking;PeerRouter router;volatile bool routerFinished;long sequence;readonly Func<DateTime> clock;
         internal bool RouterFinished { get { return routerFinished; } }
         internal bool RouterReady { get { lock(gate)return router!=null&&router.Ready; } }
@@ -229,7 +230,11 @@ namespace ScumMiniMap {
             });
         }
         internal void Update(Position p,DateTime timestamp) { lock(gate) { local=p==null?null:new Position { X=p.X,Y=p.Y,Z=p.Z,Yaw=p.Yaw };updated=timestamp.ToUniversalTime(); } }
-        internal void UpdateMarkers(SharedMapMarker[] markers) { lock(gate)localMarkers=(markers??new SharedMapMarker[0]).Where(SharedMapMarker.Valid).Take(128).GroupBy(marker=>marker.Id,StringComparer.Ordinal).Select(group=>group.First().Copy()).ToArray(); }
+        internal void UpdateMarkers(SharedMapMarker[] markers) { lock(gate) {
+            var next=(markers??new SharedMapMarker[0]).Where(SharedMapMarker.Valid).Take(128).GroupBy(marker=>marker.Id,StringComparer.Ordinal).Select(group=>group.First().Copy()).ToArray();
+            if(next.Length!=localMarkers.Length||next.Where((m,i)=>m.Id!=localMarkers[i].Id||m.Name!=localMarkers[i].Name||m.X!=localMarkers[i].X||m.Y!=localMarkers[i].Y||m.Death!=localMarkers[i].Death).Any())markerRevision++;
+            localMarkers=next;
+        } }
         internal PrivatePositions.Peer[] Snapshot() { lock(gate)return stopped||!ready?new PrivatePositions.Peer[0]:publications.Values.Where(p=>p.Id!=id&&p.Peer.Position!=null&&PrivatePositions.Fresh(p.Peer.Updated,clock())).Select(p=>p.Peer).ToArray(); }
         internal SharedMapMarker[] SnapshotMarkers() { lock(gate)return stopped||!ready?new SharedMapMarker[0]:publications.Values.Where(p=>p.Id!=id&&PrivatePositions.Fresh(p.Seen,clock())).SelectMany(p=>p.Markers).Select(marker=>marker.Copy()).ToArray(); }
         internal PrivatePositions.Peer[] Roster() { lock(gate)return stopped||!ready?new PrivatePositions.Peer[0]:publications.Values.Where(p=>p.Id!=id&&PrivatePositions.Fresh(p.Seen,clock())).Select(p=>new PrivatePositions.Peer { Id=p.Id,Name=p.Peer.Name,Position=p.Peer.Position!=null&&PrivatePositions.Fresh(p.Peer.Updated,clock())?p.Peer.Position:null,Updated=p.Peer.Updated }).OrderBy(p=>p.Name,StringComparer.CurrentCultureIgnoreCase).ThenBy(p=>p.Id,StringComparer.Ordinal).ToArray(); }
@@ -246,7 +251,7 @@ namespace ScumMiniMap {
                         if(cert==null)return false;using(var sha=SHA256.Create())return string.Equals(BitConverter.ToString(sha.ComputeHash(cert.GetRawCertData())).Replace("-",""),relayCertificate,StringComparison.OrdinalIgnoreCase);
                     });
                     secure.AuthenticateAsClient("minimap-relay",null,System.Security.Authentication.SslProtocols.Tls12,false);
-                    string line=relayGroup==null?"SCUMRELAY1 "+RelayRoom(key):memberToken==null?"SCUMGROUP1 "+relayGroup+" "+RelayRoom(key):(persistentMember?"SCUMGROUP3 ":"SCUMGROUP2 ")+relayGroup+" "+RelayRoom(key)+" "+memberToken+" "+Convert.ToBase64String(PrivatePositions.Seal(key,persistentMember?"member-name-v2:"+id+":"+name:"member-name-v1:"+name))+(string.IsNullOrEmpty(ownerToken)?"":" "+ownerToken);
+                    string line=relayGroup==null?"SCUMRELAY1 "+RelayRoom(key):memberToken==null?"SCUMGROUP1 "+relayGroup+" "+RelayRoom(key):(persistentMember?"SCUMGROUP4 ":"SCUMGROUP2 ")+relayGroup+" "+RelayRoom(key)+" "+memberToken+" "+Convert.ToBase64String(PrivatePositions.Seal(key,persistentMember?"member-name-v2:"+id+":"+name:"member-name-v1:"+name))+(string.IsNullOrEmpty(ownerToken)?"":" "+ownerToken);
                     byte[] hello=Encoding.ASCII.GetBytes(line+"\n");secure.Write(hello,0,hello.Length);Array.Clear(hello,0,hello.Length);
                     byte[] reply=new byte[3];ReadExact(secure,reply);if(Encoding.ASCII.GetString(reply)!="OK\n")throw new InvalidDataException();stream=secure;
                 }
@@ -261,40 +266,50 @@ namespace ScumMiniMap {
             var header=new byte[4];ReadExact(stream,header);int size=System.Net.IPAddress.NetworkToHostOrder(BitConverter.ToInt32(header,0));
             if(size<64||size>PrivatePositions.MaximumPacketSize)throw new InvalidDataException();var packet=new byte[size];ReadExact(stream,packet);return packet;
         }
+        byte[] ReadNetworkFrame(Stream stream) {
+            if(!persistentMember)return ReadFrame(stream);
+            while(true) {
+                var header=new byte[4];ReadExact(stream,header);uint raw=unchecked((uint)System.Net.IPAddress.NetworkToHostOrder(BitConverter.ToInt32(header,0)));int size=(int)(raw&0x7fffffff);
+                if(raw==1) { int mode=stream.ReadByte();if(mode!=0&&mode!=1)throw new InvalidDataException();lock(gate) { compactUpdates=mode==1;lastMarkerRevision=-1; }continue; }
+                if(size<64||size>PrivatePositions.MaximumPacketSize)throw new InvalidDataException();var packet=new byte[size];ReadExact(stream,packet);return packet;
+            }
+        }
         static void ReadExact(Stream stream,byte[] bytes) { int offset=0;while(offset<bytes.Length) { int count=stream.Read(bytes,offset,bytes.Length-offset);if(count==0)throw new EndOfStreamException();offset+=count; } }
-        static void WriteFrame(Stream stream,byte[] packet) { byte[] header=BitConverter.GetBytes(System.Net.IPAddress.HostToNetworkOrder(packet.Length));stream.Write(header,0,4);stream.Write(packet,0,packet.Length); }
+        static void WriteFrame(Stream stream,byte[] packet,bool compact=false) { byte[] header=BitConverter.GetBytes(System.Net.IPAddress.HostToNetworkOrder(compact?packet.Length|unchecked((int)0x80000000):packet.Length));stream.Write(header,0,4);stream.Write(packet,0,packet.Length); }
         Publication Decode(byte[] packet) {
             string text=PrivatePositions.Open(key,packet);var lines=text.Split('\n');if(lines.Length>129)throw new InvalidDataException();var fields=lines[0].Split('\t');Guid identity;long incomingSequence;int age,heartbeatAge;
             // Version 3 carries capture age, not the sender's wall-clock time.
             // Comparing another PC's UTC clock silently hid one direction when
             // its clock was more than five seconds ahead of the receiver.
-            if(fields.Length!=10||fields[0]!="3"||!Guid.TryParseExact(fields[1],"N",out identity)||fields[2].Length<1||fields[2].Length>32||fields[2].Any(char.IsControl)||!long.TryParse(fields[3],out incomingSequence)||incomingSequence<1||!int.TryParse(fields[4],out age)||age<0||!int.TryParse(fields[5],out heartbeatAge)||heartbeatAge<0)throw new InvalidDataException();
+            bool compact=fields.Length==11&&fields[0]=="4";if((!compact&&(fields.Length!=10||fields[0]!="3"))||compact&&(fields[10]!="M"&&fields[10]!="=")||!Guid.TryParseExact(fields[1],"N",out identity)||fields[2].Length<1||fields[2].Length>32||fields[2].Any(char.IsControl)||!long.TryParse(fields[3],out incomingSequence)||incomingSequence<1||!int.TryParse(fields[4],out age)||age<0||!int.TryParse(fields[5],out heartbeatAge)||heartbeatAge<0)throw new InvalidDataException();
             if(age>30000||heartbeatAge>30000)return null;var now=clock();var stamp=now.AddMilliseconds(-age);
             Position position=null;
             if(fields[6]!="-") {
                 var values=new double[4];for(int i=0;i<4;i++)if(!double.TryParse(fields[6+i],NumberStyles.Float,CultureInfo.InvariantCulture,out values[i])||double.IsNaN(values[i])||double.IsInfinity(values[i])||Math.Abs(values[i])>(i==3?360:2000000))throw new InvalidDataException();
                 position=new Position { X=values[0],Y=values[1],Z=values[2],Yaw=values[3] };
-            }else if(fields.Skip(6).Any(value=>value!="-"))throw new InvalidDataException();
+            }else if(fields.Skip(6).Take(4).Any(value=>value!="-"))throw new InvalidDataException();
             var markers=new System.Collections.Generic.List<SharedMapMarker>();var markerIds=new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
             foreach(string line in lines.Skip(1)) {
                 var values=line.Split('\t');double x,y;if(values.Length!=5||(values[1]!="D"&&values[1]!="W")||values[2].Length>512||!double.TryParse(values[3],NumberStyles.Float,CultureInfo.InvariantCulture,out x)||!double.TryParse(values[4],NumberStyles.Float,CultureInfo.InvariantCulture,out y))throw new InvalidDataException();
                 var marker=new SharedMapMarker { Id=values[0],Death=values[1]=="D",Name=new UTF8Encoding(false,true).GetString(Convert.FromBase64String(values[2])),X=x,Y=y,Owner=fields[2],OwnerId=fields[1] };
                 if(!SharedMapMarker.Valid(marker)||!markerIds.Add(marker.Id))throw new InvalidDataException();markers.Add(marker);
             }
-            return new Publication { Id=fields[1],Peer=new PrivatePositions.Peer { Id=fields[1],Name=fields[2],Position=position,Updated=stamp },Sequence=incomingSequence,Seen=now.AddMilliseconds(-heartbeatAge),Markers=markers.ToArray() };
+            if(compact&&fields[10]=="="&&markers.Count!=0)throw new InvalidDataException();
+            return new Publication { Id=fields[1],Peer=new PrivatePositions.Peer { Id=fields[1],Name=fields[2],Position=position,Updated=stamp },Sequence=incomingSequence,Seen=now.AddMilliseconds(-heartbeatAge),Markers=compact&&fields[10]=="="?null:markers.ToArray() };
         }
         byte[] Encode(Publication publication,DateTime now) {
             var peer=publication.Peer;var p=PrivatePositions.Fresh(peer.Updated,now)?peer.Position:null;
             int age=p==null?0:(int)Math.Max(0,Math.Min(30000,(now-peer.Updated).TotalMilliseconds));
-            var fields=new[]{"3",publication.Id,peer.Name,publication.Sequence.ToString(CultureInfo.InvariantCulture),age.ToString(CultureInfo.InvariantCulture),((int)Math.Max(0,(now-publication.Seen).TotalMilliseconds)).ToString(CultureInfo.InvariantCulture),p!=null?p.X.ToString("R",CultureInfo.InvariantCulture):"-",p!=null?p.Y.ToString("R",CultureInfo.InvariantCulture):"-",p!=null?p.Z.ToString("R",CultureInfo.InvariantCulture):"-",p!=null?p.Yaw.ToString("R",CultureInfo.InvariantCulture):"-"};
-            string markerRows=string.Concat(publication.Markers.Select(marker=>"\n"+marker.Id+"\t"+(marker.Death?"D":"W")+"\t"+Convert.ToBase64String(Encoding.UTF8.GetBytes(marker.Name))+"\t"+marker.X.ToString("R",CultureInfo.InvariantCulture)+"\t"+marker.Y.ToString("R",CultureInfo.InvariantCulture)));
+            var fields=new[]{publication.Compact?"4":"3",publication.Id,peer.Name,publication.Sequence.ToString(CultureInfo.InvariantCulture),age.ToString(CultureInfo.InvariantCulture),((int)Math.Max(0,(now-publication.Seen).TotalMilliseconds)).ToString(CultureInfo.InvariantCulture),p!=null?p.X.ToString("R",CultureInfo.InvariantCulture):"-",p!=null?p.Y.ToString("R",CultureInfo.InvariantCulture):"-",p!=null?p.Z.ToString("R",CultureInfo.InvariantCulture):"-",p!=null?p.Yaw.ToString("R",CultureInfo.InvariantCulture):"-"};
+            if(publication.Compact)fields=fields.Concat(new[]{publication.IncludeMarkers?"M":"="}).ToArray();
+            string markerRows=string.Concat((publication.IncludeMarkers?publication.Markers:new SharedMapMarker[0]).Select(marker=>"\n"+marker.Id+"\t"+(marker.Death?"D":"W")+"\t"+Convert.ToBase64String(Encoding.UTF8.GetBytes(marker.Name))+"\t"+marker.X.ToString("R",CultureInfo.InvariantCulture)+"\t"+marker.Y.ToString("R",CultureInfo.InvariantCulture)));
             return PrivatePositions.Seal(key,string.Join("\t",fields)+markerRows);
         }
         void Read(Link link) {
             try {
                 var stream=link.Stream;
                 while(!stopped) {
-                    var publication=Decode(ReadFrame(stream));if(publication==null)continue;
+                    var publication=Decode(ReadNetworkFrame(stream));if(publication==null)continue;
                     lock(gate) {
                         if(stopped)return;
                         if(host) { if(publication.Id==id||(link.Id!=null&&link.Id!=publication.Id)||links.Any(other=>other!=link&&other.Id==publication.Id))throw new InvalidDataException();link.Id=publication.Id; }
@@ -303,6 +318,7 @@ namespace ScumMiniMap {
                         if(link.Sequences.Count>=128&&!link.Sequences.ContainsKey(publication.Id))throw new InvalidDataException();
                         link.Sequences[publication.Id]=publication.Sequence;
                         if(publications.Count>=32&&!publications.ContainsKey(publication.Id))throw new InvalidDataException();
+                        if(publication.Markers==null) { Publication previousPublication;publication.Markers=publications.TryGetValue(publication.Id,out previousPublication)?previousPublication.Markers:new SharedMapMarker[0]; }
                         publications[publication.Id]=publication;ready=true;
                     }
                 }
@@ -312,17 +328,19 @@ namespace ScumMiniMap {
         void Tick(object unused) {
             if(stopped||Interlocked.Exchange(ref ticking,1)!=0)return;
             try {
-                Link[] connections;byte[][] packets;var now=clock();
+                Link[] connections;byte[][] packets;bool compact;var now=clock();
                 lock(gate) {
                     if(stopped)return;
                     foreach(var stale in publications.Where(pair=>!PrivatePositions.Fresh(pair.Value.Seen,now)).Select(pair=>pair.Key).ToArray())publications.Remove(stale);
                     bool valid=local!=null&&PrivatePositions.Fresh(updated,now);var p=local;
-                    var own=new Publication { Id=id,Peer=new PrivatePositions.Peer { Name=name,Updated=valid?updated:now,Position=valid?p:null },Sequence=++sequence,Seen=now,Markers=localMarkers };publications[id]=own;
+                    compact=Relay&&persistentMember&&compactUpdates;bool includeMarkers=!compact||markerRevision!=lastMarkerRevision||now>=nextFullMarkers;
+                    if(includeMarkers) { lastMarkerRevision=markerRevision;nextFullMarkers=now.AddSeconds(5); }
+                    var own=new Publication { Compact=compact,IncludeMarkers=includeMarkers,Id=id,Peer=new PrivatePositions.Peer { Name=name,Updated=valid?updated:now,Position=valid?p:null },Sequence=++sequence,Seen=now,Markers=localMarkers };publications[id]=own;
                     // Re-encode relayed publications with their current age so
                     // forwarding never makes an old captured location fresh.
                     packets=host?publications.Values.Select(value=>Encode(value,now)).ToArray():new[]{Encode(own,now)};connections=links.ToArray();
                 }
-                foreach(var connection in connections)try { var stream=connection.Stream;foreach(var packet in packets) { if(stopped)return;WriteFrame(stream,packet); } }catch(Exception) { connection.Client.Close(); }
+                foreach(var connection in connections)try { var stream=connection.Stream;foreach(var packet in packets) { if(stopped)return;WriteFrame(stream,packet,compact);Interlocked.Add(ref SentBytes,packet.Length+4); } }catch(Exception) { connection.Client.Close(); }
             }catch(Exception e) { if(!stopped)error=e.Message; }finally { Interlocked.Exchange(ref ticking,0); }
         }
         public void Dispose() {
