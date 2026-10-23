@@ -11,7 +11,7 @@ Disabling deletes the enabled marker and removes the scheduled task. The watcher
 ## Validation
 
 - `tests/Test-ScumAutoLaunch.ps1`: 17 session lifetime/task XML checks; nine watcher checks, including the actual hidden worker's enabled/disabled lifetime with an explicitly absent synthetic game. No scheduled tasks or SCUM/MiniMap sessions are started.
-- `tests/Test-Localization.ps1`: option and help text cover all 19 application languages.
+- `tests/Test-Localization.ps1`: option and help text cover all 20 application languages.
 - Canonical Test build includes the new policy suite, existing regressions and package integrity checks.
 - `tests/Test-SquadUi.ps1`: inspect the actual packaged setting, accessible label, wrapped text and disabled diagnostic controls; retain the existing UI suite.
 

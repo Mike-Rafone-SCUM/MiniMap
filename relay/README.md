@@ -1,3 +1,5 @@
+> **Current architecture (v2.3.23):** GROUP3/ROSTER3 persists encrypted offline member labels in the durable registry; GROUP4 negotiates compact updates with compatible older-client snapshots. Registry writes use a serialized worker with durable acknowledgement. The service has a metered traffic ledger/cutoff, bounded capacity, pinned TLS and private aggregate status.json. Preserve registry, ledger and TLS identity during recovery. The protocol sections below are dated history where they describe memory-only GROUP2 state. See the latest GROUP3/GROUP4 sections for current behaviour. Operator ownership and recovery acceptance remain in the private handover.
+
 # Encrypted MiniMap relay
 
 ## Host member management (v2.3.19)

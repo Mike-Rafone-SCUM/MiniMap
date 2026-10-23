@@ -1,10 +1,24 @@
-# SCUM MiniMap v2.3.23
+# SCUM MiniMap v2.3.24
 
 SCUM MiniMap is an external map overlay and road-navigation utility for SCUM, made for the Skynett community. Version 2 uses WPF for the tactical map, compact minimap, Settings, setup guide and Zone Creator. The existing tracking and routing engine remains behind the new interface.
 
+## Settings and group polish (v2.3.24)
+
+Version 2.3.24 implements selected findings from [the final audit](docs/WPF-FINAL-POLISH-AUDIT-2026-10-23.md); [the worklog](docs/WPF-MAJOR-RELEASE-WORKLOG.md) separates implemented checks from remaining acceptance. The five-page setup is still required on each application version update. Extract the complete ZIP with its assets folder before launching.
+
+In Private positions, **Done** saves an isolated Your name edit; an explicit name-save button also keeps the dialog open. Existing connections use the new name after reconnecting. **Leave group** keeps the saved code but disables automatic rejoining. **Forget on this PC** removes only this PC's saved membership and does not delete the relay group. Forgetting an owned group permanently loses its owner controls on this PC; preserve the invitation code first. **Delete group** remains the owner's separate action for everyone. Pending operations must be resolved before forgetting. Code replacement now asks for confirmation and copy failure offers a retry through Copy code without creating another group.
+
 ## Main map position and size
 
-Open **Settings > Main map position and size**, or the same control in the main-map sidebar. **Fit to SCUM window** follows the game's playable window area, including window moves and resizes. **Manual position and size** saves screen-pixel bounds; use the exact fields or **Move and resize preview**, then Done. Negative monitor coordinates are supported. Escape cancels the preview; its Done saves immediately. **Fill monitor** fills the fields with the game monitor's bounds. Saved off-screen placements recover to a connected monitor. Compact minimap placement is separate.
+Manual position fields and the main-map move/resize preview offer four arrow buttons for one-screen-pixel adjustments. The compact minimap's Move minimap preview has the same controls. Preview movement uses physical pixels rather than one WPF logical unit. Done saves; Escape cancels a preview.
+
+Open **Settings > Appearance > Positioning > Main map position and size**, or the same control in the main-map sidebar. **Fit to SCUM window** follows the game's playable window area, including window moves and resizes. **Manual position and size** saves screen-pixel bounds; use the exact fields or **Move and resize preview**, then Done. Negative monitor coordinates are supported. Escape cancels the preview; its Done saves immediately. **Fill monitor** fills the fields with the game monitor's bounds. Saved off-screen placements recover to a connected monitor. Compact minimap placement is separate.
+
+## Finding settings
+
+Settings now uses six categories. General contains language, startup and the setup guide. Appearance contains main-map/minimap placement and display controls, with collapsible map-layer, marker/history and zone-tool sections. Tracking and voice contains automatic zoom, capture timing and audio. Shortcuts contains the three SCUM bindings and all MiniMap actions. Groups and routes opens private groups/member colours and route editing. Tools and data contains admin controls, updates, support links, Data Folder and collapsed recovery actions.
+
+The footer contains Done. Use the category list with the mouse or keyboard; Ctrl+Tab and Ctrl+Shift+Tab cycle categories. Invalid numeric edits must be corrected before leaving their category. Collapsed sections retain their expansion state while the Settings window stays open. Changes use the existing settings/profile format; the mandatory five-page setup policy remains.
 
 Transparent-map dragging now coalesces input until the next Windows composition frame, with a timer fallback. Local synthetic 4K tests showed steadier drag updates; results vary by PC and this is not a guaranteed game-FPS improvement. Existing settings and keys are preserved. Complete all five setup pages after updating.
 
@@ -51,7 +65,7 @@ Shortcuts can be changed in Settings. Reset zoom, clear route, Zone Creator, set
 
 The tactical map is transparent around the world map. Its sidebar overlays the viewport, so expanding or collapsing it preserves map centring and scale. The floating rail offers close, collapse/expand, Settings (cog), setup guide (?) and death-marker removal (tombstone), with localized action tooltips.
 
-Use the wheel or bottom controls to zoom. Drag the map to pan and choose **Follow player** to resume following. Initially, the full map has 0% terrain opacity at 1× and becomes opaque when zoomed in. The opacity slider works at every zoom level; once you adjust it, your chosen transparency is retained across zoom changes and restarts. The compact minimap has its own opacity setting.
+Tactical terrain opacity is automatic: 0% at 1× zoom, 100% above 1×. The toolbar reports this policy-fixed value. Compact minimap opacity is independent and remains adjustable.
 
 Drag the bottom bar's left handle to move its controls or its right handle to resize them between 70% and 160%. Right-click the bar to reset its size and position. These layout choices last for the current session. To move the compact minimap, open Settings and choose **Move minimap**; Done saves its position and Escape cancels.
 
@@ -83,21 +97,23 @@ To open downloaded zone TSVs from Explorer, use **Enable opening zone TSV files*
 
 ## Squad tools
 
+In **Private groups**, **Your shared member colour** offers 16 colours. Each person chooses their own colour, seen consistently by teammates on their player arrow, routes and markers, including older clients. It applies to all code-based private groups on this Windows profile and survives restart. Members can choose the same colour; coordinate choices if you want every teammate distinct. Changing colour briefly reconnects active groups while preserving Leave, host Disconnect, memberships and ownership. A teammate following the previous identity may need to select Follow teammate again after your colour changes.
+
 Give a group a name when creating it, or edit its name in Private positions and choose **Save group name**. Any member with the group code can update its shared name; only the creator retains code-refresh controls. Names travel encrypted between connected members and are saved with each Windows-protected membership. A new member learns the name when another member is online. Renaming leaves invite codes unchanged. Names distinguish players and markers across multiple groups. Teammates use the same heading-arrow shape as your own marker and point in their own direction; the heading-display setting applies to both.
 
 Open **Squad tools** in the full-map sidebar for group connections, teammate visibility/follow controls and **Danger**, **Loot** or **Pick me up** pings. Its linked **Routes** and **Map presets** pages are also available directly from the sidebar and Settings. Pings require a connected group and a fresh captured position; the dialog keeps game input protected while sending an explicit ping. Right-click the map to place a ping at a selected location. Assign the three optional hotkeys in Settings; they start unbound to preserve your existing controls. A two-second cooldown prevents repeated presses from flooding the group. Pings expire after 60 seconds from first receipt; heartbeat updates do not extend them. Older clients display them as ordinary markers until the sender withdraws them.
 
-Teammate cards show connection status and seconds since the last captured location. Disconnected cards remain for up to five minutes, with their location hidden. **Follow teammate** updates your destination when they move at least 25 m, at most once every two seconds. Navigation pauses when their position is unavailable and resumes on a fresh update. **Stop navigation**, Clear, or choosing another destination cancels follow.
+Teammate cards show connection status and seconds since the last captured location. Persistent group rosters retain offline members across empty rooms and relay restarts, with live locations hidden. Transient legacy peer cards can remain for up to five minutes. **Follow teammate** updates your destination when they move at least 25 m, at most once every two seconds. Navigation pauses when their position is unavailable and resumes on a fresh update. **Stop navigation**, Clear, or choosing another destination cancels follow.
 
 Right-click to **Add route stop**, select a search result and choose **Add route stop**, or add a manual GPS destination from its map card or the **Routes** page. Named search results and shared markers retain their names when added. Open **Routes** from a GPS/route card to inspect the ordered stops and remove individual stops. A route holds up to 16 ordered stops and is shared with your connected groups through the encrypted marker transport. Choose **Start route** for your route or another member's route. **Stop navigation** keeps the route for resumption; **Clear route** removes your stops. Stops advance within 40 m; you can navigate independently of other members. Route drafts and pings are session-local. Only your own route and pings are published; received routes are not automatically forwarded into other groups. New clients understand stop ordering; older clients see individual markers.
 
 Routes calculate and start navigation automatically as stops are placed or edited. After stopping, **Start route** resumes navigation. Right-click → **Routes** to remove the clicked stop, undo, start or stop navigation, or open the route editor. **Your route** selects **Solo route** or **Shared route**. Right-click a teammate's arrow for **Follow teammate**. Choosing an ordinary GPS destination immediately replaces route/follow navigation while retaining your editable route.
 
-**Solo routes are amber** and represent a player's own plan, automatically visible to their connected groups. **Shared squad routes are cyan** and appear under their original owner. Following a shared route updates with the owner's new stages without rebroadcasting that route into your other groups; your duplicate personal route publication is suppressed while following it. Other players' routes are calculated locally from their encrypted stops and available positions. No route geometry is sent to the server. Each player has a separate **Routes** visibility pill.
+**Solo routes** represent a player's own plan and are visible to their connected groups. **Shared squad routes** remain under their original owner. Routes use their owner's assigned member colour; colour does not imply privacy. Following a shared route updates with the owner's new stages without rebroadcasting that route into your other groups; your duplicate personal route publication is suppressed while following it. Other players' routes are calculated locally from their encrypted stops and available positions. No route geometry is sent to the server. Each player has a separate **Routes** visibility pill.
 
 Solid route legs follow calculated roads. Dashed legs provide direct guidance when a road route is unavailable; they are not a verified drivable road. Calculations run off the UI thread, coalesce rapid edits and discard outdated results. Removing a stop recalculates the remaining ordered route. Without a fresh player position, the inter-stop sections can still be calculated.
 
-Under **Map presets**, choose a suggested name or type your own, then **Save current map preset**. Saving the same name on the same map replaces that preset. Click a saved name to restore categories, custom-zone visibility, map layers, zoom, rotation, clustering and opacity. Up to 24 presets are stored in the current Windows profile; each applies only to its original map. Group memberships, sharing and hotkeys are not changed by presets.
+Under **Map presets**, choose a suggested name or type your own, then **Save current map preset**. Saving the same name on the same map replaces that preset. Click a saved name to restore categories, custom-zone visibility, map layers, zoom, rotation, clustering and opacity. Up to 24 presets are stored in the current Windows profile; each applies only to its original map. Automatic zoom, group memberships, sharing and hotkeys are not changed by presets. Applying a stored zoom does not disable automatic zoom; subsequent tracking can adjust it. Unreadable presets block Save until you explicitly back up and reset; the recovery backup stays beside `map-presets.dat`. Failed writes preserve the previous saved list.
 
 The full map closes when you switch to an unrelated application and stays closed when you return. Escape, Tab and the map toggle can dismiss the visible map even if tracking is paused. Dialogs and text entry retain their own keyboard behavior.
 
@@ -117,12 +133,35 @@ Launch `SkynettMiniMap.exe --legacy-ui` to use the original frontend. This remai
 
 Version 2 caches zone identities, visibility lists, trail snapshots and world geometry. It avoids repeated formatting/hashing of all vertices during idle refreshes, culls off-screen geometry and preserves sidebar controls during camera movement.
 
-Automated checks cover input ownership, rendering, routing, persistence, package integrity, all 20 language catalogues and a detailed-zone idle stress case. They do not certify every GPU, monitor, DPI, OBS setup or long-duration workload. Very large expanded custom-zone lists are not virtualized. Death-marker age text may remain stale while stationary. Toolbar layout and death-recovery progress are session-local.
+Automated checks cover input ownership, rendering, routing, persistence, package integrity, all 20 language catalogues and a detailed-zone idle stress case. They do not certify every GPU, monitor, DPI, OBS setup or long-duration workload. Very large expanded custom-zone lists are not virtualized. Toolbar layout and death-recovery progress are session-local.
 
 SCUM MiniMap does not read game memory or inject DLLs. This statement is not an official anticheat certification. SCUM MiniMap is an independent community tool, not an official SCUM product.
 
 ## Release history, source and credits
 
-See [CHANGELOG.md](CHANGELOG.md) for the complete v2.0.0 release notes and previous releases. The source checkout uses `Build.ps1 -Configuration Release` or `Build.ps1 -Configuration Test`, both through the canonical build scripts; published output directories are immutable.
+See [CHANGELOG.md](CHANGELOG.md) for release notes and previous releases. The source checkout uses `Build.ps1 -Configuration Release` or `Build.ps1 -Configuration Test`, both through the canonical build scripts; published output directories are immutable.
 
 Community map datasets, wildlife regions, bundled fonts and other third-party resources retain their existing credits and licenses. See [ATTRIBUTION.md](ATTRIBUTION.md) for full details. SCUM artwork, game definitions and trademarks belong to their respective owners.
+
+## Troubleshooting and persistence
+
+| Symptom | Next step |
+|---|---|
+| Missing/wrong assets | Extract the full application ZIP into a new folder; keep the matching assets beside the executable. |
+| Presets cannot be read | Keep the original. Use Back up and reset only when ready to start a new list; preserve the adjacent recovery backup for support. |
+| Local save failed | Check folder access and free space, then retry. Settings/setup Done stays open on failure; do not assume an unsaved edit survived restart. |
+| Group code rejected | Check the complete invite code and ask the owner whether it was replaced. |
+| Group limit reached | Forget an unused membership on this PC; this does not delete the group for others. |
+| Clipboard busy | Use Copy code again on the existing group. |
+| Host disconnected you | Use Connect manually, or restart; automatic retry remains blocked for the current session. |
+| Sharing unavailable | Check your connection and retry. Solo map use remains available; relay operations require the service. |
+
+Settings, keys, saved places, presets and retained group memberships persist in the current Windows profile. Route stops, danger pings, per-player visibility and follow/navigation progress are temporary. Group credentials use Windows account protection; copying the encrypted file to another account is not a portable backup of owner access.
+
+| Capability | WPF status / requirement |
+|---|---|
+| Tactical map, HUD, setup, Settings, Routes and groups | WPF interface; sharing requires the relay. |
+| Admin/player/profile/spawn tools | Some native dialogs; relevant SCUM permission required. A submitted command is not proof of execution. |
+| Arbitrary terrain images, directional cone, detailed compass, history hover timestamps, admin-player overlays | Original frontend remains required for complete presentation. |
+
+Native-language review, real-game acceptance, Narrator/high contrast, mixed-DPI hardware and current WPF OBS capture remain pending. Small-window fitting is covered locally and does not certify every display combination.

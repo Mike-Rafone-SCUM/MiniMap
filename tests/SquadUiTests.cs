@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -15,6 +15,219 @@ class SquadUiTests {
     static void Set(object o,string n,object v) { o.GetType().GetField(n,F).SetValue(o,v); }
     static object Call(object o,string n,params object[] a) { return o.GetType().GetMethod(n,F).Invoke(o,a); }
     static void Check(bool v,string n) { if(!v)throw new Exception(n);Console.WriteLine("PASS: "+n); }
+    static void CheckSettingsPolish(object runtime,string folder) {
+        var engine=Get(runtime,"engine");var asm=runtime.GetType().Assembly;var assigned=new Dictionary<object,int>();
+        var window=(Window)Call(runtime,"BuildSettings",0);window.ShowActivated=false;window.Show();Pump();
+        try {
+            var nav=Children(window).OfType<ListBox>().Single(c=>c.Tag as string=="settings-categories");
+            Action<int> select=index=> {nav.SelectedItem=nav.Items.Cast<ListBoxItem>().Single(item=>item.Tag as string=="settings-category:"+index);Pump();window.UpdateLayout();};
+            Check(nav.Items.Count==6&&nav.Items.Cast<ListBoxItem>().All(item=>System.Windows.Automation.AutomationProperties.GetName(item).Length>0),"Settings has six named categories with a selected-item state");
+            var footer=Children(window).OfType<DockPanel>().Single(p=>p.Tag as string=="settings-footer");Check(Children(footer).OfType<Button>().Count()==1,"Settings footer contains only Done");
+            foreach(int index in new[]{0,2,3,1,4,5}) {
+                select(index);
+                foreach(var control in Children(window).OfType<FrameworkElement>().Where(c=>c.Resources.Contains("native-setting"))) {var setting=control.Resources["native-setting"];Check(!assigned.ContainsKey(setting),"Native setting appears in only one category: "+Get(setting,"GroupKey")+" / "+((System.Windows.Forms.Control)Get(setting,"Control")).Text);assigned.Add(setting,index);}
+                var tags=Children(window).OfType<FrameworkElement>().Select(c=>c.Tag as string).ToArray();
+                Check(tags.Contains("auto-launch-scum")== (index==0),"Startup is isolated to General: "+index);
+                Check(tags.Contains("text:MapPlacement")== (index==2),"Map placement is isolated to Appearance: "+index);
+                Check(tags.Contains("open-admin-commands")== (index==5),"Admin tools are isolated to Tools: "+index);
+                Check(Children(window).OfType<Button>().Any(b=>b.Content as string=="Private positions")== (index==4),"Group entry is isolated to Groups and routes: "+index);
+                Capture(window,Path.Combine(folder,"settings-after-en-"+index+".png"));
+            }
+            var category=runtime.GetType().GetMethod("SettingsCategory",BindingFlags.Static|BindingFlags.NonPublic);
+            var descriptors=Enumerable.Range(0,3).SelectMany(tab=>((Array)Call(engine,"WpfSettings",tab)).Cast<object>()).ToArray();
+            foreach(var setting in descriptors) {
+                var control=(System.Windows.Forms.Control)Get(setting,"Control");bool replaced=(string)Get(setting,"GroupKey")=="ShortcutHeading"&&control is System.Windows.Forms.Panel||control.Text=="Getting Started Guide..."||control.Text=="SCUM and MiniMap key rebinding wizard...";
+                Check(replaced||assigned.ContainsKey(setting)&&assigned[setting]==(int)category.Invoke(null,new[]{setting}),"Existing setting is retained or has a direct guide/binding replacement: "+Get(setting,"GroupKey")+" / "+control.Text);
+            }
+            select(1);Check(Children(window).OfType<Button>().Count(b=>b.MinWidth==88)==19,"Shortcuts retains all sixteen MiniMap actions and three SCUM bindings");
+            select(3);var input=Children(window).OfType<TextBox>().First(t=>t.Resources.Contains("commit-number"));string valid=input.Text;input.Text="invalid";select(0);
+            Check(((ListBoxItem)nav.SelectedItem).Tag as string=="settings-category:3"&&input.Text=="invalid"&&System.Windows.Automation.AutomationProperties.GetItemStatus(input).Length>0,"Category switching retains and explains invalid numeric edits");
+            var tracking=Children(window).OfType<Expander>().Single(e=>e.Tag as string=="settings-section:SecTrackingZoom");tracking.IsExpanded=false;select(0);
+            Check(tracking.IsExpanded&&((ListBoxItem)nav.SelectedItem).Tag as string=="settings-category:3","Invalid input in a collapsed section is revealed before category navigation");
+            var keyboard=InputManager.Current.PrimaryKeyboardDevice;var source=PresentationSource.FromVisual(window);
+            window.RaiseEvent(new KeyEventArgs(keyboard,source,Environment.TickCount,Key.Tab) {RoutedEvent=Keyboard.PreviewKeyDownEvent});
+            Check(((ListBoxItem)nav.SelectedItem).Tag as string=="settings-category:3","Ordinary Tab does not change the selected Settings category");
+            input.Text=valid;select(0);Check(((ListBoxItem)nav.SelectedItem).Tag as string=="settings-category:0","Correcting the value permits category navigation");
+            select(2);var markers=Children(window).OfType<Expander>().Single(e=>e.Tag as string=="settings-section:SettingsMarkers");markers.IsExpanded=true;select(0);select(2);
+            Check(Children(window).OfType<Expander>().Single(e=>e.Tag as string=="settings-section:SettingsMarkers").IsExpanded,"Section expansion survives category changes in the same Settings window");
+            var contentScroll=Children(window).OfType<ScrollViewer>().Single(v=>v.Content is StackPanel);contentScroll.ScrollToEnd();Pump();select(3);Pump();Check(contentScroll.VerticalOffset==0,"Changing category starts at the top of its content");
+        }finally {window.Close();}
+        var localization=asm.GetType("ScumMiniMap.Localization");var language=localization.GetProperty("Current");var original=language.GetValue(null,null);
+        try {
+            foreach(int index in new[]{0,3,8,6,14,19}) {
+                language.SetValue(null,Enum.ToObject(language.PropertyType,index),null);Call(engine,"WpfRebuildSettings");
+                foreach(int page in new[]{0,2,4,5}) {var translated=(Window)Call(runtime,"BuildSettings",page);translated.ShowActivated=false;translated.Show();Pump();translated.UpdateLayout();var nav=Children(translated).OfType<ListBox>().Single(c=>c.Tag as string=="settings-categories");
+                    Check(nav.Items.Cast<ListBoxItem>().All(item=>((TextBlock)item.Content).TextWrapping==TextWrapping.Wrap&&System.Windows.Automation.AutomationProperties.GetName(item).Length>0),"Translated category names wrap and retain programmatic labels: "+index+" / "+page);
+                    Capture(translated,Path.Combine(folder,"settings-after-"+index+"-"+page+".png"));translated.Close();}
+            }
+        }finally {language.SetValue(null,original,null);Call(engine,"WpfRebuildSettings");}
+    }
+    static void AuditSettings(object runtime,string folder) {
+        var engine=Get(runtime,"engine");var inventory=new List<string>();
+        for(int tab=0;tab<3;tab++) {
+            foreach(var setting in (Array)Call(engine,"WpfSettings",tab)) {
+                var control=(System.Windows.Forms.Control)Get(setting,"Control");
+                inventory.Add(tab+"\t"+Get(setting,"GroupKey")+"\t"+control.GetType().Name+"\t"+control.Name+"\t"+control.Text.Replace("\r"," ").Replace("\n"," ")+"\t"+string.Join(" / ",control.Controls.Cast<System.Windows.Forms.Control>().Select(c=>c.Text.Replace("\r"," ").Replace("\n"," "))));
+            }
+            var window=(Window)Call(runtime,"BuildSettings",tab);window.ShowActivated=false;window.Show();Pump();Capture(window,Path.Combine(folder,"settings-before-"+tab+".png"));window.Close();
+        }
+        File.WriteAllLines(Path.Combine(folder,"settings-inventory.tsv"),inventory);Check(true,"Captured current Settings and inventoried native setting descriptors without changing real profiles");
+    }
+    static void CheckMemberPolish(object runtime,string folder) {
+        var asm=runtime.GetType().Assembly;var engine=Get(runtime,"engine");var surface=asm.GetType("ScumMiniMap.WpfMapSurface");
+        Func<int,string> seed=i=>(string)surface.GetMethod("PaletteSeed",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{i});
+        Func<string,Color> colour=id=>((SolidColorBrush)surface.GetMethod("MemberInk",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{id})).Color;
+        var seeds=Enumerable.Range(0,16).Select(seed).ToArray();
+        Check(seeds.Distinct().Count()==16&&seeds.Select(s=>colour(s+new string('0',24))).Distinct().Count()==16,"Member palette has 16 distinct shared identity colours");
+        Check(seeds.All(s=>colour(s+new string('0',24))==colour(Guid.NewGuid().ToString("N")+":"+s+new string('f',24))),"Chosen colour is consistent across groups and fresh replay identities");
+        var mapState=Activator.CreateInstance(asm.GetType("ScumMiniMap.WpfMapState"),true);var peerType=asm.GetType("ScumMiniMap.PrivatePositions+Peer");var peer=Activator.CreateInstance(peerType,true);Set(peer,"Id",seeds[0]+new string('a',24));Set(peer,"Name","Stationary member");Set(peer,"Position",Get(engine,"position"));var peers=Array.CreateInstance(peerType,1);peers.SetValue(peer,0);Set(mapState,"Peers",peers);
+        var visualIdentity=runtime.GetType().GetMethod("VisualIdentity",BindingFlags.Static|BindingFlags.NonPublic);string oldVisual=(string)visualIdentity.Invoke(null,new[]{mapState});Set(peer,"Id",seeds[8]+new string('b',24));
+        Check(oldVisual!=(string)visualIdentity.Invoke(null,new[]{mapState}),"A stationary member colour change invalidates the map without requiring movement");
+        var storeType=asm.GetType("ScumMiniMap.RelayGroupStore");string profile=Path.Combine(folder,"member-colours");bool fail=false;
+        Action<string,byte[]> persist=(file,bytes)=> {if(fail)throw new IOException("Synthetic colour write failure");File.WriteAllBytes(file,bytes);};
+        Func<object> open=()=>Activator.CreateInstance(storeType,F,null,new object[]{profile,"127.0.0.1",65534,null,persist},null);
+        var previous=Get(runtime,"relayGroups");
+        using(var store=(IDisposable)open()) {
+            string original=(string)Get(store,"MemberColorSeed");var bytes=File.ReadAllBytes(Path.Combine(profile,"private-member-color.dat"));
+            fail=true;bool rejected=false;try {Call(store,"SetMemberColor",seeds[3]);}catch(TargetInvocationException e){rejected=e.InnerException is IOException;}
+            Check(rejected&&(string)Get(store,"MemberColorSeed")==original&&File.ReadAllBytes(Path.Combine(profile,"private-member-color.dat")).SequenceEqual(bytes),"Failed colour save preserves the previous protected colour and in-memory identity");
+            fail=false;Call(store,"SetMemberColor",seeds[3]);
+            using(var reloaded=(IDisposable)open())Check((string)Get(reloaded,"MemberColorSeed")==seeds[3],"Selected member colour survives a protected-profile reload");
+            Check(!System.Text.Encoding.UTF8.GetString(File.ReadAllBytes(Path.Combine(profile,"private-member-color.dat"))).Contains(seeds[3]),"Member colour identity remains Windows-protected on disk");
+            Set(runtime,"relayGroups",store);
+            try {
+                var window=(Window)Call(runtime,"BuildRelayGroups");window.ShowActivated=false;window.Show();Pump();
+                var choices=Children(window).OfType<Button>().Where(b=>(b.Tag as string??"").StartsWith("member-colour:")).ToArray();
+                Check(choices.Length==16&&choices.All(b=>System.Windows.Automation.AutomationProperties.GetName(b).Length>0),"Group screen exposes 16 named colour choices");
+                choices[8].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                Check((string)Get(store,"MemberColorSeed")==seeds[8]&&((string)choices[8].Content).StartsWith("✓ "),"A colour click saves the selected shared colour and marks it with a text check");window.Close();
+                var localization=asm.GetType("ScumMiniMap.Localization");var language=localization.GetProperty("Current");
+                foreach(int index in new[]{0,3,8,6,14,19}) { language.SetValue(null,Enum.ToObject(language.PropertyType,index),null);var translated=(Window)Call(runtime,"BuildRelayGroups");translated.ShowActivated=false;translated.Show();Pump();Children(translated).OfType<ScrollViewer>().First().ScrollToVerticalOffset(260);Pump();Capture(translated,Path.Combine(folder,"member-colours-"+index+".png"));translated.Close(); }
+                language.SetValue(null,Enum.ToObject(language.PropertyType,0),null);
+            }finally {Set(runtime,"relayGroups",previous);}
+            var memberType=asm.GetType("ScumMiniMap.RelayMembership");var directType=asm.GetType("ScumMiniMap.DirectPositions");
+            Func<object> membership=()=>memberType.GetMethod("Parse",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{"MM1-"+Guid.NewGuid().ToString("N")+"-"+Convert.ToBase64String(new byte[32]).TrimEnd('=').Replace('+','-').Replace('/','_')});
+            Func<object> closedSession=()=>Activator.CreateInstance(directType,F,null,new object[]{false,"127.0.0.1",65534,Convert.ToBase64String(new byte[32]),"Policy fixture",false,null},null);
+            var active=membership();var blocked=membership();var left=membership();var pending=membership();var activeSession=closedSession();var blockedSession=closedSession();
+            Set(active,"AutoConnect",true);Set(active,"Session",activeSession);Set(active,"RetryAt",DateTime.MaxValue);Set(active,"Owner",new string('a',64));
+            Set(blocked,"AutoConnect",true);Set(blocked,"Session",blockedSession);directType.GetProperty("ReconnectBlocked",F).GetSetMethod(true).Invoke(blockedSession,new object[]{true});
+            Set(pending,"AutoConnect",true);Set(pending,"Pending","ROTATE");
+            var groups=(System.Collections.IList)Get(store,"groups");groups.Add(active);groups.Add(blocked);groups.Add(left);groups.Add(pending);string memberToken=(string)Get(active,"MemberToken");Call(store,"SetName","Colour policy fixture");
+            var memberships=File.ReadAllBytes(Path.Combine(profile,"private-groups.dat"));Call(store,"SetMemberColor",seeds[2]);
+            Check(!object.ReferenceEquals(Get(active,"Session"),activeSession)&&((string)Get(Get(active,"Session"),"id")).StartsWith(seeds[2]),"Colour selection reconnects active groups using the selected shared colour");
+            Check(object.ReferenceEquals(Get(blocked,"Session"),blockedSession)&&Get(left,"Session")==null&&Get(pending,"Session")==null,"Colour selection respects host Disconnect, explicit Leave and pending owner operations");
+            Check((string)Get(active,"MemberToken")==memberToken&&(string)Get(active,"Owner")==new string('a',64)&&File.ReadAllBytes(Path.Combine(profile,"private-groups.dat")).SequenceEqual(memberships),"Colour selection preserves stable membership identity, ownership and the membership file");
+        }
+        var direct=asm.GetType("ScumMiniMap.DirectPositions");var privateType=asm.GetType("ScumMiniMap.PrivatePositions");string key=(string)privateType.GetMethod("NewKey",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,null);
+        var probe=new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback,0);probe.Start();int port=((System.Net.IPEndPoint)probe.LocalEndpoint).Port;probe.Stop();
+        using(var sender=(IDisposable)Activator.CreateInstance(direct,F,null,new object[]{true,"",port,key,"Colour sender",false,null,false,null,null,seeds[5],null,null,false},null))
+        using(var receiver=(IDisposable)Activator.CreateInstance(direct,F,null,new object[]{false,"127.0.0.1",port,key,"Colour receiver",false,null,false,null,null,seeds[12],null,null,false},null)) {
+            var squad=Activator.CreateInstance(asm.GetType("ScumMiniMap.SquadState"),F,null,new object[]{null},null);Call(squad,"AddStop","Colour test stop",.4d,.5d);Call(sender,"UpdateMarkers",Call(squad,"Local"));Call(sender,"Update",Get(engine,"position"),DateTime.UtcNow);
+            Await(()=>((Array)Call(receiver,"SnapshotMarkers")).Length==1&&((Array)Call(receiver,"Snapshot")).Length==1);
+            string owner=(string)Get(((Array)Call(receiver,"SnapshotMarkers")).GetValue(0),"OwnerId");string player=(string)Get(((Array)Call(receiver,"Snapshot")).GetValue(0),"Id");
+            Check(owner.StartsWith(seeds[5])&&colour(owner)==colour(player)&&colour(owner)==colour(seeds[5]+new string('0',24)),"Encrypted loopback transport preserves the sender's selected colour for route stops and player arrows");
+        }
+        var placement=(Window)Call(runtime,"BuildMapPlacement");var mode=Children(placement).OfType<ComboBox>().Single(c=>c.Tag as string=="map-placement-mode");mode.SelectedIndex=1;
+        var x=Children(placement).OfType<TextBox>().Single(t=>t.Tag as string=="map-placement-0");var y=Children(placement).OfType<TextBox>().Single(t=>t.Tag as string=="map-placement-1");
+        x.Text="-100";y.Text="-200";var width=Children(placement).OfType<TextBox>().Single(t=>t.Tag as string=="map-placement-2").Text;
+        Children(placement).OfType<Button>().Single(b=>b.Tag as string=="nudge:1:0").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        Children(placement).OfType<Button>().Single(b=>b.Tag as string=="nudge:0:-1").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        Check(x.Text=="-99"&&y.Text=="-201"&&Children(placement).OfType<TextBox>().Single(t=>t.Tag as string=="map-placement-2").Text==width,"Manual coordinate nudges move exactly one pixel on negative coordinates without resizing");
+        mode.SelectedIndex=0;Check(!Children(placement).OfType<StackPanel>().Single(p=>p.Tag as string=="pixel-nudges").IsEnabled,"Automatic fitting disables manual pixel nudges");placement.Close();
+        var native=asm.GetType("ScumMiniMap.Native").GetMethod("ReadWindowBounds",BindingFlags.Static|BindingFlags.NonPublic|BindingFlags.Public);
+        Func<Window,System.Drawing.Rectangle> bounds=w=>(System.Drawing.Rectangle)native.Invoke(null,new object[]{new System.Windows.Interop.WindowInteropHelper(w).Handle});
+        var oldBounds=Get(engine,"WpfMapBounds");var oldManual=Get(engine,"WpfManualMap");
+        try {
+            Set(engine,"WpfManualMap",true);Set(engine,"WpfMapBounds",new System.Drawing.Rectangle(100,120,800,500));
+            var preview=(Window)Call(runtime,"BuildMapMoveEditor");preview.ShowActivated=false;preview.Show();Pump();var before=bounds(preview);
+            Children(preview).OfType<Button>().Single(b=>b.Tag as string=="nudge:1:0").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Children(preview).OfType<Button>().Single(b=>b.Tag as string=="nudge:0:-1").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Pump();var after=bounds(preview);
+            Check(after.X==before.X+1&&after.Y==before.Y-1&&after.Size==before.Size,"Main-map preview nudges use physical pixels and preserve size");
+            Children(preview).OfType<Button>().Single(b=>b.Tag as string=="map-placement-preview-save").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Check((System.Drawing.Rectangle)Get(engine,"WpfMapBounds")==after,"Main-map preview Done commits the nudged physical bounds");
+            preview=(Window)Call(runtime,"BuildMapMoveEditor");preview.ShowActivated=false;preview.Show();Pump();Children(preview).OfType<Button>().Single(b=>b.Tag as string=="nudge:1:0").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));PressKey(preview,Key.Escape);
+            Check((System.Drawing.Rectangle)Get(engine,"WpfMapBounds")==after,"Escape cancels unsaved main-map nudges");
+        }finally {Set(engine,"WpfMapBounds",oldBounds);Set(engine,"WpfManualMap",oldManual);}
+        var hud=(Window)Call(runtime,"BuildHudMoveEditor");hud.ShowActivated=false;hud.Show();Pump();var hudBefore=bounds(hud);
+        Children(hud).OfType<Button>().Single(b=>b.Tag as string=="nudge:-1:0").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Pump();var hudAfter=bounds(hud);
+        Check(hudAfter.X==hudBefore.X-1&&hudAfter.Y==hudBefore.Y&&hudAfter.Size==hudBefore.Size,"Compact HUD preview moves left by exactly one physical pixel");
+        Capture(hud,Path.Combine(folder,"pixel-nudges-hud.png"));hud.Close();
+        var fields=(Window)Call(runtime,"BuildMapPlacement");Children(fields).OfType<ComboBox>().Single(c=>c.Tag as string=="map-placement-mode").SelectedIndex=1;fields.ShowActivated=false;fields.Show();Pump();Capture(fields,Path.Combine(folder,"pixel-nudges-fields.png"));fields.Close();
+    }
+    static void CheckAuditPolish(object runtime,string folder) {
+        var asm=runtime.GetType().Assembly;var engine=Get(runtime,"engine");
+        var storeType=asm.GetType("ScumMiniMap.RelayGroupStore");var memberType=asm.GetType("ScumMiniMap.RelayMembership");
+        string profile=Path.Combine(folder,"polish-groups");bool fail=false;
+        Action<string,byte[]> persist=(file,bytes)=> { if(fail)throw new IOException("Synthetic denied write");File.WriteAllBytes(file,bytes); };
+        Func<object> open=()=>Activator.CreateInstance(storeType,F,null,new object[]{profile,"127.0.0.1",65534,null,persist},null);
+        Func<object> member=()=>memberType.GetMethod("Parse",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{"MM1-"+Guid.NewGuid().ToString("N")+"-"+Convert.ToBase64String(new byte[32]).TrimEnd('=').Replace('+','-').Replace('/','_')});
+        object previous=Get(runtime,"relayGroups");
+        using(var disposable=(IDisposable)open()) {
+            object store=disposable;var groups=(System.Collections.IList)Get(store,"groups");
+            var first=member();var second=member();groups.Add(first);groups.Add(second);Call(store,"SetName","Before polish");
+            byte[] original=File.ReadAllBytes(Path.Combine(profile,"private-groups.dat"));
+            fail=true;bool rejected=false;try { Call(store,"Forget",first); }catch(TargetInvocationException e) { rejected=e.InnerException is IOException; }
+            Check(rejected&&groups.Contains(first)&&groups.Contains(second)&&original.SequenceEqual(File.ReadAllBytes(Path.Combine(profile,"private-groups.dat"))),"Failed local Forget preserves memberships and original encrypted bytes");
+            rejected=false;try {Call(store,"SetName","Unsaved name");}catch(TargetInvocationException){rejected=true;}
+            Check(rejected&&(string)Get(store,"DisplayName")=="Before polish","Failed display-name save restores the previous name");
+            Set(first,"AutoConnect",true);rejected=false;try {Call(store,"Leave",first);}catch(TargetInvocationException){rejected=true;}
+            Check(rejected&&(bool)Get(first,"AutoConnect"),"Failed Leave preserves the automatic rejoin preference");Set(first,"AutoConnect",false);
+            fail=false;Call(store,"Forget",first);Check(groups.Count==1&&groups.Contains(second),"Local Forget removes only the selected membership");
+            using(var reloaded=(IDisposable)open())Check(((System.Collections.IList)Get(reloaded,"groups")).Count==1,"Local Forget survives encrypted profile reload without relay access");
+            Set(second,"Pending","ROTATE");rejected=false;try { Call(store,"Forget",second); }catch(TargetInvocationException){rejected=true;}
+            Check(rejected&&groups.Contains(second),"Pending group operations cannot be forgotten");Set(second,"Pending","");
+            Set(runtime,"relayGroups",store);
+            try {
+                var window=(Window)Call(runtime,"BuildRelayGroups");
+                var name=Children(window).OfType<TextBox>().Single(t=>t.Tag as string=="group-name");
+                Check(System.Windows.Automation.AutomationProperties.GetName(name).Length>0&&Children(window).OfType<PasswordBox>().All(t=>System.Windows.Automation.AutomationProperties.GetName(t).Length>0),"Group name and protected code have programmatic labels");
+                Check(Children(window).OfType<TextBlock>().Any(t=>t.Text=="Disconnected")&&!Children(window).OfType<TextBlock>().Any(t=>t.Tag as string=="group-state:"+(string)Get(second,"Id")&&t.Text=="Leave group"),"Disconnected saved group uses status wording instead of Leave group");
+                name.Text="Name saved alone";Children(window).OfType<Button>().Single(b=>b.Content as string=="Done").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                Check((string)Get(store,"DisplayName")=="Name saved alone","Done saves an isolated display-name edit");
+                using(var reloaded=(IDisposable)open())Check((string)Get(reloaded,"DisplayName")=="Name saved alone","An isolated name edit survives reopening the protected store");
+                Set(second,"Owner",new string('a',64));
+                var localization=asm.GetType("ScumMiniMap.Localization");var language=localization.GetProperty("Current");
+                foreach(int index in new[]{0,3,8,6,14,19}) {
+                    language.SetValue(null,Enum.ToObject(language.PropertyType,index),null);var translated=(Window)Call(runtime,"BuildRelayGroups");translated.Show();Pump();
+                    Check(Children(translated).OfType<Button>().Any(b=>b.Tag as string=="group-forget:"+(string)Get(second,"Id")),"Localized group housekeeping is available: "+index);
+                    Capture(translated,Path.Combine(folder,"polish-groups-"+index+".png"));translated.Close();
+                }
+                language.SetValue(null,Enum.ToObject(language.PropertyType,0),null);
+            }finally {Set(runtime,"relayGroups",previous);}
+        }
+        string presetFile=Path.Combine((string)Get(engine,"dataFolder"),"map-presets.dat");byte[] broken={1,2,3,4,5};File.WriteAllBytes(presetFile,broken);
+        var presets=(Window)Call(runtime,"BuildSquadTools",2);
+        Check(!Children(presets).OfType<Button>().Single(b=>b.Content as string=="Save current map preset").IsEnabled&&Children(presets).OfType<Button>().Any(b=>b.Tag as string=="preset-recover"),"Unreadable presets disable Save and offer explicit recovery");presets.Close();
+        Check(File.ReadAllBytes(presetFile).SequenceEqual(broken),"Opening and closing damaged presets retains the original bytes");
+        var fileType=asm.GetType("ScumMiniMap.MapPresetFile");string backup=(string)fileType.GetMethod("Recover",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{presetFile});
+        Check(File.ReadAllBytes(backup).SequenceEqual(broken)&&((Array)fileType.GetMethod("Load",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{presetFile})).Length==0,"Explicit preset recovery preserves a byte-identical backup and creates an empty readable list");
+        byte[] unsupported=BitConverter.GetBytes(99).Concat(BitConverter.GetBytes(0)).ToArray();File.WriteAllBytes(presetFile,unsupported);bool unsupportedRejected=false;
+        try {fileType.GetMethod("Load",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{presetFile});}catch(TargetInvocationException e){unsupportedRejected=e.InnerException is InvalidDataException;}
+        Check(unsupportedRejected&&File.ReadAllBytes(presetFile).SequenceEqual(unsupported),"Unsupported preset format is rejected without modifying its bytes");
+        bool lockedRejected=false;using(var locked=new FileStream(presetFile,FileMode.Open,FileAccess.Read,FileShare.None)) {
+            try {fileType.GetMethod("Recover",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{presetFile});}catch(TargetInvocationException e){lockedRejected=e.InnerException is IOException;}
+        }
+        Check(lockedRejected&&File.ReadAllBytes(presetFile).SequenceEqual(unsupported),"Failed recovery of a locked preset file preserves the original");
+        fileType.GetMethod("Recover",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,new object[]{presetFile});
+        Set(engine,"autoZoom",true);Call(engine,"WpfApplyPreset",Call(engine,"WpfCapturePreset","Polish"));Check((bool)Get(engine,"autoZoom"),"Applying a map preset preserves enabled automatic zoom");
+        Set(engine,"autoZoom",false);Call(engine,"WpfApplyPreset",Call(engine,"WpfCapturePreset","Polish"));Check(!(bool)Get(engine,"autoZoom"),"Applying a map preset preserves disabled automatic zoom");
+        var settings=(Window)Call(runtime,"BuildSettings",2);settings.Show();Pump();var numeric=Children(settings).OfType<TextBox>().First(t=>t.Resources.Contains("commit-number"));
+        string validNumber=numeric.Text;numeric.Text="not-a-number";
+        bool numericAccepted=(bool)Call(runtime,"ValidateNumericFields",settings);
+        Check(!numericAccepted&&System.Windows.Automation.AutomationProperties.GetItemStatus(numeric).StartsWith("Invalid number"),"Malformed numeric input blocks completion with a text and programmatic error");
+        numeric.Text=validNumber;Check((bool)Call(runtime,"ValidateNumericFields",settings)&&System.Windows.Automation.AutomationProperties.GetItemStatus(numeric)=="","Correcting numeric input clears validation and permits completion");settings.Close();
+        string path=(string)Get(engine,"settingsPath");object oldDiagnostic=Get(engine,"diagnosticMode");string completion=(string)Get(engine,"wpfOnboardingVersion");bool firstLaunch=(bool)Get(engine,"isFirstLaunch");
+        try {
+            Set(engine,"settingsPath",folder);Set(engine,"diagnosticMode",false);
+            Check(!(bool)Call(engine,"WpfSave"),"Settings exposes denied local save as failure");
+            Set(engine,"wpfOnboardingVersion","");Set(engine,"isFirstLaunch",true);
+            Check(!(bool)Call(engine,"WpfCompleteOnboarding")&&(string)Get(engine,"wpfOnboardingVersion")==""&&(bool)Get(engine,"isFirstLaunch"),"Failed setup completion retains the required setup marker for retry");
+        }finally {Set(engine,"settingsPath",path);Set(engine,"diagnosticMode",oldDiagnostic);Set(engine,"wpfOnboardingVersion",completion);Set(engine,"isFirstLaunch",firstLaunch);}
+        var setup=(Window)Call(runtime,"BuildOnboarding",0);setup.Show();Pump();
+        var area=System.Windows.Forms.Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(setup).Handle).WorkingArea;
+        var source=System.Windows.Interop.HwndSource.FromHwnd(new System.Windows.Interop.WindowInteropHelper(setup).Handle);var physical=source.CompositionTarget.TransformToDevice.Transform(new Vector(setup.ActualWidth,setup.ActualHeight));
+        Check(physical.X<=area.Width+2&&physical.Y<=area.Height+2,"Setup initially fits the current monitor work area");Capture(setup,Path.Combine(folder,"polish-setup.png"));setup.Close();
+    }
     static RenderingEventArgs CompositionAt(double seconds) { return (RenderingEventArgs)Activator.CreateInstance(typeof(RenderingEventArgs),BindingFlags.Instance|BindingFlags.NonPublic,null,new object[]{TimeSpan.FromSeconds(seconds)},null); }
     static bool Overlap(Rect[] bounds) { for(int i=0;i<bounds.Length;i++)for(int j=i+1;j<bounds.Length;j++) { var shared=Rect.Intersect(bounds[i],bounds[j]);if(!shared.IsEmpty&&shared.Width>0&&shared.Height>0)return true; }return false; }
     static void Pump() { System.Windows.Forms.Application.DoEvents();System.Threading.Thread.Sleep(20); }
@@ -259,7 +472,7 @@ class SquadUiTests {
         var settings=(Window)Call(runtime,"BuildSettings",2);
         try {
             settings.Show();Pump();
-            var combo=Children(settings).OfType<ComboBox>().First();combo.Focus();combo.IsDropDownOpen=true;Pump();
+            foreach(var section in Children(settings).OfType<Expander>())section.IsExpanded=true;settings.UpdateLayout();var combo=Children(settings).OfType<ComboBox>().First();combo.Focus();combo.IsDropDownOpen=true;Pump();
             PressKey(combo,Key.Escape);
             Check(settings.IsVisible&&!combo.IsDropDownOpen,"First Escape dismisses a settings dropdown and keeps Settings open");
             combo.ApplyTemplate();var outline=(Border)combo.Template.FindName("outline",combo);
@@ -278,14 +491,14 @@ class SquadUiTests {
             Check(!string.IsNullOrWhiteSpace(System.Windows.Automation.AutomationProperties.GetName(auto)),"Automatic launch has an accessible text label");
             Check(auto.Content is TextBlock&&((TextBlock)auto.Content).TextWrapping==TextWrapping.Wrap,"Automatic launch label wraps in narrow settings windows");
             Capture(settings,Path.Combine(folder,"settings-auto-launch.png"));
-            Check(numbers.Length>0&&numbers.All(c=>!string.IsNullOrWhiteSpace(System.Windows.Automation.AutomationProperties.GetName(c))),"Numeric settings expose their existing labels to assistive tools");
-            Check(numbers.All(c=>!string.IsNullOrWhiteSpace(System.Windows.Automation.AutomationProperties.GetHelpText(c))),"Numeric settings expose their valid ranges to assistive tools");
-            bool bindingEditor=false;var editorTimer=new DispatcherTimer {Interval=TimeSpan.FromMilliseconds(100)};
-            editorTimer.Tick+=(s,e)=> {editorTimer.Stop();var editor=Application.Current.Windows.OfType<Window>().Single(w=>w.IsVisible&&w!=settings&&Children(w).OfType<Button>().Any(b=>b.Tag as string=="game-binding-0"));bindingEditor=true;editor.Close();};
-            editorTimer.Start();try {
-                Children(settings).OfType<Button>().Single(b=>b.Content as string=="SCUM and MiniMap key rebinding wizard...").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                Check(bindingEditor,"Rebinding wizard opens the binding editor");
-            }finally {editorTimer.Stop();}
+            Check(numbers.Length==0,"General no longer mixes in tracking and zoom numbers");
+            var nav=Children(settings).OfType<ListBox>().Single(c=>c.Tag as string=="settings-categories");
+            nav.SelectedItem=nav.Items.Cast<ListBoxItem>().Single(c=>c.Tag as string=="settings-category:3");Pump();
+            numbers=Children(settings).OfType<TextBox>().Where(c=>c.Tag as string=="setting-number").ToArray();
+            Check(numbers.Length>0&&numbers.All(c=>!string.IsNullOrWhiteSpace(System.Windows.Automation.AutomationProperties.GetName(c))),"Tracking numbers expose labels to assistive tools in their own category");
+            Check(numbers.All(c=>!string.IsNullOrWhiteSpace(System.Windows.Automation.AutomationProperties.GetHelpText(c))),"Tracking numbers retain their valid-range descriptions");
+            nav.SelectedItem=nav.Items.Cast<ListBoxItem>().Single(c=>c.Tag as string=="settings-category:1");Pump();
+            Check(Children(settings).OfType<Button>().Any(c=>c.Tag as string=="game-binding-0"),"Shortcuts category directly exposes the binding editor without a duplicate wizard window");
         }finally { settings.Close(); }
         settings=(Window)Call(runtime,"BuildSettings",1);
         try {
@@ -505,6 +718,10 @@ class SquadUiTests {
         IDisposable host=null,friend=null;
         try {
             var engine=Get(runtime,"engine");Call(engine,"WpfPreviewPosition","{X=-336602.375 Y=-270302.625 Z=18853.264|P=0 Y=135 R=0}");
+            if(Environment.GetEnvironmentVariable("MINIMAP_SETTINGS_POLISH_ONLY")=="1") {CheckSettingsPolish(runtime,folder);return;}
+            if(Environment.GetEnvironmentVariable("MINIMAP_SETTINGS_AUDIT_ONLY")=="1") {AuditSettings(runtime,folder);return;}
+            if(Environment.GetEnvironmentVariable("MINIMAP_MEMBER_POLISH_ONLY")=="1") {CheckMemberPolish(runtime,folder);return;}
+            if(Environment.GetEnvironmentVariable("MINIMAP_AUDIT_POLISH_ONLY")=="1") {CheckAuditPolish(runtime,folder);return;}
             if(Environment.GetEnvironmentVariable("MINIMAP_DRAG_CADENCE_ONLY")=="1") {CheckDragCadence(runtime,folder);return;}
             if(Environment.GetEnvironmentVariable("MINIMAP_CAMERA_LABELS_ONLY")=="1") {CheckViewportPixels(runtime,folder);return;}
             if(Environment.GetEnvironmentVariable("MINIMAP_CAMERA_PROBE_ONLY")=="1") {CheckCameraInteraction(runtime,folder,Environment.GetEnvironmentVariable("MINIMAP_CAMERA_BASELINE")!="1");return;}
@@ -589,9 +806,9 @@ class SquadUiTests {
             trayAdmin.PerformClick();Pump();
             Check((bool)Get(engine,"adminToolsEnabled")&&((System.Windows.Forms.Form)Get(engine,"adminCommandsPanel")).Visible,"Actual tray Admin commands enables and opens tools from their default disabled state");
             Call(engine,"DismissAdminControls");Call(engine,"SetAdminToolsEnabled",false);
-            var adminSettings=(Window)Call(runtime,"BuildSettings",0);
+            var adminSettings=(Window)Call(runtime,"BuildSettings",5);
             try {
-                Check(Children(adminSettings).OfType<Button>().Any(b=>b.Tag as string=="first-time-guide"),"Settings exposes the first-time setup guide for reopening later");
+                Check(!Children(adminSettings).OfType<Button>().Any(b=>b.Tag as string=="first-time-guide"),"Tools keeps admin controls separate from the setup guide");
                 var adminCheck=Children(adminSettings).OfType<CheckBox>().Single(c=>c.Tag as string=="admin-tools-enabled");
                 Check(adminCheck.IsChecked==false,"WPF Settings shows the actual disabled admin-tools state");
                 var openAdmin=Children(adminSettings).OfType<Button>().Single(b=>b.Tag as string=="open-admin-commands");
@@ -603,7 +820,7 @@ class SquadUiTests {
                 Check(adminCheck.IsChecked==true&&((System.Windows.Forms.Form)Get(engine,"adminCommandsPanel")).Visible,"Settings Open button works again after disabling admin tools");
             }finally { adminSettings.Close();Call(engine,"DismissAdminControls"); }
             trayAdmin.PerformClick();Pump();
-            var modalAdminSettings=(Window)Call(runtime,"BuildSettings",0);
+            var modalAdminSettings=(Window)Call(runtime,"BuildSettings",5);
             modalAdminSettings.ContentRendered+=(s,e)=>Children(modalAdminSettings).OfType<Button>().Single(b=>b.Tag as string=="open-admin-commands").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Call(runtime,"Modal",modalAdminSettings);Pump();
             Check(!modalAdminSettings.IsVisible&&((System.Windows.Forms.Form)Get(engine,"adminCommandsPanel")).Visible&&((System.Windows.Forms.Form)Get(engine,"adminCommandsPanel")).Enabled,"Real modal Settings closes before reopening an enabled interactive admin palette");

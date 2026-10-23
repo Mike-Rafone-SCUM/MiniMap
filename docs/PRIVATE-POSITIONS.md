@@ -66,8 +66,7 @@ Danger, Loot and Pick me up pings expire after 60 seconds; shortcuts start unbou
 Connected groups share a bounded snapshot of up to 128 point markers, including active GPS, saved waypoints, death markers, pings, route stops and group-name metadata from the current map. Recent death markers are prioritised. Custom area
 outlines, built-in POIs and received markers are not exported as your own.
 
-Friends see cyan waypoint diamonds and orange death tombstones, labelled with
-the owner's name. Shared death labels have no elapsed-time text. Hover gives
+Friends see waypoint diamonds and death tombstones in the owner's assigned member colour, labelled with the owner's name. Shared death labels have no elapsed-time text. Hover gives
 marker details; click a shared marker or use Set waypoint to navigate to it.
 Received markers are read-only and are never added to your saved waypoint files.
 You can explicitly save a separate copy using the normal Save waypoint action.
@@ -80,8 +79,10 @@ ends sharing. Your own saved markers remain in your profile.
 
 Settings > Appearance > Cluster nearby POIs turns clustering on or off for both maps. Off shows individual category icons; on groups nearby locations into count badges. The preference is saved and defaults to on.
 
-The active GPS navigation destination is shared automatically even if it has not been saved. Selecting a different destination updates its pin; clearing GPS removes that active-destination pin. The active GPS uses one slot of the 128-marker limit and is prioritised over saved markers. Off-screen shared GPS destinations have a cyan minimap edge arrow and owner label. If the same location is also a saved waypoint, that saved pin remains when GPS is cleared.
+The active GPS navigation destination is shared automatically even if it has not been saved. Selecting a different destination updates its pin; clearing GPS removes that active-destination pin. The active GPS uses one slot of the 128-marker limit and is prioritised over saved markers. Off-screen shared GPS destinations have a member-coloured minimap edge arrow and owner label. If the same location is also a saved waypoint, that saved pin remains when GPS is cleared.
 
 The big-map sidebar lists connected and remembered offline members, including players without current coordinates. Each player has separate visibility pills for live location, active GPS waypoint, saved locations death markers and routes. These session-only controls apply to both maps and do not change outgoing sharing. All five start enabled; players with the same name retain separate controls. Connection cards show status and the age of the last captured position.
 
 Current clients reduce repeated encrypted route/marker traffic while retaining regular full refreshes. Mixing older clients automatically selects the compatible full-snapshot mode. Position updates, marker removals and end-to-end encryption are preserved.
+
+Local Forget removes only the selected saved membership on this PC. It never sends a relay deletion request. Owner controls are permanently lost if an owned membership is forgotten; keep the invite code first. Pending owner operations must be resolved first. Code replacement requires confirmation; clipboard failure can be retried on the same group. Your name is saved with Done or its explicit save control and applies to existing sessions after reconnecting.

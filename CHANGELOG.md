@@ -6,6 +6,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.3.24] - 2026-10-23
+
+### Settings and precise placement
+
+- Settings now has six task categories: General, Appearance, Tracking and voice, Shortcuts, Groups and routes, Tools and data. Related options stay together, secondary sections collapse, and only Done remains in the footer. Existing settings and key bindings are retained.
+- Position the main map and compact minimap using one-physical-screen-pixel arrow controls. Main-map manual fields also have arrows. Done saves preview movement; Escape cancels it. Automatic fitting retains its established behaviour.
+
+### Shared member colours
+
+- Each member can choose one of 16 shared colours in Private positions. Their player arrow, routes and ordinary shared markers use that colour in all their code-based groups. The Windows-protected choice survives restart and renders consistently in v2.3.21–v2.3.23 clients too. Members may choose the same colour; colours are not reserved automatically. Danger/death warning colours remain distinct where already applied.
+- Changing colour briefly reconnects eligible active groups without changing saved memberships, ownership or codes. Leave and host Disconnect are respected. A teammate following the previous identity may need to select Follow teammate again.
+
+### Recovery and feedback
+
+- Unreadable presets block Save until explicit backup/reset. Recovery retains a byte-identical adjacent backup before resetting; failed preset edits restore the previous in-memory list.
+- Forget on this PC removes only the selected local saved group, frees its slot and never deletes the relay group. Owned groups have a permanent owner-control-loss warning; pending operations must be resolved first. Code replacement asks for confirmation. Copy reports success or a retryable clipboard failure.
+- Your name has an explicit Save name action; Done also saves isolated edits. Failed name/Leave persistence retains the previous stored state. Disconnected cards use status wording instead of Leave group.
+- Settings/setup Done stays open when a save fails. Invalid numbers show text/range errors and block category changes. Ordinary tools initially fit the monitor work area. Presets preserve automatic zoom. Route help explains owner colours, group visibility and session-only stops. Group fields/actions have accessible names; route text respects Windows reduced motion and exposes full detail.
+
+### Installation, validation and limits
+
+- Download and extract the complete application ZIP with matching assets. Existing preferences/keys remain; the mandatory five-page setup still appears after this version update. No relay deployment or protocol change is required.
+- New copy is authored in all 20 app languages, including Finnish. The current guide and repeatable exact-package validation command are updated. Native-language approval, real-game, mixed-DPI, Narrator/high-contrast and OBS acceptance remain pending; local synthetic checks are not certification.
+- Settings and its separate version sidecar are not one atomic transaction; a sidecar failure may follow a successful primary save. Large roster/zone-list redesign and persistent routes are deferred. Route stops and pings remain session-local. Nothing in this release changes relay capacity, traffic budget, notification preferences or earlier DM history.
+
+### Detailed implementation notes
+
+- Organize WPF Settings into six task categories, move positioning/data actions into their relevant pages, keep only Done in the footer, and group secondary options into collapsible sections. Validate numeric edits before category changes.
+
+- Add one-physical-pixel positioning arrows for the main map and compact HUD, plus 16 persistent shared member-colour choices for routes and markers.
+
+- Preserve unreadable map presets until an explicit backup/reset, and keep failed preset edits consistent with the saved list.
+- Add local Forget group with owner-loss warning, confirm code replacement, acknowledge clipboard results, save isolated name edits, and label disconnected groups correctly.
+- Fit ordinary tools to the initial work area, retain Settings/setup on save failure, and explain invalid numeric fields in text.
+- Preserve automatic zoom when applying presets; correct route-owner/visibility/session guidance; add accessible group labels and respect reduced motion for route text.
+- Update the current WPF guide and add repeatable exact-package validation. Remaining manual acceptance and known limitations are in `docs/WPF-MAJOR-RELEASE-WORKLOG.md`.
+
 ## [2.3.23] - 2026-10-23
 
 - Retry dropped private-group connections quickly, then use progressively longer randomized delays. Explicit Leave and host Disconnect retain their existing behavior.

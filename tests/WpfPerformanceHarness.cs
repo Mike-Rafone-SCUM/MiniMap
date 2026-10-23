@@ -518,7 +518,7 @@ var movedGps=Call(activeGpsFixture,"Clone");movedGps.GetType().GetField("Name").
    Call(engine,"WpfRotate",true);Check((bool)Field(Call(engine,"WpfSnapshot",false),"RotateMap"),"Rotation setting reaches the compact map snapshot");Call(engine,"WpfRotate",false);
    var editingText=type.GetMethod("EditingText",BindingFlags.Static|BindingFlags.NonPublic);
    Check((bool)editingText.Invoke(null,new object[]{new PasswordBox()})&&(bool)editingText.Invoke(null,new object[]{new TextBox()})&&!(bool)editingText.Invoke(null,new object[]{new Button()}),"Group key and name entry suppress map shortcuts while normal buttons retain them");
-   var parentSettings=(Window)Call(runtime,"BuildSettings",0);
+   var parentSettings=(Window)Call(runtime,"BuildSettings",4);
    System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(new Action(()=> {
     System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(new Action(()=> {
      var stack=((System.Collections.IEnumerable)Field(runtime,"dialogs")).Cast<Window>().ToArray();
@@ -552,13 +552,19 @@ var movedGps=Call(activeGpsFixture,"Clone");movedGps.GetType().GetField("Name").
    var tickerWindow=new Window { Width=180,Height=60,WindowStyle=WindowStyle.None,ShowActivated=false,Left=-32000,Top=-32000,Content=ticker };
    try {
     tickerText.SetValue(ticker,"→ A3 Abandoned Bunker · 6.6 km (road) · about 8 minutes",null);tickerWindow.Show();tickerWindow.UpdateLayout();System.Windows.Forms.Application.DoEvents();
-    var tickerScroll=(TranslateTransform)Field(ticker,"scroll");Check(ticker.HasAnimatedProperties&&(double)tickerType.GetProperty("Overflow",Hidden).GetValue(ticker,null)>0,"Long satnav route text starts an overflow ticker rather than truncating its details");
+    var tickerScroll=(TranslateTransform)Field(ticker,"scroll");Check((double)tickerType.GetProperty("Overflow",Hidden).GetValue(ticker,null)>0,"Long satnav fixture exceeds its available width");
+    if(SystemParameters.ClientAreaAnimation) {
+    Check(ticker.HasAnimatedProperties,"Long satnav route text animates when Windows permits client animation");
     var tickerDeadline=DateTime.UtcNow.AddMilliseconds(1400);while(DateTime.UtcNow<tickerDeadline) { System.Windows.Forms.Application.DoEvents();System.Threading.Thread.Sleep(10); }
     Check(tickerScroll.X<0,"Satnav ticker scrolls after pausing at the start");double beforeTick=tickerScroll.X;tickerText.SetValue(ticker,(string)tickerText.GetValue(ticker,null),null);Check(tickerScroll.X<=beforeTick,"Unchanged route refreshes preserve ticker progress");
     tickerText.SetValue(ticker,"→ A3 Abandoned Bunker · 6.5 km (road) · about 7 minutes",null);Check(ticker.HasAnimatedProperties&&tickerScroll.X<0,"Coordinate-driven distance updates preserve ticker progress instead of restarting the initial pause");
+    }else {
+     Check(!ticker.HasAnimatedProperties&&tickerScroll.X==0,"Windows reduced-motion preference keeps overflowing route text static");
+    }
+    Check((string)ticker.ToolTip==(string)tickerText.GetValue(ticker,null)&&System.Windows.Automation.AutomationProperties.GetName(ticker)==(string)tickerText.GetValue(ticker,null),"Full satnav detail remains available through tooltip and programmatic name");
     tickerText.SetValue(ticker,"→ D4 · 80 m",null);Check(!ticker.HasAnimatedProperties&&tickerScroll.X==0,"Short route text stays still and resets the previous scroll offset");
    }finally { tickerWindow.Close(); }
-   var generalSettings=(Window)Call(runtime,"BuildSettings",0);Check(Children(generalSettings).OfType<Button>().Any(b=>(b.Content as string)=="Move minimap"),"Settings exposes the minimap positioning action");generalSettings.Close();
+   var generalSettings=(Window)Call(runtime,"BuildSettings",2);Check(Children(generalSettings).OfType<Button>().Any(b=>(b.Content as string)=="Move minimap"),"Settings exposes the minimap positioning action");generalSettings.Close();
    var moveEditor=(Window)Call(runtime,"BuildHudMoveEditor");moveEditor.Left=-31900;moveEditor.Top=-31800;
    var editorHandle=new System.Windows.Interop.WindowInteropHelper(moveEditor).EnsureHandle();var expectedHudLocation=System.Windows.Interop.HwndSource.FromHwnd(editorHandle).CompositionTarget.TransformToDevice.Transform(new Point(moveEditor.Left,moveEditor.Top+28));
    Children(moveEditor).OfType<Button>().Single(b=>(b.Content as string)=="Done").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));

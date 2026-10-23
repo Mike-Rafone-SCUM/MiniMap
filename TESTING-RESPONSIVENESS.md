@@ -1,3 +1,17 @@
+## Current local Test: pixel positioning and member colours
+
+Extract the full Test ZIP, exit another MiniMap instance, and launch `Start-Transparent-Tac-Test.cmd`. Test updates are disabled and this does not publish or replace the production release.
+
+- Open Settings → Appearance → Positioning → Main map position and size → Manual position and size. The arrow buttons adjust X/Y by one screen pixel; Done saves the fields. Move and resize preview also has arrows: Done commits its position/size; Escape cancels.
+- Open Move minimap for the compact HUD. Its arrows move the preview by one physical screen pixel, including on scaled displays. Done saves; Escape cancels.
+- Open Settings → Groups and routes → Private positions and select a colour under Your shared member colour. The 16 choices use the existing shared identity format, so teammates see your selected colour for your player arrow, routes and markers. The choice is Windows-protected and retained after restart. All your code-based private groups use the same personal colour. Other members choose their own; choosing the same colour is allowed.
+- Settings has six categories: General, Appearance, Tracking and voice, Shortcuts, Groups and routes, and Tools and data. Positioning belongs to Appearance; Data Folder and admin controls belong to Tools. Secondary sections collapse, and only Done remains in the footer. Use Ctrl+Tab to cycle categories. Invalid numeric fields must be corrected before switching category, even if their section is collapsed.
+- Changing colour briefly reconnects active groups. Saved membership/ownership stays intact; manually left and host-disconnected groups are not reconnected by this action. After a teammate changes colour, a viewer following their old identity may need to select Follow teammate again.
+
+Use the current README and major-release worklog for known limits and exact-candidate evidence. Native-language approval, mixed-DPI hardware and a live-game session remain separate acceptance.
+
+> **Historical record below:** The retained experiments describe older packages; old Host/Join, timed holds and restart claims are not current acceptance instructions.
+
 # SCUM MiniMap input and voice navigation test
 
 ## Main map position and size (22 October 2026)

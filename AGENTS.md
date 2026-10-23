@@ -10,3 +10,5 @@ Tests use fabricated reports and isolated temporary data. Preserve input ownersh
 Private memberships remember active groups across restarts. Preserve DPAPI legacy-profile compatibility, encrypted offline labels, fresh packet replay identities and stable member colours. Explicit Leave disables automatic rejoining; host Disconnect affects only the current connection. Keep group registry and traffic budget independent.
 
 Registry mutations must await the serialized durable worker before acknowledgement. Fatal storage errors must exit as failure. GROUP4 compact frames are negotiated and must never reach legacy peers; preserve full-refresh and marker-removal behavior. Private health data must contain no player or group identifiers. Keep existing traffic and connection limits.
+
+Settings has six task categories; keep numeric validation before navigation. Position previews move by physical screen pixels. Shared member colours must remain compatible with legacy member-ID hashing, preserve DPAPI memberships/ownership and respect Leave/Disconnect. Preserve unreadable presets until explicit backup/reset; failed edits must retain saved state.

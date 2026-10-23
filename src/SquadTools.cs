@@ -18,7 +18,7 @@ namespace ScumMiniMap {
             if(scumMap!=null) { scumMap.MasterEnabled=p.Poi;scumMap.ApplyDisabledCategoriesString(p.Categories); }
             disabledZoneLayers.Clear();foreach(string s in p.ZoneLayers.Split(';').Where(s=>s.Length>0))disabledZoneLayers.Add(s);
             disabledWpfZones.Clear();foreach(string s in p.Zones.Split(';').Where(s=>s.Length>0))disabledWpfZones.Add(s);
-            fullMapOpacity=p.TacticalOpacity;fullMapZoom=Math.Max(1,Math.Min(maxZoom,p.TacticalZoom));wpfRotateMap=p.Rotate;wpfPoiClustering=p.Cluster;mapOpacity=p.Opacity;autoZoom=false;zoom=targetZoom=Math.Max(1,Math.Min(maxZoom,p.Zoom));SettingsChanged();SaveSettings();WpfRebuildSettings();return true;
+            fullMapOpacity=p.TacticalOpacity;fullMapZoom=Math.Max(1,Math.Min(maxZoom,p.TacticalZoom));wpfRotateMap=p.Rotate;wpfPoiClustering=p.Cluster;mapOpacity=p.Opacity;zoom=targetZoom=Math.Max(1,Math.Min(maxZoom,p.Zoom));SettingsChanged();SaveSettings();WpfRebuildSettings();return true;
         }
     }
     internal sealed partial class WpfFieldConsoleRuntime {
@@ -50,8 +50,7 @@ namespace ScumMiniMap {
             var now=DateTime.UtcNow;
             var current=(privatePositions==null?new PrivatePositions.Peer[0]:privatePositions.Roster()).Concat(relayGroups==null?new PrivatePositions.Peer[0]:relayGroups.Roster()).ToArray();
             foreach(var p in current) { PrivatePositions.Peer previous;if(p.Position==null)p.Updated=knownPlayers.TryGetValue(p.Id,out previous)?previous.Updated:DateTime.MinValue;knownPlayers[p.Id]=p;if(p.Online)playerSeen[p.Id]=now;else playerSeen.Remove(p.Id); }
-            var groupIds=relayGroups==null?new string[0]:relayGroups.Groups.Select(g=>g.Id+":").ToArray();
-            foreach(string id in knownPlayers.Keys.Where(id=>groupIds.Any(prefix=>id.StartsWith(prefix,StringComparison.Ordinal))&&!current.Any(p=>p.Id==id)).ToArray()) { knownPlayers.Remove(id);playerSeen.Remove(id); }
+            foreach(string id in knownPlayers.Keys.Where(id=>id.Contains(":")&&!current.Any(p=>p.Id==id)).ToArray()) { knownPlayers.Remove(id);playerSeen.Remove(id); }
             foreach(string id in playerSeen.Where(p=>now-p.Value>TimeSpan.FromMinutes(5)).Select(p=>p.Key).ToArray()) { playerSeen.Remove(id);knownPlayers.Remove(id); }
             playerRoster=knownPlayers.Values.OrderBy(p=>p.Name,StringComparer.CurrentCultureIgnoreCase).Select(p=>new PrivatePositions.Peer { Id=p.Id,Name=p.Name,Updated=p.Updated,Position=current.Any(c=>c.Id==p.Id)?p.Position:null }).ToArray();
             SyncSelectedSharedRoute();
@@ -129,12 +128,22 @@ namespace ScumMiniMap {
             body=pages[2];
             body.Children.Add(WpfFieldTheme.Text(S("SquadPresets"),19,null,true));
             string file=Path.Combine(engine.WpfDataFolder,"map-presets.dat");var presets=new List<MapPreset>();
-            try { presets.AddRange(MapPresetFile.Load(file)); }catch(Exception e) { Program.LogException("MapPresets",e);body.Children.Add(WpfFieldTheme.Text(S("PrivatePositionInvalid"))); }
+            bool presetReadable=true;
+            var presetStatus=WpfFieldTheme.Text("",13,WpfFieldTheme.Amber);presetStatus.TextWrapping=TextWrapping.Wrap;body.Children.Add(presetStatus);
+            try { presets.AddRange(MapPresetFile.Load(file)); }catch(Exception e) { presetReadable=false;Program.LogException("MapPresets",e);presetStatus.Text=S("PresetReadFailed"); }
             var presetName=new TextBox { MaxLength=64,Text=S("SquadLooting"),Margin=new Thickness(0,8,0,8) };System.Windows.Automation.AutomationProperties.SetName(presetName,S("SquadPresets"));body.Children.Add(presetName);
             var names=new WrapPanel();foreach(string key in new[]{"SquadLooting","SquadDriving","SquadExploring"}) { string n=S(key);names.Children.Add(WpfFieldTheme.Button(n,()=>presetName.Text=n)); }body.Children.Add(names);
-            var saved=new StackPanel();Action showSaved=null;Action save=()=> { try { MapPresetFile.Save(file,presets);showSaved(); }catch(Exception e) { Program.LogException("MapPresetsSave",e);System.Windows.MessageBox.Show(S("PrivatePositionInvalid")); } };
-            showSaved=()=> { saved.Children.Clear();foreach(var p in presets.ToArray()) { var row=new WrapPanel();row.Children.Add(WpfFieldTheme.Button(p.Name,()=> { if(engine.WpfApplyPreset(p)) { filterIdentity=null;Refresh(); } }));row.Children.Add(WpfFieldTheme.Button(S("SquadDelete"),()=> { presets.Remove(p);save(); }));saved.Children.Add(row); } };
-            body.Children.Add(WpfFieldTheme.Button(S("SquadSavePreset"),()=> { string name=presetName.Text.Trim();if(name.Length==0)return;var p=engine.WpfCapturePreset(name);presets.RemoveAll(v=>v.Name==name&&v.Map==p.Map);if(presets.Count>=24)return;presets.Add(p);save(); }));body.Children.Add(saved);showSaved();select(Math.Max(0,Math.Min(2,initial)));return window;
+            var saved=new StackPanel();Action showSaved=null;Action save=()=> { try { MapPresetFile.Save(file,presets);presetStatus.Text="";showSaved(); }catch(Exception e) { Program.LogException("MapPresetsSave",e);presetStatus.Text=S("LocalSaveFailed");throw; } };
+            showSaved=()=> { saved.Children.Clear();foreach(var p in presets.ToArray()) { var row=new WrapPanel();row.Children.Add(WpfFieldTheme.Button(p.Name,()=> { if(engine.WpfApplyPreset(p)) { filterIdentity=null;Refresh(); } }));row.Children.Add(WpfFieldTheme.Button(S("SquadDelete"),()=> { int index=presets.IndexOf(p);presets.RemoveAt(index);try { save(); }catch { presets.Insert(index,p); } }));saved.Children.Add(row); } };
+            var savePreset=WpfFieldTheme.Button(S("SquadSavePreset"),()=> { if(!presetReadable)return;string name=presetName.Text.Trim();if(name.Length==0)return;var previous=presets.ToArray();var p=engine.WpfCapturePreset(name);presets.RemoveAll(v=>v.Name==name&&v.Map==p.Map);if(presets.Count>=24) { presets.Clear();presets.AddRange(previous);return; }presets.Add(p);try { save(); }catch { presets.Clear();presets.AddRange(previous); } });savePreset.IsEnabled=presetReadable;body.Children.Add(savePreset);
+            if(!presetReadable) {
+                Button recover=null;recover=WpfFieldTheme.Button(S("PresetRecover"),()=> {
+                    if(MessageBox.Show(window,S("PresetReadFailed"),S("PresetRecover"),MessageBoxButton.OKCancel,MessageBoxImage.Warning,MessageBoxResult.Cancel)!=MessageBoxResult.OK)return;
+                    try { string backup=MapPresetFile.Recover(file);presetReadable=true;savePreset.IsEnabled=true;recover.IsEnabled=false;presetStatus.Text=S("PresetRecover")+": "+backup; }
+                    catch(Exception e) { Program.LogException("MapPresetsRecover",e);presetStatus.Text=S("LocalSaveFailed"); }
+                });recover.Tag="preset-recover";body.Children.Add(recover);
+            }
+            body.Children.Add(saved);showSaved();select(Math.Max(0,Math.Min(2,initial)));return window;
         }
     }
 }

@@ -12,7 +12,7 @@ permissions:
 jobs:
   build:
     runs-on: windows-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Build and validate release package
@@ -25,9 +25,9 @@ jobs:
       - name: Verify viewport streaming against the packaged executable
         shell: powershell
         run: .\tests\Test-MapStreaming.ps1 -Executable release/ci/SkynettMiniMap.exe -OutputDirectory release/streaming-checks
-      - name: Verify locked opacity and setup window ordering
+      - name: Verify exact-package UI, recovery, colours, settings and setup
         shell: powershell
-        run: .\tests\Test-OpacitySetup.ps1 -Executable release/ci/SkynettMiniMap.exe -OutputDirectory release/opacity-setup-checks
+        run: .\scripts\Test-WpfCandidate.ps1 -Executable release/ci/SkynettMiniMap.exe -EvidenceDirectory release/candidate-checks
       - uses: actions/upload-artifact@v7.0.1
         with:
           name: MiniMap-validated-package

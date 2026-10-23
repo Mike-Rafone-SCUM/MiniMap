@@ -1,4 +1,4 @@
-﻿# MiniMap development workflow
+# MiniMap development workflow
 
 `ScumMiniMap-Dev` is the canonical local project. The sibling server, companion bot and native bridge are independent projects.
 
@@ -191,3 +191,13 @@ Building does not authorize GitHub or Discord publication. CI validates/builds p
 ```
 
 Run cleanup after builds have finished. Only known generated test, check, staging and benchmark directories are removed. The current published release, source, resources and local application profile are retained. Do not store hand-written code in generated directories.
+
+## Exact WPF candidate acceptance
+
+Build into a fresh output directory with `Build.ps1 -Configuration Test -OutputDirectory release/tests/<candidate>`. Published outputs remain immutable. After a successful canonical build:
+
+```powershell
+./scripts/Test-WpfCandidate.ps1 -Executable E:/path/to/candidate/SkynettMiniMap-Test.exe -EvidenceDirectory E:/path/to/fresh-evidence
+```
+
+The explicit executable is required. Package, audit-polish, member/pixel, Settings structure, full UI, WPF and opacity/setup checks run serially in fresh Windows PowerShell STA processes. Each exit code and full log is retained in the new evidence directory, with the executable SHA-256. A failure stops subsequent checks and retains its record. Do not run another desktop fixture concurrently. Shared build checks use synthetic/local fixtures; this command does not select public-relay integration. Real-game, Narrator, high contrast, mixed-DPI/disconnected-monitor and OBS acceptance are separate manual checks, recorded as pending. The known-good public baseline is v2.3.23; see the worklog for candidate evidence. No GitHub push is authorized by building or validation.

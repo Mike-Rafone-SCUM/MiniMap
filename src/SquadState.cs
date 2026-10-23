@@ -69,6 +69,12 @@ namespace ScumMiniMap {
         internal float TacticalZoom=1;
     }
     internal static class MapPresetFile {
+        internal static string Recover(string file) {
+            // Copy first. If either copy or atomic reset fails, the original remains recoverable.
+            string backup=file+".recovery-"+DateTime.UtcNow.ToString("yyyyMMdd-HHmmss")+"-"+Guid.NewGuid().ToString("N")+".bak";
+            File.Copy(file,backup,false);
+            Save(file,new MapPreset[0]);return backup;
+        }
         internal static MapPreset[] Load(string file) {
             if(!File.Exists(file))return new MapPreset[0];if(new FileInfo(file).Length>262144)throw new InvalidDataException();
             using(var r=new BinaryReader(File.OpenRead(file),Encoding.UTF8)) {

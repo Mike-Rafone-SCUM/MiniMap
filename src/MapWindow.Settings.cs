@@ -522,11 +522,11 @@ namespace ScumMiniMap {
 
 
 
-        void SaveSettings() {
+        bool SaveSettings() {
 
 
 
-            if(diagnosticMode)return;
+            if(diagnosticMode)return true;
 
 
 
@@ -561,10 +561,10 @@ namespace ScumMiniMap {
 
 
 
-            catch(IOException) { note=Localization.Get("NoteSettingsSaveFail"); } catch(UnauthorizedAccessException) { note=Localization.Get("NoteSettingsSaveFail"); }
+            catch(IOException) { note=Localization.Get("NoteSettingsSaveFail");return false; } catch(UnauthorizedAccessException) { note=Localization.Get("NoteSettingsSaveFail");return false; }
 
 
-
+            return true;
         }
 
 

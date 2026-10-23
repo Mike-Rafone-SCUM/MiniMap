@@ -221,7 +221,7 @@ namespace ScumMiniMap {
         internal bool WpfHideOnboardingGuide { get { return hideOnboardingGuide; } }
         internal void WpfSetHideOnboardingGuide(bool hide) { hideOnboardingGuide=hide;SaveSettings(); }
         internal bool WpfNeedsOnboarding { get { return isFirstLaunch || wpfOnboardingVersion!=VersionString; } }
-        internal void WpfCompleteOnboarding() { wpfOnboardingVersion=VersionString;isFirstLaunch=false;SaveSettings(); }
+        internal bool WpfCompleteOnboarding() { string previous=wpfOnboardingVersion;bool first=isFirstLaunch;wpfOnboardingVersion=VersionString;isFirstLaunch=false;if(SaveSettings())return true;wpfOnboardingVersion=previous;isFirstLaunch=first;return false; }
         internal void WpfPreviewPosition(string value) { if(!diagnosticMode)throw new InvalidOperationException("Preview requires diagnostic mode.");Accept(value);zoom=targetZoom=4f;autoZoom=false; }
         internal void WpfTactical(bool active) { fullMapActive=active;Native.CancelActiveCopy();inputGeneration++;fallbackKeysArmed=false; }
         internal void WpfZoom(bool tactical,int direction) {
@@ -247,7 +247,7 @@ namespace ScumMiniMap {
         internal bool WpfManualMap;
         internal Rectangle WpfMapBounds;
         internal void WpfPlaceMap(bool manual,Rectangle bounds) { WpfVerifyAccess();WpfManualMap=manual;WpfMapBounds=bounds;SaveSettings(); }
-        internal void WpfSave() { SaveSettings(); }
+        internal bool WpfSave() { return SaveSettings(); }
         internal void WpfScheduleSave() { WpfVerifyAccess();saveAfter=DateTime.UtcNow.AddMilliseconds(700); }
         internal void WpfMoveHud(int left,int top) { overlay.SetMinimapLocation(new Point(left,top));SettingsChanged();SaveSettings(); }
         internal bool WpfDeleteWaypoint(MapZone marker) {

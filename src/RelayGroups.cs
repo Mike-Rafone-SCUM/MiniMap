@@ -7,6 +7,8 @@ using System.Security.Cryptography;
 using System.Threading;
 
 namespace ScumMiniMap {
+    internal sealed class RelayStorageException:IOException { internal RelayStorageException(Exception error):base("Private group storage failed",error) {} }
+    internal sealed class RelayGroupLimitException:InvalidOperationException {}
     internal sealed class RelayMembership {
         internal string Id,Key,Owner,Pending,Name,NameStamp="";
         internal DirectPositions Session;
@@ -37,7 +39,20 @@ namespace ScumMiniMap {
         internal string PersistenceError { get { return persistenceError; } }
         readonly List<RelayMembership> groups=new List<RelayMembership>();bool disposed;
         internal string DisplayName;
-        internal readonly string MemberColorSeed;
+        internal string MemberColorSeed;
+        internal void SetMemberColor(string seed) {
+            if(seed==null||seed.Length!=8||!seed.All(Uri.IsHexDigit))throw new ArgumentException();
+            lock(operations) {
+                lock(gate)if(disposed)throw new ObjectDisposedException("RelayGroupStore");
+                try { persist(Path.Combine(Path.GetDirectoryName(file),"private-member-color.dat"),Protect(Encoding.UTF8.GetBytes(seed.ToLowerInvariant()),true)); }
+                catch(Exception error) { throw new RelayStorageException(error); }
+                lock(gate) {
+                    MemberColorSeed=seed.ToLowerInvariant();
+                    // A colour choice must not override Leave or host Disconnect.
+                    foreach(var group in groups.Where(g=>g.AutoConnect&&g.Pending==""&&g.Session!=null&&!g.Session.ReconnectBlocked))OpenSession(group);
+                }
+            }
+        }
         internal RelayGroupStore(string directory,string address=null,int port=0,string certificate=null,Action<string,byte[]> persist=null) {
             this.persist=persist??WriteProtectedFile;
             file=Path.Combine(directory,"private-groups.dat");this.address=address??DirectPositions.RelayAddress;this.port=port==0?DirectPositions.RelayPort:port;this.certificate=certificate??DirectPositions.RelayCertificate;
@@ -74,10 +89,13 @@ namespace ScumMiniMap {
             return (byte[])type.GetMethod(encrypt?"Protect":"Unprotect").Invoke(null,new object[]{bytes,Encoding.UTF8.GetBytes("SCUM MiniMap private groups v1"),Enum.ToObject(scope,0)});
         }
         static void ValidateName(string name) { if(string.IsNullOrWhiteSpace(name)||name.Length>32||name.Any(char.IsControl))throw new ArgumentException(); }
-        void Save() {
-            string text;int revision;lock(gate) { text="3\n"+Base(DisplayName)+"\n"+string.Join("\n",groups.Select(g=>g.Code+"\t"+g.Owner+"\t"+g.Pending+"\t"+Base(g.Name)+"\t"+g.NameStamp+"\t1\t"+g.MemberToken+"\t"+(g.AutoConnect?"1":"0")));revision=nameRevision; }
-            byte[] plain=Encoding.UTF8.GetBytes(text);byte[] encrypted;try { encrypted=Protect(plain,true); }finally { Array.Clear(plain,0,plain.Length); }
-            persist(file,encrypted);lock(gate)savedNameRevision=Math.Max(savedNameRevision,revision);persistenceError=null;
+        void Save() { PersistGroups(null); }
+        void PersistGroups(RelayMembership excluded) {
+            string text;int revision;lock(gate) { text="3\n"+Base(DisplayName)+"\n"+string.Join("\n",groups.Where(g=>g!=excluded).Select(g=>g.Code+"\t"+g.Owner+"\t"+g.Pending+"\t"+Base(g.Name)+"\t"+g.NameStamp+"\t1\t"+g.MemberToken+"\t"+(g.AutoConnect?"1":"0")));revision=nameRevision; }
+            try {
+                byte[] plain=Encoding.UTF8.GetBytes(text);byte[] encrypted;try { encrypted=Protect(plain,true); }finally { Array.Clear(plain,0,plain.Length); }
+                persist(file,encrypted);lock(gate)savedNameRevision=Math.Max(savedNameRevision,revision);persistenceError=null;
+            }catch(Exception error) { throw new RelayStorageException(error); }
         }
         static void WriteProtectedFile(string file,byte[] encrypted) {
             Directory.CreateDirectory(Path.GetDirectoryName(file));
@@ -92,17 +110,32 @@ namespace ScumMiniMap {
         internal View[] GroupViews { get { lock(gate)return groups.Select(g=>new View(g)).ToArray(); } }
         internal bool Connected(RelayMembership group) { lock(gate)return group.Session!=null&&group.Session.Error==null; }
         internal DirectPositions[] Sessions { get { lock(gate)return groups.Where(g=>g.Session!=null).Select(g=>g.Session).ToArray(); } }
-        internal void SetName(string name) { ValidateName(name);lock(operations) { lock(gate) { if(disposed)throw new ObjectDisposedException("RelayGroupStore");DisplayName=name.Trim(); }Save(); } }
+        internal void SetName(string name) { ValidateName(name);lock(operations) { string previous;lock(gate) { if(disposed)throw new ObjectDisposedException("RelayGroupStore");previous=DisplayName;DisplayName=name.Trim(); }try { Save(); }catch { lock(gate)DisplayName=previous;throw; } } }
+        // Local housekeeping only: never sends an owner DELETE to the relay.
+        // Persist the proposed list before removing anything; keep UI reads nonblocking during I/O.
+        internal void Forget(RelayMembership group) {
+            lock(operations) {
+                lock(gate) {
+                    if(disposed||!groups.Contains(group)||group.Pending!="")throw new InvalidOperationException();
+                }
+                PersistGroups(group);
+                lock(gate) {
+                    groups.Remove(group);
+                    if(group.Session!=null)group.Session.Dispose();group.Session=null;
+                }
+                CloseMemberManagement(group);
+            }
+        }
         internal RelayMembership Create(string name="") {
             var group=new RelayMembership { Id=Guid.NewGuid().ToString("N"),Key=PrivatePositions.NewKey(),Owner=BitConverter.ToString(Convert.FromBase64String(PrivatePositions.NewKey())).Replace("-","").ToLowerInvariant(),Pending="CREATE",Name="",AutoConnect=true };
             if(!string.IsNullOrWhiteSpace(name))group.Rename(name);
-            lock(operations) { lock(gate) { if(disposed||groups.Count>=16)throw new InvalidOperationException();groups.Add(group); }Save();Complete(group);return group; }
+            lock(operations) { lock(gate) { if(disposed)throw new ObjectDisposedException("RelayGroupStore");if(groups.Count>=16)throw new RelayGroupLimitException();groups.Add(group); }Save();Complete(group);return group; }
         }
         internal RelayMembership Join(string code) {
             var parsed=RelayMembership.Parse(code);RelayMembership group;
             lock(operations) { lock(gate) {
                 if(disposed)throw new ObjectDisposedException("RelayGroupStore");group=groups.FirstOrDefault(g=>g.Id==parsed.Id);
-                if(group==null) { if(groups.Count>=16)throw new InvalidOperationException();groups.Add(parsed);group=parsed; }
+                if(group==null) { if(groups.Count>=16)throw new RelayGroupLimitException();groups.Add(parsed);group=parsed; }
                 else if(group.Key!=parsed.Key) { if(group.Pending!="")throw new InvalidOperationException();if(group.Session!=null)group.Session.Dispose();group.Session=null;group.Key=parsed.Key; }
             }Save();Connect(group);return group; }
         }
@@ -120,8 +153,10 @@ namespace ScumMiniMap {
         }
         internal void Leave(RelayMembership group) {
             lock(operations) {
-                lock(gate) { if(disposed||!groups.Contains(group))throw new InvalidOperationException();group.AutoConnect=false;if(group.Session!=null)group.Session.Dispose();group.Session=null; }
-                Save();CloseMemberManagement(group);
+                bool previous;lock(gate) { if(disposed||!groups.Contains(group))throw new InvalidOperationException();previous=group.AutoConnect;group.AutoConnect=false; }
+                try { Save(); }catch { lock(gate)group.AutoConnect=previous;throw; }
+                lock(gate) { if(group.Session!=null)group.Session.Dispose();group.Session=null; }
+                CloseMemberManagement(group);
             }
         }
         void Maintain(object unused) {
@@ -142,7 +177,7 @@ namespace ScumMiniMap {
                 }
             }finally { Monitor.Exit(operations); }
         }
-        internal void Rename(RelayMembership group,string name) { lock(operations) { lock(gate) { if(disposed||!groups.Contains(group))throw new InvalidOperationException();group.Rename(name); }Save(); } }
+        internal void Rename(RelayMembership group,string name) { lock(operations) { string previous,stamp;lock(gate) { if(disposed||!groups.Contains(group))throw new InvalidOperationException();previous=group.Name;stamp=group.NameStamp;group.Rename(name); }try { Save(); }catch { lock(gate) { group.Name=previous;group.NameStamp=stamp; }throw; } } }
         internal void SynchronizeNames() {
             lock(gate) {
                 bool changed=false;foreach(var group in groups.Where(g=>g.Session!=null)) {
