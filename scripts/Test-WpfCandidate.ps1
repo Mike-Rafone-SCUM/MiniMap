@@ -35,11 +35,20 @@ try {
         $env:MINIMAP_SETTINGS_POLISH_ONLY=if($check.Name -eq 'settings-polish') {'1'} else {$null}
         $log=Join-Path $evidence ($check.Name+'.log')
         $arguments=@('-NoProfile','-STA','-ExecutionPolicy','Bypass','-File',(Join-Path $root $check.Script))+$check.Args
-        & powershell.exe @arguments *> $log
-        $code=$LASTEXITCODE
+        # Windows PowerShell wraps native stderr as ErrorRecords. Preserve it in
+        # the log and inspect the actual child exit code before failing.
+        $priorErrorAction=$ErrorActionPreference
+        try {
+            $ErrorActionPreference='Continue'
+            & powershell.exe @arguments *> $log
+            $code=$LASTEXITCODE
+        } finally { $ErrorActionPreference=$priorErrorAction }
         $results+=@{check=$check.Name;exitCode=$code;log=$log}
         Write-Host ($check.Name+': exit '+$code)
-        if($code -ne 0) { throw ('Candidate check failed: '+$check.Name+'. See '+$log) }
+        if($code -ne 0) {
+            Get-Content -LiteralPath $log -Tail 80 | ForEach-Object { Write-Host $_ }
+            throw ('Candidate check failed: '+$check.Name+'. See '+$log)
+        }
     }
 } finally {
     $env:MINIMAP_AUDIT_POLISH_ONLY=$savedPolish
