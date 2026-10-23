@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -1085,7 +1085,7 @@ public static readonly Dictionary<string, string> StringsEn = new Dictionary<str
             { "PrivateGroupOwner", "Owner" },
             { "PrivateGroupSurvivor", "Survivor" },
             { "WizardHoldNext", "Hold for 1 second to continue" },
-            { "PrivateGroupHelp", "Create a group and share its code privately, or paste a code and connect. Codes stay valid until the owner refreshes them. You can join several groups. Saved codes are protected on this Windows account; sharing starts off. Refreshing a code disconnects that group and invalidates its old code. The creator must keep their saved profile to retain ownership." },
+            { "PrivateGroupHelp", "Create a group and share its code privately, or paste a code and connect. Codes stay valid until the owner refreshes them. You can join several groups. Saved codes are protected on this Windows account; active groups reconnect when you reopen MiniMap. Closing the app shows you offline and keeps the group available. Leave stops automatic rejoining. Refreshing a code disconnects that group and invalidates its old code. The creator must keep their saved profile to retain ownership." },
 
             { "PrivatePositionRelay", "Private group via relay" },
             { "PrivatePositionRelayHelp", "No port forwarding needed. Share one group key privately with your friends. The relay cannot read your positions. Free relay capacity is limited." },
@@ -1906,7 +1906,7 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
             { "PrivateGroupOwner", "Propietario" },
             { "PrivateGroupSurvivor", "Superviviente" },
             { "WizardHoldNext", "Mantené pulsado 1 segundo para continuar" },
-            { "PrivateGroupHelp", "Creá un grupo y compartí su código en privado, o pegá un código y conectate. Los códigos duran hasta que el propietario los renueva. Podés unirte a varios grupos. Los códigos guardados están protegidos en esta cuenta de Windows; el uso compartido empieza desactivado. Renovar desconecta al grupo e invalida el código anterior. El creador debe conservar su perfil para mantener la propiedad." },
+            { "PrivateGroupHelp", "Creá un grupo y compartí su código en privado, o pegá un código y conectate. Los códigos duran hasta que el propietario los renueva. Podés unirte a varios grupos. Los códigos guardados están protegidos en esta cuenta de Windows; los grupos activos se reconectan al volver a abrir MiniMap. Al cerrar la aplicación aparecés sin conexión y el grupo sigue disponible. Salir del grupo desactiva la reconexión automática. Renovar desconecta al grupo e invalida el código anterior. El creador debe conservar su perfil para mantener la propiedad." },
 
             { "PrivatePositionRelay", "Grupo privado por relay" },
             { "PrivatePositionRelayHelp", "No necesitás abrir puertos. Compartí una clave de grupo en privado con tus amigos. El relay no puede leer tus posiciones. La capacidad gratuita es limitada." },
@@ -2727,7 +2727,7 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
             { "PrivateGroupOwner", "Propriétaire" },
             { "PrivateGroupSurvivor", "Survivant" },
             { "WizardHoldNext", "Maintenir 1 seconde pour continuer" },
-            { "PrivateGroupHelp", "Créez un groupe et partagez son code en privé, ou collez un code et connectez-vous. Les codes restent valides jusqu’à leur renouvellement par le propriétaire. Vous pouvez rejoindre plusieurs groupes. Les codes enregistrés sont protégés sur ce compte Windows ; le partage démarre désactivé. Renouveler déconnecte le groupe et invalide l’ancien code. Le créateur doit conserver son profil pour rester propriétaire." },
+            { "PrivateGroupHelp", "Créez un groupe et partagez son code en privé, ou collez un code et connectez-vous. Les codes restent valides jusqu’à leur renouvellement par le propriétaire. Vous pouvez rejoindre plusieurs groupes. Les codes enregistrés sont protégés sur ce compte Windows ; les groupes actifs se reconnectent à la réouverture de MiniMap. Fermer l’application vous affiche hors ligne et le groupe reste disponible. Quitter le groupe arrête la reconnexion automatique. Renouveler déconnecte le groupe et invalide l’ancien code. Le créateur doit conserver son profil pour rester propriétaire." },
 
             { "PrivatePositionRelay", "Groupe privé via relais" },
             { "PrivatePositionRelayHelp", "Aucune redirection de port nécessaire. Partagez une clé de groupe en privé avec vos amis. Le relais ne peut pas lire vos positions. La capacité gratuite est limitée." },
@@ -3548,7 +3548,7 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
             { "PrivateGroupOwner", "Eigentümer" },
             { "PrivateGroupSurvivor", "Überlebender" },
             { "WizardHoldNext", "Zum Fortfahren 1 Sekunde halten" },
-            { "PrivateGroupHelp", "Erstelle eine Gruppe und teile ihren Code privat oder füge einen Code ein und verbinde dich. Codes bleiben gültig, bis der Eigentümer sie erneuert. Du kannst mehreren Gruppen beitreten. Gespeicherte Codes sind für dieses Windows-Konto geschützt; die Freigabe startet ausgeschaltet. Erneuern trennt die Gruppe und macht den alten Code ungültig. Der Ersteller muss sein Profil behalten, um Eigentümer zu bleiben." },
+            { "PrivateGroupHelp", "Erstelle eine Gruppe und teile ihren Code privat oder füge einen Code ein und verbinde dich. Codes bleiben gültig, bis der Eigentümer sie erneuert. Du kannst mehreren Gruppen beitreten. Gespeicherte Codes sind für dieses Windows-Konto geschützt; aktive Gruppen verbinden sich beim erneuten Öffnen von MiniMap automatisch. Beim Schließen wirst du als offline angezeigt und die Gruppe bleibt verfügbar. Verlassen beendet den automatischen Wiederbeitritt. Erneuern trennt die Gruppe und macht den alten Code ungültig. Der Ersteller muss sein Profil behalten, um Eigentümer zu bleiben." },
 
             { "PrivatePositionRelay", "Private Gruppe über Relay" },
             { "PrivatePositionRelayHelp", "Keine Portfreigabe nötig. Teile einen Gruppenschlüssel privat mit deinen Freunden. Das Relay kann deine Positionen nicht lesen. Die kostenlose Kapazität ist begrenzt." },
@@ -4369,7 +4369,7 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
             { "PrivateGroupOwner", "Eigenaar" },
             { "PrivateGroupSurvivor", "Overlevende" },
             { "WizardHoldNext", "Houd 1 seconde vast om door te gaan" },
-            { "PrivateGroupHelp", "Maak een groep en deel de code privé, of plak een code en verbind. Codes blijven geldig totdat de eigenaar ze vernieuwt. Je kunt meerdere groepen tegelijk gebruiken. Opgeslagen codes zijn beveiligd voor dit Windows-account; delen begint uitgeschakeld. Vernieuwen verbreekt de groepsverbindingen en maakt de oude code ongeldig. De maker moet het opgeslagen profiel bewaren om eigenaar te blijven." },
+            { "PrivateGroupHelp", "Maak een groep en deel de code privé, of plak een code en verbind. Codes blijven geldig totdat de eigenaar ze vernieuwt. Je kunt meerdere groepen tegelijk gebruiken. Opgeslagen codes zijn beveiligd voor dit Windows-account; actieve groepen verbinden automatisch wanneer je MiniMap opnieuw opent. Bij afsluiten verschijn je als offline en blijft de groep beschikbaar. Verlaten stopt automatisch opnieuw verbinden. Vernieuwen verbreekt de groepsverbindingen en maakt de oude code ongeldig. De maker moet het opgeslagen profiel bewaren om eigenaar te blijven." },
 
             { "PrivatePositionRelay", "Privégroep via relay" },
             { "PrivatePositionRelayHelp", "Geen poortdoorschakeling nodig. Deel één groepssleutel privé met je vrienden. De relay kan je posities niet lezen. De gratis capaciteit is beperkt." },
@@ -5190,7 +5190,7 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
             { "PrivateGroupOwner", "Владелец" },
             { "PrivateGroupSurvivor", "Выживший" },
             { "WizardHoldNext", "Удерживайте 1 секунду для продолжения" },
-            { "PrivateGroupHelp", "Создайте группу и передайте код лично или вставьте код и подключитесь. Код действует, пока владелец не обновит его. Можно вступать в несколько групп. Коды защищены в этой учётной записи Windows; обмен изначально выключен. Обновление отключает группу и отменяет старый код. Создателю нужно сохранить профиль, чтобы сохранить права владельца." },
+            { "PrivateGroupHelp", "Создайте группу и передайте код лично или вставьте код и подключитесь. Код действует, пока владелец не обновит его. Можно вступать в несколько групп. Коды защищены в этой учётной записи Windows; при открытии MiniMap активные группы подключаются автоматически. После закрытия приложения вы отображаетесь не в сети, а группа остаётся доступной. Выход из группы отключает автоматическое подключение. Обновление отключает группу и отменяет старый код. Создателю нужно сохранить профиль, чтобы сохранить права владельца." },
 
             { "PrivatePositionRelay", "Приватная группа через ретранслятор" },
             { "PrivatePositionRelayHelp", "Проброс портов не нужен. Передайте общий ключ группы друзьям лично. Ретранслятор не может читать ваши позиции. Бесплатная пропускная способность ограничена." },
@@ -6011,7 +6011,7 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
             { "PrivateGroupOwner", "所有者" },
             { "PrivateGroupSurvivor", "幸存者" },
             { "WizardHoldNext", "按住1秒以继续" },
-            { "PrivateGroupHelp", "创建群组并私下分享代码，或粘贴代码后连接。代码在所有者更新前一直有效。可加入多个群组。保存的代码受当前Windows账户保护；共享默认关闭。更新代码会断开群组连接并使旧代码失效。创建者需保留本地配置文件以保留所有权。" },
+            { "PrivateGroupHelp", "创建群组并私下分享代码，或粘贴代码后连接。代码在所有者更新前一直有效。可加入多个群组。保存的代码受当前Windows账户保护；重新打开 MiniMap 时会自动重连之前连接的群组。关闭应用后你会显示为离线，群组仍可使用。退出群组会停止自动重连。更新代码会断开群组连接并使旧代码失效。创建者需保留本地配置文件以保留所有权。" },
 
             { "PrivatePositionRelay", "通过中继建立私密群组" },
             { "PrivatePositionRelayHelp", "无需端口转发。请私下与好友共享同一个群组密钥。中继无法读取你的位置。免费中继容量有限。" },
@@ -6832,7 +6832,7 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
             { "PrivateGroupOwner", "Sahip" },
             { "PrivateGroupSurvivor", "Hayatta kalan" },
             { "WizardHoldNext", "Devam etmek için 1 saniye basılı tut" },
-            { "PrivateGroupHelp", "Bir grup oluşturup kodunu özel olarak paylaşın veya bir kod yapıştırıp bağlanın. Kodlar sahip yenileyene kadar geçerlidir. Birden fazla gruba katılabilirsiniz. Kaydedilen kodlar bu Windows hesabında korunur; paylaşım kapalı başlar. Yenileme grubu ayırır ve eski kodu geçersiz kılar. Oluşturan kişi sahipliği korumak için kayıtlı profilini saklamalıdır." },
+            { "PrivateGroupHelp", "Bir grup oluşturup kodunu özel olarak paylaşın veya bir kod yapıştırıp bağlanın. Kodlar sahip yenileyene kadar geçerlidir. Birden fazla gruba katılabilirsiniz. Kaydedilen kodlar bu Windows hesabında korunur; MiniMap yeniden açıldığında etkin gruplara otomatik bağlanılır. Uygulamayı kapattığınızda çevrimdışı görünürsünüz ve grup kullanılabilir kalır. Gruptan ayrılmak otomatik katılmayı durdurur. Yenileme grubu ayırır ve eski kodu geçersiz kılar. Oluşturan kişi sahipliği korumak için kayıtlı profilini saklamalıdır." },
 
             { "PrivatePositionRelay", "Aktarıcı üzerinden özel grup" },
             { "PrivatePositionRelayHelp", "Port yönlendirme gerekmez. Tek bir grup anahtarını arkadaşlarınızla özel olarak paylaşın. Aktarıcı konumlarınızı okuyamaz. Ücretsiz kapasite sınırlıdır." },
@@ -7653,7 +7653,7 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
             { "PrivateGroupOwner", "المالك" },
             { "PrivateGroupSurvivor", "ناجٍ" },
             { "WizardHoldNext", "اضغط باستمرار لمدة ثانية للمتابعة" },
-            { "PrivateGroupHelp", "أنشئ مجموعة وشارك رمزها بشكل خاص، أو الصق رمزًا واتصل. يبقى الرمز صالحًا حتى يجدده المالك. يمكنك الانضمام إلى عدة مجموعات. الرموز المحفوظة محمية بحساب Windows الحالي؛ تبدأ المشاركة متوقفة. التجديد يفصل المجموعة ويلغي الرمز القديم. يجب أن يحتفظ المنشئ بملفه المحلي ليحتفظ بالملكية." },
+            { "PrivateGroupHelp", "أنشئ مجموعة وشارك رمزها بشكل خاص، أو الصق رمزًا واتصل. يبقى الرمز صالحًا حتى يجدده المالك. يمكنك الانضمام إلى عدة مجموعات. الرموز المحفوظة محمية بحساب Windows الحالي؛ تتم إعادة الاتصال بالمجموعات النشطة عند فتح MiniMap مجددًا. عند إغلاق التطبيق تظهر غير متصل وتبقى المجموعة متاحة. مغادرة المجموعة توقف الانضمام التلقائي. التجديد يفصل المجموعة ويلغي الرمز القديم. يجب أن يحتفظ المنشئ بملفه المحلي ليحتفظ بالملكية." },
 
             { "PrivatePositionRelay", "مجموعة خاصة عبر خادم الترحيل" },
             { "PrivatePositionRelayHelp", "لا حاجة إلى إعادة توجيه المنافذ. شارك مفتاح مجموعة واحدًا مع أصدقائك بشكل خاص. لا يستطيع خادم الترحيل قراءة مواقعك. السعة المجانية محدودة." },
@@ -8474,7 +8474,7 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
             { "PrivateGroupOwner", "Proprietário" },
             { "PrivateGroupSurvivor", "Sobrevivente" },
             { "WizardHoldNext", "Segure por 1 segundo para continuar" },
-            { "PrivateGroupHelp", "Crie um grupo e compartilhe o código em particular, ou cole um código e conecte. Os códigos valem até o proprietário renová-los. Você pode entrar em vários grupos. Os códigos salvos são protegidos nesta conta do Windows; o compartilhamento começa desativado. Renovar desconecta o grupo e invalida o código anterior. O criador deve manter seu perfil salvo para continuar proprietário." },
+            { "PrivateGroupHelp", "Crie um grupo e compartilhe o código em particular, ou cole um código e conecte. Os códigos valem até o proprietário renová-los. Você pode entrar em vários grupos. Os códigos salvos são protegidos nesta conta do Windows; os grupos ativos são reconectados ao reabrir o MiniMap. Ao fechar o aplicativo, você aparece offline e o grupo continua disponível. Sair do grupo desativa a reconexão automática. Renovar desconecta o grupo e invalida o código anterior. O criador deve manter seu perfil salvo para continuar proprietário." },
 
             { "PrivatePositionRelay", "Grupo privado via retransmissor" },
             { "PrivatePositionRelayHelp", "Não é necessário redirecionar portas. Compartilhe uma chave de grupo em particular com seus amigos. O retransmissor não pode ler suas posições. A capacidade gratuita é limitada." },
@@ -9295,7 +9295,7 @@ public static readonly Dictionary<string, string> StringsEsAr = new Dictionary<s
             { "PrivateGroupOwner", "소유자" },
             { "PrivateGroupSurvivor", "생존자" },
             { "WizardHoldNext", "계속하려면 1초간 누르세요" },
-            { "PrivateGroupHelp", "그룹을 만들고 코드를 비공개로 공유하거나 코드를 붙여넣고 연결하세요. 코드는 소유자가 갱신할 때까지 유효합니다. 여러 그룹에 참여할 수 있습니다. 저장된 코드는 현재 Windows 계정으로 보호되며 공유는 꺼진 상태로 시작됩니다. 갱신하면 그룹 연결이 끊기고 이전 코드가 무효화됩니다. 소유권을 유지하려면 생성자의 저장된 프로필을 보관해야 합니다." },
+            { "PrivateGroupHelp", "그룹을 만들고 코드를 비공개로 공유하거나 코드를 붙여넣고 연결하세요. 코드는 소유자가 갱신할 때까지 유효합니다. 여러 그룹에 참여할 수 있습니다. 저장된 코드는 현재 Windows 계정으로 보호되며 MiniMap을 다시 열면 이전에 연결한 그룹에 자동으로 다시 연결됩니다. 앱을 닫으면 오프라인으로 표시되며 그룹은 계속 사용할 수 있습니다. 그룹에서 나가면 자동 재접속이 중지됩니다. 갱신하면 그룹 연결이 끊기고 이전 코드가 무효화됩니다. 소유권을 유지하려면 생성자의 저장된 프로필을 보관해야 합니다." },
 
             { "PrivatePositionRelay", "중계 서버를 통한 비공개 그룹" },
             { "PrivatePositionRelayHelp", "포트 포워딩이 필요하지 않습니다. 친구들과 그룹 키 하나를 비공개로 공유하세요. 중계 서버는 위치를 읽을 수 없습니다. 무료 중계 용량은 제한됩니다." },

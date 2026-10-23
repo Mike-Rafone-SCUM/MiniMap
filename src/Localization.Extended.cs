@@ -1,4 +1,4 @@
-// Offline translation drafts: native terminology review pending.
+﻿// Offline translation drafts: native terminology review pending.
 using System;
 using System.Collections.Generic;
 
@@ -108,7 +108,7 @@ namespace ScumMiniMap {
             { "PrivateGroupOwner", "Proprietário" },
             { "PrivateGroupSurvivor", "Sobrevivente" },
             { "WizardHoldNext", "Mantenha premido 1 segundo para continuar" },
-            { "PrivateGroupHelp", "Crie um grupo e partilhe o código em privado, ou cole um código e ligue-se. Os códigos são válidos até o proprietário os renovar. Pode aderir a vários grupos. Os códigos guardados estão protegidos nesta conta Windows; a partilha começa desativada. Renovar desliga o grupo e invalida o código anterior. O criador deve conservar o perfil guardado para manter a propriedade." },
+            { "PrivateGroupHelp", "Crie um grupo e partilhe o código em privado, ou cole um código e ligue-se. Os códigos são válidos até o proprietário os renovar. Pode aderir a vários grupos. Os códigos guardados estão protegidos nesta conta Windows; os grupos ativos voltam a ligar-se ao reabrir o MiniMap. Ao fechar a aplicação, aparece offline e o grupo continua disponível. Sair do grupo desativa a ligação automática. Renovar desliga o grupo e invalida o código anterior. O criador deve conservar o perfil guardado para manter a propriedade." },
 
             { "PrivatePositionRelay", "Grupo privado via retransmissor" },
             { "PrivatePositionRelayHelp", "Não é necessário encaminhar portas. Partilhe uma chave de grupo em privado com os seus amigos. O retransmissor não pode ler as suas posições. A capacidade gratuita é limitada." },

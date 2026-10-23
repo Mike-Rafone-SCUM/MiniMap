@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ScumMiniMap {
@@ -120,7 +120,7 @@ PrivateGroupLabel|Grupa
 PrivateGroupOwner|Właściciel
 PrivateGroupSurvivor|Ocalały
 WizardHoldNext|Przytrzymaj przez 1 sekundę, aby kontynuować
-PrivateGroupHelp|Utwórz grupę i udostępnij kod prywatnie albo wklej kod i połącz się. Kod działa, dopóki właściciel go nie odnowi. Możesz należeć do kilku grup. Zapisane kody są chronione na tym koncie Windows; udostępnianie zaczyna się wyłączone. Odnowienie rozłącza grupę i unieważnia stary kod. Twórca musi zachować zapisany profil, aby zachować własność.
+PrivateGroupHelp|Utwórz grupę i udostępnij kod prywatnie albo wklej kod i połącz się. Kod działa, dopóki właściciel go nie odnowi. Możesz należeć do kilku grup. Zapisane kody są chronione na tym koncie Windows; aktywne grupy łączą się ponownie po uruchomieniu MiniMap. Po zamknięciu aplikacji jesteś offline, a grupa pozostaje dostępna. Opuszczenie grupy wyłącza automatyczne dołączanie. Odnowienie rozłącza grupę i unieważnia stary kod. Twórca musi zachować zapisany profil, aby zachować własność.
 PrivatePositionJoin|Dołącz do grupy
 PrivatePositionHost|Utwórz grupę
 RotateMinimap|Obracaj mapę wraz ze mną

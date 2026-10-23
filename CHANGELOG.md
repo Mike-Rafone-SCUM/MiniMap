@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.3.22] - 2026-10-23
+
+- Keep private groups available when the creator closes MiniMap. Remember active memberships and automatically reconnect on startup or after a dropped connection. Explicit Leave disables automatic rejoining.
+- Retain encrypted member names in the relay registry and show offline members without live positions. Group owners retain Disconnect, code refresh and deletion controls. Existing saved codes and ownership remain compatible; older profiles reconnect after the next explicit Connect.
+
+
 ## [2.3.21] - 2026-10-22
 
 - Fit the main map overlay to SCUM's playable window area and follow window movement/resizing. Add saved manual position and size, exact pixel fields, a draggable/resizable preview, monitor fill and recovery when a saved display is disconnected. Find the controls in Settings or the main-map sidebar; compact minimap placement stays separate.

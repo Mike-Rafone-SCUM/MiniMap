@@ -49,7 +49,9 @@ namespace ScumMiniMap {
         void UpdateSquad() {
             var now=DateTime.UtcNow;
             var current=(privatePositions==null?new PrivatePositions.Peer[0]:privatePositions.Roster()).Concat(relayGroups==null?new PrivatePositions.Peer[0]:relayGroups.Roster()).ToArray();
-            foreach(var p in current) { PrivatePositions.Peer previous;if(p.Position==null)p.Updated=knownPlayers.TryGetValue(p.Id,out previous)?previous.Updated:DateTime.MinValue;knownPlayers[p.Id]=p;playerSeen[p.Id]=now; }
+            foreach(var p in current) { PrivatePositions.Peer previous;if(p.Position==null)p.Updated=knownPlayers.TryGetValue(p.Id,out previous)?previous.Updated:DateTime.MinValue;knownPlayers[p.Id]=p;if(p.Online)playerSeen[p.Id]=now;else playerSeen.Remove(p.Id); }
+            var groupIds=relayGroups==null?new string[0]:relayGroups.Groups.Select(g=>g.Id+":").ToArray();
+            foreach(string id in knownPlayers.Keys.Where(id=>groupIds.Any(prefix=>id.StartsWith(prefix,StringComparison.Ordinal))&&!current.Any(p=>p.Id==id)).ToArray()) { knownPlayers.Remove(id);playerSeen.Remove(id); }
             foreach(string id in playerSeen.Where(p=>now-p.Value>TimeSpan.FromMinutes(5)).Select(p=>p.Key).ToArray()) { playerSeen.Remove(id);knownPlayers.Remove(id); }
             playerRoster=knownPlayers.Values.OrderBy(p=>p.Name,StringComparer.CurrentCultureIgnoreCase).Select(p=>new PrivatePositions.Peer { Id=p.Id,Name=p.Name,Updated=p.Updated,Position=current.Any(c=>c.Id==p.Id)?p.Position:null }).ToArray();
             SyncSelectedSharedRoute();

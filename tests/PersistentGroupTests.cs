@@ -25,9 +25,10 @@ class PersistentGroupTests {
             string disconnected=roster.Items.Single(m=>!m.IsOwner).Id;owner.DisconnectMember(first,disconnected);
             Await(()=>!joinedFirst.Session.Ready&&joinedFirst.Session.Error!=null,"Host disconnects the selected member's current connection");
             Check(joinedSecond.Session.Ready&&first.Session.Ready&&second.Session.Ready,"Disconnecting one member preserves the owner and other groups");
-            Check(owner.ReadMembers(first).Items.Length==1,"Disconnected member disappears from the host list");
+            Check(joinedFirst.Session.ReconnectBlocked,"A host disconnect blocks automatic reconnect for the current app session");
+            Check(owner.ReadMembers(first).Items.Length==2&&!owner.ReadMembers(first).Items.Single(m=>!m.IsOwner).Online,"Disconnected member stays in the durable roster as offline");
             member.Connect(joinedFirst);Await(()=>joinedFirst.Session.Ready,"Disconnected member can reconnect using the same saved code");
-            Check(owner.ReadMembers(first).Items.Single(m=>!m.IsOwner).Id!=disconnected,"Reconnected member receives a fresh connection identifier");
+            Check(owner.ReadMembers(first).Items.Single(m=>!m.IsOwner).Id==disconnected,"Reconnected member retains its durable membership identity");
             bool selfDenied=false;try { owner.DisconnectMember(first,owner.ReadMembers(first).Items.Single(m=>m.IsOwner).Id); }catch(IOException) { selfDenied=true; }Check(selfDenied&&first.Session.Ready,"Host cannot disconnect its own protected owner connection");
             foreach(var session in owner.Sessions) { session.Update(new Position { X=100,Y=200,Yaw=90 },DateTime.UtcNow);session.UpdateMarkers(owner.MarkersFor(session,new[]{new SharedMapMarker { Id=new string('A',64),Name="Synthetic group marker",X=.2,Y=.3 }})); }
             Await(()=>member.Roster(true).Length==2&&member.Markers().Length==2,"Multiple groups deliver positions and markers without mixing identities");
@@ -36,6 +37,11 @@ class PersistentGroupTests {
             Check(member.Roster().Select(p=>p.Id).Distinct().Count()==2&&member.Markers().Select(m=>m.OwnerId).Distinct().Count()==2,"Player and marker visibility identities are scoped to their group");
             bool denied=false;try { member.Rotate(joinedFirst); }catch(InvalidOperationException) { denied=true; }Check(denied,"A joining member does not gain ownership or code-refresh permission");
             member.Leave(joinedFirst);Check(member.Sessions.Length==1&&joinedSecond.Session.Ready,"Leaving one group preserves the other active group");member.Connect(joinedFirst);Await(()=>joinedFirst.Session.Ready,"Saved codes reconnect without asking the owner for a new code");
+            var interrupted=joinedFirst.Session;var linkList=(System.Collections.IEnumerable)typeof(DirectPositions).GetField("links",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).GetValue(interrupted);
+            foreach(var link in linkList.Cast<object>().ToArray())((System.Net.Sockets.TcpClient)link.GetType().GetField("Client",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).GetValue(link)).Close();
+            Await(()=>interrupted.Error!=null,"A dropped transport is detected");joinedFirst.RetryAt=DateTime.UtcNow;
+            typeof(RelayGroupStore).GetMethod("Maintain",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).Invoke(member,new object[]{null});
+            Await(()=>joinedFirst.Session!=interrupted&&joinedFirst.Session.Ready,"A dropped transport reconnects automatically without re-entering a code");
             owner.Rotate(first);Check(first.Code!=old,"Owner refresh creates a different persistent code");
             Await(()=>joinedFirst.Session.Error!=null&&!joinedFirst.Session.Ready&&joinedFirst.Session.Snapshot().Length==0,"Owner refresh disconnects old-code members and clears their received locations");
             Check(joinedSecond.Session.Ready,"Refreshing one group leaves other groups connected");
@@ -45,11 +51,11 @@ class PersistentGroupTests {
             Check(!bytes.Contains(first.Code)&&!bytes.Contains(first.Owner)&&!bytes.Contains("Synthetic owner"),"Saved codes, owner credentials and names are protected with Windows DPAPI");
             owner.Dispose();owner=null;
             using(var reloaded=new RelayGroupStore(Path.Combine(root,"owner"),address,port,certificate)) {
-                Check(reloaded.Groups.Length==2&&reloaded.Groups.Single(g=>g.Id==first.Id).Code==first.Code&&reloaded.Groups.All(g=>g.IsOwner)&&reloaded.Sessions.Length==0,"Codes and ownership survive app restart while sharing starts disabled");
+                Check(reloaded.Groups.Length==2&&reloaded.Groups.Single(g=>g.Id==first.Id).Code==first.Code&&reloaded.Groups.All(g=>g.IsOwner)&&reloaded.Sessions.Length==2,"Codes, ownership and active memberships automatically reconnect after app restart");
                 Check(reloaded.Groups.Single(g=>g.Id==first.Id).Name=="Rescue crew","Shared group name survives rotation and Windows-protected profile reload");
                 bool memberDeleteDenied=false;try { member.Delete(joinedFirst); }catch(InvalidOperationException) { memberDeleteDenied=true; }Check(memberDeleteDenied,"Members cannot delete a group owned by someone else");
                 string retryFolder=Path.Combine(root,"delete-retry");Directory.CreateDirectory(retryFolder);File.WriteAllBytes(Path.Combine(retryFolder,"private-groups.dat"),saved);
-                using(var offline=new RelayGroupStore(retryFolder,"127.0.0.1",1)) {
+                using(var offline=new RelayGroupStore(retryFolder,"127.0.0.1",65534)) {
                     bool failed=false;try { offline.Delete(offline.Groups.Single(g=>g.Id==first.Id)); }catch { failed=true; }
                     Check(failed&&offline.Groups.Single(g=>g.Id==first.Id).Pending=="DELETE","Offline deletion preserves a durable retry instead of claiming success");
                 }
@@ -64,6 +70,18 @@ class PersistentGroupTests {
                 outside.Join(first.Code);Await(()=>retired.Session.Error!=null&&!retired.Session.Ready,"A deleted group code cannot reconnect");
             }
             using(var afterDelete=new RelayGroupStore(Path.Combine(root,"owner"),address,port,certificate))Check(afterDelete.Groups.Length==1&&afterDelete.Groups[0].Id==second.Id,"Deleted group stays absent after profile reload");
+            Await(()=>member.Roster().Any(p=>p.Name.StartsWith("Synthetic owner")&&!p.Online&&p.Position==null),"An offline owner remains visible without a live position after closing the app");
+            string memberIdentity=joinedSecond.MemberToken;member.Dispose();member=null;
+            using(var restoredMember=new RelayGroupStore(Path.Combine(root,"member"),address,port,certificate)) {
+                var remembered=restoredMember.Groups.Single(g=>g.Id==second.Id);
+                Check(remembered.MemberToken==memberIdentity,"Windows-protected membership identity survives a member app restart");
+                Await(()=>remembered.Session!=null&&remembered.Session.Ready,"A member automatically rejoins the previous group even while the owner is offline");
+                restoredMember.Leave(remembered);
+            }
+            using(var leftMember=new RelayGroupStore(Path.Combine(root,"member"),address,port,certificate)) {
+                var left=leftMember.Groups.Single(g=>g.Id==second.Id);Check(left.Session==null&&!left.AutoConnect,"Explicit Leave stays disconnected after restarting the app");
+                leftMember.Connect(left);Await(()=>left.Session.Ready,"An explicitly left group can still be rejoined with its saved code");
+            }
             var protect=typeof(RelayGroupStore).GetMethod("Protect",System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static);
             var legacyLines=System.Text.Encoding.UTF8.GetString((byte[])protect.Invoke(null,new object[]{saved,false})).Split('\n');legacyLines[0]="1";
             for(int i=2;i<legacyLines.Length;i++)if(legacyLines[i].Length>0) { var fields=legacyLines[i].Split('\t');legacyLines[i]=string.Join("\t",fields.Take(4).Concat(new[]{fields[5]})); }

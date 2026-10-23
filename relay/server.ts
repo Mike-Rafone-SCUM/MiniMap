@@ -3,16 +3,21 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {createHash, timingSafeEqual, randomBytes} from 'node:crypto';
 
-type Group = {room: string; owner: string; deleted?: boolean};
+type SavedMember = {label: string; host: boolean};
+type Group = {room: string; owner: string; deleted?: boolean; members?: Record<string, SavedMember>};
 export class GroupRegistry {
   private groups: Record<string, Group>;
   constructor(private file: string) {
-    if (fs.statSync(file).size > 4000000) throw Error('Group registry too large');
+    if (fs.statSync(file).size > 64000000) throw Error('Group registry too large');
     const state = JSON.parse(fs.readFileSync(file, 'utf8'));
     if (state.version !== 1 || !state.groups || typeof state.groups !== 'object' || Array.isArray(state.groups)) throw Error('Invalid group registry');
     this.groups = Object.create(null);
     for (const [id, group] of Object.entries(state.groups) as [string, Group][]) {
       if (!/^[a-f0-9]{32}$/.test(id) || !group || !/^[a-f0-9]{64}$/.test(group.room) || !/^[a-f0-9]{64}$/.test(group.owner) || group.deleted !== undefined && typeof group.deleted !== 'boolean') throw Error('Invalid group metadata');
+      if (group.members !== undefined) {
+        if (!group.members || typeof group.members !== 'object' || Array.isArray(group.members) || Object.keys(group.members).length > 64) throw Error('Invalid membership registry');
+        for (const [token, member] of Object.entries(group.members)) if (!/^[a-f0-9]{64}$/.test(token) || !member || typeof member.host !== 'boolean' || !/^[A-Za-z0-9+/=]{64,512}$/.test(member.label)) throw Error('Invalid saved member');
+      }
       this.groups[id] = group;
     }
     if (Object.keys(this.groups).length > 10000) throw Error('Too many registered groups');
@@ -22,6 +27,25 @@ export class GroupRegistry {
     if (!this.allows(id, room) || !/^[a-f0-9]{64}$/.test(token)) return false;
     const owner = createHash('sha256').update('MiniMap owner v1:' + id + ':' + token).digest();
     return timingSafeEqual(Buffer.from(this.groups[id].owner, 'hex'), owner);
+  }
+  roster(id: string, room: string): Record<string, SavedMember> {
+    return this.allows(id, room) ? {...this.groups[id].members} : {};
+  }
+  remember(id: string, room: string, token: string, label: string, host: boolean): boolean {
+    if (!this.allows(id, room) || !/^[a-f0-9]{64}$/.test(token) || !/^[A-Za-z0-9+/=]{64,512}$/.test(label)) return false;
+    const group = this.groups[id], previous = group.members ?? {};
+    if (!previous[token] && Object.keys(previous).length >= 64) return false;
+    this.write({...this.groups, [id]: {...group, members: {...previous, [token]: {label, host}}}});
+    return true;
+  }
+  private write(groups: Record<string, Group>) {
+    const serialized = JSON.stringify({version: 1, groups});
+    if (Buffer.byteLength(serialized) > 64000000) throw Error('Group registry too large');
+    const fd = fs.openSync(this.file + '.tmp', 'w', 0o600);
+    try { fs.writeFileSync(fd, serialized); fs.fsyncSync(fd); } finally { fs.closeSync(fd); }
+    fs.renameSync(this.file + '.tmp', this.file);
+    if (process.platform !== 'win32') { const directory = fs.openSync(path.dirname(this.file), 'r'); try { fs.fsyncSync(directory); } finally { fs.closeSync(directory); } }
+    this.groups = groups;
   }
   change(action: string, id: string, room: string, token: string): boolean {
     if (!/^[a-f0-9]{32}$/.test(id) || !/^[a-f0-9]{64}$/.test(room) || !/^[a-f0-9]{64}$/.test(token)) return false;
@@ -35,16 +59,12 @@ export class GroupRegistry {
     if (action !== 'CREATE' && action !== 'ROTATE' && action !== 'DELETE') return false;
     if (!previous && Object.keys(this.groups).length >= 10000) return false;
     // Keep an owner-hash tombstone so a deleted code cannot be re-created.
-    const groups = {...this.groups, [id]: action === 'DELETE' ? {...previous!, deleted: true} : {room, owner}};
-    const fd = fs.openSync(this.file + '.tmp', 'w', 0o600);
-    try { fs.writeFileSync(fd, JSON.stringify({version: 1, groups})); fs.fsyncSync(fd); } finally { fs.closeSync(fd); }
-    fs.renameSync(this.file + '.tmp', this.file);
-    if (process.platform !== 'win32') { const directory = fs.openSync(path.dirname(this.file), 'r'); try { fs.fsyncSync(directory); } finally { fs.closeSync(directory); } }
-    this.groups = groups; return true;
+    const groups = {...this.groups, [id]: action === 'DELETE' ? {room: previous!.room, owner: previous!.owner, deleted: true} : {room, owner, ...(previous?.room === room && previous.members ? {members: previous.members} : {})}};
+    this.write(groups); return true;
   }
 }
 
-// The relay never receives encryption keys, names, positions or saved markers.
+// The relay never receives encryption keys or plaintext names, positions or saved markers.
 // Room identifiers are independent HMAC outputs derived by each client.
 export class Budget {
   private remaining = 0;
@@ -86,7 +106,7 @@ export class Budget {
 
 export function createRelay(options: tls.TlsOptions, budget: {take(bytes: number): boolean}, registry?: GroupRegistry) {
   const rooms = new Map<string, Set<tls.TLSSocket>>();
-  const members = new Map<tls.TLSSocket, {id: string; label: string; host: boolean}>();
+  const members = new Map<tls.TLSSocket, {id: string; label: string; host: boolean; persistent?: boolean}>();
   const sockets = new Set<tls.TLSSocket>();
   const perIp = new Map<string, number>();
   let windowStart = Date.now(), output = 0;
@@ -116,6 +136,19 @@ export function createRelay(options: tls.TlsOptions, budget: {take(bytes: number
         if (end < 0) { if (buffer.length > 1024) socket.destroy(); return; }
         if (end > 1024) { socket.destroy(); return; }
         const hello = buffer.subarray(0, end).toString('utf8');
+        const presence = /^SCUMROSTER3 ([a-f0-9]{32}) ([a-f0-9]{64})$/.exec(hello);
+        if (presence) {
+          if (++frames > 16 || !registry?.allows(presence[1], presence[2])) { socket.destroy(); return; }
+          controlSession = true; buffer = buffer.subarray(end + 1);
+          const group = rooms.get(presence[1] + ':' + presence[2]);
+          const rows = Object.entries(registry.roster(presence[1], presence[2])).map(([id, member]) => {
+            const online = [...group ?? []].some(peer => !peer.destroyed && members.get(peer)?.id === id);
+            return `${id} ${member.host ? '1' : '0'} ${online ? '1' : '0'} ${member.label}`;
+          });
+          const response = `OK\n${rows.join('\n')}${rows.length ? '\n' : ''}END\n`;
+          if (!spend(Buffer.byteLength(response) * 2 + 256) || socket.writableLength > 262144) { socket.destroy();return; }
+          socket.write(response);continue;
+        }
         const control = /^SCUMMEMBERS2 (LIST|KICK) ([a-f0-9]{32}) ([a-f0-9]{64}) ([a-f0-9]{64}) ([a-f0-9]{64})$/.exec(hello);
         if (control) {
           if (++frames > 16) { socket.destroy(); return; }
@@ -129,7 +162,7 @@ export function createRelay(options: tls.TlsOptions, budget: {take(bytes: number
           } else {
             const peer = [...group].find(peer => members.get(peer)?.id === target && !members.get(peer)?.host && !peer.destroyed);
             if (!peer) socket.write('NO\n');
-            else { peer.destroy();socket.write('OK\n'); }
+            else { if (members.get(peer)?.persistent) peer.end(Buffer.alloc(4));else peer.destroy();socket.write('OK\n'); }
           }
           continue;
         }
@@ -144,10 +177,11 @@ export function createRelay(options: tls.TlsOptions, budget: {take(bytes: number
           return;
         }
         const persistent = /^SCUMGROUP1 ([a-f0-9]{32}) ([a-f0-9]{64})$/.exec(hello);
-        const memberJoin = /^SCUMGROUP2 ([a-f0-9]{32}) ([a-f0-9]{64}) ([a-f0-9]{64}) ([A-Za-z0-9+/=]{64,512})(?: ([a-f0-9]{64}))?$/.exec(hello);
+        const durableJoin = hello.startsWith('SCUMGROUP3 ');
+        const memberJoin = /^SCUMGROUP[23] ([a-f0-9]{32}) ([a-f0-9]{64}) ([a-f0-9]{64}) ([A-Za-z0-9+/=]{64,512})(?: ([a-f0-9]{64}))?$/.exec(hello);
         const legacy = /^SCUMRELAY1 ([a-f0-9]{64})$/.exec(hello);
         if (memberJoin && registry?.allows(memberJoin[1], memberJoin[2]) && (memberJoin[5] === undefined || registry.owns(memberJoin[1], memberJoin[2], memberJoin[5]))) {
-          room = memberJoin[1] + ':' + memberJoin[2];members.set(socket, {id: memberJoin[3], label: memberJoin[4], host: memberJoin[5] !== undefined});
+          room = memberJoin[1] + ':' + memberJoin[2];members.set(socket, {id: memberJoin[3], label: memberJoin[4], host: memberJoin[5] !== undefined, persistent: durableJoin});
         }
         else if (persistent && registry?.allows(persistent[1], persistent[2])) room = persistent[1] + ':' + persistent[2];
         else if (legacy && !registry) room = legacy[1]; // Synthetic/legacy test server only.
@@ -156,6 +190,10 @@ export function createRelay(options: tls.TlsOptions, budget: {take(bytes: number
         if (group.size >= 9 || (!rooms.has(room) && rooms.size >= 32)) { socket.destroy(); return; }
         if (!members.has(socket)) members.set(socket, {id: randomBytes(32).toString('hex'),label: '-',host: false});
         if ([...group].some(peer => members.get(peer)?.id === members.get(socket)?.id)) { socket.destroy(); return; }
+        if (durableJoin && memberJoin) {
+          try { if (!registry!.remember(memberJoin[1], memberJoin[2], memberJoin[3], memberJoin[4], memberJoin[5] !== undefined)) { socket.destroy();return; } }
+          catch { server.close();for (const peer of sockets) peer.destroy();return; }
+        }
         group.add(socket); rooms.set(room, group); buffer = buffer.subarray(end + 1);
         if (!spend(128)) { socket.destroy(); return; }
         socket.write('OK\n');

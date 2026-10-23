@@ -63,11 +63,11 @@ packet (64..131072 bytes). Room ID = HMAC-SHA256(group key, UTF-8
 `SCUM MiniMap opaque relay room v1`). The relay cannot derive the group key.
 Echoing each sender's frame keeps solitary clients alive; clients ignore their
 own publications. The legacy ephemeral join is disabled on the production service.
-No encryption keys, packets, names or coordinates are logged/saved.
+No encryption keys, packet history, plaintext names or coordinates are logged/saved.
 
 Owner control uses a separate TLS connection: `SCUMCREATE1 <group ID> <room ID>
 <64 hex owner token>\n`, `SCUMROTATE1 ...` or `SCUMDELETE1 ...`, acknowledged with `OK\n` only after
-the registry is flushed. Registry entries contain only the room identifier and
+the registry is flushed. Registry entries contain the room identifier, optional encrypted member labels and
 SHA-256 of `MiniMap owner v1:<group ID>:<owner token>`. Rotating disconnects old-room
 members, blocks the retired code, and leaves other groups connected. Deleting
 disconnects every member of that group and permanently blocks its codes. A
@@ -98,3 +98,9 @@ Inspect with `systemctl status minimap-relay`, `journalctl -u minimap-relay`, an
 the `budget.json` state file. Stop with `systemctl stop minimap-relay`. Existing
 direct sharing remains usable independently. No load balancer, paid storage,
 managed database, third-party relay subscription or paid failover is needed.
+
+### Persistent offline membership (unreleased)
+
+New clients use `SCUMGROUP3` with a Windows-protected, per-group member token and an encrypted `member-name-v2:<fresh packet ID>:<display name>` label. The registry stores this opaque label and owner status, never plaintext names, locations, keys or packets. Up to 64 remembered memberships per group are retained independently of the existing nine simultaneous connections. `SCUMROSTER3 <group ID> <room ID>` reads online/offline rows over pinned TLS; room possession is required on every request. Polling reuses a connection and charges the actual bounded response to the existing traffic ledger. Older GROUP1/GROUP2 and owner management clients remain accepted.
+
+Groups, membership identities and encrypted labels survive empty rooms and relay restarts. Code rotation discards the previous code's labels; deletion retains only its existing owner/room tombstone. Disconnect affects the current connection, keeps membership and prevents automatic retries until a manual Connect or app restart. Network failures retry every 30 seconds. The client remembers active groups in DPAPI storage format 3; formats 1/2 remain readable with sharing initially disabled until explicit Connect. Closing the app preserves active memberships; Leave saves a disabled reconnect preference. Both updated app and relay are required for this feature. Deploy code while preserving the existing groups registry, TLS identity and budget ledger.

@@ -19,13 +19,10 @@ encrypted with Windows DPAPI in `private-groups.dat` inside its profile director
 They are tied to that Windows account, not a portable ownership backup.
 
 You can save up to 16 groups and connect to several at once. Each saved group has
-its own Connect/Leave and Copy code controls; owned groups also show Refresh code and Delete group. Deletion requires confirmation, disconnects all members and permanently retires the code. Failed deletion remains saved for retry. Leave only disconnects your session and keeps the saved membership.
-Leaving disconnects you immediately and keeps the code for later. Starting the
-app restores saved groups with sharing disabled. Rooms with no connected members
+its own Connect/Leave and Copy code controls; owned groups also show Refresh code and Delete group. Deletion requires confirmation, disconnects all members and permanently retires the code. Failed deletion remains saved for retry. Leave disconnects your session, disables automatic rejoining and keeps the saved code.
+Closing MiniMap keeps your active memberships saved. Opening it again automatically reconnects those groups, including when their creator is offline. Explicit Leave keeps that group disconnected after restarting. Older membership files retain their previous disabled startup preference until the next Connect. Rooms with no connected members
 are removed from memory immediately; their persistent codes and ownership remain
-valid. There is no seven-day inactivity expiry. The server stores only opaque
-group/routing identifiers and owner-credential hashes, never decryption keys or
-position history. Each group shares only your own positions and markers; joining
+valid. There is no seven-day inactivity expiry. The server stores opaque group/routing and membership identifiers, owner-credential hashes and encrypted member labels, never decryption keys or position history. Member names remain encrypted. Offline members stay in the roster across empty rooms and relay restarts. They have no live position or shared map markers. Up to 64 memberships can be remembered per group. Each group shares only your own positions and markers; joining
 several groups does not forward one group's members into another group.
 
 The configured Oracle relay uses outbound TLS connections and a pinned server
@@ -35,13 +32,12 @@ opaque room identifier derived from the key, never the key itself. It forwards
 encrypted packets without decoding them or retaining location history. The relay
 operator can still see connecting IP addresses, room membership, sizes and timing.
 People with your group code can read and publish in your group. Refresh the code
-when membership changes. Active sharing remains opt-in and disabled at startup.
+when membership changes. Creating or connecting to a group enables automatic rejoining for that group; Leave disables it.
 
 Each room supports nine participants. The service has connection/rate limits and
 a conservative 50 GB monthly traffic budget with an automatic cutoff. Unused
 reserved traffic is forfeited on restart; restarting does not reset the budget.
-The allowance renews at the start of each UTC calendar month. Reconnect by
-using that group's Connect button after a failure. The direct-IP Host/Join button has been removed. No paid fallback is used.
+The allowance renews at the start of each UTC calendar month. Dropped network connections retry after 30 seconds. Host Disconnect stops automatic retries for the current app session; the member may still use Connect or restart MiniMap to rejoin. The direct-IP Host/Join button has been removed. No paid fallback is used.
 
 The relay's budget limits this service only. It cannot guarantee a zero Oracle
 bill or account-wide availability: other workloads share the account's free
@@ -49,7 +45,7 @@ allowances, and Oracle controls infrastructure availability and billing.
 
 ## Connection and capture
 
-Group codes through our Oracle relay are the connection flow. There is no direct-IP Host/Join button. Close Settings and focus SCUM to resume coordinate capture. Sharing begins disabled after restart; Connect each saved group when wanted.
+Group codes through our Oracle relay are the connection flow. There is no direct-IP Host/Join button. Close Settings and focus SCUM to resume coordinate capture. Previously active groups reconnect on startup. Connect enables this for a saved group, and Leave disables it. App and relay updates are both required for persistent offline membership.
 
 Names and coordinates use AES-256-CBC with HMAC-SHA256 and separately derived keys. Each packet has a fresh IV. Everyone with the group code is trusted and can publish names and positions; the app cannot verify their SCUM server. Keep codes private. The creator alone holds the separate permission to refresh or delete a group. The relay keeps a deleted-group tombstone containing only existing routing/owner hashes, preventing old codes or creation requests from reviving it.
 
@@ -86,4 +82,4 @@ Settings > Appearance > Cluster nearby POIs turns clustering on or off for both 
 
 The active GPS navigation destination is shared automatically even if it has not been saved. Selecting a different destination updates its pin; clearing GPS removes that active-destination pin. The active GPS uses one slot of the 128-marker limit and is prioritised over saved markers. Off-screen shared GPS destinations have a cyan minimap edge arrow and owner label. If the same location is also a saved waypoint, that saved pin remains when GPS is cleared.
 
-The big-map sidebar lists connected players, including players without current coordinates. Each player has separate visibility pills for live location, active GPS waypoint, saved locations death markers and routes. These session-only controls apply to both maps and do not change outgoing sharing. All five start enabled; players with the same name retain separate controls. Connection cards show status and the age of the last captured position.
+The big-map sidebar lists connected and remembered offline members, including players without current coordinates. Each player has separate visibility pills for live location, active GPS waypoint, saved locations death markers and routes. These session-only controls apply to both maps and do not change outgoing sharing. All five start enabled; players with the same name retain separate controls. Connection cards show status and the age of the last captured position.

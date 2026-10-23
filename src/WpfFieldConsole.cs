@@ -1116,6 +1116,7 @@ namespace ScumMiniMap {
         internal WpfFieldConsoleRuntime(string folder,bool diagnostic=false) {
             this.diagnostic=diagnostic;application=Application.Current??new Application { ShutdownMode=ShutdownMode.OnExplicitShutdown };application.Resources.MergedDictionaries.Add(WpfFieldTheme.Resources());
             engine=new MapWindow(folder,diagnostic);var handle=engine.Handle;engine.WpfInitializeDefaults();
+            if(!diagnostic)try { relayGroups=new RelayGroupStore(engine.WpfDataFolder); }catch(Exception error) { Program.LogException("RestorePrivateGroups",error); }
             if(!diagnostic)zoneFolder=new AppZoneFolder(AppDomain.CurrentDomain.BaseDirectory);
             if(diagnostic)((System.Windows.Forms.Timer)typeof(MapWindow).GetField("timer",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).GetValue(engine)).Stop();
             RoadRouter.Instance.InitializeFromResource();terrain=new WpfTerrainTiles();geography=terrain.Overview();
@@ -1673,7 +1674,8 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
             body.Children.Add(WpfFieldTheme.Button(Localization.Get("Done"),()=>window.Close(),true));
             var timer=new DispatcherTimer { Interval=TimeSpan.FromSeconds(1) };timer.Tick+=(s,e)=> { if(!busy)foreach(var label in ChildrenOf<TextBlock>(rows).Where(t=>(t.Tag as string??"").StartsWith("group-state:"))) {
                 string id=((string)label.Tag).Substring(12);var group=relayGroups.GroupViews.FirstOrDefault(g=>g.Id==id);if(group!=null)label.Text=group.Pending!=""||group.Session!=null&&group.Session.Error!=null?Localization.Get("PrivatePositionInvalid"):group.Session==null?Localization.Get("PrivateGroupLeave"):group.Session.Ready?Localization.Get("PlayerConnected")+" · "+group.Session.Connections:Localization.Get("PrivatePositionConnecting");
-            } if(!busy)foreach(var title in ChildrenOf<TextBlock>(rows).Where(t=>(t.Tag as string??"" ).StartsWith("group-title:"))) { var group=relayGroups.GroupViews.FirstOrDefault(g=>g.Id==((string)title.Tag).Substring(12));if(group!=null)title.Text=group.Label+(group.IsOwner?" · "+Localization.Get("PrivateGroupOwner"):""); }if(relayGroups.PersistenceError!=null)status.Text=Localization.Get("PrivatePositionInvalid"); };timer.Start();window.Closed+=(s,e)=> { closed=true;timer.Stop();code.Clear(); };window.ContentRendered+=(s,e)=>code.Focus();window.Content=new ScrollViewer { Content=body,VerticalScrollBarVisibility=ScrollBarVisibility.Auto };return window;
+            } if(!busy)foreach(var toggle in ChildrenOf<Button>(rows).Where(b=>(b.Tag as string??"").StartsWith("group-toggle:"))) { var group=relayGroups.GroupViews.FirstOrDefault(g=>g.Id==((string)toggle.Tag).Substring(13));if(group!=null)toggle.Content=Localization.Get(group.Session==null||group.Session.Error!=null?"PrivateGroupConnect":"PrivateGroupLeave"); }
+            if(!busy)foreach(var title in ChildrenOf<TextBlock>(rows).Where(t=>(t.Tag as string??"" ).StartsWith("group-title:"))) { var group=relayGroups.GroupViews.FirstOrDefault(g=>g.Id==((string)title.Tag).Substring(12));if(group!=null)title.Text=group.Label+(group.IsOwner?" · "+Localization.Get("PrivateGroupOwner"):""); }if(relayGroups.PersistenceError!=null)status.Text=Localization.Get("PrivatePositionInvalid"); };timer.Start();window.Closed+=(s,e)=> { closed=true;timer.Stop();code.Clear(); };window.ContentRendered+=(s,e)=>code.Focus();window.Content=new ScrollViewer { Content=body,VerticalScrollBarVisibility=ScrollBarVisibility.Auto };return window;
         }
         Window BuildGroupMembers(RelayMembership group) {
             var window=Window(Localization.Get("GroupManageMembers")+" · "+group.Label,620,580);window.Tag="group-members";
@@ -1690,8 +1692,8 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
                         if(task.Result.Items.Length==0)rows.Children.Add(WpfFieldTheme.Text(Localization.Get("GroupMembersEmpty"),14,WpfFieldTheme.Muted));
                         foreach(var member in task.Result.Items.OrderByDescending(m=>m.IsOwner).ThenBy(m=>m.Name,StringComparer.CurrentCultureIgnoreCase)) {
                             var captured=member;var row=new DockPanel { Margin=new Thickness(0,4,0,4) };
-                            if(!member.IsOwner) { var disconnect=WpfFieldTheme.Button(Localization.Get("GroupDisconnect"),()=>refresh(captured.Id));disconnect.Tag="group-disconnect:"+member.Id;DockPanel.SetDock(disconnect,Dock.Right);row.Children.Add(disconnect); }
-                            var label=WpfFieldTheme.Text(member.Name+(member.IsOwner?" · "+Localization.Get("PrivateGroupOwner"):""),15);label.TextWrapping=TextWrapping.Wrap;label.TextTrimming=TextTrimming.None;row.Children.Add(label);rows.Children.Add(row);
+                            if(!member.IsOwner&&member.Online) { var disconnect=WpfFieldTheme.Button(Localization.Get("GroupDisconnect"),()=>refresh(captured.Id));disconnect.Tag="group-disconnect:"+member.Id;DockPanel.SetDock(disconnect,Dock.Right);row.Children.Add(disconnect); }
+                            var label=WpfFieldTheme.Text(member.Name+(member.IsOwner?" · "+Localization.Get("PrivateGroupOwner"):"")+" · "+Localization.Get(member.Online?"PlayerConnected":"SquadOffline"),15);label.TextWrapping=TextWrapping.Wrap;label.TextTrimming=TextTrimming.None;row.Children.Add(label);rows.Children.Add(row);
                         }
                     });
                 });

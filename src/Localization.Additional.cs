@@ -1,4 +1,4 @@
-// Offline authored localizations; no runtime translation service.
+﻿// Offline authored localizations; no runtime translation service.
 using System;
 using System.Collections.Generic;
 namespace ScumMiniMap {
@@ -107,7 +107,7 @@ namespace ScumMiniMap {
             { "PrivateGroupOwner", "เจ้าของ" },
             { "PrivateGroupSurvivor", "ผู้รอดชีวิต" },
             { "WizardHoldNext", "กดค้าง 1 วินาทีเพื่อดำเนินการต่อ" },
-            { "PrivateGroupHelp", "สร้างกลุ่มและแชร์รหัสเป็นการส่วนตัว หรือวางรหัสแล้วเชื่อมต่อ รหัสใช้ได้จนกว่าเจ้าของจะเปลี่ยน คุณเข้าร่วมหลายกลุ่มได้ รหัสที่บันทึกได้รับการป้องกันด้วยบัญชี Windows นี้ การแชร์เริ่มต้นเป็นปิด การเปลี่ยนรหัสจะตัดการเชื่อมต่อกลุ่มและยกเลิกรหัสเดิม ผู้สร้างต้องเก็บโปรไฟล์ที่บันทึกไว้เพื่อรักษาสิทธิ์เจ้าของ" },
+            { "PrivateGroupHelp", "สร้างกลุ่มและแชร์รหัสเป็นการส่วนตัว หรือวางรหัสแล้วเชื่อมต่อ รหัสใช้ได้จนกว่าเจ้าของจะเปลี่ยน คุณเข้าร่วมหลายกลุ่มได้ รหัสที่บันทึกได้รับการป้องกันด้วยบัญชี Windows นี้ เมื่อเปิด MiniMap อีกครั้งจะเชื่อมต่อกลุ่มที่ใช้งานอยู่โดยอัตโนมัติ เมื่อปิดแอปคุณจะแสดงเป็นออฟไลน์และกลุ่มยังใช้งานได้ การออกจากกลุ่มจะหยุดการเข้าร่วมอัตโนมัติ การเปลี่ยนรหัสจะตัดการเชื่อมต่อกลุ่มและยกเลิกรหัสเดิม ผู้สร้างต้องเก็บโปรไฟล์ที่บันทึกไว้เพื่อรักษาสิทธิ์เจ้าของ" },
 
             { "PrivatePositionRelay", "กลุ่มส่วนตัวผ่านเซิร์ฟเวอร์ส่งต่อ" },
             { "PrivatePositionRelayHelp", "ไม่ต้องตั้งค่าพอร์ต แชร์คีย์กลุ่มเดียวกันกับเพื่อนเป็นการส่วนตัว เซิร์ฟเวอร์ส่งต่ออ่านตำแหน่งของคุณไม่ได้ ความจุฟรีมีจำกัด" },
@@ -1234,7 +1234,7 @@ namespace ScumMiniMap {
             { "PrivateGroupOwner", "擁有者" },
             { "PrivateGroupSurvivor", "倖存者" },
             { "WizardHoldNext", "按住1秒以繼續" },
-            { "PrivateGroupHelp", "建立群組並私下分享代碼，或貼上代碼後連線。代碼在擁有者更新前持續有效。可加入多個群組。儲存的代碼受目前Windows帳戶保護；分享預設關閉。更新代碼會中斷群組連線並使舊代碼失效。建立者需保留本機設定檔以保留擁有權。" },
+            { "PrivateGroupHelp", "建立群組並私下分享代碼，或貼上代碼後連線。代碼在擁有者更新前持續有效。可加入多個群組。儲存的代碼受目前Windows帳戶保護；重新開啟 MiniMap 時會自動重新連線至先前連線的群組。關閉應用程式後你會顯示為離線，群組仍可使用。離開群組會停止自動重新連線。更新代碼會中斷群組連線並使舊代碼失效。建立者需保留本機設定檔以保留擁有權。" },
 
             { "PrivatePositionRelay", "透過中繼建立私密群組" },
             { "PrivatePositionRelayHelp", "無需連接埠轉送。請私下與好友共用同一個群組金鑰。中繼無法讀取你的位置。免費中繼容量有限。" },
@@ -2361,7 +2361,7 @@ namespace ScumMiniMap {
             { "PrivateGroupOwner", "所有者" },
             { "PrivateGroupSurvivor", "生存者" },
             { "WizardHoldNext", "1秒間長押しして続行" },
-            { "PrivateGroupHelp", "グループを作成してコードを非公開で共有するか、コードを貼り付けて接続します。コードは所有者が更新するまで有効です。複数のグループに参加できます。保存されたコードは現在のWindowsアカウントで保護され、共有はオフで起動します。更新するとグループが切断され、以前のコードは無効になります。所有権を保つには作成者の保存済みプロファイルが必要です。" },
+            { "PrivateGroupHelp", "グループを作成してコードを非公開で共有するか、コードを貼り付けて接続します。コードは所有者が更新するまで有効です。複数のグループに参加できます。保存されたコードは現在のWindowsアカウントで保護され、MiniMapを再び開くと、前回接続していたグループに自動で再接続します。アプリを閉じるとオフライン表示になり、グループは引き続き利用できます。グループから退出すると自動再接続が停止します。更新するとグループが切断され、以前のコードは無効になります。所有権を保つには作成者の保存済みプロファイルが必要です。" },
 
             { "PrivatePositionRelay", "中継サーバーで非公開グループ" },
             { "PrivatePositionRelayHelp", "ポート開放は不要です。同じグループキーを友達と非公開で共有してください。中継サーバーは位置情報を読み取れません。無料の中継容量には制限があります。" },
@@ -3488,7 +3488,7 @@ namespace ScumMiniMap {
             { "PrivateGroupOwner", "Vlastník" },
             { "PrivateGroupSurvivor", "Přeživší" },
             { "WizardHoldNext", "Pokračujte podržením na 1 sekundu" },
-            { "PrivateGroupHelp", "Vytvořte skupinu a sdílejte kód soukromě nebo vložte kód a připojte se. Kódy platí, dokud je vlastník neobnoví. Můžete se připojit k více skupinám. Uložené kódy chrání tento účet Windows; sdílení začíná vypnuté. Obnovení odpojí skupinu a zneplatní starý kód. Tvůrce musí zachovat uložený profil, aby si ponechal vlastnictví." },
+            { "PrivateGroupHelp", "Vytvořte skupinu a sdílejte kód soukromě nebo vložte kód a připojte se. Kódy platí, dokud je vlastník neobnoví. Můžete se připojit k více skupinám. Uložené kódy chrání tento účet Windows; aktivní skupiny se při opětovném otevření MiniMap automaticky připojí. Po zavření aplikace jste offline a skupina zůstává dostupná. Opuštění skupiny vypne automatické připojování. Obnovení odpojí skupinu a zneplatní starý kód. Tvůrce musí zachovat uložený profil, aby si ponechal vlastnictví." },
 
             { "PrivatePositionRelay", "Soukromá skupina přes přenosový server" },
             { "PrivatePositionRelayHelp", "Přesměrování portů není potřeba. Sdílejte jeden klíč skupiny soukromě s přáteli. Přenosový server nemůže číst vaše pozice. Bezplatná kapacita je omezená." },
@@ -4615,7 +4615,7 @@ namespace ScumMiniMap {
             { "PrivateGroupOwner", "Proprietario" },
             { "PrivateGroupSurvivor", "Sopravvissuto" },
             { "WizardHoldNext", "Tieni premuto 1 secondo per continuare" },
-            { "PrivateGroupHelp", "Crea un gruppo e condividi il codice in privato, oppure incolla un codice e connettiti. I codici restano validi finché il proprietario non li rinnova. Puoi unirti a più gruppi. I codici salvati sono protetti da questo account Windows; la condivisione parte disattivata. Il rinnovo disconnette il gruppo e invalida il vecchio codice. Il creatore deve conservare il profilo salvato per mantenere la proprietà." },
+            { "PrivateGroupHelp", "Crea un gruppo e condividi il codice in privato, oppure incolla un codice e connettiti. I codici restano validi finché il proprietario non li rinnova. Puoi unirti a più gruppi. I codici salvati sono protetti da questo account Windows; i gruppi attivi si riconnettono alla riapertura di MiniMap. Chiudendo l’app risulti offline e il gruppo resta disponibile. Uscire dal gruppo interrompe il rientro automatico. Il rinnovo disconnette il gruppo e invalida il vecchio codice. Il creatore deve conservare il profilo salvato per mantenere la proprietà." },
 
             { "PrivatePositionRelay", "Gruppo privato tramite relay" },
             { "PrivatePositionRelayHelp", "Non serve inoltrare le porte. Condividi una chiave di gruppo in privato con gli amici. Il relay non può leggere le posizioni. La capacità gratuita è limitata." },
@@ -5742,7 +5742,7 @@ namespace ScumMiniMap {
             { "PrivateGroupOwner", "Власник" },
             { "PrivateGroupSurvivor", "Уцілілий" },
             { "WizardHoldNext", "Утримуйте 1 секунду для продовження" },
-            { "PrivateGroupHelp", "Створіть групу й передайте код приватно або вставте код і підключіться. Код діє, доки власник не оновить його. Можна приєднуватися до кількох груп. Збережені коди захищені цим обліковим записом Windows; обмін спочатку вимкнено. Оновлення відключає групу та скасовує старий код. Творець має зберігати свій профіль, щоб зберегти права власника." },
+            { "PrivateGroupHelp", "Створіть групу й передайте код приватно або вставте код і підключіться. Код діє, доки власник не оновить його. Можна приєднуватися до кількох груп. Збережені коди захищені цим обліковим записом Windows; після відкриття MiniMap активні групи підключаються автоматично. Після закриття застосунку ви відображаєтеся поза мережею, а група залишається доступною. Вихід із групи вимикає автоматичне приєднання. Оновлення відключає групу та скасовує старий код. Творець має зберігати свій профіль, щоб зберегти права власника." },
 
             { "PrivatePositionRelay", "Приватна група через ретранслятор" },
             { "PrivatePositionRelayHelp", "Перенаправлення портів не потрібне. Передайте спільний ключ групи друзям приватно. Ретранслятор не може читати ваші позиції. Безкоштовна пропускна здатність обмежена." },

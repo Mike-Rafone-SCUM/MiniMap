@@ -49,6 +49,9 @@ class GroupMemberUiTests {
                     Check((bool)Prop(Get(group,"Session"),"Ready"),"Clicking Disconnect removes the member and keeps the host connected");
                     Await(()=>!Children(dialog).OfType<Button>().Any(b=>(b.Tag as string??"").StartsWith("group-disconnect:")));
                     Check(true,"The member list refreshes after the disconnect completes");
+                    string offline=(string)asm.GetType("ScumMiniMap.Localization").GetMethod("Get").Invoke(null,new object[]{"SquadOffline"});
+                    Check(Children(dialog).OfType<TextBlock>().Any(t=>t.Text.Contains("Synthetic member")&&t.Text.Contains(offline)),"The disconnected member remains visibly labelled offline");
+                    var offlineImage=new System.Windows.Media.Imaging.RenderTargetBitmap((int)dialog.ActualWidth,(int)dialog.ActualHeight,96,96,System.Windows.Media.PixelFormats.Pbgra32);offlineImage.Render(dialog);var offlinePng=new System.Windows.Media.Imaging.PngBitmapEncoder();offlinePng.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(offlineImage));using(var stream=File.Create(Path.Combine(folder,"offline-member.png")))offlinePng.Save(stream);
                     Call(member,"Connect",joined);Await(()=>(bool)Prop(Get(joined,"Session"),"Ready"));
                     Await(()=>Children(dialog).OfType<Button>().Any(b=>(b.Tag as string??"").StartsWith("group-disconnect:")));
                     Check((string)Prop(group,"Code")==code,"Rejoining uses the unchanged invite code and returns to the live member list");

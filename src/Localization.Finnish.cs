@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ScumMiniMap {
@@ -98,7 +98,7 @@ PrivateGroupLabel|Ryhmä
 PrivateGroupOwner|Omistaja
 PrivateGroupSurvivor|Selviytyjä
 WizardHoldNext|Jatka pitämällä painettuna 1 sekunti
-PrivateGroupHelp|Luo ryhmä ja jaa sen koodi yksityisesti tai liitä saamasi koodi ja yhdistä. Koodi on voimassa, kunnes omistaja uusii sen. Voit liittyä useaan ryhmään. Tallennetut koodit suojataan tällä Windows-tilillä, ja jakaminen on aluksi pois käytöstä. Koodin uusiminen katkaisee ryhmän yhteydet ja mitätöi vanhan koodin. Ryhmän luojan on säilytettävä tallennettu profiilinsa omistajuuden säilyttämiseksi.
+PrivateGroupHelp|Luo ryhmä ja jaa sen koodi yksityisesti tai liitä saamasi koodi ja yhdistä. Koodi on voimassa, kunnes omistaja uusii sen. Voit liittyä useaan ryhmään. Tallennetut koodit suojataan tällä Windows-tilillä, ja aktiivisiin ryhmiin yhdistetään automaattisesti, kun avaat MiniMapin uudelleen. Sovelluksen sulkeminen näyttää sinut offline-tilassa, ja ryhmä pysyy käytettävissä. Ryhmästä poistuminen lopettaa automaattisen liittymisen. Koodin uusiminen katkaisee ryhmän yhteydet ja mitätöi vanhan koodin. Ryhmän luojan on säilytettävä tallennettu profiilinsa omistajuuden säilyttämiseksi.
 PrivatePositionRelay|Yksityinen ryhmä välityspalvelimen kautta
 PrivatePositionRelayHelp|Porttiohjausta ei tarvita. Jaa ryhmäavain yksityisesti kavereillesi. Välityspalvelin ei voi lukea sijaintejanne. Maksuttoman välityspalvelimen kapasiteetti on rajallinen.
 SetupSharingVisibility|Suuren kartan sivupalkissa voit valita kunkin pelaajan reaaliaikaisen sijainnin, GPS-kohteen, tallennettujen sijaintien ja kuolinmerkkien näkyvyyden erikseen. Nämä valinnat vaikuttavat vain omaan näkymääsi; jakaminen jatkuu.

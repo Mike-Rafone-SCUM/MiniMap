@@ -10,6 +10,8 @@ namespace ScumMiniMap {
     internal sealed class RelayMembership {
         internal string Id,Key,Owner,Pending,Name,NameStamp="";
         internal DirectPositions Session;
+        internal bool AutoConnect;internal string MemberToken=Guid.NewGuid().ToString("N")+Guid.NewGuid().ToString("N");
+        internal DateTime RetryAt;internal RelayGroupStore.Member[] Roster=new RelayGroupStore.Member[0];
         internal string Code { get { return "MM1-"+Id+"-"+Key.TrimEnd('=').Replace('+','-').Replace('/','_'); } }
         internal bool IsOwner { get { return !string.IsNullOrEmpty(Owner); } }
         internal string Label { get { return string.IsNullOrWhiteSpace(Name)?Localization.Get("PrivateGroupLabel")+" "+Id.Substring(0,8):Name; } }
@@ -30,7 +32,7 @@ namespace ScumMiniMap {
     }
     internal sealed class RelayGroupStore:IDisposable {
         readonly object gate=new object(),operations=new object();readonly string file,address,certificate;readonly int port;
-        readonly Action<string,byte[]> persist;
+        readonly Action<string,byte[]> persist;readonly Timer maintenance;
         int nameRevision,savedNameRevision;bool nameSaveWorker;DateTime nextNameSave;volatile string persistenceError;
         internal string PersistenceError { get { return persistenceError; } }
         readonly List<RelayMembership> groups=new List<RelayMembership>();bool disposed;
@@ -49,17 +51,20 @@ namespace ScumMiniMap {
                 WriteProtectedFile(colorFile,Protect(Encoding.UTF8.GetBytes(MemberColorSeed),true));
             }
             DisplayName=Localization.Get("PrivateGroupSurvivor")+" "+Guid.NewGuid().ToString("N").Substring(0,4);
-            if(!File.Exists(file))return;
+            if(!File.Exists(file)) { maintenance=new Timer(Maintain,null,5000,5000);return; }
             if(new FileInfo(file).Length>65536)throw new InvalidDataException();
             var lines=Encoding.UTF8.GetString(Protect(File.ReadAllBytes(file),false)).Split('\n');
-            if(lines.Length<2||lines[0]!="1"&&lines[0]!="2")throw new InvalidDataException();bool version2=lines[0]=="2";DisplayName=Text(lines[1]);ValidateName(DisplayName);
+            if(lines.Length<2||lines[0]!="1"&&lines[0]!="2"&&lines[0]!="3")throw new InvalidDataException();bool version3=lines[0]=="3",version2=lines[0]!="1";DisplayName=Text(lines[1]);ValidateName(DisplayName);
             foreach(string line in lines.Skip(2).Where(value=>value.Length>0)) {
-                var fields=line.Split('\t');if(fields.Length!=(version2?6:5))throw new InvalidDataException();var group=RelayMembership.Parse(fields[0]);
+                var fields=line.Split('\t');if(fields.Length!=(version3?8:version2?6:5))throw new InvalidDataException();var group=RelayMembership.Parse(fields[0]);
                 group.Owner=fields[1];group.Pending=fields[2];group.Name=Text(fields[3]);
                 group.NameStamp=version2?fields[4]:"";
+                if(version3) { if(fields[6].Length!=64||!fields[6].All(Uri.IsHexDigit)||fields[7]!="0"&&fields[7]!="1")throw new InvalidDataException();group.MemberToken=fields[6];group.AutoConnect=fields[7]=="1"; }
                 if(group.Name.Length>48||group.Name.Any(char.IsControl)||group.NameStamp!=""&&(group.NameStamp.Length!=64||!group.NameStamp.All(Uri.IsHexDigit)||!group.NameStamp.StartsWith("4752504E",StringComparison.Ordinal)))throw new InvalidDataException();
                 if(fields[version2?5:4]!="1"||group.Owner.Length!=0&&(group.Owner.Length!=64||!group.Owner.All(Uri.IsHexDigit))||group.Pending!=""&&group.Pending!="CREATE"&&group.Pending!="ROTATE"&&group.Pending!="DELETE"||groups.Any(g=>g.Id==group.Id)||groups.Count>=16)throw new InvalidDataException();groups.Add(group);
             }
+            foreach(var group in groups.Where(g=>g.AutoConnect&&g.Pending==""))OpenSession(group);
+            maintenance=new Timer(Maintain,null,5000,5000);
         }
         static string Text(string value) { return new UTF8Encoding(false,true).GetString(Convert.FromBase64String(value)); }
         static string Base(string value) { return Convert.ToBase64String(Encoding.UTF8.GetBytes(value??"")); }
@@ -70,7 +75,7 @@ namespace ScumMiniMap {
         }
         static void ValidateName(string name) { if(string.IsNullOrWhiteSpace(name)||name.Length>32||name.Any(char.IsControl))throw new ArgumentException(); }
         void Save() {
-            string text;int revision;lock(gate) { text="2\n"+Base(DisplayName)+"\n"+string.Join("\n",groups.Select(g=>g.Code+"\t"+g.Owner+"\t"+g.Pending+"\t"+Base(g.Name)+"\t"+g.NameStamp+"\t1"));revision=nameRevision; }
+            string text;int revision;lock(gate) { text="3\n"+Base(DisplayName)+"\n"+string.Join("\n",groups.Select(g=>g.Code+"\t"+g.Owner+"\t"+g.Pending+"\t"+Base(g.Name)+"\t"+g.NameStamp+"\t1\t"+g.MemberToken+"\t"+(g.AutoConnect?"1":"0")));revision=nameRevision; }
             byte[] plain=Encoding.UTF8.GetBytes(text);byte[] encrypted;try { encrypted=Protect(plain,true); }finally { Array.Clear(plain,0,plain.Length); }
             persist(file,encrypted);lock(gate)savedNameRevision=Math.Max(savedNameRevision,revision);persistenceError=null;
         }
@@ -89,7 +94,7 @@ namespace ScumMiniMap {
         internal DirectPositions[] Sessions { get { lock(gate)return groups.Where(g=>g.Session!=null).Select(g=>g.Session).ToArray(); } }
         internal void SetName(string name) { ValidateName(name);lock(operations) { lock(gate) { if(disposed)throw new ObjectDisposedException("RelayGroupStore");DisplayName=name.Trim(); }Save(); } }
         internal RelayMembership Create(string name="") {
-            var group=new RelayMembership { Id=Guid.NewGuid().ToString("N"),Key=PrivatePositions.NewKey(),Owner=BitConverter.ToString(Convert.FromBase64String(PrivatePositions.NewKey())).Replace("-","").ToLowerInvariant(),Pending="CREATE",Name="" };
+            var group=new RelayMembership { Id=Guid.NewGuid().ToString("N"),Key=PrivatePositions.NewKey(),Owner=BitConverter.ToString(Convert.FromBase64String(PrivatePositions.NewKey())).Replace("-","").ToLowerInvariant(),Pending="CREATE",Name="",AutoConnect=true };
             if(!string.IsNullOrWhiteSpace(name))group.Rename(name);
             lock(operations) { lock(gate) { if(disposed||groups.Count>=16)throw new InvalidOperationException();groups.Add(group); }Save();Complete(group);return group; }
         }
@@ -103,15 +108,36 @@ namespace ScumMiniMap {
         }
         internal void Connect(RelayMembership group) {
             lock(operations) {
-            if(group.Pending!="") { Complete(group);return; }
-            lock(gate) {
-                if(disposed||!groups.Contains(group))throw new InvalidOperationException();if(group.Session!=null)group.Session.Dispose();
-                string token=BitConverter.ToString(Convert.FromBase64String(PrivatePositions.NewKey())).Replace("-","").ToLowerInvariant();
-                group.Session=new DirectPositions(false,address,port,group.Key,DisplayName,false,null,true,certificate,group.Id,MemberColorSeed,token,group.Owner);
-            }
+                bool previous;lock(gate) { if(disposed||!groups.Contains(group))throw new InvalidOperationException();previous=group.AutoConnect;group.AutoConnect=true; }
+                try { Save(); }catch { lock(gate)group.AutoConnect=previous;throw; }if(group.Pending!="") { Complete(group);return; }
+                lock(gate)OpenSession(group);
             }
         }
-        internal void Leave(RelayMembership group) { lock(gate) { if(group.Session!=null)group.Session.Dispose();group.Session=null; } }
+        void OpenSession(RelayMembership group) {
+            if(group.Session!=null)group.Session.Dispose();
+            group.Session=new DirectPositions(false,address,port,group.Key,DisplayName,false,null,true,certificate,group.Id,MemberColorSeed,group.MemberToken,group.Owner,true);
+            group.RetryAt=DateTime.UtcNow.AddSeconds(30);
+        }
+        internal void Leave(RelayMembership group) {
+            lock(operations) {
+                lock(gate) { if(disposed||!groups.Contains(group))throw new InvalidOperationException();group.AutoConnect=false;if(group.Session!=null)group.Session.Dispose();group.Session=null; }
+                Save();CloseMemberManagement(group);
+            }
+        }
+        void Maintain(object unused) {
+            if(!Monitor.TryEnter(operations))return;
+            try {
+                foreach(var group in Groups) {
+                    lock(gate) {
+                        if(disposed)return;if(!group.AutoConnect||group.Pending!="")continue;
+                        if(group.Session==null||group.Session.Error!=null&&!group.Session.ReconnectBlocked&&DateTime.UtcNow>=group.RetryAt)OpenSession(group);
+                        if(!group.Session.Ready)continue;
+                    }
+                    try { var roster=MemberControl(group,"ROSTER",new string('0',64));lock(gate)if(!disposed)group.Roster=roster.Items; }
+                    catch { /* Keep known names offline while the relay is unavailable. */ }
+                }
+            }finally { Monitor.Exit(operations); }
+        }
         internal void Rename(RelayMembership group,string name) { lock(operations) { lock(gate) { if(disposed||!groups.Contains(group))throw new InvalidOperationException();group.Rename(name); }Save(); } }
         internal void SynchronizeNames() {
             lock(gate) {
@@ -173,7 +199,7 @@ namespace ScumMiniMap {
             }
         }
         internal sealed class Member {
-            internal string Id,Name;internal bool IsOwner;
+            internal string Id,Name,PeerId;internal bool IsOwner,Online=true;
         }
         internal sealed class Members {
             internal Member[] Items;
@@ -184,11 +210,14 @@ namespace ScumMiniMap {
         }
         readonly System.Collections.Concurrent.ConcurrentDictionary<string,MemberLink> memberLinks=new System.Collections.Concurrent.ConcurrentDictionary<string,MemberLink>();
         internal void CloseMemberManagement(RelayMembership group) { MemberLink link;if(memberLinks.TryRemove(group.Id,out link))link.Dispose(); }
-        internal Members ReadMembers(RelayMembership group) { return MemberControl(group,"LIST",new string('0',64)); }
+        internal Members ReadMembers(RelayMembership group) {
+            lock(gate)if(disposed||!groups.Contains(group)||!group.IsOwner)throw new InvalidOperationException();
+            var saved=MemberControl(group,"ROSTER",new string('0',64));var live=MemberControl(group,"LIST",new string('0',64));return new Members { Items=saved.Items.Concat(live.Items.Where(m=>!saved.Items.Any(previous=>previous.Id==m.Id))).ToArray() };
+        }
         internal void DisconnectMember(RelayMembership group,string id) { MemberControl(group,"KICK",id); }
         Members MemberControl(RelayMembership group,string action,string id) {
             lock(operations) {
-                lock(gate)if(disposed||!groups.Contains(group)||!group.IsOwner||group.Pending!=""||id==null||id.Length!=64||!id.All(Uri.IsHexDigit))throw new InvalidOperationException();
+                lock(gate)if(disposed||!groups.Contains(group)||action!="ROSTER"&&!group.IsOwner||group.Pending!=""||id==null||id.Length!=64||!id.All(Uri.IsHexDigit))throw new InvalidOperationException();
                 try {
                     MemberLink link;
                     if(!memberLinks.TryGetValue(group.Id,out link)) {
@@ -204,16 +233,22 @@ namespace ScumMiniMap {
                         }catch { link.Dispose();throw; }
                     }
                     var stream=link.Stream;
-                        byte[] request=Encoding.ASCII.GetBytes("SCUMMEMBERS2 "+action+" "+group.Id+" "+DirectPositions.RelayRoom(Convert.FromBase64String(group.Key))+" "+group.Owner+" "+id.ToLowerInvariant()+"\n");stream.Write(request,0,request.Length);Array.Clear(request,0,request.Length);
+                        byte[] request=Encoding.ASCII.GetBytes((action=="ROSTER"?"SCUMROSTER3 "+group.Id+" "+DirectPositions.RelayRoom(Convert.FromBase64String(group.Key)):"SCUMMEMBERS2 "+action+" "+group.Id+" "+DirectPositions.RelayRoom(Convert.FromBase64String(group.Key))+" "+group.Owner+" "+id.ToLowerInvariant())+"\n");stream.Write(request,0,request.Length);Array.Clear(request,0,request.Length);
                         string response=ReadLine(stream);
-                        if(action!="LIST") { if(response!="OK")throw new IOException();return null; }
+                        if(action!="LIST"&&action!="ROSTER") { if(response!="OK")throw new IOException();return null; }
                         if(response!="OK")throw new IOException();var members=new List<Member>();
                         while(true) {
-                            string row=ReadLine(stream);if(row=="END")break;if(members.Count>=9)throw new InvalidDataException();var parts=row.Split(' ');
-                            if(parts.Length!=3||parts[0].Length!=64||!parts[0].All(Uri.IsHexDigit)||(parts[1]!="0"&&parts[1]!="1"))throw new InvalidDataException();
+                            string row=ReadLine(stream);if(row=="END")break;if(members.Count>=(action=="ROSTER"?64:9))throw new InvalidDataException();var parts=row.Split(' ');
+                            bool roster=action=="ROSTER";if(parts.Length!=(roster?4:3)||roster&&parts[2]!="0"&&parts[2]!="1"||parts[0].Length!=64||!parts[0].All(Uri.IsHexDigit)||(parts[1]!="0"&&parts[1]!="1"))throw new InvalidDataException();
                             string label=Localization.Get("GroupOlderClient")+" · "+parts[0].Substring(0,8);
-                            if(parts[2]!="-")try { string decoded=PrivatePositions.Open(Convert.FromBase64String(group.Key),Convert.FromBase64String(parts[2]));if(!decoded.StartsWith("member-name-v1:",StringComparison.Ordinal))throw new InvalidDataException();decoded=decoded.Substring(15);ValidateName(decoded);label=decoded; }catch { label=Localization.Get("PrivateGroupSurvivor")+" · "+parts[0].Substring(0,8); }
-                            members.Add(new Member { Id=parts[0],Name=label,IsOwner=parts[1]=="1" });
+                            string encrypted=parts[roster?3:2],peerId=null;
+                            if(encrypted!="-")try {
+                                string decoded=PrivatePositions.Open(Convert.FromBase64String(group.Key),Convert.FromBase64String(encrypted));
+                                if(decoded.StartsWith("member-name-v2:",StringComparison.Ordinal)) { peerId=decoded.Substring(15,32);if(peerId.Length!=32||!peerId.All(Uri.IsHexDigit)||decoded[47]!=':')throw new InvalidDataException();decoded=decoded.Substring(48); }
+                                else if(decoded.StartsWith("member-name-v1:",StringComparison.Ordinal))decoded=decoded.Substring(15);else throw new InvalidDataException();
+                                ValidateName(decoded);label=decoded;
+                            }catch { label=Localization.Get("PrivateGroupSurvivor")+" · "+parts[0].Substring(0,8);peerId=null; }
+                            members.Add(new Member { Id=parts[0],Name=label,PeerId=peerId,IsOwner=parts[1]=="1",Online=!roster||parts[2]=="1" });
                         }
                         return new Members { Items=members.ToArray() };
                 }catch { CloseMemberManagement(group);throw; }
@@ -221,11 +256,16 @@ namespace ScumMiniMap {
         }
         static string ReadLine(Stream stream) { var text=new StringBuilder();for(int i=0;i<1024;i++) { int value=stream.ReadByte();if(value<0)throw new EndOfStreamException();if(value==10)return text.ToString();if(value<32||value>126)throw new InvalidDataException();text.Append((char)value); }throw new InvalidDataException(); }
         internal PrivatePositions.Peer[] Roster(bool positionsOnly=false) {
-            lock(gate)return groups.Where(g=>g.Session!=null).SelectMany(g=>(positionsOnly?g.Session.Snapshot():g.Session.Roster()).Select(p=>new PrivatePositions.Peer { Id=g.Id+":"+p.Id,Name=p.Name+" · "+g.Label,Position=p.Position,Updated=p.Updated })).ToArray();
+            lock(gate)return groups.Where(g=>g.Session!=null).SelectMany(g=> {
+                var live=(positionsOnly?g.Session.Snapshot():g.Session.Roster()).Where(p=>!g.Roster.Any(m=>m.PeerId==p.Id&&!m.Online)).ToArray();
+                var offline=positionsOnly?new PrivatePositions.Peer[0]:g.Roster.Where(m=>m.Id!=g.MemberToken&&m.PeerId!=null&&!live.Any(p=>p.Id==m.PeerId)).Select(m=>new PrivatePositions.Peer { Id=m.PeerId,Name=m.Name,Updated=DateTime.MinValue,Online=m.Online&&g.Session.Ready }).ToArray();
+                return live.Concat(offline).Select(p=>new PrivatePositions.Peer { Id=g.Id+":"+StableId(g,p.Id),Name=p.Name+" · "+g.Label,Position=p.Position,Updated=p.Updated,Online=p.Online });
+            }).ToArray();
         }
+        static string StableId(RelayMembership group,string peer) { var member=group.Roster.FirstOrDefault(m=>m.PeerId==peer);return member==null?peer:peer.Substring(0,8)+member.Id.Substring(8,24); }
         internal SharedMapMarker[] Markers() {
-            lock(gate)return groups.Where(g=>g.Session!=null).SelectMany(g=>g.Session.SnapshotMarkers().Where(m=>!RelayMembership.IsNameMarker(m)).Select(m=>new SharedMapMarker { Id=m.Id,Name=m.Name,Owner=m.Owner+" · "+g.Label,OwnerId=g.Id+":"+m.OwnerId,X=m.X,Y=m.Y,Death=m.Death })).ToArray();
+            lock(gate)return groups.Where(g=>g.Session!=null).SelectMany(g=>g.Session.SnapshotMarkers().Where(m=>!RelayMembership.IsNameMarker(m)&&!g.Roster.Any(member=>member.PeerId==m.OwnerId&&!member.Online)).Select(m=>new SharedMapMarker { Id=m.Id,Name=m.Name,Owner=m.Owner+" · "+g.Label,OwnerId=g.Id+":"+StableId(g,m.OwnerId),X=m.X,Y=m.Y,Death=m.Death })).ToArray();
         }
-        public void Dispose() { lock(gate) { disposed=true;foreach(var group in groups)if(group.Session!=null) { group.Session.Dispose();group.Session=null; }foreach(var link in memberLinks.Values)link.Dispose();memberLinks.Clear(); } }
+        public void Dispose() { lock(gate) { disposed=true;maintenance.Dispose();foreach(var group in groups)if(group.Session!=null) { group.Session.Dispose();group.Session=null; }foreach(var link in memberLinks.Values)link.Dispose();memberLinks.Clear(); } }
     }
 }

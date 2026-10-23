@@ -138,3 +138,28 @@ test('member polling reuses one authenticated connection and rechecks owner auth
     assert.equal(connections,2);const closed=once(admin,'close');admin.write(`SCUMMEMBERS2 LIST ${id} ${room} ${hostId} ${hostId}\n`);await closed;assert.equal(host.destroyed,false);
   }finally{for(const client of clients)client.destroy();await new Promise(resolve=>server.close(resolve));fs.rmSync(dir,{recursive:true});}
 });
+
+
+test('durable member roster survives an empty room and relay restart with encrypted labels only', {skip:!process.env.TEST_KEY,timeout:20000},async()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'minimap-offline-roster-')),file=path.join(dir,'groups.json');
+  fs.writeFileSync(file,JSON.stringify({version:1,groups:{}}));
+  const id='a'.repeat(32),room='b'.repeat(64),owner='c'.repeat(64),token='d'.repeat(64),label=Buffer.alloc(128,77).toString('base64');
+  let registry=new GroupRegistry(file);registry.change('CREATE',id,room,owner);
+  let server;const clients=[];
+  const start=async()=>{server=createRelay({key:fs.readFileSync(process.env.TEST_KEY),cert:fs.readFileSync(process.env.TEST_CERT)}, {take:()=>true},registry);server.listen(0,'127.0.0.1');await once(server,'listening');};
+  const open=async()=>{const socket=tls.connect({host:'127.0.0.1',port:server.address().port,rejectUnauthorized:false});socket.on('error',()=>{});clients.push(socket);await once(socket,'secureConnect');return socket;};
+  const request=(socket,line,end)=>new Promise((resolve,reject)=>{let text='';const collect=chunk=>{text+=chunk.toString();if(text.endsWith(end)){socket.off('data',collect);resolve(text);}};socket.on('data',collect);socket.once('error',reject);socket.write(line+'\n');});
+  const stop=async()=>{for(const client of clients)client.destroy();await new Promise(resolve=>server.close(resolve));};
+  try {
+    await start();let member=await open();assert.equal(await request(member,`SCUMGROUP3 ${id} ${room} ${token} ${label} ${owner}`,'\n'),'OK\n');
+    let control=await open();assert.equal(await request(control,`SCUMROSTER3 ${id} ${room}`,'END\n'),`OK\n${token} 1 1 ${label}\nEND\n`);
+    await stop();registry=new GroupRegistry(file);registry.change('CREATE',id,room,owner); // Lost-ack retry preserves members.
+    await start();control=await open();assert.equal(await request(control,`SCUMROSTER3 ${id} ${room}`,'END\n'),`OK\n${token} 1 0 ${label}\nEND\n`);
+    member=await open();assert.equal(await request(member,`SCUMGROUP3 ${id} ${room} ${token} ${label} ${owner}`,'\n'),'OK\n');
+    assert.equal(Object.keys(new GroupRegistry(file).roster(id,room)).length,1);
+    assert.equal(await request(control,`SCUMROSTER3 ${id} ${room}`,'END\n'),`OK\n${token} 1 1 ${label}\nEND\n`);
+    const outsider=await open(),closed=once(outsider,'close');outsider.write(`SCUMROSTER3 ${id} ${'e'.repeat(64)}\n`);await closed;
+    registry.change('ROTATE',id,'f'.repeat(64),owner);assert.deepEqual(new GroupRegistry(file).roster(id,'f'.repeat(64)),{});
+    assert.equal(fs.readFileSync(file,'utf8').includes(label),false);
+  }finally{await stop();fs.rmSync(dir,{recursive:true});}
+});
