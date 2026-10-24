@@ -1,6 +1,6 @@
 ﻿$ErrorActionPreference = 'Stop'
 $miniRoot = Split-Path $PSScriptRoot -Parent
-Add-Type -Path @(('Localization.cs','Localization.MapObjects.cs','Localization.MapObjects.DeNlPl.cs','Localization.Polish.cs','Localization.SpawnItems.cs','Localization.Extended.cs','Localization.Additional.cs','Localization.Finnish.cs') | ForEach-Object { Join-Path $miniRoot "src\$_" })
+Add-Type -Path @(('Localization.cs','Localization.MapObjects.cs','Localization.MapObjects.DeNlPl.cs','Localization.Polish.cs','Localization.SpawnItems.cs','Localization.Extended.cs','Localization.Additional.cs','Localization.Finnish.cs','Localization.LithuanianSwahili.cs') | ForEach-Object { Join-Path $miniRoot "src\$_" })
 [ScumMiniMap.Localization]::SelfTest()
 $english = [ScumMiniMap.Localization]::StringsEn
 $references = 0
@@ -55,6 +55,9 @@ $addedLanguageExpectations=@{
     'it-IT'=@('it','It','Impostazioni','Edifici')
     'uk-UA'=@('uk','Uk','Налаштування','Будівлі')
     'fi-FI'=@('fi','Fi','Asetukset','Rakennukset')
+    'lt-LT'=@('lt','Lt','Nustatymai','Pastatai')
+    'sw-KE'=@('sw','Sw','Mipangilio','Majengo')
+    'sw-TZ'=@('sw','Sw','Mipangilio','Majengo')
 }
 try {
     foreach($culture in $addedLanguageExpectations.Keys) {

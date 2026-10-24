@@ -1,7 +1,7 @@
 ﻿param(
     [Parameter(Mandatory=$true)][string]$AssemblyPath,
     [Parameter(Mandatory=$true)][string]$OutputDirectory,
-    [string[]]$Languages=@('en','es-AR','fr','de','nl','ru','zh-CN','tr','ar','pt-BR','ko','pl','pt-PT','th','zh-TW','ja','cs','it','uk','fi')
+    [string[]]$Languages=@('en','es-AR','fr','de','nl','ru','zh-CN','tr','ar','pt-BR','ko','pl','pt-PT','th','zh-TW','ja','cs','it','uk','fi','lt','sw')
 )
 $ErrorActionPreference = 'Stop'
 $assembly = (Resolve-Path -LiteralPath $AssemblyPath).ProviderPath

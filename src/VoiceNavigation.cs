@@ -15,12 +15,15 @@ namespace ScumMiniMap {
         internal const string GermanName="Mila (German)";
         internal const string SpanishName="Isabel (Spanish Argentine)";
         internal const string FinnishName="Noora (Suomi)";
-        internal static readonly string[] BundledNames={DefaultName,RussianName,GermanName,SpanishName,FinnishName};
-        static bool DistanceOnly(string name) { return name==RussianName || name==GermanName || name==FinnishName; }
+        internal const string LithuanianName="Ona (Lietuvių)";
+        internal const string SwahiliName="Zuri (Kiswahili)";
+        internal static readonly string[] BundledNames={DefaultName,RussianName,GermanName,SpanishName,FinnishName,LithuanianName,SwahiliName};
+        static bool DistanceOnly(string name) { return name==RussianName || name==GermanName || name==FinnishName || name==LithuanianName || name==SwahiliName; }
         internal static string[] RequiredClips(string name) { return Clips.Where(clip=>clip!="11_in.mp3" || !DistanceOnly(name)).ToArray(); }
         internal static string[] Compose(string voiceName,IEnumerable<string> clips) {
             // Russian «В» and German north-specific examples are not reusable
-            // distance prefixes. Finnish distance clips already include "metrin päästä".
+            // distance prefixes. Finnish, Lithuanian and Swahili distance clips
+            // already include their language's equivalent of the distance prefix.
             // Those voices say the distance followed by action.
             return clips.Where(clip=>!DistanceOnly(voiceName) || clip!="11_in.mp3").ToArray();
         }

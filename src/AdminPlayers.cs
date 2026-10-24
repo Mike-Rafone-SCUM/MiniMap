@@ -347,6 +347,12 @@ namespace ScumMiniMap {
             var tilePlayers=new List<Tuple<AdminPlayer,ListViewItem>>();
             int tileGeneration=0,displayedGeneration=-1,displayedPage=-1,displayedWidth=-1,displayedPageSize=-1;
             int currentPage=0,playersPerPage=1;
+            int tileBatchRevision=0;
+            Action appendTileBatch=null;
+            var tileBatchTimer=new System.Windows.Forms.Timer { Interval=15 };
+            tileBatchTimer.Tick+=(s,e)=> { tileBatchTimer.Stop();if(appendTileBatch!=null)appendTileBatch(); };
+            tiles.VisibleChanged+=(s,e)=> { if(tiles.Visible && appendTileBatch!=null && !form.IsDisposed)tileBatchTimer.Start();else tileBatchTimer.Stop(); };
+            form.FormClosed+=(s,e)=> { tileBatchRevision++;appendTileBatch=null;tileBatchTimer.Dispose(); };
             bool updatingTiles=false,updatingPageNumber=false;
             Action refreshTiles=null;
             refreshTiles=()=> {
@@ -367,7 +373,9 @@ namespace ScumMiniMap {
                     updatingPageNumber=false;
                     pageCount.Text="/ "+pages+"  ·  "+tilePlayers.Count;
                     previousPage.Enabled=currentPage>0;nextPage.Enabled=currentPage<pages-1;
-                    if(displayedGeneration==tileGeneration && displayedPage==currentPage && displayedWidth==width && displayedPageSize==pageSize)return;
+                    if(displayedGeneration==tileGeneration && displayedPage==currentPage && displayedWidth==width && displayedPageSize==pageSize) {if(appendTileBatch!=null && tiles.Visible)tileBatchTimer.Start();return;}
+                    tileBatchTimer.Stop();appendTileBatch=null;
+                    int batchRevision=++tileBatchRevision;
                     int first=currentPage*pageSize,last=Math.Min(tilePlayers.Count,first+pageSize);
                     // Height-only viewport changes retain the unchanged prefix
                     // of cards. Rebuilding it on grow and shrink made a small
@@ -380,7 +388,18 @@ namespace ScumMiniMap {
                     while(tiles.Controls.Count>keep) {var old=tiles.Controls[tiles.Controls.Count-1];tiles.Controls.RemoveAt(tiles.Controls.Count-1);old.Dispose();}
                     tiles.Padding=new Padding(4);
                     tiles.Height=Math.Max(8,((last-first+columns-1)/columns)*268+8);
-                    for(int index=first+keep;index<last;index++) {
+                    int nextTile=first+keep;
+                    // Native card construction can exceed an input frame when a
+                    // viewport grows. Add at most two cards per UI timer turn.
+                    // New pages/resizes cancel the previous unfinished batch.
+                    appendTileBatch=()=> {
+                        if(form.IsDisposed || closing || batchRevision!=tileBatchRevision || !tiles.Visible) {tileBatchTimer.Stop();return;}
+                        bool wasUpdating=updatingTiles;updatingTiles=true;
+                        tileScroll.BeginContentUpdate();tiles.SuspendLayout();
+                        try {
+                        int batchEnd=Math.Min(last,nextTile+2);
+                        for(;nextTile<batchEnd;nextTile++) {
+                        int index=nextTile;
                         var player=tilePlayers[index].Item1;var row=tilePlayers[index].Item2;
                         var tile=CreateAdminPlayerTile(player,PlayerDirectoryQuery.Count(cachedVehicles,player.Id),PlayerDirectoryQuery.Count(cachedFlags,player.Id),page=> {
                             if(busy)return;
@@ -393,7 +412,12 @@ namespace ScumMiniMap {
                             finally { busy=false;if(!closing && !form.IsDisposed) { updateActions();RestoreAdminTool(form,Native.AdminGameWindow()); } }
                         },!diagnosticMode);
                         tile.Width=width;AttachPlayerTeleportMenu(tile,player,form,text=>status.Text=text);tiles.Controls.Add(tile);
-                    }
+                        }
+                        } catch(Exception error) { tileBatchTimer.Stop();appendTileBatch=null;if(!form.IsDisposed)status.Text=error.Message;return; }
+                        finally { if(!tiles.IsDisposed)tiles.ResumeLayout(true);tileScroll.EndContentUpdate();updatingTiles=wasUpdating; }
+                        if(nextTile<last)tileBatchTimer.Start();else appendTileBatch=null;
+                    };
+                    appendTileBatch();
                 } catch(Exception error) { if(!form.IsDisposed)status.Text=error.Message; }
                 finally { updatingPageNumber=false;if(!tiles.IsDisposed)tiles.ResumeLayout(true);tileScroll.EndContentUpdate();updatingTiles=false; }
             };

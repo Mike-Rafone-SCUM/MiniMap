@@ -1369,6 +1369,9 @@ static class InputVoiceTests {
             Check(VoicePacks.Discover(packs).SequenceEqual(VoicePacks.BundledNames.OrderBy(name=>name,StringComparer.CurrentCultureIgnoreCase)),"All bundled voices install their required clips and are discovered");
             Check(VoicePacks.Compose(VoicePacks.FinnishName,new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}).SequenceEqual(new[]{VoicePacks.Clips[0],VoicePacks.Clips[5]})
                 && VoicePacks.RequiredClips(VoicePacks.FinnishName).Length==11,"Finnish distance phrases include their own postposition and do not require an English In prefix");
+            foreach(string voice in new[]{VoicePacks.LithuanianName,VoicePacks.SwahiliName})
+                Check(VoicePacks.Compose(voice,new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}).SequenceEqual(new[]{VoicePacks.Clips[0],VoicePacks.Clips[5]})
+                    && VoicePacks.RequiredClips(voice).Length==11,"Localized distance phrases omit the English prefix: "+voice);
             Check(VoicePacks.Compose(VoicePacks.RussianName,new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}).SequenceEqual(new[]{VoicePacks.Clips[0],VoicePacks.Clips[5]}),"Russian distance guidance uses distance then turn without an incorrect preposition");
             Check(VoicePacks.Compose(VoicePacks.DefaultName,new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}).SequenceEqual(new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}),"English navigation retains its In-distance-turn composition");
             Check(VoicePacks.Compose(VoicePacks.GermanName,new[]{VoicePacks.Clips[10],VoicePacks.Clips[0],VoicePacks.Clips[5]}).SequenceEqual(new[]{VoicePacks.Clips[0],VoicePacks.Clips[5]}),"German cues use distance then action without announcing a fixed northern heading");
@@ -1626,10 +1629,16 @@ static class InputVoiceTests {
                 typeof(MapWindow).GetField("position",Hidden).SetValue(window,new Position { X=-143991,Y=-142991 });
                 typeof(MapWindow).GetField("updated",Hidden).SetValue(window,DateTime.UtcNow);
                 typeof(MapWindow).GetField("voiceVolume",Hidden).SetValue(window,0);
-                typeof(MapWindow).GetMethod("SpeakVoice",Hidden).Invoke(window,new object[]{new[]{VoicePacks.Clips[10],VoicePacks.Clips[2],VoicePacks.Clips[5]}});
                 var windowPlayer=(VoicePlayer)typeof(MapWindow).GetField("voicePlayer",Hidden).GetValue(window);
-                typeof(MapWindow).GetMethod("TickVoice",Hidden).Invoke(window,new object[]{DateTime.UtcNow,true});
-                Check(windowPlayer.Busy,"On-connector guidance does not truncate the phrase after 'In'");
+                if(windowPlayer==null) {windowPlayer=new VoicePlayer();typeof(MapWindow).GetField("voicePlayer",Hidden).SetValue(window,windowPlayer);}
+                // Keep the native worker from consuming the test phrase before
+                // TickVoice can inspect it. This checks queue cancellation even
+                // when a desktop/CI audio device completes or rejects MP3s at once.
+                lock(typeof(VoicePlayer).GetField("gate",Hidden).GetValue(windowPlayer)) {
+                    typeof(MapWindow).GetMethod("SpeakVoice",Hidden).Invoke(window,new object[]{new[]{VoicePacks.Clips[10],VoicePacks.Clips[2],VoicePacks.Clips[5]}});
+                    typeof(MapWindow).GetMethod("TickVoice",Hidden).Invoke(window,new object[]{DateTime.UtcNow,true});
+                    Check(windowPlayer.Busy,"On-connector guidance does not truncate the phrase after 'In'");
+                }
                 if(String.Equals(Environment.GetEnvironmentVariable("CI"),"true",StringComparison.OrdinalIgnoreCase)) windowPlayer.Stop();
                 else Pump(windowPlayer);
                 typeof(MapWindow).GetField("routeCalculating",Hidden).SetValue(window,true);

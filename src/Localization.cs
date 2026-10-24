@@ -23,7 +23,9 @@ namespace ScumMiniMap {
         Czech = 16,
         Italian = 17,
         Ukrainian = 18,
-        Finnish = 19
+        Finnish = 19,
+        Lithuanian = 20,
+        Swahili = 21
     }
 
     public static partial class Localization {
@@ -31,7 +33,7 @@ namespace ScumMiniMap {
 
         private static AppLanguage currentLanguage = AppLanguage.English;
         public static string[] LanguageDisplayNames {
-            get { return new[]{"English","Español (Argentina)","Français","Deutsch","Nederlands","Русский","中文 (简体)","Türkçe","العربية","Português (Brasil)","한국어","Polski","Português (Portugal)","ไทย","中文（繁體）","日本語","Čeština","Italiano","Українська","Suomi"}; }
+            get { return new[]{"English","Español (Argentina)","Français","Deutsch","Nederlands","Русский","中文 (简体)","Türkçe","العربية","Português (Brasil)","한국어","Polski","Português (Portugal)","ไทย","中文（繁體）","日本語","Čeština","Italiano","Українська","Suomi","Lietuvių","Kiswahili"}; }
         }
         public static AppLanguage LanguageAt(int index) {
             return index>=0 && index<LanguageDisplayNames.Length ? (AppLanguage)index : AppLanguage.English;
@@ -70,6 +72,8 @@ namespace ScumMiniMap {
                     case AppLanguage.Italian: return "it";
                     case AppLanguage.Ukrainian: return "uk";
                     case AppLanguage.Finnish: return "fi";
+                    case AppLanguage.Lithuanian: return "lt";
+                    case AppLanguage.Swahili: return "sw";
                     default: return "en";
                 }
             }
@@ -116,6 +120,10 @@ namespace ScumMiniMap {
                 Current = AppLanguage.Ukrainian;
             } else if (normalized=="fi" || normalized.StartsWith("fi-")) {
                 Current = AppLanguage.Finnish;
+            } else if (normalized=="lt" || normalized.StartsWith("lt-")) {
+                Current = AppLanguage.Lithuanian;
+            } else if (normalized=="sw" || normalized.StartsWith("sw-")) {
+                Current = AppLanguage.Swahili;
             } else {
                 Current = AppLanguage.English;
             }
@@ -148,6 +156,8 @@ namespace ScumMiniMap {
                 case AppLanguage.Italian: dict = StringsIt; break;
                 case AppLanguage.Ukrainian: dict = StringsUk; break;
                 case AppLanguage.Finnish: dict = StringsFi; break;
+                case AppLanguage.Lithuanian: dict = StringsLt; break;
+                case AppLanguage.Swahili: dict = StringsSw; break;
                 default: dict = StringsEn; break;
             }
             string value;
@@ -249,7 +259,8 @@ namespace ScumMiniMap {
                  currentLanguage==AppLanguage.Portuguese || currentLanguage==AppLanguage.PortuguesePortugal ||
                  currentLanguage==AppLanguage.Thai || currentLanguage==AppLanguage.ChineseTraditional ||
                  currentLanguage==AppLanguage.Japanese || currentLanguage==AppLanguage.Czech ||
-                 currentLanguage==AppLanguage.Italian || currentLanguage==AppLanguage.Ukrainian || currentLanguage==AppLanguage.Finnish) &&
+                 currentLanguage==AppLanguage.Italian || currentLanguage==AppLanguage.Ukrainian || currentLanguage==AppLanguage.Finnish ||
+                 currentLanguage==AppLanguage.Lithuanian || currentLanguage==AppLanguage.Swahili) &&
                 ZoneNamesEsAr.ContainsKey(englishName))
                 return TranslateMapObject(englishName,CurrentMapObjects,CurrentMapCategories);
             Dictionary<string,string> additionalZones = currentLanguage == AppLanguage.German ? GermanZoneNames.Value :
@@ -310,6 +321,8 @@ namespace ScumMiniMap {
                 case AppLanguage.Italian: dict = SectionNamesIt; break;
                 case AppLanguage.Ukrainian: dict = SectionNamesUk; break;
                 case AppLanguage.Finnish: dict = SectionNamesFi; break;
+                case AppLanguage.Lithuanian: dict = SectionNamesLt; break;
+                case AppLanguage.Swahili: dict = SectionNamesSw; break;
             }
             if (dict != null) {
                 string loc;
@@ -343,6 +356,8 @@ namespace ScumMiniMap {
                 case AppLanguage.Italian: dict = CategoryNamesIt; break;
                 case AppLanguage.Ukrainian: dict = CategoryNamesUk; break;
                 case AppLanguage.Finnish: dict = CategoryNamesFi; break;
+                case AppLanguage.Lithuanian: dict = CategoryNamesLt; break;
+                case AppLanguage.Swahili: dict = CategoryNamesSw; break;
             }
             if (dict != null) {
                 string loc;
@@ -352,9 +367,10 @@ namespace ScumMiniMap {
         }
 
         public static void SelfTest() {
-            foreach(var entry in MemberControlText)if(entry.Value.Length!=LanguageDisplayNames.Length||Array.Exists(entry.Value,string.IsNullOrWhiteSpace))throw new InvalidOperationException("Incomplete member controls: "+entry.Key);
+            foreach(var entry in MemberControlText)if(entry.Value.Length!=(int)AppLanguage.Lithuanian||Array.Exists(entry.Value,string.IsNullOrWhiteSpace))throw new InvalidOperationException("Incomplete legacy member controls: "+entry.Key);
+            // The appended languages include member/audit copy in their complete tables.
             // Inspect the actual catalogues: Get() intentionally falls back to English.
-            var catalogues=new[]{StringsEn,StringsEsAr,StringsFr,StringsDe,StringsNl,StringsRu,StringsZh,StringsTr,StringsAr,StringsPt,StringsKo,StringsPl,StringsPtPt,StringsTh,StringsZhTw,StringsJa,StringsCs,StringsIt,StringsUk,StringsFi};
+            var catalogues=new[]{StringsEn,StringsEsAr,StringsFr,StringsDe,StringsNl,StringsRu,StringsZh,StringsTr,StringsAr,StringsPt,StringsKo,StringsPl,StringsPtPt,StringsTh,StringsZhTw,StringsJa,StringsCs,StringsIt,StringsUk,StringsFi,StringsLt,StringsSw};
             if(catalogues.Length!=Enum.GetValues(typeof(AppLanguage)).Length || LanguageDisplayNames.Length!=catalogues.Length)
                 throw new Exception("Language selectors and catalogues differ.");
             for(int language=0;language<catalogues.Length;language++) {
@@ -386,11 +402,11 @@ namespace ScumMiniMap {
             ValidateNameCatalogue(CategoryNamesPt, CategoryNamesPtPt, "European Portuguese categories");
             foreach (var objects in new[]{MapObjectsFr,MapObjectsZh,MapObjectsTr,MapObjectsAr,MapObjectsPt,MapObjectsPtPt,MapObjectsKo})
                 ValidateNameCatalogue(MapObjectsEsAr, objects, "Expanded map objects");
-            foreach(var names in new[]{SectionNamesTh,SectionNamesZhTw,SectionNamesJa,SectionNamesCs,SectionNamesIt,SectionNamesUk,SectionNamesFi})
+            foreach(var names in new[]{SectionNamesTh,SectionNamesZhTw,SectionNamesJa,SectionNamesCs,SectionNamesIt,SectionNamesUk,SectionNamesFi,SectionNamesLt,SectionNamesSw})
                 ValidateNameCatalogue(SectionNamesPt,names,"Added language sections");
-            foreach(var names in new[]{CategoryNamesTh,CategoryNamesZhTw,CategoryNamesJa,CategoryNamesCs,CategoryNamesIt,CategoryNamesUk,CategoryNamesFi})
+            foreach(var names in new[]{CategoryNamesTh,CategoryNamesZhTw,CategoryNamesJa,CategoryNamesCs,CategoryNamesIt,CategoryNamesUk,CategoryNamesFi,CategoryNamesLt,CategoryNamesSw})
                 ValidateNameCatalogue(CategoryNamesPt,names,"Added language categories");
-            foreach(var names in new[]{MapObjectsTh,MapObjectsZhTw,MapObjectsJa,MapObjectsCs,MapObjectsIt,MapObjectsUk,MapObjectsFi})
+            foreach(var names in new[]{MapObjectsTh,MapObjectsZhTw,MapObjectsJa,MapObjectsCs,MapObjectsIt,MapObjectsUk,MapObjectsFi,MapObjectsLt,MapObjectsSw})
                 ValidateNameCatalogue(MapObjectsEsAr,names,"Added language map objects");
         }
 

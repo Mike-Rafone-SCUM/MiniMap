@@ -1,0 +1,137 @@
+# Offline localized catalogue; native-speaker review pending.
+weapons	Silaha
+clothing	Mavazi na silaha
+survival	Chakula, afya na kuishi
+crafting	Vifaa na utengenezaji
+vehicles	Sehemu za gari
+other	Vipengee vingine
+weapon_ranged	Silaha za mbali
+weapon_melee	Silaha za karibu
+melee_weapon	Silaha za karibu
+ammunition	Risasi
+armor	Silaha
+attachment	Viambatisho vya silaha
+book	Vitabu
+buildable	Vitu vya upanuzi wa msingi
+consumable	Chakula, vinywaji na dawa
+equipment	Vifaa
+farming	Kilimo
+fishing	Uvuvi
+fishing_attachment	Viambatisho vya uvuvi
+fortification	Vitu vya kuimarisha
+hunting	Uwindaji
+magazine	Magazeti
+material	Nyenzo
+player_modification	Marekebisho ya wachezaji
+seasonal_event	Vitu vya msimu
+throwable	Vitu vya kutupa na mitego
+vehicle_part	Sehemu za gari
+weapon_part	Sehemu za silaha
+general	Mkuu
+Arrow	Mshale
+Crossbow Bolt	Boliti ya msalaba
+Flare	Mwangaza
+12 Gauge	Kipimo cha 12
+accessories	Vifaa
+adhesive	Wambiso
+alcoholic	Vinywaji vya pombe
+animal_part	Sehemu za wanyama
+assault_rifle	Bunduki za kushambulia
+axe	Shoka
+backpack	Mikoba
+base_upgrades	Maboresho ya msingi
+bayonet	Bayoneti
+beverage	Vinywaji
+blunt	Silaha butu
+body	Mwili
+body_armor	Silaha
+bow	Mipinde
+bumper	Bumper
+clip	Klipu
+cookbook	Kitabu cha upishi
+cosmetic	Vipodozi
+craft_station	Vituo vya ufundi
+crafting_material	Nyenzo za ufundi
+door	Mlango
+earmuffs	Vipu vya masikio
+engine	Injini
+enhancement	Uboreshaji
+event	Tukio
+eyewear	Mavazi ya macho
+fender	Fender
+fire_starter	Vianzio vya moto
+fishing_catch	Uvuvi wa samaki
+flash_hider	Vificha flash
+flashlight	Tochi
+food	Chakula
+footwear	Viatu
+fuel	Mafuta
+ghillie	Ghillie anafunga
+ghillie_jacket	Jacket ya Ghillie
+gloves	Kinga
+hazmat_suit	Suti ya Hazmat
+headwear	Nguo za kichwa
+heavy	Silaha nzito
+holster	Holster
+jacket	Jacket
+knife	Visu
+leggings	Leggings
+light	Mwanga
+lmg	Bunduki nyepesi za mashine
+lockpick	Lockpick
+mask	Kinyago
+medical	Dawa
+miscellaneous	Mbalimbali
+organic	Kikaboni
+paint	Rangi
+pants	Suruali
+pistol	Bastola
+pistol_parts	Sehemu za bastola
+quiver	Kutetemeka
+rail	Reli
+raincoat	Koti la mvua
+ranged_parts	Sehemu mbalimbali
+repair_kit	Seti za ukarabati
+repair_material	Kukarabati nyenzo
+results	Matokeo
+revolver	Revolvers
+rifle_parts	Sehemu za bunduki
+scarf	Skafu
+scope	Mawanda
+seasonal_craft	Ufundi wa msimu
+seat	Kiti
+security	Usalama
+seed	Mbegu
+shirt	Shati
+shotgun	Risasi
+shotgun_parts	Sehemu za bunduki
+sight	Vivutio
+single_shot	Bunduki za risasi moja
+skirt	Sketi
+smg	Bunduki za submachine
+smg_parts	Sehemu za SMG
+sniper	Bunduki za sniper
+socks	Soksi
+soft_drink	Vinywaji laini
+spear	Mikuki
+stabilizer	Vidhibiti
+storage	Hifadhi
+suppressor	Wakandamizaji
+sweater	Sweta
+sword	Mapanga
+tool	Zana
+undershirt	Shati ya ndani
+underwear	Nguo za ndani
+unknown_parts	Sehemu zisizojulikana
+utility	Huduma
+vehicle_attachment	Kiambatisho cha gari
+water	Maji
+wheel	Gurudumu
+Health	Hali
+Uses	Matumizi iliyobaki
+Dirtiness	Uchafu
+Location	Nafasi
+KeyCardSector	Sekta ya Keycard
+StackCount	Hesabu ya rafu
+Radiation	Mionzi
+Weight	Uzito (kg)

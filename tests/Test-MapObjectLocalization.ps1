@@ -42,6 +42,8 @@ try {
         'it' = @('It', 'B2 Stazione di polizia', 'Distributore di carburante - Aeroporto', "A0 Aerodromo dell'avamposto commerciale", 'Stazione di polizia')
         'uk' = @('Uk', 'B2 Поліцейська дільниця', 'АЗС - Аеропорт', 'A0 Аеродром торгового форпосту', 'Поліцейська дільниця')
         'fi-FI' = @('Fi', 'B2 Poliisiasema', 'Huoltoasema - Lentoasema', 'A0 Etuvartion lentokenttä', 'Poliisiasema')
+        'lt-LT' = @('Lt', 'B2 Policijos nuovada', 'Degalinė - Oro uostas', 'A0 Prekybos posto aerodromas', 'Policijos nuovada')
+        'sw-TZ' = @('Sw', 'B2 Kituo cha polisi', 'Kituo cha mafuta - Uwanja wa ndege', 'A0 Uwanja wa ndege wa kituo cha biashara', 'Kituo cha polisi')
     }
     foreach ($language in $expectations.Keys) {
         [ScumMiniMap.Localization]::SetLanguage($language)

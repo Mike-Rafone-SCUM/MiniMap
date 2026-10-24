@@ -79,7 +79,8 @@ We gratefully acknowledge the creators and community contributors whose publicly
 
 ### Navigation voice recordings
 * **Lyan (Female US)**, **Mira (Russian)**, **Mila (German)** and **Isabel (Spanish Argentine)**: ElevenLabs recordings supplied by the project owner for inclusion in SCUM MiniMap.
-* The individual navigation prompts were extracted from the supplied recordings. No new speech or voice clone was generated.
+* For those four voices, individual navigation prompts were extracted from the supplied recordings.
+* **Noora (Suomi)**, **Ona (Lietuvių)** and **Zuri (Kiswahili)** use synthesized Microsoft neural speech prepared with the offline authoring tools. The application bundles the MP3 clips and plays them locally. These packs do not clone a person's voice. Lithuanian and Swahili transcripts and pronunciation still require native-speaker review.
 
 ### Steam profile icon
 * Steam logo PNG supplied by the project owner, displayed at 22 × 22 pixels for Steam Community profile links. Steam and the Steam logo are trademarks of Valve Corporation.

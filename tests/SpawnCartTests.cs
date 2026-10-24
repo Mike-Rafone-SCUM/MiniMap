@@ -2081,7 +2081,7 @@ static class SpawnCartTests {
     }
 
     static void TestExpandedLocalization(SpawnItemCatalog catalog,string directory) {
-        string[] languages={"es-AR","fr","de","nl","ru","zh-CN","tr","ar","pt-BR","pt-PT","ko","pl","th","zh-TW","ja","cs","it","uk","fi"};
+        string[] languages={"es-AR","fr","de","nl","ru","zh-CN","tr","ar","pt-BR","pt-PT","ko","pl","th","zh-TW","ja","cs","it","uk","fi","lt","sw"};
         var boots=catalog.Find("Boots_06_01");
         try {
             foreach(string code in languages) {
@@ -2098,6 +2098,19 @@ static class SpawnCartTests {
                 Check(catalog.Items.Select(item=>item.Subcategory).Distinct().Where(key=>key.Length>0 && char.IsLetter(key[0])).All(key=>Localization.GetSpawnCategoryName(key,"").Length>0),code+": every named subtype has an explicit translation");
                 Check(SpawnModifiers.PropertyNames.All(key=>Localization.GetSpawnModifierLabel(key)!=key),code+": every modifier explains its original property token");
             }
+            Localization.SetLanguage("lt-LT");
+            Check(Localization.Current==AppLanguage.Lithuanian && (int)Localization.Current==20 && Localization.Get("Settings")=="Nustatymai","Lithuanian appends a stable persisted identity");
+            Check(boots.DisplayName=="Statybiniai batai" && catalog.Search("statybiniai batai",null).Contains(boots),"Lithuanian item search resolves canonical boots");
+            Check(catalog.Search("ginklai",null).Count>0,"Lithuanian category search resolves weapons");
+            Check(catalog.Find("Magazine_AK47").DisplayName=="Dėtuvė — AK47" && catalog.Search("detuve",null).Contains(catalog.Find("Magazine_AK47")),"Lithuanian accent-free search and weapon terminology preserve the magazine ID");
+            Check(Localization.GetSpawnModifierLabel("Health")=="Būklė (Health)" && Localization.GetSpawnModifierLabel("Weight")=="Svoris (kg) (Weight)","Lithuanian property labels preserve raw tokens");
+            Check(Localization.GetMapObjectName("Gas Station - Airport")=="Degalinė - Oro uostas" && Localization.GetMapObjectName("Airport (B2)")=="Oro uostas (B2)","Lithuanian compound map labels preserve sector identity");
+            Localization.SetLanguage("sw-TZ");
+            Check(Localization.Current==AppLanguage.Swahili && (int)Localization.Current==21 && Localization.Get("Settings")=="Mipangilio","Swahili appends a stable persisted identity");
+            Check(boots.DisplayName=="Viatu vya ujenzi" && catalog.Search("viatu vya ujenzi",null).Contains(boots),"Swahili item search resolves canonical boots");
+            Check(Localization.GetSpawnModifierLabel("Health")=="Hali (Health)" && Localization.GetSpawnModifierLabel("Weight")=="Uzito (kg) (Weight)","Swahili property labels preserve raw tokens");
+            Check(Localization.GetMapObjectName("Gas Station - Airport")=="Kituo cha mafuta - Uwanja wa ndege","Swahili compound map labels translate all parts");
+            Check(Localization.GetZoneName("My custom waypoint")=="My custom waypoint","New languages preserve custom waypoint names");
             Localization.SetLanguage("fi-FI");
             Check(Localization.Current==AppLanguage.Finnish && Localization.CurrentCode=="fi" && Localization.Get("Settings")=="Asetukset","Finnish regional culture selects its persisted language identity");
             Check(boots.DisplayName=="Työkengät" && catalog.Search("tyokengat",null).Contains(boots),"Finnish item search accepts missing ä and ö accents");

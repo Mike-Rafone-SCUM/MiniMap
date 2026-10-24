@@ -538,7 +538,11 @@ static class AdminPlayerTests {
                 window.ShowAdminPlayers();
                 Check(panel.Visible && page.Value==lastPage && ReferenceEquals(bottomTile,tiles.Controls[0]),"Reopening players preserves the server, page and existing card controls");
                 measuredAction="Resize";
-                page.Value=1;Application.DoEvents();int smallPageCount=tiles.Controls.Count;var resizeFirstTile=tiles.Controls[0];
+                page.Value=1;Application.DoEvents();
+                // Card construction yields between bounded batches; wait for the
+                // complete first page advertised by the fixture's pagination.
+                WaitFor(()=>tiles.Controls.Count==(int)Math.Ceiling(1000m/page.Maximum));
+                int smallPageCount=tiles.Controls.Count;var resizeFirstTile=tiles.Controls[0];
                 // Exercise the production viewport resize event independently of
                 // hosted Windows desktop/form layout limits.
                 var originalBounds=scroll.Bounds;var originalDock=scroll.Dock;
@@ -546,6 +550,13 @@ static class AdminPlayerTests {
                 scroll.Bounds=new Rectangle(originalBounds.X,originalBounds.Y,originalBounds.Width,originalBounds.Height+600);
                 Console.WriteLine("Resize fixture: viewport="+scroll.VisibleContentBounds+", initial cards="+smallPageCount);
                 WaitFor(()=>tiles.Controls.Count>smallPageCount);
+                ((Button)Controls(panel).Single(control=>control.Name=="PlayerView")).PerformClick();
+                Application.DoEvents();int hiddenCardCount=tiles.Controls.Count;
+                DateTime hiddenUntil=DateTime.UtcNow.AddMilliseconds(60);WaitFor(()=>DateTime.UtcNow>=hiddenUntil);
+                Check(tiles.Controls.Count==hiddenCardCount,"Hidden card pages pause unfinished UI batches");
+                ((Button)Controls(panel).Single(control=>control.Name=="PlayerView")).PerformClick();
+                WaitFor(()=>tiles.Controls.Count==(int)Math.Ceiling(1000m/page.Maximum));
+                Check(tiles.Controls.Count>smallPageCount,"Reopening a card page resumes and completes its bounded batch");
                 Application.DoEvents();
                 Check(tiles.Controls.Count<=24,"Resizing the player viewport grows its bounded page without building unbounded cards");Check(ReferenceEquals(resizeFirstTile,tiles.Controls[0]),"Growing a player viewport reuses unchanged cards instead of rebuilding the whole page");
                 scroll.Bounds=originalBounds;scroll.Dock=originalDock;

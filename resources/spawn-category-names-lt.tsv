@@ -1,0 +1,137 @@
+# Offline localized catalogue; native-speaker review pending.
+weapons	Ginklai
+clothing	Drabužiai ir šarvai
+survival	Maistas, sveikata ir išgyvenimas
+crafting	Įranga ir amatai
+vehicles	Transporto priemonių dalys
+other	Kiti daiktai
+weapon_ranged	Nuotoliniai ginklai
+weapon_melee	Artimosios kovos ginklai
+melee_weapon	Artimosios kovos ginklai
+ammunition	Šaudmenys
+armor	Šarvai
+attachment	Ginklų priedai
+book	Knygos
+buildable	Pagrindo išplėtimo elementai
+consumable	Maistas, gėrimai ir vaistai
+equipment	Įranga
+farming	Ūkininkavimas
+fishing	Žvejyba
+fishing_attachment	Žvejybos priedai
+fortification	Fortifikaciniai daiktai
+hunting	Medžioklė
+magazine	Žurnalai
+material	Medžiagos
+player_modification	Grotuvo modifikacijos
+seasonal_event	Sezoniniai daiktai
+throwable	Metimai ir spąstai
+vehicle_part	Transporto priemonių dalys
+weapon_part	Ginklų dalys
+general	Generolas
+Arrow	Rodyklė
+Crossbow Bolt	Arbaleto varžtas
+Flare	Blyksnis
+12 Gauge	12 matuoklis
+accessories	Priedai
+adhesive	Klijai
+alcoholic	Alkoholiniai gėrimai
+animal_part	Gyvūnų dalys
+assault_rifle	Šturmo šautuvai
+axe	Kirviai
+backpack	Kuprinės
+base_upgrades	Baziniai atnaujinimai
+bayonet	Bajonetės
+beverage	Gėrimai
+blunt	Buki ginklai
+body	Kūnas
+body_armor	Šarvai
+bow	Lankai
+bumper	Buferis
+clip	Klipas
+cookbook	Kulinarijos knyga
+cosmetic	Kosmetikos
+craft_station	Amatų stotys
+crafting_material	Medžiaga amatų gamybai
+door	Durys
+earmuffs	Ausinės
+engine	Variklis
+enhancement	Patobulinimas
+event	Renginys
+eyewear	Akiniai
+fender	Sparnas
+fire_starter	Gaisro starteriai
+fishing_catch	Žvejybos laimikis
+flash_hider	Flash hiders
+flashlight	Žibintuvėliai
+food	Maistas
+footwear	Avalynė
+fuel	Kuro
+ghillie	Ghillie įvyniojimai
+ghillie_jacket	Ghillie striukė
+gloves	Pirštinės
+hazmat_suit	Hazmat kostiumas
+headwear	Galvos apdangalai
+heavy	Sunkieji ginklai
+holster	Dėklas
+jacket	Striukė
+knife	Peiliai
+leggings	Antblauzdžiai
+light	Šviesa
+lmg	Lengvieji kulkosvaidžiai
+lockpick	Užraktas
+mask	Kaukė
+medical	Medicina
+miscellaneous	Įvairūs
+organic	Ekologiškas
+paint	Dažai
+pants	Kelnės
+pistol	Pistoletai
+pistol_parts	Pistoleto dalys
+quiver	Drebulys
+rail	Bėgiai
+raincoat	Lietpaltis
+ranged_parts	Skirtingos dalys
+repair_kit	Remonto komplektai
+repair_material	Remonto medžiaga
+results	Rezultatai
+revolver	Revolveriai
+rifle_parts	Šautuvų dalys
+scarf	Šalikas
+scope	Taikymo sritis
+seasonal_craft	Sezoninis amatas
+seat	Sėdynės
+security	Saugumas
+seed	Sėklos
+shirt	Marškiniai
+shotgun	Šautuvai
+shotgun_parts	Šautuvų dalys
+sight	Lankytinos vietos
+single_shot	Vieno šūvio šautuvai
+skirt	Sijonas
+smg	Kulkosvaidžiai
+smg_parts	Smg dalys
+sniper	Snaiperio šautuvai
+socks	Kojinės
+soft_drink	Gaivieji gėrimai
+spear	Ietys
+stabilizer	Stabilizatoriai
+storage	Sandėliavimas
+suppressor	Slopintuvai
+sweater	Megztinis
+sword	Kardai
+tool	Įrankiai
+undershirt	Apatiniai marškinėliai
+underwear	Apatiniai
+unknown_parts	Nežinomos dalys
+utility	Naudingumas
+vehicle_attachment	Transporto priemonės tvirtinimas
+water	Vanduo
+wheel	Ratas
+Health	Būklė
+Uses	Likę naudojimo būdai
+Dirtiness	Nešvarumas
+Location	Padėtis
+KeyCardSector	Raktų kortelių sektorius
+StackCount	Krūvos skaičius
+Radiation	Radiacija
+Weight	Svoris (kg)

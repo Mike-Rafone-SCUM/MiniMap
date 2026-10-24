@@ -298,7 +298,9 @@ Sea Dentex Activity Spot|Punto de actividad de dentones en el mar|Морская
                 currentLanguage == AppLanguage.Czech ? MapObjectsCs :
                 currentLanguage == AppLanguage.Italian ? MapObjectsIt :
                 currentLanguage == AppLanguage.Ukrainian ? MapObjectsUk :
-                currentLanguage == AppLanguage.Finnish ? MapObjectsFi : null; }
+                currentLanguage == AppLanguage.Finnish ? MapObjectsFi :
+                currentLanguage == AppLanguage.Lithuanian ? MapObjectsLt :
+                currentLanguage == AppLanguage.Swahili ? MapObjectsSw : null; }
         }
 
         static Dictionary<string,string> CurrentMapCategories {
@@ -323,6 +325,8 @@ Sea Dentex Activity Spot|Punto de actividad de dentones en el mar|Морская
                     case AppLanguage.Italian:return CategoryNamesIt;
                     case AppLanguage.Ukrainian:return CategoryNamesUk;
                     case AppLanguage.Finnish:return CategoryNamesFi;
+                    case AppLanguage.Lithuanian:return CategoryNamesLt;
+                    case AppLanguage.Swahili:return CategoryNamesSw;
                     default:return null;
                 }
             }

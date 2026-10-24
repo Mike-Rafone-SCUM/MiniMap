@@ -1,6 +1,12 @@
-# SCUM MiniMap v2.3.24
+# SCUM MiniMap v2.3.25
 
 SCUM MiniMap is an external map overlay and road-navigation utility for SCUM, made for the Skynett community. Version 2 uses WPF for the tactical map, compact minimap, Settings, setup guide and Zone Creator. The existing tracking and routing engine remains behind the new interface.
+
+## Lithuanian and Swahili (v2.3.25)
+
+Choose **Lietuvių** or **Kiswahili** in Settings > General > Language. Both cover setup, help, settings, groups, map labels, all 2,328 items and item properties. Existing language choices, settings and key bindings are retained. Optional **Ona (Lietuvių)** and **Zuri (Kiswahili)** navigation voices each contain 12 locally played synthesized clips, including route recalculation. Native-speaker text and pronunciation review remains pending.
+
+Admin player cards are created in batches of two between UI timer turns to keep page changes and resizing responsive. Closing the tool cancels unfinished work. The five-page setup remains required after each application version update.
 
 ## Settings and group polish (v2.3.24)
 

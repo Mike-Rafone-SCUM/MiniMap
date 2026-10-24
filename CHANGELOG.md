@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.3.25] - 2026-10-24
+
+### Lithuanian and Swahili
+
+- Added Lietuvių (`lt`, including `lt-LT`) and Kiswahili (`sw`, including `sw-KE` and `sw-TZ`) across the WPF interface, setup, help, settings, groups, map labels, item catalogues and item properties.
+- Existing language identities remain stable. Localized, English and item-ID search use the same canonical items; changing language preserves commands and custom waypoint names.
+- Each language includes 820 interface strings, 16 map sections, 48 map categories, 242 map object types, 2,328 items and 136 item category/property labels. Native-speaker approval remains pending.
+- Added optional Ona (Lietuvių) and Zuri (Kiswahili) navigation voices, each with 12 locally played synthesized clips including route recalculation.
+- Admin player cards build in bounded batches of two per UI timer turn, with batched layout during construction. Page changes and resizes cancel obsolete batches; hiding pauses them and closing disposes the timer. Existing paging, card reuse and responsiveness assertions remain.
+- Saved settings, key bindings, memberships and ownership are retained. The five-page setup remains required after an application version update.
+
 ## [2.3.24] - 2026-10-23
 
 ### Settings and precise placement

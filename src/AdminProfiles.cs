@@ -329,16 +329,21 @@ namespace ScumMiniMap {
         void ClearAdminProfileMarkers() { adminProfileMarkers=new List<AdminAsset>().AsReadOnly();adminPlayerRevision++;canvas.Invalidate();overlay.Invalidate(); }
         internal static Panel CreateAdminPlayerTile(AdminPlayer player,int vehicles,int flags,Action<string> open,Action<bool> teleport=null,bool onlineNames=false) {
             var tile=new Panel { Name="PlayerTile_"+player.Id,Width=295,Height=260,Margin=new Padding(4),Padding=new Padding(10),BackColor=Color.FromArgb(38,43,49) };
+            // Build and style the detached card as one layout transaction. Repeated
+            // Dock/Font changes otherwise lay out every intermediate control tree.
+            tile.SuspendLayout();
             var title=new Label { Dock=DockStyle.Top,Height=28,Font=new Font("Segoe UI",12f,FontStyle.Bold),Text=player.Name,AutoEllipsis=true };
             var identity=new Label { Dock=DockStyle.Fill,Text=player.PlatformName+"\n"+Localization.Get(player.InSnapshot?"PlayersSnapshot":player.Location==null?"ProfileImportedMember":"PlayersHistory")+"\n"+Localization.T("ProfileObservation",player.SeenUtc.ToLocalTime().ToString("g")),AutoEllipsis=true };
             var steam=SteamProfileButton(player.Id,onlineNames);
             var heading=new Panel { Dock=DockStyle.Top,Height=56 };
+            heading.SuspendLayout();
             var avatar=new Panel { Dock=DockStyle.Left,Width=38 };
             avatar.Paint+=(s,e)=> { using(var brush=new SolidBrush(OverlayTheme.InkMuted)) { e.Graphics.SmoothingMode=System.Drawing.Drawing2D.SmoothingMode.AntiAlias;e.Graphics.FillEllipse(brush,9,9,16,16);e.Graphics.FillEllipse(brush,3,29,28,24); } };
-            var headingText=new Panel { Dock=DockStyle.Fill };headingText.Controls.Add(steam);headingText.Controls.Add(title);heading.Controls.Add(headingText);heading.Controls.Add(avatar);
+            var headingText=new Panel { Dock=DockStyle.Fill };headingText.SuspendLayout();headingText.Controls.Add(steam);headingText.Controls.Add(title);heading.Controls.Add(headingText);heading.Controls.Add(avatar);
             var stats=new Label { Dock=DockStyle.Bottom,Height=42,AutoEllipsis=true,Text=player.Location==null?"":Localization.T("PlayersDetails",player.Fame.ToString("N0"),player.Balance.ToString("N0"),player.Gold.ToString("N0")),ForeColor=OverlayTheme.Accent };
             bool lookupStarted=false;tile.VisibleChanged+=async(s,e)=> { if(!onlineNames || lookupStarted || !tile.Visible)return;lookupStarted=true;string name=await SteamProfiles.Name(player.Id);if(name!=null && !tile.IsDisposed)identity.Text=name+identity.Text.Substring(identity.Text.IndexOf('\n')); };
             var links=new FlowLayoutPanel { Dock=DockStyle.Bottom,AutoSize=true,AutoSizeMode=AutoSizeMode.GrowAndShrink,WrapContents=true };
+            links.SuspendLayout();
             foreach(string page in new[]{"Overview","Vehicles","Flags","Squad"}) {
                 string label=Localization.Get(page=="Vehicles"?"ProfileVehicles":page=="Flags"?"ProfileFlags":page=="Squad"?"ProfileSquad":"ProfileOverview");
                 var button=new Button { Name="Tile"+page,Width=118,Height=28,AutoEllipsis=true,Text=page=="Vehicles"?Localization.T("ProfileAssetCount",label,vehicles):page=="Flags"?Localization.T("ProfileAssetCount",label,flags):label };
@@ -351,7 +356,8 @@ namespace ScumMiniMap {
             tile.Controls.Add(identity);tile.Controls.Add(heading);tile.Controls.Add(stats);tile.Controls.Add(links);OverlayTheme.Style(tile);
             heading.BackColor=headingText.BackColor=avatar.BackColor=stats.BackColor=OverlayTheme.SurfaceCard;stats.ForeColor=OverlayTheme.Accent;
             tile.BackColor=identity.BackColor=title.BackColor=links.BackColor=OverlayTheme.SurfaceCard;title.ForeColor=OverlayTheme.Accent;
-            tile.Paint+=(s,e)=> { using(var pen=new Pen(OverlayTheme.Border))e.Graphics.DrawRectangle(pen,0,0,tile.ClientSize.Width-1,tile.ClientSize.Height-1); };return tile;
+            tile.Paint+=(s,e)=> { using(var pen=new Pen(OverlayTheme.Border))e.Graphics.DrawRectangle(pen,0,0,tile.ClientSize.Width-1,tile.ClientSize.Height-1); };
+            headingText.ResumeLayout(false);heading.ResumeLayout(false);links.ResumeLayout(false);tile.ResumeLayout(true);return tile;
         }
         internal static void StyleProfileList(ListView list) {
             list.BorderStyle=BorderStyle.None;list.BackColor=OverlayTheme.Surface;list.ForeColor=OverlayTheme.Ink;list.OwnerDraw=true;
