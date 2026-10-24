@@ -188,7 +188,7 @@ Small_Animal_Fat	Gyvūniniai riebalai
 Animal_skin	Gyvūnų oda
 Bear_Improvised_Jacket	Striukė iš gyvūnų odos
 Bear_Improvised_Pants	Gyvūninės odos kelnės
-Improvised_Quiver_01	Gyvūnų odos drebulys
+Improvised_Quiver_01	Gyvūnų odos strėlinė
 HH_Shoes_01_01	Kulkšnies batai
 HH_Shoes_01_02	Kulkšnies batai
 HH_Shoes_01_03	Kulkšnies batai
@@ -419,7 +419,7 @@ ColorCan_Black	Juodųjų dažų skardinė
 BlackPepper	Juodieji pipirai
 Blackberry	Gervuogė
 Recurve_Bow_90	BlackHawk 90#
-Weapon_BlackHawk_Crossbow	Blackhawk arbaletas
+Weapon_BlackHawk_Crossbow	Arbaletas Blackhawk
 BlankSign	Tuščias ženklas
 Blast_Cap	Blast Cap
 2H_Baseball_Bat_Blaze	Blaze Bat
@@ -543,7 +543,7 @@ Car_Repair_Kit	Automobilio remonto rinkinys
 PETBottle01	Karamelinė soda
 PETBottle02	Karamelinė soda
 Carbon_Arrow	Anglies rodyklė
-Ammo_Crossbow_Bolt_Carbon	Anglies arbaleto varžtas
+Ammo_Crossbow_Bolt_Carbon	Anglies pluošto arbaleto strėlė
 Weapon_CarbonHunter	Anglies medžiotojas
 Weapon_CarbonBear	Anglies medžiotojas Ironpaw
 Magazine_CarbonHunter	Dėtuvė — Anglies medžiotojas
@@ -727,7 +727,7 @@ Diary	Dienoraštis
 1H_Dildo	Dildo
 Dildo_Spear	Dildo ietis
 Dildo_Arrow	Dildo medinė strėlė
-Ammo_Crossbow_Bolt_Dildo	Dildo medinis arbaleto varžtas
+Ammo_Crossbow_Bolt_Dildo	Medinė arbaleto strėlė su dildu
 Dinghy_Item	Valties krepšys
 Dirtbike_Body_Item	Dirtbike kėbulas
 Dirtbike_Brakelight_Item	Dirtbike stabdžių lemputė
@@ -798,7 +798,7 @@ WeaponCharm_EvilEye	Piktos akies ginklo žavesys
 Explosive_Arrow_Carbon	Sprogstamosios anglies rodyklė
 Explosive_Arrow_Metal	Sprogstamoji metalinė strėlė
 Explosive_Arrow	Sprogioji medinė strėlė
-Ammo_Crossbow_Bolt_Explosive	Sprogus medinis arbaleto varžtas
+Ammo_Crossbow_Bolt_Explosive	Sprogstamoji medinė arbaleto strėlė
 Extreme_Helmet_01	Ekstremalus šalmas
 Faceroll_Smasher	Facerolls Face Smasher
 Fascinator_Hat_01	Žavi skrybėlė
@@ -1042,7 +1042,7 @@ Improvised_Chandelier_Light	Improvizuotas sietynas
 ImprovisedClaymore	Improvizuotas Claymore'as
 Improvised_compass	Improvizuotas kompasas
 Improvised_Bag_Small_01	Improvizuota kurjerio kuprinė
-Weapon_Improvised_Crossbow	Improvizuotas arbaletas
+Weapon_Improvised_Crossbow	Savadarbis arbaletas
 Improvised_Electric_Lamp_Ceiling	Improvizuota elektrinė lempa
 ImprovisedFishingHook	Improvizuotas žuvies kabliukas
 ImprovisedFishingFloater	Improvizuotas žvejybos plūduras
@@ -1074,7 +1074,7 @@ WeaponSuppressor_ImprovisedOilCan_01	Duslintuvas — savadarbis iš alyvos skard
 PaintSprayer	Improvizuotas dažų purkštuvas
 Dish_Pasta_Improvised	Improvizuotas makaronų patiekalas
 Weapon_Parts_Impro_Pistol	Improvizuota pistoleto ginklo dalys
-Improvised_Quiver_02_Rags	Improvizuotas Quiver
+Improvised_Quiver_02_Rags	Savadarbė strėlinė
 Raincoat_Improvised	Improvizuotas lietpaltis
 Dish_Rice_Improvised	Improvizuotas ryžių patiekalas
 Weapon_Improvised_Rifle	Improvizuotas šautuvas
@@ -1341,7 +1341,7 @@ Knife_Sheath	Melee ginklo dėklas
 Metal_Arrow	Metalinė rodyklė
 2H_Metal_Axe	Metalinis kirvis
 2H_Metal_Baseball_Bat	Metalinė beisbolo lazda
-Ammo_Crossbow_Bolt_Metal	Metalinis arbaleto varžtas
+Ammo_Crossbow_Bolt_Metal	Metalinė arbaleto strėlė
 MetalDetector	Metalo detektorius
 1H_Improvised_metal_knife	Metalinis peilis
 1H_Metal_Pipe	Metalinis vamzdis
@@ -1352,7 +1352,7 @@ Metal_Scrap_03	Metalo laužas
 Metal_Scrap_04	Metalo laužas
 Metal_Scrap_05	Metalo laužas
 1H_Metal_Sword	Metalinis kardas
-Ammo_Crossbow_Bolt_WoodenMetalTip	Metalinis arbaleto antgalis
+Ammo_Crossbow_Bolt_WoodenMetalTip	Arbaleto strėlė metaliniu antgaliu
 Wooden_ArrowMetalTip	Metalinis antgalis Medinė rodyklė
 Bundle_Of_Metal_Tips	Metaliniai antgaliai
 HH_Shoes_05_01	Vidutinio kulno sandalai
@@ -1381,14 +1381,14 @@ Military_Helmet_01_06	Karinis šalmas
 Military_Helmet_01_07	Karinis šalmas
 Military_Helmet_01_08	Karinis šalmas
 Military_Helmet_01_09	Karinis šalmas
-Military_Quiver_01	Karinis varpas
-Military_Quiver_02	Karinis varpas
-Military_Quiver_03	Karinis varpas
-Military_Quiver_04	Karinis varpas
-Military_Quiver_05	Karinis varpas
-Military_Quiver_06	Karinis varpas
-Military_Quiver_07	Karinis varpas
-Military_Quiver_08	Karinis varpas
+Military_Quiver_01	Karinė strėlinė
+Military_Quiver_02	Karinė strėlinė
+Military_Quiver_03	Karinė strėlinė
+Military_Quiver_04	Karinė strėlinė
+Military_Quiver_05	Karinė strėlinė
+Military_Quiver_06	Karinė strėlinė
+Military_Quiver_07	Karinė strėlinė
+Military_Quiver_08	Karinė strėlinė
 Military_Shirt_01	Kariniai marškinėliai
 Military_Shirt_02	Kariniai marškinėliai
 Military_Shirt_03	Kariniai marškinėliai
@@ -1972,7 +1972,7 @@ Stockings_08	Kojinės
 Stone	Akmuo
 1H_Stone_Axe	Akmeninis kirvis
 1H_ImprovisedKnife	Akmeninis peilis
-Ammo_Crossbow_Bolt_WoodenStoneTip	Akmens antgalio arbaleto varžtas
+Ammo_Crossbow_Bolt_WoodenStoneTip	Arbaleto strėlė akmeniniu antgaliu
 Wooden_ArrowStoneTip	Akmens antgalis medinė rodyklė
 Bundle_Of_Stone_Tips	Akmens antgaliai
 Strait_Jacket	Tramdomoji striukė
@@ -2253,7 +2253,7 @@ Wooden_Arrow	Medinė rodyklė
 Wooden_Arrows_6pc	Medinė rodyklė
 1H_Wooden_club	Medinis klubas
 1H_Wooden_club_with_spikes	Medinis klubas su vinimis
-Ammo_Crossbow_Bolt_Wooden	Medinis arbaleto varžtas
+Ammo_Crossbow_Bolt_Wooden	Medinė arbaleto strėlė
 Wooden_Fork	Medinė šakutė
 Wooden_Log_01	Medinis rąstas
 Wooden_Log_02	Medinis rąstas

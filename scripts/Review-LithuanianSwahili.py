@@ -87,6 +87,9 @@ SpawnCartKitImported|Rinkinys „{0}“ importuotas.|Seti “{0}” imeingizwa.
 SpawnCartNoSavedKits|Dar nėra išsaugotų rinkinių. Išsaugokite sąrašą arba importuokite ankstesnį rinkinį.|Hakuna seti zilizohifadhiwa bado. Hifadhi orodha au ingiza seti ya awali.
 SpawnCartSaveStopped|Sąrašo išsaugoti nepavyko. Siuntimas sustabdytas. Išsaugotame sąraše gali likti jau išsiųstų daiktų; patikrinkite jį prieš naudodami dar kartą.|Orodha haikuweza kuhifadhiwa. Utumaji umesimamishwa. Orodha iliyohifadhiwa inaweza kuwa na vitu vilivyotumwa; ikague kabla ya kuitumia tena.'''
 copy+='''
+FirstTimeGuideTitle|Pradinė sąranka|Usanidi wa kwanza
+GuideExtracted|Išskleidžiau ZIP pasirinkęs Extract All. Paleidau EXE iš išskleisto aplanko, o assets aplankas yra šalia jo.|Nilitoa faili za ZIP kwa kutumia Extract All. Ninaendesha EXE katika folda iliyotolewa, huku folda ya assets ikiwa kando yake.
+GuideWindowed|SCUM veikia Windowed arba Borderless Window režimu. Mano veikėjas įkeltas.|SCUM iko katika hali ya Windowed au Borderless Window. Mhusika wangu amepakiwa.
 GuideScumNumpad|SCUM funkcijai Copy Location priskirtas Num / (skaičių klaviatūros dalybos klavišas).|Katika SCUM, Copy Location ni Num / (kitufe cha kugawanya kwenye sehemu ya nambari).
 GuideMiniNumpad|MiniMap jau naudoja Num /. Čia nereikia keisti ar užfiksuoti klavišo.|MiniMap tayari hutumia Num /. Sihitaji kubadilisha au kunakili kitufe hapa.
 GuideUseNumpad|MiniMap naudoti Num /|Tumia Num / katika MiniMap
@@ -172,7 +175,76 @@ Funga Mipangilio ya MiniMap. Rudi kwa mhusika wako na ufunge gumzo na orodha ya 
 Unahitaji msaada? Kwanza kagua vifungo katika programu ZOTE MBILI. Kwa kawaida Home hufungua Mipangilio; ? kwenye ramani kubwa hufungua tena usanidi. Ikiwa ufuatiliaji bado haufanyi kazi, fungua tiketi katika Discord → Make a ticket. Jumuisha toleo la programu na picha za mipangilio ya vifungo katika programu zote mbili.'''
 review['lt'][reference['FirstTimeGuideBody']]=guide_lt
 review['sw'][reference['FirstTimeGuideBody']]=guide_sw.replace('\u0415','E')
+review['categories']={code:dict(line.split('\t') for line in (ROOT/'resources'/('spawn-category-names-'+code+'.tsv')).read_text(encoding='utf8').splitlines() if line and not line.startswith('#')) for code in ['lt','sw']}
+category_copy='''clothing|Drabužiai ir šarvai|Mavazi na vifaa vya kinga
+survival|Maistas, sveikata ir išgyvenimas|Chakula, afya na kujinusuru
+crafting|Įranga ir gamyba|Vifaa na utengenezaji
+armor|Šarvai|Vifaa vya kinga
+buildable|Bazės plėtros daiktai|Vitu vya kupanua kambi
+magazine|Dėtuvės|Makasha ya risasi
+player_modification|Veikėjo modifikacijos|Marekebisho ya mhusika
+throwable|Metamieji ginklai ir spąstai|Vitu vya kutupa na mitego
+general|Bendra|Jumla
+Arrow|Strėlės|Mishale
+Crossbow Bolt|Arbaleto strėlės|Mishale ya upinde wa msalaba
+Flare|Signalinės raketos|Fataki za ishara
+12 Gauge|12 kalibras|Kaliba 12
+base_upgrades|Bazės patobulinimai|Maboresho ya kambi
+body|Kėbulai|Miili ya magari
+body_armor|Apsauginės liemenės|Mavazi ya kinga ya mwili
+bumper|Buferiai|Vizuia mgongano
+clip|Šovinių apkabos|Vishikio vya risasi
+cosmetic|Išvaizdos daiktai|Vitu vya mwonekano
+earmuffs|Apsauginės ausinės|Vikinga masikio
+fender|Automobilių sparnai|Vikinga matope
+fire_starter|Ugnies įžiebimo priemonės|Vifaa vya kuwasha moto
+flash_hider|Liepsnos slopintuvai|Vificha mwanga wa mlipuko
+ghillie|Kamufliažiniai apvalkalai|Vifuniko vya kuficha
+ghillie_jacket|Kamufliažinės striukės|Makoti ya kuficha
+hazmat_suit|Apsauginiai kostiumai|Mavazi ya kujikinga na kemikali
+holster|Ginklų dėklai|Vibebeo vya bastola
+leggings|Antblauzdžiai|Suruali za kubana
+light|Apšvietimo priemonės|Taa
+lockpick|Visrakčiai|Vifaa vya kufungua kufuli
+quiver|Strėlinės|Vifuko vya mishale
+rail|Tvirtinimo bėgeliai|Reli za kufungia
+ranged_parts|Šaunamųjų ginklų dalys|Sehemu za silaha za mbali
+revolver|Revolveriai|Bastola za revolva
+scope|Optiniai taikikliai|Darubini za kulenga
+shotgun|Lygiavamzdžiai šautuvai|Bunduki zinazotawanya risasi
+shotgun_parts|Lygiavamzdžių šautuvų dalys|Sehemu za bunduki zinazotawanya risasi
+sight|Taikikliai|Vilengezi
+smg|Pistoletai kulkosvaidžiai|Bunduki ndogo za risasi mfululizo
+smg_parts|Pistoletų kulkosvaidžių dalys|Sehemu za bunduki ndogo za risasi mfululizo
+sniper|Snaiperiniai šautuvai|Bunduki za kudungua
+suppressor|Duslintuvai|Vipunguza sauti
+Uses|Likę panaudojimai|Matumizi yaliyobaki
+StackCount|Kiekis krūvoje|Idadi katika fungu
+KeyCardSector|Raktų kortelės sektorius|Sekta ya kadi ya ufunguo'''
+for line in category_copy.splitlines():
+    key,lt,sw=line.split('|');review['categories']['lt'][key]=lt;review['categories']['sw'][key]=sw
 for english,lt,sw in [
+    ('Apply','Taikyti','Tumia'),
+    ('Continental Meadow','Žemyninė pieva','Uwanda wa nyasi wa bara'),
+    ('Magazines','Dėtuvės','Makasha ya risasi'),
+    ('General','Bendra','Jumla'),
+    ('Scopes','Optiniai taikikliai','Darubini za kulenga'),
+    ('Sights','Taikikliai','Vilengezi'),
+    ('Quiver','Strėlinė','Kifuko cha mishale'),
+    ('Suppressors','Duslintuvai','Vipunguza sauti'),
+    ('Crossbow Bolt','Arbaleto strėlė','Mshale wa upinde wa msalaba'),
+    ('Animal Skin Quiver','Gyvūnų odos strėlinė','Kifuko cha mishale cha ngozi ya mnyama'),
+    ('Improvised Quiver','Savadarbė strėlinė','Kifuko cha mishale kilichotengenezwa kwa mikono'),
+    ('Military Quiver','Karinė strėlinė','Kifuko cha mishale cha kijeshi'),
+    ('Blackhawk Crossbow','Arbaletas Blackhawk','Upinde wa msalaba wa Blackhawk'),
+    ('Improvised Crossbow','Savadarbis arbaletas','Upinde wa msalaba uliotengenezwa kwa mikono'),
+    ('Carbon Crossbow Bolt','Anglies pluošto arbaleto strėlė','Mshale wa upinde wa msalaba wa nyuzi za kaboni'),
+    ('Dildo Wooden Crossbow Bolt','Medinė arbaleto strėlė su dildu','Mshale wa mbao wa upinde wa msalaba wenye dildo'),
+    ('Explosive Wooden Crossbow Bolt','Sprogstamoji medinė arbaleto strėlė','Mshale wa mbao wa upinde wa msalaba wenye mlipuko'),
+    ('Metal Crossbow Bolt','Metalinė arbaleto strėlė','Mshale wa chuma wa upinde wa msalaba'),
+    ('Metal Tip Crossbow Bolt','Arbaleto strėlė metaliniu antgaliu','Mshale wa upinde wa msalaba wenye ncha ya chuma'),
+    ('Stone Tip Crossbow Bolt','Arbaleto strėlė akmeniniu antgaliu','Mshale wa upinde wa msalaba wenye ncha ya jiwe'),
+    ('Wooden Crossbow Bolt','Medinė arbaleto strėlė','Mshale wa mbao wa upinde wa msalaba'),
     ('Police Station','Policijos nuovada','Kituo cha polisi'),
     ('Outpost Airfield','Prekybos posto aerodromas','Uwanja wa ndege wa kituo cha biashara'),
     ('Melee weapons','Artimosios kovos ginklai','Silaha za karibu'),

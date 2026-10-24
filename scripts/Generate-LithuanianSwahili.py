@@ -57,7 +57,8 @@ def item_label(english, translated, code, memory):
 def generate(code, suffix):
     cache = FOLDER/(code+'.json')
     memory = json.loads(cache.read_text(encoding='utf8')) if cache.exists() else {}
-    overrides = json.loads((ROOT/'resources/lithuanian-swahili-review.json').read_text(encoding='utf8'))[code]
+    reviewed = json.loads((ROOT/'resources/lithuanian-swahili-review.json').read_text(encoding='utf8'))
+    overrides = reviewed[code]
     memory.update(overrides)
     for label in labels:
         if not re.search(r'[A-Za-z]{2,}', base.author.PROTECT.sub('',label)):
@@ -80,6 +81,7 @@ def generate(code, suffix):
         output += '        };\n'
     for prefix, rows in RESOURCES:
         values = [(key,item_label(value,memory[value],code,memory) if prefix=='spawn-item-names' else memory[value]) for key,value in rows]
+        if prefix=='spawn-category-names':values=[(key,reviewed['categories'][code][key]) for key,_ in values]
         for key,value in values:
             if not value.strip() or '\n' in value or '\t' in value or len(value)>256:
                 raise ValueError('Invalid catalogue label: '+code+' / '+key)

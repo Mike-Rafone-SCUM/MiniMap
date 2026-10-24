@@ -1,7 +1,7 @@
 # Offline localized catalogue; native-speaker review pending.
 weapons	Silaha
-clothing	Mavazi na silaha
-survival	Chakula, afya na kuishi
+clothing	Mavazi na vifaa vya kinga
+survival	Chakula, afya na kujinusuru
 crafting	Vifaa na utengenezaji
 vehicles	Sehemu za gari
 other	Vipengee vingine
@@ -9,10 +9,10 @@ weapon_ranged	Silaha za mbali
 weapon_melee	Silaha za karibu
 melee_weapon	Silaha za karibu
 ammunition	Risasi
-armor	Silaha
+armor	Vifaa vya kinga
 attachment	Viambatisho vya silaha
 book	Vitabu
-buildable	Vitu vya upanuzi wa msingi
+buildable	Vitu vya kupanua kambi
 consumable	Chakula, vinywaji na dawa
 equipment	Vifaa
 farming	Kilimo
@@ -20,18 +20,18 @@ fishing	Uvuvi
 fishing_attachment	Viambatisho vya uvuvi
 fortification	Vitu vya kuimarisha
 hunting	Uwindaji
-magazine	Magazeti
+magazine	Makasha ya risasi
 material	Nyenzo
-player_modification	Marekebisho ya wachezaji
+player_modification	Marekebisho ya mhusika
 seasonal_event	Vitu vya msimu
 throwable	Vitu vya kutupa na mitego
 vehicle_part	Sehemu za gari
 weapon_part	Sehemu za silaha
-general	Mkuu
-Arrow	Mshale
-Crossbow Bolt	Boliti ya msalaba
-Flare	Mwangaza
-12 Gauge	Kipimo cha 12
+general	Jumla
+Arrow	Mishale
+Crossbow Bolt	Mishale ya upinde wa msalaba
+Flare	Fataki za ishara
+12 Gauge	Kaliba 12
 accessories	Vifaa
 adhesive	Wambiso
 alcoholic	Vinywaji vya pombe
@@ -39,46 +39,46 @@ animal_part	Sehemu za wanyama
 assault_rifle	Bunduki za kushambulia
 axe	Shoka
 backpack	Mikoba
-base_upgrades	Maboresho ya msingi
+base_upgrades	Maboresho ya kambi
 bayonet	Bayoneti
 beverage	Vinywaji
 blunt	Silaha butu
-body	Mwili
-body_armor	Silaha
+body	Miili ya magari
+body_armor	Mavazi ya kinga ya mwili
 bow	Mipinde
-bumper	Bumper
-clip	Klipu
+bumper	Vizuia mgongano
+clip	Vishikio vya risasi
 cookbook	Kitabu cha upishi
-cosmetic	Vipodozi
+cosmetic	Vitu vya mwonekano
 craft_station	Vituo vya ufundi
 crafting_material	Nyenzo za ufundi
 door	Mlango
-earmuffs	Vipu vya masikio
+earmuffs	Vikinga masikio
 engine	Injini
 enhancement	Uboreshaji
 event	Tukio
 eyewear	Mavazi ya macho
-fender	Fender
-fire_starter	Vianzio vya moto
+fender	Vikinga matope
+fire_starter	Vifaa vya kuwasha moto
 fishing_catch	Uvuvi wa samaki
-flash_hider	Vificha flash
+flash_hider	Vificha mwanga wa mlipuko
 flashlight	Tochi
 food	Chakula
 footwear	Viatu
 fuel	Mafuta
-ghillie	Ghillie anafunga
-ghillie_jacket	Jacket ya Ghillie
+ghillie	Vifuniko vya kuficha
+ghillie_jacket	Makoti ya kuficha
 gloves	Kinga
-hazmat_suit	Suti ya Hazmat
+hazmat_suit	Mavazi ya kujikinga na kemikali
 headwear	Nguo za kichwa
 heavy	Silaha nzito
-holster	Holster
+holster	Vibebeo vya bastola
 jacket	Jacket
 knife	Visu
-leggings	Leggings
-light	Mwanga
+leggings	Suruali za kubana
+light	Taa
 lmg	Bunduki nyepesi za mashine
-lockpick	Lockpick
+lockpick	Vifaa vya kufungua kufuli
 mask	Kinyago
 medical	Dawa
 miscellaneous	Mbalimbali
@@ -87,36 +87,36 @@ paint	Rangi
 pants	Suruali
 pistol	Bastola
 pistol_parts	Sehemu za bastola
-quiver	Kutetemeka
-rail	Reli
+quiver	Vifuko vya mishale
+rail	Reli za kufungia
 raincoat	Koti la mvua
-ranged_parts	Sehemu mbalimbali
+ranged_parts	Sehemu za silaha za mbali
 repair_kit	Seti za ukarabati
 repair_material	Kukarabati nyenzo
 results	Matokeo
-revolver	Revolvers
+revolver	Bastola za revolva
 rifle_parts	Sehemu za bunduki
 scarf	Skafu
-scope	Mawanda
+scope	Darubini za kulenga
 seasonal_craft	Ufundi wa msimu
 seat	Kiti
 security	Usalama
 seed	Mbegu
 shirt	Shati
-shotgun	Risasi
-shotgun_parts	Sehemu za bunduki
-sight	Vivutio
+shotgun	Bunduki zinazotawanya risasi
+shotgun_parts	Sehemu za bunduki zinazotawanya risasi
+sight	Vilengezi
 single_shot	Bunduki za risasi moja
 skirt	Sketi
-smg	Bunduki za submachine
-smg_parts	Sehemu za SMG
-sniper	Bunduki za sniper
+smg	Bunduki ndogo za risasi mfululizo
+smg_parts	Sehemu za bunduki ndogo za risasi mfululizo
+sniper	Bunduki za kudungua
 socks	Soksi
 soft_drink	Vinywaji laini
 spear	Mikuki
 stabilizer	Vidhibiti
 storage	Hifadhi
-suppressor	Wakandamizaji
+suppressor	Vipunguza sauti
 sweater	Sweta
 sword	Mapanga
 tool	Zana
@@ -128,10 +128,10 @@ vehicle_attachment	Kiambatisho cha gari
 water	Maji
 wheel	Gurudumu
 Health	Hali
-Uses	Matumizi iliyobaki
+Uses	Matumizi yaliyobaki
 Dirtiness	Uchafu
 Location	Nafasi
-KeyCardSector	Sekta ya Keycard
-StackCount	Hesabu ya rafu
+KeyCardSector	Sekta ya kadi ya ufunguo
+StackCount	Idadi katika fungu
 Radiation	Mionzi
 Weight	Uzito (kg)

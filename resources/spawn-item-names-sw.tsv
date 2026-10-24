@@ -188,7 +188,7 @@ Small_Animal_Fat	Mafuta ya Wanyama
 Animal_skin	Ngozi ya Wanyama
 Bear_Improvised_Jacket	Jacket ya Ngozi ya Wanyama
 Bear_Improvised_Pants	Suruali ya Ngozi ya Wanyama
-Improvised_Quiver_01	Mtetemeko wa Ngozi ya Wanyama
+Improvised_Quiver_01	Kifuko cha mishale cha ngozi ya mnyama
 HH_Shoes_01_01	Viatu vya mguu
 HH_Shoes_01_02	Viatu vya mguu
 HH_Shoes_01_03	Viatu vya mguu
@@ -419,7 +419,7 @@ ColorCan_Black	Kopo la Rangi Nyeusi
 BlackPepper	Pilipili Nyeusi
 Blackberry	Blackberry
 Recurve_Bow_90	BlackHawk 90#
-Weapon_BlackHawk_Crossbow	Blackhawk Crossbow
+Weapon_BlackHawk_Crossbow	Upinde wa msalaba wa Blackhawk
 BlankSign	Ishara tupu
 Blast_Cap	Mlipuko Cap
 2H_Baseball_Bat_Blaze	Popo wa Blaze
@@ -543,7 +543,7 @@ Car_Repair_Kit	Seti ya Urekebishaji wa Magari
 PETBottle01	Soda ya Caramel
 PETBottle02	Soda ya Caramel
 Carbon_Arrow	Mshale wa Kaboni
-Ammo_Crossbow_Bolt_Carbon	Bolt ya Carbon Crossbow
+Ammo_Crossbow_Bolt_Carbon	Mshale wa upinde wa msalaba wa nyuzi za kaboni
 Weapon_CarbonHunter	Mwindaji wa Carbon
 Weapon_CarbonBear	Mwindaji wa Carbon Ironpaw
 Magazine_CarbonHunter	Kasha la risasi — Mwindaji wa Carbon
@@ -727,7 +727,7 @@ Diary	Shajara
 1H_Dildo	Dildo
 Dildo_Spear	Dildo Spear
 Dildo_Arrow	Mshale wa Mbao wa Dildo
-Ammo_Crossbow_Bolt_Dildo	Dildo Wooden Crossbow Bolt
+Ammo_Crossbow_Bolt_Dildo	Mshale wa mbao wa upinde wa msalaba wenye dildo
 Dinghy_Item	Mfuko wa Dinghy
 Dirtbike_Body_Item	Mwili wa Dirtbike
 Dirtbike_Brakelight_Item	Dirtbike Brake Mwanga
@@ -798,7 +798,7 @@ WeaponCharm_EvilEye	Charm ya Silaha ya Jicho baya
 Explosive_Arrow_Carbon	Mshale wa Kaboni Unaolipuka
 Explosive_Arrow_Metal	Mshale wa Metali Unaolipuka
 Explosive_Arrow	Mshale wa Mbao Unaolipuka
-Ammo_Crossbow_Bolt_Explosive	Bolt ya Mbao yenye Mlipuko
+Ammo_Crossbow_Bolt_Explosive	Mshale wa mbao wa upinde wa msalaba wenye mlipuko
 Extreme_Helmet_01	Kofia Iliyokithiri
 Faceroll_Smasher	Facerolls Face Smasher
 Fascinator_Hat_01	Kofia ya kuvutia
@@ -1042,7 +1042,7 @@ Improvised_Chandelier_Light	Chandelier iliyoboreshwa
 ImprovisedClaymore	Claymore iliyoboreshwa
 Improvised_compass	Dira Iliyoboreshwa
 Improvised_Bag_Small_01	Mkoba ulioboreshwa wa Courier
-Weapon_Improvised_Crossbow	Crossbow iliyoboreshwa
+Weapon_Improvised_Crossbow	Upinde wa msalaba uliotengenezwa kwa mikono
 Improvised_Electric_Lamp_Ceiling	Taa ya Umeme iliyoboreshwa
 ImprovisedFishingHook	Ndoano ya Samaki iliyoboreshwa
 ImprovisedFishingFloater	Floater iliyoboreshwa ya Uvuvi
@@ -1074,7 +1074,7 @@ WeaponSuppressor_ImprovisedOilCan_01	Kipunguza sauti — iliyotengenezwa kwa kop
 PaintSprayer	Kinyunyizio cha rangi kilichoboreshwa
 Dish_Pasta_Improvised	Sahani ya Pasta iliyoboreshwa
 Weapon_Parts_Impro_Pistol	Sehemu za Silaha za Bastola zilizoboreshwa
-Improvised_Quiver_02_Rags	Podo Iliyoboreshwa
+Improvised_Quiver_02_Rags	Kifuko cha mishale kilichotengenezwa kwa mikono
 Raincoat_Improvised	Koti ya mvua iliyoboreshwa
 Dish_Rice_Improvised	Sahani ya Mchele iliyoboreshwa
 Weapon_Improvised_Rifle	Bunduki Iliyoboreshwa
@@ -1341,7 +1341,7 @@ Knife_Sheath	Holster ya Silaha ya Melee
 Metal_Arrow	Mshale wa Chuma
 2H_Metal_Axe	Shoka la Chuma
 2H_Metal_Baseball_Bat	Bat ya Metal baseball
-Ammo_Crossbow_Bolt_Metal	Bolt ya Metal Crossbow
+Ammo_Crossbow_Bolt_Metal	Mshale wa chuma wa upinde wa msalaba
 MetalDetector	Metal Detector
 1H_Improvised_metal_knife	Kisu cha Chuma
 1H_Metal_Pipe	Bomba la Chuma
@@ -1352,7 +1352,7 @@ Metal_Scrap_03	Chuma chakavu
 Metal_Scrap_04	Chuma chakavu
 Metal_Scrap_05	Chuma chakavu
 1H_Metal_Sword	Upanga wa Chuma
-Ammo_Crossbow_Bolt_WoodenMetalTip	Metal Tip Crossbow Bolt
+Ammo_Crossbow_Bolt_WoodenMetalTip	Mshale wa upinde wa msalaba wenye ncha ya chuma
 Wooden_ArrowMetalTip	Metal Tip Mbao Arrow
 Bundle_Of_Metal_Tips	Vidokezo vya Metal
 HH_Shoes_05_01	Viatu vya kati vya kisigino
@@ -1381,14 +1381,14 @@ Military_Helmet_01_06	Kofia ya kijeshi
 Military_Helmet_01_07	Kofia ya kijeshi
 Military_Helmet_01_08	Kofia ya kijeshi
 Military_Helmet_01_09	Kofia ya kijeshi
-Military_Quiver_01	Podo la kijeshi
-Military_Quiver_02	Podo la kijeshi
-Military_Quiver_03	Podo la kijeshi
-Military_Quiver_04	Podo la kijeshi
-Military_Quiver_05	Podo la kijeshi
-Military_Quiver_06	Podo la kijeshi
-Military_Quiver_07	Podo la kijeshi
-Military_Quiver_08	Podo la kijeshi
+Military_Quiver_01	Kifuko cha mishale cha kijeshi
+Military_Quiver_02	Kifuko cha mishale cha kijeshi
+Military_Quiver_03	Kifuko cha mishale cha kijeshi
+Military_Quiver_04	Kifuko cha mishale cha kijeshi
+Military_Quiver_05	Kifuko cha mishale cha kijeshi
+Military_Quiver_06	Kifuko cha mishale cha kijeshi
+Military_Quiver_07	Kifuko cha mishale cha kijeshi
+Military_Quiver_08	Kifuko cha mishale cha kijeshi
 Military_Shirt_01	Shati ya Kijeshi
 Military_Shirt_02	Shati ya Kijeshi
 Military_Shirt_03	Shati ya Kijeshi
@@ -1972,7 +1972,7 @@ Stockings_08	Soksi
 Stone	Jiwe
 1H_Stone_Axe	Shoka la Jiwe
 1H_ImprovisedKnife	Kisu cha Jiwe
-Ammo_Crossbow_Bolt_WoodenStoneTip	Stone Tip Crossbow Bolt
+Ammo_Crossbow_Bolt_WoodenStoneTip	Mshale wa upinde wa msalaba wenye ncha ya jiwe
 Wooden_ArrowStoneTip	Kidokezo cha Jiwe Mshale wa Mbao
 Bundle_Of_Stone_Tips	Vidokezo vya Jiwe
 Strait_Jacket	Straitjacket
@@ -2253,7 +2253,7 @@ Wooden_Arrow	Mshale wa Mbao
 Wooden_Arrows_6pc	Mshale wa Mbao
 1H_Wooden_club	Klabu ya Mbao
 1H_Wooden_club_with_spikes	Klabu ya Mbao yenye misumari
-Ammo_Crossbow_Bolt_Wooden	Bolt ya Mbao ya Crossbow
+Ammo_Crossbow_Bolt_Wooden	Mshale wa mbao wa upinde wa msalaba
 Wooden_Fork	Uma wa Mbao
 Wooden_Log_01	Logi ya mbao
 Wooden_Log_02	Logi ya mbao

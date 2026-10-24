@@ -2102,12 +2102,16 @@ static class SpawnCartTests {
             Check(Localization.Current==AppLanguage.Lithuanian && (int)Localization.Current==20 && Localization.Get("Settings")=="Nustatymai","Lithuanian appends a stable persisted identity");
             Check(boots.DisplayName=="Statybiniai batai" && catalog.Search("statybiniai batai",null).Contains(boots),"Lithuanian item search resolves canonical boots");
             Check(catalog.Search("ginklai",null).Count>0,"Lithuanian category search resolves weapons");
+            Check(Localization.GetSpawnCategoryName("magazine","")=="Dėtuvės" && Localization.GetSpawnCategoryName("scope","")=="Optiniai taikikliai" && Localization.GetSpawnCategoryName("general","")=="Bendra","Lithuanian categories use weapon and general-setting terminology");
+            Check(catalog.Find("Military_Quiver_01").DisplayName=="Karinė strėlinė","Lithuanian quivers use the equipment meaning");
             Check(catalog.Find("Magazine_AK47").DisplayName=="Dėtuvė — AK47" && catalog.Search("detuve",null).Contains(catalog.Find("Magazine_AK47")),"Lithuanian accent-free search and weapon terminology preserve the magazine ID");
             Check(Localization.GetSpawnModifierLabel("Health")=="Būklė (Health)" && Localization.GetSpawnModifierLabel("Weight")=="Svoris (kg) (Weight)","Lithuanian property labels preserve raw tokens");
             Check(Localization.GetMapObjectName("Gas Station - Airport")=="Degalinė - Oro uostas" && Localization.GetMapObjectName("Airport (B2)")=="Oro uostas (B2)","Lithuanian compound map labels preserve sector identity");
             Localization.SetLanguage("sw-TZ");
             Check(Localization.Current==AppLanguage.Swahili && (int)Localization.Current==21 && Localization.Get("Settings")=="Mipangilio","Swahili appends a stable persisted identity");
             Check(boots.DisplayName=="Viatu vya ujenzi" && catalog.Search("viatu vya ujenzi",null).Contains(boots),"Swahili item search resolves canonical boots");
+            Check(Localization.GetSpawnCategoryName("magazine","")=="Makasha ya risasi" && Localization.GetSpawnCategoryName("scope","")=="Darubini za kulenga" && Localization.Get("SpawnCartModifierApply")=="Tumia","Swahili weapon categories and Apply use the intended meanings");
+            Check(catalog.Find("Military_Quiver_01").DisplayName=="Kifuko cha mishale cha kijeshi","Swahili quivers use the equipment meaning");
             Check(Localization.GetSpawnModifierLabel("Health")=="Hali (Health)" && Localization.GetSpawnModifierLabel("Weight")=="Uzito (kg) (Weight)","Swahili property labels preserve raw tokens");
             Check(Localization.GetMapObjectName("Gas Station - Airport")=="Kituo cha mafuta - Uwanja wa ndege","Swahili compound map labels translate all parts");
             Check(Localization.GetZoneName("My custom waypoint")=="My custom waypoint","New languages preserve custom waypoint names");

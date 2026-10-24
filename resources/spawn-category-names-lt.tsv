@@ -2,7 +2,7 @@
 weapons	Ginklai
 clothing	Drabužiai ir šarvai
 survival	Maistas, sveikata ir išgyvenimas
-crafting	Įranga ir amatai
+crafting	Įranga ir gamyba
 vehicles	Transporto priemonių dalys
 other	Kiti daiktai
 weapon_ranged	Nuotoliniai ginklai
@@ -12,7 +12,7 @@ ammunition	Šaudmenys
 armor	Šarvai
 attachment	Ginklų priedai
 book	Knygos
-buildable	Pagrindo išplėtimo elementai
+buildable	Bazės plėtros daiktai
 consumable	Maistas, gėrimai ir vaistai
 equipment	Įranga
 farming	Ūkininkavimas
@@ -20,18 +20,18 @@ fishing	Žvejyba
 fishing_attachment	Žvejybos priedai
 fortification	Fortifikaciniai daiktai
 hunting	Medžioklė
-magazine	Žurnalai
+magazine	Dėtuvės
 material	Medžiagos
-player_modification	Grotuvo modifikacijos
+player_modification	Veikėjo modifikacijos
 seasonal_event	Sezoniniai daiktai
-throwable	Metimai ir spąstai
+throwable	Metamieji ginklai ir spąstai
 vehicle_part	Transporto priemonių dalys
 weapon_part	Ginklų dalys
-general	Generolas
-Arrow	Rodyklė
-Crossbow Bolt	Arbaleto varžtas
-Flare	Blyksnis
-12 Gauge	12 matuoklis
+general	Bendra
+Arrow	Strėlės
+Crossbow Bolt	Arbaleto strėlės
+Flare	Signalinės raketos
+12 Gauge	12 kalibras
 accessories	Priedai
 adhesive	Klijai
 alcoholic	Alkoholiniai gėrimai
@@ -39,46 +39,46 @@ animal_part	Gyvūnų dalys
 assault_rifle	Šturmo šautuvai
 axe	Kirviai
 backpack	Kuprinės
-base_upgrades	Baziniai atnaujinimai
+base_upgrades	Bazės patobulinimai
 bayonet	Bajonetės
 beverage	Gėrimai
 blunt	Buki ginklai
-body	Kūnas
-body_armor	Šarvai
+body	Kėbulai
+body_armor	Apsauginės liemenės
 bow	Lankai
-bumper	Buferis
-clip	Klipas
+bumper	Buferiai
+clip	Šovinių apkabos
 cookbook	Kulinarijos knyga
-cosmetic	Kosmetikos
+cosmetic	Išvaizdos daiktai
 craft_station	Amatų stotys
 crafting_material	Medžiaga amatų gamybai
 door	Durys
-earmuffs	Ausinės
+earmuffs	Apsauginės ausinės
 engine	Variklis
 enhancement	Patobulinimas
 event	Renginys
 eyewear	Akiniai
-fender	Sparnas
-fire_starter	Gaisro starteriai
+fender	Automobilių sparnai
+fire_starter	Ugnies įžiebimo priemonės
 fishing_catch	Žvejybos laimikis
-flash_hider	Flash hiders
+flash_hider	Liepsnos slopintuvai
 flashlight	Žibintuvėliai
 food	Maistas
 footwear	Avalynė
 fuel	Kuro
-ghillie	Ghillie įvyniojimai
-ghillie_jacket	Ghillie striukė
+ghillie	Kamufliažiniai apvalkalai
+ghillie_jacket	Kamufliažinės striukės
 gloves	Pirštinės
-hazmat_suit	Hazmat kostiumas
+hazmat_suit	Apsauginiai kostiumai
 headwear	Galvos apdangalai
 heavy	Sunkieji ginklai
-holster	Dėklas
+holster	Ginklų dėklai
 jacket	Striukė
 knife	Peiliai
 leggings	Antblauzdžiai
-light	Šviesa
+light	Apšvietimo priemonės
 lmg	Lengvieji kulkosvaidžiai
-lockpick	Užraktas
+lockpick	Visrakčiai
 mask	Kaukė
 medical	Medicina
 miscellaneous	Įvairūs
@@ -87,36 +87,36 @@ paint	Dažai
 pants	Kelnės
 pistol	Pistoletai
 pistol_parts	Pistoleto dalys
-quiver	Drebulys
-rail	Bėgiai
+quiver	Strėlinės
+rail	Tvirtinimo bėgeliai
 raincoat	Lietpaltis
-ranged_parts	Skirtingos dalys
+ranged_parts	Šaunamųjų ginklų dalys
 repair_kit	Remonto komplektai
 repair_material	Remonto medžiaga
 results	Rezultatai
 revolver	Revolveriai
 rifle_parts	Šautuvų dalys
 scarf	Šalikas
-scope	Taikymo sritis
+scope	Optiniai taikikliai
 seasonal_craft	Sezoninis amatas
 seat	Sėdynės
 security	Saugumas
 seed	Sėklos
 shirt	Marškiniai
-shotgun	Šautuvai
-shotgun_parts	Šautuvų dalys
-sight	Lankytinos vietos
+shotgun	Lygiavamzdžiai šautuvai
+shotgun_parts	Lygiavamzdžių šautuvų dalys
+sight	Taikikliai
 single_shot	Vieno šūvio šautuvai
 skirt	Sijonas
-smg	Kulkosvaidžiai
-smg_parts	Smg dalys
-sniper	Snaiperio šautuvai
+smg	Pistoletai kulkosvaidžiai
+smg_parts	Pistoletų kulkosvaidžių dalys
+sniper	Snaiperiniai šautuvai
 socks	Kojinės
 soft_drink	Gaivieji gėrimai
 spear	Ietys
 stabilizer	Stabilizatoriai
 storage	Sandėliavimas
-suppressor	Slopintuvai
+suppressor	Duslintuvai
 sweater	Megztinis
 sword	Kardai
 tool	Įrankiai
@@ -128,10 +128,10 @@ vehicle_attachment	Transporto priemonės tvirtinimas
 water	Vanduo
 wheel	Ratas
 Health	Būklė
-Uses	Likę naudojimo būdai
+Uses	Likę panaudojimai
 Dirtiness	Nešvarumas
 Location	Padėtis
-KeyCardSector	Raktų kortelių sektorius
-StackCount	Krūvos skaičius
+KeyCardSector	Raktų kortelės sektorius
+StackCount	Kiekis krūvoje
 Radiation	Radiacija
 Weight	Svoris (kg)
