@@ -93,6 +93,8 @@ proton_wine() {
     return 1
 }
 
+has_dotnet() { [[ -d "$1/pfx/drive_c/windows/Microsoft.NET/Framework64/v4.0.30319/WPF" ]]; }
+
 app_version() { [[ -f "$1/package.txt" ]] && sed -n 's/^version=//p' "$1/package.txt" | head -n1 || true; }
 
 # ---------------------------------------------------------------------------
@@ -160,6 +162,10 @@ cmd_setup() {
         fi
     fi
 
+    if (( dotnet )) && ! has_dotnet "$compat"; then
+        die ".NET 4.8 wurde nicht vollständig installiert (WPF fehlt). Ausgabe oben prüfen und 'scum-minimap setup' erneut ausführen."
+    fi
+
     # WPF's Direct3D 9 path is unreliable on Wine/DXVK; software rendering is stable.
     if (( hw )); then
         prefix_wine "$compat" reg delete 'HKCU\Software\Microsoft\Avalon.Graphics' /v DisableHWAcceleration /f >/dev/null 2>&1 || true
@@ -177,6 +183,11 @@ cmd_steam() {
     [[ $# -gt 0 ]] || die "Als Steam-Startoption verwenden:  scum-minimap-steam %command%"
     local compat target
     if compat="$(find_compatdata)" && target="$(sync_app "$compat")"; then
+        if ! has_dotnet "$compat"; then
+            local text="In SCUMs Prefix fehlt .NET Framework 4.8. MiniMap läuft so nur eingeschränkt. Bitte SCUM beenden und 'scum-minimap setup' ausführen."
+            warn "$text"
+            command -v notify-send >/dev/null 2>&1 && notify-send -a "SCUM MiniMap" -i dialog-warning "SCUM MiniMap" "$text" || true
+        fi
         export SCUM_MINIMAP_LINUX=1 SCUM_MINIMAP_PACKAGED=1
         if [[ -z "${PROTON_REMOTE_DEBUG_CMD:-}" ]]; then
             export PROTON_REMOTE_DEBUG_CMD="$target/$EXE"
@@ -219,7 +230,7 @@ cmd_doctor() {
             echo "Proton:           $proton"
             wine="$(proton_wine "$proton" || echo '?')"; echo "wine:             $wine"
         else echo "Proton:           unbekannt (SCUM einmal starten)"; fi
-        if [[ -d "$compat/pfx/drive_c/windows/Microsoft.NET/Framework64/v4.0.30319/WPF" ]]; then echo ".NET 4.8 / WPF:   installiert"
+        if has_dotnet "$compat"; then echo ".NET 4.8 / WPF:   installiert"
         else echo ".NET 4.8 / WPF:   fehlt (scum-minimap setup)"; fi
     else
         echo "SCUM-Prefix:      nicht gefunden"
