@@ -1,0 +1,13 @@
+post_install() {
+    cat <<'MSG'
+==> SCUM MiniMap einrichten (einmalig, als normaler Benutzer, SCUM beendet):
+      scum-minimap setup
+    Danach in Steam: SCUM > Eigenschaften > Startoptionen:
+      scum-minimap-steam %command%
+    Details: /usr/share/doc/scum-minimap/README-Linux.md
+MSG
+}
+
+post_upgrade() {
+    echo "==> Die neue MiniMap-Version wird beim nächsten SCUM-Start automatisch in den Prefix kopiert."
+}

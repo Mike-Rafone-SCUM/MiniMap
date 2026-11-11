@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=SCUM MiniMap
+Comment=Map overlay and road navigation for SCUM (runs inside SCUM's Proton prefix)
+Comment[de]=Karten-Overlay und Navigation für SCUM (läuft im Proton-Prefix von SCUM)
+Exec=scum-minimap run
+Icon=applications-games
+Terminal=false
+Categories=Game;Utility;
+Keywords=SCUM;Map;Proton;

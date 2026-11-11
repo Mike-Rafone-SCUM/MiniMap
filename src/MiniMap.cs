@@ -1918,6 +1918,10 @@ namespace ScumMiniMap {
 
 
             if(Program.IsTestBuild || updateCheckRunning || closing || IsDisposed || diagnosticMode) return;
+            if(WineHost.IsWine) {
+                if(userInitiated && !closing && !IsDisposed) RunUiModal(() => MessageBox.Show(UiDialogOwner, WineHost.UpdateHelp, Localization.Get("UpdateCheckTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information));
+                return;
+            }
 
 
 
