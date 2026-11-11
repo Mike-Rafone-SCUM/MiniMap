@@ -14,7 +14,8 @@ wineserver wie SCUM**. Dort sieht MiniMap das Spiel genau wie unter Windows.
 ## Installation
 
 ```bash
-git clone <dieses Repo> && cd MiniMap/linux/arch
+git clone https://github.com/h3adbang3r/SkynettMiniMap_ArchLinux.git
+cd SkynettMiniMap_ArchLinux/linux/arch
 makepkg -si
 ```
 
