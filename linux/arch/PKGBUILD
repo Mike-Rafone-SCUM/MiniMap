@@ -5,7 +5,7 @@
 
 pkgname=scum-minimap
 pkgver=2.3.25
-pkgrel=1
+pkgrel=2
 pkgdesc="SCUM map overlay and road navigation, running inside SCUM's Steam/Proton prefix"
 arch=('any')
 url="https://github.com/h3adbang3r/SkynettMiniMap_ArchLinux"

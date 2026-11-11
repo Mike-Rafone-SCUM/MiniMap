@@ -766,6 +766,9 @@ namespace ScumMiniMap {
         internal static void Observe(int key,uint scan,uint flags) {
             int encoded=EncodeScanCode(scan,flags);
             if(key<=0 || key>=256 || !Valid(encoded)) return;
+            // Wine/XWayland synthesizes a NumLock press before numpad keys to resync the lock
+            // state. It must never be captured in place of the key the player pressed.
+            if(key==0x90 && WineHost.IsWine) return;
             lock(sync) { lastKey=key; lastScan=encoded; lastTime=DateTime.UtcNow; }
         }
         internal static int EncodeScanCode(uint scan,uint flags) { return scan>0 && scan<=255?(int)scan|((flags&1)!=0?0x100:0):0; }
