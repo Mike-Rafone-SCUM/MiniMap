@@ -5,8 +5,27 @@ using System.Security;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace ScumMiniMap {
+    // Linux support: MiniMap runs inside SCUM's own Proton/Wine prefix so that focus,
+    // clipboard and input share SCUM's wineserver. Windows-only integrations
+    // (Task Scheduler, self-update) are replaced by the Linux launcher there.
+    internal static class WineHost {
+        [DllImport("kernel32.dll",CharSet=CharSet.Unicode)] static extern IntPtr GetModuleHandleW(string name);
+        [DllImport("kernel32.dll",CharSet=CharSet.Ansi,BestFitMapping=false)] static extern IntPtr GetProcAddress(IntPtr module,string name);
+        internal static readonly bool IsWine=Detect();
+        internal static bool PackageManaged { get { return IsWine && Environment.GetEnvironmentVariable("SCUM_MINIMAP_PACKAGED")=="1"; } }
+        internal const string AutoLaunchHelp="On Linux/Proton, start MiniMap together with SCUM through the Steam launch option \"scum-minimap-steam %command%\". It closes automatically with the game.";
+        internal const string UpdateHelp="On Linux, MiniMap is updated by the scum-minimap package (pacman/AUR helper), not by the built-in updater.";
+        static bool Detect() {
+            if(Environment.GetEnvironmentVariable("SCUM_MINIMAP_LINUX")=="1")return true;
+            try {
+                IntPtr ntdll=GetModuleHandleW("ntdll.dll");
+                return ntdll!=IntPtr.Zero && GetProcAddress(ntdll,"wine_get_version")!=IntPtr.Zero;
+            } catch { return false; }
+        }
+    }
     internal sealed class ScumSessionLifetime {
         bool seenGame;
         DateTime? missingSince;
@@ -74,6 +93,7 @@ namespace ScumMiniMap {
             return "<?xml version=\"1.0\" encoding=\"utf-16\"?><Task version=\"1.2\" xmlns=\"http://schemas.microsoft.com/windows/2004/02/mit/task\"><Triggers><LogonTrigger><Enabled>true</Enabled><UserId>"+escape(sid)+"</UserId></LogonTrigger></Triggers><Principals><Principal id=\"User\"><UserId>"+escape(sid)+"</UserId><LogonType>InteractiveToken</LogonType><RunLevel>HighestAvailable</RunLevel></Principal></Principals><Settings><MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy><DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries><StopIfGoingOnBatteries>false</StopIfGoingOnBatteries><ExecutionTimeLimit>PT0S</ExecutionTimeLimit></Settings><Actions Context=\"User\"><Exec><Command>"+escape(powershell)+"</Command><Arguments>"+escape("-NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File \""+script+"\"")+"</Arguments></Exec></Actions></Task>";
         }
         internal static void SetEnabled(bool enabled) {
+            if(WineHost.IsWine)throw new NotSupportedException(WineHost.AutoLaunchHelp);
             if(!enabled) {
                 if(File.Exists(EnabledFile))File.Delete(EnabledFile);
                 Scheduler("/Delete /TN \""+TaskName+"\" /F");return;
