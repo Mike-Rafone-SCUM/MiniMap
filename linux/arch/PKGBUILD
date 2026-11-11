@@ -5,14 +5,15 @@
 
 pkgname=scum-minimap
 pkgver=2.3.25
-pkgrel=2
+pkgrel=3
 pkgdesc="SCUM map overlay and road navigation, running inside SCUM's Steam/Proton prefix"
 arch=('any')
 url="https://github.com/h3adbang3r/SkynettMiniMap_ArchLinux"
 license=('LicenseRef-unknown')
 depends=('bash' 'coreutils' 'procps-ng' 'steam')
 makedepends=('git' 'dotnet-sdk' 'libarchive')
-optdepends=('protontricks: installs .NET Framework 4.8 into the SCUM prefix (recommended)'
+optdepends=('protontricks: required by scum-minimap setup to install .NET Framework 4.8'
+            'libnotify: desktop warning when .NET is missing'
             'winetricks: alternative to protontricks for scum-minimap setup')
 install=scum-minimap.install
 # Linux port lives in the fork; upstream: https://github.com/Mike-Rafone-SCUM/MiniMap
