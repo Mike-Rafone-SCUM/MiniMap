@@ -147,23 +147,26 @@ cmd_setup() {
     msg "SCUM-Prefix: $compat/pfx"
     if pgrep -f 'SCUM(-Win64-Shipping)?\.exe' >/dev/null 2>&1; then die "SCUM läuft gerade. Bitte zuerst beenden."; fi
 
-    if (( dotnet )); then
-        if command -v protontricks >/dev/null 2>&1; then
-            msg "Installiere .NET Framework 4.8 in den SCUM-Prefix (dauert einige Minuten) ..."
-            protontricks "$APPID" -q dotnet48
-        elif command -v winetricks >/dev/null 2>&1; then
-            local proton wine
-            proton="$(find_proton "$compat")" || die "Proton-Version von SCUM nicht gefunden (SCUM_PROTON setzen)."
-            wine="$(proton_wine "$proton")" || die "Kein wine-Binary in $proton"
-            msg "Installiere .NET Framework 4.8 mit winetricks und $(basename "$proton") ..."
-            WINEPREFIX="$compat/pfx" WINE="$wine" WINESERVER="$(dirname "$wine")/wineserver" winetricks -q dotnet48
+    if (( dotnet )) && has_dotnet "$compat"; then
+        msg ".NET Framework 4.8 ist bereits installiert."
+    elif (( dotnet )); then
+        # Proton's own wine fails on the dotnet40 step (netfx_core.mzz, status 67);
+        # the system wine installs .NET into the Proton prefix reliably.
+        if command -v winetricks >/dev/null 2>&1 && command -v wine >/dev/null 2>&1; then
+            [[ -d "$compat/pfx.backup" ]] || { msg "Sichere den Prefix nach $compat/pfx.backup ..."; cp -a "$compat/pfx" "$compat/pfx.backup"; }
+            msg "Installiere .NET Framework 4.8 mit System-Wine ($(wine --version 2>/dev/null)), dauert einige Minuten ..."
+            WINEPREFIX="$compat/pfx" winetricks -q --force dotnet48 || warn "winetricks meldete einen Fehler."
+            WINEPREFIX="$compat/pfx" wineserver -k 2>/dev/null || true
+        elif command -v protontricks >/dev/null 2>&1; then
+            msg "Installiere .NET Framework 4.8 mit protontricks (dauert einige Minuten) ..."
+            protontricks "$APPID" -q dotnet48 || warn "protontricks meldete einen Fehler."
         else
-            die "protontricks (empfohlen) oder winetricks wird benötigt (pacman -S protontricks bzw. AUR)"
+            die "winetricks und wine werden benötigt: sudo pacman -S winetricks wine"
         fi
     fi
 
     if (( dotnet )) && ! has_dotnet "$compat"; then
-        die ".NET 4.8 wurde nicht vollständig installiert (WPF fehlt). Ausgabe oben prüfen und 'scum-minimap setup' erneut ausführen."
+        die ".NET 4.8 wurde nicht vollständig installiert (WPF fehlt). Ausgabe oben prüfen. Sicherung: $compat/pfx.backup"
     fi
 
     # WPF's Direct3D 9 path is unreliable on Wine/DXVK; software rendering is stable.

@@ -20,10 +20,10 @@ makepkg -si
 ```
 
 Abhängigkeiten zum Bauen: `dotnet-sdk`, `git`, `libarchive` (werden von
-`makepkg -s` installiert). Zur Laufzeit wird `protontricks` empfohlen:
+`makepkg -s` installiert). Für die Einrichtung von .NET werden `winetricks` und System-`wine` gebraucht:
 
 ```bash
-sudo pacman -S protontricks     # falls nicht in den Repos: yay -S protontricks (AUR)
+sudo pacman -S winetricks wine protontricks
 ```
 
 ## Einrichtung (einmalig)
