@@ -1904,18 +1904,18 @@ if(followButton!=null)followButton.Background=engine.WpfFollowing?WpfFieldTheme.
                     Button guide=null;guide=WpfFieldTheme.Button(Localization.Get("FirstTimeGuideTitle"),()=> {window.Close();application.Dispatcher.BeginInvoke(new Action(()=>ShowSetupWindow(false)));});guide.Tag="first-time-guide";general.Children.Add(guide);section("SecGeneral",general,true);
                     var startup=new StackPanel();
                         var autoLabel=WpfFieldTheme.Text(ScumAutoLaunch.Label,16);autoLabel.TextWrapping=TextWrapping.Wrap;autoLabel.MaxWidth=480;
-                        var auto=new CheckBox { Content=autoLabel,IsChecked=ScumAutoLaunch.Enabled,Tag="auto-launch-scum",Margin=new Thickness(0,12,0,8),IsEnabled=!diagnostic };
+                        var auto=new CheckBox { Content=autoLabel,IsChecked=ScumAutoLaunch.Enabled,Tag="auto-launch-scum",Margin=new Thickness(0,12,0,8),IsEnabled=!diagnostic&&!WineHost.IsWine };
                         System.Windows.Automation.AutomationProperties.SetName(auto,ScumAutoLaunch.Label);
-                        auto.ToolTip=ScumAutoLaunch.Help;
+                        auto.ToolTip=WineHost.IsWine?WineHost.AutoLaunchHelp:ScumAutoLaunch.Help;
                         auto.Click+=async (s,e)=> {
                             if(diagnostic)return;
                             bool enable=auto.IsChecked==true;auto.IsEnabled=false;
                             try { await System.Threading.Tasks.Task.Run(()=>ScumAutoLaunch.SetEnabled(enable)); }
                             catch(Exception error) { Program.LogException("ScumAutoLaunchSettings",error);MessageBox.Show(window,error.Message,"SCUM MiniMap",MessageBoxButton.OK,MessageBoxImage.Error); }
-                            auto.IsChecked=ScumAutoLaunch.Enabled;auto.IsEnabled=true;
+                            auto.IsChecked=ScumAutoLaunch.Enabled;auto.IsEnabled=!WineHost.IsWine;
                         };
                         startup.Children.Add(auto);
-                        var autoHelp=WpfFieldTheme.Text(ScumAutoLaunch.Help,14,WpfFieldTheme.Muted);autoHelp.TextWrapping=TextWrapping.Wrap;startup.Children.Add(autoHelp);
+                        var autoHelp=WpfFieldTheme.Text(WineHost.IsWine?WineHost.AutoLaunchHelp:ScumAutoLaunch.Help,14,WpfFieldTheme.Muted);autoHelp.TextWrapping=TextWrapping.Wrap;startup.Children.Add(autoHelp);
 
                     section("SettingsStartup",startup,true);
                 } else if(index==2) {

@@ -1,0 +1,48 @@
+# Maintainer: Sven (h3adbang3r)
+# Builds SCUM MiniMap from source on Arch Linux / CachyOS and installs the
+# Proton launcher. MiniMap itself is a .NET Framework/WPF program that runs
+# inside SCUM's Proton prefix.
+
+pkgname=scum-minimap
+pkgver=2.3.25
+pkgrel=1
+pkgdesc="SCUM map overlay and road navigation, running inside SCUM's Steam/Proton prefix"
+arch=('any')
+url="https://github.com/h3adbang3r/SkynettMiniMap_ArchLinux"
+license=('LicenseRef-unknown')
+depends=('bash' 'coreutils' 'procps-ng' 'steam')
+makedepends=('git' 'dotnet-sdk' 'libarchive')
+optdepends=('protontricks: installs .NET Framework 4.8 into the SCUM prefix (recommended)'
+            'winetricks: alternative to protontricks for scum-minimap setup')
+install=scum-minimap.install
+# Linux port lives in the fork; upstream: https://github.com/Mike-Rafone-SCUM/MiniMap
+_repo="https://github.com/h3adbang3r/SkynettMiniMap_ArchLinux.git"
+_branch="main"
+source=("MiniMap::git+${_repo}#branch=${_branch}"
+        "netfx-refs-net48-1.0.3.zip::https://api.nuget.org/v3-flatcontainer/microsoft.netframework.referenceassemblies.net48/1.0.3/microsoft.netframework.referenceassemblies.net48.1.0.3.nupkg")
+sha256sums=('SKIP'
+            '8a7e348538e7eb91351696911689f49e3d4f63f8bab517432bbe159b8b1104a2')
+
+pkgver() {
+    cd MiniMap
+    grep -oP 'public const string VersionString\s*=\s*"\K[0-9.]+(?=";)' src/MiniMap.cs
+}
+
+build() {
+    cd MiniMap
+    rm -rf "$srcdir/out"
+    NETFX_REFS="$srcdir/build/.NETFramework/v4.8" DOTNET_CLI_TELEMETRY_OPTOUT=1 \
+        bash linux/build.sh Release "$srcdir/out"
+}
+
+package() {
+    cd MiniMap
+    install -d "$pkgdir/usr/share/scum-minimap"
+    cp -a "$srcdir/out/." "$pkgdir/usr/share/scum-minimap/"
+    install -Dm755 linux/scum-minimap "$pkgdir/usr/bin/scum-minimap"
+    ln -s scum-minimap "$pkgdir/usr/bin/scum-minimap-steam"
+    install -Dm644 linux/scum-minimap.desktop "$pkgdir/usr/share/applications/scum-minimap.desktop"
+    install -Dm644 linux/README.md "$pkgdir/usr/share/doc/scum-minimap/README-Linux.md"
+    install -Dm644 ATTRIBUTION.md "$pkgdir/usr/share/licenses/scum-minimap/ATTRIBUTION.md"
+    install -Dm644 resources/fonts/OFL.txt "$pkgdir/usr/share/licenses/scum-minimap/OFL-BarlowSemiCondensed.txt"
+}
