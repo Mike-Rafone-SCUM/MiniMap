@@ -1,0 +1,259 @@
+#!/usr/bin/env bash
+# SCUM MiniMap for Linux (Steam/Proton), tuned for Arch Linux and CachyOS.
+#
+# MiniMap is a Windows (.NET/WPF) program that watches SCUM's foreground window,
+# presses SCUM's "Copy Location" key and reads the clipboard. On Linux this only
+# works when MiniMap runs inside SCUM's own Proton prefix, on the same wineserver
+# as the game. This script prepares that prefix and starts MiniMap there.
+#
+# Usage:
+#   scum-minimap setup [--no-dotnet] [--hw-render]   prepare SCUM's Proton prefix once
+#   scum-minimap steam %command%                      Steam launch option (recommended)
+#   scum-minimap run [args...]                        start next to a running SCUM (best effort)
+#   scum-minimap sync                                 copy MiniMap into the prefix
+#   scum-minimap doctor                               show what was detected
+#
+# The command is also installed as `scum-minimap-steam`, which equals `scum-minimap steam`.
+#
+# Environment overrides:
+#   SCUM_MINIMAP_HOME   folder with SkynettMiniMap.exe + assets/ (default /usr/share/scum-minimap)
+#   SCUM_COMPATDATA     SCUM's compatdata folder (.../steamapps/compatdata/513710)
+#   SCUM_PROTON         Proton folder used for `setup`/`run` (contains files/bin/wine or dist/bin/wine)
+set -euo pipefail
+
+APPID=513710
+APP_HOME="${SCUM_MINIMAP_HOME:-/usr/share/scum-minimap}"
+EXE=SkynettMiniMap.exe
+PREFIX_DIR_NAME="SCUM-MiniMap"
+
+msg()  { printf '\e[1;32m==>\e[0m %s\n' "$*" >&2; }
+warn() { printf '\e[1;33m==> WARNUNG:\e[0m %s\n' "$*" >&2; }
+die()  { printf '\e[1;31m==> FEHLER:\e[0m %s\n' "$*" >&2; exit 1; }
+
+# ---------------------------------------------------------------------------
+# Steam / Proton discovery
+# ---------------------------------------------------------------------------
+steam_roots() {
+    local r
+    for r in "${STEAM_COMPAT_CLIENT_INSTALL_PATH:-}" \
+             "$HOME/.local/share/Steam" "$HOME/.steam/steam" "$HOME/.steam/root" \
+             "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam"; do
+        if [[ -n "$r" && -d "$r/steamapps" ]]; then realpath "$r"; fi
+    done | awk '!seen[$0]++'
+}
+
+steam_libraries() {
+    local root vdf lib
+    {
+        while IFS= read -r root; do
+            echo "$root"
+            for vdf in "$root/steamapps/libraryfolders.vdf" "$root/config/libraryfolders.vdf"; do
+                if [[ -f "$vdf" ]]; then
+                    sed -n 's/^[[:space:]]*"path"[[:space:]]*"\(.*\)"[[:space:]]*$/\1/p' "$vdf" | sed 's/\\\\/\\/g'
+                fi
+            done
+        done < <(steam_roots)
+    } | while IFS= read -r lib; do
+        if [[ -d "$lib/steamapps" ]]; then realpath "$lib"; fi
+    done | awk '!seen[$0]++'
+}
+
+find_compatdata() {
+    if [[ -n "${SCUM_COMPATDATA:-}" ]]; then echo "$SCUM_COMPATDATA"; return; fi
+    if [[ -n "${STEAM_COMPAT_DATA_PATH:-}" ]]; then echo "$STEAM_COMPAT_DATA_PATH"; return; fi
+    local lib
+    while IFS= read -r lib; do
+        if [[ -d "$lib/steamapps/compatdata/$APPID/pfx" ]]; then echo "$lib/steamapps/compatdata/$APPID"; return; fi
+    done < <(steam_libraries)
+    return 1
+}
+
+# The Proton build last used for SCUM is recorded in compatdata/<appid>/config_info.
+find_proton() {
+    local compat="$1" line dir
+    if [[ -n "${SCUM_PROTON:-}" ]]; then echo "$SCUM_PROTON"; return; fi
+    if [[ -f "$compat/config_info" ]]; then
+        while IFS= read -r line; do
+            case "$line" in
+                */files/share/fonts/*) dir="${line%%/files/share/fonts/*}" ;;
+                */dist/share/fonts/*)  dir="${line%%/dist/share/fonts/*}" ;;
+                *) continue ;;
+            esac
+            [[ -d "$dir" ]] && { echo "$dir"; return; }
+        done < "$compat/config_info"
+    fi
+    return 1
+}
+
+proton_wine() {
+    local p="$1" d
+    for d in files dist; do
+        [[ -x "$p/$d/bin/wine" ]] && { echo "$p/$d/bin/wine"; return; }
+    done
+    return 1
+}
+
+has_dotnet() { [[ -d "$1/pfx/drive_c/windows/Microsoft.NET/Framework64/v4.0.30319/WPF" ]]; }
+
+app_version() { [[ -f "$1/package.txt" ]] && sed -n 's/^version=//p' "$1/package.txt" | head -n1 || true; }
+
+# ---------------------------------------------------------------------------
+# Copy MiniMap into drive_c of SCUM's prefix. Steam runs Proton inside the Steam
+# Linux Runtime container, where the host's /usr is not visible, so the program
+# has to live inside the prefix.
+# ---------------------------------------------------------------------------
+sync_app() {
+    local compat="$1" target src_ver dst_ver tmp
+    [[ -f "$APP_HOME/$EXE" ]] || die "$APP_HOME/$EXE fehlt. Paket installiert? (oder SCUM_MINIMAP_HOME setzen)"
+    target="$compat/pfx/drive_c/$PREFIX_DIR_NAME"
+    src_ver="$(app_version "$APP_HOME")"; dst_ver="$(app_version "$target")"
+    if [[ -f "$target/$EXE" && -n "$src_ver" && "$src_ver" == "$dst_ver" ]] && cmp -s "$APP_HOME/$EXE" "$target/$EXE"; then
+        echo "$target"; return
+    fi
+    msg "Kopiere SCUM MiniMap ${src_ver:-?} nach $target"
+    tmp="$target.new.$$"
+    rm -rf "$tmp"; mkdir -p "$tmp"
+    cp -a "$APP_HOME/." "$tmp/"
+    chmod -R u+w "$tmp"
+    rm -rf "$target.old"; [[ -e "$target" ]] && mv "$target" "$target.old"
+    mv "$tmp" "$target"; rm -rf "$target.old"
+    echo "$target"
+}
+
+# Run a Windows command in SCUM's prefix outside of a game session.
+prefix_wine() {
+    local compat="$1"; shift
+    if command -v protontricks >/dev/null 2>&1; then
+        protontricks -c "wine $(printf '%q ' "$@")" "$APPID"
+    else
+        local proton wine
+        proton="$(find_proton "$compat")" || die "Proton-Version von SCUM nicht gefunden. SCUM einmal starten oder SCUM_PROTON setzen."
+        wine="$(proton_wine "$proton")" || die "Kein wine-Binary in $proton"
+        WINEPREFIX="$compat/pfx" WINEDEBUG=-all "$wine" "$@"
+    fi
+}
+
+# ---------------------------------------------------------------------------
+cmd_setup() {
+    local dotnet=1 hw=0 compat
+    for a in "$@"; do
+        case "$a" in
+            --no-dotnet) dotnet=0 ;;
+            --hw-render) hw=1 ;;
+            *) die "Unbekannte Option: $a" ;;
+        esac
+    done
+    compat="$(find_compatdata)" || die "SCUM-Prefix (compatdata/$APPID) nicht gefunden. SCUM einmal über Steam mit Proton starten."
+    msg "SCUM-Prefix: $compat/pfx"
+    if pgrep -f 'SCUM(-Win64-Shipping)?\.exe' >/dev/null 2>&1; then die "SCUM läuft gerade. Bitte zuerst beenden."; fi
+
+    if (( dotnet )) && has_dotnet "$compat"; then
+        msg ".NET Framework 4.8 ist bereits installiert."
+    elif (( dotnet )); then
+        # Proton's own wine fails on the dotnet40 step (netfx_core.mzz, status 67);
+        # the system wine installs .NET into the Proton prefix reliably.
+        if command -v winetricks >/dev/null 2>&1 && command -v wine >/dev/null 2>&1; then
+            [[ -d "$compat/pfx.backup" ]] || { msg "Sichere den Prefix nach $compat/pfx.backup ..."; cp -a "$compat/pfx" "$compat/pfx.backup"; }
+            msg "Installiere .NET Framework 4.8 mit System-Wine ($(wine --version 2>/dev/null)), dauert einige Minuten ..."
+            WINEPREFIX="$compat/pfx" winetricks -q --force dotnet48 || warn "winetricks meldete einen Fehler."
+            WINEPREFIX="$compat/pfx" wineserver -k 2>/dev/null || true
+        elif command -v protontricks >/dev/null 2>&1; then
+            msg "Installiere .NET Framework 4.8 mit protontricks (dauert einige Minuten) ..."
+            protontricks "$APPID" -q dotnet48 || warn "protontricks meldete einen Fehler."
+        else
+            die "winetricks und wine werden benötigt: sudo pacman -S winetricks wine"
+        fi
+    fi
+
+    if (( dotnet )) && ! has_dotnet "$compat"; then
+        die ".NET 4.8 wurde nicht vollständig installiert (WPF fehlt). Ausgabe oben prüfen. Sicherung: $compat/pfx.backup"
+    fi
+
+    # WPF's Direct3D 9 path is unreliable on Wine/DXVK; software rendering is stable.
+    if (( hw )); then
+        prefix_wine "$compat" reg delete 'HKCU\Software\Microsoft\Avalon.Graphics' /v DisableHWAcceleration /f >/dev/null 2>&1 || true
+    else
+        prefix_wine "$compat" reg add 'HKCU\Software\Microsoft\Avalon.Graphics' /v DisableHWAcceleration /t REG_DWORD /d 1 /f >/dev/null
+    fi
+    sync_app "$compat" >/dev/null
+    msg "Fertig. Steam > SCUM > Eigenschaften > Startoptionen:  scum-minimap-steam %command%"
+}
+
+# Steam launch option: `scum-minimap-steam %command%`
+# Proton starts PROTON_REMOTE_DEBUG_CMD with the game's own wine, environment and
+# container right before the game, and stops it again when the game exits.
+cmd_steam() {
+    [[ $# -gt 0 ]] || die "Als Steam-Startoption verwenden:  scum-minimap-steam %command%"
+    local compat target
+    if compat="$(find_compatdata)" && target="$(sync_app "$compat")"; then
+        if ! has_dotnet "$compat"; then
+            local text="In SCUMs Prefix fehlt .NET Framework 4.8. MiniMap läuft so nur eingeschränkt. Bitte SCUM beenden und 'scum-minimap setup' ausführen."
+            warn "$text"
+            command -v notify-send >/dev/null 2>&1 && notify-send -a "SCUM MiniMap" -i dialog-warning "SCUM MiniMap" "$text" || true
+        fi
+        export SCUM_MINIMAP_LINUX=1 SCUM_MINIMAP_PACKAGED=1
+        if [[ -z "${PROTON_REMOTE_DEBUG_CMD:-}" ]]; then
+            export PROTON_REMOTE_DEBUG_CMD="$target/$EXE"
+        else
+            warn "PROTON_REMOTE_DEBUG_CMD ist bereits gesetzt, MiniMap wird nicht gestartet."
+        fi
+    else
+        warn "SCUM MiniMap konnte nicht vorbereitet werden, SCUM startet ohne MiniMap."
+    fi
+    exec "$@"
+}
+
+# Start next to an already running SCUM. Needs the same wine build as the game so
+# that it connects to the game's wineserver; protontricks-launch handles the
+# Steam Linux Runtime for us.
+cmd_run() {
+    local compat target
+    compat="$(find_compatdata)" || die "SCUM-Prefix nicht gefunden."
+    target="$(sync_app "$compat")"
+    export SCUM_MINIMAP_LINUX=1 SCUM_MINIMAP_PACKAGED=1
+    pgrep -f 'SCUM(-Win64-Shipping)?\.exe' >/dev/null 2>&1 || warn "SCUM läuft nicht. MiniMap braucht das laufende Spiel im selben Prefix."
+    if command -v protontricks-launch >/dev/null 2>&1; then
+        exec protontricks-launch --appid "$APPID" "$target/$EXE" "$@"
+    fi
+    local proton wine
+    proton="$(find_proton "$compat")" || die "Proton-Version von SCUM nicht gefunden (SCUM_PROTON setzen)."
+    wine="$(proton_wine "$proton")" || die "Kein wine-Binary in $proton"
+    warn "protontricks-launch fehlt, starte direkt mit $wine (Steam-Startoption ist zuverlässiger)."
+    WINEPREFIX="$compat/pfx" WINEFSYNC="${WINEFSYNC:-1}" WINEESYNC="${WINEESYNC:-1}" exec "$wine" "$target/$EXE" "$@"
+}
+
+cmd_doctor() {
+    local compat proton wine v
+    echo "MiniMap-Dateien:  $APP_HOME ($(app_version "$APP_HOME"))"
+    echo "Steam-Bibliotheken:"; steam_libraries | sed 's/^/  /'
+    if compat="$(find_compatdata)"; then
+        echo "SCUM-Prefix:      $compat/pfx"
+        v="$(app_version "$compat/pfx/drive_c/$PREFIX_DIR_NAME")"; echo "MiniMap im Prefix: ${v:-fehlt}"
+        if proton="$(find_proton "$compat")"; then
+            echo "Proton:           $proton"
+            wine="$(proton_wine "$proton" || echo '?')"; echo "wine:             $wine"
+        else echo "Proton:           unbekannt (SCUM einmal starten)"; fi
+        if has_dotnet "$compat"; then echo ".NET 4.8 / WPF:   installiert"
+        else echo ".NET 4.8 / WPF:   fehlt (scum-minimap setup)"; fi
+    else
+        echo "SCUM-Prefix:      nicht gefunden"
+    fi
+    for t in protontricks protontricks-launch winetricks; do printf '%-18s%s\n' "$t:" "$(command -v "$t" || echo fehlt)"; done
+    echo "Sitzung:          ${XDG_SESSION_TYPE:-?}${PROTON_ENABLE_WAYLAND:+ (PROTON_ENABLE_WAYLAND gesetzt: Overlay funktioniert nur mit XWayland)}"
+}
+
+case "$(basename "$0")" in
+    scum-minimap-steam) cmd_steam "$@" ;;
+    *)
+        sub="${1:-help}"; shift || true
+        case "$sub" in
+            setup)  cmd_setup "$@" ;;
+            steam)  cmd_steam "$@" ;;
+            run)    cmd_run "$@" ;;
+            sync)   c="$(find_compatdata)" || die "SCUM-Prefix nicht gefunden."; sync_app "$c" ;;
+            doctor) cmd_doctor ;;
+            help|-h|--help) sed -n '2,22p' "$0" | sed 's/^# \{0,1\}//' ;;
+            *) die "Unbekannter Befehl: $sub (siehe scum-minimap help)" ;;
+        esac
+        ;;
+esac
